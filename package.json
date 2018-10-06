@@ -1,0 +1,26 @@
+{
+  "name": "shc",
+  "version": "1.0.0",
+  "description": "exform-client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "brace-expansion": "^1.1.4",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-exist": "^2.0.0",
+    "gulp-watch": "^5.0.1",
+    "gulp-less": "^4.0.1",
+    "less-plugin-autoprefix": "^2.0.0",
+    "less-plugin-clean-css": "^1.5.1",
+    "bower": "^1.8.4"
+  }
+}

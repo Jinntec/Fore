@@ -1,0 +1,26 @@
+{
+  "name": "exform-client",
+  "description": "",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git://gitlab.exist-db.org:eXistdbElements/existdb-packagemanager.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "ignore": [
+    ".idea",
+    "build",
+    "bower_components",
+    "node_modules",
+    "test",
+    "build.xml",
+    "expath-pkg.xml",
+    "repo.xml",
+    "package.json",
+    "gulpfile.js"
+  ],
+  "private": true
+}
