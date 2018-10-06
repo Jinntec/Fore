@@ -1,0 +1,31 @@
+language: node_js
+sudo: 'false'
+before_script:
+  - npm install -g polymer-cli
+  - polymer install --variants
+  - >-
+    npm run update-types && git diff --exit-code || (echo -e
+    '\n\033[31mERROR:\033[0m Typings are stale. Please run "npm run
+    update-types".' && false)
+  - >-
+    npm run format && git diff --exit-code || (echo -e '\n\033[31mERROR:\033[0m
+    Project is not formatted. Please run "npm run format".' && false)
+node_js: '9'
+addons:
+  firefox: latest
+  chrome: stable
+script:
+  - xvfb-run polymer test
+  - >-
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test -s 'default';
+    fi
+env:
+  global:
+    - secure: >-
+        RGjZnWcPAItqdhGwtRuA8ETsDoZt/Hd3iAb3E6hat/61tI3S9xn+qi6lc0hrFYBBTnTkgYJX1QONPywMtCpijPw1ao16cx83lum9DhQgLipYfanWr+eWtODlWedL6v2ISUutSsgrbdrkhngBzHXJGnmAvJ2MnLYx5uUDWfNR+XJAJHRXbEJ2JD6NTo1QE4HPSPUQVQRCa17TU1lzN+mtpBFTEdVSVtMKi61OZwG+w77w6e6PZjP04ccaaZJqx3mrVMx5rZ48aYmBzIkd9dzjjJsxzyTaP3otubWCyPjEGKaP9MvIjCR2tXQFReFloXraozieHDZ1gtF4WWDLn+s0QxSpVO09JMk8GC9FJif4mds+qd5h42c6bZ9oZ+u4LDSP/343lcrCi3a/+aKH7xNT7ET3GoJn9ULzqOrqOYa50r3wg9gIKd6Ah/2QOiMIsJtJ3mbekX9djg+y2sobxebmdDNO2L08rZX6TV8mRIZsp2w0Ss2UgWJFwykWHOboGEAwU8lETDsK4EFr9ZWPKZ99itANsBqsGAq4JHvg2Za/yJtrUd4ru/IVwl6Jm+EpL7xlEnJKDh7ExIkyjQJSGCxTkvHtlB8NgNOImamogJWJmLNYD0QM9dzg4xg6NC/jixZHg7Csv3E/xOW1Z8SiYKkNg187swLGTrUnbc1yqXmge7c=
+    - secure: >-
+        fgdSTc0bJJLeL2fRmAOs9ba1ncmyqw3vdH5lQgIeQGUg6K7VwA9tUY29L6lP6QMPdHhFxgEDW1fz/5W1oOfav3EFudIwKuwW0a7lx6WYrXugeHRllb0Ij5VrQ3Rwj0+CIeUPbjCwXW4UelTgHOfEivOBDF6hNx8A6iT2MvW93Q0C2vcf2YTvXlnlYw1WKRxZvE58Emp5V8LpqqXMxXMj7rOj0YHis0QdJ3TdZs37f1C77xNkOS7RyigPYMkNgxLsxNMgrjrDPcw2lrV5LTLYwA+wiyAMNyYEWcmr7V30eO52IpVES11Bq/+L10K7Vb6cUGLV0W0WAbOu4ywntkeFjD29r1GzWiTcEDXWMD5U7jZnS/FhsnTEJqD8THYjucZlUqmYoJiQ5OLJoPCjMwqn6mpFaKJ3poYKIm+qGJnCHnQmrA/S3yxBsQPUk+MyJkOAmkuIwBmT+lZ3YEk1x3wHRG3u+6wI9AwA/p31BMpovCRUzuzbyLibPiITdb8SMt8Tok4SPOAFQYwuXMZBDDDVMcLsF1JTx7BRCX9gIrurvAYZtZjOZsKxLG0/sbfvJh7mTOPZajMPOSDl2o+0Pc8ZPRmgHZ71nbEGtlzl7UtgBA/uJkeGiNsaipHAgzn9VJF/NVAdGlWMDSoPT6SfPNCYHQ9hBjqwbNuwfzitmgmtI28=
+dist: trusty
+cache:
+  directories:
+    - node_modules

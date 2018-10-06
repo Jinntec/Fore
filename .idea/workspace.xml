@@ -1,7 +1,926 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/img/migration.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/Changelog.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/dist/js/axs_testing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/accessibility-developer-tools/main.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/deps/nodeunit.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/deps/nodeunit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/dist/async.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/dist/async.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/dist/async.min.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/karma.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/lib/async.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/mocha_test/compose.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/mocha_test/forever.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/mocha_test/support/is_browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/perf/benchmark.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/perf/memory.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/perf/suites.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/async/support/sync-package-managers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/CODE_OF_CONDUCT.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/ReleaseNotes.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/chai.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/karma.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/karma.sauce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/chai/sauce.browsers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/roboto.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/font-roboto/roboto.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/.github/ISSUE_TEMPLATE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo-pages-shared-styles.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo-pages-shared-styles.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo-snippet.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo-snippet.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo/simple-button.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/demo/url-bar.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/test/basic.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/test/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/test/simple-button.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/url-bar.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/url-bar.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-demo-helpers/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/.github/ISSUE_TEMPLATE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/GUIDE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/demo/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/gen-tsd.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/iron-flex-layout-classes.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/iron-flex-layout.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/iron-flex-layout.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/test/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/test/iron-flex-layout-classes.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-flex-layout/test/iron-flex-layout.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/.github/ISSUE_TEMPLATE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/demo/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/demo/iron-query-params.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/iron-location.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/iron-location.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/iron-query-params.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/iron-query-params.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/initialization-cases.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/initialization-iframe.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/initialization-tests.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/integration.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/iron-location.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/iron-query-params.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/redirection.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/test/replace-state-patch.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/iron-location/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/lodash/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/lodash/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/lodash/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/lodash/lodash.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/lodash/lodash.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/.github/ISSUE_TEMPLATE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/demo/example.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/demo/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/gen-tsd.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/hero.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/marked-element.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/marked-element.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/marked-import.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/marked-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/polymer.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/marked-element.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/remoteSanitization.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/test.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/test1.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/test/test2.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked-element/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/bin/marked" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/AUTHORS.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/CNAME" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/CODE_OF_CONDUCT.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/PUBLISHING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/USING_ADVANCED.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/USING_PRO.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/broken.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/img/logo-black-and-white.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/img/logo-black.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/docs/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/jasmine.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/lib/marked.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/man/marked.1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/man/marked.1.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/marked.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/www/demo.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/www/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/marked/www/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/mocha.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/mocha/mocha.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/externs/closure-types.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/externs/polymer-externs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/externs/polymer-internal-shared-types.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/externs/polymer-internal-types.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/externs/webcomponents-externs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/gen-tsd.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/array-selector.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/custom-style.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/dom-bind.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/dom-if.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/dom-module.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/elements/dom-repeat.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/class.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/legacy-element-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/mutable-data-behavior.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/polymer-fn.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/polymer.dom.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/legacy/templatizer-behavior.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/dir-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/disable-upgrade-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/element-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/gesture-event-listeners.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/mutable-data.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/properties-changed.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/properties-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/property-accessors.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/property-effects.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/strict-binding-parser.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/mixins/template-stamp.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/array-splice.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/async.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/boot.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/case-map.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/debounce.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/flattened-nodes-observer.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/flush.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/gestures.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/html-tag.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/import-href.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/path.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/render-status.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/resolve-url.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/settings.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/style-gather.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/templatize.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/lib/utils/unresolved.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/polymer-element.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/polymer.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/extra-types.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/array-selector.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/custom-style.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/dom-bind.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/dom-if.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/dom-module.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/elements/dom-repeat.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/class.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/legacy-element-mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/mutable-data-behavior.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/polymer-fn.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/polymer.dom.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/legacy/templatizer-behavior.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/dir-mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/disable-upgrade-mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/element-mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/gesture-event-listeners.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/mutable-data.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/properties-changed.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/properties-mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/property-accessors.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/property-effects.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/strict-binding-parser.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/mixins/template-stamp.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/array-splice.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/async.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/boot.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/case-map.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/debounce.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/flattened-nodes-observer.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/flush.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/gestures.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/html-tag.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/import-href.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/mixin.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/path.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/render-status.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/resolve-url.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/settings.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/style-gather.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/templatize.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/lib/utils/unresolved.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/polymer-element.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/types/polymer.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/polymer/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/demo/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/demo/prism-demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/gen-tsd.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-highlighter.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-highlighter.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-import.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-theme-default.d.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism-element/prism-theme-default.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-abap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-abap.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-actionscript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-actionscript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ada.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ada.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-apacheconf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-apacheconf.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-apl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-apl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-applescript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-applescript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-arduino.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-arduino.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-arff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-arff.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-asciidoc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-asciidoc.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-asm6502.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-asm6502.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-aspnet.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-aspnet.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-autohotkey.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-autohotkey.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-autoit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-autoit.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bash.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bash.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-basic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-basic.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-batch.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-batch.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bison.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bison.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-brainfuck.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-brainfuck.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bro.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-bro.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-c.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-c.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-clike.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-clike.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-clojure.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-clojure.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-coffeescript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-coffeescript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-core.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-core.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-cpp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-cpp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-crystal.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-crystal.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-csharp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-csharp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-csp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-csp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-css-extras.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-css-extras.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-css.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-css.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-d.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-d.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-dart.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-dart.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-diff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-diff.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-django.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-django.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-docker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-docker.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-eiffel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-eiffel.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-elixir.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-elixir.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-elm.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-elm.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-erb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-erb.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-erlang.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-erlang.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-flow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-flow.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-fortran.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-fortran.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-fsharp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-fsharp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-gedcom.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-gedcom.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-gherkin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-gherkin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-git.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-git.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-glsl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-glsl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-go.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-go.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-graphql.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-graphql.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-groovy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-groovy.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haml.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-handlebars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-handlebars.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haskell.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haskell.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haxe.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-haxe.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-hpkp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-hpkp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-hsts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-hsts.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-http.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-http.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ichigojam.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ichigojam.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-icon.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-icon.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-inform7.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-inform7.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ini.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ini.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-io.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-io.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-j.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-j.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-java.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-java.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-javascript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-javascript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-jolie.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-jolie.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-json.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-json.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-jsx.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-jsx.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-julia.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-julia.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-keyman.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-keyman.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-kotlin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-kotlin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-latex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-latex.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-less.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-less.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-liquid.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-liquid.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lisp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lisp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-livescript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-livescript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lolcode.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lolcode.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lua.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-lua.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-makefile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-makefile.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markdown.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markdown.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markup-templating.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markup-templating.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markup.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-markup.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-matlab.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-matlab.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-mel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-mel.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-mizar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-mizar.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-monkey.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-monkey.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-n4js.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-n4js.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nasm.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nasm.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nginx.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nginx.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nim.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nix.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nix.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nsis.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-nsis.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-objectivec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-objectivec.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ocaml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ocaml.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-opencl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-opencl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-oz.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-oz.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-parigp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-parigp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-parser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-parser.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pascal.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pascal.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-perl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-perl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-php-extras.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-php-extras.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-php.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-php.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-plsql.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-plsql.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-powershell.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-powershell.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-processing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-processing.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-prolog.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-prolog.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-properties.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-properties.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-protobuf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-protobuf.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pug.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-puppet.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-puppet.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pure.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-pure.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-python.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-python.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-q.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-q.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-qore.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-qore.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-r.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-r.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-reason.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-reason.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-renpy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-renpy.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rest.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rip.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rip.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-roboconf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-roboconf.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ruby.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-ruby.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rust.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-rust.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sas.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sas.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sass.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sass.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scala.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scala.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scheme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scheme.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scss.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-scss.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-smalltalk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-smalltalk.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-smarty.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-smarty.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-soy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-soy.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sql.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-sql.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-stylus.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-stylus.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-swift.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-swift.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tap.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tcl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tcl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-textile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-textile.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tsx.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tsx.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tt2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-tt2.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-twig.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-twig.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-typescript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-typescript.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vbnet.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vbnet.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-velocity.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-velocity.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-verilog.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-verilog.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vhdl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vhdl.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-vim.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-visual-basic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-visual-basic.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-wasm.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-wasm.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-wiki.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-wiki.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xeora.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xeora.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xojo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xojo.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-xquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-yaml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/components/prism-yaml.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/composer.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/examples.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/gulpfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/autolinker/prism-autolinker.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/autolinker/prism-autolinker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/autolinker/prism-autolinker.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/autoloader/prism-autoloader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/autoloader/prism-autoloader.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/command-line/prism-command-line.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/command-line/prism-command-line.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/command-line/prism-command-line.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/copy-to-clipboard/prism-copy-to-clipboard.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/custom-class/prism-custom-class.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/custom-class/prism-custom-class.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/data-uri-highlight/prism-data-uri-highlight.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/data-uri-highlight/prism-data-uri-highlight.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/file-highlight/prism-file-highlight.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/file-highlight/prism-file-highlight.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/highlight-keywords/prism-highlight-keywords.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/highlight-keywords/prism-highlight-keywords.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/jsonp-highlight/prism-jsonp-highlight.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/jsonp-highlight/prism-jsonp-highlight.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/keep-markup/prism-keep-markup.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/keep-markup/prism-keep-markup.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-highlight/prism-line-highlight.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-highlight/prism-line-highlight.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-highlight/prism-line-highlight.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-numbers/prism-line-numbers.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-numbers/prism-line-numbers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/line-numbers/prism-line-numbers.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/normalize-whitespace/prism-normalize-whitespace.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/normalize-whitespace/prism-normalize-whitespace.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/previewers/prism-previewers.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/previewers/prism-previewers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/previewers/prism-previewers.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/remove-initial-line-feed/prism-remove-initial-line-feed.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/remove-initial-line-feed/prism-remove-initial-line-feed.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/show-invisibles/prism-show-invisibles.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/show-invisibles/prism-show-invisibles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/show-invisibles/prism-show-invisibles.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/show-language/prism-show-language.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/show-language/prism-show-language.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/toolbar/prism-toolbar.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/toolbar/prism-toolbar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/toolbar/prism-toolbar.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/unescaped-markup/prism-unescaped-markup.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/unescaped-markup/prism-unescaped-markup.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/unescaped-markup/prism-unescaped-markup.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/wpd/prism-wpd.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/wpd/prism-wpd.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/plugins/wpd/prism-wpd.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/prism.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-coy.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-dark.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-funky.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-okaidia.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-solarizedlight.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-tomorrow.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism-twilight.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/themes/prism.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/vendor/FileSaver.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/vendor/jszip.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/prism/vendor/promise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.eslintrc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.gitattributes" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/apply-shim.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/apply-shim.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/apply-shim.min.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/custom-style-interface.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/custom-style-interface.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/custom-style-interface.min.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/entrypoints/apply-shim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/entrypoints/custom-style-interface.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/entrypoints/scoping-shim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/examples/custom-style-element.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/examples/document-style-lib.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/externs/shadycss-externs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/gulpfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/scoping-shim.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/scoping-shim.min.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/apply-shim-utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/apply-shim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/common-regex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/common-utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/css-parse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/custom-style-interface.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/document-wait.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/document-watcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/scoping-shim.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-cache.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-info.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-placeholder.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-properties.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-settings.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-transformer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/style-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/template-map.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/src/unscoped-style-handler.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/.eslintrc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/apply-shim.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/async-loading.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/chrome-devtools.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/complicated-mixin-ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/css-parse.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/custom-style-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/custom-style-late.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/custom-style-only.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/custom-style.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/deferred-apply.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/dynamic-scoping.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/html-imports/custom-style-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/lazy-init.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/media-query.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/mixin-fallbacks.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/mixin-ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/css-parse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/custom-style-element.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/make-element.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-cache.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-info.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-placeholder.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-properties.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-settings.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-transformer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/style-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/module/svg-in-shadow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-applyshim/custom-style-late.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-applyshim/custom-style-only.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-applyshim/custom-style.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/apply-shim.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/complicated-mixin-ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/custom-style-late.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/custom-style-only.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/custom-style.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/no-scopingshim/mixin-ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/placeholder-ordering.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/runner.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/scoping-api.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/scoping.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/settings.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/style-transformer.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/svg.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/test-flags.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/wc-1.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/tests/workarounds.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/shadycss/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.editorconfig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.eslintignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.eslintrc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/lib/sinon-chai.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/.eslintrc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/callArguments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/callContext.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/callCount.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/callOrder.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/callingWithNew.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/common.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/messages.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/mocha.opts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/regressions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/returning.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinon-chai/test/throwing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinonjs/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinonjs/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinonjs/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/sinonjs/sinon.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/lib/formatting.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/lib/normalization.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/stacky/lib/parsing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/.github/ISSUE_TEMPLATE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/test-fixture-mocha.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/test-fixture.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/test/handle-multiple-registrations.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/test/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/test/test-fixture.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/test-fixture/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/browser.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/data/a11ySuite-npm-header.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/data/a11ySuite.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/data/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/web-component-tester/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.eslintrc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.gitattributes" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.github/CODEOWNERS" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/closure-output.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/custom-elements-es5-adapter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/custom-elements-es5-adapter-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-ce-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-hi-ce-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-hi-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-hi-sd-ce-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-hi-sd-ce-pf-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-hi-sd-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-sd-ce-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/entrypoints/webcomponents-sd-index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/externs/webcomponents.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/gulpfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/license-header.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/package-lock.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/src/post-polyfill.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/src/pre-polyfill.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/src/promise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/src/unresolved.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/ce-import-upgrade-async.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/ce-import-upgrade.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/ce-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/ce-upgrade-order.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/ce-upgradedocumenttree.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/dev-loader-swizzled.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/dev-loader.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/force-polyfills.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/a1-define.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/a1-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/a1-instance.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/a1-reference.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/csp-import-1.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/csp-import-2.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/csp-script-1.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/csp-script-2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/current-script.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/element-import-a.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/element-import-b.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/element-import.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/import-file.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/import-upgrade-order.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/script-1.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/script-2.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/simple-element-es5.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/imports/simple-element.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/integration-es5.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/integration.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/load.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/promise.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/runner.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/smoke.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/template-and-CE.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/tests/template-and-imports.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/wct.conf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-ce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-ce.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-ce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-ce.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-sd-ce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-sd-ce.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-sd.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi-sd.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-hi.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-lite.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-lite.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-loader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-sd-ce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-sd-ce.js.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-sd.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/webcomponentsjs/webcomponents-sd.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,17 +931,40 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+              <caret line="1" column="6" lean-forward="false" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="27" lean-forward="false" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="exf-model.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/exf-model.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="10" lean-forward="true" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -33,6 +975,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/demo/index.html" />
+        <option value="$PROJECT_DIR$/exf-model.html" />
       </list>
     </option>
   </component>
@@ -49,14 +993,18 @@
     </gulpfiles>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="720" />
+    <option name="width" value="1371" />
     <option name="height" value="877" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -80,6 +1028,11 @@
               <item name="exform" type="b2602c69:ProjectViewProjectNode" />
               <item name="exform" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="exform" type="b2602c69:ProjectViewProjectNode" />
+              <item name="exform" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -94,6 +1047,9 @@
     <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v7.2.0/bin/node" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -199,15 +1155,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1538846308968</updated>
-      <workItem from="1538846312399" duration="146000" />
+      <workItem from="1538846312399" duration="411000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146000" />
+    <option name="totallyTimeSpent" value="411000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="720" height="877" extended-state="0" />
+    <frame x="0" y="23" width="1371" height="877" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -218,16 +1175,16 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32971507" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32971507" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5194611" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2630781" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24943139" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -250,11 +1207,34 @@
     <breakpoint-manager />
     <watches-manager />
   </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <expanded value="true" />
+    </buildFile>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+          <caret line="1" column="6" lean-forward="false" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="27" lean-forward="false" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exf-model.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="10" lean-forward="true" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
           <folding />
         </state>
       </provider>
@@ -262,9 +1242,80 @@
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>exform</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>
