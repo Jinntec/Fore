@@ -25,12 +25,12 @@ var exClient = exist.createClient({
 })
 
 var html5TargetConfiguration = {
-    target: '/db/apps/exform-client',
+    target: '/db/apps/exform',
     html5AsBinary: true
 }
 
 var targetConfiguration = {
-    target: '/db/apps/exform-client/',
+    target: '/db/apps/exform/',
     html5AsBinary: true
 }
 
@@ -105,7 +105,7 @@ var components = [
 
 gulp.task('deploy:comp', function () {
     return gulp.src(components, {base: './'})
-        .pipe(gulp.dest('bower_components/exform-client'))
+        .pipe(gulp.dest('bower_components/exform'))
 })
 
 gulp.task('deploy', ['deploy:comp', 'deploy:other', 'deploy:components', 'deploy:styles'])
