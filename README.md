@@ -35,6 +35,12 @@ different from using a dedicated form processing facility.
 
 Ideally it should be easy to upgrade to 'exform' when things get more complicated as first perceived.
 
+> amendment: my experiments with forms in Polymer have shown a bit different picture. Actually it can
+> get quite complicated quickly. When using custom elements as form components you have to make sure they
+> play by the rules by e.g. implementing a validate() function. Furthermore you have to take care of validation
+> on the server which quickly gets messy in plain XQuery. As a consequence it can be said that a generic form solution
+> gets attractive even earlier. 
+
 ### type 2: datatyping and cross-dependencies
 
 While plain HTML can provide simple datatyping it has no facility to handle advanced validation.
@@ -192,6 +198,12 @@ to represent the UI part of the forms and bind to XML nodes via <bind> elements.
 
 ## exchanging nodes between client and server
 
+## what is needed
 
+Just a high-level list of things that need to be implemented:
+
+* implement an XPath facade class to evaluate and analyse XPath expressions
+* re-implement Instance class to use eXist-dbs' DOM document
+* 
 
 
