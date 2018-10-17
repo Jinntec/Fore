@@ -175,15 +175,6 @@ component.
 
 
 
-
-
-
-
-
-
-
-
-
 ## porting the XForms model to eXist-db
 
 XForms is a MVC architecture and its power is mainly within the model. This is the part we'd like to be available
@@ -198,12 +189,17 @@ to represent the UI part of the forms and bind to XML nodes via <bind> elements.
 
 ## exchanging nodes between client and server
 
+[tbd]
+
 ## what is needed
 
 Just a high-level list of things that need to be implemented:
 
 * implement an XPath facade class to evaluate and analyse XPath expressions
 * re-implement Instance class to use eXist-dbs' DOM document
-* 
+* clarify node referencing (nodenumber versus nodeid)
+* work out form syntax details
+* example forms
+* ...
 
 
