@@ -149,7 +149,7 @@ a change of node ids for a given document.
 
 ### using eXist-db XPath and XQuery engine 
 
-The initial reason to develop something like exforms was to replace the XPath engine. This at the same time offers
+The initial reason to develop something like exforms was to replace betterFORM (with its dependency on specific Saxon version). This at the same time offers
 some interesting potential for a new solution. By using the eXist-db builtin XPath engine we can easily upgrade to 
 future enhancements of XPath, use our own ways of supporting custom functions as well as allow full XQuery support in
 various places (e.g. calculations and submissions). This certainly offers a whole new level of processing power.
@@ -158,21 +158,27 @@ various places (e.g. calculations and submissions). This certainly offers a whol
 
 [tbd]
 
+Websockets, Service Workers and AJAX comes to mind. Not sure, if websockets are really much beneficial here as their
+main selling point is pushing to *multiple* clients. It actually seems not to be made for one-to-one communication though 
+it can be enforced.
+
+Service Workers might play a role in pre-loading resources and maybe even data instances. However they are not for updating i guess.
+In conjunction with AJAX this however should be fine. 
+
 
 
 ## Migration path
 
-As migrating the whole of XForms model to use the native facilities of eXist-db is a huge effort when considering the
-the whole existing functionality we need a migration path that develops from the simple to the more complex cases.
+During our meetup on 29th/30th Jan 2019 we decided to go for a new forms solution. However we also agreed to use a migration
+path to the full solution by breaking the project in pieces.
 
-However investigations so far have revealed that we'll use Web Components on the client to represent our UI controls.
-To weave binding capabilities into controls we'll use a Mixin or extend controls from a generic <bound-element>
-component.
+To get usable results and profit quickly we start by migrating the betterFORM model to eXist-db. This would give us a validation
+facility with support for dependencies, datatypes and facets. Calculated values should likewise not be a problem.
 
-[tbc...]
+The resulting validation report would output a well-defined JSON structures to inform about potential issues. This can then be used
+to display sensible messages to the user.
 
-
-
+In the second big work package the UI needs to be implemented to make up a complete solution for data editing..
 
 
 ## porting the XForms model to eXist-db
@@ -187,9 +193,6 @@ In practice we do not have much use for supporting other output than HTML. There
 should not deal with porting the original UI controls. Instead we would build upon HTML5 and especially Web Components
 to represent the UI part of the forms and bind to XML nodes via <bind> elements. 
 
-## exchanging nodes between client and server
-
-[tbd]
 
 ## what is needed
 
