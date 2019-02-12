@@ -1,20 +1,20 @@
-<exf-model id="address">
+<fore-model id="address">
 <!--
     <data>
         <salary></salary>
         <average>12000</average>
     </data>
 -->
-    <exf-bind ref="salary">
-        <exf-required expr="true()">
-            <exf-alert>firstname is required</exf-alert>
-        </exf-required>
-        <exf-type expr="xs:decimal">
-            <exf-alert>salary is not a decimal</exf-alert>
-        </exf-type>
-        <exf-constraint expr=". lt ../average">
-            <exf-alert>your salary is too low</exf-alert>
-        </exf-constraint>
-    </exf-bind>
-</exf-model>
+    <fore-bind ref="salary">
+        <fore-required expr="true()">
+            <fore-alert>firstname is required</fore-alert>
+        </fore-required>
+        <fore-type expr="xs:decimal">
+            <fore-alert>salary is not a decimal</fore-alert>
+        </fore-type>
+        <fore-constraint expr=". lt ../average">
+            <fore-alert>your salary is too low</fore-alert>
+        </fore-constraint>
+    </fore-bind>
+</fore-model>
 

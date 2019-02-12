@@ -10,74 +10,74 @@
 
 </head>
 <body>
-    <exf-form id="my-form">
-        <exf-model id="address">
-            <exf-instance id="default" src="address.xml"></exf-instance>
+    <fore-form id="my-form">
+        <fore-model id="address">
+            <fore-instance id="default" src="address.xml"></fore-instance>
 
-            <exf-bind id="title" ref="title" type="string"></exf-bind>
-            <exf-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></exf-bind>
-            <exf-bind id="name" ref="name" type="string" required="true()" relevant="true()"></exf-bind>
-            <exf-bind id="street" ref="street" type="string"></exf-bind>
-            <exf-bind id="city" ref="city" type="string"></exf-bind>
-            <exf-bind id="zip" ref="zip" type="integer"></exf-bind>
-            <exf-bind id="country" ref="country" type="string"></exf-bind>
+            <fore-bind id="title" ref="title" type="string"></fore-bind>
+            <fore-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></fore-bind>
+            <fore-bind id="name" ref="name" type="string" required="true()" relevant="true()"></fore-bind>
+            <fore-bind id="street" ref="street" type="string"></fore-bind>
+            <fore-bind id="city" ref="city" type="string"></fore-bind>
+            <fore-bind id="zip" ref="zip" type="integer"></fore-bind>
+            <fore-bind id="country" ref="country" type="string"></fore-bind>
 
 
-            <exf-submission id="s-save"
+            <fore-submission id="s-save"
                             resource="contacts/contact"
                             replace="none"
                             method="post">
-                <exf-action ev:event="xforms-submit-done">
-                    <exf-message level="ephemeral">Contact has been saved.</exf-message>
-                    <exf-dispatch name="unload-subforms" targetid="contact"></exf-dispatch>
-                </exf-action>
-            </exf-submission>
+                <fore-action ev:event="xforms-submit-done">
+                    <fore-message level="ephemeral">Contact has been saved.</fore-message>
+                    <fore-dispatch name="unload-subforms" targetid="contact"></fore-dispatch>
+                </fore-action>
+            </fore-submission>
 
 
-            <exf-instance id="i-countries" src="countries.xml"></exf-instance>
+            <fore-instance id="i-countries" src="countries.xml"></fore-instance>
 
-            <exf-bind id="counties" ref="instance('i-countries')/country">
-                <exf-bind id="countryName" ref="name"></exf-bind>
-                <exf-bind id="countryValue" ref="value"></exf-bind>
-            </exf-bind>
+            <fore-bind id="counties" ref="instance('i-countries')/country">
+                <fore-bind id="countryName" ref="name"></fore-bind>
+                <fore-bind id="countryValue" ref="value"></fore-bind>
+            </fore-bind>
 
-            <exf-send ev:event="xforms-ready" submission="s-load-from-master"></exf-send>
-        </exf-model>
+            <fore-send ev:event="xforms-ready" submission="s-load-from-master"></fore-send>
+        </fore-model>
 
-        <exf-group appearance="full">
-            <exf-input bind="title">
-                <exf-label id="title">Title</exf-label>
-            </exf-input>
-            <exf-input bind="firstname">
-                <exf-label id="firstNames">First names</exf-label>
-            </exf-input>
-            <exf-input bind="name">
-                <exf-label id="name">Name</exf-label>
-            </exf-input>
-            <exf-input bind="street">
-                <exf-label id="street">Street</exf-label>
-            </exf-input>
-            <exf-input bind="city">
-                <exf-label id="city">City</exf-label>
-            </exf-input>
-            <exf-input bind="zip">
-                <exf-label id="zip">Zip</exf-label>
-                <exf-alert>Please put your ZIP code here</exf-alert>
-            </exf-input>
-            <exf-select1 bind="country">
-                <exf-label bind="country">Country</exf-label>
-                <exf-itemset bind="countries">
-                    <exf-label bind="countryName"></exf-label>
-                    <exf-value bind="countryValue"></exf-value>
-                </exf-itemset>
-            </exf-select1>
+        <fore-group appearance="full">
+            <fore-input bind="title">
+                <fore-label id="title">Title</fore-label>
+            </fore-input>
+            <fore-input bind="firstname">
+                <fore-label id="firstNames">First names</fore-label>
+            </fore-input>
+            <fore-input bind="name">
+                <fore-label id="name">Name</fore-label>
+            </fore-input>
+            <fore-input bind="street">
+                <fore-label id="street">Street</fore-label>
+            </fore-input>
+            <fore-input bind="city">
+                <fore-label id="city">City</fore-label>
+            </fore-input>
+            <fore-input bind="zip">
+                <fore-label id="zip">Zip</fore-label>
+                <fore-alert>Please put your ZIP code here</fore-alert>
+            </fore-input>
+            <fore-select1 bind="country">
+                <fore-label bind="country">Country</fore-label>
+                <fore-itemset bind="countries">
+                    <fore-label bind="countryName"></fore-label>
+                    <fore-value bind="countryValue"></fore-value>
+                </fore-itemset>
+            </fore-select1>
 
-            <exf-trigger>
-                <exf-label>update table</exf-label>
-                <exf-hint>This button will update the table above with the data from the subform</exf-hint>
-                <exf-send submission="s-save"></exf-send>
-            </exf-trigger>
-        </exf-group>
-    </exf-form>
+            <fore-trigger>
+                <fore-label>update table</fore-label>
+                <fore-hint>This button will update the table above with the data from the subform</fore-hint>
+                <fore-send submission="s-save"></fore-send>
+            </fore-trigger>
+        </fore-group>
+    </fore-form>
 </body>
 </html>
