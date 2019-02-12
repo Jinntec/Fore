@@ -1,4 +1,6 @@
-# eXForm - forms for eXist-db
+# fore - forms for eXist-db
+
+ > "fore - something that occupies a front position" - Merriam Webster dictionary 
 
 ## what's here
 
@@ -13,7 +15,8 @@ for betterFORM / XForms. Due to betterFORM being dependent on a specific Saxon v
 for maintainence in eXist-db which likes to moves on to newer Saxon versions. Porting the relevant code portions
 from one Saxon version to the other is always a huge effort which we want to get rid of.
 
-The idea is to use eXist-db's internal XPath engine to replace Saxon.
+The idea is to develop a functional equivalent for the betterFORM engine. Unlike betterFORM it will rely on and be integrated
+tightly with eXist-db. 
 
 ## Use cases
 

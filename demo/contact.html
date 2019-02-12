@@ -6,76 +6,78 @@
     <title>exforms-client demo</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../exf-model.html">
+    <link rel="import" href="../elements/model/exf-model.html"/>
 
 </head>
 <body>
-    <exf-model id="address">
-        <exf-instance id="default" src="address.xml"></exf-instance>
+    <exf-form id="my-form">
+        <exf-model id="address">
+            <exf-instance id="default" src="address.xml"></exf-instance>
 
-        <exf-bind id="title" ref="title" type="string"></exf-bind>
-        <exf-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></exf-bind>
-        <exf-bind id="name" ref="name" type="string" required="true()" relevant="true()"></exf-bind>
-        <exf-bind id="street" ref="street" type="string"></exf-bind>
-        <exf-bind id="city" ref="city" type="string"></exf-bind>
-        <exf-bind id="zip" ref="zip" type="integer"></exf-bind>
-        <exf-bind id="country" ref="country" type="string"></exf-bind>
-
-
-        <exf-submission id="s-save"
-                       resource="contacts/contact"
-                       replace="none"
-                       method="post">
-            <exf-action ev:event="xforms-submit-done">
-                <exf-message  level="ephemeral">Contact has been saved.</exf-message>
-                <exf-dispatch name="unload-subforms" targetid="contact"></exf-dispatch>
-            </exf-action>
-        </exf-submission>
+            <exf-bind id="title" ref="title" type="string"></exf-bind>
+            <exf-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></exf-bind>
+            <exf-bind id="name" ref="name" type="string" required="true()" relevant="true()"></exf-bind>
+            <exf-bind id="street" ref="street" type="string"></exf-bind>
+            <exf-bind id="city" ref="city" type="string"></exf-bind>
+            <exf-bind id="zip" ref="zip" type="integer"></exf-bind>
+            <exf-bind id="country" ref="country" type="string"></exf-bind>
 
 
-        <exf-instance id="i-countries" src="countries.xml"></exf-instance>
+            <exf-submission id="s-save"
+                            resource="contacts/contact"
+                            replace="none"
+                            method="post">
+                <exf-action ev:event="xforms-submit-done">
+                    <exf-message level="ephemeral">Contact has been saved.</exf-message>
+                    <exf-dispatch name="unload-subforms" targetid="contact"></exf-dispatch>
+                </exf-action>
+            </exf-submission>
 
-        <exf-bind id="counties" ref="instance('i-countries')/country">
-            <exf-bind id="countryName" ref="name"></exf-bind>
-            <exf-bind id="countryValue" ref="value"></exf-bind>
-        </exf-bind>
 
-        <exf-send ev:event="xforms-ready" submission="s-load-from-master"></exf-send>
-    </exf-model>
+            <exf-instance id="i-countries" src="countries.xml"></exf-instance>
 
-    <exf-group appearance="full">
-        <exf-input bind="title">
-            <exf-label id="title">Title</exf-label>
-        </exf-input>
-        <exf-input bind="firstname">
-            <exf-label id="firstNames">First names</exf-label>
-        </exf-input>
-        <exf-input bind="name">
-            <exf-label id="name">Name</exf-label>
-        </exf-input>
-        <exf-input bind="street">
-            <exf-label id="street">Street</exf-label>
-        </exf-input>
-        <exf-input bind="city">
-            <exf-label id="city">City</exf-label>
-        </exf-input>
-        <exf-input bind="zip">
-            <exf-label id="zip">Zip</exf-label>
-            <exf-alert>Please put your ZIP code here</exf-alert>
-        </exf-input>
-        <exf-select1 bind="country">
-            <exf-label bind="country">Country</exf-label>
-            <exf-itemset bind="countries">
-                <exf-label bind="countryName"></exf-label>
-                <exf-value bind="countryValue"></exf-value>
-            </exf-itemset>
-        </exf-select1>
+            <exf-bind id="counties" ref="instance('i-countries')/country">
+                <exf-bind id="countryName" ref="name"></exf-bind>
+                <exf-bind id="countryValue" ref="value"></exf-bind>
+            </exf-bind>
 
-        <exf-trigger>
-            <exf-label>update table</exf-label>
-            <exf-hint>This button will update the table above with the data from the subform</exf-hint>
-            <exf-send submission="s-save"></exf-send>
-        </exf-trigger>
-    </exf-group>
+            <exf-send ev:event="xforms-ready" submission="s-load-from-master"></exf-send>
+        </exf-model>
+
+        <exf-group appearance="full">
+            <exf-input bind="title">
+                <exf-label id="title">Title</exf-label>
+            </exf-input>
+            <exf-input bind="firstname">
+                <exf-label id="firstNames">First names</exf-label>
+            </exf-input>
+            <exf-input bind="name">
+                <exf-label id="name">Name</exf-label>
+            </exf-input>
+            <exf-input bind="street">
+                <exf-label id="street">Street</exf-label>
+            </exf-input>
+            <exf-input bind="city">
+                <exf-label id="city">City</exf-label>
+            </exf-input>
+            <exf-input bind="zip">
+                <exf-label id="zip">Zip</exf-label>
+                <exf-alert>Please put your ZIP code here</exf-alert>
+            </exf-input>
+            <exf-select1 bind="country">
+                <exf-label bind="country">Country</exf-label>
+                <exf-itemset bind="countries">
+                    <exf-label bind="countryName"></exf-label>
+                    <exf-value bind="countryValue"></exf-value>
+                </exf-itemset>
+            </exf-select1>
+
+            <exf-trigger>
+                <exf-label>update table</exf-label>
+                <exf-hint>This button will update the table above with the data from the subform</exf-hint>
+                <exf-send submission="s-save"></exf-send>
+            </exf-trigger>
+        </exf-group>
+    </exf-form>
 </body>
 </html>

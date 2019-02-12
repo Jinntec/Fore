@@ -1,0 +1,139 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>exforms-client demo</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../elements/model/fore-model.html"/>
+
+</head>
+<body>
+    <!-- fore-model is not exposed to the client! -->
+    <fore-model id="record">
+        <fore-instance>
+            <data>
+                <salary>110</salary>
+                <average>120.00</average>
+                <items>
+                    <item></item>
+                </items>
+            </data>
+        </fore-instance>
+
+        <fore-instance id="conf">
+            <data>
+                <target-collection>data/records/record</target-collection>
+                <count>1</count>
+            </data>
+        </fore-instance>
+
+        <fore-instance id="loadedbyfunction">
+            {
+            let $inst := generateSomehow()
+            }
+        </fore-instance>
+
+        <fore-instance id="byFunctionButFromAttr" src="{$someData}"></fore-instance>
+        <fore-instance id="byFunctionButFromDb" src="{doc($myRoot)/}"></fore-instance>
+
+        <!--
+            [
+                {
+                    "bind":"salary",
+                    "readonly":false,
+                    "required":true,
+                    "value":110,
+                    "datatype":"xs:string",
+                    "valid":true,
+                    "relevant":true
+                },
+                {
+                    "bind":"items",
+                    "relevant":true
+                },
+                {
+                    "bind":"item",
+                    "readonly":false,
+                    "required":true,
+
+                }
+            ]
+        -->
+
+        let $salary := fore-instance[1]//salary[string-length(.) != 0]
+
+        <fore-bind id="salary" ref="//salary">
+            <fore-required>
+                <fore-alert>salary is required</fore-alert>
+            </fore-required>
+            <fore-type expr="xs:decimal">
+                <fore-alert>salary is not a decimal</fore-alert>
+            </fore-type>
+            <fore-constraint expr=". gt ../average">
+                <fore-alert>salary is not too low</fore-alert>
+            </fore-constraint>
+        </fore-bind>
+
+        <!-- the context here is instance() which means the first instance in doc order -->
+        <fore-bind id="items" ref="items">
+            <fore-bind id="item" ref="item" required="true"></fore-bind>
+        </fore-bind>
+
+        <!-- another shortcut to XForms - simply use XQuery var for instance addressing -->
+        <fore-bind id="target-collection" ref="$conf//target-collection" required="true()"></fore-bind>
+
+        <!--
+        'db' scheme here is used as a posssible sample to write to an absolute address
+        -->
+        <fore-submission id="save"
+                         resource="xmldb:doc({$conf/target-resource}{count}.xml)"
+                         replace="none">
+            <fore-submit-error>
+                {
+                    fore:message('storing record failed', false)
+                }
+                <fore-message modal="false">storing record failed</fore-message>
+            </fore-submit-error>
+            <fore-submit-done>
+                <!-- start over -->
+                <fore-load url="seed-form.html"></fore-load>
+                <fore-message>Your data have been stored</fore-message>
+            </fore-submit-done>
+        </fore-submission>
+
+        <fore-function signature="foo:func1(param as xs:string)">
+
+        </fore-function>
+
+        <fore-ready>
+            <!-- some actions when model is up -->
+            <fore-setvalue ref="items/item[1]" value="defaultVal"></fore-setvalue>
+        </fore-ready>
+    </fore-model>
+
+    <!-- Runtime:
+    fore-form will apply the JSON provided by server to the local UI by
+    using id references.
+
+    Advantage: can be nearly any kind of control as long as it plays by the conventions
+    of HTML controls using 'value' or 'checked' plus readonly, required etc.
+    -->
+    <fore-form model="record">
+        <input bind="salary" value="this will get substituted by model-bridge">
+
+        <fore-repeat bind="items" actions="append delete">
+            <!--
+            a 'required' or 'readonly' attribute could be set in addition to use browser built-in validation feature to
+            give early feedback.
+
+            For the sake of easier processing on the server in well-formed markup.
+            -->
+            <input bind="item" required="required">
+        </fore-repeat>
+
+        <fore-submit submission="save"></fore-submit>
+    </fore-form>
+</body>
+</html>

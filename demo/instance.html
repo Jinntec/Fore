@@ -6,10 +6,14 @@
     <title>exforms-client demo</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../elements/model/exf-form.html">
+    <link rel="import" href="../elements/model/exf-model.html"/>
 
 </head>
 <body>
-    <exf-form> </exf-form>
+    <exf-form>
+        <exf-model id="address">
+            <exf-instance id="default" src="address.xml"></exf-instance>
+        </exf-model>
+    </exf-form>
 </body>
 </html>
