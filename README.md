@@ -38,15 +38,22 @@ Ideally it should be easy to upgrade to 'exform' when things get more complicate
 > amendment: my experiments with forms in Polymer have shown a bit different picture. Actually it can
 > get quite complicated quickly. When using custom elements as form components you have to make sure they
 > play by the rules by e.g. implementing a validate() function. Furthermore you have to take care of validation
-> on the server which quickly gets messy in plain XQuery. As a consequence it can be said that a generic form solution
+> on the server which quickly gets messy in plain XQuery (Schematron might be better here). As a consequence it can be said that a generic form solution
 > gets attractive even earlier. 
 
 ### type 2: datatyping and cross-dependencies
 
-While plain HTML can provide simple datatyping it has no facility to handle advanced validation.
+While plain HTML can provide simple datatyping it has no facility to handle advanced validation nor can it replace
+a server-side validation.
 
-By advanced typing here the use of XSD datatypes including custom sub-types is meant. Furthermore there's no facility
-to define cross-validation that involves more than the value a control is holding.
+XForms offers:
+* datatype support (XSD simple types and extensions of those)
+* boolean `readonly` XPath expression
+* boolean `required` XPath expression
+* boolean `constraint` XPath expression
+* boolean `relevant` XPath expression
+ 
+`constraint` expressions are the most powerful ones by allowing to validate cross-dependencies between nodes
 
 While still possible to implement most of this by-hand for a given use case these type of forms will already
 profit from a forms framework.
@@ -58,6 +65,7 @@ When it comes to edit even more complex XML documents you are usually confronted
 * you have to juggle with several XML documents for i18n or other files you need to reference 
 * you may want some control with regard to datatypes
 * you may want to enforce some rules under which you consider your document valid after editing
+* you need to chain submissions to allow complex manipulation of different sources at once
 
 
 ## exforms - what should it look like?
@@ -65,19 +73,17 @@ When it comes to edit even more complex XML documents you are usually confronted
 ### birds' eye view
 
 While re-implementing a full XForms implementation is neither sensible nor can be done within a reasonable timeframe and
-budget, a broken-down version makes a lot of sense.
+budget, a broken-down version makes a lot of sense. Some aspects of XForms can be dropped or replaced without much overall
+functional loss. During our meetup on 29th/30th Jan 2019 we decided to go for a new forms solution. However we also agreed to use a migration
+path to the full solution by breaking the project in pieces.
 
-The power XForms offers comes from the model and it's descendant elements 'instance', 'bind' and 'submission'. These
-elements let XForms stand out from other form solutions. 'exforms' as a new module within eXist-db should preserve
-the XForms model functionality but offer it in an HTML5 syntax (instead of XForms namespace).
+The new approach to XForms is meant to be extremely pragmatic - we'll certainly take freedom in syntax while keeping the good
+ideas. We'd like to start with a XQuery-driven approach that gives us the XForms model abilities to validate and 'route' data
+along with a fine-grained error messaging. 
 
-The XForms UI has been build to abstract clients. It turned out that we rather do not need this as we always deal 
-with HTML when it comes to forms and this fully covers our needs. The abstraction caused some of the troubles involved
-with form authoring and could be solved much easier by using concrete web components as controls. 
+Second step would be implementation of the UI part as Web Components. Though data-binding the UI should be possible even for
+plain HTML controls the use of Web Components would certainly offer a whole lot more power. 
 
-To summarize:
-
-"keep the model but drop the UI"
 
 ## Requirements
 
@@ -85,7 +91,7 @@ general:
 * MUST provide server-side validation
 * SHOULD support offline editing
 * SHALL support server push
-* MUST be easy to author
+* MUST be easy to author (declarative)
 
 for instances:
 * MUST provide an implementation of an XForms instance
@@ -107,7 +113,8 @@ for submissions:
 * MUST provide an implementation of an XForms submission
 * SHOULD use XML:DB API to access data
 * SHOULD support submission chaining
-* MAY support http submissions
+* SHALL support http submissions
+* MAY support other protocols
 
 
 ## Architecture (draft)
@@ -124,14 +131,58 @@ fired by the UI or the model to change the state of the model which in turn will
 ### distributing the parts
 
 Server-side form processing has proved to be very stable and powerful in the past with betterFORM. It allows 
-to validate the data on the server to assure the quality of the data and enforce the rules given by a form. 
+to validate the data on the server to assure the quality of the data and enforce the rules given by a form. It 
+furthermore allows to keep business logic on the server not exposing it to the client.
 
-That means that the model will be processed on the server which always has the last word when it comes to submissions.
+That means that the model will be processed on the server which always has the last word when it comes to validation and submissions.
 The client however will be implemented as Web Components that reflect the state of nodes in the browser.
 
-[discussion] it's still an open question if the model is represented in the browser at all or in a limited way. E.g. there
-are use cases where a user might not want to expose all constraints that are attached to the data. On the other
-hand we would like to at least allow limited manipulation of the data in an offline setting. 
+### client- and server model 
+
+The primary goal of the new forms solution is to edit XML data. However browser do not well with XML
+natively. Furthermore JSON has made the race in the client-side world and the use of XML and XPath
+has always had a nice-existence at best. This is not going to change.
+
+XPath (and XQuery) are the powertools of XML but they are not (really) present in the browser. To circumvent
+these problems and give each side what it deserves we need to introduce some mapping.
+
+On the server we deal with data instances which each represent their own documents. On the client we'd like to 
+consume some JSON data to render and update our UI. A plain XML to JSON conversion is possible but still leaves
+us with the problem of resolving path expressions and map those from XPath to e.g. JSONPath. This involves some
+complexity and potential for errors. 
+
+A simpler mechanism would be to use the `bind` elements as intermediates:
+
+a `bind` references one or more nodes by an XPath expression and on the other
+hand allow a UI control to bind to it via id. 
+
+e.g. 
+```
+<bind id="foo" ref="//aNode">
+
+...
+
+<input bind="foo">
+```
+
+Besides the value the bind also has access to the different facets of validation, error-messages etc.
+By serializing the state of a bind we can feed the UI with the necessary bits. 
+
+A JSON representation of a bind would look like this:
+```
+{
+    "bind":"salary",
+    "readonly":false,
+    "required":true,
+    "value":110,
+    "datatype":"xs:string",
+    "valid":true,
+    "relevant":true
+}
+```
+
+
+
 
 ### mapping nodes between client and server
 
@@ -165,44 +216,5 @@ it can be enforced.
 Service Workers might play a role in pre-loading resources and maybe even data instances. However they are not for updating i guess.
 In conjunction with AJAX this however should be fine. 
 
-
-
-## Migration path
-
-During our meetup on 29th/30th Jan 2019 we decided to go for a new forms solution. However we also agreed to use a migration
-path to the full solution by breaking the project in pieces.
-
-To get usable results and profit quickly we start by migrating the betterFORM model to eXist-db. This would give us a validation
-facility with support for dependencies, datatypes and facets. Calculated values should likewise not be a problem.
-
-The resulting validation report would output a well-defined JSON structures to inform about potential issues. This can then be used
-to display sensible messages to the user.
-
-In the second big work package the UI needs to be implemented to make up a complete solution for data editing..
-
-
-## porting the XForms model to eXist-db
-
-XForms is a MVC architecture and its power is mainly within the model. This is the part we'd like to be available
-when we need stronger capabilities in XML editing. 
-
-XForms also defined a set of UI controls which abstract from the concrete platform. While this is a nice idea
-it also tends to complicate thing a lot for the developer. The additional abstraction always forcing thinking 'around the edge'.
-
-In practice we do not have much use for supporting other output than HTML. Therefore a eXist-db form framework
-should not deal with porting the original UI controls. Instead we would build upon HTML5 and especially Web Components
-to represent the UI part of the forms and bind to XML nodes via <bind> elements. 
-
-
-## what is needed
-
-Just a high-level list of things that need to be implemented:
-
-* implement an XPath facade class to evaluate and analyse XPath expressions
-* re-implement Instance class to use eXist-dbs' DOM document
-* clarify node referencing (nodenumber versus nodeid)
-* work out form syntax details
-* example forms
-* ...
 
 
