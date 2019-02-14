@@ -14,7 +14,7 @@
     <fore-model id="record">
         <fore-instance>
             <data>
-                <salary>110</salary>
+                <salary>210.00</salary>
                 <average>120.00</average>
                 <items>
                     <item></item>
@@ -22,22 +22,40 @@
             </data>
         </fore-instance>
 
+        <fore-bind id="salary" ref="//salary">
+            <!-- fore-required might have optional attr 'expr' for boolean XPath expressions. When omitted defaults to true() -->
+            <fore-required>
+                <fore-alert>salary is required</fore-alert>
+            </fore-required>
+            <fore-type expr="xs:decimal">
+                <fore-alert>salary is not a decimal</fore-alert>
+            </fore-type>
+            <fore-constraint expr=". gt instance('third')/path">
+                <fore-alert>salary is not too low</fore-alert>
+            </fore-constraint>
+        </fore-bind>
+
+        <!-- the context here is instance() which means the first instance in doc order -->
+        <fore-bind id="items" ref="items">
+            <fore-bind id="item" ref="item" required="true"></fore-bind>
+        </fore-bind>
+
+        <!-- ##### second instance ####### -->
         <fore-instance id="conf">
             <data>
                 <target-collection>data/records/record</target-collection>
                 <count>1</count>
             </data>
         </fore-instance>
+        <!-- another shortcut to XForms - simply use XQuery var for instance addressing -->
+        <fore-bind id="target-collection" ref="$instances?conf//target-collection" required="true()"></fore-bind>
 
-        <fore-instance id="loadedbyfunction">
-            {
-            let $inst := generateSomehow()
-            }
-        </fore-instance>
+        <fore-instance id="second" src="http://{fore:contextParams('someData')}"></fore-instance>
 
-        <fore-instance id="byFunctionButFromAttr" src="{$someData}"></fore-instance>
-        <fore-instance id="byFunctionButFromDb" src="{doc($myRoot)/}"></fore-instance>
+        <fore-instance id="third" src="{doc($myRoot)/}"></fore-instance>
 
+        <!-- ? can/should we assign a var for each instance id for short reference (dropping XForms instance() func) ?  -->
+        <fore-bind id="foobar" ref="$instances?third/data/foo/bar"></fore-bind>
         <!--
             [
                 {
@@ -62,44 +80,22 @@
             ]
         -->
 
-        let $salary := fore-instance[1]//salary[string-length(.) != 0]
 
-        <fore-bind id="salary" ref="//salary">
-            <fore-required>
-                <fore-alert>salary is required</fore-alert>
-            </fore-required>
-            <fore-type expr="xs:decimal">
-                <fore-alert>salary is not a decimal</fore-alert>
-            </fore-type>
-            <fore-constraint expr=". gt ../average">
-                <fore-alert>salary is not too low</fore-alert>
-            </fore-constraint>
-        </fore-bind>
-
-        <!-- the context here is instance() which means the first instance in doc order -->
-        <fore-bind id="items" ref="items">
-            <fore-bind id="item" ref="item" required="true"></fore-bind>
-        </fore-bind>
-
-        <!-- another shortcut to XForms - simply use XQuery var for instance addressing -->
-        <fore-bind id="target-collection" ref="$conf//target-collection" required="true()"></fore-bind>
 
         <!--
         'db' scheme here is used as a posssible sample to write to an absolute address
         -->
-        <fore-submission id="save"
+        <fore-submission id="s-save"
                          resource="xmldb:doc({$conf/target-resource}{count}.xml)"
+                         method="put"
                          replace="none">
             <fore-submit-error>
-                {
-                    fore:message('storing record failed', false)
-                }
                 <fore-message modal="false">storing record failed</fore-message>
             </fore-submit-error>
             <fore-submit-done>
                 <!-- start over -->
                 <fore-load url="seed-form.html"></fore-load>
-                <fore-message>Your data have been stored</fore-message>
+                <fore-message level="ephemeral">Your data have been stored</fore-message>
             </fore-submit-done>
         </fore-submission>
 
@@ -109,7 +105,10 @@
 
         <fore-ready>
             <!-- some actions when model is up -->
-            <fore-setvalue ref="items/item[1]" value="defaultVal"></fore-setvalue>
+            <!-- imperative or descriptive? -->
+            <fore-action>
+                <fore-setvalue ref="items/item[1]" value="defaultVal"></fore-setvalue>
+            </fore-action>
         </fore-ready>
     </fore-model>
 
@@ -130,7 +129,8 @@
 
             For the sake of easier processing on the server in well-formed markup.
             -->
-            <input bind="item" required="required">
+            <input data-bind="item" required="required">
+            <fore-input></fore-input>
         </fore-repeat>
 
         <fore-submit submission="save"></fore-submit>

@@ -7,6 +7,7 @@ declare function fore:init($form as element()){
 
     (: support multiple models? :)
     (: init model :)
+    fore:init-model($form/fore-model[1])
 };
 
 (: update model with data from client including error messaging :)
@@ -51,16 +52,21 @@ declare function fore:init-model($model as element){
 
 };
 
-declare private function fore:load-instances($model as element){
-
+declare private function fore:load-instances($instances as element*){
 };
 
-declare private function fore:rebuild($model as element){
 
+(: this one is optional at least until we're doing a dependency graph :)
+declare private function fore:rebuild($model as element){
 };
 
 (: iterate and evaluate all 'calculate' attributes on bind elements :)
 declare private function fore:recalculate($model as element){
+
+    (:
+    iterate all binds and evaluate 'bind' attribute or fore-bind/@ex
+    :)
+
 
 };
 
