@@ -1,0 +1,51 @@
+<!--
+
+    Very simple model as could be used for reading from a plain HTML form for server-side validation
+
+-->
+<fore-model id="record">
+
+    <fore-instance id="default">
+        <data>
+            <param1>foo</param1>
+            <param2>bar</param2>
+            <param3>5.0</param3>
+        </data>
+    </fore-instance>
+
+    <!--
+    Context: there's only one instance here so the evaluation context will be
+    `data`.
+
+    In general the evaluation context is always the first instance in document order by default.
+
+    We decided to use a map of instances to access all instances like e.g. `$instances?myInst`.
+
+    In XForms the root node of the instance in context is always ignored in path expressions.
+    So `param1` is the same as `instances?default/param1. The context is the rootnode of the instance NOT the
+    `fore-instance` element.
+-->
+    <fore-bind ref="param1" required="true()"></fore-bind>
+    <fore-bind ref="param2" type="xs:string"></fore-bind>
+    <fore-bind ref="param3" type="xs:decimal" required="true()"></fore-bind>
+
+
+    <fore-instance id="second">
+        <data>
+            <item>item1</item>
+            <item>item2</item>
+            <item>item3</item>
+        </data>
+    </fore-instance>
+
+    <!--
+        binds are nested here. Scoped resolution in XForms means that the `ref` is stepping upwards to the outermost
+        bind element to determine it's context. In this example the #item bind would resolve to `$instances?second/item`.
+    -->
+    <fore-bind ref="$instances?second">
+        <fore-bind id="item" ref="item" required="true()" type="xs:string"></fore-bind>
+    </fore-bind>
+
+
+</fore-model>
+
