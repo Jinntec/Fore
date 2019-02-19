@@ -138,25 +138,6 @@ validation on or off for that item. If relevant becomes false the required prope
 will have no effect. Relevance will be described in more detail in the remainder of this
 document.
 
-## Architecture
-
-As you've probably noticed XForms (and Fore) uses a MVC kind of model that is composed of different parts.
-
-The following graphic shows the main building blocks 'model', 'UI' and 'actions'. These modules together make up
-the MVC architecture of XForms.
-
-![MVC architecture](mvc.png)
-
-
-The model represents the data and it's constraints. The UI binds to the model via the `<fore-bind> elements. Actions can be
-fired by the UI or the model to change the state of the model which in turn will trigger the UI to update itself.
-
-A more in-depth look at the model reveals its internal structure:
-
-![model internals](model.png)
-
-A model is designed for a purpose. The instance, bind and submission elements act together to implement that purpose.
-
 
 ## Document structure
 

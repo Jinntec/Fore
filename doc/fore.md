@@ -22,8 +22,16 @@ the concrete element names and the syntax might diverge from it.
 todo: how-to get and install
 todo: run your first form
 
-## [Differences to XForms](differences.md)
+## [Requirements](requirements.md)
 
 ## [User Guide](userguide.md)
 
-## [Developer Guide](developerguide.md)
+## [Developer Guide](devguide.md)
+
+## [Architecture](architecture.md)
+
+## [Differences to XForms](differences.md)
+
+## Links
+
+* [XForms 2.0 draft](https://www.w3.org/TR/xforms20/)
