@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/model.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/architecture.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/devguide.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/requirements.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/usecases.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/fore.md" afterPath="$PROJECT_DIR$/doc/fore.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo/seed-form.html" afterPath="$PROJECT_DIR$/demo/seed-form.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/userguide.md" afterPath="$PROJECT_DIR$/doc/userguide.md" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -20,24 +14,54 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="seed-form.html" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/demo/seed-form.html">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="768">
+                    <caret line="61" column="44" lean-forward="false" selection-start-line="61" selection-start-column="44" selection-end-line="61" selection-end-column="44" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file leaf-file-name="seed-form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demo/seed-form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="830">
-              <caret line="52" column="44" lean-forward="false" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
+            <state relative-caret-position="803">
+              <caret line="109" column="0" lean-forward="true" selection-start-line="96" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="userguide.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="simple-model.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/simple-model.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="493">
+              <caret line="29" column="57" lean-forward="false" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userguide.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/doc/userguide.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-186">
-                <caret line="140" column="0" lean-forward="false" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
+              <first_editor relative-caret-position="981">
+                <caret line="385" column="0" lean-forward="false" selection-start-line="385" selection-start-column="0" selection-end-line="385" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -45,7 +69,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
@@ -182,7 +206,6 @@
         <option value="$PROJECT_DIR$/demo/calculate.html" />
         <option value="$PROJECT_DIR$/expath-pkg.xml" />
         <option value="$PROJECT_DIR$/repo.xml" />
-        <option value="$PROJECT_DIR$/demo/seed-form.html" />
         <option value="$PROJECT_DIR$/modules/validate.xql" />
         <option value="$PROJECT_DIR$/demo/simple-model.html" />
         <option value="$PROJECT_DIR$/demo/two-instances.html" />
@@ -190,11 +213,12 @@
         <option value="$PROJECT_DIR$/doc/differences.md" />
         <option value="$PROJECT_DIR$/doc/requirements.md" />
         <option value="$PROJECT_DIR$/doc/usecases.md" />
-        <option value="$PROJECT_DIR$/doc/userguide.md" />
         <option value="$PROJECT_DIR$/doc/architecture.md" />
         <option value="$PROJECT_DIR$/doc/devguide.md" />
         <option value="$PROJECT_DIR$/doc/fore.md" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/demo/seed-form.html" />
+        <option value="$PROJECT_DIR$/doc/userguide.md" />
       </list>
     </option>
   </component>
@@ -215,9 +239,9 @@
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-2580" />
+    <option name="x" value="-3268" />
     <option name="y" value="-517" />
-    <option name="width" value="2443" />
+    <option name="width" value="3268" />
     <option name="height" value="1417" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -419,7 +443,7 @@
       <workItem from="1550139510586" duration="10845000" />
       <workItem from="1550225263820" duration="14663000" />
       <workItem from="1550501412370" duration="501000" />
-      <workItem from="1550569689798" duration="5137000" />
+      <workItem from="1550569689798" duration="18470000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -470,14 +494,21 @@
       <option name="project" value="LOCAL" />
       <updated>1550569764390</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="documentation">
+      <created>1550575399472</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1550575399472</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102484000" />
+    <option name="totallyTimeSpent" value="115817000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2580" y="-517" width="2443" height="1417" extended-state="0" />
+    <frame x="-3268" y="-517" width="3268" height="1417" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -495,7 +526,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1551652" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17879353" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3645084" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29916066" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -778,14 +809,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/simple-model.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="57" lean-forward="false" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo/two-instances.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -832,14 +855,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/seed-form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="830">
-          <caret line="52" column="44" lean-forward="false" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/doc/requirements.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -856,17 +871,6 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="799">
             <caret line="47" column="83" lean-forward="false" selection-start-line="47" selection-start-column="83" selection-end-line="47" selection-end-column="83" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/doc/userguide.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-186">
-            <caret line="140" column="0" lean-forward="false" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />
@@ -911,6 +915,33 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="663">
             <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/simple-model.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="57" lean-forward="false" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/seed-form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="803">
+          <caret line="109" column="0" lean-forward="true" selection-start-line="96" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/userguide.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="981">
+            <caret line="385" column="0" lean-forward="false" selection-start-line="385" selection-start-column="0" selection-end-line="385" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />

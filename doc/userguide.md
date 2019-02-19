@@ -163,7 +163,7 @@ fore-submission | submission
 
 ## The model
 
-The model is the heart of a form. It holds an arbitrary amount of `fore-instance`, `fore-bind` and `fore-submission' 
+The model is the heart of a form. It holds an arbitrary amount of `fore-instance`, `fore-bind` and `fore-submission` 
 elements each of which are described in more detail below.
 
 Together those elements make up the 'contract' of a form. The contract defines under which conditions data are considered 
@@ -214,6 +214,9 @@ To address a certain instance in Fore you use:
 $instances?myInstance
 ```
 
+An anonymous instance (if you have just one) will get the id 'default' assigned and
+be accessible by `$instances?default`.
+
 `$instances` is an internal map that is created by the model at init time. 
 
 ### inline instance data
@@ -222,21 +225,247 @@ The simplest way to load instance data is to put them inline.
 
 Example:
 ```
-<fore-instance>
-    <data>
-        <hello>World</hello>
-    </data>
-</fore-instance>
+<fore-model>
+    <fore-instance>
+        <data>
+            <hello>World</hello>
+        </data>
+    </fore-instance>
+</fore-model>
 ```
+
+At init-time the Fore processor will create an appropriate entry in its `$instances` map. A `fore-instance` without
+an explicit `id` will get the id 'default' assigned.
+
 
 ### loading via `src` attribute
 
+When data shall be loaded from an external source the `src` attribute can be used.
+
+Example:
+```
+<fore-instance src="doc('data/mydata.xml')"></fore-instance>
+
+```
+
+As no URL scheme is given (such as e.g. 'http:') it will default to 'xmldb:' in Fore and be evaluated relative
+to the location of the form. Here the form directory would need to have a 'data' subdir with a resource `mydata.xml`.
+
+### dynamic resolution of instances
+
+To dynamically resolve a `src` attribute you can put your expression within curly brackets like so:
+
+```
+<fore-instance src="{$contextParams?param1}"></fore-instance>
+``` 
+
+ > `$contextParams` is a pre-defined map that will be passed into the model
+ during initialization. It contains a set of standard environment variables such as URL, it's params, headers etc.
+  and may also be used to pass in arbitrary application-specific parameters.
 
 
+ > IMPORTANT: any expression not starting with `$contextParams` will fail to resolve. This is to prevent accessing
+ nodes of other instance before they are actually defined. When the instance data resolution depends on values in other
+ instances a `fore-submission` can be used.  
+ 
+## JSON instances
 
-### fore-bind
+A `fore-instance` can also contain some JSON data like this:
 
-### fore-submission
+```
+    <fore-instance>
+        {
+            "data":{
+                "salary":210.00,
+                "average"120.00
+            }
+        }
+    </fore-instance>
+```  
+When binding you have to use the map notation instead of XPath in your `fore-bind` 
+elements.
+
+```
+<fore-bind ref="?salary" ...></fore-bind>
+```
+
+todo: not sure about the correct syntax yet. Can you help @wolfgang @juri?
+
+## fore-bind
+
+The bindings are the power source of XForms. They allow to attach constraints to nodes, calculate and filter nodes and alert 
+users in detail about validation issues. Arbitrary complex validation logic can be used to make sure that incoming
+data play by the rules. The dense descriptive format greatly helps maintainance of that logic.
+
+XForms defines the so-called 'Model Item Properties' or MIPs for short. You can imagine those
+as facets being applied to a referenced node. 
+
+### attaching MIPs to nodes
+
+To bind MIPs to a Node you use the `ref` attribute. Its value is typically a XPath 
+locationpath expression that refers to one or more XML Nodes.
+
+ > Fore will also support the use of JSON instances. The syntax for referring to JSON 
+ data is still to be defined.
+ 
+This or those nodes also set the evaluation context
+ 
+### Available Properties  
+
+Name | Purpose | default
+----- | ------ | -------
+calculate | XPath/XQuery expression to calculate the value of a node 
+readonly | Boolean XPath/XQuery expression determining whether a node is readonly or readwrite | false
+required | Boolean XPath/XQuery expression determining whether a node is required or optional | false
+relevant | Boolean XPath/XQuery expression determining whether a node is relevant or non-relevant | true
+type | any XSD SimpleType | `xs:string`
+valid | Boolean XPath/XQuery expression determing whether a node is valid or invalid | true
+
+Bind properties can be expressed either as attributes or elements like this:
+```
+<fore-bind id="method" ref="method" required="true()"></fore-bind>
+```
+
+or equivalently as element:
+
+```
+<fore-bind id="method" ref="method">
+    <fore-required expr="true()"></fore-required>
+</fore-bind>
+```
+
+The latter syntax then allows to attach a dedicated alert in case the user tries to 
+submit the incomplete form.
+
+```
+<fore-bind id="method" ref="method">
+    <fore-required expr="true()">
+        <fore-alert>Please select a payment method</fore-alert>
+    </fore-required>
+</fore-bind>
+
+```
+
+This syntax is also applicable to `calculate`, `readonly`, `relevant` and `valid` properties.
+
+## Actions
+
+There is a pre-defined set of actions in XForms that cover all basic
+procedures.
+
+Here's a subset of the list which will be considered by Fore:
+
+name | purpose
+----- | -----
+action | a block of actions optionally identified by an id
+setvalue | set the value of a bound node
+insert | insert a Node or Nodeset into a given position
+delete | delete a Node or Nodeset
+trigger(1) | call a certain action block imperatively
+recalculate | trigger a recalculate
+revalidate | trigger revalidation
+reset | reset all instances to their original state after loading
+load | loads a resource
+unload | unloads a resource previously loaded with `load`
+submit(2) | trigger the referenced or default submission
+message | show a message to the user 
+
+(1) Fore does not support events. In original XForms this action is called
+`dispatch`. Due to the common association with events it seems therefore
+better to rename this action to `trigger`.
+
+(2) In XForms the action is called 'send'. As `submit` feels more familiar
+in the HTML world we've renamed it. 
+
+ > why use a set of elements instead of an API for a imperative task? One
+ argument to stay with the elements in Fore is to limit the actual allowed
+ procedures. It would be all too easy to compromise the original purpose of
+ a form or introduce great confusion by allowing full access to the XQuery
+ context.
+ 
+  
+
+## fore-submission
+
+Submissions serve different purposes at once:
+
+* select the (subset of) data to be submitted either by selecting a subtree
+and/or by applying relevance filtering (more on that later)
+* validate before sending data along
+* either replace the current data with response, end the current session or ignore
+response
+* trigger pre- and post hooks to react on the outcome of a submission
+* might support arbitrary protocols for submission like e.g. 'xmldb:', 'http:', 'file:' etc. etc.
+* can be used for loading data in highly dynamic applications
+
+Consider this example to get an idea of the power of submissions:
+
+```
+    <fore-instance>
+        <data>...some XML payload here ...</data>
+    </fore-instance>
+    
+    <fore-instance id="conf">
+        <data>
+            <targeturl>my-instance</targeturl>
+            <counter>1</counter>
+        </data>
+    </fore-instance>
+    
+    <fore-submission id="s-save"
+                     resource="xmldb:doc({$instances?conf/targeturl}-{$instances?conf/count}.xml)"
+                     method="put"
+                     replace="none">
+        <fore-submit>
+            <fore-message level="info">Sending your data... Please hold on</fore-message>
+        </fore-submit>
+        <fore-submit-error>
+            <fore-message level="error">storing record failed</fore-message>
+        </fore-submit-error>
+        <fore-submit-done>
+            <fore-message level="info">Your data have been stored</fore-message>
+            <!-- increment counter -->
+            <fore-setvalue ref="$instances?conf/counter" value=". +1"><fore-setvalue>
+        </fore-submit-done>
+    </fore-submission>
+
+```
+
+The submission is usually triggered by an user action (hitting a button)
+e.g. somewhere in your UI you have:
+
+```
+<fore-submit submission="s-save">Save</fore-submit>
+
+```
+
+This will send a request to the server to submit the form by executing the 
+referenced `fore-submission` element. 
+
+Submission will execute these steps:
+1. pre-submission is triggered by executing `fore-submit` element
+1. select the relevant data for submission. In the above example there is no
+explicit `ref` attribute. Therefore the default instance (first in document order)
+is used.
+1. execute `recalculate` and `revalidate` to verify state
+1. continue processing depending on validation state
+
+Data are valid:
+1. if data are valid the `resource` attribute is evaluated to determine
+the target URL for the submission.
+1. data are serialized and sent with the protocol given by `resource` 
+('xmldb:' by default)
+1. post submission hook `fore-submit-done` is triggered. In our example this
+signals to the client to show an informal message and to increment the value
+of the counter in the 'conf' instance to generate a new one for the next save.
+
+Data are invalid:
+1. the `fore-submit-error` hook is triggered which returns a message to
+the client with the request to show an error message.
+
+### chaining submissions
+
+
 
 
 
