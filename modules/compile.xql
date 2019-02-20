@@ -71,12 +71,17 @@ declare function compile:get-change-set($bind as element(fore-bind)) {
 };
 
 
-declare function compile:main($model as element(fore-model)) {
+declare function compile:main($model as element(fore-model), $debug as xs:boolean?) {
     let $code :=
         <xquery>
             <declare-namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/>
             <import-module prefix="runtime" uri="http://existsolutions.com/exform/runtime" at="runtime.xql"/>
-            
+            {
+                if ($debug) then
+                    <import-module prefix="console" uri="http://exist-db.org/xquery/console" at="java:org.exist.console.xquery.ConsoleModule"/>
+                else
+                    ()
+            }
             <declare-option option="output:method" value="json"/>
             <declare-option option="output:media-type" value="application/json"/>
             
@@ -94,15 +99,25 @@ declare function compile:main($model as element(fore-model)) {
                 <let var="instances">
                     <expr>runtime:recalculate($instances, $changes)</expr>
                     <return>
-                        <var>instances?default</var>
-                        <bang/>
-                        <array>
-                        {
-                            for $bind in $model/fore-bind
-                            return
-                                compile:validate($bind)
-                        }
-                        </array>
+                        <sequence>
+                            <item>
+                                <var>instances?default</var>
+                                <bang/>
+                                <array>
+                                {
+                                    for $bind in $model/fore-bind
+                                    return
+                                        compile:validate($bind)
+                                }
+                                </array>
+                            </item>
+                            {
+                                if ($debug) then
+                                    <item>console:log($instances)</item>
+                                else
+                                    ()
+                            }
+                        </sequence>
                     </return>
                 </let>
             </let>
