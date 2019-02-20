@@ -21,7 +21,7 @@ declare function compile:validate($bind as element(fore-bind)) {
     else
         (),
     if ($bind/@type) then
-        <item>runtime:assert(every $v in {$bind/@ref/string()} satisfies $v castable as {$bind/@type/string()}, "type", {serialize($bind)})</item>
+        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v castable as {$bind/@type/string()} }}, "type", {serialize($bind)})</item>
     else
         (),
     (: Recursively check sub-bindings :)
