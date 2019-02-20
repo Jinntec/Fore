@@ -19,13 +19,16 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
         ()
 };
 
-
-declare function runtime:assert($expr as xs:boolean?, $message as xs:string, $bind as element()) {
-    if (not($expr)) then
-        map {
-            "error": $message,
-            "binding": $bind
-        }
-    else
-        ()
+declare function runtime:for-each($refs as node()*, $check as function(*), $message as xs:string, $bind as element()) {
+    for $ref at $idx in $refs
+    let $valid := $check($ref)
+    return
+        if ($valid) then
+            ()
+        else
+            map {
+                "error": $message,
+                "index": $idx,
+                "binding": $bind
+            }
 };
