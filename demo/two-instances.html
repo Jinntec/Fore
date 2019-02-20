@@ -28,10 +28,9 @@
     <fore-bind ref="param1" required="true()"></fore-bind>
     <fore-bind ref="param2" type="xs:string" constraint="../param3 &gt; 2"></fore-bind>
     <fore-bind ref="param3" type="xs:decimal" required="true()"></fore-bind>
-
-
+    
     <fore-instance id="second">
-        <data>
+        <data count="3">
             <item>item1</item>
             <item>item2</item>
             <item>item3</item>
@@ -44,6 +43,7 @@
     -->
     <fore-bind ref="$instances?second">
         <fore-bind id="item" ref="item" required="true()" type="xs:string"></fore-bind>
+        <fore-bind ref="@count" calculate="count(../item)" type="xs:integer" constraint=". = 3"></fore-bind>
     </fore-bind>
 
 
