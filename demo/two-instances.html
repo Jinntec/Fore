@@ -30,7 +30,7 @@
     <fore-bind ref="param3" type="xs:decimal" required="true()"></fore-bind>
     
     <fore-instance id="second">
-        <data count="3">
+        <data count="">
             <item>item1</item>
             <item>item2</item>
             <item>item3</item>
@@ -46,6 +46,20 @@
         <fore-bind ref="@count" calculate="count(../item)" type="xs:integer" constraint=". = 3"></fore-bind>
     </fore-bind>
 
-
+    <fore-instance id="third">
+        <data>
+            <total></total>
+            <products>
+                <price>22.50</price>
+                <price>34.50</price>
+                <price>13.25</price>
+            </products>
+        </data>
+    </fore-instance>
+    
+    <fore-bind ref="$instances?third">
+        <fore-bind ref="products/price" type="xs:double"></fore-bind>
+        <fore-bind ref="total" calculate="sum(../products/price)" constraint=". = 70.25"></fore-bind>
+    </fore-bind>
 </fore-model>
 

@@ -69,7 +69,8 @@ declare %private function runtime:update-recursive($changes as array(*), $instan
     else
         let $change := array:head($changes)
         let $newInstance :=
-            if (root($change?target)/* is $instance) then
+            (: Check if target node of change is within the instance :)
+            if ($change?target/ancestor::* is $instance) then
                 runtime:update-instance($instance, $change)
             else
                 $instance
@@ -88,21 +89,26 @@ declare %private function runtime:update-instance($nodes as node()*, $change as 
             case element() return
                 if ($node is $change?target) then
                     element { node-name($node) } {
-                        $node/@*,
+                        runtime:update-attributes($node, $change),
                         $change?value
                     }
                 else
                     element { node-name($node) } {
-                        for $attr in $node/@*
-                        return
-                            if ($attr is $change?target) then
-                                attribute { node-name($attr) } {
-                                    $change?value
-                                }
-                            else
-                                $attr,
+                        runtime:update-attributes($node, $change),
                         runtime:update-instance($node/node(), $change)
                     }
             default return
                 $node
 };
+
+declare function runtime:update-attributes($node as element(), $change as map(*)) {
+    for $attr in $node/@*
+    return
+        if ($attr is $change?target) then
+            attribute { node-name($attr) } {
+                $change?value
+            }
+        else
+            $attr
+};
+
