@@ -275,10 +275,8 @@ A `fore-instance` can also contain some JSON data like this:
 ```
     <fore-instance>
         {
-            "data":{
-                "salary":210.00,
-                "average"120.00
-            }
+            "salary":210.00,
+            "average"120.00
         }
     </fore-instance>
 ```  
@@ -319,7 +317,7 @@ readonly | Boolean XPath/XQuery expression determining whether a node is readonl
 required | Boolean XPath/XQuery expression determining whether a node is required or optional | false
 relevant | Boolean XPath/XQuery expression determining whether a node is relevant or non-relevant | true
 type | any XSD SimpleType | `xs:string`
-valid | Boolean XPath/XQuery expression determing whether a node is valid or invalid | true
+constraint | Boolean XPath/XQuery expression determing whether a node is valid or invalid | true
 
 Bind properties can be expressed either as attributes or elements like this:
 ```
@@ -346,7 +344,7 @@ submit the incomplete form.
 
 ```
 
-This syntax is also applicable to `calculate`, `readonly`, `relevant` and `valid` properties.
+This syntax is also applicable to `calculate`, `readonly`, `relevant` and `constraint` properties.
 
 ## Actions
 
@@ -463,13 +461,45 @@ Data are invalid:
 1. the `fore-submit-error` hook is triggered which returns a message to
 the client with the request to show an error message.
 
-### chaining submissions
+### Chaining submissions
+
+Chaining submissions is a powerful tool. It allows to submit several instances
+from a form instead of just one. Furthermore you can react on the outcome
+of one submission before firing the next. 
 
 
+Example:
+```
+<fore-submission id="register" resource="data/myregistration.xml">
+    <fore-submit-error>
+        <fore-message level="error">user name is already taken</fore-message>
+    </fore-submit-error>
+    <fore-submit-done>
+        <fore-submit id="confirm-account"
+    </fore-submit-done>
+<fore-submission>
 
+<fore-submission id="confirm-account"
+                 resource="mailto:{user}"
+                 ref="account">
+</fore-submission>
+```
 
+In this example the submision 'confirm-account' is only called in case the
+'register' submission was sucessful.
 
 ## Server-side validation
+
+Beyond building complete forms with UI Fore can also be used just for validation
+purposes.
+
+To do this you have to import the Fore module into your XQuery with:
+
+```
+import module namespace modelValidator="http://exist-db.org/apps/fore" at "fore.xqm";
+```
+
+
 
 ## Binding the UI
 
