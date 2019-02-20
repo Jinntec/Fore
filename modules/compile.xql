@@ -17,19 +17,19 @@ declare function compile:init-instances($model as element(fore-model)) {
 
 declare function compile:validate($bind as element(fore-bind)) {
     if ($bind/@required) then
-        ``[runtime:assert(`{$bind/@required/string()}` and exists(`{$bind/@ref/string()}`), "required", `{serialize($bind)}`)]``
+        <item>runtime:require({$bind/@required/string()}, {$bind/@ref/string()}, "required", {serialize($bind)})</item>
     else
         (),
     if ($bind/@type) then
-        ``[runtime:assert(every $v in `{$bind/@ref/string()}` satisfies $v castable as `{$bind/@type}`, "type", `{serialize($bind)}`)]``
+        <item>runtime:assert(every $v in {$bind/@ref/string()} satisfies $v castable as {$bind/@type/string()}, "type", {serialize($bind)})</item>
     else
         (),
     (: Recursively check sub-bindings :)
     if ($bind/fore-bind) then
-        let $subBindings := string-join(for $child in $bind/fore-bind return compile:validate($child), ", ")
+        let $subBindings := for $child in $bind/fore-bind return compile:validate($child)
         return
             (: Adjust context to correspond to current @ref :)
-            ``[`{$bind/@ref/string()}` ! ( `{$subBindings}` )]``
+            <item>{$bind/@ref/string()} <bang/> <sequence>{$subBindings}</sequence></item>
     else
         ()
 };
@@ -40,11 +40,8 @@ declare function compile:main($model as element(fore-model)) {
             <declare-namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/>
             <import-module prefix="runtime" uri="http://existsolutions.com/exform/runtime" at="runtime.xql"/>
             
-            <code>
-declare option output:method "json";
-declare option output:media-type "application/json";
-
-</code>
+            <declare-option option="output:method" value="json"/>
+            <declare-option option="output:media-type" value="application/json"/>
             
             <let var="instances">
                 <expr>
@@ -52,16 +49,14 @@ declare option output:media-type "application/json";
                 </expr>
                 <return>
                     <var>instances?default</var>
-                    <bang/> array {{
+                    <bang/>
+                    <array>
                     {
-                        string-join(
-                            for $bind in $model/fore-bind
-                            return
-                                compile:validate($bind),
-                            ',&#10;'
-                        )
+                        for $bind in $model/fore-bind
+                        return
+                            compile:validate($bind)
                     }
-                    }}
+                    </array>
                 </return>
             </let>
         </xquery>
