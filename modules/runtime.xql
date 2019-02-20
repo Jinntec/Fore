@@ -31,18 +31,28 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
  :)
 declare function runtime:for-each($refs as node()*, $check as function(*), $message as xs:string, $bind as element()) {
     for $ref at $idx in $refs
-    let $valid := $check($ref)
     return
-        if ($valid) then
-            ()
-        else
+        try {
+            if ($check($ref)) then
+                ()
+            else
+                map {
+                    "error": $message,
+                    "index": $idx,
+                    "bind": ($bind/@id, $bind/@ref)[1],
+                    "type": $bind/@type,
+                    "value": $ref/string()
+                }
+        } catch * {
             map {
                 "error": $message,
+                "detail": $err:description,
                 "index": $idx,
                 "bind": ($bind/@id, $bind/@ref)[1],
                 "type": $bind/@type,
                 "value": $ref/string()
             }
+        }
 };
 
 (:~
@@ -101,7 +111,7 @@ declare %private function runtime:update-instance($nodes as node()*, $change as 
                 $node
 };
 
-declare function runtime:update-attributes($node as element(), $change as map(*)) {
+declare %private function runtime:update-attributes($node as element(), $change as map(*)) {
     for $attr in $node/@*
     return
         if ($attr is $change?target) then
