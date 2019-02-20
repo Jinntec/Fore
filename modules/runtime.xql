@@ -13,7 +13,9 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
                 map {
                     "error": $message,
                     "index": $idx,
-                    "binding": $bind
+                    "bind": ($bind/@id, $bind/@ref)[1],
+                    "required": $require,
+                    "value": $v/string()
                 }
     else
         ()
@@ -29,6 +31,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
             map {
                 "error": $message,
                 "index": $idx,
-                "binding": $bind
+                "bind": ($bind/@id, $bind/@ref)[1],
+                "value": $ref/string()
             }
 };

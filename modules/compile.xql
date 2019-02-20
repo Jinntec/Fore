@@ -24,6 +24,10 @@ declare function compile:validate($bind as element(fore-bind)) {
         <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v castable as {$bind/@type/string()} }}, "type", {serialize($bind)})</item>
     else
         (),
+    if ($bind/@constraint) then
+        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v ! boolean({$bind/@constraint/string()}) }}, "constraint", {serialize($bind)})</item>
+    else
+        (),
     (: Recursively check sub-bindings :)
     if ($bind/fore-bind) then
         let $subBindings := for $child in $bind/fore-bind return compile:validate($child)
