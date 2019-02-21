@@ -1,13 +1,13 @@
 xquery version "3.1";
 
-module namespace compile="http://existsolutions.com/exform/compile";
+module namespace compile="http://existsolutions.com/fore/compile";
 
 import module namespace xqgen="http://www.tei-c.org/tei-simple/xquery/xqgen";
 
-declare function compile:init-instances($model as element(fore-model)) {
+declare function compile:init-instances($model as element(xf-model)) {
     <map>
     {
-        for $instance in $model/fore-instance
+        for $instance in $model/xf-instance
         let $data := serialize($instance/*)
         return
             <entry key='"{$instance/@id}"' value="{$data}"/>
@@ -19,9 +19,9 @@ declare function compile:init-instances($model as element(fore-model)) {
  : If a binding has nested bindings, return code which: 1) sets the current binding
  : ref as context, and 2) calls the given function to generate code on the nested binding.
  :)
-declare function compile:process-nested-binds($bind as element(fore-bind), $func as function(*)) {
-    if ($bind/fore-bind) then
-        let $subBindings := for $child in $bind/fore-bind return $func($child)
+declare function compile:process-nested-binds($bind as element(xf-bind), $func as function(*)) {
+    if ($bind/xf-bind) then
+        let $subBindings := for $child in $bind/xf-bind return $func($child)
         return
             (: Adjust context to correspond to current @ref :)
             <item>{$bind/@ref/string()} <bang/> <sequence>{$subBindings}</sequence></item>
@@ -32,7 +32,7 @@ declare function compile:process-nested-binds($bind as element(fore-bind), $func
 (:~
  : Generate code to validate instance nodes based on a specified binding element.
  :)
-declare function compile:validate($bind as element(fore-bind)) {
+declare function compile:validate($bind as element(xf-bind)) {
     if ($bind/@required) then
         <item>runtime:require({$bind/@required/string()}, {$bind/@ref/string()}, "required", {serialize($bind)})</item>
     else
@@ -75,7 +75,7 @@ declare function compile:main($model as element(xf-model), $debug as xs:boolean?
     let $code :=
         <xquery>
             <declare-namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/>
-            <import-module prefix="runtime" uri="http://existsolutions.com/exform/runtime" at="runtime.xql"/>
+            <import-module prefix="runtime" uri="http://existsolutions.com/fore/runtime" at="runtime.xql"/>
             {
                 if ($debug) then
                     <import-module prefix="console" uri="http://exist-db.org/xquery/console" at="java:org.exist.console.xquery.ConsoleModule"/>
