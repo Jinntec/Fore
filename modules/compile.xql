@@ -54,7 +54,7 @@ declare function compile:validate($bind as element(fore-bind)) {
  : For each binding with a @calculate attribute, return a map with two keys:
  : "target" is the target node for the change in the instance, "value" is the value to set.
  :)
-declare function compile:get-change-set($bind as element(fore-bind)) {
+declare function compile:get-change-set($bind as element(xf-bind)) {
     if ($bind/@calculate) then
         <item>
             {$bind/@ref/string()}
@@ -71,7 +71,7 @@ declare function compile:get-change-set($bind as element(fore-bind)) {
 };
 
 
-declare function compile:main($model as element(fore-model), $debug as xs:boolean?) {
+declare function compile:main($model as element(xf-model), $debug as xs:boolean?) {
     let $code :=
         <xquery>
             <declare-namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/>
@@ -93,7 +93,7 @@ declare function compile:main($model as element(fore-model), $debug as xs:boolea
                     <expr>
                         <var>instances?default</var>
                         <bang/>
-                        <array>{ for $bind in $model/fore-bind return compile:get-change-set($bind) }</array>
+                        <array>{ for $bind in $model/xf-bind return compile:get-change-set($bind) }</array>
                     </expr>
                 </let>
                 <let var="instances">
@@ -105,7 +105,7 @@ declare function compile:main($model as element(fore-model), $debug as xs:boolea
                                 <bang/>
                                 <array>
                                 {
-                                    for $bind in $model/fore-bind
+                                    for $bind in $model/xf-bind
                                     return
                                         compile:validate($bind)
                                 }

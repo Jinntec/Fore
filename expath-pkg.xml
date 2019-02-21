@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://expath.org/ns/pkg" name="http://exist-db.org/apps/fore" abbrev="fore" version="1.0.0" spec="1.0">
-    <title>exform-client</title>
+    <title>Fore</title>
 </package>

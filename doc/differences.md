@@ -25,9 +25,10 @@ During more than 10 years of delivering XForms solutions we never had a single c
 HTML5 introduced Custom Elements which will fit our needs perfectly. They allow to define our own extension elements that behave as first-class citizens in HTML.
 
 Example:
-`xf:model` becomes `fore-model`
+`xf:model` becomes `xf-model`
 
-As aforementioned we intend to take some freedom from the specs. We therefore use `fore-` as the prefix for our components instead of `xf-` to emphasize this fact. 
+Though Fore will take some freedom from the spec we still like to stay close to the ideas of XForms and 'xf-' as
+the prefix for all elements.
 
  > in Fore all XForms elements are translated to Custom Element syntax
 
@@ -69,6 +70,6 @@ simplified.
 
 Of course the purpose of these events needs to be kept and Fore will just trigger defined 'hooks' to mimik those.
 
-E.g. instead of dispatching an `xforms-submit-done` we'll directly execute the corresponding `<fore-submit-done>` element.
+E.g. instead of dispatching an `xforms-submit-done` we'll directly execute the corresponding `<xf-submit-done>` element.
 
  > Fore will not use events but 'hooks' to react to certain conditions.

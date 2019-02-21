@@ -30,9 +30,27 @@ The server-side validation will finally decide if given data can be submitted or
 Advantages of this architecture:
 
 * strong separation between model and UI
-* the policies a model defines (its bindings) it not exposed to the client
+* the policies a model defines (its bindings) is not exposed to the client
 * a client might still operate decoupled from the server 
 * 2 level validation either on client and on server  
+
+## Syntax
+
+XForms is a namespaced XML language that is meant to be embedded into other XML languages.
+In contrast to XForms Fore considers HTML as it's natural habitat and is part of it. Many years
+of experience showed that we never needed something else than HTML as a host language.
+
+Fore uses [HTML Custom Elements](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements)
+ syntax. That means that all element names must have a `-` character in their name.
+ 
+Whereever possible Fore will use the equivalent XForms name but there might be differences in detail e.g.
+a prefixed `xf:model` will become `xf-model` in Fore.
+
+People with an XML background must keep in mind that in HTML and Custom Elements there is no such
+thing as an empty element (ending in `/>'). However Fore pages must be well-formed markup.
+
+ > Remember to always write closing tags even if your element has no content e.g. `<my-element></my-element>` 
+ instead of `<my-element/>`.
 
 ## An Example
 
@@ -43,20 +61,20 @@ The model defines WHAT the form does. The UI binding this model implements the v
 The following example model shows a very simple payment form.
 
 ```
-<fore-model>
-  <fore-instance>
+<xf-model>
+  <xf-instance>
     <ecommerce>
       <method/>
       <number/>
       <expiry/>
     </ecommerce>
-  </fore-instance>
-  <fore-submission action="module/handleSubmit()" method="post" id="submit"></fore-submission>
-  <fore-bind id="method" ref="method"></fore-bind>
-  <fore-bind id="number" ref="number"></fore-bind>
-  <fore-bind id="expiry" ref="expiry"></fore-bind>
+  </xf-instance>
+  <xf-submission action="module/handleSubmit()" method="post" id="submit"></xf-submission>
+  <xf-bind id="method" ref="method"></xf-bind>
+  <xf-bind id="number" ref="number"></xf-bind>
+  <xf-bind id="expiry" ref="expiry"></xf-bind>
   
-</fore-model>
+</xf-model>
 
 ```
 
@@ -87,9 +105,9 @@ In this case we use a HTML select control but of course could have choosen radio
 ```
 
 The controls are bound to the model by the XForms binding mechanism with the `bind` attribute. The value of a `bind`
-is an idref to a `fore-bind` element in the model.
+is an idref to a `xf-bind` element in the model.
 
- > Why is there no support for the XForms `ref` attribute? In XForms you can use `ref` attribute as a second way to bind to the 
+ > Why is there no support for the XForms `ref` attribute in the UI? In XForms you can use `ref` attribute as a second way to bind to the 
  model. Refs use XPath statements to link to an instance node. However in Fore we want to keep XPath out of the UI
  as its kind of a foreigner in HTML. Fore is also designed with security in mind - a `ref` already reveals quite some
  detail about the structure of our data which we probably don't want to expose. By using `bind` instead we can strongly
@@ -99,7 +117,7 @@ Some things worth pointing out:
 
 * we're using native HTML controls in the example above. This approach might be limited
 for more advanced use cases where you want more specific behavior than these controls allow.
-* alternatively we could have used one of the 'fore-*' controls that knows about the specifics
+* alternatively we could have used one of the 'xf-*' controls that knows about the specifics
 of binding themselves and will provide automatic update in a more sophisticated way.
 
 ### submitting data
@@ -119,15 +137,15 @@ If the user triggers the submit the instance would be send as follows:
 To make sure the incoming data are correct we can use bindings to set constraints.
 
 ```
-<fore-bind id="method" ref="method" required="true()"></fore-bind>
-<fore-bind id="number" ref="number" 
+<xf-bind id="method" ref="method" required="true()"></xf-bind>
+<xf-bind id="number" ref="number" 
                        relevant="../method = 'cc'" 
                        required="true()" 
-                       type="my:ccnumber"><fore-bind>
-<fore-bind id="expiry" ref="expiry"
+                       type="my:ccnumber"><xf-bind>
+<xf-bind id="expiry" ref="expiry"
                        relevant="../method = 'cc'
                        required="true()"
-                       type="xs:gYearMonth"></fore-bind>
+                       type="xs:gYearMonth"></xf-bind>
                        
                       
 ```
@@ -152,18 +170,18 @@ Fore defines the following model elements:
 
 Fore element | XForms equivalent 
 -------------|------------------- 
-fore-model | model 
-fore-instance | instance 
-fore-bind | bind 
-fore-submission | submission
+xf-model | model 
+xf-instance | instance 
+xf-bind | bind 
+xf-submission | submission
 
  > XForms defines some more that will be implemented step-by-step in Fore as the need arises. 
 
-`fore-model` is the outermost element containing the others.
+`xf-model` is the outermost element containing the others.
 
 ## The model
 
-The model is the heart of a form. It holds an arbitrary amount of `fore-instance`, `fore-bind` and `fore-submission` 
+The model is the heart of a form. It holds an arbitrary amount of `xf-instance`, `xf-bind` and `xf-submission` 
 elements each of which are described in more detail below.
 
 Together those elements make up the 'contract' of a form. The contract defines under which conditions data are considered 
@@ -191,9 +209,9 @@ This is a shortened version of the reality in XForms but might be sufficient to 
  execution context is the database itself and we're using the XMLDB API to directly access data. In XForms this 
  context would usually default to 'http'. So, if not protocol is given Fore will default to XMLDB:
 
-## fore-instance
+## xf-instance
 
-A `fore-instance` represents a piece of XML with a single root node. It is an error attempting to load
+A `xf-instance` represents a piece of XML with a single root node. It is an error attempting to load
 a nodeset as an instance.  
 
 A model might have as many instances as necessary. Each except the first in document order needs to have an id
@@ -201,11 +219,11 @@ to address it.
 
 Example:
 ```
-<fore-instance id="myInstance">
+<xf-instance id="myInstance">
     <data>
         <foo/>
     </data>
-</fore-instance>
+</xf-instance>
 ```
 
 To address a certain instance in Fore you use:
@@ -225,16 +243,16 @@ The simplest way to load instance data is to put them inline.
 
 Example:
 ```
-<fore-model>
-    <fore-instance>
+<xf-model>
+    <xf-instance>
         <data>
             <hello>World</hello>
         </data>
-    </fore-instance>
-</fore-model>
+    </xf-instance>
+</xf-model>
 ```
 
-At init-time the Fore processor will create an appropriate entry in its `$instances` map. A `fore-instance` without
+At init-time the Fore processor will create an appropriate entry in its `$instances` map. A `xf-instance` without
 an explicit `id` will get the id 'default' assigned.
 
 
@@ -244,7 +262,7 @@ When data shall be loaded from an external source the `src` attribute can be use
 
 Example:
 ```
-<fore-instance src="doc('data/mydata.xml')"></fore-instance>
+<xf-instance src="doc('data/mydata.xml')"></xf-instance>
 
 ```
 
@@ -256,7 +274,7 @@ to the location of the form. Here the form directory would need to have a 'data'
 To dynamically resolve a `src` attribute you can put your expression within curly brackets like so:
 
 ```
-<fore-instance src="{$contextParams?param1}"></fore-instance>
+<xf-instance src="{$contextParams?param1}"></xf-instance>
 ``` 
 
  > `$contextParams` is a pre-defined map that will be passed into the model
@@ -266,30 +284,36 @@ To dynamically resolve a `src` attribute you can put your expression within curl
 
  > IMPORTANT: any expression not starting with `$contextParams` will fail to resolve. This is to prevent accessing
  nodes of other instance before they are actually defined. When the instance data resolution depends on values in other
- instances a `fore-submission` can be used.  
+ instances a `xf-submission` can be used.  
  
 ## JSON instances
 
-A `fore-instance` can also contain some JSON data like this:
+A `xf-instance` can also contain some JSON data like this:
 
 ```
-    <fore-instance>
+    <xf-instance>
         {
             "salary":210.00,
             "average"120.00
         }
-    </fore-instance>
+    </xf-instance>
 ```  
-When binding you have to use the map notation instead of XPath in your `fore-bind` 
+
+As with XML instances of course you can also use `src` attribute to load JSON from
+somwhere:
+```
+<xf-instance src=="{constructJSON()}"></xf-instance>
+```
+When binding you have to use the map notation instead of XPath in your `xf-bind` 
 elements.
 
 ```
-<fore-bind ref="?salary" ...></fore-bind>
+<xf-bind ref="?salary" ...></xf-bind>
 ```
 
 todo: not sure about the correct syntax yet. Can you help @wolfgang @juri?
 
-## fore-bind
+## xf-bind
 
 The bindings are the power source of XForms. They allow to attach constraints to nodes, calculate and filter nodes and alert 
 users in detail about validation issues. Arbitrary complex validation logic can be used to make sure that incoming
@@ -321,26 +345,26 @@ constraint | Boolean XPath/XQuery expression determing whether a node is valid o
 
 Bind properties can be expressed either as attributes or elements like this:
 ```
-<fore-bind id="method" ref="method" required="true()"></fore-bind>
+<xf-bind id="method" ref="method" required="true()"></xf-bind>
 ```
 
 or equivalently as element:
 
 ```
-<fore-bind id="method" ref="method">
-    <fore-required expr="true()"></fore-required>
-</fore-bind>
+<xf-bind id="method" ref="method">
+    <xf-required expr="true()"></xf-required>
+</xf-bind>
 ```
 
 The latter syntax then allows to attach a dedicated alert in case the user tries to 
 submit the incomplete form.
 
 ```
-<fore-bind id="method" ref="method">
-    <fore-required expr="true()">
-        <fore-alert>Please select a payment method</fore-alert>
-    </fore-required>
-</fore-bind>
+<xf-bind id="method" ref="method">
+    <xf-required expr="true()">
+        <xf-alert>Please select a payment method</xf-alert>
+    </xf-required>
+</xf-bind>
 
 ```
 
@@ -383,7 +407,7 @@ in the HTML world we've renamed it.
  
   
 
-## fore-submission
+## xf-submission
 
 Submissions serve different purposes at once:
 
@@ -399,33 +423,33 @@ response
 Consider this example to get an idea of the power of submissions:
 
 ```
-    <fore-instance>
+    <xf-instance>
         <data>...some XML payload here ...</data>
-    </fore-instance>
+    </xf-instance>
     
-    <fore-instance id="conf">
+    <xf-instance id="conf">
         <data>
             <targeturl>my-instance</targeturl>
             <counter>1</counter>
         </data>
-    </fore-instance>
+    </xf-instance>
     
-    <fore-submission id="s-save"
+    <xf-submission id="s-save"
                      resource="xmldb:doc({$instances?conf/targeturl}-{$instances?conf/count}.xml)"
                      method="put"
                      replace="none">
-        <fore-submit>
-            <fore-message level="info">Sending your data... Please hold on</fore-message>
-        </fore-submit>
-        <fore-submit-error>
-            <fore-message level="error">storing record failed</fore-message>
-        </fore-submit-error>
-        <fore-submit-done>
-            <fore-message level="info">Your data have been stored</fore-message>
+        <xf-submit>
+            <xf-message level="info">Sending your data... Please hold on</xf-message>
+        </xf-submit>
+        <xf-submit-error>
+            <xf-message level="error">storing record failed</xf-message>
+        </xf-submit-error>
+        <xf-submit-done>
+            <xf-message level="info">Your data have been stored</xf-message>
             <!-- increment counter -->
-            <fore-setvalue ref="$instances?conf/counter" value=". +1"><fore-setvalue>
-        </fore-submit-done>
-    </fore-submission>
+            <xf-setvalue ref="$instances?conf/counter" value=". +1"><xf-setvalue>
+        </xf-submit-done>
+    </xf-submission>
 
 ```
 
@@ -433,15 +457,15 @@ The submission is usually triggered by an user action (hitting a button)
 e.g. somewhere in your UI you have:
 
 ```
-<fore-submit submission="s-save">Save</fore-submit>
+<xf-submit submission="s-save">Save</xf-submit>
 
 ```
 
 This will send a request to the server to submit the form by executing the 
-referenced `fore-submission` element. 
+referenced `xf-submission` element. 
 
 Submission will execute these steps:
-1. pre-submission is triggered by executing `fore-submit` element
+1. pre-submission is triggered by executing `xf-submit` element
 1. select the relevant data for submission. In the above example there is no
 explicit `ref` attribute. Therefore the default instance (first in document order)
 is used.
@@ -453,12 +477,12 @@ Data are valid:
 the target URL for the submission.
 1. data are serialized and sent with the protocol given by `resource` 
 ('xmldb:' by default)
-1. post submission hook `fore-submit-done` is triggered. In our example this
+1. post submission hook `xf-submit-done` is triggered. In our example this
 signals to the client to show an informal message and to increment the value
 of the counter in the 'conf' instance to generate a new one for the next save.
 
 Data are invalid:
-1. the `fore-submit-error` hook is triggered which returns a message to
+1. the `xf-submit-error` hook is triggered which returns a message to
 the client with the request to show an error message.
 
 ### Chaining submissions
@@ -470,23 +494,41 @@ of one submission before firing the next.
 
 Example:
 ```
-<fore-submission id="register" resource="data/myregistration.xml">
-    <fore-submit-error>
-        <fore-message level="error">user name is already taken</fore-message>
-    </fore-submit-error>
-    <fore-submit-done>
-        <fore-submit id="confirm-account"
-    </fore-submit-done>
-<fore-submission>
+<xf-submission id="register" resource="data/myregistration.xml">
+    <xf-submit-error>
+        <xf-message level="error">user name is already taken</xf-message>
+    </xf-submit-error>
+    <xf-submit-done>
+        <xf-submit id="confirm-account"
+    </xf-submit-done>
+<xf-submission>
 
-<fore-submission id="confirm-account"
+<xf-submission id="confirm-account"
                  resource="mailto:{user}"
                  ref="account">
-</fore-submission>
+</xf-submission>
 ```
 
 In this example the submision 'confirm-account' is only called in case the
 'register' submission was sucessful.
+
+
+## UI contols
+
+## xf-input
+## xf-textarea
+## xf-checkbox
+
+## UI container
+
+### xf-group
+### xf-repeat
+### xf-switch
+
+
+## Using protocols for loading and submission
+
+## The `relevant` property and its effects
 
 ## Server-side validation
 
@@ -499,10 +541,3 @@ To do this you have to import the Fore module into your XQuery with:
 import module namespace modelValidator="http://exist-db.org/apps/fore" at "fore.xqm";
 ```
 
-
-
-## Binding the UI
-
-## Using protocols for loading and submission
-
-## The `relevant` property and its effects

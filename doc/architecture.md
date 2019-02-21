@@ -82,7 +82,22 @@ A JSON representation of a bind would look like this:
 }
 ```
 
+## Q & A
 
+### why use Custom Elements for the model?
+
+As has been pointed out the model is executed on the server. So why use Custom Element syntax for
+these though they never get to the client for being enhanced as Web Components?
+
+Here are the arguments:
+
+* first, it would be rather confusing to use two different markups for a single purpose e.g.
+XML for the model part and Custom Elements for the client. In practice you often keep a complete
+form (the model and the UI) in one HTML document. It is rather convenient to have all in one place.
+* further it might well happen that the model elements get an representation in the browser for 
+debugging purposes.
+* it might even happen that the client gets a simplified version of the model which will get synced
+back later in time.
 
 
 

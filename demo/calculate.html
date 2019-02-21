@@ -6,21 +6,21 @@
     <title>prototype form with calculate</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../elements/model/fore-model.html"/>
+    <link rel="import" href="../elements/model/xf-model.html"/>
 
 </head>
 <body>
-    <!-- fore-model is not exposed to the client! -->
-    <fore-model id="calc">
-        <fore-instance>
+    <!-- xf-model is not exposed to the client! -->
+    <xf-model id="calc">
+        <xf-instance>
             <data>
                 <a>2</a>
                 <b>3</b>
                 <sum></sum>
             </data>
-        </fore-instance>
+        </xf-instance>
 
-        <fore-bind id="salary" ref="//sum" calculate="../a + ../b"></fore-bind>
-    </fore-model>
+        <xf-bind id="salary" ref="//sum" calculate="../a + ../b"></xf-bind>
+    </xf-model>
 </body>
 </html>

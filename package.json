@@ -1,26 +1,20 @@
 {
-  "name": "shc",
-  "version": "1.0.0",
-  "description": "exform-client",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "fore-model",
+  "description": "an xformish model for eXist-db",
+  "main": "fore-model.js",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "brace-expansion": "^1.1.4",
-    "del": "^3.0.0",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
+    "@polymer/test-fixture": "^4.0.2",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "wct-mocha": "^1.0.0",
     "gulp": "^3.9.1",
     "gulp-exist": "^2.0.0",
     "gulp-watch": "^5.0.1",
-    "gulp-less": "^4.0.1",
-    "less-plugin-autoprefix": "^2.0.0",
-    "less-plugin-clean-css": "^1.5.1",
-    "bower": "^1.8.4"
+
   }
 }

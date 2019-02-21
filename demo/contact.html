@@ -10,74 +10,74 @@
 
 </head>
 <body>
-    <fore-form id="my-form">
-        <fore-model id="address">
-            <fore-instance id="default" src="address.xml"></fore-instance>
+    <xf-form id="my-form">
+        <xf-model id="address">
+            <xf-instance id="default" src="address.xml"></xf-instance>
 
-            <fore-bind id="title" ref="title" type="string"></fore-bind>
-            <fore-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></fore-bind>
-            <fore-bind id="name" ref="name" type="string" required="true()" relevant="true()"></fore-bind>
-            <fore-bind id="street" ref="street" type="string"></fore-bind>
-            <fore-bind id="city" ref="city" type="string"></fore-bind>
-            <fore-bind id="zip" ref="zip" type="integer"></fore-bind>
-            <fore-bind id="country" ref="country" type="string"></fore-bind>
+            <xf-bind id="title" ref="title" type="string"></xf-bind>
+            <xf-bind id="firstname" ref="firstNames" type="string" required="true()" relevant="true()"></xf-bind>
+            <xf-bind id="name" ref="name" type="string" required="true()" relevant="true()"></xf-bind>
+            <xf-bind id="street" ref="street" type="string"></xf-bind>
+            <xf-bind id="city" ref="city" type="string"></xf-bind>
+            <xf-bind id="zip" ref="zip" type="integer"></xf-bind>
+            <xf-bind id="country" ref="country" type="string"></xf-bind>
 
 
-            <fore-submission id="s-save"
+            <xf-submission id="s-save"
                             resource="contacts/contact"
                             replace="none"
                             method="post">
-                <fore-action ev:event="xforms-submit-done">
-                    <fore-message level="ephemeral">Contact has been saved.</fore-message>
-                    <fore-dispatch name="unload-subforms" targetid="contact"></fore-dispatch>
-                </fore-action>
-            </fore-submission>
+                <xf-action ev:event="xforms-submit-done">
+                    <xf-message level="ephemeral">Contact has been saved.</xf-message>
+                    <xf-dispatch name="unload-subforms" targetid="contact"></xf-dispatch>
+                </xf-action>
+            </xf-submission>
 
 
-            <fore-instance id="i-countries" src="countries.xml"></fore-instance>
+            <xf-instance id="i-countries" src="countries.xml"></xf-instance>
 
-            <fore-bind id="counties" ref="instance('i-countries')/country">
-                <fore-bind id="countryName" ref="name"></fore-bind>
-                <fore-bind id="countryValue" ref="value"></fore-bind>
-            </fore-bind>
+            <xf-bind id="counties" ref="instance('i-countries')/country">
+                <xf-bind id="countryName" ref="name"></xf-bind>
+                <xf-bind id="countryValue" ref="value"></xf-bind>
+            </xf-bind>
 
-            <fore-send ev:event="xforms-ready" submission="s-load-from-master"></fore-send>
-        </fore-model>
+            <xf-send ev:event="xforms-ready" submission="s-load-from-master"></xf-send>
+        </xf-model>
 
-        <fore-group appearance="full">
-            <fore-input bind="title">
-                <fore-label id="title">Title</fore-label>
-            </fore-input>
-            <fore-input bind="firstname">
-                <fore-label id="firstNames">First names</fore-label>
-            </fore-input>
-            <fore-input bind="name">
-                <fore-label id="name">Name</fore-label>
-            </fore-input>
-            <fore-input bind="street">
-                <fore-label id="street">Street</fore-label>
-            </fore-input>
-            <fore-input bind="city">
-                <fore-label id="city">City</fore-label>
-            </fore-input>
-            <fore-input bind="zip">
-                <fore-label id="zip">Zip</fore-label>
-                <fore-alert>Please put your ZIP code here</fore-alert>
-            </fore-input>
-            <fore-select1 bind="country">
-                <fore-label bind="country">Country</fore-label>
-                <fore-itemset bind="countries">
-                    <fore-label bind="countryName"></fore-label>
-                    <fore-value bind="countryValue"></fore-value>
-                </fore-itemset>
-            </fore-select1>
+        <xf-group appearance="full">
+            <xf-input bind="title">
+                <xf-label id="title">Title</xf-label>
+            </xf-input>
+            <xf-input bind="firstname">
+                <xf-label id="firstNames">First names</xf-label>
+            </xf-input>
+            <xf-input bind="name">
+                <xf-label id="name">Name</xf-label>
+            </xf-input>
+            <xf-input bind="street">
+                <xf-label id="street">Street</xf-label>
+            </xf-input>
+            <xf-input bind="city">
+                <xf-label id="city">City</xf-label>
+            </xf-input>
+            <xf-input bind="zip">
+                <xf-label id="zip">Zip</xf-label>
+                <xf-alert>Please put your ZIP code here</xf-alert>
+            </xf-input>
+            <xf-select1 bind="country">
+                <xf-label bind="country">Country</xf-label>
+                <xf-itemset bind="countries">
+                    <xf-label bind="countryName"></xf-label>
+                    <xf-value bind="countryValue"></xf-value>
+                </xf-itemset>
+            </xf-select1>
 
-            <fore-trigger>
-                <fore-label>update table</fore-label>
-                <fore-hint>This button will update the table above with the data from the subform</fore-hint>
-                <fore-send submission="s-save"></fore-send>
-            </fore-trigger>
-        </fore-group>
-    </fore-form>
+            <xf-trigger>
+                <xf-label>update table</xf-label>
+                <xf-hint>This button will update the table above with the data from the subform</xf-hint>
+                <xf-send submission="s-save"></xf-send>
+            </xf-trigger>
+        </xf-group>
+    </xf-form>
 </body>
 </html>

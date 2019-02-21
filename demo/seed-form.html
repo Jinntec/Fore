@@ -6,13 +6,13 @@
     <title>prototype (seed) form</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../elements/model/fore-model.html"/>
+    <link rel="import" href="../elements/model/xf-model.html"/>
 
 </head>
 <body>
-    <!-- fore-model is not exposed to the client! -->
-    <fore-model id="record">
-        <fore-instance>
+    <!-- xf-model is not exposed to the client! -->
+    <xf-model id="record">
+        <xf-instance>
             <data>
                 <salary>210.00</salary>
                 <average>120.00</average>
@@ -20,51 +20,51 @@
                     <item></item>
                 </items>
             </data>
-        </fore-instance>
+        </xf-instance>
 
-        <fore-instance>
+        <xf-instance>
             {
                 "data":{
                     "salary":210.00,
                     "average"120.00
                 }
             }
-        </fore-instance>
+        </xf-instance>
 
-        <fore-bind id="salary" ref="//salary">
-            <!-- fore-required might have optional attr 'expr' for boolean XPath expressions. When omitted defaults to true() -->
-            <fore-required>
-                <fore-alert>salary is required</fore-alert>
-            </fore-required>
-            <fore-type expr="xs:decimal">
-                <fore-alert>salary is not a decimal</fore-alert>
-            </fore-type>
-            <fore-constraint expr=". gt instance('third')/path">
-                <fore-alert>salary is not too low</fore-alert>
-            </fore-constraint>
-        </fore-bind>
+        <xf-bind id="salary" ref="//salary">
+            <!-- xf-required might have optional attr 'expr' for boolean XPath expressions. When omitted defaults to true() -->
+            <xf-required>
+                <xf-alert>salary is required</xf-alert>
+            </xf-required>
+            <xf-type expr="xs:decimal">
+                <xf-alert>salary is not a decimal</xf-alert>
+            </xf-type>
+            <xf-constraint expr=". gt instance('third')/path">
+                <xf-alert>salary is not too low</xf-alert>
+            </xf-constraint>
+        </xf-bind>
 
         <!-- the context here is instance() which means the first instance in doc order -->
-        <fore-bind id="items" ref="items">
-            <fore-bind id="item" ref="item" required="true"></fore-bind>
-        </fore-bind>
+        <xf-bind id="items" ref="items">
+            <xf-bind id="item" ref="item" required="true"></xf-bind>
+        </xf-bind>
 
         <!-- ##### second instance ####### -->
-        <fore-instance id="conf">
+        <xf-instance id="conf">
             <data>
                 <target-collection>data/records/record</target-collection>
                 <count>1</count>
             </data>
-        </fore-instance>
+        </xf-instance>
         <!-- another shortcut to XForms - simply use XQuery var for instance addressing -->
-        <fore-bind id="target-collection" ref="$instances?conf//target-collection" required="true()"></fore-bind>
+        <xf-bind id="target-collection" ref="$instances?conf//target-collection" required="true()"></xf-bind>
 
-        <fore-instance id="second" src="http://{fore:contextParams('someData')}"></fore-instance>
+        <xf-instance id="second" src="http://{fore:contextParams('someData')}"></xf-instance>
 
-        <fore-instance id="third" src="{doc($myRoot)/}"></fore-instance>
+        <xf-instance id="third" src="{doc($myRoot)/}"></xf-instance>
 
         <!-- ? can/should we assign a var for each instance id for short reference (dropping XForms instance() func) ?  -->
-        <fore-bind id="foobar" ref="$instances?third/data/foo/bar"></fore-bind>
+        <xf-bind id="foobar" ref="$instances?third/data/foo/bar"></xf-bind>
         <!--
             [
                 {
@@ -94,44 +94,44 @@
         <!--
         'db' scheme here is used as a posssible sample to write to an absolute address
         -->
-        <fore-submission id="s-save"
+        <xf-submission id="s-save"
                          resource="xmldb:doc({$conf/target-resource}{count}.xml)"
                          method="put"
                          replace="none">
-            <fore-submit-error>
-                <fore-message modal="false">storing record failed</fore-message>
-            </fore-submit-error>
-            <fore-submit-done>
+            <xf-submit-error>
+                <xf-message modal="false">storing record failed</xf-message>
+            </xf-submit-error>
+            <xf-submit-done>
                 <!-- start over -->
-                <fore-load url="seed-form.html"></fore-load>
-                <fore-message level="ephemeral">Your data have been stored</fore-message>
-            </fore-submit-done>
-        </fore-submission>
+                <xf-load url="seed-form.html"></xf-load>
+                <xf-message level="ephemeral">Your data have been stored</xf-message>
+            </xf-submit-done>
+        </xf-submission>
 
-        <fore-function signature="foo:func1(param as xs:string)">
+        <xf-function signature="foo:func1(param as xs:string)">
 
-        </fore-function>
+        </xf-function>
 
-        <fore-ready>
+        <xf-ready>
             <!-- some actions when model is up -->
             <!-- imperative or descriptive? -->
-            <fore-action>
-                <fore-setvalue ref="items/item[1]" value="defaultVal"></fore-setvalue>
-            </fore-action>
-        </fore-ready>
-    </fore-model>
+            <xf-action>
+                <xf-setvalue ref="items/item[1]" value="defaultVal"></xf-setvalue>
+            </xf-action>
+        </xf-ready>
+    </xf-model>
 
     <!-- Runtime:
-    fore-form will apply the JSON provided by server to the local UI by
+    xf-form will apply the JSON provided by server to the local UI by
     using id references.
 
     Advantage: can be nearly any kind of control as long as it plays by the conventions
     of HTML controls using 'value' or 'checked' plus readonly, required etc.
     -->
-    <fore-form model="record">
+    <xf-form model="record">
         <input bind="salary" value="this will get substituted by model-bridge">
 
-        <fore-repeat bind="items" actions="append delete">
+        <xf-repeat bind="items" actions="append delete">
             <!--
             a 'required' or 'readonly' attribute could be set in addition to use browser built-in validation feature to
             give early feedback.
@@ -139,10 +139,10 @@
             For the sake of easier processing on the server in well-formed markup.
             -->
             <input data-bind="item" required="required">
-            <fore-input></fore-input>
-        </fore-repeat>
+            <xf-input></xf-input>
+        </xf-repeat>
 
-        <fore-submit submission="save"></fore-submit>
-    </fore-form>
+        <xf-submit submission="save"></xf-submit>
+    </xf-form>
 </body>
 </html>

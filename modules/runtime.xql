@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace runtime="http://existsolutions.com/exform/runtime";
+module namespace runtime="http://existsolutions.com/fore/runtime";
 
 (:~
  : If a value is required, check for each node in the reference set if it does

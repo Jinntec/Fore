@@ -1,9 +1,9 @@
 xquery version "3.1";
 
-module namespace fore="http://exist-db.org/fore";
+module namespace fore="http://exist-db.org/apps/fore";
 
 (: inits the whole form :)
-declare function fore:init($form as element()){
+declare function fore:init($form as element(), $params as map){
 
     (: support multiple models? :)
     (: init model :)
@@ -105,3 +105,15 @@ declare private function fore:refresh($model as element){
 
 };
 
+(:~
+    generates an XML instance from request params. 'data' will be used as the rootnode name.
+:)
+declare function fore:param2instance(){
+    <data>
+    {
+        for $param in request:get-parameters()
+            (: todo :)
+            return ()
+    }
+    </data>
+};
