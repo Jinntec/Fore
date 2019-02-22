@@ -68,7 +68,8 @@ declare function local:handleChildren($node as node()){
 (:let $doc := util:parse(util:binary-to-string(util:binary-doc("/db/apps/fore/demo/seed-form.html"))) :)
 
 
-let $doc := doc("/db/apps/fore/demo/seed-form.html")
+let $path := request:get-parameter('path',())
+let $doc := doc("/db/apps/fore" || request:get-parameter('path',''))
 let $token := util:uuid()
 
 (:return <data>{request:get-uri()}</data>:)

@@ -5,7 +5,8 @@
   "dependencies": {
     "@polymer/iron-ajax": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.0.0"
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "polymer-redux": "^2.0.0-beta.2"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",
