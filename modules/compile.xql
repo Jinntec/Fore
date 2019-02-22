@@ -33,18 +33,41 @@ declare function compile:process-nested-binds($bind as element(xf-bind), $func a
  : Generate code to validate instance nodes based on a specified binding element.
  :)
 declare function compile:validate($bind as element(xf-bind)) {
-    if ($bind/@required) then
-        <item>runtime:require({$bind/@required/string()}, {$bind/@ref/string()}, "required", {serialize($bind)})</item>
-    else
-        (),
-    if ($bind/@type) then
-        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v castable as {$bind/@type/string()} }}, "type", {serialize($bind)})</item>
-    else
-        (),
-    if ($bind/@constraint) then
-        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v ! boolean({$bind/@constraint/string()}) }}, "constraint", {serialize($bind)})</item>
-    else
-        (),
+    <item>
+        <let var="invalid">
+            <expr>
+                <sequence>
+                {
+                    if ($bind/@required) then
+                        <item>runtime:require({$bind/@required/string()}, {$bind/@ref/string()}, "required", {serialize($bind)})</item>
+                    else
+                        (),
+                    if ($bind/@type) then
+                        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v castable as {$bind/@type/string()} }}, "type", {serialize($bind)})</item>
+                    else
+                        (),
+                    if ($bind/@constraint) then
+                        <item>runtime:for-each({$bind/@ref/string()}, function($v) {{ $v ! boolean({$bind/@constraint/string()}) }}, "constraint", {serialize($bind)})</item>
+                    else
+                        ()
+                }
+                </sequence>
+            </expr>
+            <return>
+                <if test="exists($invalid)">
+                    <then>$invalid</then>
+                    <else>
+                    {
+                        if ($bind/xf-bind) then
+                            <code>()</code>
+                        else
+                            <code>runtime:output({$bind/@ref/string()}, {($bind/@relevant/string(), "true()")[1]}, {serialize($bind)})</code>
+                    }
+                    </else>
+                </if>
+            </return>
+        </let>
+    </item>,
     (: Recursively check sub-bindings :)
     compile:process-nested-binds($bind, compile:validate#1)
 };

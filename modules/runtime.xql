@@ -2,6 +2,19 @@ xquery version "3.1";
 
 module namespace runtime="http://existsolutions.com/fore/runtime";
 
+declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element()) {
+    map {
+        "valid": true(),
+        "bind": ($bind/@id, $bind/@ref)[1],
+        "value": 
+            if (count($refs) = 1) then 
+                $refs/string() 
+            else
+                array { $refs/string() },
+        "relevant": $relevant
+    }
+};
+
 (:~
  : If a value is required, check for each node in the reference set if it does
  : exist and has content.
@@ -15,6 +28,7 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
                 ()
             else
                 map {
+                    "valid": false(),
                     "error": $message,
                     "index": $idx,
                     "bind": ($bind/@id, $bind/@ref)[1],
@@ -37,6 +51,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
                 ()
             else
                 map {
+                    "valid": false(),
                     "error": $message,
                     "index": $idx,
                     "bind": ($bind/@id, $bind/@ref)[1],
@@ -45,6 +60,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
                 }
         } catch * {
             map {
+                "valid": false(),
                 "error": $message,
                 "detail": $err:description,
                 "index": $idx,
