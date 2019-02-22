@@ -3,11 +3,8 @@
 var gulp = require('gulp'),
     exist = require('gulp-exist'),
     watch = require('gulp-watch'),
-    less = require('gulp-less'),
     del = require('del'),
-    path = require('path'),
-    LessPluginCleanCSS = require('less-plugin-clean-css'),
-    LessAutoprefix = require('less-plugin-autoprefix')
+    path = require('path')
 
 var PRODUCTION = (!!process.env.NODE_ENV || process.env.NODE_ENV === 'production')
 
@@ -40,41 +37,15 @@ gulp.task('clean', function () {
 
 // styles //
 
-var lessPath = './resources/css/style.less'
 var stylesPath = 'resources/css/*'
-var cleanCSSPlugin = new LessPluginCleanCSS({advanced: true})
-var autoprefix = new LessAutoprefix({browsers: ['last 2 versions']})
 
-gulp.task('styles', function () {
-    return gulp.src(lessPath)
-        .pipe(less({plugins: [cleanCSSPlugin, autoprefix]}))
-        .pipe(gulp.dest('./resources/css'))
-})
-
-gulp.task('deploy:styles', ['styles'], function () {
-    return gulp.src('resources/css/*.css', {base: './'})
-        .pipe(exClient.newer(targetConfiguration))
-        .pipe(exClient.dest(targetConfiguration))
-})
-
-// odd files //
-
-var oddPath = 'resources/odd/**/*';
-gulp.task('odd:deploy', function () {
-    return gulp.src(oddPath, {base: './'})
-        .pipe(exClient.newer(targetConfiguration))
-        .pipe(exClient.dest(targetConfiguration))
-})
-
-gulp.task('odd:watch', function () {
-    gulp.watch(oddPath, ['odd:deploy'])
-})
 
 // files in project root //
 
 var componentPaths = [
     '*.html',
-    'bower_components/**/*'
+    'assets/**/*',
+    'elements/*.js'
 ];
 
 gulp.task('deploy:components', function () {
@@ -86,8 +57,6 @@ gulp.task('deploy:components', function () {
 var otherPaths = [
     '*.html',
     '*.xql',
-    'templates/**/*',
-    'transforms/**/*',
     'resources/**/*',
     '!resources/css/*',
     'modules/**/*'
@@ -100,17 +69,15 @@ gulp.task('deploy:other', function () {
 })
 
 var components = [
-    '*-*.html'
+    'elements/*.js'
 ];
 
 
 gulp.task('deploy', ['deploy:other', 'deploy:components', 'deploy:styles'])
 
 gulp.task('watch', function () {
-    gulp.watch('resources/css/!*', ['deploy:styles'])
     gulp.watch(otherPaths, ['deploy:other'])
-    gulp.watch(components, ['deploy:comp'])
-    gulp.watch('*.html', ['deploy:components'])
+    gulp.watch('elements/**/*.js', ['deploy:components'])
 })
 
 gulp.task('default', ['watch'])

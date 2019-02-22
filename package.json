@@ -3,18 +3,24 @@
   "description": "an xformish model for eXist-db",
   "main": "fore-model.js",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/iron-ajax": "^3.0.1",
+    "@polymer/polymer": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0"
   },
   "devDependencies": {
+    "@0xcda7a/empathy": "0.0.9",
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "@polymer/test-fixture": "^4.0.2",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "wct-mocha": "^1.0.0",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-exist": "^2.0.0",
     "gulp-watch": "^5.0.1",
-
+    "mocha": "^5.2.0",
+    "wct-mocha": "^1.0.0"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/@0xcda7a/empathy/bin/empathy install"
   }
 }

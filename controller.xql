@@ -23,6 +23,16 @@ else if ($exist:path = "/") then
         <redirect url="index.html"/>
     </dispatch>
 
+else if (starts-with($exist:path, "/demo/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/load-form.xql" method="get"></forward>
+    </dispatch>
+
+else if (starts-with($exist:path, "/init")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/init.xql" method="get"></forward>
+    </dispatch>
+
 else if (ends-with($exist:path, ".html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>

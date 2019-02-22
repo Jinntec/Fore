@@ -40,3 +40,40 @@ The initial reason to develop something like Fore was to replace betterFORM (wit
 some interesting potential for a new solution. By using the eXist-db builtin XPath engine we can easily upgrade to 
 future enhancements of XPath, use our own ways of supporting custom functions as well as allow full XQuery support in
 various places (e.g. calculations and submissions). This certainly offers a whole new level of processing power.
+
+
+## handling Polymer3 module loading
+
+Many third-party components use package scopes to import their own dependencies. E.g. in 
+the `@polymer` package we find a lot of components that use a plain:
+
+```
+import '@polymer/...'
+
+```
+
+`@polymer` is the scope here. A scope is meant to group related packages. However scopes
+do not resolve in the browser. So when we deploy 'node_modules' as is this will result
+in resolution errors (dependencies cannot be loaded).
+
+For reference see [modulizer readme](https://github.com/Polymer/tools/tree/master/packages/modulizer#conversion-options).
+Here it's clearly stated that this won't run in browsers directly.
+
+Also see discussion here:
+https://github.com/Polymer/polymer/issues/5238
+
+
+### using [Empathy](https://github.com/PolymerLabs/empathy/tree/initial-implementation) tool
+
+There's a little (but still unreleased) tool that rewrites scoped package to path notation.
+
+execute in 'components dir':
+
+```
+$ npm i --save-dev @0xcda7a/empathy
+$ ./node_modules/@0xcda7a/empathy/bin/empathy install
+```
+
+For better integration this could be integrated with an npm postinstall hook. See `package.json`.
+
+After execution the converted files will end up in a directory named 'assets'.
