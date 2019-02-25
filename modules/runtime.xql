@@ -29,7 +29,7 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
             else
                 map {
                     "valid": false(),
-                    "error": $message,
+                    "alert": $message,
                     "index": $idx,
                     "bind": ($bind/@id, $bind/@ref)[1],
                     "required": $require,
@@ -52,7 +52,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
             else
                 map {
                     "valid": false(),
-                    "error": $message,
+                    "alert": $message,
                     "index": $idx,
                     "bind": ($bind/@id, $bind/@ref)[1],
                     "type": $bind/@type,
@@ -61,7 +61,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
         } catch * {
             map {
                 "valid": false(),
-                "error": $message,
+                "alert": $message,
                 "detail": $err:description,
                 "index": $idx,
                 "bind": ($bind/@id, $bind/@ref)[1],
