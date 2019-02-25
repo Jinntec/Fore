@@ -45,31 +45,38 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
  :)
 declare function runtime:for-each($refs as node()*, $check as function(*), $message as xs:string, $bind as element()) {
     for $ref at $idx in $refs
-    return
-        try {
-            if ($check($ref)) then
-                ()
-            else
-                map {
-                    "valid": false(),
-                    "alert": $message,
-                    "index": $idx,
-                    "bind": ($bind/@id, $bind/@ref)[1],
-                    "type": $bind/@type,
-                    "value": $ref/string()
-                }
-        } catch * {
-            map {
-                "valid": false(),
-                "alert": $message,
-                "detail": $err:description,
-                "index": $idx,
-                "bind": ($bind/@id, $bind/@ref)[1],
-                "type": $bind/@type,
-                "value": $ref/string()
+        let $alert :=   if($message = 'constraint' and exists($bind/@alert)) then
+                            data($bind/@alert)
+                        else 'constraint'
+
+        let $result-map := map:new((
+                    if(exists($bind/@type) and $bind/@type != 'xs:string')
+                        then ( map {"type": $bind/@type})
+                        else (),
+                    map {
+                        "valid": false(),
+                        "alert": $alert,
+                        "index": $idx,
+                        "bind": ($bind/@id, $bind/@ref)[1]
+                    }))
+        return
+            try {
+                if ($check($ref)) then
+                    ()
+                else
+                    $result-map
+            } catch * {
+                map:new((
+                        $result-map,
+                        map {
+                            "detail": $err:description,
+                            "value": $ref/string()
+                        }
+                    ))
             }
-        }
 };
+
+
 
 (:~
  : Iterate through all instances and apply the specified changes. Return
