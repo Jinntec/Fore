@@ -9,8 +9,9 @@ declare function compile:init-instances($model as element(xf-model)) {
     {
         for $instance in $model/xf-instance
         let $data := serialize($instance/*)
+        let $key := if(exists($instance/@id)) then $instance/@id else 'default'
         return
-            <entry key='"{$instance/@id}"' value="{$data}"/>
+            <entry key='"{$key}"' value="{$data}"/>
     }
     </map>
 };
