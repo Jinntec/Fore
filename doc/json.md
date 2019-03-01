@@ -33,22 +33,6 @@ The resulting JSON will look like this:
 ```
 [
     {
-    "bind":"b-greeting",
-    "required":true,
-    "value":"hello"
-    },
-    {
-    "bind":"b-audience",
-    "value":"world"
-    }
-]
-```
-
-alternative:
-
-```
-[
-    {
         "bind":{
             "id":"b-greeting",
             "required":true,
@@ -72,9 +56,49 @@ There a few things worth pointing out:
 state of the bound node (see `required` in above example).
 * a `bind` is identified by the bind id given by the corresponding `xf-bind` element
  ('b-greeting' and 'b-audience').
+
+
+## nested bindings
+
+```
+<xf-model>
+    <xf-instance>
+        <data>
+            <address type="postal">
+                <street>Kielganstr.</street>
+            </address>
+        </data>
+    </xf-instance>
+    <xf-bind id="b-address">
+        <xf-bind id="b-tyoe" ref="@type"></xf-bind>
+        <xf-bind id="b-street" ref="street"></xf-bind>
+    </xf-bind>
+</xf-model>
+
+``` 
+
+The JSON structure reflects the structure of the bindings like this:
+
+```
+[
+    {
+        "bind":{
+            "id":"b-address",
+            "bind": [
+                {
+                    "id": "b-type"
+                }
+                {
+                    "id":"b-street"
+                }
+            ]
+        }
+    }
+]
+```
  
  
-## simple nested bindings
+## simple repeat bindings
 
 The concept of a 'bind object' becomes more clear when dealing with bindings
 that resolve to multiple targets.
@@ -90,42 +114,41 @@ Example:
             <item>item3</item>
         <data>
     </xf-instance>
-    <xf-bind id='b-item' set="item"></xf-bind>
+    <xf-bind id='b-item' set="item" required="preceding-sibling::node()[1] = 'item1'"></xf-bind>
 </xf-model>
 ```
+
 
 In this case the bind targets 3 nodes in the bound instance. For each occurrence
 a 'bind object' is created that reflects the state of the node with respect
 to the binding properties (readonly, required, relevant, valid, type, value).
 
 The resulting JSON:
-```
-[
-    {
-    "bind": "b-item",
-    "set": [
-        {"value": "item1"},
-        {"value": "item2"},
-        {"value": "item3"}
-    ]
-]
-```
-
-
-alternatively:
 
 ```
 [
     {
-        "bind": {
+        "bind":{
             "id":"b-item",
-            "values": [
-                "item1",
-                "item2",
-                "item3"
-            ]
+            "value":"item1",
+            "required":false
+        }
+    },
+    {
+        "bind":{
+            "id":"b-item",
+            "value":"item2",
+            "required":true
+        }
+    },
+    {
+        "bind":{
+            "id":"b-item",
+            "value":"item3",
+            "required":false
         }
     }
+    
 ]
 ```
 
@@ -204,7 +227,7 @@ This results in slight changes in the resulting JSON:
 Here the set is not just an array but an array of arrays as we need to distinguish
 'the rows in our table'.
 
-## complex example
+## complex nested repeat example
 
 This example shows the use of nested sets.
 
