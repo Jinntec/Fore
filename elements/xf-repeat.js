@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '../../node_modules/@polymer/polymer/polymer-element.js';
+import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 
 /**
  * `xf-repeat`
@@ -9,24 +9,50 @@ import {html, PolymerElement} from '../../node_modules/@polymer/polymer/polymer-
  * @demo demo/index.html
  */
 class XfRepeat extends PolymerElement {
-  static get template() {
-    return html`
+    static get template() {
+        return html`
       <style>
         :host {
           display: block;
         }
       </style>
-      <h2>Hello [[prop1]]!</h2>
+      <template id="template">
+          <slot></slot>
+      </template>
     `;
-  }
-  static get properties() {
-    return {
-      prop1: {
-        type: String,
-        value: 'fore-form',
-      },
-    };
-  }
+    }
+
+    static get properties() {
+        return {
+            bind:{
+                type:String
+            }
+        };
+    }
+
+
+    connectedCallback() {
+        super.connectedCallback();
+        // console.log('xf-repeat connected ', this);
+        // const $bindings = this.querySelectorAll('[bind]');
+        // console.log('repeat binds ', $bindings);
+        // console.log('repeat data ', this.data[0].todo);
+        // console.log('repeat data ', this.data['todo']);
+/*
+        const tmpl = this.shadowRoot.querySelector('template');
+        console.log('repeat template ', tmpl);
+        console.log('repeat content ', tmpl.content);
+        const content = document.importNode(tmpl.content, true);
+        this.appendChild(content);
+*/
+
+
+    }
+
+    _attachDom(dom) {
+        this.appendChild(dom);
+    }
+
 }
 
 window.customElements.define('xf-repeat', XfRepeat);

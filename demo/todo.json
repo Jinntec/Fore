@@ -1,0 +1,41 @@
+[
+  {
+    "bind": {
+      "id": "todo",
+      "bind": [
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value":"Pick up Milk"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": false
+          },
+          {
+            "id": "b-due",
+            "type": "date"
+          }
+        ],
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value":"Make tutorial part"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": true
+          },
+          {
+            "id": "b-due",
+            "type": "date"
+          }
+        ]
+      ]
+    }
+  }
+]

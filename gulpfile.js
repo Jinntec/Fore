@@ -4,32 +4,32 @@ var gulp = require('gulp'),
     exist = require('gulp-exist'),
     watch = require('gulp-watch'),
     del = require('del'),
-    path = require('path')
+    path = require('path');
 
-var PRODUCTION = (!!process.env.NODE_ENV || process.env.NODE_ENV === 'production')
+var PRODUCTION = (!!process.env.NODE_ENV || process.env.NODE_ENV === 'production');
 
-console.log('Production? %s', PRODUCTION)
+console.log('Production? %s', PRODUCTION);
 
 exist.defineMimeTypes({
     'application/xml': ['odd']
-})
+});
 
 var exClient = exist.createClient({
     host: 'localhost',
     port: '8080',
     path: '/exist/xmlrpc',
     basic_auth: {user: 'admin', pass: ''}
-})
+});
 
 var html5TargetConfiguration = {
     target: '/db/apps/fore',
     html5AsBinary: true
-}
+};
 
 var targetConfiguration = {
     target: '/db/apps/exform/',
     html5AsBinary: true
-}
+};
 
 gulp.task('clean', function () {
     return del(['build/**/*']);
@@ -37,7 +37,7 @@ gulp.task('clean', function () {
 
 // styles //
 
-var stylesPath = 'resources/css/*'
+var stylesPath = 'resources/css/*';
 
 
 // files in project root //
@@ -52,32 +52,33 @@ gulp.task('deploy:components', function () {
     return gulp.src(componentPaths, {base: './'})
         .pipe(exClient.newer(html5TargetConfiguration))
         .pipe(exClient.dest(html5TargetConfiguration))
-})
+});
 
 var otherPaths = [
     '*.html',
     '*.xql',
     'resources/**/*',
     '!resources/css/*',
-    'modules/**/*'
+    'modules/**/*',
+    'demo/**/*.html'
 ];
 
 gulp.task('deploy:other', function () {
     return gulp.src(otherPaths, {base: './'})
         .pipe(exClient.newer(targetConfiguration))
         .pipe(exClient.dest(targetConfiguration))
-})
+});
 
 var components = [
     'elements/*.js'
 ];
 
 
-gulp.task('deploy', ['deploy:other', 'deploy:components', 'deploy:styles'])
+gulp.task('deploy', ['deploy:other', 'deploy:components', 'deploy:styles']);
 
 gulp.task('watch', function () {
-    gulp.watch(otherPaths, ['deploy:other'])
+    gulp.watch(otherPaths, ['deploy:other']);
     gulp.watch('elements/**/*.js', ['deploy:components'])
-})
+});
 
-gulp.task('default', ['watch'])
+gulp.task('default', ['watch']);

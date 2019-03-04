@@ -1,0 +1,36 @@
+[
+  {
+    "bind": "b-cart",
+    "children": [
+      {
+        "bind": "b-total",
+        "valid": false,
+        "alert": "total must sum up to 70.20"
+      },
+      {
+        "bind": "b-products",
+        "set": [
+          [
+            {
+              "bind": "b-info",
+              "set":[
+                {
+                  "bind":"b-serial",
+                  "type":"integer"
+                },
+                {
+                  "bind":"b-origin"
+                }
+              ]
+            },
+            {
+              "bind":"price",
+              "type": "decimal"
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]
+

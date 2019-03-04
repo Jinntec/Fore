@@ -1,0 +1,46 @@
+[
+  {
+    "bind": "todo",
+    "relevant": true,
+    "items": [
+      "item":[
+        {
+          "bind":"text",
+          "required": true,
+          "value": "Pick up Milk"
+        },
+        {
+          "bind": "state",
+          "type": "boolean",
+          "value": false
+        },
+        {
+          "bind": "due",
+          "value": "2019-02-04"
+        }
+    ]
+      ]
+  },
+  {
+    "bind":"todo",
+    "relevant": true,
+    "items": [
+      {
+        "bind": "text",
+        "required": true,
+        "value": "Make tutorial part 1"
+      },
+      {
+        "bind": "state",
+        "type": "boolean",
+        "value": true
+      },
+      {
+        "bind": "due",
+        "value": "2019-01-04"
+      }
+    ]
+  }
+]
+
+

@@ -87,7 +87,7 @@ The JSON structure reflects the structure of the bindings like this:
             "bind": [
                 {
                     "id": "b-type"
-                }
+                },
                 {
                     "id":"b-street"
                 }
@@ -170,10 +170,10 @@ Example:
         </data>
     </xf-instance>
 
-    <xf-bind id="todo" set="task">
-        <xf-bind id="text" ref="./text()" required="true()"></xf-bind>
-        <xf-bind id="state" ref="@complete" type="xs:boolean"> </xf-bind>
-        <xf-bind id="due" ref="@due"> </xf-bind>
+    <xf-bind id="b-todo" set="task">
+        <xf-bind id="b-task" ref="./text()" required="true()"></xf-bind>
+        <xf-bind id="b-state" ref="@complete" type="xs:boolean"> </xf-bind>
+        <xf-bind id="b-due" ref="@due"> </xf-bind>
     </xf-bind>
 </xf-model>
 ```
@@ -183,46 +183,49 @@ This results in slight changes in the resulting JSON:
 ```
 [
   {
-    "bind": "todo",
-    "relevant": true,
-    "set": [
-      [
-        {
-          "bind": "text",
-          "required": true,
-          "value": "Pick up Milk"
-        },
-        {
-          "bind": "state",
-          "type": "boolean",
-          "value": false
-        },
-        {
-          "bind": "due",
-          "value": "2019-02-04"
-        }
-      ],
-      [
-        {
-          "bind": "text",
-          "required": true,
-          "value": "Make tutorial part 1"
-        },
-        {
-          "bind": "state",
-          "type": "boolean",
-          "value": true
-        },
-        {
-          "bind": "due",
-          "value": "2019-01-04"
-        }
+    "bind": {
+      "id": "todo",
+      "bind": [
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value":"Pick up Milk"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": false
+          },
+          {
+            "id": "b-due",
+            "type": "date"
+          }
+        ],
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value":"Make tutorial part"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": true
+          },
+          {
+            "id": "b-due",
+            "type": "date"
+          }
+        ]
       ]
-    ]
+    }
   }
 ]
 
 ```
+
+
 
 Here the set is not just an array but an array of arrays as we need to distinguish
 'the rows in our table'.

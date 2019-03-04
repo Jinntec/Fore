@@ -59,7 +59,7 @@
     
     <xf-bind ref="$instances?third">
         <xf-bind ref="products/price" type="xs:double"></xf-bind>
-        <xf-bind ref="total" calculate="sum(../products/price)" constraint=". = 70.20"></xf-bind>
+        <xf-bind ref="total" calculate="sum(../products/price)" constraint=". = 70.20" alert="total must sum up to 70.20"></xf-bind>
     </xf-bind>
 </xf-model>
 

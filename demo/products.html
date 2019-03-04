@@ -1,0 +1,49 @@
+<!--
+
+    Very simple model as could be used for reading from a plain HTML form for server-side validation
+
+-->
+<xf-model id="products">
+
+    <xf-instance>
+        <data>
+            <cart total="">
+                <products>
+                    <product>
+                        <info>
+                            <serial>123</serial>
+                            <origin>China</origin>
+                        </info>
+                        <price>22.50</price>
+                    </product>
+                    <product>
+                        <info>
+                            <serial>456</serial>
+                            <origin>China</origin>
+                        </info>
+                        <price>34.50</price>
+                    </product>
+                    <product>
+                        <info>
+                            <serial>678</serial>
+                            <origin>Bangladesh</origin>
+                        </info>
+                        <price>13.25</price>
+                    </product>
+                </products>
+            </cart>
+        </data>
+    </xf-instance>
+    
+    <xf-bind id="cart" ref="$instances?default/cart">
+        <xf-bind id="total" ref="@total" calculate="sum(../products/price)" constraint=". = 70.20" alert="total must sum up to 70.20"></xf-bind>
+        <xf-bind id="b-products" set="products/product">
+            <xf-bind id="b-info" set="info">
+                <xf-bind id="b-serial" ref="serial" type="xs:integer"></xf-bind>
+                <xf-bind id="b-origin" ref="origin"></xf-bind>
+            </xf-bind>
+            <xf-bind id="price" ref="price" type="xs:double"></xf-bind>
+        </xf-bind>
+    </xf-bind>
+</xf-model>
+
