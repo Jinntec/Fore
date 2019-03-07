@@ -153,6 +153,10 @@ In this case the bind targets 3 nodes in the bound instance. For each occurrence
 a 'bind object' is created that reflects the state of the node with respect
 to the binding properties (readonly, required, relevant, valid, type, value).
 
+**todo: this needs another review - it's probably more consistent to wrap the single
+binding in an array to align it with complex repeats (use the same structure). This 
+might ease coding for the client.**
+
 The resulting JSON:
 ```
 [
