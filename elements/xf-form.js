@@ -8,7 +8,7 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
  # * @polymer
  * @demo demo/index.html
  */
-class XfForm extends PolymerElement {
+export class XfForm extends PolymerElement {
     static get template() {
         return html`
       <style>
@@ -31,7 +31,7 @@ class XfForm extends PolymerElement {
             token: {
                 type: String
             },
-            todo:{
+            data:{
                 type:Array,
                 value:[
                     {
@@ -51,7 +51,8 @@ class XfForm extends PolymerElement {
                                     },
                                     {
                                         "id": "b-due",
-                                        "type": "date"
+                                        "type": "date",
+                                        "value":"2019-03-01"
                                     }
                                 ],
                                 [
@@ -67,7 +68,8 @@ class XfForm extends PolymerElement {
                                     },
                                     {
                                         "id": "b-due",
-                                        "type": "date"
+                                        "type": "date",
+                                        "value":"2019-04-01"
                                     }
                                 ]
                             ]
@@ -75,110 +77,7 @@ class XfForm extends PolymerElement {
                     }
                 ]
 
-            },
-            data: {
-                type: Array,
-                value: [
-                    {
-                        "bind": {
-                            "id": "b-cart",
-                            "bind": [
-                                {
-                                    "id": "b-total",
-                                    "valid": false,
-                                    "alert": "total must sum up to 70.20"
-                                },
-                                {
-                                    "id": "b-products",
-                                    "bind": [
-                                        [
-                                            {
-                                                "id": "b-info",
-                                                "bind": [
-                                                    [
-                                                        {
-                                                            "id": "b-serial",
-                                                            "type": "xs:integer",
-                                                            "value": 123
-                                                        },
-                                                        {
-                                                            "id": "b-origin",
-                                                            "value": "China"
-                                                        }
-                                                    ]
-                                                ]
-                                            },
-                                            {
-                                                "id": "price",
-                                                "type": "xs:double",
-                                                "value": 22.50
-                                            }
-                                        ],
-                                        [
-                                            {
-                                                "id": "b-info",
-                                                "bind": [
-                                                    [
-                                                        {
-                                                            "id": "b-serial",
-                                                            "type": "xs:integer",
-                                                            "value": 456
-                                                        },
-                                                        {
-                                                            "id": "b-origin",
-                                                            "value": "China"
-                                                        }
-                                                    ]
-                                                ]
-                                            },
-                                            {
-                                                "id": "price",
-                                                "type": "xs:double",
-                                                "value": 34.50
-                                            }
-                                        ],
-                                        [
-                                            {
-                                                "id": "b-info",
-                                                "bind": [
-                                                    [
-                                                        {
-                                                            "id": "b-serial",
-                                                            "type": "xs:integer",
-                                                            "value": 678
-                                                        },
-                                                        {
-                                                            "id": "b-origin",
-                                                            "value": "Bangladesh"
-                                                        }
-                                                    ],
-                                                    [
-                                                        {
-                                                            "id": "b-serial",
-                                                            "type": "xs:integer",
-                                                            "value": 999
-                                                        },
-                                                        {
-                                                            "id": "b-origin",
-                                                            "value": "Canada"
-                                                        }
-                                                    ]
-                                                ]
-                                            },
-                                            {
-                                                "id": "price",
-                                                "type": "xs:double",
-                                                "value": 13.25
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                ]
             }
-
         };
     }
 
@@ -187,17 +86,24 @@ class XfForm extends PolymerElement {
         super.connectedCallback();
         console.log('xf-form connected ', this);
         console.log('xf-form connected ', window.location.pathname);
-        console.log("data ", this.todo);
 
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
 
-
-        this.refresh();
     }
 
-    refresh() {
-        this.todo.forEach(bind => this._initBinding(bind));
+    ready(){
+        super.ready;
+        console.log('all components are up');
+
+        window.addEventListener('WebComponentsReady', function() {
+            console.log('#### WebComponentsReady #####');
+            document.querySelector('xf-form').init();
+        });
+    }
+
+    init() {
+        this.data.forEach(bind => this._initBinding(bind, 0));
     }
 
     _getBindId(bind){
@@ -208,15 +114,15 @@ class XfForm extends PolymerElement {
         }
     }
 
-    _initBinding(bind) {
+    _initBinding(bind, index) {
         // console.log("bind: ", bind);
 
         if (bind.bind && bind.bind.id) {
             // console.log("call APPLY-STATE 1 for bind ", bind.bind.id);
-            this._applyState(bind.bind.id, bind.bind);
+            this._applyInitialState(bind.bind.id, bind.bind, index);
         } else if (bind.id) {
             // console.log("call APPLY-STATE 2 for bind ", bind.id);
-            this._applyState(bind.id, bind);
+            this._applyInitialState(bind.id, bind, index);
         }
 
 
@@ -233,29 +139,54 @@ class XfForm extends PolymerElement {
 
                 for (let j = 0; j < inner.length; j++) {
                     // console.log('inner ', inner[j])
-                    this._initBinding(inner[j]);
+                    this._initBinding(inner[j], i);
                 }
             }
         } else if (Array.isArray(bind)) {
             const plain = bind;
             for (let i = 0; i < plain.length; i++) {
-                this._initBinding(plain[i]);
+                this._initBinding(plain[i], i);
             }
         } else if (bind.bind && bind.bind.bind) {
             // console.log('yes, we have children');
             const child = bind.bind.bind;
             // console.log("child ", child);
-            this._initBinding(child);
+            this._initBinding(child ,0);
         } else if (bind.bind) {
-            this._initBinding(bind.bind);
+            this._initBinding(bind.bind, 0);
         }
 
     }
 
-    _applyState(bindId,bind){
-        // console.log('_applyState for bind ', bind);
-        console.log('_applyState for bind id ', bindId);
-        // console.log('_applyState for bind id ', this._getBindId(bind));
+    _applyInitialState(bindId, bind, index){
+        console.log('_applyInitialState for bind ', bind);
+        // console.log('_applyInitialState for bind id ', bindId);
+        // console.log('_applyInitialState index ', index);
+        const search = '[bind=' + bindId + ']';
+
+        const found = document.querySelectorAll(search);
+        console.log('found controls ', found);
+
+        const targetElem = found[0];
+/*
+        if(found[0].nodeName.toUpperCase() === 'XF-REPEAT'){
+            console.log('>>>>>>>> init repeat');
+
+        }
+*/
+
+        if(bind.bind && Array.isArray(bind.bind[0])){
+            console.log('>>>>>>>> init repeat');
+            const items = bind.bind;
+
+            for(const item in items){
+                const repeat = found[0];
+                console.log('repeat ', repeat);
+                repeat.append();
+            }
+        }
+
+        // console.log('_applyInitialState for bind id ', this._getBindId(bind));
 
         //todo: if bind id is not defined we might have a simple set bindings - needs special treatment
 
@@ -267,6 +198,7 @@ class XfForm extends PolymerElement {
         }
         if(bind.required !== undefined){
             console.log('apply required prop ', bind.required);
+            found[index].setAttribute('required','required');
         }
         if(bind.relevant !== undefined){
             console.log('apply relevant prop ', bind.relevant);
@@ -279,6 +211,14 @@ class XfForm extends PolymerElement {
         }
         if(bind.value !== undefined){
             console.log('apply value prop ', bind.value);
+
+            //todo: this is obviously not optimal as it requires too much knowledge about certain controls
+            const control = found[index];
+            if(control.type === 'text'){
+                control.value = bind.value;
+            }else if(control.type === 'checkbox'){
+                control.checked = bind.value;
+            }
         }
     }
 

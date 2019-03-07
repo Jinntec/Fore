@@ -13,18 +13,33 @@
 
     <style>
     </style>
+
+    <script>
+        function append() {
+            document.getElementById('todo').append();
+        }
+
+        function remove(elem){
+            const repeatItem = elem.closest('.repeat-item');
+            repeatItem.parentNode.removeChild(repeatItem);
+        }
+    </script>
+
 </head>
 <body>
     <div class="vertical-section-container centered">
         <h3>Basic xf-repeat demo</h3>
         <xf-repeat id="todo">
             <template>
-                <input bind="b-task"/>
-                <input bind="b-state" type="checkbox"/>
-                <input bind="b-due" type="date"/>
+                <div>
+                    <input bind="b-task"/>
+                    <input bind="b-state" type="checkbox"/>
+                    <input bind="b-due" type="date"/>
+                    <button type="button" onclick="remove(this);">-</button>
+                </div>
             </template>
         </xf-repeat>
-        <button type="button" on-click="_add">add</button>
+        <button type="button" onclick="append();">add</button>
     </div>
 </body>
 </html>

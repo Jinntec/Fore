@@ -9,6 +9,27 @@
     <script type="module" src="../elements/xf-form.js"></script>
     <script type="module" src="../elements/xf-repeat.js"></script>
 
+    <script>
+        function append() {
+            document.getElementById('r-todos').append();
+        }
+        function remove(elem){
+            const repeatItem = elem.closest('.repeat-item');
+            repeatItem.parentNode.removeChild(repeatItem);
+        }
+
+    </script>
+
+    <style>
+        .header, .repeat-item{
+            display:grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+        [required]{
+            background:lightyellow;
+        }
+    </style>
 </head>
 <body>
     <!-- xf-model is not exposed to the client! -->
@@ -22,17 +43,8 @@
 
         <xf-bind id="b-todo" set="task">
             <xf-bind id="b-task" ref="./text()" required="true()"></xf-bind>
-            <xf-bind id="b-state" ref="@complete" type="xs:boolean"> </xf-bind>
-            <xf-bind id="b-due" ref="@due" type="xs:date"> </xf-bind>
-        </xf-bind>
-
-        <xf-bind id="todo">
-            <item idx="1">
-
-            </item>
-            <item idx="2">
-
-            </item>
+            <xf-bind id="b-state" ref="@complete" type="xs:boolean"></xf-bind>
+            <xf-bind id="b-due" ref="@due" type="xs:date"></xf-bind>
         </xf-bind>
 
 
@@ -62,17 +74,24 @@
 
 
     <xf-form>
-        <xf-repeat id="r-todos" set="b-todo">
-            <input bind="b-task"/>
-            <input bind="b-state" type="checkbox" />
-            <input bind="b-due" type="date"/>
+        <h1>todos</h1>
+
+        <div class="header">
+            <span>todo</span>
+            <span>due</span>
+            <span>status</span>
+        </div>
+        <xf-repeat id="r-todos" bind="b-todo">
+            <template>
+                <div>
+                    <input bind="b-task" type="text"/>
+                    <input bind="b-due" type="date"/>
+                    <input bind="b-state" type="checkbox"/>
+                    <button type="button" onclick="remove(this);">-</button>
+                </div>
+            </template>
         </xf-repeat>
-        <button>
-            <xf-append bind="todo" template="todoTmpl">add</xf-append>
-        </button>
-        <button>
-            <xf-delete bind="todo" at="index('r-todos')">delete</xf-delete>
-        </button>
+        <button type="button" onclick="append();">add</button>
     </xf-form>
 </body>
 </html>
