@@ -1,15 +1,36 @@
 # JSON format description
 
+author: joern turner
+date: 06.03.2019
+
 This document describes the exchange format for binding between client and server.
 
 The `xf-bind` elements are provided in an JSON format that matches the structure 
-of the bindings. These will be consumed by the client and serves as the datamodel
+of the bindings. This will be consumed by the client and serves as the datamodel
 of the client.
+
+## bind properties
+
+A bind may have additional properties that attach certain facets to bound nodes. With
+the exception of the `type` property these are the result of evaluation of a boolean XPath
+expression.
+
+The following properties exist:
+
+Property | Meaning | default
+-------- | ------- | -------
+readonly | bound node is readonly or readwrite | false
+required | bound node is required or optional | false
+relevant | bound node is relevant or not | true
+valid | bound node is valid or invalid | true
+type | datatype | string
+
+
 
 ## bind objects
 
 Essentially the datamodel is made of bind objects. You can think of a 'bind object' as
-an instanciation of a bind to a concrete node in the associated XML or JSON data.
+an instanciation of a bind for a concrete node in the associated XML or JSON data.
 
 Example:
 
@@ -53,12 +74,18 @@ There a few things worth pointing out:
 
 * the JSON returned is always an array of bind objects
 * bind objects contain a varying amount of properties that reflect the evaluated
-state of the bound node (see `required` in above example).
+state of the bound node (see `required` in above example). Properties will only be present
+if they have a non-default value to minimize the needed bandwidth
 * a `bind` is identified by the bind id given by the corresponding `xf-bind` element
  ('b-greeting' and 'b-audience').
+* each `xf-bind` MUST have an id
 
 
 ## nested bindings
+
+Binds can be nested where child bindings inherit the context from its parents e.g. in 
+this example the bind of `b-type` will evaluate to `address/@type`.
+
 
 ```
 <xf-model>
@@ -70,12 +97,13 @@ state of the bound node (see `required` in above example).
         </data>
     </xf-instance>
     <xf-bind id="b-address">
-        <xf-bind id="b-tyoe" ref="@type"></xf-bind>
+        <xf-bind id="b-type" ref="@type"></xf-bind>
         <xf-bind id="b-street" ref="street"></xf-bind>
     </xf-bind>
 </xf-model>
 
 ``` 
+
 
 The JSON structure reflects the structure of the bindings like this:
 
@@ -87,9 +115,11 @@ The JSON structure reflects the structure of the bindings like this:
             "bind": [
                 {
                     "id": "b-type"
+                    "value": "postal"
                 },
                 {
                     "id":"b-street"
+                    "value": "Kielganstr."
                 }
             ]
         }
@@ -124,35 +154,39 @@ a 'bind object' is created that reflects the state of the node with respect
 to the binding properties (readonly, required, relevant, valid, type, value).
 
 The resulting JSON:
-
 ```
 [
-    {
-        "bind":{
-            "id":"b-item",
-            "value":"item1",
-            "required":false
+  {
+    "bind": {
+      "id": "b-item",
+      "bind": [
+        {
+          "value": "item1",
+          "required": false
+        },
+        {
+          "value": "item2",
+          "required": true
+        },
+        {
+          "value": "item3",
+          "required": false
         }
-    },
-    {
-        "bind":{
-            "id":"b-item",
-            "value":"item2",
-            "required":true
-        }
-    },
-    {
-        "bind":{
-            "id":"b-item",
-            "value":"item3",
-            "required":false
-        }
+      ]
     }
-    
+  }
 ]
 ```
 
-The `set` property will contain an array of bind objects. 
+
+
+ > In XForms there used to be a `nodeset` attribute on bind elements to bind to nodesets.
+ This was deprecated and changed to the use of the `ref` attribute in all places. However
+ as Fore is designed as a compiler it is significantly easier to process the bindings if 
+ we can rely on static analysis of the bind elements. Therefore we use the `set` attribute
+ instead of `ref` to explicitly mark the fact that multiple nodes are referred. As we intend
+ to also bind to JSON instances we use the more generic term 'set' instead of 'nodeset'. 
+
 
 ## complex nested bindings
 
@@ -184,7 +218,7 @@ This results in slight changes in the resulting JSON:
 [
   {
     "bind": {
-      "id": "todo",
+      "id": "b-todo",
       "bind": [
         [
           {
@@ -224,7 +258,6 @@ This results in slight changes in the resulting JSON:
 ]
 
 ```
-
 
 
 Here the set is not just an array but an array of arrays as we need to distinguish
@@ -280,58 +313,101 @@ This example shows the use of nested sets.
 
 ```
 [
-  {
-    "bind": {
-      "id": "b-cart",
-      "bind": [
-        {
-          "id": "b-total",
-          "valid": false,
-          "alert": "total must sum up to 70.20"
-        },
-        {
-          "id": "b-products",
-          "bind": [
-            [
-              {
-                "id": "b-info",
-                "bind": [
-                  {
-                    "id": "b-serial",
-                    "type": "xs:integer"
-                  },
-                  {
-                    "id": "b-origin"
-                  }
-                ]
-              },
-              {
-                "id": "price",
-                "type": "xs:double"
-              }
-            ],
-            [
-              {
-                "id": "b-info",
-                "bind": [
-                  {
-                    "id": "b-serial",
-                    "type": "xs:integer"
-                  },
-                  {
-                    "id": "b-origin"
-                  }
-                ]
-              },
-              {
-                "id": "price",
-                "type": "xs:double"
-              }
+    {
+        "bind": {
+            "id": "b-cart",
+            "bind": [
+                {
+                    "id": "b-total",
+                    "valid": false,
+                    "alert": "total must sum up to 70.20"
+                },
+                {
+                    "id": "b-products",
+                    "bind": [
+                        [
+                            {
+                                "id": "b-info",
+                                "bind": [
+                                    [
+                                        {
+                                            "id": "b-serial",
+                                            "type": "xs:integer",
+                                            "value":123
+                                        },
+                                        {
+                                            "id": "b-origin",
+                                            "value": "China"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "id": "price",
+                                "type": "xs:double",
+                                "value":22.50
+                            }
+                        ],
+                        [
+                            {
+                                "id": "b-info",
+                                "bind": [
+                                    [
+                                        {
+                                            "id": "b-serial",
+                                            "type": "xs:integer",
+                                            "value":456
+                                        },
+                                        {
+                                            "id": "b-origin",
+                                            "value": "China"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "id": "price",
+                                "type": "xs:double",
+                                "value": 34.50
+                            }
+                        ],
+                        [
+                            {
+                                "id": "b-info",
+                                "bind": [
+                                    [
+                                        {
+                                            "id": "b-serial",
+                                            "type": "xs:integer",
+                                            "value":678
+                                        },
+                                        {
+                                            "id": "b-origin",
+                                            "value": "Bangladesh"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "id": "price",
+                                "type": "xs:double",
+                                "value": 13.25
+                            }
+                        ]
+                    ]
+                }
             ]
-          ]
         }
-      ]
     }
-  }
 ]
 ```
+
+## Mapping of datatypes
+
+In `xf-bind` elements the XSD Simple Types are used. This can be either the predefined as 
+well as extended ones. Obviously those datatypes cannot be supported by a browser natively.
+
+In order to allow at least basic type-checking the XSD types must be mapped to the
+datatypes available in the browser.
+
+tbd: Mapping table
