@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>xf-repeat demo</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module">
+        import '../xf-repeat.js';
+    </script>
+
+    <style>
+    </style>
+</head>
+<body>
+    <div class="vertical-section-container centered">
+        <h3>Basic xf-repeat demo</h3>
+        <xf-repeat id="todo">
+            <template>
+                <input bind="b-task"/>
+                <input bind="b-state" type="checkbox"/>
+                <input bind="b-due" type="date"/>
+            </template>
+        </xf-repeat>
+        <button type="button" on-click="_add">add</button>
+    </div>
+</body>
+</html>

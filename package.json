@@ -6,13 +6,13 @@
     "@polymer/iron-ajax": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "polymer-redux": "^2.0.0-beta.2"
+    "polymer-redux": "^2.0.0-beta.2",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "@polymer/test-fixture": "^4.0.2",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
     "chai": "^4.2.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
