@@ -76,7 +76,7 @@ var components = [
 ];
 
 
-gulp.task('deploy', ['deploy:other', 'deploy:components', 'deploy:styles']);
+gulp.task('deploy', ['deploy:other', 'deploy:components']);
 
 gulp.task('watch', function () {
     gulp.watch(otherPaths, ['deploy:other']);

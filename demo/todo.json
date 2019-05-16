@@ -1,13 +1,13 @@
 [
   {
     "bind": {
-      "id": "todo",
+      "id": "b-todo",
       "bind": [
         [
           {
             "id": "b-task",
             "required": true,
-            "value":"Pick up Milk"
+            "value": "Pick up Milk"
           },
           {
             "id": "b-state",
@@ -16,14 +16,15 @@
           },
           {
             "id": "b-due",
-            "type": "date"
+            "type": "date",
+            "value": "2019-03-01"
           }
         ],
         [
           {
             "id": "b-task",
             "required": true,
-            "value":"Make tutorial part"
+            "value": "Make tutorial part"
           },
           {
             "id": "b-state",
@@ -32,7 +33,8 @@
           },
           {
             "id": "b-due",
-            "type": "date"
+            "type": "date",
+            "value": "2019-04-01"
           }
         ]
       ]

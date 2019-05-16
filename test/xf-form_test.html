@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>xf-model test</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script type="module" src="../elements/xf-form.js"></script>
+    <script type="module" src="../elements/xf-output.js"></script>
+  </head>
+  <body>
+
+        <xf-form id="basic" mockup='[
+          {
+            "bind":{
+              "id":"b-greeting",
+              "required":true,
+              "value":"World"
+            }
+          }
+        ]'>
+        </xf-form>
+
+<!--
+        <xf-form id="todo" mockup='[
+          {
+            "bind":{
+              "id":"b-todo",
+              "bind":[
+                [
+                  {
+                    "id":"b-task",
+                    "required":true,
+                    "value":"Pick up Milk"
+                  },
+                  {
+                    "id":"b-state",
+                    "type":"boolean",
+                    "value":false
+                  },
+                  {
+                    "id":"b-due",
+                    "type":"date",
+                    "value":"2019-03-01"
+                  }
+                ],
+                [
+                  {
+                    "id":"b-task",
+                    "required":true,
+                    "value":"Make tutorial part"
+                  },
+                  {
+                    "id":"b-state",
+                    "type":"boolean",
+                    "value":true
+                  },
+                  {
+                    "id":"b-due",
+                    "type":"date",
+                    "value":"2019-04-01"
+                  }
+                ]
+              ]
+            }
+          }
+        ]'>
+
+        </xf-form>
+-->
+
+    <script type="module">
+      suite('xf-form', () => {
+
+        const element = document.getElementById('basic');
+
+        test('instantiating the element with mockup data works', () => {
+          const mydata = element.model[0];
+          assert.equal(mydata.bind.id, 'b-greeting');
+          assert.equal(mydata.bind.required, true);
+          assert.equal(mydata.bind.value, 'World');
+        });
+
+        test('binding works', () => {
+
+          document.addEventListener('ui-initialized', function (){
+            const output = document.getElementById('greeting');
+            assert.equal(output.innerHTML,'World');
+          });
+
+        });
+
+
+/*
+        test('setting a property on the element works', () => {
+          const element = fixture('ChangedPropertyTestFixture');
+          assert.equal(element.prop1, 'new-prop1');
+          const elementShadowRoot = element.shadowRoot;
+          const elementHeader = elementShadowRoot.querySelector('h2');
+          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+        });
+*/
+
+      });
+    </script>
+
+  </body>
+</html>

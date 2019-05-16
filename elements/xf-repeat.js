@@ -1,5 +1,6 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 
+
 /**
  * `xf-repeat`
  * an xformish form for eXist-db
@@ -38,18 +39,21 @@ export class XfRepeat extends PolymerElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-repeat connected ', this);
+        // console.log('xf-repeat connected ', this);
         // console.log('this content aka template ', this.firstElementChild);
 
     }
 
     append(){
+
+        //todo: add entry to data-model
+
         const tmpl = this.firstElementChild;
-        console.log('template for repeat ', tmpl);
+        // console.log('template for repeat ', tmpl);
 
         const clone = document.importNode(tmpl.content, true);
-        console.log('clone ', clone);
-        console.log('clone first', clone.firstElementChild);
+        // console.log('clone ', clone);
+        // console.log('clone first', clone.firstElementChild);
         clone.firstElementChild.classList.add('repeat-item');
         this.appendChild(clone);
 

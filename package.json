@@ -1,7 +1,7 @@
 {
-  "name": "fore-model",
+  "name": "xf-form",
   "description": "an xformish model for eXist-db",
-  "main": "fore-model.js",
+  "main": "xf-form.js",
   "dependencies": {
     "@polymer/iron-ajax": "^3.0.1",
     "@polymer/polymer": "^3.0.0",

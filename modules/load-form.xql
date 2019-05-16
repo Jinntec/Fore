@@ -17,6 +17,7 @@ declare function local:filter-model($element as element(), $token as xs:string) 
                 return
                 if(name($child) eq 'xf-form') then
                     element{'xf-form'}{
+                        $child/@*,
                         attribute{'token'}{$token},
                         for $subchild in $child/*
                         return local:filter-model($subchild,$token)
@@ -34,6 +35,7 @@ declare function local:copy($element as element(), $token as xs:string) as eleme
             return
                 if(name($child) eq 'xf-form') then
                     element{'xf-form'}{
+                        $child/@*,
                         attribute{'token'}{$token},
                         for $subchild in $child/*
                             return
@@ -48,6 +50,7 @@ declare function local:copy($element as element(), $token as xs:string) as eleme
 declare function local:handleChildren($node as node()){
     if(name($child) eq 'xf-form') then
         element{'xf-form'}{
+            $child/@*,
             attribute{'token'}{$token},
             for $subchild in $child/*
                 return
