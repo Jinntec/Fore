@@ -45,10 +45,17 @@
             }
           }
         ]'>
-        <h1>Hello <xf-output id="output" bind="b-greeting"></xf-output></h1>
+        <h1>Hello
+            <xf-output id="output" bind="b-greeting">
+
+            </xf-output>
+        </h1>
 
         <label for="greeting">Greeting:</label>
         <input id="greeting" bind="b-greeting" type="text" incremental="incremental"/>
+
+        <label for="greeting2">This fires onblur</label>
+        <input id="greeting2" bind="b-greeting" type="text"/>
 
         <xf-button label="set value to 'girls and boys'">
             <xf-setvalue bind="b-greeting" value="girls and boys"></xf-setvalue>

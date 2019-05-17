@@ -27,11 +27,10 @@ class XfSetvalue extends PolymerElement {
     }
 
     execute(){
-        console.log('xf-setvalue executing...');
-        console.log('xf-setvalue bind ', this.bind);
-        console.log('parent form ', this.closest('xf-form').getProxy(this.bind));
+        // console.log('xf-setvalue executing...');
+        // console.log('xf-setvalue bind ', this.bind);
         const proxy = this.closest('xf-form').getProxy(this.bind);
-        console.log('setvalue proxy ', proxy);
+        // console.log('setvalue proxy ', proxy);
         proxy.value =  this.value;
         return true;
     }

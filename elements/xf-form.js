@@ -11,8 +11,17 @@ window.controls = ['INPUT',
                    'XF-OUTPUT'];
 
 /**
- * `fore-form`
- * an xformish form for eXist-db
+ * `xf-form`
+ * an xformish form framework for eXist-db.
+ *
+ * 'xf-form' is the main component of the client-side part of Fore. Just like an HTML form it wraps the controls
+ * belonging to the form. A complete form consists of a server-side part (the model) and a client-side part.
+ *
+ * On the client the model is represented in JSON which reflects the structure of the model-bindings. Value updates and
+ * simple validations are conducted on the client directly. Second-level validation and submissions are executed on the
+ * server.
+ *
+ * While the data-model can be directly inlined within the HTML it will never be exposed to the client at runtime.
  *
  # * @polymer
  * @demo demo/index.html
@@ -74,6 +83,7 @@ export class XfForm extends PolymerElement {
 
     init() {
 
+        // ### with the 'mockup' property local mockup data can be passed to the form.
         if(this.mockup){
             // console.log('loading mockup data from : ', this.mockup);
             this.model = JSON.parse(this.mockup);
@@ -83,22 +93,21 @@ export class XfForm extends PolymerElement {
         if(this.model){
             this.model.forEach(item => this._processData(item, 0));
         }
-        // ### initialize action elements
-        document.querySelectorAll('xf-button').forEach( trigger => {
 
-        });
-
+        // ### notification event to signal that the form is ready for action
         this.dispatchEvent(new CustomEvent('ui-initialized'));
-
     }
 
+    /**
+     * returns a proxy object for a bind.
+     *
+     * @param bindId the bind id as given by the client-side model
+     * @returns {any}
+     */
     getProxy(bindId){
         return this.proxies.get(bindId);
     }
 
-    _updateData(){
-        console.log('### updateData ', this.model);
-    }
 
     _getBindId(bind) {
         if (bind.bind && bind.bind.id) {
@@ -109,9 +118,12 @@ export class XfForm extends PolymerElement {
     }
 
     /**
-     * recursively processes all model data to initialize the UI
+     * recursively processes all model data (JSON) to initialize the UI
      *
-     * @param bind
+     *
+     * todo: check for correctness with larger nested structures.
+     *
+     * @param bind the bind object to process
      * @param index
      * @private
      */
@@ -127,7 +139,8 @@ export class XfForm extends PolymerElement {
 */
         if (bind.id) {
             // console.log("call _initControls for bind ", bind.id);
-            this._initControls(bind.id, bind, index);
+            // this._initControls(bind.id, bind, index);
+            this._initControls(bind, index);
         }
 
         // PROCESS CHILDREN
@@ -162,17 +175,32 @@ export class XfForm extends PolymerElement {
 
     }
 
-    _initControls(bindId, bind, index) {
+    /**
+     * Processes controls bound to given bind object. Creates a proxy object for the bind object which handles the
+     * actual updates of values. The proxy will hold references to all controls that are bound to a certain bind object.
+     *
+     * This function also applies all properties of the bind object to the bound controls and attaches eventlisteners
+     * to the controls to propagate the changes back to the model (via the proxy).
+     *
+     * todo: repeat processing
+     *
+     * @param bind the bind object
+     * @param index
+     * @private
+     */
+    // _initControls(bindId, bind, index) {
+    _initControls(bind, index) {
         // console.log('_initControls for bind ', bindId, bind, index);
 
         // ### searching all controls that are bound to given bind id
-        const search = '[bind=' + bindId + ']';
+        // const search = '[bind=' + bindId + ']';
+        const search = '[bind=' + bind.id + ']';
         const found = document.querySelectorAll(search);
         console.log('found controls ', found);
 
         // ### if no controls are bound back out
         if(!found[0]) {
-            // console.warn('bind with id ' + bindId + ' is not bound in this form');
+            console.warn('bind with id ' + bind.id + ' is not bound in this form');
             return;
         }
 
@@ -187,7 +215,7 @@ export class XfForm extends PolymerElement {
            proxy.bound = elem;
 
            this._applyProperties(elem, bind);
-           this._attachListener(elem,bind,proxy);
+           this._attachListener(elem,proxy);
 
        });
 
@@ -223,6 +251,15 @@ export class XfForm extends PolymerElement {
 
     }
 
+    /**
+     * Creates a proxy for every bind object in the data-model. This serves as a central for mutations of the data-model
+     * and updates all bound controls when value changes occur. All proxy objects will be stored in a local map of this
+     * form instance.
+     *
+     * @param bind the bind object which gets proxied.
+     * @returns {boolean|*}
+     * @private
+     */
     _createProxy(bind){
         // ### setting up a proxy object for binding with also keeps references to all bound controls
         const handler = {
@@ -247,9 +284,7 @@ export class XfForm extends PolymerElement {
 
                 // ### actual setting of values
                 if(key === 'value'){
-
                     target[key] = value;
-
                     target.boundElements.forEach( control => {
                         control.value = value;
                     });
@@ -262,10 +297,16 @@ export class XfForm extends PolymerElement {
         const proxy = new Proxy(bind, handler);
         this.proxies.set(bind.id,proxy);
         console.log('proxies ', this.proxies);
-        // return proxy;
     }
 
-    _attachListener(control,bind,proxy){
+    /**
+     * Attaches eventlisteners to bound controls to report back value-changes triggered by the user.
+     *
+     * @param control the control
+     * @param proxy the proxy object
+     * @private
+     */
+    _attachListener(control,proxy){
 
         // xf-output is the exception from the rule. Outputs do not have update listeners
         console.log('#', control.nodeName.toUpperCase());
@@ -293,12 +334,25 @@ export class XfForm extends PolymerElement {
         }
     }
 
+    /**
+     * applies the properties of the bind object to the control.
+     *
+     * @param control the control to initialize
+     * @param bind the bind object
+     * @private
+     */
     _applyProperties(control, bind){
         if (bind.alert !== undefined) {
             // console.log('apply alert prop ', bind.alert);
+            //todo
         }
         if (bind.readonly !== undefined) {
             // console.log('apply readonly prop ', bind.readonly);
+            if(bind.readonly){
+                control.setAttribute('readonly','readonly')
+            }else{
+                control.removeAttribute('readonly');
+            }
         }
         if (bind.required !== undefined) {
             // console.log('apply required prop ', bind.required);
@@ -306,12 +360,19 @@ export class XfForm extends PolymerElement {
         }
         if (bind.relevant !== undefined) {
             // console.log('apply relevant prop ', bind.relevant);
+            if(bind.relevant){
+                control.style.display = 'inline-block';
+            }else {
+                control.style.display = 'none';
+            }
         }
         if (bind.valid !== undefined) {
             // console.log('apply valid prop ', bind.valid);
+            //todo
         }
         if (bind.type !== undefined) {
             // console.log('apply type prop ', bind.type);
+            //todo
         }
         if (bind.value !== undefined) {
             // console.log('apply value prop ', bind.value);

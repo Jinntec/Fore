@@ -1,35 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="added a comment">
-      <change afterPath="$PROJECT_DIR$/demo/helloworld.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elements/xf-append.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elements/xf-button.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elements/xf-output.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elements/xf-setvalue.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elements/xf-submit.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/xf-output_test.html" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="local binding and updating of values works">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller.xql" beforeDir="false" afterPath="$PROJECT_DIR$/controller.xql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo.json" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo4.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo5.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/json.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/json.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elements/demo/repeat.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/elements/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-bound.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/helloworld.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/helloworld.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elements/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elements/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elements/xf-store.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/load-form.xql" beforeDir="false" afterPath="$PROJECT_DIR$/modules/load-form.xql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/_element_test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-form_test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/exf-model_test.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elements/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-setvalue.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="true" current-in-tab="false">
+      <file pinned="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/elements/xf-form.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="241" column="29" selection-start-line="241" selection-start-column="29" selection-end-line="241" selection-end-column="29" />
+            <state relative-caret-position="497">
+              <caret line="341" column="15" lean-forward="true" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
               <folding>
                 <element signature="e#0#83#0" expanded="true" />
               </folding>
@@ -67,47 +43,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demo/instance.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/elements/xf-form1.js">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/xf-form_test.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+            <state relative-caret-position="384">
+              <caret line="92" column="63" selection-start-line="92" selection-start-column="63" selection-end-line="92" selection-end-column="63" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demo/todo.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="101" column="30" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/xf-output_test.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="423">
-              <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+              <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/xf-button_test.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="637">
+              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
             </state>
           </provider>
         </entry>
@@ -115,8 +72,49 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
+            <state relative-caret-position="568">
+              <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/elements/xf-button.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="359">
+              <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+              <folding>
+                <marker date="1558085876218" expanded="true" signature="304:456" ph="..." />
+                <marker date="1558085876218" expanded="true" signature="320:357" ph="{...}" />
+                <marker date="1558085876218" expanded="true" signature="509:592" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="493">
+              <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/products.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="113">
+              <caret line="14" column="49" selection-start-line="14" selection-start-column="49" selection-end-line="14" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/elements/xf-submit.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
             </state>
           </provider>
         </entry>
@@ -124,7 +122,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="706">
+            <state relative-caret-position="782">
               <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
             </state>
           </provider>
@@ -141,12 +139,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>bind</find>
-      <find>mockup</find>
-      <find>form</find>
-      <find>template</find>
-      <find>this.$</find>
-      <find>button</find>
       <find>XfForm</find>
       <find>XF</find>
       <find>XfAppend</find>
@@ -162,15 +154,21 @@
       <find>_applyInitialState</find>
       <find>found</find>
       <find>_initControl</find>
-      <find>_initControls</find>
       <find>initForm</find>
-      <find>_updateData</find>
       <find>data</find>
       <find>refreshing</find>
       <find>_processData</find>
       <find>setting value</find>
       <find>modelChanged</find>
       <find>greeting</find>
+      <find>forEach</find>
+      <find>controls</find>
+      <find>_updateData</find>
+      <find>bindId</find>
+      <find>_initControls</find>
+      <find>proxy</find>
+      <find>_attachListener</find>
+      <find>_applyProperties</find>
     </findStrings>
     <replaceStrings>
       <replace>exf:</replace>
@@ -206,7 +204,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/doc/userguide.md" />
         <option value="$PROJECT_DIR$/modules/main.xql" />
         <option value="$PROJECT_DIR$/data/config.xml" />
         <option value="$PROJECT_DIR$/modules/config.xqm" />
@@ -234,7 +231,6 @@
         <option value="$PROJECT_DIR$/doc/json.md" />
         <option value="$PROJECT_DIR$/elements/xf-bound.js" />
         <option value="$PROJECT_DIR$/elements/xf-submit.js" />
-        <option value="$PROJECT_DIR$/elements/xf-button.js" />
         <option value="$PROJECT_DIR$/elements/xf-append.js" />
         <option value="$PROJECT_DIR$/elements/xf-repeat.js" />
         <option value="$PROJECT_DIR$/modules/load-form.xql" />
@@ -251,12 +247,14 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/test/xf-output_test.html" />
         <option value="$PROJECT_DIR$/test/index.html" />
-        <option value="$PROJECT_DIR$/elements/xf-setvalue.js" />
         <option value="$PROJECT_DIR$/demo/todo.html" />
         <option value="$PROJECT_DIR$/elements/xf-output.js" />
+        <option value="$PROJECT_DIR$/test/xf-form_test.html" />
+        <option value="$PROJECT_DIR$/test/xf-button_test.html" />
+        <option value="$PROJECT_DIR$/elements/xf-button.js" />
+        <option value="$PROJECT_DIR$/elements/xf-setvalue.js" />
         <option value="$PROJECT_DIR$/demo/helloworld.html" />
         <option value="$PROJECT_DIR$/elements/xf-form.js" />
-        <option value="$PROJECT_DIR$/test/xf-form_test.html" />
       </list>
     </option>
   </component>
@@ -282,12 +280,23 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="fore" type="b2602c69:ProjectViewProjectNode" />
               <item name="fore" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fore" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fore" type="462c0819:PsiDirectoryNode" />
+              <item name="elements" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fore" type="b2602c69:ProjectViewProjectNode" />
@@ -299,7 +308,6 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -307,7 +315,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/elements" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/test" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -320,16 +328,16 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/elements/model" />
-      <recent name="$PROJECT_DIR$/elements" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/elements" />
       <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/elements" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/elements/demo" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/elements/model" />
+      <recent name="$PROJECT_DIR$/elements" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -431,7 +439,8 @@
       <workItem from="1557737662303" duration="11380000" />
       <workItem from="1557827689718" duration="2112000" />
       <workItem from="1557910331691" duration="16068000" />
-      <workItem from="1557994449036" duration="22629000" />
+      <workItem from="1557994449036" duration="23306000" />
+      <workItem from="1558075862699" duration="17006000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -608,17 +617,31 @@
       <option name="project" value="LOCAL" />
       <updated>1551981247256</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="local binding and updating of values works">
+      <created>1558022617218</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1558022617219</updated>
+    </task>
+    <task id="LOCAL-00027" summary="refactored xf-form; implemented basic setvalue action">
+      <created>1558088546376</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1558088546376</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="382212000" />
+    <option name="totallyTimeSpent" value="399895000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-2355" y="-1057" width="2165" height="1413" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14955041" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15097019" />
       <window_info id="Structure" order="1" weight="0.3645084" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -635,10 +658,10 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="TypeScript" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.67305934" visible="true" weight="0.36999214" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.67305934" weight="0.36999214" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.32694063" side_tool="true" weight="0.2944369" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.3299293" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785638" weight="0.3181461" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785638" visible="true" weight="0.3181461" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -721,7 +744,9 @@
     <MESSAGE value="basic client-side parsing of states; started implementation of repeat" />
     <MESSAGE value="made sure initial state is applied once all controls are up;&#10;initialisation of repeat for todo sample;" />
     <MESSAGE value="added a comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a comment" />
+    <MESSAGE value="local binding and updating of values works" />
+    <MESSAGE value="refactored xf-form; implemented basic setvalue action" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored xf-form; implemented basic setvalue action" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -740,20 +765,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/elements/seed-element.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gulpfile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="78" column="56" selection-start-line="78" selection-start-column="56" selection-end-line="78" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/@polymer/iron-ajax/iron-ajax.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -823,20 +834,6 @@
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-submit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="1" lean-forward="true" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo/countries.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -879,18 +876,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-button.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
-          <folding>
-            <marker date="1557317455044" expanded="true" signature="304:371" ph="..." />
-            <marker date="1557317455044" expanded="true" signature="320:357" ph="{...}" />
-            <marker date="1557317455044" expanded="true" signature="424:480" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo/todo.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -908,90 +893,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-form1.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="706">
-          <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/hello.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" lean-forward="true" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/hello.json" />
+    <entry file="file://$PROJECT_DIR$/demo/my-element.html" />
+    <entry file="file://$PROJECT_DIR$/demo/todo2.json" />
+    <entry file="file://$PROJECT_DIR$/demo/todo5.json" />
+    <entry file="file://$PROJECT_DIR$/demo/todo4.json" />
+    <entry file="file://$PROJECT_DIR$/demo/todo3.json" />
+    <entry file="file://$PROJECT_DIR$/elements/my-element.js" />
+    <entry file="file://$PROJECT_DIR$/elements/demo/index.html" />
+    <entry file="file://$PROJECT_DIR$/elements/demo/repeat.html" />
     <entry file="file://$PROJECT_DIR$/demo/instance.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/my-element.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/todo2.json">
+    <entry file="file://$PROJECT_DIR$/elements/xf-form1.js">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/todo5.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/todo4.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/todo3.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/my-element.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/todo.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="101" column="30" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-form.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="241" column="29" selection-start-line="241" selection-start-column="29" selection-end-line="241" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/demo/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elements/demo/repeat.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-103" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/xf-form_test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/index.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1000,10 +915,88 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/demo/todo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1717">
+          <caret line="101" column="30" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/xf-output_test.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="423">
-          <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+          <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/xf-form_test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="92" column="63" selection-start-line="92" selection-start-column="63" selection-end-line="92" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-submit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/xf-button_test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-button.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+          <folding>
+            <marker date="1558085876218" expanded="true" signature="304:456" ph="..." />
+            <marker date="1558085876218" expanded="true" signature="320:357" ph="{...}" />
+            <marker date="1558085876218" expanded="true" signature="509:592" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/products.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="14" column="49" selection-start-line="14" selection-start-column="49" selection-end-line="14" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="568">
+          <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="497">
+          <caret line="341" column="15" lean-forward="true" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#83#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
