@@ -1,6 +1,15 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
 
+
+/**
+ * this array defines which elements are accepted as controls (get eventlisteners attached)
+ */
+window.controls = ['INPUT',
+                   'SELECT',
+                   'TEXTAREA',
+                   'XF-OUTPUT'];
+
 /**
  * `fore-form`
  * an xformish form for eXist-db
@@ -38,7 +47,7 @@ export class XfForm extends PolymerElement {
             },
             model: {
                 type: Array,
-                value:function () { return [] },
+                value:function () { return []; },
                 notify:true
             }
         };
@@ -47,7 +56,7 @@ export class XfForm extends PolymerElement {
     connectedCallback() {
         super.connectedCallback();
         console.log('xf-form connected ', window.location.pathname);
-
+        this.proxies = new Map();
 
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
@@ -70,12 +79,23 @@ export class XfForm extends PolymerElement {
             this.model = JSON.parse(this.mockup);
         }
 
+        // ### initialize model
         if(this.model){
             this.model.forEach(item => this._processData(item, 0));
-            this.dispatchEvent(new CustomEvent('ui-initialized'));
         }
+        // ### initialize action elements
+        document.querySelectorAll('xf-button').forEach( trigger => {
+
+        });
+
+        this.dispatchEvent(new CustomEvent('ui-initialized'));
 
     }
+
+    getProxy(bindId){
+        return this.proxies.get(bindId);
+    }
+
     _updateData(){
         console.log('### updateData ', this.model);
     }
@@ -148,7 +168,7 @@ export class XfForm extends PolymerElement {
         // ### searching all controls that are bound to given bind id
         const search = '[bind=' + bindId + ']';
         const found = document.querySelectorAll(search);
-        // console.log('found controls ', found);
+        console.log('found controls ', found);
 
         // ### if no controls are bound back out
         if(!found[0]) {
@@ -156,48 +176,14 @@ export class XfForm extends PolymerElement {
             return;
         }
 
-        // ### setting up a proxy object for binding with also keeps references to all bound controls
-        const handler = {
-            get(target, key){
-                console.log('getting value: ', target[key]);
-                return target[key];
-            },
-            set(target, key,value){
-                console.log('setting value ', value);
-                // console.log('@@@bind ', bind);
-                console.log('@@@bind id ', bind.id);
-
-                // ### bound controls are stored in an array 'boundElements'
-                if(key === 'bound'){
-                    if(target.boundElements === undefined){
-                        target.boundElements=[];
-                    }
-                    console.log('added bound control: ', proxy);
-                    target.boundElements.push(value);
-                }
-
-                // ### actual setting of values
-                if(key === 'value'){
-
-                    target[key] = value;
-
-                    target.boundElements.forEach( control => {
-                       control.value = value;
-                    });
-
-                }
-                return true;
-            }
-
-        };
-        const proxy = new Proxy(bind, handler);
-        console.log('new proxy ', proxy);
-
+        // ### create a single proxy object for each bind in the model
+        this._createProxy(bind);
 
         found.forEach((elem) => {
            //todo: if bind id is not defined we might have a simple set bindings - needs special treatment
 
            // store control in proxy object
+           const proxy = this.proxies.get(bind.id);
            proxy.bound = elem;
 
            this._applyProperties(elem, bind);
@@ -237,10 +223,57 @@ export class XfForm extends PolymerElement {
 
     }
 
+    _createProxy(bind){
+        // ### setting up a proxy object for binding with also keeps references to all bound controls
+        const handler = {
+            get(target, key){
+                console.log('getting value: ', target[key]);
+                return target[key];
+            },
+            set(target, key,value){
+                console.log('setting value ', value);
+                // console.log('@@@bind ', bind);
+
+                // ### bound controls are stored in an array 'boundElements'
+                if(key === 'bound'){
+                    if(target.boundElements === undefined){
+                        target.boundElements=[];
+                    }
+                    if(window.controls.indexOf(value.nodeName.toUpperCase()) != -1) {
+                        console.log('added bound control: ', value);
+                        target.boundElements.push(value);
+                    }
+                }
+
+                // ### actual setting of values
+                if(key === 'value'){
+
+                    target[key] = value;
+
+                    target.boundElements.forEach( control => {
+                        control.value = value;
+                    });
+
+                }
+                return true;
+            }
+
+        };
+        const proxy = new Proxy(bind, handler);
+        this.proxies.set(bind.id,proxy);
+        console.log('proxies ', this.proxies);
+        // return proxy;
+    }
+
     _attachListener(control,bind,proxy){
 
         // xf-output is the exception from the rule. Outputs do not have update listeners
-        if(control.nodeName.toUpperCase() !== 'XF-OUTPUT'){
+        console.log('#', control.nodeName.toUpperCase());
+        console.log('#', window.controls.indexOf(control.nodeName.toUpperCase()));
+        const ctrl = control.nodeName.toUpperCase();
+
+        // ### attach listener to controls with the exception of 'xf-output' controls which cannot be changed.
+        if(window.controls.indexOf(ctrl) != -1 && ctrl !== 'XF-OUTPUT'){
             console.log('attaching listener to ', control);
 
             if(control.hasAttribute('incremental')){

@@ -16,9 +16,13 @@ class XfButton extends PolymerElement {
         :host {
           display: block;
         }
+        .label{
+            display:inline-block;
+            padding:4px;
+        }
       </style>
       <button id="button" on-click="performActions">
-        [[label]]
+        <span class="label">[[label]]</span>
         <slot></slot>
       </button>
     `;
@@ -34,7 +38,7 @@ class XfButton extends PolymerElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-button attached');
+        // console.log('xf-button attached');
 
     }
 
@@ -45,12 +49,15 @@ class XfButton extends PolymerElement {
         for (let i = 0; i < this.children.length; i++) {
             console.log('child ', this.children[i]);
             const child = this.children[i];
+
             if(typeof child.execute === 'function' ){
                 child.execute();
             }else{
                 console.warn('child has no "execute" function ', child);
+                return false;
             }
         }
+        return true;
     }
 
 
