@@ -33,14 +33,18 @@
 
     <script type="module">
       suite('xf-output', () => {
+        const output = document.getElementById('greeting');
 
         test('output binding works', () => {
 
           document.addEventListener('ui-initialized', function (){
-            const output = document.getElementById('greeting');
             assert.equal(output.innerHTML,'World');
           });
 
+        });
+
+        test('xf-output has "value" property', () => {
+          assert.isTrue(output.value !== 'undefined');
         });
 
         test('value is in light DOM', () => {

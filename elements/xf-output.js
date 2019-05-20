@@ -29,9 +29,15 @@ class XfOutput extends PolymerElement {
             },
             value:{
                 type: String,
-                observer:'_updateValue'
+                observer:'_updateValue',
+                value:''
             }
         };
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        // console.log('xf-output has value prop ', XfOutput.prototype.hasOwnProperty('value'));
     }
 
     refresh(bind) {

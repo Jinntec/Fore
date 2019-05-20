@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>select</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+    <script type="module" src="../elements/xf-form.js"> </script>
+    <script type="module" src="../elements/xf-button.js"> </script>
+    <script type="module" src="../elements/xf-output.js"> </script>
+    <script type="module" src="../elements/xf-setvalue.js"> </script>
+
+    <style>
+        xf-model{
+            display:none;
+        }
+        xf-output{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="record">
+
+        <xf-instance>
+            <data>
+                <selected>bananas</selected>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="b-selected" ref="selected"> </xf-bind>
+
+    </xf-model>
+
+
+    <xf-form mockup='[
+          {
+            "bind":{
+              "id":"b-selected",
+              "required":true,
+              "value":"bananas"
+            }
+          }
+        ]'>
+        <h1>Your favorite:<xf-output id="output" bind="b-selected"> </xf-output>
+        </h1>
+
+        <label for="selected">Which do you like best?</label>
+        <select id="selected" bind="b-selected">
+            <option value="apples">Apples</option>
+            <option value="pears">Pears</option>
+            <option value="oranges">Oranges</option>
+            <option value="bananas">Bananas</option>
+        </select>
+
+        <xf-button label="select value 'apples'">
+            <xf-setvalue bind="b-selected" value="apples"></xf-setvalue>
+        </xf-button>
+    </xf-form>
+</body>
+</html>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="local binding and updating of values works">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties">
+      <change afterPath="$PROJECT_DIR$/demo/select.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/helloworld.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/helloworld.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elements/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elements/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-setvalue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elements/xf-output.js" beforeDir="false" afterPath="$PROJECT_DIR$/elements/xf-output.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-output_test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-output_test.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,8 +34,8 @@
       <file pinned="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/elements/xf-form.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="341" column="15" lean-forward="true" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
+            <state relative-caret-position="908">
+              <caret line="412" selection-start-line="412" selection-end-line="412" />
               <folding>
                 <element signature="e#0#83#0" expanded="true" />
               </folding>
@@ -43,10 +44,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/xf-form_test.html">
+        <entry file="file://$PROJECT_DIR$/demo/two-instances.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="92" column="63" selection-start-line="92" selection-start-column="63" selection-end-line="92" selection-end-column="63" />
+            <state relative-caret-position="442">
+              <caret line="26" selection-start-line="26" selection-end-line="27" />
             </state>
           </provider>
         </entry>
@@ -54,26 +55,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/xf-output_test.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+            <state relative-caret-position="579">
+              <caret line="46" column="51" selection-start-line="46" selection-start-column="51" selection-end-line="46" selection-end-column="51" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/xf-button_test.html">
+        <entry file="file://$PROJECT_DIR$/demo/select.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="637">
-              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="568">
-              <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+            <state relative-caret-position="210">
+              <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
             </state>
           </provider>
         </entry>
@@ -81,8 +73,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/elements/xf-button.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+            <state relative-caret-position="196">
+              <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
               <folding>
                 <marker date="1558085876218" expanded="true" signature="304:456" ph="..." />
                 <marker date="1558085876218" expanded="true" signature="320:357" ph="{...}" />
@@ -93,37 +85,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demo/products.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="14" column="49" selection-start-line="14" selection-start-column="49" selection-end-line="14" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/elements/xf-submit.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="782">
-              <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
+            <state relative-caret-position="319">
+              <caret line="32" column="24" lean-forward="true" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -139,12 +104,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>XfForm</find>
-      <find>XF</find>
-      <find>XfAppend</find>
-      <find>token</find>
-      <find>loadMockup</find>
-      <find>_handleMockup</find>
       <find>favicon</find>
       <find>init</find>
       <find>output</find>
@@ -169,6 +128,12 @@
       <find>proxy</find>
       <find>_attachListener</find>
       <find>_applyProperties</find>
+      <find>#</find>
+      <find>setting</find>
+      <find>typeof</find>
+      <find>window</find>
+      <find>window.</find>
+      <find>window.controls</find>
     </findStrings>
     <replaceStrings>
       <replace>exf:</replace>
@@ -204,7 +169,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/modules/main.xql" />
         <option value="$PROJECT_DIR$/data/config.xml" />
         <option value="$PROJECT_DIR$/modules/config.xqm" />
         <option value="$PROJECT_DIR$/notfound.html.xhtml" />
@@ -245,15 +209,16 @@
         <option value="$PROJECT_DIR$/elements/test/seed-element_test.html" />
         <option value="$PROJECT_DIR$/test/fore-model_test.html" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/test/xf-output_test.html" />
         <option value="$PROJECT_DIR$/test/index.html" />
         <option value="$PROJECT_DIR$/demo/todo.html" />
-        <option value="$PROJECT_DIR$/elements/xf-output.js" />
         <option value="$PROJECT_DIR$/test/xf-form_test.html" />
         <option value="$PROJECT_DIR$/test/xf-button_test.html" />
         <option value="$PROJECT_DIR$/elements/xf-button.js" />
         <option value="$PROJECT_DIR$/elements/xf-setvalue.js" />
         <option value="$PROJECT_DIR$/demo/helloworld.html" />
+        <option value="$PROJECT_DIR$/demo/select.html" />
+        <option value="$PROJECT_DIR$/elements/xf-output.js" />
+        <option value="$PROJECT_DIR$/test/xf-output_test.html" />
         <option value="$PROJECT_DIR$/elements/xf-form.js" />
       </list>
     </option>
@@ -268,10 +233,10 @@
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-2355" />
+    <option name="x" value="-2064" />
     <option name="y" value="-1057" />
-    <option name="width" value="2165" />
-    <option name="height" value="1413" />
+    <option name="width" value="1672" />
+    <option name="height" value="1309" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -280,6 +245,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -307,7 +273,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -315,7 +280,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -328,16 +293,16 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/elements" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/elements/demo" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/elements/model" />
       <recent name="$PROJECT_DIR$/elements" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/elements" />
+      <recent name="$PROJECT_DIR$/elements/demo" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -440,7 +405,8 @@
       <workItem from="1557827689718" duration="2112000" />
       <workItem from="1557910331691" duration="16068000" />
       <workItem from="1557994449036" duration="23306000" />
-      <workItem from="1558075862699" duration="17006000" />
+      <workItem from="1558075862699" duration="18192000" />
+      <workItem from="1558349058153" duration="9156000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -631,17 +597,24 @@
       <option name="project" value="LOCAL" />
       <updated>1558088546376</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties">
+      <created>1558096272269</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1558096272269</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="399895000" />
+    <option name="totallyTimeSpent" value="410237000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-2355" y="-1057" width="2165" height="1413" extended-state="0" />
+    <frame x="-2064" y="-1057" width="1672" height="1309" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15097019" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19876543" />
       <window_info id="Structure" order="1" weight="0.3645084" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -658,14 +631,14 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="TypeScript" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.67305934" weight="0.36999214" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.67305934" visible="true" weight="0.28742516" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.32694063" side_tool="true" weight="0.2944369" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.3299293" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785638" visible="true" weight="0.3181461" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785638" weight="0.3181461" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.10837672" />
+      <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.14135802" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Code Outline" order="4" />
@@ -746,7 +719,8 @@
     <MESSAGE value="added a comment" />
     <MESSAGE value="local binding and updating of values works" />
     <MESSAGE value="refactored xf-form; implemented basic setvalue action" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactored xf-form; implemented basic setvalue action" />
+    <MESSAGE value="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties" />
+    <option name="LAST_COMMIT_MESSAGE" value="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -765,9 +739,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/assets/@polymer/iron-ajax/iron-ajax.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/@polymer/iron-ajax/iron-request.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="697">
@@ -869,13 +840,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/demo/todo6.json" />
-    <entry file="file://$PROJECT_DIR$/demo/two-instances.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" selection-start-line="26" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo/todo.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -922,45 +886,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/xf-output_test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/xf-form_test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
+        <state relative-caret-position="1564">
           <caret line="92" column="63" selection-start-line="92" selection-start-column="63" selection-end-line="92" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/xf-button_test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="49" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/products.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="49" selection-start-line="14" selection-start-column="49" selection-end-line="14" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/elements/xf-submit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/xf-button_test.html">
+    <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="637">
-          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        <state relative-caret-position="568">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/two-instances.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" selection-start-line="26" selection-end-line="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/elements/xf-button.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+        <state relative-caret-position="196">
+          <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
           <folding>
             <marker date="1558085876218" expanded="true" signature="304:456" ph="..." />
             <marker date="1558085876218" expanded="true" signature="320:357" ph="{...}" />
@@ -969,31 +947,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/elements/xf-setvalue.js">
+    <entry file="file://$PROJECT_DIR$/demo/select.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+        <state relative-caret-position="210">
+          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/products.html">
+    <entry file="file://$PROJECT_DIR$/elements/xf-output.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="14" column="49" selection-start-line="14" selection-start-column="49" selection-end-line="14" selection-end-column="49" />
+        <state relative-caret-position="319">
+          <caret line="32" column="24" lean-forward="true" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/helloworld.html">
+    <entry file="file://$PROJECT_DIR$/test/xf-output_test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+        <state relative-caret-position="579">
+          <caret line="46" column="51" selection-start-line="46" selection-start-column="51" selection-end-line="46" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/elements/xf-form.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="341" column="15" lean-forward="true" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
+        <state relative-caret-position="908">
+          <caret line="412" selection-start-line="412" selection-end-line="412" />
           <folding>
             <element signature="e#0#83#0" expanded="true" />
           </folding>

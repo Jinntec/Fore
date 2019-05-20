@@ -5,7 +5,7 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
 /**
  * this array defines which elements are accepted as controls (get eventlisteners attached)
  */
-window.controls = ['INPUT',
+window.CONTROLS = ['INPUT',
                    'SELECT',
                    'TEXTAREA',
                    'XF-OUTPUT'];
@@ -196,10 +196,14 @@ export class XfForm extends PolymerElement {
         // const search = '[bind=' + bindId + ']';
         const search = '[bind=' + bind.id + ']';
         const found = document.querySelectorAll(search);
-        console.log('found controls ', found);
+        // console.log('found controls ', found);
+
+        // ### filter controls from search-result (which may also contain actions
+        const allControls = Array.from(found).filter(this._filterControls);
+        console.log('### all controls found ', allControls);
 
         // ### if no controls are bound back out
-        if(!found[0]) {
+        if(!allControls[0]) {
             console.warn('bind with id ' + bind.id + ' is not bound in this form');
             return;
         }
@@ -207,7 +211,7 @@ export class XfForm extends PolymerElement {
         // ### create a single proxy object for each bind in the model
         this._createProxy(bind);
 
-        found.forEach((elem) => {
+        allControls.forEach((elem) => {
            //todo: if bind id is not defined we might have a simple set bindings - needs special treatment
 
            // store control in proxy object
@@ -252,6 +256,18 @@ export class XfForm extends PolymerElement {
     }
 
     /**
+     * filters all elements out that are NOT defined in window.CONTROLS
+     *
+     * @param controlName
+     * @returns {boolean}
+     * @private
+     */
+    _filterControls(control){
+        // console.log('#### controlName: ', control.nodeName);
+        return window.CONTROLS.indexOf(control.nodeName) !== -1;
+    }
+
+    /**
      * Creates a proxy for every bind object in the data-model. This serves as a central for mutations of the data-model
      * and updates all bound controls when value changes occur. All proxy objects will be stored in a local map of this
      * form instance.
@@ -268,7 +284,7 @@ export class XfForm extends PolymerElement {
                 return target[key];
             },
             set(target, key,value){
-                console.log('setting value ', value);
+                // console.log('setting value ', value);
                 // console.log('@@@bind ', bind);
 
                 // ### bound controls are stored in an array 'boundElements'
@@ -276,14 +292,16 @@ export class XfForm extends PolymerElement {
                     if(target.boundElements === undefined){
                         target.boundElements=[];
                     }
-                    if(window.controls.indexOf(value.nodeName.toUpperCase()) != -1) {
-                        console.log('added bound control: ', value);
+                    if(window.CONTROLS.indexOf(value.nodeName.toUpperCase()) != -1) {
+                        // console.log('added bound control: ', value);
                         target.boundElements.push(value);
                     }
                 }
 
                 // ### actual setting of values
                 if(key === 'value'){
+                    console.log('setting value ', value);
+
                     target[key] = value;
                     target.boundElements.forEach( control => {
                         control.value = value;
@@ -310,18 +328,24 @@ export class XfForm extends PolymerElement {
 
         // xf-output is the exception from the rule. Outputs do not have update listeners
         console.log('#', control.nodeName.toUpperCase());
-        console.log('#', window.controls.indexOf(control.nodeName.toUpperCase()));
+        console.log('#', window.CONTROLS.indexOf(control.nodeName.toUpperCase()));
         const ctrl = control.nodeName.toUpperCase();
 
         // ### attach listener to controls with the exception of 'xf-output' controls which cannot be changed.
-        if(window.controls.indexOf(ctrl) != -1 && ctrl !== 'XF-OUTPUT'){
+        if(window.CONTROLS.indexOf(ctrl) != -1 && ctrl !== 'XF-OUTPUT'){
             console.log('attaching listener to ', control);
 
+            if(control.nodeName === 'SELECT'){
+                control.addEventListener('change', function(e){
+                    console.log('changing....... ', e);
+                    proxy.value = e.target.value;
+                }.bind(this));
+            }else
             if(control.hasAttribute('incremental')){
                 console.log('incremental handler');
 
                 control.addEventListener('keyup', function(e){
-                    console.log('changing....... ', e);
+                    console.log('keyup....... ', e);
                    proxy.value = e.target.value;
                 }.bind(this));
             }else{
@@ -329,7 +353,6 @@ export class XfForm extends PolymerElement {
                     proxy.value = e.target.value;
                 });
             }
-
 
         }
     }
@@ -375,18 +398,19 @@ export class XfForm extends PolymerElement {
             //todo
         }
         if (bind.value !== undefined) {
-            // console.log('apply value prop ', bind.value);
+            console.log('apply value prop ', bind.value);
 
             //todo: this is obviously not optimal as it requires too much knowledge about certain controls
             // todo: why does third condition does not apply to normal input control?
-            if (control.type === 'text') {
-                control.value = bind.value;
-            } else if (control.type === 'checkbox') {
+            if(control.type === 'checkbox'){
                 control.checked = bind.value;
-            } else if('undefined' === typeof (control.value)) {
-                // ### if control has a value property
+            }else if(control.value !== 'undefined'){
+                // ### all controls should have a 'value' property
                 control.value = bind.value;
+            }else{
+                console.warn(control, ' has no "value" property')
             }
+
         }
     }
 
