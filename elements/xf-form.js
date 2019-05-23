@@ -144,7 +144,7 @@ export class XfForm extends PolymerElement {
 
         // ### PROCESS SELF
         if (bind.id) {
-            console.log("call _initControls for bind ", bind.id);
+            // console.log("call _initControls for bind ", bind.id);
             // this._initControls(bind.id, bind, index);
             this._initControls(bind, index);
         }
@@ -225,11 +225,9 @@ export class XfForm extends PolymerElement {
             // ### store control in proxy object
             const proxy = this.proxies.get(bind.id);
             proxy.bound = elem;
-            console.log('----created proxy ', proxy);
+            // console.log('----created proxy ', proxy);
 
-            // if we are a core HTML control apply properties and attach change listeners
-            console.log('+++++ elem name ', elem.nodeName);
-            console.log('+++++ elem name ', elem.nodeName.indexOf('-'));
+            // ### if we are a core HTML control apply properties and attach change listeners
             if(elem.nodeName.indexOf('-') > -1 ){
                 // ### initialize bound web component control
                 if(typeof elem.init === 'function') {
@@ -302,7 +300,7 @@ export class XfForm extends PolymerElement {
         // ### setting up a proxy object for binding with also keeps references to all bound controls
         const handler = {
             get(target, key) {
-                console.log('getting value: ', target[key]);
+                // console.log('getting value: ', target[key]);
                 return target[key];
             },
             set(target, key, value) {
@@ -322,7 +320,7 @@ export class XfForm extends PolymerElement {
 
                 // ### actual setting of values
                 if (key === 'value') {
-                    console.log('setting value ', value);
+                    // console.log('setting value ', value);
 
                     target[key] = value;
                     target.boundElements.forEach(control => {

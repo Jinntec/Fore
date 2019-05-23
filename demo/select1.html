@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>select</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+    <script src="../assets/web-animations-js/web-animations-next-lite.min.js"> </script>
+
+    <script type="module" src="../elements/xf-form.js"> </script>
+    <script type="module" src="../elements/xf-button.js"> </script>
+    <script type="module" src="../elements/xf-output.js"> </script>
+    <script type="module" src="../elements/xf-setvalue.js"> </script>
+    <script type="module" src="../elements/xf-select1.js"> </script>
+    <script type="module" src="../elements/xf-itemset.js"> </script>
+
+
+    <style>
+        xf-model{
+            display:none;
+        }
+        xf-output{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="record">
+
+        <xf-instance>
+            <data>
+                <selected>bananas</selected>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="b-selected" ref="selected"> </xf-bind>
+
+        <xf-instance id="fruits">
+            <data>
+                <fruit value="apple">Apple</fruit>
+                <fruit value="pears">Pears</fruit>
+                <fruit value="oranges">Oranges</fruit>
+                <fruit value="bananas">Bananas</fruit>
+            </data>
+        </xf-instance>
+
+
+        <xf-bind id="b-fruit" set="fruit">
+            <xf-bind id="b-fruit-label" ref="./text()"> </xf-bind>
+            <xf-bind id="b-fruit-value" ref="@value"> </xf-bind>
+        </xf-bind>
+    </xf-model>
+
+
+    <xf-form mockup='[
+  {
+    "bind": {
+      "id": "b-selected",
+      "required": true,
+      "value": "bananas"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-fruit",
+      "bind": [
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Apples"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "apples"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Pears"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "pears"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Oranges"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "oranges"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Bananas"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "bananas"
+          }
+        ]
+      ]
+    }
+  }
+]'>
+
+        <h1>Select1 Control with Itemset</h1>
+        <h2>Your favorite:<xf-output id="output" bind="b-selected"> </xf-output></h2>
+
+        <xf-select1 id="selected" bind="b-selected" label="Which do you like best?">
+            <xf-itemset bind="b-fruit" bind-label="b-fruit-label" bind-value="b-fruit-value">
+<!--
+                <xf-label bind="b-fruit-label"> </xf-label>
+                <xf-value bind="b-fruit-value"> </xf-value>
+-->
+            </xf-itemset>
+        </xf-select1>
+
+
+
+    </xf-form>
+</body>
+</html>

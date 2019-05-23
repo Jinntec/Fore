@@ -49,7 +49,7 @@ export class XfBound extends PolymerElement {
     }
 
     init(proxy) {
-        console.log('xf-output init with proxy: ', proxy);
+        console.log('init with proxy: ', proxy);
         this.proxy = proxy;
         this._applyProperties();
         this._attachListeners();
@@ -101,7 +101,22 @@ export class XfBound extends PolymerElement {
      */
     _attachListeners() {}
 
+    _updateAlert(){}
 
+    _updateReadonly(){}
+
+    _updateRequired(){}
+
+    _updateRelevant(){}
+
+    _updateValid(){}
+
+    _updateDatatype(){}
+
+    _updateValue(){
+        // console.log('### xf-bound._updateValue ', this.value);
+        // this.proxy.value = this.value;
+    }
 }
 
 window.customElements.define('xf-bound', XfBound);
