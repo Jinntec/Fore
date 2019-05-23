@@ -1,5 +1,5 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-
+import { XfBound } from './xf-bound.js';
 
 /**
  * `xf-output`
@@ -8,7 +8,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @customElement
  * @polymer
  */
-class XfOutput extends PolymerElement {
+class XfOutput extends XfBound {
     static get template() {
         return html`
       <style>
@@ -22,6 +22,7 @@ class XfOutput extends PolymerElement {
     `;
     }
 
+/*
     static get properties() {
         return {
             bind: {
@@ -31,23 +32,16 @@ class XfOutput extends PolymerElement {
                 type: String,
                 observer:'_updateValue',
                 value:''
+            },
+            proxy:{
+                type:Object,
+                value:{}
             }
+
         };
     }
+*/
 
-    connectedCallback() {
-        super.connectedCallback();
-        // console.log('xf-output has value prop ', XfOutput.prototype.hasOwnProperty('value'));
-    }
-
-    refresh(bind) {
-        console.log('refreshing xf-output ', bind);
-
-        if (bind.value) {
-            this.innerHTML = bind.value;
-        }
-
-    }
 
     _updateValue(){
         this.innerHTML = this.value;
