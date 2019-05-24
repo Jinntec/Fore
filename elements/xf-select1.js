@@ -1,7 +1,7 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import '../assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 
-import { XfBound } from './xf-bound.js';
+import { XfControl } from './xf-control.js';
 
 
 /**
@@ -11,7 +11,7 @@ import { XfBound } from './xf-bound.js';
  * @customElement
  * @polymer
  */
-class XfSelect1 extends XfBound {
+class XfSelect1 extends XfControl {
     static get template() {
         return html`
       <style>

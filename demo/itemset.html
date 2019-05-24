@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>Itemset Demo</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+    <script type="module" src="../elements/xf-form.js"> </script>
+    <script type="module" src="../elements/xf-itemset.js"> </script>
+
+    <style>
+        xf-model{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-instance id="fruits">
+        <data>
+            <fruit value="apple">Apple</fruit>
+            <fruit value="pears">Pears</fruit>
+            <fruit value="oranges">Oranges</fruit>
+            <fruit value="bananas">Bananas</fruit>
+        </data>
+    </xf-instance>
+
+
+    <xf-bind id="b-fruit" set="fruit">
+        <xf-bind id="b-fruit-label" ref="./text()"> </xf-bind>
+        <xf-bind id="b-fruit-value" ref="@value"> </xf-bind>
+    </xf-bind>
+
+
+    <xf-form mockup='[
+  {
+    "bind": {
+      "id": "b-fruit",
+      "bind": [
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Apples"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "apples"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Pears"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "pears"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Oranges"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "oranges"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Bananas"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "bananas"
+          }
+        ]
+      ]
+    }
+  }
+]'>
+      <h1>Itemset</h1>
+
+        <xf-itemset bind="b-fruit">
+
+        </xf-itemset>
+    </xf-form>
+</body>
+</html>
