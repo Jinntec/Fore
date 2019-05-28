@@ -20,9 +20,7 @@ class XfSelect1 extends XfControl {
         }
       </style>
       <paper-dropdown-menu id="dropdown"label="[[label]]" on-iron-select="_handleSelected">
-<!--        <paper-listbox slot="dropdown-content" class="dropdown-content">-->
-            <slot slot="dropdown-content"> </slot>
-<!--        </paper-listbox>     -->
+        <slot slot="dropdown-content"> </slot>
       </paper-dropdown-menu>
     `;
     }

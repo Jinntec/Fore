@@ -1,4 +1,5 @@
 import {PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
+import { BoundElementMixin } from './BoundElementMixin.js';
 
 
 /**
@@ -7,7 +8,7 @@ import {PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
  * @customElement
  * @polymer
  */
-class XfSetvalue extends PolymerElement {
+class XfSetvalue extends BoundElementMixin(PolymerElement) {
 
     static get properties() {
         return {
@@ -29,9 +30,9 @@ class XfSetvalue extends PolymerElement {
     execute(){
         // console.log('xf-setvalue executing...');
         // console.log('xf-setvalue bind ', this.bind);
-        const proxy = this.closest('xf-form').getProxy(this.bind);
+        // const proxy = this.closest('xf-form').getProxy(this.bind);
         // console.log('setvalue proxy ', proxy);
-        proxy.value =  this.value;
+        this.proxy.value =  this.value;
         return true;
     }
 

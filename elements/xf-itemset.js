@@ -4,7 +4,7 @@ import '../assets/@polymer/paper-item/paper-item.js';
 import '../assets/@polymer/polymer/lib/elements/dom-repeat.js';
 
 
-import { XfBound } from './xf-bound.js';
+import { BoundElementMixin } from './BoundElementMixin.js';
 
 
 /**
@@ -14,7 +14,7 @@ import { XfBound } from './xf-bound.js';
  * @customElement
  * @polymer
  */
-class XfItemset extends XfBound {
+class XfItemset extends BoundElementMixin(PolymerElement) {
     static get template() {
         return html`
       <style>
@@ -63,7 +63,7 @@ class XfItemset extends XfBound {
 
     init(proxy){
         super.init(proxy);
-        console.log('xf-itemset bound children: ', this.proxy);
+        console.log('xf-itemset bound children: ', this.proxy.bind);
     }
 
     selectItem(value){

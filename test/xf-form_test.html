@@ -28,61 +28,13 @@
         ]'>
         </xf-form>
 
-<!--
-        <xf-form id="todo" mockup='[
-          {
-            "bind":{
-              "id":"b-todo",
-              "bind":[
-                [
-                  {
-                    "id":"b-task",
-                    "required":true,
-                    "value":"Pick up Milk"
-                  },
-                  {
-                    "id":"b-state",
-                    "type":"boolean",
-                    "value":false
-                  },
-                  {
-                    "id":"b-due",
-                    "type":"date",
-                    "value":"2019-03-01"
-                  }
-                ],
-                [
-                  {
-                    "id":"b-task",
-                    "required":true,
-                    "value":"Make tutorial part"
-                  },
-                  {
-                    "id":"b-state",
-                    "type":"boolean",
-                    "value":true
-                  },
-                  {
-                    "id":"b-due",
-                    "type":"date",
-                    "value":"2019-04-01"
-                  }
-                ]
-              ]
-            }
-          }
-        ]'>
-
-        </xf-form>
--->
-
     <script type="module">
       suite('xf-form', () => {
 
         const element = document.getElementById('basic');
 
         test('instantiating the element with mockup data works', () => {
-          const mydata = element.model[0];
+          const mydata = element.modelData[0];
           assert.equal(mydata.bind.id, 'b-greeting');
           assert.equal(mydata.bind.required, true);
           assert.equal(mydata.bind.value, 'World');
@@ -96,6 +48,7 @@
           });
 
         });
+
 
 
 /*

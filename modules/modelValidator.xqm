@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-module namespace modelValidator="http://exist-db.org/apps/model-validator";
+module namespace modelValidator="http://exist-db.org/apps/modelData-validator";
 
 declare function modelValidator:validate($model as element()){
     for $bind in $model//exf-bind
@@ -13,7 +13,7 @@ declare function modelValidator:validate($model as element()){
             return
             typeswitch($constraint)
                 case element(exf-required) return
-                    if(util:eval("string-length($model" || $ref || ") != 0")) then ()
+                    if(util:eval("string-length($modelData" || $ref || ") != 0")) then ()
                     else
                         $constraint/exf-alert
                 case element(exf-constraint) return

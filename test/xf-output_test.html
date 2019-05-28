@@ -34,13 +34,31 @@
     <script type="module">
       suite('xf-output', () => {
         const output = document.getElementById('greeting');
+        const form = document.getElementById('hello');
 
         test('output binding works', () => {
 
           document.addEventListener('ui-initialized', function (){
             assert.equal(output.innerHTML,'World');
+            console.log('proxies ', form.proxies);
           });
 
+        });
+
+        test('there is ONE proxy object for bind b-greeting', () => {
+          assert.isTrue(Object.keys(form.proxies['b-greeting']).length === 1);
+        });
+
+        test('there is ONE proxy object with id b-greeting', () => {
+          assert.isTrue(form.getProxy('b-greeting',0).id === 'b-greeting');
+        });
+
+        test('there is ONE proxy object with value "World"', () => {
+          assert.isTrue(form.getProxy('b-greeting',0).value === 'World');
+        });
+
+        test('there is ONE control being bound to proxy', () => {
+          assert.isTrue(form.getProxy('b-greeting',0).boundElements.length === 1);
         });
 
         test('xf-output has "value" property', () => {

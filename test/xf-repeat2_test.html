@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+
+    <title>xf-model test</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script src="../elements/xf-form.js" type="module"></script>
+    <script src="../elements/xf-output.js" type="module"></script>
+</head>
+<body>
+
+    <xf-form id="todo" mockup='[
+          {
+            "bind": {
+              "id": "b-todo",
+              "bind": [
+                [
+                  {
+                    "id": "b-task",
+                    "required": true,
+                    "value": "Pick up Milk"
+                  },
+                  {
+                    "id": "b-state",
+                    "type": "boolean",
+                    "value": false
+                  },
+                  {
+                    "id": "b-due",
+                    "type": "date",
+                    "value": "2019-03-01"
+                  }
+                ],
+                [
+                  {
+                    "id": "b-task",
+                    "required": true,
+                    "value": "Make tutorial part"
+                  },
+                  {
+                    "id": "b-state",
+                    "type": "boolean",
+                    "value": true
+                  },
+                  {
+                    "id": "b-due",
+                    "type": "date",
+                    "value": "2019-04-01"
+                  }
+                ]
+              ]
+            }
+          }
+        ]'>
+        <h1>todos</h1>
+
+        <div class="header">
+            <span>todo</span>
+            <span>due</span>
+            <span>status</span>
+        </div>
+        <xf-repeat bind="b-todo" id="r-todos">
+            <template>
+                <div>
+                    <input bind="b-task" id="task" type="text"/>
+                    <input bind="b-due" id="due" type="date"/>
+                    <input bind="b-state" id="state" type="checkbox"/>
+                    <!--
+                                        <xf-button>
+                                            <xf-delete bind="b-todo"
+                                        </xf-button>
+                    -->
+                </div>
+            </template>
+        </xf-repeat>
+
+        <!--        <button type="button" onclick="append();">add</button>-->
+
+
+        <!--
+                <xf-button label="set task to 'foo'">
+                    <xf-setvalue bind="b-task" value="'foo'"> </xf-setvalue>
+                </xf-button>
+
+                <xf-button label="add todo">
+                    <xf-append bind="b-todo"> </xf-append>
+                    &lt;!&ndash; +++ immediately save changes +++ &ndash;&gt;
+                    <xf-submit submission="s-save"> </xf-submit>
+                </xf-button>
+        -->
+
+
+    </xf-form>
+
+
+    <script type="module">
+        suite('xf-repeat', () => {
+
+
+            const todo = document.getElementById('todo');
+
+            test('first task input control has value: "Pick Up Milk"', (done) => {
+
+                /*
+                                document.addEventListener('ui-initialized', () => {
+                                    console.log('proxies ', form.proxies);
+                                    assert.instanceOf(todo, XfForm);
+                                    assert.isTrue(document.querySelectorAll('input')[0].value === 'Pick u Milk');
+
+                                });
+                */
+
+                // flush(function () {
+                    const handler = (ev) => {
+                        document.removeEventListener('ui-iniialized', handler);
+                        assert.equal(ev.target, 'document');
+                        done();
+                    };
+
+                    document.addEventListener('ui-intialized', handler);
+                    document.dispatchEvent('ui-intialized', handler);
+                });
+
+            // });
+
+
+        });
+    </script>
+
+</body>
+</html>

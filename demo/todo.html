@@ -38,7 +38,7 @@
     </style>
 </head>
 <body>
-    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <!-- ##### xf-modelData is not exposed to the client! ##### -->
     <xf-model id="record">
         <xf-instance>
             <data>
@@ -129,18 +129,20 @@
             <span>due</span>
             <span>status</span>
         </div>
-<!--
         <xf-repeat id="r-todos" bind="b-todo">
             <template>
                 <div>
                     <input bind="b-task" type="text"/>
                     <input bind="b-due" type="date"/>
                     <input bind="b-state" type="checkbox"/>
-                    <button type="button" onclick="remove(this);">-</button>
+<!--
+                    <xf-button>
+                        <xf-delete bind="b-todo"
+                    </xf-button>
+-->
                 </div>
             </template>
         </xf-repeat>
--->
 
 <!--        <button type="button" onclick="append();">add</button>-->
 

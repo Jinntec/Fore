@@ -5,7 +5,7 @@ import {dedupingMixin} from '../assets/@polymer/polymer/lib/utils/mixin.js';
  * A bound element is an element having a `bind` attribute. All Controls are bound elements, however not all bound elements
  * are controls (e.g. itemset, repeat, group and actions).
  *
- * A bound element gets access to the model via a proxy object that is passed in during initialization of the form.
+ * A bound element gets access to the modelData via a proxy object that is passed in during initialization of the form.
  *
  * @polymer
  * @mixinClass
@@ -22,7 +22,7 @@ let bound = (superClass) =>
         static get properties() {
             return {
                 /**
-                 * the proxy property holds a reference to the proxy object that itself gives access to the model
+                 * the proxy property holds a reference to the proxy object that itself gives access to the modelData
                  */
                 proxy: {
                     type: Object
@@ -38,6 +38,7 @@ let bound = (superClass) =>
         init(proxy) {
             this.proxy = proxy;
         }
+
 
     };
 
