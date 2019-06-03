@@ -61,8 +61,8 @@ class XfItemset extends BoundElementMixin(PolymerElement) {
 
     }
 
-    init(proxy){
-        super.init(proxy);
+    refresh(proxy){
+        super.refresh(proxy);
         console.log('xf-itemset bound children: ', this.proxy.bind);
     }
 

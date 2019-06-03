@@ -14,7 +14,7 @@ class XfButton extends PolymerElement {
         return html`
       <style>
         :host {
-          display: block;
+          display: inline-block;
         }
         .label{
             display:inline-block;
@@ -44,10 +44,10 @@ class XfButton extends PolymerElement {
 
 
     performActions(e) {
-        console.log('performActions ', this.children);
+        // console.log('performActions ', this.children);
 
         for (let i = 0; i < this.children.length; i++) {
-            console.log('child ', this.children[i]);
+            // console.log('child ', this.children[i]);
             const child = this.children[i];
 
             if(typeof child.execute === 'function' ){

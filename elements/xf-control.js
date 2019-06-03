@@ -50,8 +50,8 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
         };
     }
 
-    init(proxy) {
-        super.init(proxy);
+    refresh(proxy) {
+        super.refresh(proxy);
         console.log('init with proxy: ', proxy);
         this.proxy = proxy;
         this._applyProperties();

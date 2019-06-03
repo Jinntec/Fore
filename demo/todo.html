@@ -10,6 +10,7 @@
     <script type="module" src="../elements/xf-form.js"></script>
     <script type="module" src="../elements/xf-repeat.js"></script>
     <script type="module" src="../elements/xf-button.js"></script>
+    <script type="module" src="../elements/xf-delete.js"></script>
 
     <script>
         function append() {
@@ -27,7 +28,7 @@
             display:none;
         }
 
-        .header, .repeat-item{
+        .header, xf-repeat-item{
             display:grid;
             grid-template-columns: 200px 120px 50px 20px;
             grid-column-gap: 10px;
@@ -35,6 +36,7 @@
         [required]{
             background:lightyellow;
         }
+
     </style>
 </head>
 <body>
@@ -83,6 +85,7 @@
           {
             "bind": {
               "id": "b-todo",
+              "sequence":true,
               "bind": [
                 [
                   {
@@ -131,16 +134,12 @@
         </div>
         <xf-repeat id="r-todos" bind="b-todo">
             <template>
-                <div>
-                    <input bind="b-task" type="text"/>
-                    <input bind="b-due" type="date"/>
-                    <input bind="b-state" type="checkbox"/>
-<!--
-                    <xf-button>
-                        <xf-delete bind="b-todo"
-                    </xf-button>
--->
-                </div>
+                <input bind="b-task" type="text"/>
+                <input bind="b-due" type="date"/>
+                <input bind="b-state" type="checkbox"/>
+                <xf-button label="delete">
+                    <xf-delete bind="b-todo"></xf-delete>
+                </xf-button>
             </template>
         </xf-repeat>
 

@@ -26,8 +26,19 @@ let bound = (superClass) =>
                  */
                 proxy: {
                     type: Object
+                }/*,
+                bind:{
+                    type: String
+                }*/,
+                ownerForm:{
+                    type: Object
                 }
             };
+        }
+
+        connectedCallback(){
+            super.connectedCallback();
+            this.ownerForm = this.closest('xf-form');
         }
 
         /**
@@ -35,9 +46,11 @@ let bound = (superClass) =>
          *
          * @param proxy - the proxy object
          */
-        init(proxy) {
+        refresh(proxy) {
             this.proxy = proxy;
+            // console.log('BoundElementMixing proxy ', this.proxy);
         }
+
 
 
     };
