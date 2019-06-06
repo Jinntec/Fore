@@ -7,20 +7,21 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
  */
 window.BOUND_ELEMENTS =
     ['INPUT',
-        'SELECT',
-        'TEXTAREA',
-        'XF-BUTTON',
-        'XF-INPUT',
-        'XF-ITEMSET',
-        'XF-RANGE',
-        'XF-REPEAT',
-        'XF-SELECT',
-        'XF-SELECT1',
-        'XF-TEXTAREA',
-        'XF-OUTPUT',
-        'XF-UPLOAD',
-        'XF-DELETE'];
+    'SELECT',
+    'TEXTAREA',
+    'XF-BUTTON',
+    'XF-INPUT',
+    'XF-ITEMSET',
+    'XF-RANGE',
+    'XF-REPEAT',
+    'XF-SELECT',
+    'XF-SELECT1',
+    'XF-TEXTAREA',
+    'XF-OUTPUT',
+    'XF-UPLOAD'];
 
+window.ACTION_ELEMENTS =
+    ['XF-DELETE'];
 
 /**
  * `xf-form`
@@ -75,7 +76,7 @@ export class XfForm extends PolymerElement {
                 reflectToAttribute: true
             },
             proxies: {
-                type: Object,
+                type: Array,
                 value: {}
             }
         };
@@ -92,20 +93,12 @@ export class XfForm extends PolymerElement {
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
 
+        this.addEventListener('model-ready', this._modelReady);
+
         window.addEventListener('WebComponentsReady', function () {
             console.log('#### WebComponentsReady #####');
-            // document.querySelector('xf-form').init();
             this._init();
         }.bind(this));
-
-        this.addEventListener('model-ready', this._modelReady);
-        this.addEventListener('xf-delete', this._xfDelete);
-    }
-
-    _xfDelete(e) {
-        console.log('_xfDelete location ', e.detail.deleteLocation);
-        console.log('_xfDelete items ', e.detail.deleteItems);
-        console.log('_xfDelete proxies ', this.proxies);
 
     }
 
@@ -114,19 +107,30 @@ export class XfForm extends PolymerElement {
         this.removeEventListener('model-ready', this._modelReady);
     }
 
+
     _init() {
         // console.log('### xf-form init ', this);
         // ### with the 'mockup' property local mockup data can be passed to the form.
+
+        this._update();
+        this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
+    }
+
+    /**
+     * updates the model data. As we have limited capabilities on the client _update serves the purpose of the
+     * rebuild, recalculate and revalidate function of XForms.
+     *
+     * @private
+     */
+    _update(){
         if (this.mockup) {
             // console.log('loading mockup data from : ', this.mockup);
             this.modelData = JSON.parse(this.mockup);
+        }else{
+            //todo: load via ajax
         }
-
-        this._rebuild();
-
-        // ### notification event to signal that the form is ready for action
-        // document.dispatchEvent(new CustomEvent('ui-initialized', {composed:true, bubbles:true, detail: {target: this}}));
     }
+
 
 
     /**
@@ -137,14 +141,10 @@ export class XfForm extends PolymerElement {
      */
     _rebuild() {
         // ### initialize modelData
-        // console.log('modelData ', this.modelData);
+        console.log('modelData ', this.modelData);
         if (this.modelData) {
-            // this.modelData.forEach(item => this._processData(item, 0));
-            this._processData(this.modelData, 0);
+            this.proxies = [];
             console.log('proxies after data processing', this.proxies);
-            this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
-
-            // this._initUI();
         }
     }
 
@@ -157,257 +157,109 @@ export class XfForm extends PolymerElement {
      */
     _modelReady() {
         console.log('### model-ready event fired');
-        this._initUI();
+        this.refresh();
+        console.log('### _modelReady proxies: ', this.proxies);
     }
-
-    _initUI() {
-        console.log('>>>>> _initUI');
-        // iterate the UI in search for bound controls
-        const boundElements = this.querySelectorAll('[bind]');
-        for (let i = 0; i < boundElements.length; i++) {
-            console.log('>>>>> bound UI element ', boundElements[i], i+1 , ' of ', boundElements.length );
-            // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
-            const elem = boundElements[i];
-            const bindId = elem.getAttribute('bind');
-
-            // const proxy = this.getProxy(bindId,0);
-            const proxy = this.getProxy(bindId);
-            console.log('>>>>> proxy ', proxy);
-
-            //todo: proxy might not exist - should behave like not relevant
-
-            proxy.bound = elem;
-            console.log('### control ', boundElements[i], ' bound to proxy ', proxy);
-
-
-            // ### if we are a core HTML control apply properties and attach change listeners
-            if (elem.nodeName.indexOf('-') > -1) {
-                // ### initialize bound web component control
-                if (typeof elem.refresh === 'function') {
-                    elem.refresh(proxy);
-                }
-            } else {
-                // ### initialize core HTML control
-                this._applyPropertiesToNativeControls(elem, proxy);
-                this._attachListenerToNativeControls(elem, proxy);
-                3
-            }
-
-        }
-        /*
-                Object.keys(this.proxies).forEach(function(key,index) {
-                    // key: the name of the object key
-                    // index: the ordinal position of the key within the object
-                    console.log('initUI key ',key);
-                    const proxy = this.getProxy(key,0);
-                    console.log('initUI proxy ', proxy);
-                    console.log('initUI proxy ', proxy.id);
-                    this._initBoundElements(proxy.id, proxy.index);
-
-                }.bind(this));
-        */
-
-    }
-
 
     /**
-     * returns a proxy object for a bind. `index` param is only effective if the requested proxy exists more than once.
+     * find a proxy for given bindId
      *
-     * @param bindId the bind id as given by the client-side modelData
-     * @returns {any}
-     */
-    getProxy(bindId, index) {
-        console.log('### getProxy ', bindId, index);
-
-        if (this.proxies[bindId].length === 1) {
-            return this.proxies[bindId][0];
-        }
-        return this.proxies[bindId][index];
-    }
-
-
-    /*
-        #### todo: deprecated - remove?
-        _getBindId(bind) {
-            if (bind.bind && bind.bind.id) {
-                return bind.bind.id;
-            } else if (bind.id) {
-                return bind.id
-            }
-        }
-    */
-
-    /**
-     * recursively processes all modelData data (JSON) to initialize the UI
+     * First checks wether a proxy is already present and just returning that if it exists
+     * If no proxy is present consult the parent for a proxy and check for bindId within its context.
+     * Continue upwards until 'xf-form' element is reached.
      *
-     *
-     * todo: check for correctness with larger nested structures.
-     *
-     * @param bind the bind object to process
-     * @param index
+     * @param bindId
+     * @param boundElement
      * @private
      */
-    _processData(bind, index, parent) {
-        let p;
-        // ### PROCESS SELF
-        if (bind.id) {
-            // console.log("_processData bind: ", bind);
-            // console.log("call _initBoundElements for bind ", bind.id);
-            // ### create a single proxy object for each bind object in the modelData
-            p = this._createProxy(bind, index);
-            // console.log('#### proxies ', this.proxies);
-            // todo: we can pass the proxy here however does not matter too much
-            // this._initBoundElements(bind, index);
-        }
+    resolveProxy(bindId, boundElement) {
+        console.log('>>>>> resolveProxy boundElement ', boundElement );
 
-        // ### PROCESS CHILDREN
-        if (bind.bind) {
-            console.log(1, 'child bind ', bind.bind.id);
-            // if(bind.bind.id){
-                this._processData(bind.bind, 0, p);
-            // }
-        } else if (Array.isArray(bind) && Array.isArray(bind[0])) {
-            console.log(2, "bind is an array of arrays", parent);
-            let proxies = [];
-            const set = bind;
-            // console.log('set ', bind);
-            for (let i = 0; i < set.length; i++) {
-                const inner = set[i];
-                // console.log('outer ', set[i]);
-                const innerSet = [];
-                for (let j = 0; j < inner.length; j++) {
-                    // console.log('inner ', inner[j]);
-                    innerSet.push(this._processData(inner[j], i));
-                }
-                proxies.push(innerSet)
-            }
-            parent.proxies = proxies;
-        } else if (Array.isArray(bind)) {
-            console.log(3, 'isArray bind ', bind);
-            let proxies = [];
-            const plain = bind;
-            console.log(3, 'isArray bind isRepeated', bind);
-            for (let i = 0; i < plain.length; i++) {
-                // proxies.push(this._processData(plain[i], i));
-                this._processData(plain[i],i);
-            }
-            return proxies;
-        } else if (bind.bind && bind.bind.bind) {
-            console.log(4, 'yes, we have children');
-            const child = bind.bind.bind;
-            // console.log("child ", child);
-            parent.proxies = [this._processData(child, 0)];
-        }
-        return p;
-    }
 
-    /**
-     * Processes controls bound to given bind object. Creates a proxy object for the bind object which handles the
-     * actual updates of values. The proxy will hold references to all controls that are bound to a certain bind object.
-     *
-     * This function also applies all properties of the bind object to the bound controls and attaches eventlisteners
-     * to the controls to propagate the changes back to the modelData (via the proxy).
-     *
-     * todo: repeat processing
-     * todo: review later: this function still uses the 'bind' object instead of proxy - should that change?
-     *
-     * @param bind the bind object
-     * @param index
-     * @private
-     */
-    _initBoundElements(bind, index) {
-        console.log('_initBoundElements for bind ', bind, index);
 
-        // ### searching all controls that are bound to given bind id
-        const search = '[bind=' + bind.id + ']';
-        const found = Array.from(document.querySelectorAll(search));
-        console.log('found controls ', search, found);
-
-        // ### filter controls from search-result (which may also contain actions
-        // const allControls = Array.from(found).filter(this._filterControls);
-        // console.log('### all controls found for search', search,  allControls);
-
-        // ### if no controls are bound back out
-        // if (!allControls[0]) {
-        if (!found[0]) {
-            console.warn('bind with id ' + bind.id + ' is not bound in this form currently');
-            return;
-        }
-
-        /*
-        *  not really happy with this part - there should be a better distinction between repeated and non-repeated data.
-        */
-        const repeated = found[0].closest('XF-REPEAT');
-        console.log('is repeated ', repeated);
-        if (repeated) {
-            const item = found[index];
-            // console.log('found item ', item);
-
-            // ### add control to 'boundElements' array in proxy
-            const proxy = this.getProxy(bind.id, index);
-            proxy.bound = item;
-
-            // ### if we are a core HTML control apply properties and attach change listeners
-            if (item.nodeName.indexOf('-') > -1) {
-                // ### initialize bound web component control
-                if (typeof item.init === 'function') {
-                    item.init(proxy, index);
-                }
-            } else {
-                // ### initialize core HTML control
-                this._applyPropertiesToNativeControls(item, proxy);
-                this._attachListenerToNativeControls(item, proxy);
-            }
+        if (boundElement.hasOwnProperty('proxy')) {
+            console.log('resolveProxy - already exists on element. Returning it: ', boundElement.proxy);
+            return boundElement.proxy;
         } else {
-            found.forEach((elem) => {
-                // ### store control in proxy object
-                // const proxy = this.proxies.get(bind.id);
-                // const proxy = this.proxies[bind.id];
+            console.warn('resolveProxy - element has no proxy ', boundElement);
 
-                // ### add control to 'boundElements' array in proxy
-                const proxy = this.getProxy(bind.id, index);
-                proxy.bound = elem;
 
-                // ### if we are a core HTML control apply properties and attach change listeners
-                if (elem.nodeName.indexOf('-') > -1) {
-                    // ### initialize bound web component control
-                    if (typeof elem.init === 'function') {
-                        elem.init(proxy, index);
-                    }
-                } else {
-                    // ### initialize core HTML control
-                    this._applyPropertiesToNativeControls(elem, proxy);
-                    this._attachListenerToNativeControls(elem, proxy);
+
+            console.log('>>>>> resolveProxy modelData ', this.modelData );
+            // todo: potential weak and might not find binding under certain nested conditions
+            // const target = this.modelData.find(x => x.bind.id === bindId).bind;
+
+            const target = this._findById(this.modelData,bindId);
+            // console.log('++++++++++ test ', test);
+
+
+            console.log('>>>>> resolveProxy modelData target', target);
+            const parentBind = this.closest('[bind]');
+            console.log('>>>>> resolveProxy parent? ', parentBind);
+
+            if(parentBind === null){
+
+                // ### we're outermost
+                // ### check this.proxies for entry
+                console.log('>>>>> resolveProxy this.proxies: ', this.proxies);
+                console.log('>>>>> resolveProxy this.proxies id: ', this.proxies[bindId]);
+                // if(this.proxies[bindId] !== undefined){
+                // if(this.proxies[bindId].length === 0){
+                if(this.proxies[bindId] === undefined){
+                    // ### create proxy and store in `proxies`
+                    const p = this.createBindProxy(target, 0);
+                    this._addProxy(bindId, p); // add to list of top-level proxies
+                    console.log('>>>>> resolveProxy new proxy ', p);
+                    return p;
+                }else {
+                    console.log('exists with id: ', this.proxies);
+                    // this.proxies[bindId].bound = boundElement;
+                    return this.proxies[bindId][0]; // ### should be fine to use index '0' as we are outermost and there can be only one
                 }
+            }else{
+                // ### do we have a parent ?
+                //todo get parent proxy
+                //todo check for proxy obj
+                //todo if not there create it
+                //todo continue upwards if necessary
 
-            });
+            }
+
+            return null;
+
+            // walking upwards the tree of UIElements to find the proxy
+            // return null;
         }
+    }
 
+    _findById(o, id) {
+        console.log('/////////// o ',o);
+        //Early return
+        if( o.hasOwnProperty('id') && o.id === id ){
+            return o;
+        }
+        var result, p;
+        for (p in o) {
+            if( o.hasOwnProperty(p) && typeof o[p] === 'object' ) {
+                result = this._findById(o[p], id);
+                if(result){
+                    return result;
+                }
+            }
+        }
+        return result;
     }
 
     /**
-     * filters all elements out that are NOT defined in window.BOUND_ELEMENTS
+     * get or create a proxy object for given `bind`, `boundElement` and `index`
      *
-     * @param controlName
-     * @returns {boolean}
-     * @private
-     */
-    _filterControls(control) {
-        // console.log('#### controlName: ', control.nodeName);
-        return window.BOUND_ELEMENTS.indexOf(control.nodeName) !== -1;
-    }
-
-    /**
-     * Creates a proxy for every bind object in the data-modelData. This serves as a central for mutations of the data-modelData
-     * and updates all bound controls when value changes occur. All proxy objects will be stored in a local map of this
-     * form instance.
-     *
-     * @param bind the bind object which gets proxied.
+     * @param bind
+     * @param boundElement
+     * @param index
      * @returns {boolean|*}
      * @private
      */
-    _createProxy(bind, index) {
-        // ### setting up a proxy object for binding with also keeps references to all bound controls
+    createBindProxy(bind, index){
         const handler = {
             get(target, key) {
                 // console.log('getting value: ', target[key]);
@@ -441,7 +293,7 @@ export class XfForm extends PolymerElement {
                     console.log('####### target.bind ', target.proxies);
                     console.log('####### delete from proxy ', key, value);
 
-                    target.proxies.splice(value, 1);
+                    // target.proxies.splice(value, 1);
                     target.bind.splice(value, 1);
 
 
@@ -471,18 +323,79 @@ export class XfForm extends PolymerElement {
             }
 
         };
+
         const proxy = new Proxy(bind, handler);
         proxy.index = index;
         if (bind['sequence']) {
             proxy.sequence = true;
         }
-
-        // ### add new proxy to 'proxies' map
-        // this.proxies.set(bind.id, proxy);
-        this._addProxy(bind.id, proxy);
         return proxy;
-        // console.log('>>>>>>>>>>>proxies ', this.proxies);
+
     }
+
+
+
+    refresh() {
+        console.log('>>>>> refresh');
+        // iterate the UI in search for bound controls
+        const boundElements = this.querySelectorAll('[bind]');
+        for (let i = 0; i < boundElements.length; i++) {
+            console.log('>>>>> bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
+            const elem = boundElements[i];
+            const bindId = elem.getAttribute('bind');
+
+
+
+            // const proxy = this.getProxy(bindId,0);
+            // console.log('>>>>> resolveProxy ', bindId);
+
+            // const proxy = this.getProxy(bindId);
+            const proxy = this.resolveProxy(bindId,elem);
+            console.log('>>>>> _resolvedProxy ', proxy);
+
+            if (proxy !== null) {
+                proxy.bound = elem;
+                console.log('### control ', boundElements[i], ' bound to proxy ', proxy);
+
+                if(elem.nodeName === "XF-REPEAT"){
+                    // ### xf-repeat refreshes itself
+                    elem.refresh(proxy);
+                }else if (elem.nodeName.indexOf('-') > -1) {
+                    // ### initialize bound web component control
+                    if (typeof elem.refresh === 'function') {
+                        elem.refresh(proxy);
+                    }
+                } else {
+                    // ### initialize core HTML control
+                    this._applyPropertiesToNativeControls(elem, proxy);
+                    this._attachListenerToNativeControls(elem, proxy);
+                }
+            }else{
+                //todo: proxy might not exist - should behave like not relevant
+
+            }
+
+        }
+        /*
+                Object.keys(this.proxies).forEach(function(key,index) {
+                    // key: the name of the object key
+                    // index: the ordinal position of the key within the object
+                    console.log('initUI key ',key);
+                    const proxy = this.getProxy(key,0);
+                    console.log('initUI proxy ', proxy);
+                    console.log('initUI proxy ', proxy.id);
+                    this._initBoundElements(proxy.id, proxy.index);
+
+                }.bind(this));
+        */
+
+
+
+
+    }
+
+
 
     // ########## function below are supporting HTML Core Controls ##########
     // ########## function below are supporting HTML Core Controls ##########
@@ -501,6 +414,7 @@ export class XfForm extends PolymerElement {
         } else {
             this.proxies[bindId].push(proxy);
         }
+        console.log('_addProxy proxies updated', this.proxies);
 
     }
 

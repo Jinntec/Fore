@@ -10,7 +10,8 @@ import { BoundElementMixin } from './BoundElementMixin.js';
  * @polymer
  * @demo demo/index.html
  */
-class XfDelete extends BoundElementMixin(PolymerElement) {
+// class XfDelete extends BoundElementMixin(PolymerElement) {
+class XfDelete extends PolymerElement {
 
     static get properties() {
         return {
@@ -24,14 +25,16 @@ class XfDelete extends BoundElementMixin(PolymerElement) {
 
     }
 
+/*
     refresh(proxy){
         super.refresh(proxy);
         console.log('xf-delete bound children: ', this.proxy.bind);
     }
+*/
 
     execute(){
         console.log('xf-delete executing...');
-        console.log('xf-delete proxy ', this.proxy);
+        // console.log('xf-delete proxy ', this.proxy);
         // document.getElementById('r-todos').append();
         const repeatItem = this.closest('xf-repeat-item');
         console.log('enclosing repeat ', repeatItem);

@@ -77,7 +77,28 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             console.warn('no template found for this repeat:', this.id);
         }
 
-        this._unroll();
+
+        // ### first unroll repeat-items to instanciate the controls
+        // ### iterate the 'bind' array as we do not have proxies yet
+        this.proxy.bind.forEach( item => {
+            console.log('_unroll binding ', item);
+            const index = this.proxy.bind.indexOf(item);
+
+            // ### create a repeat-item
+            const repeatItem = new XfRepeatItem();
+            const clone = document.importNode(this.template.content, true);
+            repeatItem.appendChild(clone);
+            this.appendChild(repeatItem);
+
+            // ### create proxy for repeat-item
+            // const newProxy = repeatItem.createProxy(index);
+            // this.proxy.proxies = [];
+            // this.proxy.proxies.push(newProxy);
+            repeatItem.index = index;
+            repeatItem.refresh(this.proxy);
+        });
+
+        // this._unroll();
         document.dispatchEvent(new CustomEvent('repeat-initialized'));
 
     }

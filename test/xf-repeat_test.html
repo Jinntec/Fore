@@ -13,6 +13,7 @@
     <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
     <script src="../elements/xf-form.js" type="module"></script>
+    <script src="../elements/xf-repeat.js" type="module"></script>
     <script src="../elements/xf-output.js" type="module"></script>
 </head>
 <body>
@@ -135,47 +136,23 @@
             });
 
             test('first task is "Pick up Milk"', () => {
-                assert.isTrue(todo.getProxy('b-task', 0).value === 'Pick up Milk');
+                // assert.isTrue(todo.getProxy('b-task', 0).value === 'Pick up Milk');
+                assert.isTrue(todo.proxies['b-task'][0].value === 'Pick up Milk');
             });
 
             test('first task is "Make tutorial part"', () => {
-                assert.isTrue(todo.getProxy('b-task', 1).value === 'Make tutorial part');
+                assert.isTrue(todo.proxies['b-task'][1].value === 'Make tutorial part');
             });
 
 
-
-/*
-            test('second input is "01.03.2019"', () => {
-
+            test('second input is "2019-03-01"', () => {
                 document.addEventListener('ui-initialized', function () {
-                    assert.isTrue(document.querySelectorAll('input')[1].value === '01.03.2019');
+                    assert.isTrue(document.querySelectorAll('input')[1].value === '2019-03-01');
                 });
-
             });
 
-            test('third input is checkbox and is false', () => {
 
-                document.addEventListener('ui-initialized', function () {
-                    assert.isTrue(document.querySelectorAll('input')[2].type === 'checkbox');
-                    assert.isTrue(document.querySelectorAll('input')[2].value === 'false');
-                });
-
-            });
-
-            test('fourth task input is "Make tutorial part"', () => {
-
-                document.addEventListener('ui-initialized', function () {
-                    // assert.isTrue(document.getElementById('task').value === 'Pick up Milk');
-                    assert.isTrue(document.querySelectorAll('input')[2].value === 'Make ttorial part');
-                });
-
-
-            });
-*/
-
-
-        })
-        ;
+        });
     </script>
 
 </body>
