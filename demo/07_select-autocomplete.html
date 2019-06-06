@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>select</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+    <script src="../assets/web-animations-js/web-animations-next-lite.min.js"> </script>
+
+    <script type="module" src="../elements/xf-form.js"> </script>
+    <script type="module" src="../elements/xf-button.js"> </script>
+    <script type="module" src="../elements/xf-output.js"> </script>
+    <script type="module" src="../elements/xf-setvalue.js"> </script>
+    <script type="module" src="../elements/xf-select1.js"> </script>
+    <script type="module" src="../elements/xf-itemset.js"> </script>
+
+
+    <style>
+        xf-model{
+            display:none;
+        }
+        xf-output{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="record">
+
+        <xf-instance>
+            <data>
+                <relation cert="high" name="child" target="P7-Joe"/>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="b-selected" ref="relation/@target"> </xf-bind>
+
+        <xf-instance id="persons">
+            <data>
+              <name xml:lang="gr" xml:id="P1-Antiochos">Αντίοχος</name>
+              <name xml:lang="gr" xml:id="P2-Dikaios">Δικαῖος</name>
+              <name xml:lang="de" xml:id="P3-Wolfgang">Wolfgang</name>
+              <name xml:lang="de" xml:id="P4-Joern">Jörn</name>
+              <name xml:lang="de" xml:id="P5-Alexandra">Alexandra</name>
+              <name xml:lang="pl" xml:id="P6-Magdalena">Magdalena</name>
+              <name xml:lang="en" xml:id="P7-Joe">Joe</name>
+              <name xml:lang="de" xml:id="P8-Juri">Juri</name>
+            </data>
+        </xf-instance>
+
+
+        <xf-bind id="b-persons" set="persons">
+            <xf-bind id="b-person-label" ref="./text()"> </xf-bind>
+            <xf-bind id="b-person-key" ref="@xml:id"> </xf-bind>
+        </xf-bind>
+    </xf-model>
+
+
+    <xf-form mockup='[
+  {
+    "bind": {
+      "id": "b-selected",
+      "required": true,
+      "value": "P7-Joe"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-persons",
+      "bind": [
+        [
+          {
+            "id": "b-person-label",
+            "value": "Αντίοχος"
+          },
+          {
+            "id": "b-person-key",
+            "value": "P1-Antiochos"
+          }
+        ],
+        [
+          {
+            "id": "b-person-label",
+            "value": "Δικαῖος"
+          },
+          {
+            "id": "b-person-key",
+            "value": "P2-Dikaios"
+          }
+        ],
+        [
+          {
+            "id": "b-person-label",
+            "value": "Wolfgang"
+          },
+          {
+            "id": "b-person-key",
+            "value": "P3-Wolfgang"
+          }
+        ],
+        [
+          {
+            "id": "b-person-label",
+            "value": "Joe"
+          },
+          {
+            "id": "b-person-key",
+            "value": "P7-Joe"
+          }
+        ]
+      ]
+    }
+  }
+]'>
+
+        <h1>Select-Autocomplete Control with Itemset</h1>
+        <h2>Your favorite:<xf-output id="output" bind="b-selected"> </xf-output></h2>
+
+        <xf-select1 id="selected" bind="b-selected" label="Which do you like best?">
+            <xf-itemset bind="b-persons" bind-label="b-person-label" bind-value="b-person-key"/>
+        </xf-select1>
+
+    </xf-form>
+</body>
+</html>

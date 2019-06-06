@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>select</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+    <script src="../assets/web-animations-js/web-animations-next-lite.min.js"> </script>
+
+    <script type="module" src="../elements/xf-form.js"> </script>
+    <script type="module" src="../elements/xf-button.js"> </script>
+    <script type="module" src="../elements/xf-output.js"> </script>
+    <script type="module" src="../elements/xf-setvalue.js"> </script>
+    <script type="module" src="../elements/xf-select1.js"> </script>
+    <script type="module" src="../elements/xf-itemset.js"> </script>
+
+
+    <style>
+        xf-model{
+            display:none;
+        }
+        xf-output{
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="record">
+
+        <xf-instance>
+            <data>
+              <trait ana="religion" type="Judaism" subtype="Rabbinic"/>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="b-master" ref="trait/@type"> </xf-bind>
+        <xf-bind id="b-slave" ref="trait/@subtype"> </xf-bind>
+
+        <xf-instance id="religions">
+            <data>
+              <religion name="Christianity">
+                <religion name="Anglican"/>
+                <religion name="Catholic"/>
+                <religion name="Protestant"/>
+                <religion name="Assyrian"/>
+              </religion>
+              <religion name="Islam">
+                <religion name="Sunni"/>
+                <religion name="Shia"/>
+                <religion name="Ahmadiyya"/>
+              </religion>
+              <religion name="Hinduism">
+                <religion name="Vaishnavism"/>
+                <religion name="Shaivism"/>
+                <religion name="Shaktism"/>
+                <religion name="Smartism"/>
+              </religion>
+              <religion name="Buddhism">
+                <religion name="Theravada"/>
+                <religion name="Mahayana"/>
+              </religion>
+              <religion name="Judaism">
+                <religion name="Rabbinic"/>
+                <religion name="Karaites"/>
+                <religion name="Haymanot"/>
+              </religion>
+            </data>
+        </xf-instance>
+
+
+        <xf-bind id="b-religions" set="religions">
+            <xf-bind id="b-religion-label" ref="@name"> </xf-bind>
+            <xf-bind id="b-religion-key" ref="@name"> </xf-bind>
+        </xf-bind>
+    </xf-model>
+
+
+    <xf-form mockup='[
+  {
+    "bind": {
+      "id": "b-master",
+      "required": true,
+      "value": "Judaism"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-slave",
+      "required": true,
+      "value": "Rabbinic"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-religions",
+      "bind": [
+        [
+          {
+            "id": "b-religion-label",
+            "value": "Christianity"
+          },
+          {
+            "id": "b-religion-key",
+            "value": "Christianity"
+          }
+        ],
+        [
+          {
+            "id": "b-religion-label",
+            "value": "Judaism"
+          },
+          {
+            "id": "b-religion-key",
+            "value": "Judaism"
+          }
+        ],
+        [
+          {
+            "id": "b-religion-label",
+            "value": "Islam"
+          },
+          {
+            "id": "b-religion-key",
+            "value": "Islam"
+          }
+        ]
+      ]
+    }
+  },
+  {
+      "bind": {
+        "id": "b-sub-religions",
+        "bind": [
+          [
+            {
+              "id": "b-religion-label",
+              "value": "Rabbinic"
+            },
+            {
+              "id": "b-religion-key",
+              "value": "Rabbinic"
+            }
+          ],
+          [
+            {
+              "id": "b-religion-label",
+              "value": "Karaites"
+            },
+            {
+              "id": "b-religion-key",
+              "value": "Karaites"
+            }
+          ],
+          [
+            {
+              "id": "b-religion-label",
+              "value": "Haymanot"
+            },
+            {
+              "id": "b-religion-key",
+              "value": "Haymanot"
+            }
+          ]
+        ]
+      }
+  }
+]'>
+
+        <h1>Select-Autocomplete Control with Itemset</h1>
+        <h2>Your favorite:<xf-output id="output" bind="b-master"> </xf-output></h2>
+
+        <xf-select1 id="master" bind="b-master" label="Which do you like best?">
+            <xf-itemset bind="b-religions" bind-label="b-religion-label" bind-value="b-religion-key"/>
+        </xf-select1>
+
+        <xf-select1 id="slave" bind="b-slave" label="Which denomination?">
+            <xf-itemset bind="b-sub-religions" bind-label="b-religion-label" bind-value="b-religion-key"/>
+        </xf-select1>
+    </xf-form>
+</body>
+</html>
