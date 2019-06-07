@@ -1,6 +1,7 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import {BoundElementMixin} from './BoundElementMixin.js';
 import {XfRepeatItem} from './xf-repeat-item.js';
+import {XfForm} from './xf-form.js';
 
 
 /**
@@ -133,7 +134,8 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             // ### check if boundElement
             // console.log('window.... ',window.BOUND_ELEMENTS);
 
-            if(this.isBoundComponent(child)){
+            // if(this.isBoundComponent(child)){
+            if(XfForm.isBoundComponent(child)){
                 console.log('######### bound child ', child);
                 const bindId = child.getAttribute('bind');
                 const newObj = {"id":bindId, "value":""}; // create default object for insertion into repeat

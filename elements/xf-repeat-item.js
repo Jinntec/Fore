@@ -1,5 +1,7 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import {BoundElementMixin} from './BoundElementMixin.js';
+import {XfForm} from './xf-form.js';
+
 
 
 /**
@@ -11,18 +13,6 @@ import {BoundElementMixin} from './BoundElementMixin.js';
  * @demo demo/index.html
  */
 export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
-/*
-        static get template() {
-            return html`
-          <style>
-            :host {
-              display: block;
-            }
-          </style>
-            <slot></slot>
-        `;
-        }
-*/
 
     static get properties() {
         return {
@@ -56,7 +46,7 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
             /*
             create proxy objects
              */
-            if(window.BOUND_ELEMENTS.indexOf(elem.nodeName.toUpperCase()) !== -1){
+            if(XfForm.isBoundComponent(elem)){
                 const bindId = elem.getAttribute('bind');
                 // console.log('repeat-item child ', bindId);
 
@@ -86,6 +76,8 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
      * to given bindId
      *
      *
+     * todo: evaluate if this can be replaced with the 'resolve' in xf-form.
+     *
      * @param bindId
      * @param element
      * @returns null or matching proxy
@@ -107,7 +99,7 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
         if(target !== undefined){
             return target;
         }else {
-            // ### look upwards in repeat proxy
+            // ### look upwards in repeat
             parent = element.parentNode;
             if(parent.hasAttribute('bind')){
                 target = this._resolve(bindId, parent);
@@ -115,9 +107,6 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
                 if(target !== undefined){
                     return target;
                 }else {
-                    // const b = this._resolve(bindId,parent,index);
-                    // const p = this.ownerForm.createBindProxy(b,index);
-                    // return p;
                     return this._resolve(bindId,parent);
                 }
             } else if(parent.nodeName === 'XF-FORM'){
@@ -129,10 +118,6 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
                     return null;
                 }
             } else {
-                // const b = this._resolve(bindId,parent,index);
-                // const p = this.ownerForm.createBindProxy(b,index);
-                // return p;
-
                 return this._resolve(bindId,parent);
             }
         }

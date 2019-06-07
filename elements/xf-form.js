@@ -3,32 +3,10 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
 
 
 /**
- * this array defines which elements are accepted as controls (get eventlisteners attached)
- */
-window.BOUND_ELEMENTS = [
-    'INPUT',
-    'SELECT',
-    'TEXTAREA',
-    'XF-BUTTON',
-    'XF-INPUT',
-    'XF-ITEMSET',
-    'XF-RANGE',
-    'XF-REPEAT',
-    'XF-SELECT',
-    'XF-SELECT1',
-    'XF-TEXTAREA',
-    'XF-OUTPUT',
-    'XF-UPLOAD'
-];
-
-window.ACTION_ELEMENTS = [
-    'XF-APPEND',
-    'XF-DELETE'
-];
-
-
-/**
- * ModelItem is a decorator class for a `bind` in the modelData. It controls access to the
+ * ModelItem is a decorator class for a `bind` in the modelData. There will be a single ModelItem for each
+ * `bind` object in the modelData.
+ *
+ * This class also knows about the controls which bind to a given modelItem and handles updates to those.
  */
 class ModelItem {
 
@@ -126,11 +104,19 @@ export class XfForm extends PolymerElement {
             'XF-ITEMSET',
             'XF-RANGE',
             'XF-REPEAT',
+            'XF-REPEAT-ITEM',
             'XF-SELECT',
             'XF-SELECT1',
             'XF-TEXTAREA',
             'XF-OUTPUT',
             'XF-UPLOAD'
+        ];
+    }
+
+    static get ACTIONELEMENTS(){
+        return [
+            'XF-APPEND',
+            'XF-DELETE'
         ];
     }
 
@@ -160,6 +146,9 @@ export class XfForm extends PolymerElement {
             mockup: {
                 type: String
             },
+            /**
+             * The modelData are the parsed JSON data that are returned from the server.
+             */
             modelData: {
                 type: Array,
                 value: function () {
@@ -168,6 +157,12 @@ export class XfForm extends PolymerElement {
                 notify: true,
                 reflectToAttribute: true
             },
+            /**
+             * modelItems is an object which a key for each `bindId` that is used by a bound element.
+             *
+             * The value will contain an array of ModelItem objects as each `bindId` might be used
+             * several times throughout the form.
+             */
             modelItems: {
                 type: Object,
                 value: {}
@@ -176,6 +171,15 @@ export class XfForm extends PolymerElement {
         };
     }
 
+    /**
+     * checks wether an element is bound or not. A bound element is can be updated from its modelItem.
+     *
+     * Note: actions are not bound elements though they have a binding expression. However they do not receive updates
+     * on state changes etc.
+     *
+     * @param element
+     * @returns {boolean}
+     */
     static isBoundComponent(element) {
         return (XfForm.BOUNDELEMENTS.indexOf(element.nodeName.toUpperCase()) > -1);
     }
@@ -195,9 +199,14 @@ export class XfForm extends PolymerElement {
         this.addEventListener('model-ready', this._modelReady);
         this.addEventListener('item-appended', this._itemAppended);
 
+        /*
+        form processing starts here when all components have be loaded and instanciated by calling the `update`
+        function.
+         */
         window.addEventListener('WebComponentsReady', function () {
             console.log('#### WebComponentsReady #####');
             this.update();
+            this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
         }.bind(this));
 
     }
@@ -205,13 +214,14 @@ export class XfForm extends PolymerElement {
     disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('model-ready', this._modelReady);
+        this.removeEventListener('item-appended', this._itemAppended);
     }
 
+    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
     _itemAppended(e) {
         console.log('##### item was appended ', e.detail);
         this.refresh();
     }
-
 
     /**
      * updates the model data. As we have limited capabilities on the client _update serves the purpose of the
@@ -225,7 +235,6 @@ export class XfForm extends PolymerElement {
         } else {
             //todo: load via ajax
         }
-        this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
     }
 
 
@@ -241,79 +250,12 @@ export class XfForm extends PolymerElement {
         console.log('### _modelReady modelItems: ', this.modelItems);
     }
 
+
     /**
-     * find a ModelItem for given bindId
-     *
-     * First checks wether a ModelItem is already present and just returning that if it exists
-     * If no ModelItem is present consult the parent for a ModelItem and check for bindId within its context.
-     * Continue upwards until 'xf-form' element is reached.
-     *
-     * @param bindId
-     * @param boundElement
-     * @private
+     * does a full refresh of all bound elements. That involves creating modelitems as necessary,
+     * passing them to the respective controls and calling `refresh` on them to trigger the updating
+     * of all state properties (value, readonly, required etc.)
      */
-    resolve(bindId, boundElement) {
-        // console.log('>>>>> resolve boundElement ', boundElement);
-
-        if (boundElement.hasOwnProperty('modelItem')) {
-            // console.log('resolve - already exists on element. Returning it: ', boundElement.modelItem);
-            return boundElement.modelItem;
-        } else {
-            console.warn('resolve - element has no modelItem ', boundElement);
-            // console.log('>>>>> resolve modelData ', this.modelData );
-
-            // todo: potential weak and might not find binding under certain nested conditions
-            // const target = this.modelData.find(x => x.bind.id === bindId).bind;
-
-            const target = this._findById(this.modelData, bindId);
-            // console.log('++++++++++ test ', test);
-
-            if (this.modelItems[bindId] === undefined) {
-                // ### create modelItem and store in `modelItems`
-                // const state = this.createBindProxy(target, 0);
-                const state = this.createModelItem(target, 0);
-                this._addModelItem(bindId, state);
-                return state;
-            } else {
-                return this.modelItems[bindId][0]; // ### should be fine to use index '0' as we are outermost and there can be only one
-            }
-
-            return null;
-
-            // walking upwards the tree of UIElements to find the modelItem
-            // return null;
-        }
-    }
-
-    createModelItem(bind, index) {
-        const state = new ModelItem(bind);
-        state.index = index;
-
-        if (bind['sequence']) {
-            state.sequence = true;
-        }
-        return state;
-    }
-
-    _findById(o, id) {
-        // console.log('/////////// o ', o);
-        //Early return
-        if (o.hasOwnProperty('id') && o.id === id) {
-            return o;
-        }
-        var result, p;
-        for (p in o) {
-            if (o.hasOwnProperty(p) && typeof o[p] === 'object') {
-                result = this._findById(o[p], id);
-                if (result) {
-                    return result;
-                }
-            }
-        }
-        return result;
-    }
-
-
     refresh() {
         console.log('>>>>> refresh');
 
@@ -359,6 +301,99 @@ export class XfForm extends PolymerElement {
         }
     }
 
+    /**
+     * find a ModelItem for given bindId
+     *
+     * First checks wether a ModelItem is already present and just returning that if it exists
+     * If no ModelItem is present consult the parent for a ModelItem and check for bindId within its context.
+     * Continue upwards until 'xf-form' element is reached.
+     *
+     * @param bindId
+     * @param boundElement
+     * @private
+     */
+    resolve(bindId, boundElement) {
+        // console.log('>>>>> resolve boundElement ', boundElement);
+
+        if (boundElement.hasOwnProperty('modelItem')) {
+            // console.log('resolve - already exists on element. Returning it: ', boundElement.modelItem);
+            return boundElement.modelItem;
+        } else {
+            console.warn('resolve - element has no modelItem ', boundElement);
+            // console.log('>>>>> resolve modelData ', this.modelData );
+
+            const target = this._findById(this.modelData, bindId);
+            // console.log('++++++++++ test ', test);
+
+            if (this.modelItems[bindId] === undefined) {
+                // ### create modelItem and store in `modelItems`
+                // const state = this.createBindProxy(target, 0);
+                const state = this.createModelItem(target, 0);
+                this._addModelItem(bindId, state);
+                return state;
+            } else {
+                return this.modelItems[bindId][0]; // ### should be fine to use index '0' as we are outermost and there can be only one
+            }
+
+            return null;
+
+            // walking upwards the tree of UIElements to find the modelItem
+            // return null;
+        }
+    }
+
+    /**
+     * creates a ModelItem object which wrap the passed bind object.
+     *
+     * @param bind - the bind to be wrapped
+     * @param index -
+     * @returns {ModelItem}
+     */
+    createModelItem(bind, index) {
+        const state = new ModelItem(bind);
+        state.index = index;
+
+        if (bind['sequence']) {
+            state.sequence = true;
+        }
+        return state;
+    }
+
+    /**
+     * searches the modelItems for given bindId and returns the object.
+     *
+     * @param o the object to search
+     * @param id the bindId
+     * @returns {{id}|*|*}
+     * @private
+     */
+    _findById(o, id) {
+        // console.log('_findById o ', o);
+        //Early return
+        if (o.hasOwnProperty('id') && o.id === id) {
+            return o;
+        }
+        var result, p;
+        for (p in o) {
+            if (o.hasOwnProperty(p) && typeof o[p] === 'object') {
+                result = this._findById(o[p], id);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * add a modelItem to modelItems array. If an entry for given `bindId` already exists the
+     * new modelItem is added to the list.
+     *
+     * @param bindId the bind id
+     * @param modelItem the modelItem to add
+     * @private
+     */
     _addModelItem(bindId, modelItem) {
         const entry = this.modelItems[bindId];
         if (entry === undefined) {
@@ -383,9 +418,9 @@ export class XfForm extends PolymerElement {
         // xf-output is the exception from the rule. Outputs do not have update listeners
         // console.log('#', control.nodeName.toUpperCase());
         // console.log('#', window.BOUND_ELEMENTS.indexOf(control.nodeName.toUpperCase()));
-        const ctrl = control.nodeName.toUpperCase();
+        // const ctrl = control.nodeName.toUpperCase();
 
-        if (window.BOUND_ELEMENTS.indexOf(ctrl) != -1) {
+        if (XfForm.isBoundComponent(control)) {
             // console.log('attaching listener to ', control);
 
             if (control.nodeName === 'SELECT') {
