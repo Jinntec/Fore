@@ -24,14 +24,19 @@ let bound = (superClass) =>
                 /**
                  * the proxy property holds a reference to the proxy object that itself gives access to the modelData
                  */
+/*
                 proxy: {
                     type: Object
-                }/*,
+                },
+*/
                 bind:{
                     type: String
-                }*/,
+                },
                 ownerForm:{
                     type: Object
+                },
+                modelItem:{
+                    type:Object
                 }
             };
         }
@@ -46,10 +51,19 @@ let bound = (superClass) =>
          *
          * @param proxy - the proxy object
          */
-        refresh(proxy) {
-            this.proxy = proxy;
+        refresh(modelItem) {
+            // this.proxy = proxy;
+            this.modelItem = modelItem;
+
             // console.log('BoundElementMixing proxy ', this.proxy);
         }
+
+
+        isBoundComponent(element){
+            console.log('### isBoundComponent ', element);
+            return element.hasAttribute('bind') && (window.BOUND_ELEMENTS.indexOf(element.nodeName.toUpperCase()) > -1);
+        }
+
 
 
 

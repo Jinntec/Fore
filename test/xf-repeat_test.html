@@ -109,39 +109,39 @@
             const todo = document.getElementById('todo');
 
             test('there is one proxy for each bound node in the model', () => {
-                assert.isTrue(Object.keys(todo.proxies).length === 4);
+                assert.isTrue(Object.keys(todo.modelItems).length === 4);
             });
 
             test('there is one proxy for each distinct bind in the model', () => {
-                assert.isTrue(todo.proxies['b-todo'].length == 1);
-                assert.isTrue(todo.proxies['b-task'].length == 2);
-                assert.isTrue(todo.proxies['b-due'].length == 2);
-                assert.isTrue(todo.proxies['b-state'].length == 2);
+                assert.isTrue(todo.modelItems['b-todo'].length == 1);
+                assert.isTrue(todo.modelItems['b-task'].length == 2);
+                assert.isTrue(todo.modelItems['b-due'].length == 2);
+                assert.isTrue(todo.modelItems['b-state'].length == 2);
             });
 
-            test('there are two proxies for b-task', () => {
-                assert.isTrue(todo.proxies['b-task'].length == 2);
-                assert.isTrue(todo.proxies['b-due'].length == 2);
-                assert.isTrue(todo.proxies['b-state'].length == 2);
+            test('there are two modelItems for b-task', () => {
+                assert.isTrue(todo.modelItems['b-task'].length == 2);
+                assert.isTrue(todo.modelItems['b-due'].length == 2);
+                assert.isTrue(todo.modelItems['b-state'].length == 2);
             });
 
-            test('there are two proxies for b-due', () => {
-                assert.isTrue(todo.proxies['b-due'].length == 2);
+            test('there are two modelItems for b-due', () => {
+                assert.isTrue(todo.modelItems['b-due'].length == 2);
             });
 
-            test('there are two proxies for b-state', () => {
-                assert.isTrue(todo.proxies['b-task'].length == 2);
-                assert.isTrue(todo.proxies['b-due'].length == 2);
-                assert.isTrue(todo.proxies['b-state'].length == 2);
+            test('there are two modelItems for b-state', () => {
+                assert.isTrue(todo.modelItems['b-task'].length == 2);
+                assert.isTrue(todo.modelItems['b-due'].length == 2);
+                assert.isTrue(todo.modelItems['b-state'].length == 2);
             });
 
             test('first task is "Pick up Milk"', () => {
                 // assert.isTrue(todo.getProxy('b-task', 0).value === 'Pick up Milk');
-                assert.isTrue(todo.proxies['b-task'][0].value === 'Pick up Milk');
+                assert.isTrue(todo.modelItems['b-task'][0].value === 'Pick up Milk');
             });
 
             test('first task is "Make tutorial part"', () => {
-                assert.isTrue(todo.proxies['b-task'][1].value === 'Make tutorial part');
+                assert.isTrue(todo.modelItems['b-task'][1].value === 'Make tutorial part');
             });
 
 

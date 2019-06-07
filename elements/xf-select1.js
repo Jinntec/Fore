@@ -39,12 +39,12 @@ class XfSelect1 extends XfControl {
 
         // ### in this case we need to reach down to bring the list into the right state (showing pre-selection)
         this.querySelector('xf-itemset').selectItem(this.value);
-        console.log('_updateValue proxy ', this.proxy);
+        console.log('_updateValue uiState ', this.modelItem);
     }
 
     _handleSelected(e){
         console.log('select1 got select ',e.detail.item.value);
-        this.proxy.value = e.detail.item.value;
+        this.modelItem.value = e.detail.item.value;
     }
 }
 

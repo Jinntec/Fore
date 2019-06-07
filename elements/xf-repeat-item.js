@@ -45,8 +45,8 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
         console.log('repeat-item click ', e);
     }
 
-    refresh(proxy) {
-        super.refresh(proxy);
+    refresh(modelItem) {
+        super.refresh(modelItem);
         // console.log('refresh repeat item from ', this.proxy);
 
         const boundElements = this.querySelectorAll('[bind]');
@@ -62,49 +62,22 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
 
                 const b = this._resolve(bindId,elem,i);
 
-                console.log('################### this.proxy ',this.proxy);
+                console.log('################### this.modelItem ',this.modelItem);
                 console.log('################### b ',b);
-                const p = this.ownerForm.createBindProxy(b,this.index);
-                console.log('################### new proxy ',p);
+                const modelItem = this.ownerForm.createModelItem(b,this.index);
+                console.log('################### new modelItem ', modelItem);
 
-                elem.proxy = p;
-                p.bound = elem;
-                this.ownerForm._addProxy(bindId,p);
-                this._refreshElement(elem,p);
+                elem.modelItem = modelItem;
+
+                modelItem.addBoundElement(elem);
+                // p.bound = elem;
+                // this.ownerForm._addProxy(bindId,p);
+                this.ownerForm._addModelItem(bindId,modelItem);
+                this._refreshElement(elem,modelItem);
             }
-
-
-
-
-
-            // const newProxy = elem.createProxy(i);
-            // let targetProxy = this.proxy.bind.find(p=> p.id === bindId);
-            // console.log('repeat targetProxy ', targetProxy);
-            // console.log('<<<<<<<<<<<<<<<<<<<<<< repeat-item bind',this.proxy.bind[i]);
-            // const newProxy = this.closest('xf-form').createBindProxy()
-            // console.log('>>>>>>>>>>>>>>>>>> created repeat-item proxy ', newProxy);
-
-/*
-            let targetProxy = this.proxy.find(p=> p.id === bindId);
-            console.log('repeat targetProxy ', targetProxy);
-
-            // ### look for proxy matching the bind id of the control at hand
-            if(targetProxy){
-                targetProxy.bound = elem;
-                console.log('repeat targetProxy ', targetProxy);
-                this._refreshElement(elem,targetProxy);
-            } else{
-                const p = this.ownerForm.getProxy(bindId, this.index);
-                console.log('repeat targetProxy ', p);
-                p.bound = elem;
-                this._refreshElement(elem,p);
-            }
-
-*/
-
         }
 
-        console.log('ownerForm proxies ', this.ownerForm.proxies);
+        console.log('ownerForm modelItems ', this.ownerForm.modelItems);
     }
 
 
@@ -120,15 +93,15 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
      */
     _resolve(bindId, element){
 
-        // console.log('>>>>> resolveProxy proxy', bindId, element);
-        // console.log('>>>>> resolveProxy proxy', bindId, this.proxy);
-        // console.log('>>>>> resolveProxy index', this.index);
-        // console.log('>>>>> resolveProxy proxy for item', this.proxy.bind[this.index]);
+        // console.log('>>>>> resolve proxy', bindId, element);
+        // console.log('>>>>> resolve proxy', bindId, this.proxy);
+        // console.log('>>>>> resolve index', this.index);
+        // console.log('>>>>> resolve proxy for item', this.proxy.bind[this.index]);
 
 
         // ### try to find on repeat proxy first
-        let target = this.proxy.bind[this.index].find(x => x.id === bindId);
-        // console.log('>>>>> resolveProxy modelData target', target);
+        let target = this.modelItem.children[this.index].find(x => x.id === bindId);
+        // console.log('>>>>> resolve modelData target', target);
 
         let parent = {};
         if(target !== undefined){
@@ -148,8 +121,8 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
                     return this._resolve(bindId,parent);
                 }
             } else if(parent.nodeName === 'XF-FORM'){
-                console.log('xf-form proxies reacher - outermost ', parent.proxies);
-                target = parent.proxies[bindId][0];
+                console.log('xf-form uiStates reacher - outermost ', parent.modelItems);
+                target = parent.modelItems[bindId][0];
                 if(target !== undefined){
                     return target;
                 }else {
@@ -169,19 +142,20 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
     delete(){
         console.log('deleting item at index:', this.index);
         const repeat = this.closest('xf-repeat');
-        repeat.delete(this);
+        // repeat.delete(this);
+        this.modelItem.delete();
     }
 
-    _refreshElement(elem, proxy){
+    _refreshElement(elem, modelItem){
         if (elem.nodeName.indexOf('-') > -1) {
             // ### initialize bound web component control
             if (typeof elem.refresh === 'function') {
-                elem.refresh(proxy);
+                elem.refresh(modelItem);
             }
         } else {
             // ### initialize core HTML control
-            this.ownerForm._applyPropertiesToNativeControls(elem, proxy);
-            this.ownerForm._attachListenerToNativeControls(elem, proxy);
+            this.ownerForm._applyPropertiesToNativeControls(elem, modelItem);
+            this.ownerForm._attachListenerToNativeControls(elem, modelItem);
         }
     }
 

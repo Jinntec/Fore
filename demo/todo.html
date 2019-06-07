@@ -11,6 +11,7 @@
     <script type="module" src="../elements/xf-repeat.js"></script>
     <script type="module" src="../elements/xf-button.js"></script>
     <script type="module" src="../elements/xf-delete.js"></script>
+    <script type="module" src="../elements/xf-append.js"></script>
 
     <script>
         function append() {
@@ -142,6 +143,9 @@
                 </xf-button>
             </template>
         </xf-repeat>
+        <xf-button label="add">
+            <xf-append bind="b-todo"></xf-append>
+        </xf-button>
 
 <!--        <button type="button" onclick="append();">add</button>-->
 

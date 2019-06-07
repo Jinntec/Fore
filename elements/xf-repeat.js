@@ -41,6 +41,10 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             index: {
                 type: Number,
                 value: 1
+            },
+            dataTemplate: {
+                type: Array,
+                value:[]
             }
         };
     }
@@ -48,41 +52,45 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-repeat connected ', this);
-
-        /*
-                window.addEventListener('WebComponentsReady', function () {
-                    console.log('repeat bound to proxy ', this.proxy);
-                    this._unroll();
-                }.bind(this));
-        */
-
-        // console.log('this content aka template ', this.firstElementChild);
-
+        console.log('### xf-repeat connected ', this);
+        this._initTemplate();
     }
 
-    refresh(proxy) {
-        super.refresh(proxy);
-        console.log('refresh repeat from ', this.proxy);
+    _initTemplate(){
+        // ### there must be a single 'template' child
+        this.template = this.firstElementChild;
+        console.log('##### template ', this.template);
+        if (this.template === null) {
+            console.error('### no template found for this repeat:', this.id);
+            //todo: catch this on form element
+            this.dispatchEvent(new CustomEvent('no-template-error', {
+                composed: true,
+                bubbles: true,
+                detail: {"message": "no template found for repeat:" + this.id}
+            }));
+        }
+    }
+
+
+    refresh(modelItem) {
+        super.refresh(modelItem);
+        console.log('### refresh repeat from ', this.modelItem);
+
+        // this.modelItem.dataTemplate = this.dataTemplate;
+        this.modelItem.dataTemplate = this._getDataTemplate();
 
         // ### remove all repeat-items that might have been there already
         this.querySelectorAll('xf-repeat-item').forEach(item => {
             this.removeChild(item);
         });
 
-        // ### there must be a single 'template' child
-        this.template = this.firstElementChild;
-        // console.log('template ', this.template);
-        if (this.template === null) {
-            console.warn('no template found for this repeat:', this.id);
-        }
-
 
         // ### first unroll repeat-items to instanciate the controls
         // ### iterate the 'bind' array as we do not have proxies yet
-        this.proxy.bind.forEach( item => {
+        this.modelItem.children.forEach(item => {
             console.log('_unroll binding ', item);
-            const index = this.proxy.bind.indexOf(item);
+            // const index = this.modelItem.bind.indexOf(item);
+            const index = this.modelItem.children.indexOf(item);
 
             // ### create a repeat-item
             const repeatItem = new XfRepeatItem();
@@ -90,12 +98,8 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             repeatItem.appendChild(clone);
             this.appendChild(repeatItem);
 
-            // ### create proxy for repeat-item
-            // const newProxy = repeatItem.createProxy(index);
-            // this.proxy.proxies = [];
-            // this.proxy.proxies.push(newProxy);
             repeatItem.index = index;
-            repeatItem.refresh(this.proxy);
+            repeatItem.refresh(this.modelItem);
         });
 
         // this._unroll();
@@ -106,50 +110,75 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
     delete(repeatItem) {
         console.log('repeat delete item ', repeatItem);
         const repeat = this.closest('xf-repeat');
-        this.proxy.delete = repeatItem.index;
+        // this.proxy.delete = repeatItem.index;
+        this.modelItem.delete(repeatItem.index);
+
         // this.removeChild(repeatItem);
-        this.refresh(this.proxy);
+        this.refresh(this.modelItem);
         this.dispatchEvent(new CustomEvent('xf-delete', {
             composed: true,
             bubbles: true,
-            detail: {'deleteLocation': repeatItem.index, 'deleteItems': repeatItem.proxy}
+            detail: {'deleteLocation': repeatItem.index, 'deleteItems': repeatItem.modelItem}
         }));
 
     }
 
-    _unroll() {
-        // const bindings = this.proxy.bind;
-        const bindings = this.proxy.proxies;
+    _getDataTemplate(){
+        console.log('##### template found children ', this.template.content.children);
 
-        bindings.forEach(item => {
+        let tmp = [];
+        Array.from(this.template.content.children).forEach(child => {
+            console.log('####### child ', child);
 
-            console.log('_unroll binding ', item);
-            console.log('_unroll binding ', this.proxy.proxies.indexOf(item));
+            // ### check if boundElement
+            // console.log('window.... ',window.BOUND_ELEMENTS);
 
-            //todo: add entry to data-modelData
-            const index = this.proxy.proxies.indexOf(item);
-
-            // const tmpl = this.firstElementChild;
-            // console.log('template for repeat ', tmpl);
-
-            // ### create a repeat-item
-            const repeatItem = new XfRepeatItem();
-            const clone = document.importNode(this.template.content, true);
-
-            // console.log('clone ', clone);
-            // console.log('clone first', clone.firstElementChild);
-            // clone.firstElementChild.classList.add('repeat-item');
-
-            // this.appendChild(clone);
-
-            repeatItem.appendChild(clone);
-            this.appendChild(repeatItem);
-            repeatItem.index = index;
-            repeatItem.refresh(item);
+            if(this.isBoundComponent(child)){
+                console.log('######### bound child ', child);
+                const bindId = child.getAttribute('bind');
+                const newObj = {"id":bindId, "value":""}; // create default object for insertion into repeat
+                tmp.push(newObj);
+            }
         });
-
-
+        return tmp;
     }
+
+
+    /*
+        _unroll() {
+            // const bindings = this.proxy.bind;
+            const bindings = this.proxy.proxies;
+
+            bindings.forEach(item => {
+
+                console.log('_unroll binding ', item);
+                console.log('_unroll binding ', this.proxy.proxies.indexOf(item));
+
+                //todo: add entry to data-modelData
+                const index = this.proxy.proxies.indexOf(item);
+
+                // const tmpl = this.firstElementChild;
+                // console.log('template for repeat ', tmpl);
+
+                // ### create a repeat-item
+                const repeatItem = new XfRepeatItem();
+                const clone = document.importNode(this.template.content, true);
+
+                // console.log('clone ', clone);
+                // console.log('clone first', clone.firstElementChild);
+                // clone.firstElementChild.classList.add('repeat-item');
+
+                // this.appendChild(clone);
+
+                repeatItem.appendChild(clone);
+                this.appendChild(repeatItem);
+                repeatItem.index = index;
+                repeatItem.refresh(item);
+            });
+
+
+        }
+    */
 
     _attachDom(dom) {
         this.appendChild(dom);

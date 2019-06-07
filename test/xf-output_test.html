@@ -40,32 +40,32 @@
 
           document.addEventListener('ui-initialized', function (){
             assert.equal(output.innerHTML,'World');
-            console.log('proxies ', form.proxies);
+            console.log('uiStates ', form.modelItems);
           });
 
         });
 
-        test('there is ONE entry in proxies array', () => {
-          assert.isTrue(Object.keys(form.proxies).length === 1);
+        test('there is ONE entry in modelItems array', () => {
+          assert.isTrue(Object.keys(form.modelItems).length === 1);
         });
 
-        test('there is ONE proxy object in proxies array with key b-greeting', () => {
-          const p = form.proxies['b-greeting'];
+        test('there is ONE proxy object in modelItems array with key b-greeting', () => {
+          const p = form.modelItems['b-greeting'];
           assert.isTrue(p.length === 1);
         });
 
         test('there is ONE proxy object with value "World"', () => {
-          assert.isTrue(form.proxies['b-greeting'][0].value === 'World');
+          assert.isTrue(form.modelItems['b-greeting'][0].value === 'World');
         });
 
         test('there is ONE control being bound to proxy', () => {
-          assert.isTrue(form.proxies['b-greeting'][0].boundElements.length === 1);
+          assert.isTrue(form.modelItems['b-greeting'][0].boundElements.length === 1);
         });
 
-        test('proxy object of output matches the one in form.proxies array',() => {
-          const p = output.proxy;
+        test('proxy object of output matches the one in form.modelItems array',() => {
+          const p = output.modelItem;
           console.log('########### p ', p);
-          assert.isTrue( p === form.proxies['b-greeting'][0]);
+          assert.isTrue( p === form.modelItems['b-greeting'][0]);
         });
 
         test('xf-output has "value" property', () => {

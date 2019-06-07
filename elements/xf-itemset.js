@@ -56,14 +56,15 @@ class XfItemset extends BoundElementMixin(PolymerElement) {
             // console.log('itemset bound to proxy ', this.proxy.bind);
             // console.log('itemset bindLabel ', this.bindLabel);
             // console.log('itemset bindValue ', this.bindValue);
-            this.list = this.proxy.bind;
+            // this.list = this.modelItem.boundItem.bind;
+            this.list = this.modelItem.children;
         }.bind(this));
 
     }
 
     refresh(proxy){
         super.refresh(proxy);
-        console.log('xf-itemset bound children: ', this.proxy.bind);
+        console.log('xf-itemset bound children: ', this.modelItem.bind);
     }
 
     selectItem(value){

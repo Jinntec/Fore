@@ -29,7 +29,7 @@ class XfOutput extends XfControl {
      * @private
      */
     _updateValue(){
-        this.innerText = this.proxy.value;
+        this.innerText = this.modelItem.value;
     }
 
 }

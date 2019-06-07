@@ -15,16 +15,27 @@ class XfAppend extends PolymerElement {
         return {
             bind: {
                 type: String
-            },
+            }
         };
     }
 
     execute(){
-        console.log('xf-append executing...');
-        // document.getElementById('r-todos').append();
+        console.log('##### xf-append executing bindId ', this.bind);
 
-        // todo: signal the form to append an entry to the list of bound nodes
+        const modelItem = this.closest('xf-form').resolve(this.bind,this);
 
+        console.log('##### proxy for append ', modelItem);
+        // console.log('##### dataTemplate append ', modelItem.dataTemplate.slice());
+        // const p = this.closest('xf-form')
+
+        modelItem.append();
+
+        this.closest('xf-form').dispatchEvent(new CustomEvent('item-appended', {composed: true, bubbles: true, detail: {"bind":this.bind}}));
+
+    }
+
+    isBoundComponent(element){
+        return (window.BOUND_ELEMENTS.indexOf(element) > -1);
     }
 
 }

@@ -50,53 +50,53 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
         };
     }
 
-    refresh(proxy) {
-        super.refresh(proxy);
-        console.log('init with proxy: ', proxy);
-        this.proxy = proxy;
+    refresh(modelItem) {
+        super.refresh(modelItem);
+        console.log('init with modelItem: ', modelItem);
+        this.modelItem = modelItem;
         this._applyProperties();
         this._attachListeners();
     }
 
 
     _applyProperties() {
-        console.log('XfControl.applyProperties ', this.proxy);
-        console.log('XfControl.applyProperties ', this.proxy.value);
-        console.log('XfControl.applyProperties id', this.proxy.id);
-        console.log('XfControl.applyProperties id', this.proxy.required);
+        console.log('XfControl.applyProperties ', this.modelItem);
+        console.log('XfControl.applyProperties ', this.modelItem.value);
+        console.log('XfControl.applyProperties id', this.modelItem.id);
+        console.log('XfControl.applyProperties id', this.modelItem.required);
 
-        if (this.proxy.alert !== undefined) {
-            // console.log('apply alert prop ', this.proxy.alert);
+        if (this.modelItem.alert !== undefined) {
+            // console.log('apply alert prop ', this.uiState.alert);
             //todo
         }
-        if (this.proxy.readonly !== undefined) {
-            // console.log('apply readonly prop ', this.proxy.readonly);
-            this.readonly = this.proxy.readonly;
+        if (this.modelItem.readonly !== undefined) {
+            // console.log('apply readonly prop ', this.uiState.readonly);
+            this.readonly = this.modelItem.readonly;
         }
-        if (this.proxy.required !== undefined) {
-            // console.log('apply required prop ', this.proxy.required);
-            this.required = this.proxy.required;
+        if (this.modelItem.required !== undefined) {
+            // console.log('apply required prop ', this.uiState.required);
+            this.required = this.modelItem.required;
         }
-        if (this.proxy.relevant !== undefined) {
-            // console.log('apply relevant prop ', this.proxy.relevant);
-            this.relevant = this.proxy.relevant;
+        if (this.modelItem.relevant !== undefined) {
+            // console.log('apply relevant prop ', this.uiState.relevant);
+            this.relevant = this.modelItem.relevant;
         }
-        if (this.proxy.valid !== undefined) {
-            // console.log('apply valid prop ', this.proxy.valid);
-            this.valid = this.proxy.valid;
+        if (this.modelItem.valid !== undefined) {
+            // console.log('apply valid prop ', this.uiState.valid);
+            this.valid = this.modelItem.valid;
         }
-        if (this.proxy.type !== undefined) {
-            // console.log('apply type prop ', this.proxy.type);
-            this.datatype = this.proxy.type;
+        if (this.modelItem.type !== undefined) {
+            // console.log('apply type prop ', this.uiState.type);
+            this.datatype = this.modelItem.type;
         }
-        if (this.proxy.value !== undefined) {
-            this.value = this.proxy.value;
+        if (this.modelItem.value !== undefined) {
+            this.value = this.modelItem.value;
         }
 
     }
 
     /**
-     * attaches eventlisteners that update the proxy after user-interaction.
+     * attaches eventlisteners that update the uiState after user-interaction.
      *
      * As this varies between controls the respective control must override this.
      *
@@ -118,7 +118,7 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
 
     _updateValue(){
         // console.log('### xf-control._updateValue ', this.value);
-        // this.proxy.value = this.value;
+        // this.uiState.value = this.value;
     }
 }
 

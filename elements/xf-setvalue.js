@@ -8,7 +8,7 @@ import { BoundElementMixin } from './BoundElementMixin.js';
  * @customElement
  * @polymer
  */
-class XfSetvalue extends BoundElementMixin(PolymerElement) {
+class XfSetvalue extends PolymerElement {
 
     static get properties() {
         return {
@@ -32,7 +32,8 @@ class XfSetvalue extends BoundElementMixin(PolymerElement) {
         // console.log('xf-setvalue bind ', this.bind);
         // const proxy = this.closest('xf-form').getProxy(this.bind);
         // console.log('setvalue proxy ', proxy);
-        this.proxy.value =  this.value;
+        const state = this.closest('xf-form').resolve(this.bind,this);
+        state.value =  this.value;
         return true;
     }
 
