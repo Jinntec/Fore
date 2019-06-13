@@ -91,7 +91,6 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             const clone = document.importNode(this.template.content, true);
             repeatItem.appendChild(clone);
             this.appendChild(repeatItem);
-
             repeatItem.index = index;
             repeatItem.modelItem = this.modelItem.bind[index];
             repeatItem.init();
@@ -102,11 +101,35 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
     }
 
     refresh(){
-        // super.refresh();
+        const repeatItems = this.querySelectorAll('xf-repeat-item');
+        for(let i = 0; i < repeatItems.length; i++){
+            const item = repeatItems[i];
+            item.refresh();
+        }
     }
 
+    appendRepeatItem(){
+
+        const dTmpl = this._getDataTemplate();
+        console.log('dataTemplate from repeat ', dTmpl);
+
+        // const modelItem = this.closest('xf-form').resolve(this.bind,this);
+        this.modelItem.bind.push(dTmpl);
+
+        // ### create a repeat-item
+        const repeatItem = new XfRepeatItem();
+        const clone = document.importNode(this.template.content, true);
+        repeatItem.appendChild(clone);
+        this.appendChild(repeatItem);
+
+        repeatItem.index = this.modelItem.bind.length - 1;
+        repeatItem.modelItem = this.modelItem.bind[repeatItem.index];
+        repeatItem.init();
+    }
+
+/*
     refresh(modelItem) {
-        super.refresh(modelItem);
+        // super.refresh(modelItem);
         console.log('### refresh repeat from ', this.modelItem);
 
         // this.modelItem.dataTemplate = this.dataTemplate;
@@ -120,9 +143,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
         // ### first unroll repeat-items to instanciate the controls
         // ### iterate the 'bind' array as we do not have proxies yet
-        this.modelItem.children.forEach(item => {
+        this.modelItem.bind.forEach(item => {
             // console.log('_unroll binding ', item);
-            const index = this.modelItem.children.indexOf(item);
+            const index = this.modelItem.bind.indexOf(item);
 
             // ### create a repeat-item
             const repeatItem = new XfRepeatItem();
@@ -131,12 +154,13 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             this.appendChild(repeatItem);
 
             repeatItem.index = index;
-            // repeatItem.refresh(this.modelItem);
+            repeatItem.refresh(this.modelItem);
         });
 
         document.dispatchEvent(new CustomEvent('repeat-initialized'));
 
     }
+*/
 
     delete(repeatItem) {
         console.log('repeat delete item ', repeatItem);

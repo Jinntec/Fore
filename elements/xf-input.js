@@ -15,7 +15,7 @@ class XfInput extends XfControl {
         return html`
       <style>
         :host {
-          display: inline;
+          display: inline-block;
         }
       </style>
       <input id="input" type="[[type]]" value="{{value}}">

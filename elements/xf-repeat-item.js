@@ -52,23 +52,29 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
 
     }
 
-/*
     refresh() {
         console.log('### repeat item refresh');
-
+        const boundElements = this.querySelectorAll('[bind]');
+        for(let i = 0; i < boundElements.length; i++){
+            const elem = boundElements[i];
+            const bindId = elem.getAttribute('bind');
+            if (typeof elem.refresh === 'function') {
+                elem.refresh();
+            }
+        }
     }
 
-*/
+/*
     refresh(modelItem) {
-        super.refresh(modelItem);
+        // super.refresh(modelItem);
         // console.log('refresh repeat item from ', this.proxy);
         const boundElements = this.querySelectorAll('[bind]');
         for(let i = 0; i < boundElements.length; i++){
             const elem = boundElements[i];
 
-            /*
+            /!*
             create proxy objects
-             */
+             *!/
             if(XfForm.isBoundComponent(elem)){
                 const bindId = elem.getAttribute('bind');
                 // console.log('repeat-item child ', bindId);
@@ -90,6 +96,7 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
 
         console.log('ownerForm modelItems ', this.ownerForm.modelItems);
     }
+*/
 
 
     /**

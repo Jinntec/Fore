@@ -27,14 +27,7 @@ class XfAppend extends PolymerElement {
 
         // ### get repeat and _dataTemplate
         const repeat = document.getElementById(this.repeat);
-        const dTmpl = repeat._getDataTemplate();
-        console.log('dataTemplate from repeat ', dTmpl);
-
-        // const modelItem = this.closest('xf-form').resolve(this.bind,this);
-        const modelItem = repeat.modelItem;
-        modelItem.append(dTmpl);
-        this.closest('xf-form').dispatchEvent(new CustomEvent('item-appended', {composed: true, bubbles: true, detail: {"bind":this.bind}}));
-
+        repeat.appendRepeatItem();
     }
 
     isBoundComponent(element){
