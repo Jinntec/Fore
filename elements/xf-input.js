@@ -36,7 +36,11 @@ class XfInput extends XfControl {
      * @private
      */
     _updateValue(){
-        this.$.input.value = this.modelItem.value;
+        if(this.type === 'checkbox'){
+            this.$.input.checked = this.modelItem.value;
+        }else{
+            this.$.input.value = this.modelItem.value;
+        }
     }
 
     attachListeners(){
