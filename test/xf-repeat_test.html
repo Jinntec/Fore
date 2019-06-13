@@ -15,6 +15,9 @@
     <script src="../elements/xf-form.js" type="module"></script>
     <script src="../elements/xf-repeat.js" type="module"></script>
     <script src="../elements/xf-output.js" type="module"></script>
+    <script src="../elements/xf-button.js" type="module"></script>
+    <script src="../elements/xf-delete.js" type="module"></script>
+    <script src="../elements/xf-append.js" type="module"></script>
 </head>
 <body>
 
@@ -63,6 +66,10 @@
         ]'>
         <h1>todos</h1>
 
+        <xf-button id="add" label="add">
+            <xf-append bind="b-todo"></xf-append>
+        </xf-button>
+
         <div class="header">
             <span>todo</span>
             <span>due</span>
@@ -74,11 +81,9 @@
                     <input bind="b-task" id="task" type="text"/>
                     <input bind="b-due" id="due" type="date"/>
                     <input bind="b-state" id="state" type="checkbox"/>
-                    <!--
-                                        <xf-button>
-                                            <xf-delete bind="b-todo"
-                                        </xf-button>
-                    -->
+                    <xf-button id="delete">
+                        <xf-delete id="deleteAction" bind="b-todo"></xf-delete>
+                    </xf-button>
                 </div>
             </template>
         </xf-repeat>
@@ -107,6 +112,8 @@
 
 
             const todo = document.getElementById('todo');
+            const deleteBtn = document.getElementById('delete');
+            const deleteAction = document.getElementById('deleteAction');
 
             test('there is one proxy for each bound node in the model', () => {
                 assert.isTrue(Object.keys(todo.modelItems).length === 4);
@@ -146,9 +153,33 @@
 
 
             test('second input is "2019-03-01"', () => {
-                document.addEventListener('ui-initialized', function () {
+                // document.addEventListener('ui-initialized', function () {
                     assert.isTrue(document.querySelectorAll('input')[1].value === '2019-03-01');
+                // });
+            });
+
+            test('deleting first item works', () => {
+                fail;
+/*
+                document.addEventListener('ui-initialized', function () {
+                    assert.isTrue(deleteAction !== undefined);
+                    console.log('@@@@@', deleteAction);
+                    deleteAction.execute();
+                    // assert.isTrue(todo.modelItems['b-todo'][0].childrn.length == 1);
                 });
+*/
+            });
+
+            test('just one modelitem for each bind exists after a delete', () => {
+                fail;
+//                todo: too many modelItems after delete - fix code and test
+
+/*
+                document.addEventListener('ui-initialized', function () {
+                    deleteAction.execute();
+                    assert.isTrue(todo.modelItems['b-task'].lenth == 1);
+                });
+*/
             });
 
 

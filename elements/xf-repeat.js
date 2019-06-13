@@ -57,12 +57,18 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this._initTemplate();
     }
 
+    init() {
+        super.init();
+        this._initTemplate();
+        this._initializeRepeatItems();
+    }
+
     _initTemplate(){
         // ### there must be a single 'template' child
         this.template = this.firstElementChild;
         console.log('##### template ', this.template);
         if (this.template === null) {
-            console.error('### no template found for this repeat:', this.id);
+            // console.error('### no template found for this repeat:', this.id);
             //todo: catch this on form element
             this.dispatchEvent(new CustomEvent('no-template-error', {
                 composed: true,
@@ -72,6 +78,32 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         }
     }
 
+    _initializeRepeatItems(){
+        // ### first unroll repeat-items to instanciate the controls
+        // ### iterate the 'bind' array as we do not have proxies yet
+        const items = Array.from(this.modelItem.bind);
+        this.modelItem.bind.forEach(item => {
+            // console.log('_unroll binding ', item);
+            const index = this.modelItem.bind.indexOf(item);
+
+            // ### create a repeat-item
+            const repeatItem = new XfRepeatItem();
+            const clone = document.importNode(this.template.content, true);
+            repeatItem.appendChild(clone);
+            this.appendChild(repeatItem);
+
+            repeatItem.index = index;
+            repeatItem.modelItem = this.modelItem.bind[index];
+            repeatItem.init();
+            // repeatItem.refresh();
+            // repeatItem.refresh(this.modelItem);
+        });
+
+    }
+
+    refresh(){
+        // super.refresh();
+    }
 
     refresh(modelItem) {
         super.refresh(modelItem);
@@ -89,8 +121,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         // ### first unroll repeat-items to instanciate the controls
         // ### iterate the 'bind' array as we do not have proxies yet
         this.modelItem.children.forEach(item => {
-            console.log('_unroll binding ', item);
-            // const index = this.modelItem.bind.indexOf(item);
+            // console.log('_unroll binding ', item);
             const index = this.modelItem.children.indexOf(item);
 
             // ### create a repeat-item
@@ -100,10 +131,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             this.appendChild(repeatItem);
 
             repeatItem.index = index;
-            repeatItem.refresh(this.modelItem);
+            // repeatItem.refresh(this.modelItem);
         });
 
-        // this._unroll();
         document.dispatchEvent(new CustomEvent('repeat-initialized'));
 
     }
@@ -138,8 +168,10 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             if(XfForm.isBoundComponent(child)){
                 console.log('######### bound child ', child);
                 const bindId = child.getAttribute('bind');
-                const newObj = {"id":bindId, "value":""}; // create default object for insertion into repeat
-                tmp.push(newObj);
+                if(bindId){
+                    const newObj = {"id":bindId, "value":""}; // create default object for insertion into repeat
+                    tmp.push(newObj);
+                }
             }
         });
         return tmp;

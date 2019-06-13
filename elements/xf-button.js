@@ -20,6 +20,9 @@ class XfButton extends PolymerElement {
             display:inline-block;
             padding:4px;
         }
+        button{
+          background:inherit;
+        }
       </style>
       <button id="button" on-click="performActions">
         <span class="label">[[label]]</span>
@@ -44,7 +47,7 @@ class XfButton extends PolymerElement {
 
 
     performActions(e) {
-        // console.log('performActions ', this.children);
+        console.log('performActions ', this.children);
 
         for (let i = 0; i < this.children.length; i++) {
             // console.log('child ', this.children[i]);

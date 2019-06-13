@@ -14,6 +14,8 @@
 
     <script type="module" src="../elements/xf-form.js"></script>
     <script type="module" src="../elements/xf-output.js"></script>
+    <script type="module" src="../elements/xf-refresh.js"></script>
+    <script type="module" src="../elements/xf-button.js"></script>
   </head>
   <body>
 
@@ -26,12 +28,21 @@
             }
           }
         ]'>
+          <h1>Say hello:
+            <xf-output id="output" bind="b-greeting"></xf-output>
+          </h1>
+
+          <xf-button label="refresh">
+            <xf-refresh id="refresh"> </xf-refresh>
+          </xf-button>
+
         </xf-form>
 
     <script type="module">
       suite('xf-form', () => {
 
         const element = document.getElementById('basic');
+        const output = document.getElementById('output');
 
         test('instantiating the element with mockup data works', () => {
           const mydata = element.modelData[0];
@@ -47,6 +58,42 @@
             assert.equal(output.innerHTML,'World');
           });
 
+        });
+
+        test('output control has a modelItem object',function (){
+          assert.typeOf(output.modelItem,'Object');
+        });
+
+        test('output control has a modelItem object with id "b-greeting"',function (){
+          assert.equal(output.modelItem.id,'b-greeting');
+        });
+
+        test('output control has a modelItem value of "World"',function (){
+          assert.equal(output.modelItem.value,'World');
+        });
+
+        test('output control binds to required modelItem',function (){
+          assert.equal(output.modelItem.required,true);
+        });
+
+        test('output control has a bind attribute with value "b-greeting"',function (){
+          assert.equal(output.bind,'b-greeting');
+        });
+
+        test('output control has a value of "World"',function (){
+          assert.equal(output.value,'World');
+        });
+
+
+        test('refresh without changes does not change state of control',function (){
+          const refreshAction = document.getElementById('refresh');
+          refreshAction.execute();
+          assert.typeOf(output.modelItem,'Object');
+          assert.equal(output.modelItem.id,'b-greeting');
+          assert.equal(output.modelItem.value,'World');
+          assert.equal(output.modelItem.required,true);
+          assert.equal(output.bind,'b-greeting');
+          assert.equal(output.value,'World');
         });
 
 

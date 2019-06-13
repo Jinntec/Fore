@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>xf-model test</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script type="module" src="../elements/xf-form.js"></script>
+    <script type="module" src="../elements/xf-output.js"></script>
+    <script type="module" src="../elements/xf-button.js"></script>
+    <script type="module" src="../elements/xf-refresh.js"></script>
+  </head>
+  <body>
+
+
+        <xf-form id="hello" mockup='[
+          {
+            "bind":{
+              "id":"b-greeting",
+              "value":"World"
+            }
+          }
+        ]'>
+
+          <h1>Hello <xf-output id="greeting" bind="b-greeting"></xf-output></h1>
+          <xf-button label="refresh">
+            <xf-refresh id="refresh"> </xf-refresh>
+          </xf-button>
+
+        </xf-form>
+
+    <script type="module">
+      suite('xf-refresh', () => {
+        const form = document.getElementById('hello');
+        const output = document.getElementById('greeting');
+        const refresh = document.getElementById('refresh');
+
+        test('refresh does not create additional bound elements', () => {
+          refresh.execute();
+          assert.isTrue(output.modelItem.boundElements.length == 1);
+          // refresh.execute();
+          // assert.isTrue(output.modelItem.boundElements.length == 1);
+
+        });
+
+
+
+      });
+    </script>
+
+  </body>
+</html>

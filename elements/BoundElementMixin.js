@@ -37,6 +37,10 @@ let bound = (superClass) =>
                 },
                 modelItem:{
                     type:Object
+                },
+                repeated:{
+                    type: Boolean,
+                    value:false
                 }
             };
         }
@@ -46,17 +50,63 @@ let bound = (superClass) =>
             this.ownerForm = this.closest('xf-form');
         }
 
+        init(){
+            this.modelItem = this.ownerForm.findById(this.ownerForm.modelData, this.bind)
+        }
+
         /**
          * initialize the bound element by storing the reference to its proxy.
          *
          * @param proxy - the proxy object
          */
-        refresh(modelItem) {
+        // refresh() {
             // this.proxy = proxy;
-            this.modelItem = modelItem;
-
+            // this.modelItem = modelItem;
             // console.log('BoundElementMixing proxy ', this.proxy);
+        // }
+
+        /**
+         * find the ModelItem for given bindId
+         *
+         * If no ModelItem is present consult the parent for a ModelItem and check for bindId within its context.
+         * Continue upwards until 'xf-form' element is reached.
+         *
+         * @param bindId
+         * @param boundElement
+         * @private
+         */
+/*
+        _resolve(bindId, boundElement) {
+            // console.log('>>>>> resolve boundElement ', boundElement);
+
+            if (boundElement.hasOwnProperty('modelItem')) {
+                // console.log('resolve - already exists on element. Returning it: ', boundElement.modelItem);
+                return boundElement.modelItem;
+            } else {
+                console.warn('resolve - element has no modelItem ', boundElement);
+                // console.log('>>>>> resolve modelData ', this.modelData );
+
+                const target = this._findById(this.modelData, bindId);
+                // console.log('++++++++++ test ', test);
+
+                if (this.modelItems[bindId] === undefined) {
+                    // ### create modelItem and store in `modelItems`
+                    // const state = this.createBindProxy(target, 0);
+                    const state = this.createModelItem(target, 0);
+                    // this._addModelItem(bindId, state);
+                    return state;
+                } else {
+                    return this.modelItems[bindId][0]; // ### should be fine to use index '0' as we are outermost and there can be only one
+                }
+
+                return null;
+
+                // walking upwards the tree of UIElements to find the modelItem
+                // return null;
+            }
         }
+*/
+
 
 
         isBoundComponent(element){

@@ -13,7 +13,7 @@ class ModelItem {
     constructor(bind) {
         this._bind = bind;
         this.boundElements = [];
-        console.log('new ModelItem ', this);
+        // console.log('new ModelItem ', this);
     }
 
     get children(){
@@ -59,13 +59,17 @@ class ModelItem {
 
 
     addBoundElement(element) {
-        if (XfForm.isBoundComponent(element))
-            this.boundElements.push(element);
+        if (XfForm.isBoundComponent(element)){
+            if(this.boundElements.indexOf(element) == -1){
+                this.boundElements.push(element);
+            }
+        }
     }
 
-    append(){
+    append(dataTemplate){
         // const newEntry = this._dataTemplate.splice();
-        const newEntry = Array.from(this._dataTemplate);
+
+        const newEntry = Array.from(dataTemplate);
         this.children.push(newEntry);
 
     }
@@ -93,6 +97,7 @@ class ModelItem {
  * @demo demo/index.html
  */
 export class XfForm extends PolymerElement {
+
 
     static get BOUNDELEMENTS() {
         return [
@@ -157,15 +162,9 @@ export class XfForm extends PolymerElement {
                 notify: true,
                 reflectToAttribute: true
             },
-            /**
-             * modelItems is an object which a key for each `bindId` that is used by a bound element.
-             *
-             * The value will contain an array of ModelItem objects as each `bindId` might be used
-             * several times throughout the form.
-             */
-            modelItems: {
-                type: Object,
-                value: {}
+            changed:{
+                type: Array,
+                value:[]
             }
 
         };
@@ -198,6 +197,8 @@ export class XfForm extends PolymerElement {
 
         this.addEventListener('model-ready', this._modelReady);
         this.addEventListener('item-appended', this._itemAppended);
+        this.addEventListener('value-changed', this._handleValueChange);
+        this.addEventListener('action-performed', this._handleActionPerformed);
 
         /*
         form processing starts here when all components have be loaded and instanciated by calling the `update`
@@ -209,6 +210,32 @@ export class XfForm extends PolymerElement {
             this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
         }.bind(this));
 
+    }
+
+    _handleValueChange(e){
+        console.log('_handleValueChange ',e.target);
+        console.log('_handleValueChange ',e.target.modelItem);
+
+/*
+        //this is for handling deferred update for action blocks
+        //check if action block has been started and add changes as necessary
+        const modelItem = e.target.modelItem;
+        if(this.changed.indexOf(modelItem) === -1){
+            this.changed.push(modelItem);
+        }else{
+            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
+            this.changed[idx] = modelItem;
+        }
+        console.log('### change list ', this.changed);
+*/
+        this.refresh();
+
+    }
+
+    _handleActionPerformed(e){
+        console.log('_handleActionPerformed ',e.target);
+        // todo: finer-grained updating by using the 'changed' array
+        this.refresh();
     }
 
     disconnectedCallback() {
@@ -246,100 +273,55 @@ export class XfForm extends PolymerElement {
      */
     _modelReady() {
         console.log('### model-ready event fired');
-        this.refresh();
-        console.log('### _modelReady modelItems: ', this.modelItems);
+        // this.refresh();
+        this._initUI();
+        document.dispatchEvent(new CustomEvent('ui-initialized', {composed: true, bubbles: true, detail: {}}));
+
     }
 
 
-    /**
-     * does a full refresh of all bound elements. That involves creating modelitems as necessary,
-     * passing them to the respective controls and calling `refresh` on them to trigger the updating
-     * of all state properties (value, readonly, required etc.)
-     */
-    refresh() {
-        console.log('>>>>> refresh');
-
-
+    _initUI() {
+        console.log('### init the UI');
         // iterate the UI in search for bound controls
         const boundElements = this.querySelectorAll('[bind]');
         for (let i = 0; i < boundElements.length; i++) {
-            console.log('>>>>> bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            console.log('##### init UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            const boundElement = boundElements[i];
+            const bindId = boundElement.getAttribute('bind');
+            // if(XfForm.isBoundComponent(boundElement)){
+            boundElement.init();
+            // }
+
+        }
+        // XfForm.initUI(boundElements);
+    }
+
+    /*
+        static initUI(boundElements){
+            console.log('### init the UI');
+            // iterate the UI in search for bound controls
+            for (let i = 0; i < boundElements.length; i++) {
+                console.log('##### init UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+                const boundElement = boundElements[i];
+                const bindId = boundElement.getAttribute('bind');
+                boundElement.init();
+            }
+        }
+    */
+
+    refresh(){
+        console.log('### refresh');
+        const boundElements = this.querySelectorAll('[bind]');
+        for (let i = 0; i < boundElements.length; i++) {
+            console.log('##### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
             // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
             const elem = boundElements[i];
             const bindId = elem.getAttribute('bind');
-
-
-            // const proxy = this.getProxy(bindId,0);
-            // console.log('>>>>> resolve ', bindId);
-
-            // const proxy = this.getProxy(bindId);
-            const modelItem = this.resolve(bindId, elem);
-            console.log('>>>>> _resolved modelItem ', modelItem);
-
-            if (modelItem !== null) {
-                modelItem.addBoundElement(elem);
-                console.log('### control ', boundElements[i], ' bound to modelItem ', modelItem);
-
-                if (elem.nodeName === "XF-REPEAT") {
-                    // ### xf-repeat refreshes itself
-                    elem.refresh(modelItem);
-                } else if (elem.nodeName.indexOf('-') > -1) {
-                    // ### initialize bound web component control
-                    if (typeof elem.refresh === 'function') {
-                        elem.refresh(modelItem);
-                    }
-                } else {
-                    // ### initialize core HTML control
-                    this._applyPropertiesToNativeControls(elem, modelItem);
-                    this._attachListenerToNativeControls(elem, modelItem);
-                }
-            } else {
-                //todo: modelItem might not exist - should behave like not relevant
-
+            if (typeof elem.refresh === 'function') {
+                elem.refresh();
             }
-
         }
-    }
 
-    /**
-     * find a ModelItem for given bindId
-     *
-     * First checks wether a ModelItem is already present and just returning that if it exists
-     * If no ModelItem is present consult the parent for a ModelItem and check for bindId within its context.
-     * Continue upwards until 'xf-form' element is reached.
-     *
-     * @param bindId
-     * @param boundElement
-     * @private
-     */
-    resolve(bindId, boundElement) {
-        // console.log('>>>>> resolve boundElement ', boundElement);
-
-        if (boundElement.hasOwnProperty('modelItem')) {
-            // console.log('resolve - already exists on element. Returning it: ', boundElement.modelItem);
-            return boundElement.modelItem;
-        } else {
-            console.warn('resolve - element has no modelItem ', boundElement);
-            // console.log('>>>>> resolve modelData ', this.modelData );
-
-            const target = this._findById(this.modelData, bindId);
-            // console.log('++++++++++ test ', test);
-
-            if (this.modelItems[bindId] === undefined) {
-                // ### create modelItem and store in `modelItems`
-                // const state = this.createBindProxy(target, 0);
-                const state = this.createModelItem(target, 0);
-                this._addModelItem(bindId, state);
-                return state;
-            } else {
-                return this.modelItems[bindId][0]; // ### should be fine to use index '0' as we are outermost and there can be only one
-            }
-
-            return null;
-
-            // walking upwards the tree of UIElements to find the modelItem
-            // return null;
-        }
     }
 
     /**
@@ -360,14 +342,14 @@ export class XfForm extends PolymerElement {
     }
 
     /**
-     * searches the modelItems for given bindId and returns the object.
+     * searches the modelData for given bindId and returns the object.
      *
      * @param o the object to search
      * @param id the bindId
      * @returns {{id}|*|*}
      * @private
      */
-    _findById(o, id) {
+    findById(o, id) {
         // console.log('_findById o ', o);
         //Early return
         if (o.hasOwnProperty('id') && o.id === id) {
@@ -376,7 +358,7 @@ export class XfForm extends PolymerElement {
         var result, p;
         for (p in o) {
             if (o.hasOwnProperty(p) && typeof o[p] === 'object') {
-                result = this._findById(o[p], id);
+                result = this.findById(o[p], id);
                 if (result) {
                     return result;
                 }
@@ -385,129 +367,10 @@ export class XfForm extends PolymerElement {
         return result;
     }
 
-
-    /**
-     * add a modelItem to modelItems array. If an entry for given `bindId` already exists the
-     * new modelItem is added to the list.
-     *
-     * @param bindId the bind id
-     * @param modelItem the modelItem to add
-     * @private
-     */
-    _addModelItem(bindId, modelItem) {
-        const entry = this.modelItems[bindId];
-        if (entry === undefined) {
-            this.modelItems[bindId] = [];
-            this.modelItems[bindId][0] = modelItem;
-        } else {
-            this.modelItems[bindId].push(modelItem);
-        }
-        console.log('_addModelItem modelItems updated', this.modelItems);
-    }
-
-
-    /**
-     * Attaches eventlisteners to bound controls to report back value-changes triggered by the user.
-     *
-     * @param control the control
-     * @param modelItem the ModelItem object
-     * @private
-     */
-    _attachListenerToNativeControls(control, modelItem) {
-
-        // xf-output is the exception from the rule. Outputs do not have update listeners
-        // console.log('#', control.nodeName.toUpperCase());
-        // console.log('#', window.BOUND_ELEMENTS.indexOf(control.nodeName.toUpperCase()));
-        // const ctrl = control.nodeName.toUpperCase();
-
-        if (XfForm.isBoundComponent(control)) {
-            // console.log('attaching listener to ', control);
-
-            if (control.nodeName === 'SELECT') {
-                control.addEventListener('change', function (e) {
-                    console.log('changing....... ', e);
-                    modelItem.value = e.target.value;
-                }.bind(this));
-            } else if (control.hasAttribute('incremental')) {
-                console.log('incremental handler');
-
-                control.addEventListener('keyup', function (e) {
-                    console.log('keyup....... ', e);
-                    modelItem.value = e.target.value;
-                }.bind(this));
-            } else {
-                control.addEventListener('blur', function (e) {
-                    modelItem.value = e.target.value;
-                });
-            }
-
-        }
-    }
-
-    /**
-     * applies the properties of the bind object to the control.
-     *
-     * @param control the control to initialize
-     * @param bind the bind object
-     * @private
-     */
-    _applyPropertiesToNativeControls(control, modelItem) {
-        if (modelItem.alert !== undefined) {
-            // console.log('apply alert prop ', modelItem.alert);
-            //todo
-        }
-        if (modelItem.readonly !== undefined) {
-            // console.log('apply readonly prop ', modelItem.readonly);
-            if (modelItem.readonly) {
-                control.setAttribute('readonly', 'readonly')
-            } else {
-                control.removeAttribute('readonly');
-            }
-        }
-        if (modelItem.required !== undefined) {
-            // console.log('apply required prop ', modelItem.required);
-            control.setAttribute('required', 'required');
-        }
-        if (modelItem.relevant !== undefined) {
-            // console.log('apply relevant prop ', modelItem.relevant);
-            if (modelItem.relevant) {
-                control.style.display = 'inline-block';
-            } else {
-                control.style.display = 'none';
-            }
-        }
-        if (modelItem.valid !== undefined) {
-            // console.log('apply valid prop ', modelItem.valid);
-            //todo
-        }
-        if (modelItem.type !== undefined) {
-            // console.log('apply type prop ', modelItem.type);
-            //todo
-        }
-        if (modelItem.value !== undefined) {
-            // console.log('apply value prop ', modelItem.value);
-
-            //todo: this is obviously not optimal as it requires too much knowledge about certain controls
-            // todo: why does third condition does not apply to normal input control?
-            if (control.type === 'checkbox') {
-                control.checked = modelItem.value;
-            } else if (control.value !== 'undefined') {
-                // ### all controls should have a 'value' property
-                control.value = modelItem.value;
-            } else {
-                console.warn(control, ' has no "value" property')
-            }
-
-        }
-    }
-
     _isWebComponent(elementName) {
         return (elementName.indexOf('-') > -1);
     }
 
-    _isNativeControl(elementName) {
-        return (elementName.indexOf)
-    }
 
 }
 

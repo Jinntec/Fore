@@ -24,6 +24,7 @@ class XfOutput extends XfControl {
     `;
     }
 
+
     /**
      * @override
      * @private
@@ -31,6 +32,8 @@ class XfOutput extends XfControl {
     _updateValue(){
         this.innerText = this.modelItem.value;
     }
+
+
 
 }
 

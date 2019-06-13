@@ -46,24 +46,35 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
             value: {
                 type: String,
                 observer:'_updateValue'
+            },
+            incremental:{
+                type: Boolean,
+                value: false
             }
         };
     }
 
-    refresh(modelItem) {
-        super.refresh(modelItem);
-        console.log('init with modelItem: ', modelItem);
-        this.modelItem = modelItem;
-        this._applyProperties();
-        this._attachListeners();
+    init(){
+        if(!this.repeated){
+            super.init();
+        }
+        this.applyProperties();
+        this.attachListeners();
+
+    }
+
+    refresh() {
+        console.log('init with modelItem: ', this.modelItem);
+        // this.modelItem = modelItem;
+        this.applyProperties();
     }
 
 
-    _applyProperties() {
+    applyProperties() {
         console.log('XfControl.applyProperties ', this.modelItem);
         console.log('XfControl.applyProperties ', this.modelItem.value);
-        console.log('XfControl.applyProperties id', this.modelItem.id);
-        console.log('XfControl.applyProperties id', this.modelItem.required);
+        console.log('XfControl.applyProperties id: ', this.modelItem.id);
+        console.log('XfControl.applyProperties required: ', this.modelItem.required);
 
         if (this.modelItem.alert !== undefined) {
             // console.log('apply alert prop ', this.uiState.alert);
@@ -102,7 +113,12 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
      *
      * @private
      */
-    _attachListeners() {}
+    attachListeners() {}
+
+    dispatchValueChange(){
+        console.log('### dispatching value change from ', this);
+        this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {}}));
+    }
 
     _updateAlert(){}
 

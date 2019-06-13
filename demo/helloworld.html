@@ -10,6 +10,7 @@
     <script type="module" src="../elements/xf-form.js"> </script>
     <script type="module" src="../elements/xf-button.js"> </script>
     <script type="module" src="../elements/xf-output.js"> </script>
+    <script type="module" src="../elements/xf-input.js"> </script>
     <script type="module" src="../elements/xf-setvalue.js"> </script>
 
     <style>
@@ -19,7 +20,7 @@
         xf-output{
             color:blue;
         }
-        input{
+        xf-input{
             display: block;
             margin-bottom: 20px;
         }
@@ -54,10 +55,10 @@
         </h1>
 
         <label for="greeting">Greeting:</label>
-        <input id="greeting" bind="b-greeting" type="text" incremental="incremental"/>
+        <xf-input id="greeting" bind="b-greeting" type="text" incremental="incremental"> </xf-input>
 
         <label for="greeting2">This fires onblur</label>
-        <input id="greeting2" bind="b-greeting" type="text"/>
+        <xf-input id="greeting2" bind="b-greeting" type="text"> </xf-input>
 
         <xf-button label="set value to 'girls and boys'">
             <xf-setvalue bind="b-greeting" value="girls and boys"></xf-setvalue>

@@ -25,7 +25,7 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-repeat-item connected ', this);
+        console.log('### xf-repeat-item connected ', this);
 
         this.addEventListener('click',this._onClick);
 
@@ -35,10 +35,33 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
         console.log('repeat-item click ', e);
     }
 
+    init(){
+        // super.init();
+        console.log('### repeat item modelitem ', this.modelItem);
+        const boundElements = this.querySelectorAll('[bind]');
+        for (let i = 0; i < boundElements.length; i++) {
+            console.log('##### init UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            const boundElement = boundElements[i];
+            const bindId = boundElement.getAttribute('bind');
+            boundElement.repeated = true;
+            boundElement.modelItem = this.ownerForm.findById(this.modelItem,bindId);
+            boundElement.init();
+            // boundElement.applyProperties();
+            // boundElement.attachListeners();
+        }
+
+    }
+
+/*
+    refresh() {
+        console.log('### repeat item refresh');
+
+    }
+
+*/
     refresh(modelItem) {
         super.refresh(modelItem);
         // console.log('refresh repeat item from ', this.proxy);
-
         const boundElements = this.querySelectorAll('[bind]');
         for(let i = 0; i < boundElements.length; i++){
             const elem = boundElements[i];
@@ -52,17 +75,15 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
 
                 const b = this._resolve(bindId,elem,i);
 
-                console.log('################### this.modelItem ',this.modelItem);
-                console.log('################### b ',b);
+                console.log('##### this.modelItem ',this.modelItem);
                 const modelItem = this.ownerForm.createModelItem(b,this.index);
-                console.log('################### new modelItem ', modelItem);
 
                 elem.modelItem = modelItem;
 
                 modelItem.addBoundElement(elem);
                 // p.bound = elem;
                 // this.ownerForm._addProxy(bindId,p);
-                this.ownerForm._addModelItem(bindId,modelItem);
+                // this.ownerForm._addModelItem(bindId,modelItem);
                 this._refreshElement(elem,modelItem);
             }
         }
@@ -139,8 +160,8 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
             }
         } else {
             // ### initialize core HTML control
-            this.ownerForm._applyPropertiesToNativeControls(elem, modelItem);
-            this.ownerForm._attachListenerToNativeControls(elem, modelItem);
+            // this.ownerForm._applyPropertiesToNativeControls(elem, modelItem);
+            // this.ownerForm._attachListenerToNativeControls(elem, modelItem);
         }
     }
 

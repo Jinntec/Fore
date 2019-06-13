@@ -22,9 +22,7 @@ class XfDelete extends PolymerElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-delete attached');
-        console.log('xf-delete proxy',this.proxy);
-
+        console.log('### xf-delete connected');
     }
 
 /*
@@ -35,7 +33,7 @@ class XfDelete extends PolymerElement {
 */
 
     execute(){
-        console.log('xf-delete executing...');
+        console.log('##### xf-delete executing...');
         // console.log('xf-delete proxy ', this.proxy);
         // document.getElementById('r-todos').append();
         // const repeatItem = this.closest('xf-repeat-item');

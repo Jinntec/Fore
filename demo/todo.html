@@ -12,6 +12,7 @@
     <script type="module" src="../elements/xf-button.js"></script>
     <script type="module" src="../elements/xf-delete.js"></script>
     <script type="module" src="../elements/xf-append.js"></script>
+    <script type="module" src="../elements/xf-input.js"></script>
 
     <script>
         function append() {
@@ -36,6 +37,9 @@
         }
         [required]{
             background:lightyellow;
+        }
+        [label=add]{
+            background: #29B6F6;
         }
 
     </style>
@@ -128,24 +132,33 @@
         ]'>
         <h1>todos</h1>
 
+        <xf-button label="add">
+<!--            <xf-append bind="b-todo"></xf-append>-->
+            <xf-append repeat="r-todos"></xf-append>
+        </xf-button>
+
+        <br/><br/>
+
         <div class="header">
             <span>todo</span>
-            <span>due</span>
-            <span>status</span>
+<!--            <span>due</span>-->
+<!--            <span>status</span>-->
         </div>
         <xf-repeat id="r-todos" bind="b-todo">
             <template>
-                <input bind="b-task" type="text"/>
+                <xf-input bind="b-task" type="text"> </xf-input>
+<!--
                 <input bind="b-due" type="date"/>
                 <input bind="b-state" type="checkbox"/>
+-->
+<!--
                 <xf-button label="delete">
                     <xf-delete bind="b-todo"></xf-delete>
+                    <xf-delete></xf-delete>
                 </xf-button>
+-->
             </template>
         </xf-repeat>
-        <xf-button label="add">
-            <xf-append bind="b-todo"></xf-append>
-        </xf-button>
 
 <!--        <button type="button" onclick="append();">add</button>-->
 

@@ -15,6 +15,9 @@ class XfAppend extends PolymerElement {
         return {
             bind: {
                 type: String
+            },
+            repeat:{
+                type: String
             }
         };
     }
@@ -22,14 +25,14 @@ class XfAppend extends PolymerElement {
     execute(){
         console.log('##### xf-append executing bindId ', this.bind);
 
-        const modelItem = this.closest('xf-form').resolve(this.bind,this);
+        // ### get repeat and _dataTemplate
+        const repeat = document.getElementById(this.repeat);
+        const dTmpl = repeat._getDataTemplate();
+        console.log('dataTemplate from repeat ', dTmpl);
 
-        console.log('##### proxy for append ', modelItem);
-        // console.log('##### dataTemplate append ', modelItem.dataTemplate.slice());
-        // const p = this.closest('xf-form')
-
-        modelItem.append();
-
+        // const modelItem = this.closest('xf-form').resolve(this.bind,this);
+        const modelItem = repeat.modelItem;
+        modelItem.append(dTmpl);
         this.closest('xf-form').dispatchEvent(new CustomEvent('item-appended', {composed: true, bubbles: true, detail: {"bind":this.bind}}));
 
     }
