@@ -155,8 +155,8 @@ export class XfRepeatItem extends BoundElementMixin(PolymerElement) {
     delete(){
         console.log('deleting item at index:', this.index);
         const repeat = this.closest('xf-repeat');
-        // repeat.delete(this);
-        this.modelItem.delete();
+        repeat.delete(this);
+        // this.modelItem.delete();
     }
 
     _refreshElement(elem, modelItem){

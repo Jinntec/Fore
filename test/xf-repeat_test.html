@@ -15,6 +15,7 @@
     <script src="../elements/xf-form.js" type="module"></script>
     <script src="../elements/xf-repeat.js" type="module"></script>
     <script src="../elements/xf-output.js" type="module"></script>
+    <script src="../elements/xf-input.js" type="module"></script>
     <script src="../elements/xf-button.js" type="module"></script>
     <script src="../elements/xf-delete.js" type="module"></script>
     <script src="../elements/xf-append.js" type="module"></script>
@@ -34,12 +35,12 @@
                   },
                   {
                     "id": "b-state",
-                    "type": "boolean",
+                    "type": "Boolean",
                     "value": false
                   },
                   {
                     "id": "b-due",
-                    "type": "date",
+                    "type": "Date",
                     "value": "2019-03-01"
                   }
                 ],
@@ -51,12 +52,12 @@
                   },
                   {
                     "id": "b-state",
-                    "type": "boolean",
+                    "type": "Boolean",
                     "value": true
                   },
                   {
                     "id": "b-due",
-                    "type": "date",
+                    "type": "Date",
                     "value": "2019-04-01"
                   }
                 ]
@@ -67,7 +68,7 @@
         <h1>todos</h1>
 
         <xf-button id="add" label="add">
-            <xf-append bind="b-todo"></xf-append>
+            <xf-append repeat="r-todos"></xf-append>
         </xf-button>
 
         <div class="header">
@@ -75,14 +76,14 @@
             <span>due</span>
             <span>status</span>
         </div>
-        <xf-repeat bind="b-todo" id="r-todos">
+        <xf-repeat bind="b-todo" id="repeat">
             <template>
                 <div>
-                    <input bind="b-task" id="task" type="text"/>
-                    <input bind="b-due" id="due" type="date"/>
-                    <input bind="b-state" id="state" type="checkbox"/>
+                    <xf-input bind="b-task" id="task" type="text"></xf-input>
+                    <xf-input bind="b-due" id="due" type="date"></xf-input>
+                    <xf-input bind="b-state" id="state" type="checkbox"></xf-input>
                     <xf-button id="delete">
-                        <xf-delete id="deleteAction" bind="b-todo"></xf-delete>
+                        <xf-delete id="deleteAction"></xf-delete>
                     </xf-button>
                 </div>
             </template>
@@ -112,74 +113,93 @@
 
 
             const todo = document.getElementById('todo');
+            const repeat = document.getElementById('repeat');
             const deleteBtn = document.getElementById('delete');
             const deleteAction = document.getElementById('deleteAction');
 
-            test('there is one proxy for each bound node in the model', () => {
-                assert.isTrue(Object.keys(todo.modelItems).length === 4);
+            test('there is a repeat binding to b-todo', () => {
+                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
+
+
+                assert.isTrue(repeat.bind === 'b-todo');
+                assert.isTrue(repeat.modelItem.id === 'b-todo');
             });
 
-            test('there is one proxy for each distinct bind in the model', () => {
-                assert.isTrue(todo.modelItems['b-todo'].length == 1);
-                assert.isTrue(todo.modelItems['b-task'].length == 2);
-                assert.isTrue(todo.modelItems['b-due'].length == 2);
-                assert.isTrue(todo.modelItems['b-state'].length == 2);
+            test('bound modelItem has 2 child bind elements', () => {
+                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
+                assert.isTrue(repeat.modelItem.bind.length === 2);
             });
 
-            test('there are two modelItems for b-task', () => {
-                assert.isTrue(todo.modelItems['b-task'].length == 2);
-                assert.isTrue(todo.modelItems['b-due'].length == 2);
-                assert.isTrue(todo.modelItems['b-state'].length == 2);
+            test('repeat has created 2 repeat-items', () => {
+                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
+                assert.isTrue(repeat.querySelectorAll('xf-repeat-item').length === 2);
             });
 
-            test('there are two modelItems for b-due', () => {
-                assert.isTrue(todo.modelItems['b-due'].length == 2);
+            test('repeat-item 1 has been initialized correctly', () => {
+                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
+                const first = repeat.querySelectorAll('xf-repeat-item')[0];
+
+                console.log('>>>>>>>>>>> repeat modelitem ', first.modelItem);
+
+                assert.isTrue(first.modelItem.length === 3);
+                assert.isTrue(first.modelItem[0].id === 'b-task');
+                assert.isTrue(first.modelItem[1].id === 'b-state');
+                assert.isTrue(first.modelItem[2].id === 'b-due');
+
+                assert.isTrue(first.modelItem[0].value === 'Pick up Milk');
+                assert.isTrue(first.modelItem[0].required);
+
+                assert.isFalse(first.modelItem[1].value);
+                assert.isTrue(first.modelItem[1].type === 'Boolean');
+
+                assert.isTrue(first.modelItem[2].value === '2019-03-01');
+                assert.isTrue(first.modelItem[2].type === 'Date');
+
             });
 
-            test('there are two modelItems for b-state', () => {
-                assert.isTrue(todo.modelItems['b-task'].length == 2);
-                assert.isTrue(todo.modelItems['b-due'].length == 2);
-                assert.isTrue(todo.modelItems['b-state'].length == 2);
+            test('repeat-item 2 has been initialized correctly', () => {
+                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
+                const second = repeat.querySelectorAll('xf-repeat-item')[1];
+
+                console.log('>>>>>>>>>>> repeat modelitem ', second.modelItem);
+
+                assert.isTrue(second.modelItem.length === 3);
+                assert.isTrue(second.modelItem[0].id === 'b-task');
+                assert.isTrue(second.modelItem[1].id === 'b-state');
+                assert.isTrue(second.modelItem[2].id === 'b-due');
+
+                assert.isTrue(second.modelItem[0].value === 'Make tutorial part');
+                assert.isTrue(second.modelItem[0].required);
+
+                assert.isTrue(second.modelItem[1].value);
+                assert.isTrue(second.modelItem[1].type === 'Boolean');
+
+                assert.isTrue(second.modelItem[2].value === '2019-04-01');
+                assert.isTrue(second.modelItem[2].type === 'Date');
+
             });
 
-            test('first task is "Pick up Milk"', () => {
-                // assert.isTrue(todo.getProxy('b-task', 0).value === 'Pick up Milk');
-                assert.isTrue(todo.modelItems['b-task'][0].value === 'Pick up Milk');
-            });
+            test('controls are initialized with their bound values', () => {
+                const input = document.querySelectorAll('xf-input');
+                assert.isTrue(input[0].bind === 'b-task');
+                assert.isTrue(input[0].value === 'Pick up Milk');
 
-            test('first task is "Make tutorial part"', () => {
-                assert.isTrue(todo.modelItems['b-task'][1].value === 'Make tutorial part');
-            });
+                assert.isTrue(input[1].bind === 'b-due');
+                assert.isTrue(input[1].value === '2019-03-01');
+
+                assert.isTrue(input[2].bind === 'b-state');
+                assert.isFalse(input[2].value);
+
+                assert.isTrue(input[3].bind === 'b-task');
+                assert.isTrue(input[3].value === 'Make tutorial part');
+
+                assert.isTrue(input[4].bind === 'b-due');
+                assert.isTrue(input[4].value === '2019-04-01');
+
+                assert.isTrue(input[5].bind === 'b-state');
+                assert.isTrue(input[5].value);
 
 
-            test('second input is "2019-03-01"', () => {
-                // document.addEventListener('ui-initialized', function () {
-                    assert.isTrue(document.querySelectorAll('input')[1].value === '2019-03-01');
-                // });
-            });
-
-            test('deleting first item works', () => {
-                fail;
-/*
-                document.addEventListener('ui-initialized', function () {
-                    assert.isTrue(deleteAction !== undefined);
-                    console.log('@@@@@', deleteAction);
-                    deleteAction.execute();
-                    // assert.isTrue(todo.modelItems['b-todo'][0].childrn.length == 1);
-                });
-*/
-            });
-
-            test('just one modelitem for each bind exists after a delete', () => {
-                fail;
-//                todo: too many modelItems after delete - fix code and test
-
-/*
-                document.addEventListener('ui-initialized', function () {
-                    deleteAction.execute();
-                    assert.isTrue(todo.modelItems['b-task'].lenth == 1);
-                });
-*/
             });
 
 

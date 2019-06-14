@@ -36,40 +36,13 @@
         const output = document.getElementById('greeting');
         const form = document.getElementById('hello');
 
-        test('output binding works', () => {
 
-          document.addEventListener('ui-initialized', function (){
-            assert.equal(output.innerHTML,'World');
-            console.log('uiStates ', form.modelItems);
-          });
-
+        test('xf-output "value" is "World', () => {
+          assert.isTrue(output.value == "World");
         });
 
-        test('there is ONE entry in modelItems array', () => {
-          assert.isTrue(Object.keys(form.modelItems).length === 1);
-        });
-
-        test('there is ONE proxy object in modelItems array with key b-greeting', () => {
-          const p = form.modelItems['b-greeting'];
-          assert.isTrue(p.length === 1);
-        });
-
-        test('there is ONE proxy object with value "World"', () => {
-          assert.isTrue(form.modelItems['b-greeting'][0].value === 'World');
-        });
-
-        test('there is ONE control being bound to proxy', () => {
-          assert.isTrue(form.modelItems['b-greeting'][0].boundElements.length === 1);
-        });
-
-        test('proxy object of output matches the one in form.modelItems array',() => {
-          const p = output.modelItem;
-          console.log('########### p ', p);
-          assert.isTrue( p === form.modelItems['b-greeting'][0]);
-        });
-
-        test('xf-output has "value" property', () => {
-          assert.isTrue(output.value !== 'undefined');
+        test('xf-output "value" and modelItem value are the same', () => {
+          assert.isTrue(output.value == output.modelItem.value);
         });
 
         test('value is in light DOM', () => {

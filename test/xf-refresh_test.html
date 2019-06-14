@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
 
     <title>xf-model test</title>
 
@@ -12,15 +12,15 @@
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-    <script type="module" src="../elements/xf-form.js"></script>
-    <script type="module" src="../elements/xf-output.js"></script>
-    <script type="module" src="../elements/xf-button.js"></script>
-    <script type="module" src="../elements/xf-refresh.js"></script>
-  </head>
-  <body>
+    <script src="../elements/xf-form.js" type="module"></script>
+    <script src="../elements/xf-output.js" type="module"></script>
+    <script src="../elements/xf-button.js" type="module"></script>
+    <script src="../elements/xf-refresh.js" type="module"></script>
+</head>
+<body>
 
 
-        <xf-form id="hello" mockup='[
+    <xf-form id="hello" mockup='[
           {
             "bind":{
               "id":"b-greeting",
@@ -29,31 +29,59 @@
           }
         ]'>
 
-          <h1>Hello <xf-output id="greeting" bind="b-greeting"></xf-output></h1>
-          <xf-button label="refresh">
-            <xf-refresh id="refresh"> </xf-refresh>
-          </xf-button>
+        <h1>Hello
+            <xf-output bind="b-greeting" id="greeting"></xf-output>
+        </h1>
+        <xf-button label="refresh">
+            <xf-refresh id="refresh"></xf-refresh>
+        </xf-button>
 
-        </xf-form>
+    </xf-form>
 
     <script type="module">
-      suite('xf-refresh', () => {
-        const form = document.getElementById('hello');
-        const output = document.getElementById('greeting');
-        const refresh = document.getElementById('refresh');
+        suite('xf-refresh', () => {
+            const form = document.getElementById('hello');
+            const output = document.getElementById('greeting');
+            const refresh = document.getElementById('refresh');
 
-        test('refresh does not create additional bound elements', () => {
-          refresh.execute();
-          assert.isTrue(output.modelItem.boundElements.length == 1);
-          // refresh.execute();
-          // assert.isTrue(output.modelItem.boundElements.length == 1);
+            test('output has value "World" before and after refresh', () => {
+
+                assert.isTrue(output.modelItem.value === 'World');
+                assert.isTrue(output.bind === 'b-greeting');
+                assert.isTrue(output.modelItem.id === 'b-greeting');
+
+                refresh.execute();
+
+                assert.isTrue(output.modelItem.value === 'World');
+                assert.isTrue(output.bind === 'b-greeting');
+                assert.isTrue(output.modelItem.id === 'b-greeting');
+
+
+            });
+
+            test('refresh event fires', (done) => {
+
+                const handler = (ev) => {
+                    form.removeEventListener('refresh', handler);
+                    done();
+                };
+                form.addEventListener('refresh',handler);
+                refresh.execute();
+            });
+
+            test('refresh-done event fires', (done) => {
+
+                const handler = (ev) => {
+                    form.removeEventListener('refresh-done', handler);
+                    done();
+                };
+                form.addEventListener('refresh-done',handler);
+                refresh.execute();
+            });
+
 
         });
-
-
-
-      });
     </script>
 
-  </body>
+</body>
 </html>

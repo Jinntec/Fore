@@ -5,13 +5,13 @@ import { XfControl } from './xf-control.js';
 
 
 /**
- * `xf-select1`
+ * `xf-paper-select1`
  * general class for bound elements
  *
  * @customElement
  * @polymer
  */
-class XfSelect1 extends XfControl {
+class XfPaperSelect1 extends XfControl {
     static get template() {
         return html`
       <style>
@@ -35,7 +35,7 @@ class XfSelect1 extends XfControl {
 
 
     _updateValue(){
-        // console.log('xf-select1._updateValue ', this.proxy.value);
+        // console.log('xf-paper-select1._updateValue ', this.proxy.value);
 
         // ### in this case we need to reach down to bring the list into the right state (showing pre-selection)
         this.querySelector('xf-itemset').selectItem(this.value);
@@ -45,7 +45,9 @@ class XfSelect1 extends XfControl {
     _handleSelected(e){
         console.log('select1 got select ',e.detail.item.value);
         this.modelItem.value = e.detail.item.value;
+        this.dispatchValueChange();
+
     }
 }
 
-window.customElements.define('xf-select1', XfSelect1);
+window.customElements.define('xf-paper-select1', XfPaperSelect1);

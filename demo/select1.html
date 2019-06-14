@@ -14,7 +14,7 @@
     <script type="module" src="../elements/xf-button.js"> </script>
     <script type="module" src="../elements/xf-output.js"> </script>
     <script type="module" src="../elements/xf-setvalue.js"> </script>
-    <script type="module" src="../elements/xf-select1.js"> </script>
+    <script type="module" src="../elements/xf-paper-select1.js"> </script>
     <script type="module" src="../elements/xf-itemset.js"> </script>
 
 
@@ -116,14 +116,14 @@
         <h1>Select1 Control with Itemset</h1>
         <h2>Your favorite:<xf-output id="output" bind="b-selected"> </xf-output></h2>
 
-        <xf-select1 id="selected" bind="b-selected" label="Which do you like best?">
+        <xf-paper-select1 id="selected" bind="b-selected" label="Which do you like best?">
             <xf-itemset bind="b-fruit" bind-label="b-fruit-label" bind-value="b-fruit-value">
 <!--
                 <xf-label bind="b-fruit-label"> </xf-label>
                 <xf-value bind="b-fruit-value"> </xf-value>
 -->
             </xf-itemset>
-        </xf-select1>
+        </xf-paper-select1>
 
 
 

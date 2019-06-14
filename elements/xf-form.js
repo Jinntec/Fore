@@ -276,6 +276,7 @@ export class XfForm extends PolymerElement {
         // this.refresh();
         this._initUI();
         document.dispatchEvent(new CustomEvent('ui-initialized', {composed: true, bubbles: true, detail: {}}));
+        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: true, detail: {}}));
 
     }
 
@@ -311,6 +312,9 @@ export class XfForm extends PolymerElement {
 
     refresh(){
         console.log('### refresh');
+        this.dispatchEvent(new CustomEvent('refresh', {composed: true, bubbles: true, detail: {}}));
+
+
         const boundElements = this.querySelectorAll('[bind]');
         for (let i = 0; i < boundElements.length; i++) {
             console.log('##### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
@@ -321,6 +325,8 @@ export class XfForm extends PolymerElement {
                 elem.refresh();
             }
         }
+
+        this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
 
     }
 

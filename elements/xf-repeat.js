@@ -86,7 +86,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             // console.log('_unroll binding ', item);
             const index = this.modelItem.bind.indexOf(item);
 
-            // ### create a repeat-item
+            // ### create a repeat-item and initialize it
             const repeatItem = new XfRepeatItem();
             const clone = document.importNode(this.template.content, true);
             repeatItem.appendChild(clone);
@@ -94,8 +94,6 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             repeatItem.index = index;
             repeatItem.modelItem = this.modelItem.bind[index];
             repeatItem.init();
-            // repeatItem.refresh();
-            // repeatItem.refresh(this.modelItem);
         });
 
     }
@@ -164,12 +162,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
     delete(repeatItem) {
         console.log('repeat delete item ', repeatItem);
-        const repeat = this.closest('xf-repeat');
-        // this.proxy.delete = repeatItem.index;
-        this.modelItem.delete(repeatItem.index);
 
-        // this.removeChild(repeatItem);
-        this.refresh(this.modelItem);
+        this.removeChild(repeatItem);
+
         this.dispatchEvent(new CustomEvent('xf-delete', {
             composed: true,
             bubbles: true,

@@ -141,20 +141,18 @@
 
         <div class="header">
             <span>todo</span>
-<!--            <span>due</span>-->
-<!--            <span>status</span>-->
+            <span>due</span>
+            <span>status</span>
         </div>
         <xf-repeat id="r-todos" bind="b-todo">
             <template>
                 <xf-input bind="b-task" type="text"> </xf-input>
                 <xf-input bind="b-due" type="date"> </xf-input>
                 <xf-input bind="b-state" type="checkbox"> </xf-input>
-<!--
                 <xf-button label="delete">
-                    <xf-delete bind="b-todo"></xf-delete>
+<!--                    <xf-delete bind="b-todo"></xf-delete>-->
                     <xf-delete></xf-delete>
                 </xf-button>
--->
             </template>
         </xf-repeat>
 
