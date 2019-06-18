@@ -68,7 +68,7 @@
         <h1>todos</h1>
 
         <xf-button id="add" label="add">
-            <xf-append repeat="r-todos"></xf-append>
+            <xf-append id="append" repeat="repeat"></xf-append>
         </xf-button>
 
         <div class="header">
@@ -116,11 +116,9 @@
             const repeat = document.getElementById('repeat');
             const deleteBtn = document.getElementById('delete');
             const deleteAction = document.getElementById('deleteAction');
+            const append = document.getElementById('append');
 
             test('there is a repeat binding to b-todo', () => {
-                // assert.isTrue(Object.keys(todo.modelItems).length === 4);
-
-
                 assert.isTrue(repeat.bind === 'b-todo');
                 assert.isTrue(repeat.modelItem.id === 'b-todo');
             });
@@ -198,9 +196,34 @@
 
                 assert.isTrue(input[5].bind === 'b-state');
                 assert.isTrue(input[5].value);
-
-
             });
+
+            test('last items has "repeat-index" attribute after appending an entry', (done) => {
+
+
+                const handler = (ev) => {
+                    todo.removeEventListener('repeat-item-appended', handler);
+                    const items = repeat.querySelectorAll('xf-repeat-item');
+                    assert.isTrue(items.length === 33);
+                    assert.isTrue(items[1].hasAttribute('repeat-index'));
+                    done();
+                };
+                repeat.addEventListener('repeat-item-appended',handler);
+                append.execute();
+
+
+/*
+                const items = repeat.querySelectorAll('xf-repeat-item');
+                for (let i = 0; i < items.length; i++) {
+                    if(i === 3){
+                        assert.isTrue(items[i].hasAttribute('repeat-index'));
+                    }else{
+                        assert.isFalse(items[i].hasAttribute('repeat-index'));
+                    }
+                };
+*/
+            });
+
 
 
         });

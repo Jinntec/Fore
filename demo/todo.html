@@ -135,6 +135,7 @@
         <xf-button label="add">
 <!--            <xf-append bind="b-todo"></xf-append>-->
             <xf-append repeat="r-todos"></xf-append>
+<!--            <xf-setfocus-->
         </xf-button>
 
         <br/><br/>
@@ -144,9 +145,9 @@
             <span>due</span>
             <span>status</span>
         </div>
-        <xf-repeat id="r-todos" bind="b-todo">
+        <xf-repeat id="r-todos" bind="b-todo" focus-on-create="task">
             <template>
-                <xf-input bind="b-task" type="text"> </xf-input>
+                <xf-input id="task" bind="b-task" type="text"> </xf-input>
                 <xf-input bind="b-due" type="date"> </xf-input>
                 <xf-input bind="b-state" type="checkbox"> </xf-input>
                 <xf-button label="delete">

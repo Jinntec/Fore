@@ -28,11 +28,9 @@ class XfAppend extends PolymerElement {
         // ### get repeat and _dataTemplate
         const repeat = document.getElementById(this.repeat);
         repeat.appendRepeatItem();
+
     }
 
-    isBoundComponent(element){
-        return (window.BOUND_ELEMENTS.indexOf(element) > -1);
-    }
 
 }
 

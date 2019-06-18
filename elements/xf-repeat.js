@@ -13,23 +13,16 @@ import {XfForm} from './xf-form.js';
  * @demo demo/index.html
  */
 export class XfRepeat extends BoundElementMixin(PolymerElement) {
-    /*
-        static get template() {
-            return html`
+    static get template() {
+        return html`
           <style>
             :host {
               display: block;
             }
-            #repeatTmpl{
-
-            }
           </style>
-          <template id="repeatTmpl">
-            <slot></slot>
-          </template>
+          <slot></slot>
         `;
-        }
-    */
+    }
 
     static get properties() {
         return {
@@ -39,13 +32,16 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             template: {
                 type: Object
             },
-            index: {
-                type: Number,
-                value: 1
-            },
             dataTemplate: {
                 type: Array,
-                value:[]
+                value: []
+            },
+            focusOnCreate: {
+                type: String
+            },
+            initDone: {
+                type: Boolean,
+                value: false
             }
         };
     }
@@ -55,15 +51,23 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         super.connectedCallback();
         console.log('### xf-repeat connected ', this);
         this._initTemplate();
+
     }
 
     init() {
         super.init();
         this._initTemplate();
         this._initializeRepeatItems();
+        this.initDone = true;
     }
 
-    _initTemplate(){
+    setCurrent(repeatItem) {
+        const index = this.modelItem.bind.indexOf(repeatItem.modelItem);
+        this._removeIndexMarker();
+        this.querySelectorAll('xf-repeat-item')[index].setAttribute('repeat-index','');
+    }
+
+    _initTemplate() {
         // ### there must be a single 'template' child
         this.template = this.firstElementChild;
         console.log('##### template ', this.template);
@@ -78,117 +82,143 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         }
     }
 
-    _initializeRepeatItems(){
+    _initializeRepeatItems() {
         // ### first unroll repeat-items to instanciate the controls
         // ### iterate the 'bind' array as we do not have proxies yet
         const items = Array.from(this.modelItem.bind);
         this.modelItem.bind.forEach(item => {
             // console.log('_unroll binding ', item);
             const index = this.modelItem.bind.indexOf(item);
-
-            // ### create a repeat-item and initialize it
-            const repeatItem = new XfRepeatItem();
-            const clone = document.importNode(this.template.content, true);
-            repeatItem.appendChild(clone);
-            this.appendChild(repeatItem);
-            repeatItem.index = index;
-            repeatItem.modelItem = this.modelItem.bind[index];
-            repeatItem.init();
+            this._createRepeatItem(index);
         });
 
+        const first = this.querySelector('xf-repeat-item');
+        first.setAttribute('repeat-index', '');
     }
 
-    refresh(){
+    refresh() {
         const repeatItems = this.querySelectorAll('xf-repeat-item');
-        for(let i = 0; i < repeatItems.length; i++){
+        for (let i = 0; i < repeatItems.length; i++) {
             const item = repeatItems[i];
             item.refresh();
         }
     }
 
-    appendRepeatItem(){
+    appendRepeatItem() {
 
         const dTmpl = this._getDataTemplate();
         console.log('dataTemplate from repeat ', dTmpl);
 
-        // const modelItem = this.closest('xf-form').resolve(this.bind,this);
+        // ### update the model (adding an entry to bind array)
         this.modelItem.bind.push(dTmpl);
 
-        // ### create a repeat-item
-        const repeatItem = new XfRepeatItem();
-        const clone = document.importNode(this.template.content, true);
-        repeatItem.appendChild(clone);
-        this.appendChild(repeatItem);
+        // ### create a repeat-item in the UI
+        const index = this.modelItem.bind.length - 1;
+        const item = this._createRepeatItem(index);
 
-        repeatItem.index = this.modelItem.bind.length - 1;
-        repeatItem.modelItem = this.modelItem.bind[repeatItem.index];
-        repeatItem.init();
-    }
+        item.setAttribute('repeat-index', '');
 
-/*
-    refresh(modelItem) {
-        // super.refresh(modelItem);
-        console.log('### refresh repeat from ', this.modelItem);
-
-        // this.modelItem.dataTemplate = this.dataTemplate;
-        this.modelItem.dataTemplate = this._getDataTemplate();
-
-        // ### remove all repeat-items that might have been there already
-        this.querySelectorAll('xf-repeat-item').forEach(item => {
-            this.removeChild(item);
-        });
-
-
-        // ### first unroll repeat-items to instanciate the controls
-        // ### iterate the 'bind' array as we do not have proxies yet
-        this.modelItem.bind.forEach(item => {
-            // console.log('_unroll binding ', item);
-            const index = this.modelItem.bind.indexOf(item);
-
-            // ### create a repeat-item
-            const repeatItem = new XfRepeatItem();
-            const clone = document.importNode(this.template.content, true);
-            repeatItem.appendChild(clone);
-            this.appendChild(repeatItem);
-
-            repeatItem.index = index;
-            repeatItem.refresh(this.modelItem);
-        });
-
-        document.dispatchEvent(new CustomEvent('repeat-initialized'));
-
-    }
-*/
-
-    delete(repeatItem) {
-        console.log('repeat delete item ', repeatItem);
-
-        this.removeChild(repeatItem);
-
-        this.dispatchEvent(new CustomEvent('xf-delete', {
+        this.dispatchEvent(new CustomEvent('repeat-item-appended', {
             composed: true,
             bubbles: true,
-            detail: {'deleteLocation': repeatItem.index, 'deleteItems': repeatItem.modelItem}
+            detail: {'deleteLocation': index, 'appendedItem': item.modelItem}
         }));
 
     }
 
-    _getDataTemplate(){
+    _createRepeatItem(index) {
+        // ### create a repeat-item and initialize it
+        const repeatItem = new XfRepeatItem();
+        const clone = document.importNode(this.template.content, true);
+        repeatItem.appendChild(clone);
+        this.appendChild(repeatItem);
+        repeatItem.index = index;
+        repeatItem.modelItem = this.modelItem.bind[index];
+        repeatItem.addEventListener('repeat-item-created', this._handleItemCreated.bind(this));
+        repeatItem.init();
+        this._removeRepeatIndex();
+        return repeatItem;
+    }
+
+    _removeRepeatIndex() {
+        const lastItem = this.querySelector('[repeat-index]');
+        if (lastItem) {
+            lastItem.removeAttribute('repeat-index');
+        }
+    }
+
+    _handleItemCreated(e) {
+        console.log('### _handleItemCreated ', e);
+
+        if (!this.initDone) return;
+
+        if (this.focusOnCreate) {
+            const id = this.focusOnCreate;
+            const focusControl = e.target.querySelector('#' + id);
+            focusControl.focus();
+        }
+    }
+
+    delete(repeatItem) {
+        console.log('### repeat delete item ', repeatItem);
+
+        // ### get the index of repeatItem within modelData
+        const index = this.modelItem.bind.indexOf(repeatItem.modelItem);
+        // console.log('old item index ', index);
+
+        this.modelItem.bind.splice(index, 1);
+        // console.log('after modelItem delete ', this.modelItem.bind);
+
+        // ### delete the repeatItem from the DOM
+        this.removeChild(repeatItem);
+
+
+        const items = this.querySelectorAll('xf-repeat-item');
+        const cnt = items.length;
+
+        // ### update the 'repeat-index' marker attribute
+        // ##### remove current repeat-index marker
+/*
+        const oldmarker = this.querySelector('[repeat-index]');
+        if (oldmarker) {
+            // might not exist any more if current item is deleted
+            oldmarker.removeAttribute('repeat-index');
+        }
+*/
+        this._removeIndexMarker();
+
+
+        if (cnt !== 0) {
+            if (index <= cnt - 1) {
+                // ### if there's a repeat-item left with the same index as the deleted one it becomes the new repeat index
+                items[index].setAttribute('repeat-index', '');
+            } else if (index > cnt - 1) {
+                // ### if the last one is deleted the new last one will be new repeat-index
+                items[cnt - 1].setAttribute('repeat-index', '');
+            }
+        }
+
+
+        this.dispatchEvent(new CustomEvent('repeat-item-deleted', {
+            composed: true,
+            bubbles: true,
+            detail: {'deleteLocation': index, 'deleteItems': repeatItem.modelItem}
+        }));
+
+    }
+
+    _getDataTemplate() {
         console.log('##### template found children ', this.template.content.children);
 
         let tmp = [];
         Array.from(this.template.content.children).forEach(child => {
             console.log('####### child ', child);
 
-            // ### check if boundElement
-            // console.log('window.... ',window.BOUND_ELEMENTS);
-
-            // if(this.isBoundComponent(child)){
-            if(XfForm.isBoundComponent(child)){
+            if (XfForm.isBoundComponent(child)) {
                 console.log('######### bound child ', child);
                 const bindId = child.getAttribute('bind');
-                if(bindId){
-                    const newObj = {"id":bindId, "value":""}; // create default object for insertion into repeat
+                if (bindId) {
+                    const newObj = {"id": bindId, "value": ""}; // create default object for insertion into repeat
                     tmp.push(newObj);
                 }
             }
@@ -196,45 +226,12 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         return tmp;
     }
 
-
-    /*
-        _unroll() {
-            // const bindings = this.proxy.bind;
-            const bindings = this.proxy.proxies;
-
-            bindings.forEach(item => {
-
-                console.log('_unroll binding ', item);
-                console.log('_unroll binding ', this.proxy.proxies.indexOf(item));
-
-                //todo: add entry to data-modelData
-                const index = this.proxy.proxies.indexOf(item);
-
-                // const tmpl = this.firstElementChild;
-                // console.log('template for repeat ', tmpl);
-
-                // ### create a repeat-item
-                const repeatItem = new XfRepeatItem();
-                const clone = document.importNode(this.template.content, true);
-
-                // console.log('clone ', clone);
-                // console.log('clone first', clone.firstElementChild);
-                // clone.firstElementChild.classList.add('repeat-item');
-
-                // this.appendChild(clone);
-
-                repeatItem.appendChild(clone);
-                this.appendChild(repeatItem);
-                repeatItem.index = index;
-                repeatItem.refresh(item);
-            });
-
-
+    _removeIndexMarker() {
+        const oldmarker = this.querySelector('[repeat-index]');
+        if (oldmarker) {
+            // might not exist any more if current item is deleted
+            oldmarker.removeAttribute('repeat-index');
         }
-    */
-
-    _attachDom(dom) {
-        this.appendChild(dom);
     }
 
 }

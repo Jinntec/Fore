@@ -64,6 +64,10 @@ class XfInput extends XfControl {
         }
     }
 
+    focus(){
+        this.$.input.focus();
+    }
+
 
 
 }
