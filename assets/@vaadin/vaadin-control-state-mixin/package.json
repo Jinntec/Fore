@@ -1,0 +1,66 @@
+{
+  "_from": "@vaadin/vaadin-control-state-mixin@^2.1.1",
+  "_id": "@vaadin/vaadin-control-state-mixin@2.1.3",
+  "_inBundle": false,
+  "_integrity": "sha512-EtLfMN9i/gwToAEuW6E1OA2Q2i/4a+Il6tKkqE/0i7bgu3Xr1IITMcagQn9QSsp1Xkpr/nLtWWKRq7yZZkbHVg==",
+  "_location": "/@vaadin/vaadin-control-state-mixin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@vaadin/vaadin-control-state-mixin@^2.1.1",
+    "name": "@vaadin/vaadin-control-state-mixin",
+    "escapedName": "@vaadin%2fvaadin-control-state-mixin",
+    "scope": "@vaadin",
+    "rawSpec": "^2.1.1",
+    "saveSpec": null,
+    "fetchSpec": "^2.1.1"
+  },
+  "_requiredBy": [
+    "/@vaadin/vaadin-combo-box",
+    "/@vaadin/vaadin-text-field"
+  ],
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-control-state-mixin/-/vaadin-control-state-mixin-2.1.3.tgz",
+  "_shasum": "509998350611651acfa8db1506fc12d925861b48",
+  "_spec": "@vaadin/vaadin-control-state-mixin@^2.1.1",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@vaadin/vaadin-combo-box",
+  "author": {
+    "name": "Vaadin Ltd"
+  },
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-control-state-mixin/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0"
+  },
+  "deprecated": false,
+  "description": "vaadin-control-state-mixin",
+  "devDependencies": {
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1"
+  },
+  "homepage": "https://vaadin.com/elements",
+  "keywords": [
+    "Vaadin",
+    "vaadin-control-state-mixin",
+    "web-components",
+    "web-component",
+    "polymer"
+  ],
+  "license": "Apache-2.0",
+  "main": "vaadin-control-state-mixin.js",
+  "name": "@vaadin/vaadin-control-state-mixin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaadin/vaadin-control-state-mixin.git"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "version": "2.1.3"
+}

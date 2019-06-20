@@ -1,0 +1,145 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>prototype (seed) form</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"/>
+    <script type="module" src="../xf-form.js"></script>
+
+</head>
+<body>
+    <!-- xf-model is not exposed to the client! -->
+    <xf-model id="record">
+        <xf-instance>
+            <data>
+                <salary>210.00</salary>
+                <average>120.00</average>
+                <items>
+                    <item/>
+                </items>
+            </data>
+        </xf-instance>
+
+        <xf-instance>
+            {
+            "data":{
+            "salary":210.00,
+            "average"120.00
+            }
+            }
+        </xf-instance>
+
+        <xf-bind id="salary" ref="//salary">
+            <!-- xf-required might have optional attr 'expr' for boolean XPath expressions. When omitted defaults to true() -->
+            <xf-required>
+                <xf-alert>salary is required</xf-alert>
+            </xf-required>
+            <xf-type expr="xs:decimal">
+                <xf-alert>salary is not a decimal</xf-alert>
+            </xf-type>
+            <xf-constraint expr=". gt instance('third')/path">
+                <xf-alert>salary is not too low</xf-alert>
+            </xf-constraint>
+        </xf-bind>
+
+        <!-- the context here is instance() which means the first instance in doc order -->
+        <xf-bind id="items" ref="items">
+            <xf-bind id="item" ref="item" required="true"/>
+        </xf-bind>
+
+        <!-- ##### second instance ####### -->
+        <xf-instance id="conf">
+            <data>
+                <target-collection>data/records/record</target-collection>
+                <count>1</count>
+            </data>
+        </xf-instance>
+        <!-- another shortcut to XForms - simply use XQuery var for instance addressing -->
+        <xf-bind id="target-collection" ref="$instances?conf//target-collection" required="true()"/>
+
+        <xf-instance id="second" src="http://{fore:contextParams('someData')}"/>
+
+        <xf-instance id="third" src="{doc($myRoot)/}"/>
+
+        <!-- ? can/should we assign a var for each instance id for short reference (dropping XForms instance() func) ?  -->
+        <xf-bind id="foobar" ref="$instances?third/data/foo/bar"/>
+        <!--
+            [
+                {
+                    "bind":"salary",
+                    "readonly":false,
+                    "required":true,
+                    "value":110,
+                    "datatype":"xs:string",
+                    "valid":true,
+                    "relevant":true
+                },
+                {
+                    "bind":"items",
+                    "relevant":true
+                },
+                {
+                    "bind":"item",
+                    "readonly":false,
+                    "required":true,
+
+                }
+            ]
+        -->
+
+
+
+        <!--
+        'db' scheme here is used as a posssible sample to write to an absolute address
+        -->
+        <xf-submission id="s-save" resource="xmldb:doc({$conf/target-resource}{count}.xml)" method="put" replace="none">
+            <xf-submit-error>
+                <xf-message modal="false">storing record failed</xf-message>
+            </xf-submit-error>
+            <xf-submit-done>
+                <!-- start over -->
+                <xf-load url="seed-form.html"/>
+                <xf-message level="ephemeral">Your data have been stored</xf-message>
+            </xf-submit-done>
+        </xf-submission>
+
+        <xf-function signature="foo:func1(param as xs:string)">
+
+        </xf-function>
+
+        <xf-ready>
+            <!-- some actions when model is up -->
+            <!-- imperative or descriptive? -->
+            <xf-action>
+                <xf-setvalue ref="items/item[1]" value="defaultVal"/>
+            </xf-action>
+        </xf-ready>
+    </xf-model>
+
+    <!-- Runtime:
+    xf-form will apply the JSON provided by server to the local UI by
+    using id references.
+
+    Advantage: can be nearly any kind of control as long as it plays by the conventions
+    of HTML controls using 'value' or 'checked' plus readonly, required etc.
+    -->
+    <xf-form model="record">
+        <input bind="salary" value="this will get substituted by model-bridge"/>
+
+        <xf-repeat bind="items" actions="append delete">
+            <!--
+            a 'required' or 'readonly' attribute could be set in addition to use browser built-in validation feature to
+            give early feedback.
+
+            For the sake of easier processing on the server in well-formed markup.
+            -->
+            <input data-bind="item" required="required"/>
+            <xf-input/>
+        </xf-repeat>
+
+        <xf-submit submission="save"/>
+    </xf-form>
+</body>
+</html>

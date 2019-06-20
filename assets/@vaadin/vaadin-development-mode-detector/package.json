@@ -1,0 +1,55 @@
+{
+  "_from": "@vaadin/vaadin-development-mode-detector@^2.0.0",
+  "_id": "@vaadin/vaadin-development-mode-detector@2.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-B6P8sppzubOkcoO0uKgybEWQAsBkRPCL1CnDLgdelGZrRqmUBwLi9dYIG1AJY5i9i+hqa8Sn/O0B/Be0T39k7w==",
+  "_location": "/@vaadin/vaadin-development-mode-detector",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@vaadin/vaadin-development-mode-detector@^2.0.0",
+    "name": "@vaadin/vaadin-development-mode-detector",
+    "escapedName": "@vaadin%2fvaadin-development-mode-detector",
+    "scope": "@vaadin",
+    "rawSpec": "^2.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^2.0.0"
+  },
+  "_requiredBy": [
+    "/@vaadin/vaadin-element-mixin",
+    "/@vaadin/vaadin-usage-statistics"
+  ],
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-development-mode-detector/-/vaadin-development-mode-detector-2.0.2.tgz",
+  "_shasum": "67ba4d6e95d8907c8dc699a80049a2995ecebaef",
+  "_spec": "@vaadin/vaadin-development-mode-detector@^2.0.0",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@vaadin/vaadin-element-mixin",
+  "author": {
+    "name": "Vaadin Ltd"
+  },
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-development-mode-detector/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Element for detecting that an application using Vaadin Elements is running in development mode",
+  "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.0.0"
+  },
+  "homepage": "https://github.com/vaadin/vaadin-development-mode-detector#readme",
+  "license": "Apache-2.0",
+  "main": "vaadin-development-mode-detector.js",
+  "name": "@vaadin/vaadin-development-mode-detector",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaadin/vaadin-development-mode-detector.git"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "version": "2.0.2"
+}

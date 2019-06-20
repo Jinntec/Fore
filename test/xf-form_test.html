@@ -12,22 +12,27 @@
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-    <script type="module" src="../elements/xf-form.js"></script>
-    <script type="module" src="../elements/xf-output.js"></script>
-    <script type="module" src="../elements/xf-refresh.js"></script>
-    <script type="module" src="../elements/xf-button.js"></script>
+    <script type="module" src="../src/xf-form.js"></script>
+    <script type="module" src="../src/xf-output.js"></script>
+    <script type="module" src="../src/xf-refresh.js"></script>
+    <script type="module" src="../src/xf-button.js"></script>
+    <script type="module" src="../src/xf-json-data.js"></script>
   </head>
   <body>
 
-        <xf-form id="basic" mockup='[
-          {
-            "bind":{
-              "id":"b-greeting",
-              "required":true,
-              "value":"World"
+        <xf-json-data id="mockup">
+          [
+            {
+              "bind":{
+                "id":"b-greeting",
+                "required":true,
+                "value":"World"
+              }
             }
-          }
-        ]'>
+          ]
+        </xf-json-data>
+
+        <xf-form id="basic" mockup='mockup'>
           <h1>Say hello:
             <xf-output id="output" bind="b-greeting"></xf-output>
           </h1>

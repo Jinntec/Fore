@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../xf-form.js';
+        import '../xf-output.js';
+        import '../xf-button.js';
+        import '../xf-refresh.js';
+        import '../xf-json-data.js';
+
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+        xf-json-data {display:none;}
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <greeting>World!</greeting>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+
+    <demo-snippet>
+        <template>
+            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind":{
+                      "id":"b-greeting",
+                      "required":true,
+                      "value":"Hello"
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+                <h1>Say hello:
+                    <xf-output bind="b-greeting" id="output"></xf-output>
+                </h1>
+
+                <xf-button label="refresh">
+                    <xf-refresh></xf-refresh>
+                </xf-button>
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

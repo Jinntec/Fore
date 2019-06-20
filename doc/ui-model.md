@@ -6,7 +6,7 @@ data model is needed to represent the state of the server-side data on the clien
 As natural for UI apps nowadays the data model will be represented in JSON format.
 
 
-This example shows the JSON structure for the form [two-instances.html](../elements/demo/two-instances.html)
+This example shows the JSON structure for the form [two-instances.html](../src/demo/two-instances.html)
 
 ```
 

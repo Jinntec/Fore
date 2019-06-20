@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+
+    <title>prototype form with calculate</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../src/model/xf-model.html"/>
+
+</head>
+<body>
+    <!-- xf-model is not exposed to the client! -->
+    <xf-model id="calc">
+        <xf-instance>
+            <data>
+                <a>2</a>
+                <b>3</b>
+                <sum></sum>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="salary" ref="//sum" calculate="../a + ../b"></xf-bind>
+    </xf-model>
+</body>
+</html>

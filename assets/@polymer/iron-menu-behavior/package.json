@@ -1,0 +1,68 @@
+{
+  "_from": "@polymer/iron-menu-behavior@^3.0.0-pre.26",
+  "_id": "@polymer/iron-menu-behavior@3.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-8dpASkFNBIkxAJWsFLWIO1M7tKM0+wKs3PqdeF/dDdBciwoaaFgC2K1XCZFZnbe2t9/nJgemXxVugGZAWpYCGg==",
+  "_location": "/@polymer/iron-menu-behavior",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@polymer/iron-menu-behavior@^3.0.0-pre.26",
+    "name": "@polymer/iron-menu-behavior",
+    "escapedName": "@polymer%2firon-menu-behavior",
+    "scope": "@polymer",
+    "rawSpec": "^3.0.0-pre.26",
+    "saveSpec": null,
+    "fetchSpec": "^3.0.0-pre.26"
+  },
+  "_requiredBy": [
+    "/@polymer/paper-listbox"
+  ],
+  "_resolved": "https://registry.npmjs.org/@polymer/iron-menu-behavior/-/iron-menu-behavior-3.0.2.tgz",
+  "_shasum": "f8fa2d59af472a4cb4fb0359c704b808bc2c105d",
+  "_spec": "@polymer/iron-menu-behavior@^3.0.0-pre.26",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/paper-listbox",
+  "author": {
+    "name": "The Polymer Authors"
+  },
+  "bugs": {
+    "url": "https://github.com/PolymerElements/iron-menu-behavior/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.26",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.26",
+    "@polymer/iron-selector": "^3.0.0-pre.26",
+    "@polymer/polymer": "^3.0.0"
+  },
+  "deprecated": false,
+  "description": "Provides accessible menu behavior",
+  "devDependencies": {
+    "@polymer/gen-typescript-declarations": "^1.5.1",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.26",
+    "@polymer/paper-styles": "^3.0.0-pre.26",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1",
+    "webmat": "^0.2.0"
+  },
+  "homepage": "https://github.com/PolymerElements/iron-menu-behavior",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "behavior",
+    "menu"
+  ],
+  "license": "BSD-3-Clause",
+  "name": "@polymer/iron-menu-behavior",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-menu-behavior.git"
+  },
+  "scripts": {
+    "format": "webmat",
+    "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
+    "prepare": "npm run generate-types"
+  },
+  "version": "3.0.2"
+}

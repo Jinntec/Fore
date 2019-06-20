@@ -1,0 +1,40 @@
+{
+  "files": {
+    "paper-dropdown-menu.html": {
+      "convertedUrl": "paper-dropdown-menu.js",
+      "exports": {}
+    },
+    "paper-dropdown-menu-icons.html": {
+      "convertedUrl": "paper-dropdown-menu-icons.js",
+      "exports": {}
+    },
+    "paper-dropdown-menu-shared-styles.html": {
+      "convertedUrl": "paper-dropdown-menu-shared-styles.js",
+      "exports": {}
+    },
+    "paper-dropdown-menu-light.html": {
+      "convertedUrl": "paper-dropdown-menu-light.js",
+      "exports": {}
+    },
+    "index.html": {
+      "convertedUrl": "index.html",
+      "exports": {}
+    },
+    "demo/index.html": {
+      "convertedUrl": "demo/index.html",
+      "exports": {}
+    },
+    "test/index.html": {
+      "convertedUrl": "test/index.html",
+      "exports": {}
+    },
+    "test/paper-dropdown-menu-light.html": {
+      "convertedUrl": "test/paper-dropdown-menu-light.html",
+      "exports": {}
+    },
+    "test/paper-dropdown-menu.html": {
+      "convertedUrl": "test/paper-dropdown-menu.html",
+      "exports": {}
+    }
+  }
+}

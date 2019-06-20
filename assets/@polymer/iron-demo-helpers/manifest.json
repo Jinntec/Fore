@@ -1,0 +1,44 @@
+{
+  "files": {
+    "demo-snippet.html": {
+      "convertedUrl": "demo-snippet.js",
+      "exports": {}
+    },
+    "url-bar.html": {
+      "convertedUrl": "url-bar.js",
+      "exports": {}
+    },
+    "demo-pages-shared-styles.html": {
+      "convertedUrl": "demo-pages-shared-styles.js",
+      "exports": {}
+    },
+    "index.html": {
+      "convertedUrl": "index.html",
+      "exports": {}
+    },
+    "demo/index.html": {
+      "convertedUrl": "demo/index.html",
+      "exports": {}
+    },
+    "demo/simple-button.html": {
+      "convertedUrl": "demo/simple-button.js",
+      "exports": {}
+    },
+    "demo/url-bar.html": {
+      "convertedUrl": "demo/url-bar.html",
+      "exports": {}
+    },
+    "test/basic.html": {
+      "convertedUrl": "test/basic.html",
+      "exports": {}
+    },
+    "test/simple-button.html": {
+      "convertedUrl": "test/simple-button.js",
+      "exports": {}
+    },
+    "test/index.html": {
+      "convertedUrl": "test/index.html",
+      "exports": {}
+    }
+  }
+}

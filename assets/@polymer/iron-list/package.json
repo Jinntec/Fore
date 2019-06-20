@@ -1,0 +1,82 @@
+{
+  "_from": "@polymer/iron-list@^3.0.0",
+  "_id": "@polymer/iron-list@3.0.2",
+  "_inBundle": false,
+  "_integrity": "sha512-A6GMTx/4mWxGn3BC6weaXqRC7B0coNjgEoxwVbEcDNwovqntv0aWs5sT9+PI4zvV/syWL5rAESyJDvOxTatoEw==",
+  "_location": "/@polymer/iron-list",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@polymer/iron-list@^3.0.0",
+    "name": "@polymer/iron-list",
+    "escapedName": "@polymer%2firon-list",
+    "scope": "@polymer",
+    "rawSpec": "^3.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^3.0.0"
+  },
+  "_requiredBy": [
+    "/@vaadin/vaadin-combo-box"
+  ],
+  "_resolved": "https://registry.npmjs.org/@polymer/iron-list/-/iron-list-3.0.2.tgz",
+  "_shasum": "9e6b80e503328dc29217dbe26f94faa47adb4124",
+  "_spec": "@polymer/iron-list@^3.0.0",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@vaadin/vaadin-combo-box",
+  "author": {
+    "name": "The Polymer Authors"
+  },
+  "bugs": {
+    "url": "https://github.com/PolymerElements/iron-list/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.26",
+    "@polymer/iron-resizable-behavior": "^3.0.0-pre.26",
+    "@polymer/iron-scroll-target-behavior": "^3.0.0-pre.26",
+    "@polymer/polymer": "^3.0.0"
+  },
+  "deprecated": false,
+  "description": "Displays a virtual, 'infinite' scrolling list of items",
+  "devDependencies": {
+    "@polymer/app-layout": "^3.0.0-pre.26",
+    "@polymer/gen-typescript-declarations": "^1.5.1",
+    "@polymer/iron-ajax": "^3.0.0-pre.26",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.26",
+    "@polymer/iron-icon": "^3.0.0-pre.26",
+    "@polymer/iron-icons": "^3.0.0-pre.26",
+    "@polymer/iron-image": "^3.0.0-pre.26",
+    "@polymer/iron-scroll-threshold": "^3.0.0-pre.26",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.26",
+    "@polymer/paper-badge": "^3.0.0-pre.26",
+    "@polymer/paper-button": "^3.0.0-pre.26",
+    "@polymer/paper-icon-button": "^3.0.0-pre.26",
+    "@polymer/paper-item": "^3.0.0-pre.26",
+    "@polymer/paper-menu-button": "^3.0.0-pre.26",
+    "@polymer/paper-spinner": "^3.0.0-pre.26",
+    "@polymer/test-fixture": "^4.0.1",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1",
+    "webmat": "^0.2.1"
+  },
+  "homepage": "https://github.com/PolymerElements/iron-list",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "list",
+    "virtual-list"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "iron-list.js",
+  "name": "@polymer/iron-list",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-list.git"
+  },
+  "scripts": {
+    "format": "webmat",
+    "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
+    "prepare": "npm run generate-types"
+  },
+  "version": "3.0.2"
+}

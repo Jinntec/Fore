@@ -1,0 +1,93 @@
+{
+  "_from": "@vaadin/vaadin-combo-box@^5.0.3",
+  "_id": "@vaadin/vaadin-combo-box@5.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-FiSv49XYM5XgmRcIp75XQo533qVrmOy4g0/P1bRp110FMZ4fZi7Zj8qEeYo2cP5o65zac61Re2AADoAyiLn3ZA==",
+  "_location": "/@vaadin/vaadin-combo-box",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@vaadin/vaadin-combo-box@^5.0.3",
+    "name": "@vaadin/vaadin-combo-box",
+    "escapedName": "@vaadin%2fvaadin-combo-box",
+    "scope": "@vaadin",
+    "rawSpec": "^5.0.3",
+    "saveSpec": null,
+    "fetchSpec": "^5.0.3"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.3.tgz",
+  "_shasum": "58873e1a6f800169abd218b5e73203109111b910",
+  "_spec": "@vaadin/vaadin-combo-box@^5.0.3",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0",
+  "author": {
+    "name": "Vaadin Ltd"
+  },
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-combo-box/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@polymer/iron-a11y-announcer": "^3.0.0",
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0",
+    "@polymer/iron-list": "^3.0.0",
+    "@polymer/iron-resizable-behavior": "^3.0.0",
+    "@polymer/polymer": "^3.0.0",
+    "@vaadin/vaadin-control-state-mixin": "^2.1.1",
+    "@vaadin/vaadin-element-mixin": "^2.0.0",
+    "@vaadin/vaadin-item": "^2.1.0",
+    "@vaadin/vaadin-lumo-styles": "^1.1.1",
+    "@vaadin/vaadin-material-styles": "^1.1.2",
+    "@vaadin/vaadin-overlay": "^3.2.0",
+    "@vaadin/vaadin-text-field": "^2.4.3",
+    "@vaadin/vaadin-themable-mixin": "^1.3.2"
+  },
+  "deprecated": false,
+  "description": "Web Component for displaying a list of items with filtering",
+  "devDependencies": {
+    "@polymer/iron-ajax": "^3.0.0",
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-form": "^3.0.0",
+    "@polymer/iron-icon": "^3.0.0",
+    "@polymer/iron-icons": "^3.0.0",
+    "@polymer/iron-input": "^3.0.0",
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@polymer/paper-button": "^3.0.0",
+    "@polymer/paper-icon-button": "^3.0.0",
+    "@polymer/paper-input": "^3.0.0",
+    "@polymer/paper-styles": "^3.0.0",
+    "@vaadin/vaadin-button": "^2.1.0",
+    "@vaadin/vaadin-demo-helpers": "^3.0.0",
+    "wct-browser-legacy": "^1.0.1"
+  },
+  "files": [
+    "vaadin-*.js",
+    "src",
+    "theme"
+  ],
+  "homepage": "https://vaadin.com/components",
+  "keywords": [
+    "Vaadin",
+    "combo-box",
+    "web-components",
+    "web-component",
+    "polymer"
+  ],
+  "license": "Apache-2.0",
+  "main": "vaadin-combo-box.js",
+  "name": "@vaadin/vaadin-combo-box",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaadin/vaadin-combo-box.git"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "version": "5.0.3"
+}
