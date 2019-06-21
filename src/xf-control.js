@@ -107,7 +107,7 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
             // console.log('XfControl.applyProperties type: ', this.modelItem.type);
             this.datatype = this.modelItem.type;
         }
-        if (this.modelItem.value !== undefined) {
+        if (this.modelItem.value !== undefined && this.modelItem.value !== this.value) {
             // console.log('XfControl.applyProperties value: ', this.modelItem.value);
             this.value = this.modelItem.value;
         }

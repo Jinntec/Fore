@@ -10,6 +10,7 @@ import { XfControl } from './xf-control.js';
  *
  * @customElement
  * @polymer
+ * @demo demo/07_select_autocomplete.html
  */
 class XfMaterialSelect1 extends XfControl {
     static get template() {

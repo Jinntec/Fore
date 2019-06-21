@@ -60,8 +60,6 @@ class XfMaterialCombo extends XfControl {
             // console.log('value-changed....... ', e);
             this.modelItem.value = e.detail.value;
             if(this.value !== e.detail.value){
-                // this line is a workaround for bug https://github.com/vaadin/vaadin-combo-box/issues/758
-                this.$.combo._revertInputValueToValue();
                 this.dispatchValueChange();
             }
         }.bind(this));
@@ -69,7 +67,8 @@ class XfMaterialCombo extends XfControl {
         if(this.selection === 'open'){
             this.$.combo.addEventListener('custom-value-set', function (e) {
                 // console.log('custom value set....... ', e);
-                this.modelItem.value = e.detail.value;
+                this.modelItem.value = e.detail;
+                // this.$.combo.inputElement.value = this.value;
                 if(this.value !== e.detail.value){
                     this.dispatchValueChange();
                 }
@@ -82,13 +81,15 @@ class XfMaterialCombo extends XfControl {
      * @private
      */
     _updateValue() {
-        // this.innerText = this.modelItem.value;
         this.$.combo.value = this.value;
-        this.$.combo.inputElement.value = this.value;
-        // *** this actually shouldn't be necessary but is to display a custom value (one that's not in the list)
-        // this line is a workaround for bug https://github.com/vaadin/vaadin-combo-box/issues/758
-        this.$.combo._revertInputValueToValue();
+        // console.log('>>>>>>>>>>>>> combo label ', this.$.combo.selectedItem);
 
+        // hack to work around issue: https://github.com/vaadin/vaadin-combo-box/issues/758
+        if(this.$.combo.selectedItem){
+            this.$.combo.inputElement.value = this.$.combo.selectedItem.label;
+        }else{
+            this.$.combo.inputElement.value = this.value;
+        }
     }
 
     _getItemValue(value){
