@@ -11,7 +11,7 @@ const $_documentContainer = html`<dom-module id="lumo-number-field" theme-for="v
         width: 8em;
       }
 
-      :host([has-controls]) [part="value"] {
+      :host([has-controls]:not([theme~="align-right"])) [part="value"] {
         text-align: center;
       }
 

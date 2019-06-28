@@ -18,12 +18,13 @@
   },
   "_requiredBy": [
     "/@polymer/iron-dropdown",
+    "/@polymer/paper-dialog",
     "/@polymer/paper-menu-button"
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/neon-animation/-/neon-animation-3.0.1.tgz",
   "_shasum": "6658e4b524abc057477772a7473292493d366c24",
   "_spec": "@polymer/neon-animation@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/paper-menu-button",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/paper-dialog",
   "author": {
     "name": "The Polymer Authors"
   },

@@ -17,7 +17,12 @@
     "fetchSpec": "^3.0.0-pre.26"
   },
   "_requiredBy": [
+    "/@polymer/iron-component-page",
+    "/@polymer/iron-doc-viewer",
+    "/@polymer/paper-button",
+    "/@polymer/paper-dialog-behavior",
     "/@polymer/paper-dropdown-menu",
+    "/@polymer/paper-icon-button",
     "/@polymer/paper-input",
     "/@polymer/paper-item",
     "/@polymer/paper-listbox",
@@ -26,7 +31,7 @@
   "_resolved": "https://registry.npmjs.org/@polymer/paper-styles/-/paper-styles-3.0.1.tgz",
   "_shasum": "bd4962b83ab8432cd1cf197bb5222d3a08f135e1",
   "_spec": "@polymer/paper-styles@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/paper-dropdown-menu",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/iron-component-page",
   "author": {
     "name": "The Polymer Authors"
   },

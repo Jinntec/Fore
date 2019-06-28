@@ -78,7 +78,7 @@ class PasswordFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.4.5';
+    return '2.4.6';
   }
 
   static get properties() {

@@ -1,5 +1,5 @@
 {
-  "_from": "@polymer/font-roboto@^3.0.0-pre.25",
+  "_from": "@polymer/font-roboto@^3.0.1",
   "_id": "@polymer/font-roboto@3.0.2",
   "_inBundle": false,
   "_integrity": "sha512-tx5TauYSmzsIvmSqepUPDYbs4/Ejz2XbZ1IkD7JEGqkdNUJlh+9KU85G56Tfdk/xjEZ8zorFfN09OSwiMrIQWA==",
@@ -8,13 +8,13 @@
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "@polymer/font-roboto@^3.0.0-pre.25",
+    "raw": "@polymer/font-roboto@^3.0.1",
     "name": "@polymer/font-roboto",
     "escapedName": "@polymer%2ffont-roboto",
     "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.25",
+    "rawSpec": "^3.0.1",
     "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.25"
+    "fetchSpec": "^3.0.1"
   },
   "_requiredBy": [
     "/@polymer/iron-demo-helpers",
@@ -22,8 +22,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/font-roboto/-/font-roboto-3.0.2.tgz",
   "_shasum": "80cdaa7225db2359130dfb2c6d9a3be1820020c3",
-  "_spec": "@polymer/font-roboto@^3.0.0-pre.25",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/iron-demo-helpers",
+  "_spec": "@polymer/font-roboto@^3.0.1",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/paper-styles",
   "author": {
     "name": "The Polymer Authors"
   },

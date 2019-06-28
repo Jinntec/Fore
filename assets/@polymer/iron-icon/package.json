@@ -17,13 +17,15 @@
     "fetchSpec": "^3.0.0-pre.26"
   },
   "_requiredBy": [
+    "/@polymer/iron-icons",
     "/@polymer/paper-dropdown-menu",
+    "/@polymer/paper-icon-button",
     "/@vaadin/vaadin-lumo-styles"
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/iron-icon/-/iron-icon-3.0.1.tgz",
   "_shasum": "93211c39d8825fe4965a68419566036c1df291eb",
   "_spec": "@polymer/iron-icon@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/paper-dropdown-menu",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/iron-icons",
   "author": {
     "name": "The Polymer Authors"
   },

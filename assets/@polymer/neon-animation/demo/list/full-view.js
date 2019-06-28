@@ -12,7 +12,7 @@ found at http://polymer.github.io/PATENTS.txt
 import '../../../polymer/polymer-legacy.js';
 import '../../../iron-flex-layout/iron-flex-layout.js';
 import '../../../paper-styles/shadow.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '../../../app-layout/app-toolbar/app-toolbar.js';
 
 import { Polymer } from '../../../polymer/lib/legacy/polymer-fn.js';
 import { html } from '../../../polymer/lib/utils/html-tag.js';

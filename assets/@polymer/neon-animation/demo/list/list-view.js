@@ -10,13 +10,13 @@ part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
 */
 import '../../../polymer/polymer-legacy.js';
-import '@polymer/iron-icons/iron-icons.js';
+import '../../../iron-icons/iron-icons.js';
 import '../../../iron-icon/iron-icon.js';
 import '../../../iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+import '../../../paper-icon-button/paper-icon-button.js';
 import '../../../paper-item/paper-item.js';
 import '../../../paper-item/paper-item-body.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '../../../app-layout/app-toolbar/app-toolbar.js';
 import '../../../paper-styles/color.js';
 
 import { Polymer } from '../../../polymer/lib/legacy/polymer-fn.js';

@@ -17,12 +17,13 @@
     "fetchSpec": "^3.0.1"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/@polymer/iron-component-page"
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/iron-ajax/-/iron-ajax-3.0.1.tgz",
   "_shasum": "831781be31ced011ac7243a46e34a775a4bb3133",
   "_spec": "@polymer/iron-ajax@^3.0.1",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM",
   "author": {
     "name": "The Polymer Authors"
   },

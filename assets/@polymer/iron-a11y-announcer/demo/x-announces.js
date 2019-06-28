@@ -9,7 +9,7 @@ the polymer project is also subject to an additional IP rights grant found at
 http://polymer.github.io/PATENTS
 */
 import '../../polymer/polymer-legacy.js';
-import '@polymer/paper-button/paper-button.js';
+import '../../paper-button/paper-button.js';
 
 import { Polymer } from '../../polymer/lib/legacy/polymer-fn.js';
 import { html } from '../../polymer/lib/utils/html-tag.js';

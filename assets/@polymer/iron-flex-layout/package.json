@@ -1,5 +1,5 @@
 {
-  "_from": "@polymer/iron-flex-layout@^3.0.0-pre.25",
+  "_from": "@polymer/iron-flex-layout@^3.0.0-pre.26",
   "_id": "@polymer/iron-flex-layout@3.0.1",
   "_inBundle": false,
   "_integrity": "sha512-7gB869czArF+HZcPTVSgvA7tXYFze9EKckvM95NB7SqYF+NnsQyhoXgKnpFwGyo95lUjUW9TFDLUwDXnCYFtkw==",
@@ -8,26 +8,28 @@
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "@polymer/iron-flex-layout@^3.0.0-pre.25",
+    "raw": "@polymer/iron-flex-layout@^3.0.0-pre.26",
     "name": "@polymer/iron-flex-layout",
     "escapedName": "@polymer%2firon-flex-layout",
     "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.25",
+    "rawSpec": "^3.0.0-pre.26",
     "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.25"
+    "fetchSpec": "^3.0.0-pre.26"
   },
   "_requiredBy": [
+    "/@polymer/app-layout",
     "/@polymer/iron-autogrow-textarea",
     "/@polymer/iron-demo-helpers",
     "/@polymer/iron-icon",
     "/@polymer/iron-menu-behavior",
+    "/@polymer/paper-button",
     "/@polymer/paper-item",
     "/@polymer/paper-styles"
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/iron-flex-layout/-/iron-flex-layout-3.0.1.tgz",
   "_shasum": "36f9e1a8eb792d279b2bc75d362628721ad37f0c",
-  "_spec": "@polymer/iron-flex-layout@^3.0.0-pre.25",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/iron-demo-helpers",
+  "_spec": "@polymer/iron-flex-layout@^3.0.0-pre.26",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/app-layout",
   "author": {
     "name": "The Polymer Authors"
   },

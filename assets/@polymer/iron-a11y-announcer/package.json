@@ -18,12 +18,13 @@
   },
   "_requiredBy": [
     "/@polymer/iron-input",
+    "/@polymer/paper-toast",
     "/@vaadin/vaadin-combo-box"
   ],
   "_resolved": "https://registry.npmjs.org/@polymer/iron-a11y-announcer/-/iron-a11y-announcer-3.0.2.tgz",
   "_shasum": "730dd36ccb2e042ecd5160ba439c2bf2f8a97412",
   "_spec": "@polymer/iron-a11y-announcer@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/iron-input",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/paper-toast",
   "author": {
     "name": "The Polymer Authors"
   },

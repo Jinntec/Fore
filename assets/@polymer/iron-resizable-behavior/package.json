@@ -17,6 +17,7 @@
     "fetchSpec": "^3.0.0-pre.26"
   },
   "_requiredBy": [
+    "/@polymer/app-layout",
     "/@polymer/iron-list",
     "/@polymer/iron-overlay-behavior",
     "/@polymer/neon-animation",
@@ -25,7 +26,7 @@
   "_resolved": "https://registry.npmjs.org/@polymer/iron-resizable-behavior/-/iron-resizable-behavior-3.0.1.tgz",
   "_shasum": "e284348ed7c1c7e263f7039297532fa954025ea2",
   "_spec": "@polymer/iron-resizable-behavior@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageoLiYj0/node_modules/@polymer/iron-overlay-behavior",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/app-layout",
   "author": {
     "name": "The Polymer Authors"
   },
