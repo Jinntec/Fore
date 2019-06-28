@@ -48,6 +48,8 @@
 
         const element = document.getElementById('basic');
         const output = document.getElementById('output');
+        const refreshAction = document.getElementById('refresh');
+
 
         test('instantiating the element with mockup data works', () => {
           const mydata = element.modelData[0];
@@ -91,7 +93,6 @@
 
 
         test('refresh without changes does not change state of control',function (){
-          const refreshAction = document.getElementById('refresh');
           refreshAction.execute();
           assert.typeOf(output.modelItem,'Object');
           assert.equal(output.modelItem.id,'b-greeting');

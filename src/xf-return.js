@@ -2,14 +2,15 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
 
 
 /**
- * `xf-append`
+ * `xf-return`
  * general class for bound elements
+ *
+ * todo: implementation and demo
  *
  * @customElement
  * @polymer
- * @demo demo/todo.html
  */
-class XfAppend extends PolymerElement {
+class XfReturn extends PolymerElement {
 
     static get properties() {
         return {
@@ -23,15 +24,12 @@ class XfAppend extends PolymerElement {
     }
 
     execute(){
-        console.log('##### xf-append executing bindId ', this.bind);
+        console.log('##### xf-return executing bindId ', this.bind);
 
-        // ### get repeat and _dataTemplate
-        const repeat = document.getElementById(this.repeat);
-        repeat.appendRepeatItem();
 
     }
 
 
 }
 
-window.customElements.define('xf-append', XfAppend);
+window.customElements.define('xf-return', XfReturn);

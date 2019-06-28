@@ -13,6 +13,7 @@ import { BoundElementMixin } from './BoundElementMixin.js';
  *
  * @customElement
  * @polymer
+ * @deprecated
  */
 class XfItemset extends BoundElementMixin(PolymerElement) {
     static get template() {

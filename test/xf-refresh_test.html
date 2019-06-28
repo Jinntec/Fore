@@ -12,11 +12,11 @@
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-    <script src="../src/xf-form.js" type="module"></script>
-    <script src="../src/xf-output.js" type="module"></script>
-    <script src="../src/xf-button.js" type="module"></script>
-    <script src="../src/xf-refresh.js" type="module"></script>
-    <script src="../src/xf-json-data.js" type="module"></script>
+    <script src="../src/xf-form.js" type="module"> </script>
+    <script src="../src/xf-output.js" type="module"> </script>
+    <script src="../src/xf-button.js" type="module"> </script>
+    <script src="../src/xf-refresh.js" type="module"> </script>
+    <script src="../src/xf-json-data.js" type="module"> </script>
 </head>
 <body>
 
@@ -60,9 +60,9 @@
                 assert.isTrue(output.bind === 'b-greeting');
                 assert.isTrue(output.modelItem.id === 'b-greeting');
 
-
             });
 
+/*
             test('refresh event fires', (done) => {
 
                 const handler = (ev) => {
@@ -82,6 +82,7 @@
                 form.addEventListener('refresh-done',handler);
                 refresh.execute();
             });
+*/
 
 
         });

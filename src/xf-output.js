@@ -1,5 +1,5 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfControl } from './xf-control.js';
+import { XfAbstractControl } from './xf-abstract-control.js';
 
 // import { XfBound } from './xf-bound.js';
 
@@ -10,7 +10,7 @@ import { XfControl } from './xf-control.js';
  * @customElement
  * @polymer
  */
-class XfOutput extends XfControl {
+class XfOutput extends XfAbstractControl {
     static get template() {
         return html`
       <style>

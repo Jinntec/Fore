@@ -1,14 +1,12 @@
 import {PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 
-import {BoundElementMixin} from './BoundElementMixin.js';
-
 /**
  * `xf-delete`
  * general class for bound elements
  *
  * @customElement
  * @polymer
- * @demo demo/index.html
+ * @demo demo/todo.html
  */
 class XfDelete extends PolymerElement {
 

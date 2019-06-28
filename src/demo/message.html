@@ -4,16 +4,16 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Hello</title>
+    <title>Messages</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../xf-form.js';
-        import '../xf-output.js';
         import '../xf-button.js';
         import '../xf-refresh.js';
         import '../xf-json-data.js';
         import '../xf-message.js';
+        import '../xf-output.js';
 
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -64,13 +64,11 @@
             </xf-json-data>
 
             <xf-form mockup='mockup'>
-                <xf-message event="model-ready"  sticky="true">the model is ready</xf-message>
-                <xf-message event="form-ready">the form is fully initialized</xf-message>
-                <xf-message event="refresh-done" sticky="true">refresh has been done</xf-message>
+                <xf-message event="model-ready">the model is ready</xf-message>
+                <xf-message event="form-ready" level="modeless">the form is fully initialized with greeting: '<xf-output bind="b-greeting"></xf-output>'</xf-message>
+                <xf-message event="refresh-done" level="modal">refresh has been done and bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla </xf-message>
 
-                <h1>Say hello:
-                    <xf-output bind="b-greeting" id="output"></xf-output>
-                </h1>
+                <h1>Not much to see here....</h1>
 
                 <xf-button label="refresh">
                     <xf-refresh></xf-refresh>

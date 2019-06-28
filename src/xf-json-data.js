@@ -3,12 +3,12 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
 
 /**
  * `xf-json-data`
- * general class for bound elements
+ * holds some JSON data as inline content and returns them as Object.
  *
  * @customElement
  * @polymer
  */
-class XfJsonData extends PolymerElement {
+export class XfJsonData extends PolymerElement {
     static get template() {
         return html`
       <style>
@@ -20,17 +20,37 @@ class XfJsonData extends PolymerElement {
     `;
     }
 
+    static get properties() {
+        return {
+            data:{
+                type:Object
+            },
+            content:{
+                type:Object
+            }
+        }
+    }
+
     connectedCallback() {
         super.connectedCallback();
-        const inner = this.innerText;
-        this.data = JSON.parse(inner);
+        this.content = this.innerText;
+        try{
+            this.data = JSON.parse(this.content);
+        } catch (e) {
+            this._dispatchError();
+        }
         console.log('### XfJsonData.connectedCallback ', this);
         console.log('### XfJsonData.connectedCallback ', this.getData());
 
     }
 
-    getData(){
+    getData() {
         return this.data;
+    }
+
+    _dispatchError(){
+        console.error('Error while trying to parse JSON data ', this);
+        this.dispatchEvent(new CustomEvent('json-parse-error', {composed: true, bubbles: true, detail: {"element":this}}));
     }
 
 }

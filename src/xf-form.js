@@ -1,86 +1,14 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
+import '../assets/@polymer/paper-toast/paper-toast.js';
+import '../assets/@polymer/paper-styles/paper-styles.js';
+import '../assets/@polymer/paper-styles/typography.js';
+import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
+import '../assets/@polymer/iron-icons/iron-icons.js';
+import '../assets/@polymer/iron-icon/iron-icon.js';
+import '../assets/@polymer/paper-dialog/paper-dialog.js';
+import '../assets/@polymer/paper-button/paper-button.js';
 
-
-/**
- * ModelItem is a decorator class for a `bind` in the modelData. There will be a single ModelItem for each
- * `bind` object in the modelData.
- *
- * This class also knows about the controls which bind to a given modelItem and handles updates to those.
- */
-/*
-class ModelItem {
-
-    constructor(bind) {
-        this._bind = bind;
-        this.boundElements = [];
-        // console.log('new ModelItem ', this);
-    }
-
-    get children(){
-        if(Array.isArray(this._bind.bind)){
-            return this._bind.bind;
-        }
-    }
-
-    /!**
-     * get the
-     * @returns {*}
-     *!/
-    get boundItem(){
-        return this._bind;
-    }
-
-    get value() {
-        return this._bind.value;
-    }
-
-    set value(newVal) {
-        console.log('*** ModelItem changed value ', this._bind.value, newVal);
-        this._bind.value = newVal;
-
-        // ### update all other elements that are bound to this ModelItem obj
-        this.boundElements.forEach((control) => {
-            control.value = newVal;
-        });
-
-    }
-
-    set index(index) {
-        this._index = index;
-    }
-
-    set sequence(bool) {
-        this._sequence = bool;
-    }
-
-    set dataTemplate(dataTemplate){
-        this._dataTemplate = Array.from(dataTemplate);
-    }
-
-
-    addBoundElement(element) {
-        if (XfForm.isBoundComponent(element)){
-            if(this.boundElements.indexOf(element) == -1){
-                this.boundElements.push(element);
-            }
-        }
-    }
-
-    append(dataTemplate){
-        // const newEntry = this._dataTemplate.splice();
-
-        const newEntry = Array.from(dataTemplate);
-        this.children.push(newEntry);
-
-    }
-
-    delete(index) {
-        console.log('ModelItem delete ', this._bind);
-        this.children.splice(index,1);
-    }
-}
-*/
 
 /**
  * `xf-form`
@@ -120,7 +48,7 @@ export class XfForm extends PolymerElement {
         ];
     }
 
-    static get ACTIONELEMENTS(){
+    static get ACTIONELEMENTS() {
         return [
             'XF-APPEND',
             'XF-DELETE'
@@ -129,18 +57,50 @@ export class XfForm extends PolymerElement {
 
     static get template() {
         return html`
-          <style>
+          <style is="custom-style">
             :host {
               display: block;
+              @apply(--paper-font-common-base);
+            }
+            paper-icon-button{
+                position: absolute;
+                right: 10px;
+                top:5px;
+            }
+            paper-dialog{
+                width:300px;
+            }
+            paper-dialog .dialogActions{
+                background:var(--paper-grey-100);
+                text-align: center;
+                padding: 6px;
+                margin:0;                
+            }
+            #messageContent{
+                padding: 20px;
+                margin:0;
             }
           </style>          
 
+          <slot> </slot>
           <iron-ajax id="initForm" 
                      url="/exist/apps/fore/init"
                      handle-as="json" 
-                     method="GET"></iron-ajax>
+                     method="GET"> </iron-ajax>
                      
-           <slot></slot>
+           
+           <paper-toast id="info" always-on-top="true"> </paper-toast>
+           <paper-toast id="important" class="fit-bottom">
+            <paper-icon-button icon="close" on-click="_closeToast"></paper-icon-button>
+           </paper-toast>
+           
+           <paper-dialog id="modalMessage" modal="true">
+                <div id="messageContent"></div>
+                <div class="dialogActions">
+                    <paper-button dialog-dismiss autofocus>Close</paper-button>
+                </div>
+           </paper-dialog>
+           
         `;
     }
 
@@ -164,9 +124,9 @@ export class XfForm extends PolymerElement {
                 notify: true,
                 reflectToAttribute: true
             },
-            changed:{
+            changed: {
                 type: Array,
-                value:[]
+                value: []
             }
 
         };
@@ -197,10 +157,12 @@ export class XfForm extends PolymerElement {
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
 
-        this.addEventListener('model-ready', this._modelReady);
+        // this.addEventListener('model-ready', this._modelReady);
+        // this.addEventListener('form-ready', this._formReady);
         this.addEventListener('item-appended', this._itemAppended);
         this.addEventListener('value-changed', this._handleValueChange);
         this.addEventListener('action-performed', this._handleActionPerformed);
+        // this.addEventListener('refresh-done', this._handleRefreshDone);
 
         /*
         form processing starts here when all components have be loaded and instanciated by calling the `update`
@@ -210,34 +172,10 @@ export class XfForm extends PolymerElement {
             console.log('#### WebComponentsReady #####');
             this.update();
             this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
+            this._initUI();
+
         }.bind(this));
 
-    }
-
-    _handleValueChange(e){
-        console.log('_handleValueChange ',e.target);
-        console.log('_handleValueChange ',e.target.modelItem);
-
-/*
-        //this is for handling deferred update for action blocks
-        //check if action block has been started and add changes as necessary
-        const modelItem = e.target.modelItem;
-        if(this.changed.indexOf(modelItem) === -1){
-            this.changed.push(modelItem);
-        }else{
-            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
-            this.changed[idx] = modelItem;
-        }
-        console.log('### change list ', this.changed);
-*/
-        this.refresh();
-
-    }
-
-    _handleActionPerformed(e){
-        console.log('_handleActionPerformed ',e.target);
-        // todo: finer-grained updating by using 'changed' array?
-        this.refresh();
     }
 
     disconnectedCallback() {
@@ -246,11 +184,6 @@ export class XfForm extends PolymerElement {
         this.removeEventListener('item-appended', this._itemAppended);
     }
 
-    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
-    _itemAppended(e) {
-        console.log('##### item was appended ', e.detail);
-        this.refresh();
-    }
 
     /**
      * updates the model data. As we have limited capabilities on the client _update serves the purpose of the
@@ -266,42 +199,14 @@ export class XfForm extends PolymerElement {
         } else {
             //todo: load via ajax
         }
+        // this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
     }
-
 
     /**
-     * called after `model-ready` event fired to signal that all model initialization is complete.
-     *
-     * @event listener for `model-ready` event
-     * @private
+     * refresh is trigged whenever controls need to be updated to the latest state of the modelData. It will visit all elements
+     * in the UI that have a `bind` attribute and call their `refresh` method.
      */
-    _modelReady() {
-        console.log('### model-ready event fired');
-        // this.refresh();
-        this._initUI();
-        document.dispatchEvent(new CustomEvent('ui-initialized', {composed: true, bubbles: true, detail: {}}));
-        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: true, detail: {}}));
-
-    }
-
-
-    _initUI() {
-        console.log('### init the UI');
-        // iterate the UI in search for bound controls
-        const boundElements = this.querySelectorAll('[bind]');
-        for (let i = 0; i < boundElements.length; i++) {
-            console.log('##### init UI element ', i + 1, ' of ', boundElements.length);
-            const boundElement = boundElements[i];
-            const bindId = boundElement.getAttribute('bind');
-            // if(XfForm.isBoundComponent(boundElement)){
-            boundElement.init();
-            // }
-
-        }
-    }
-
-
-    refresh(){
+    refresh() {
         console.log('### refresh');
         this.dispatchEvent(new CustomEvent('refresh', {composed: true, bubbles: true, detail: {}}));
 
@@ -320,26 +225,7 @@ export class XfForm extends PolymerElement {
     }
 
     /**
-     * creates a ModelItem object which wrap the passed bind object.
-     *
-     * @param bind - the bind to be wrapped
-     * @param index -
-     * @returns {ModelItem}
-     */
-/*
-    createModelItem(bind, index) {
-        const state = new ModelItem(bind);
-        state.index = index;
-
-        if (bind['sequence']) {
-            state.sequence = true;
-        }
-        return state;
-    }
-*/
-
-    /**
-     * searches the modelData for given bindId and returns the object.
+     * searches the modelData for given bindId and returns the object (ModelItem).
      *
      * @param o the object to search
      * @param id the bindId
@@ -364,11 +250,143 @@ export class XfForm extends PolymerElement {
         return result;
     }
 
+    /**
+     * display a 'global' message to the user. Uses paper-toast for this purpose.
+     * @param msg the message to display
+     */
+    message(msg, level) {
+        console.log('xf-form.message ', msg);
+
+
+        if (level === 'modal') {
+            // alert(msg);
+            this.$.messageContent.innerText = msg;
+            this.$.modalMessage.open();
+        } else if(level === 'modeless'){
+            this.$.important.duration=0;
+            this.$.important.text = msg;
+            this.$.important.open();
+        }
+        else {
+            this.$.info.fitInto = this;
+            this.$.info.verticalAlign = "bottom";
+            if (this.$.info.opened) {
+                setTimeout(function () {
+                    this.$.info.text = msg;
+                    this.$.info.open();
+                }.bind(this), 1500);
+            } else {
+                this.$.info.text = msg;
+                this.$.info.open();
+            }
+
+        }
+
+    }
+
+    /*
+        _handleRefreshDone(e){
+            console.log('_handleRefreshDone ',e);
+        }
+    */
+
+    _handleValueChange(e) {
+        console.log('_handleValueChange ', e.target);
+        console.log('_handleValueChange ', e.target.modelItem);
+
+        //this is for handling deferred update for action blocks
+        //check if action block has been started and add changes as necessary
+        const modelItem = e.target.modelItem;
+        if (this.changed.indexOf(modelItem) === -1) {
+            this.changed.push(modelItem);
+        } else {
+            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
+            this.changed[idx] = modelItem;
+        }
+        console.log('### change list ', this.changed);
+        this.refresh();
+
+    }
+
+    _handleActionPerformed(e) {
+        console.log('_handleActionPerformed ', e.target);
+        // todo: finer-grained updating by using 'changed' array?
+        this.refresh();
+    }
+
+
+    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
+    _itemAppended(e) {
+        console.log('##### item was appended ', e.detail);
+        this.refresh();
+    }
+
+
+    /**
+     * called after `model-ready` event fired to signal that all model initialization is complete.
+     *
+     * @event listener for `model-ready` event
+     * @private
+     */
+    _modelReady() {
+        console.log('### model-ready event fired');
+        // this.refresh();
+        // this._initUI();
+        // document.dispatchEvent(new CustomEvent('ui-initialized', {composed: true, bubbles: true, detail: {}}));
+        // this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: true, detail: {}}));
+
+    }
+
+    _formReady() {
+        console.log('### form-ready event fired');
+    }
+
+
+    _initUI() {
+        console.log('### init the UI');
+        // iterate the UI in search for bound controls
+        const boundElements = this.querySelectorAll('[bind]');
+        for (let i = 0; i < boundElements.length; i++) {
+            console.log('##### init UI element ', i + 1, ' of ', boundElements.length);
+            const boundElement = boundElements[i];
+            const bindId = boundElement.getAttribute('bind');
+            // if(XfForm.isBoundComponent(boundElement)){
+            boundElement.init();
+            // }
+
+        }
+        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
+    }
+
+
+    /**
+     * creates a ModelItem object which wrap the passed bind object.
+     *
+     * @param bind - the bind to be wrapped
+     * @param index -
+     * @returns {ModelItem}
+     */
+
+    /*
+        createModelItem(bind, index) {
+            const state = new ModelItem(bind);
+            state.index = index;
+
+            if (bind['sequence']) {
+                state.sequence = true;
+            }
+            return state;
+        }
+    */
+
+
     _isWebComponent(elementName) {
         return (elementName.indexOf('-') > -1);
     }
 
-
+    _closeToast(e) {
+        this.$.important.close();
+    }
 }
 
 window.customElements.define('xf-form', XfForm);

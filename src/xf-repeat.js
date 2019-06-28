@@ -50,7 +50,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
     connectedCallback() {
         super.connectedCallback();
         console.log('### xf-repeat connected ', this);
-        this._initTemplate();
+        // this._initTemplate();
 
     }
 

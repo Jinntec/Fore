@@ -15,7 +15,7 @@
         import '../xf-output.js';
         import '../xf-setvalue.js';
         import '../xf-material-combo.js';
-        import '../xf-key-value-list.js';
+        import '../xf-items.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -43,6 +43,8 @@
 </head>
 <body>
 
+    <h1><code>xf-material-combo</code></h1>
+
     <demo-snippet>
         <template>
             <!-- ##### xf-model is not exposed to the client! ##### -->
@@ -57,7 +59,11 @@
                 <xf-bind id="b-selected2" ref="yourown"></xf-bind>
 
             </xf-model>
+        </template>
+    </demo-snippet>
 
+    <demo-snippet>
+        <template>
             <xf-json-data id="mockup">
                 [
                   {
@@ -84,7 +90,7 @@
                     <xf-output bind="b-selected" id="output"></xf-output>
                 </h2>
 
-                <xf-key-value-list id='colors'>
+                <xf-items id='colors'>
                     [
                         {"label":"LightGreen","value":"lightgreen"},
                         {"label":"Green","value":"green"},
@@ -99,17 +105,17 @@
                         {"label":"Yellow","value":"yellow"},
                         {"label":"DarkYellow","value":"darkyellow"}
                     ]
-                </xf-key-value-list>
+                </xf-items>
 
                 <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
-                <xf-material-combo bind="b-selected" id="selected" items="colors"
+                <xf-material-combo bind="b-selected" id="selected" itemset="colors"
                                    label="Which do you like best?"></xf-material-combo>
 
-                <xf-material-combo bind="b-selected" items="colors" label="Which do you like best?"></xf-material-combo>
+                <xf-material-combo bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-combo>
 
 
                 <h2>User can provide a value that's not in the list</h2>
-                <xf-material-combo bind="b-selected2" id="selected2" items="colors" label="Which do you like best?"
+                <xf-material-combo bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
                                    selection="open"></xf-material-combo>
                 <h2>Your free selection:
                     <xf-output bind="b-selected2" id="output"></xf-output>

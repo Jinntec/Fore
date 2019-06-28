@@ -1,5 +1,5 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import {XfControl} from './xf-control.js';
+import {XfAbstractControl} from './xf-abstract-control.js';
 import '../assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 
 // import { XfBound } from './xf-bound.js';
@@ -11,7 +11,7 @@ import '../assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js';
  * @customElement
  * @polymer
  */
-class XfMaterialCombo extends XfControl {
+class XfMaterialCombo extends XfAbstractControl {
     static get template() {
         return html`
       <style>
@@ -29,7 +29,10 @@ class XfMaterialCombo extends XfControl {
 
     static get properties() {
         return {
-            items:{
+            /**
+             * idref to
+             */
+            itemset:{
                 type:String
             },
             selection:{
@@ -43,14 +46,14 @@ class XfMaterialCombo extends XfControl {
         super.init();
 
         console.log('modelitem bindings ', this.modelItem);
-        console.log('modelitem bindings ', this.items);
-        console.log('modelitem mockup ', document.getElementById(this.items).data);
+        console.log('modelitem bindings ', this.itemset);
+        console.log('modelitem mockup ', document.getElementById(this.itemset).data);
 
         if(this.selection === 'open'){
             this.$.combo.allowCustomValue = true;
         }
 
-        this.$.combo.items = document.getElementById(this.items).data;
+        this.$.combo.items = document.getElementById(this.itemset).data;
     }
 
     attachListeners() {
@@ -92,9 +95,11 @@ class XfMaterialCombo extends XfControl {
         }
     }
 
+/*
     _getItemValue(value){
         return this.$.combo.value;
     }
+*/
 
 }
 

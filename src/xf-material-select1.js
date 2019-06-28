@@ -1,7 +1,7 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import '../assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 
-import { XfControl } from './xf-control.js';
+import { XfAbstractControl } from './xf-abstract-control.js';
 
 
 /**
@@ -11,8 +11,9 @@ import { XfControl } from './xf-control.js';
  * @customElement
  * @polymer
  * @demo demo/07_select_autocomplete.html
+ * @deprecated in favor of xf-material-combo
  */
-class XfMaterialSelect1 extends XfControl {
+class XfMaterialSelect1 extends XfAbstractControl {
     static get template() {
         return html`
       <style>

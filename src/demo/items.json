@@ -1,0 +1,14 @@
+[
+  {"label":"LightGreen","value":"lightgreen"},
+  {"label":"Green","value":"green"},
+  {"label":"DarkGreen","value":"darkgreen"},
+  {"label":"LightBlue","value":"lightblue"},
+  {"label":"Blue","value":"blue"},
+  {"label":"DarkBlue","value":"darkblue"},
+  {"label":"LightRed","value":"lightred"},
+  {"label":"Red","value":"red"},
+  {"label":"DarkRed","value":"darkred"},
+  {"label":"LightYellow","value":"lightyellow"},
+  {"label":"Yellow","value":"yellow"},
+  {"label":"DarkYellow","value":"darkyellow"}
+]
