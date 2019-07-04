@@ -2,6 +2,7 @@
   {
     "bind": {
       "id": "b-todo",
+      "sequence":true,
       "bind": [
         [
           {
@@ -18,6 +19,97 @@
             "id": "b-due",
             "type": "date",
             "value": "2019-03-01"
+          },
+          {
+            "id":"b-subtask",
+            "bind":[
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"go to store"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":true
+                },
+                {
+                  "id":"b-subsubtask",
+                  "bind":[
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"stand up"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":true
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"fetch keys"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"find your way"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"enter store"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ]
+                  ]
+                }
+
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"find milk"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"pay milk"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"take it home"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ]
+            ]
           }
         ],
         [

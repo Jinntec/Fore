@@ -42,15 +42,13 @@ export class XfRepeatItem extends PolymerElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('### xf-repeat-item connected ', this);
+        console.log('### xf-repeat-item for ', this.parentNode.id ,'connected ', this);
 
         this.addEventListener('click',this._onClick);
-
     }
 
     _onClick(e){
         console.log('repeat-item click ', e);
-
 
         if(this.parentNode){
             this.parentNode.setCurrent(this);
@@ -64,15 +62,28 @@ export class XfRepeatItem extends PolymerElement {
      */
     init(){
         console.log('### repeat item modelitem ', this.modelItem);
+        // console.table(this.modelItem);
         const boundElements = this.querySelectorAll('[bind]');
+        console.group('initRepeatItem');
         for (let i = 0; i < boundElements.length; i++) {
-            console.log('##### init UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            console.log('### init UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
             const boundElement = boundElements[i];
             const bindId = boundElement.getAttribute('bind');
             boundElement.repeated = true;
             boundElement.modelItem = this.closest('xf-form').findById(this.modelItem,bindId);
-            boundElement.init();
+
+            // ### if there's no modelItem yet create one
+            if(!boundElement.modelItem){
+                this.modelItem = {};
+                this.modelItem.bind = [];
+            }
+
+            if(boundElement.modelItem){
+                boundElement.init();
+            }
         }
+        console.groupEnd('initRepeatItem');
+
         this.dispatchEvent(new CustomEvent('repeat-item-created', {composed: true, bubbles: true, detail: {}}));
     }
 

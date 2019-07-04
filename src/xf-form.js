@@ -169,7 +169,7 @@ export class XfForm extends PolymerElement {
         function.
          */
         window.addEventListener('WebComponentsReady', function () {
-            console.log('#### WebComponentsReady #####');
+            console.log('---------- WebComponentsReady ----------');
             this.update();
             this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
             this._initUI();
@@ -211,9 +211,11 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('refresh', {composed: true, bubbles: true, detail: {}}));
 
 
+        // console.groupCollapsed('refresh');
+        console.group('refresh');
         const boundElements = this.querySelectorAll('[bind]');
         for (let i = 0; i < boundElements.length; i++) {
-            console.log('##### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            console.log('### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
             // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
             const elem = boundElements[i];
             const bindId = elem.getAttribute('bind');
@@ -221,6 +223,7 @@ export class XfForm extends PolymerElement {
                 elem.refresh();
             }
         }
+        console.groupEnd('refresh');
         this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
     }
 
@@ -317,7 +320,7 @@ export class XfForm extends PolymerElement {
 
     // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
     _itemAppended(e) {
-        console.log('##### item was appended ', e.detail);
+        console.log('### item was appended ', e.detail);
         this.refresh();
     }
 
@@ -343,11 +346,12 @@ export class XfForm extends PolymerElement {
 
 
     _initUI() {
-        console.log('### init the UI');
+        // console.log('### init the UI');
         // iterate the UI in search for bound controls
         const boundElements = this.querySelectorAll('[bind]');
+        console.group('initUI');
         for (let i = 0; i < boundElements.length; i++) {
-            console.log('##### init UI element ', i + 1, ' of ', boundElements.length);
+            console.info('### init UI element ', i + 1, ' of ', boundElements.length);
             const boundElement = boundElements[i];
             const bindId = boundElement.getAttribute('bind');
             // if(XfForm.isBoundComponent(boundElement)){
@@ -355,6 +359,8 @@ export class XfForm extends PolymerElement {
             // }
 
         }
+        console.groupEnd('initUI');
+
         this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
     }
 

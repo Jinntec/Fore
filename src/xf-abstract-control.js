@@ -59,12 +59,11 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('### XfControl.connectedCallback ', this);
-
+        // console.log('### XfControl connected ', this);
     }
 
     init() {
-        console.log('### init ', this);
+        // console.log('### init ', this);
         if (!this.repeated) {
             super.init();
         }
@@ -74,14 +73,14 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     }
 
     refresh() {
-        console.log('### XfControl.refresh on : ', this);
+        // console.log('### XfControl.refresh on : ', this);
         // this.modelItem = modelItem;
         this.applyProperties();
     }
 
 
     applyProperties() {
-        console.log('XfControl.applyProperties ', this.modelItem);
+        // console.log('XfControl.applyProperties ', this.modelItem);
 
         if (this.modelItem.alert !== undefined) {
             // console.log('XfControl.applyProperties alert: ', this.modelItem.alert);

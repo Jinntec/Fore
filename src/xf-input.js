@@ -17,7 +17,11 @@ class XfInput extends XfAbstractControl {
         :host {
           display: inline-block;
         }
+        label{
+        display:block;
+        }
       </style>
+      <label for="input">[[label]]</label>
       <input id="input" type="[[type]]" value="{{value}}">
     `;
     }

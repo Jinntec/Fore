@@ -13,7 +13,7 @@ class XfRefresh extends PolymerElement {
 
 
     execute(){
-        console.log('###### refresh fired');
+        // console.log('#### refresh fired');
         this.closest('xf-form').refresh();
     }
 
