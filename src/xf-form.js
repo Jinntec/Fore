@@ -48,12 +48,14 @@ export class XfForm extends PolymerElement {
         ];
     }
 
+/*
     static get ACTIONELEMENTS() {
         return [
             'XF-APPEND',
             'XF-DELETE'
         ];
     }
+*/
 
     static get template() {
         return html`
@@ -161,7 +163,7 @@ export class XfForm extends PolymerElement {
         // this.addEventListener('form-ready', this._formReady);
         this.addEventListener('item-appended', this._itemAppended);
         this.addEventListener('value-changed', this._handleValueChange);
-        this.addEventListener('action-performed', this._handleActionPerformed);
+        // this.addEventListener('action-performed', this._handleActionPerformed);
         // this.addEventListener('refresh-done', this._handleRefreshDone);
 
         /*
@@ -306,16 +308,20 @@ export class XfForm extends PolymerElement {
             const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
             this.changed[idx] = modelItem;
         }
-        console.log('### change list ', this.changed);
+        console.log('### list of changes ###');
+        console.table(this.changed);
+        console.log('### modelData ', this.modelData);
         this.refresh();
 
     }
 
+/*
     _handleActionPerformed(e) {
         console.log('_handleActionPerformed ', e.target);
         // todo: finer-grained updating by using 'changed' array?
         this.refresh();
     }
+*/
 
 
     // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
@@ -355,7 +361,7 @@ export class XfForm extends PolymerElement {
             const boundElement = boundElements[i];
             const bindId = boundElement.getAttribute('bind');
             // if(XfForm.isBoundComponent(boundElement)){
-            boundElement.init();
+                boundElement.init();
             // }
 
         }

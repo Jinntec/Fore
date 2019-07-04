@@ -125,7 +125,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     dispatchValueChange() {
         console.log('### dispatching value change from ', this);
-        this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {}}));
+        this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
     }
 
     _updateAlert() {

@@ -13,6 +13,8 @@
         import '../xf-button.js';
         import '../xf-delete.js';
         import '../xf-append.js';
+        import '../xf-setvalue.js';
+        import '../xf-refresh.js';
         import '../xf-input.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
@@ -285,6 +287,9 @@
 
             <xf-form mockup='mockup'>
                 <h1>todos</h1>
+                <xf-button label="refresh">
+                    <xf-refresh></xf-refresh>
+                </xf-button>
                 <xf-button label="add">
                     <xf-append repeat="r-todos"></xf-append>
                 </xf-button>
@@ -327,6 +332,9 @@
                                         <xf-input bind="b-subsubtask-complete" id="subsubcomplete" type="checkbox"></xf-input>
                                         <xf-button label="delete">
                                             <xf-delete></xf-delete>
+                                        </xf-button>
+                                        <xf-button label="setvalue 'foo'">
+                                            <xf-setvalue bind="b-subsubtask-text" value="foo"></xf-setvalue>
                                         </xf-button>
                                     </template>
                                 </xf-repeat>

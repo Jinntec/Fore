@@ -36,19 +36,6 @@
     </style>
 </head>
 <body>
-    <script type="module">
-        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-
-        // Create this in a module so that the shared styles above are loaded
-        // before this element is created.
-        const template = document.createElement('template');
-        template.innerHTML = `
-      <custom-style>
-        <style is="custom-style" include="demo-pages-shared-styles"></style>
-      </custom-style>
-    `;
-        document.body.appendChild(template.content);
-    </script>
 
     <demo-snippet>
         <template>

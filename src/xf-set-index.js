@@ -23,6 +23,10 @@ class XfSetIndex extends PolymerElement {
         };
     }
 
+    init(){
+        super.init();
+    }
+
     execute(){
         console.log('##### xf-set-index executing bindId ', this.bind);
 

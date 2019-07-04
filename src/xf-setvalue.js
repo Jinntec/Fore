@@ -1,5 +1,5 @@
 import {PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfAction } from './xf-action.js';
+import {XfAction} from './xf-action.js';
 
 
 /**
@@ -14,9 +14,9 @@ class XfSetvalue extends XfAction {
         return {
             bind: {
                 type: String,
-                reflectToAttribute:true
+                reflectToAttribute: true
             },
-            value:{
+            value: {
                 type: String
             }
         };
@@ -27,10 +27,32 @@ class XfSetvalue extends XfAction {
         console.log('xf-setvalue connected ');
     }
 
+    init(){
+        super.init();
+    }
 
-    execute(){
-        this.modelItem.value = this.value;
-        this.dispatchActionPerformed();
+    execute() {
+
+        const repeated = this.closest('xf-repeat-item');
+        if(repeated){
+            const item = repeated.modelItem;
+            const target = this.ownerForm.findById(item,this.bind);
+            target.value = this.value;
+            this.dispatchEvent(new CustomEvent('value-changed', {
+                composed: true,
+                bubbles: true,
+                detail: {'modelItem': target}
+            }));
+
+        }else{
+            this.modelItem.value = this.value;
+            this.dispatchEvent(new CustomEvent('value-changed', {
+                composed: true,
+                bubbles: true,
+                detail: {'modelItem': this.modelItem}
+            }));
+        }
+
         return true;
     }
 

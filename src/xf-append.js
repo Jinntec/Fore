@@ -1,5 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfAbstractAction } from "./xf-abstract-action.js";
+import { XfAction } from "./xf-action.js";
 
 /**
  * `xf-append`
@@ -10,7 +9,7 @@ import { XfAbstractAction } from "./xf-abstract-action.js";
  * @demo demo/todo.html
  * @demo demo/todoWithLabels.html
  */
-class XfAppend extends XfAbstractAction {
+class XfAppend extends XfAction {
 
     static get properties() {
         return {

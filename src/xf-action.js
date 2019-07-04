@@ -11,6 +11,7 @@ import { BoundElementMixin } from './BoundElementMixin.js';
  * @demo demo/index.html
  */
 export class XfAction extends BoundElementMixin(PolymerElement){
+// export class XfAction extends PolymerElement{
 
 /*
     static get properties() {
@@ -25,14 +26,13 @@ export class XfAction extends BoundElementMixin(PolymerElement){
 
     }
 
+/*
     init() {
         super.init();
     }
+*/
 
-    performAction(e) {
-        console.log('performAction ', this);
-
-    }
+    execute(){}
 
     dispatchActionPerformed(){
         this.dispatchEvent(new CustomEvent('action-performed', {composed: true, bubbles: true, detail: {}}));
