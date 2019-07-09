@@ -1,5 +1,5 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-
+import {parseTpl} from './StringTpl.js';
 
 /**
  * `xf-message`
@@ -18,8 +18,7 @@ class XfMessage extends PolymerElement {
             :host {
               display: none;
             }
-          </style>          
-          <slot> </slot>
+          </style>
         `;
     }
 
@@ -28,17 +27,17 @@ class XfMessage extends PolymerElement {
             bind: {
                 type: String
             },
-            repeat:{
+            repeat: {
                 type: String
             },
-            event:{
+            event: {
                 type: String
             },
-            sticky:{
-                type: Boolean,
-                value:false
+            level: {
+                type: String,
+                value: 'ephemeral'
             },
-            level:{
+            id: {
                 type: String
             }
         };
@@ -47,13 +46,27 @@ class XfMessage extends PolymerElement {
     connectedCallback() {
         super.connectedCallback();
         console.log('### xf-message connected ', this);
-        this.parentNode.addEventListener(this.event, this.execute.bind(this));
+        this.parentNode.addEventListener(this.event, e => this.execute(e));
+        this.id = "foobar";
     }
 
-    execute(e){
-        // console.log('xf-message.execute ', this);
-        console.log('xf-message.execute ', this.textContent);
-        this.closest('xf-form').message(this.textContent, this.level);
+    execute(e) {
+        console.log('xf-message.execute ', e.detail);
+        console.log('xf-message.execute textContent: ', this.textContent);
+
+        const details = e.detail;
+        let tmpl = this.textContent;
+
+        const result = parseTpl(this.textContent, details);
+        console.log('result: ', result);
+
+        // this.closest('xf-form').message(e.detail, result, this.level);
+
+        this.dispatchEvent(new CustomEvent('message', {
+            composed: true, bubbles: true,
+            detail: {'level': this.level, 'message':result}
+        }));
+
     }
 
 }

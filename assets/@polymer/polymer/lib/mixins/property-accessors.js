@@ -92,6 +92,9 @@ function saveAccessorValue(model, property) {
  * @appliesMixin PropertiesChanged
  * @summary Element class mixin for reacting to property changes from
  *   generated property accessors.
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const PropertyAccessors = dedupingMixin(superClass => {
 
@@ -120,9 +123,10 @@ export const PropertyAccessors = dedupingMixin(superClass => {
      * `camelCase` convention
      *
      * @return {void}
+     * @nocollapse
      */
     static createPropertiesForAttributes() {
-      let a$ = this.observedAttributes;
+      let a$ = /** @type {?} */this.observedAttributes;
       for (let i = 0; i < a$.length; i++) {
         this.prototype._createPropertyAccessor(dashToCamelCase(a$[i]));
       }
@@ -135,6 +139,7 @@ export const PropertyAccessors = dedupingMixin(superClass => {
      * @return {string} Attribute name corresponding to the given property.
      *
      * @protected
+     * @nocollapse
      */
     static attributeNameForProperty(property) {
       return camelToDashCase(property);

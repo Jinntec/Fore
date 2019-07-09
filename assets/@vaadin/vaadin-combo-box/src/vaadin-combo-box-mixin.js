@@ -314,13 +314,9 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
     if (this.opened) {
       this._openedWithFocusRing = this.hasAttribute('focus-ring') || this.focusElement && this.focusElement.hasAttribute('focus-ring');
-      // For touch devices, we don't want to popup virtual keyboard on touch devices unless input
-      // is explicitly focused by the user.
-      if (!this.$.overlay.touchDevice) {
-        // Check to see if there is a focused property and if it's already true.
-        if (!this.focused) {
-          this.focus();
-        }
+      // For touch devices, we don't want to popup virtual keyboard unless input is explicitly focused by the user.
+      if (!this.hasAttribute('focused') && !this.$.overlay.touchDevice) {
+        this.focus();
       }
     } else {
       this._onClosed();
@@ -501,6 +497,12 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     if (toggleElement) {
       // Don't blur the input on toggle mousedown
       toggleElement.addEventListener('mousedown', e => e.preventDefault());
+      // Unfocus previously focused element if focus is not inside combo box (on touch devices)
+      toggleElement.addEventListener('click', e => {
+        if (this.$.overlay.touchDevice && !this.hasAttribute('focused')) {
+          document.activeElement.blur();
+        }
+      });
     }
   }
 

@@ -107,7 +107,16 @@ interface TemplateStampConstructor {
    * @returns Parsed template metadata
    */
   _parseTemplate(template: HTMLTemplateElement, outerTemplateInfo?: TemplateInfo|null): TemplateInfo;
-  _parseTemplateContent(template: any, templateInfo: any, nodeInfo: any): any;
+
+  /**
+   * See docs for _parseTemplateNode.
+   *
+   * @param template .
+   * @param templateInfo .
+   * @param nodeInfo .
+   * @returns .
+   */
+  _parseTemplateContent(template: HTMLTemplateElement, templateInfo: TemplateInfo, nodeInfo: NodeInfo): boolean;
 
   /**
    * Parses template node and adds template and node metadata based on
@@ -162,12 +171,13 @@ interface TemplateStampConstructor {
    * for nodes of interest.
    *
    * @param node Node to parse
-   * @param templateInfo Template metadata for current template
+   * @param templateInfo Template metadata for current
+   *     template
    * @param nodeInfo Node metadata for current template.
    * @returns `true` if the visited node added node-specific
    *   metadata to `nodeInfo`
    */
-  _parseTemplateNodeAttributes(node: Element|null, templateInfo: TemplateInfo|null, nodeInfo: NodeInfo|null): boolean;
+  _parseTemplateNodeAttributes(node: Element|null, templateInfo: TemplateInfo, nodeInfo: NodeInfo): boolean;
 
   /**
    * Parses a single template node attribute and adds node metadata to

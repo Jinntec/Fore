@@ -710,6 +710,12 @@ function setupCompoundStorage(node, binding) {
     storage[target] = literals;
     // Configure properties with their literal parts
     if (binding.literal && binding.kind == 'property') {
+      // Note, className needs style scoping so this needs wrapping.
+      // We may also want to consider doing this for `textContent` and
+      // `innerHTML`.
+      if (target === 'className') {
+        node = wrap(node);
+      }
       node[target] = binding.literal;
     }
   }
@@ -1052,6 +1058,9 @@ function upper(name) {
  * @appliesMixin PropertyAccessors
  * @summary Element class mixin that provides meta-programming for Polymer's
  * template binding and data observation system.
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const PropertyEffects = dedupingMixin(superClass => {
 
@@ -1123,6 +1132,9 @@ export const PropertyEffects = dedupingMixin(superClass => {
       this.__templateInfo;
     }
 
+    /**
+     * @return {!Object<string, string>} Effect prototype property name map.
+     */
     get PROPERTY_EFFECT_TYPES() {
       return TYPES;
     }
@@ -1385,6 +1397,10 @@ export const PropertyEffects = dedupingMixin(superClass => {
       // implement a whitelist of tag & property values that should never
       // be reset (e.g. <input>.value && <select>.value)
       if (value !== node[prop] || typeof value == 'object') {
+        // Note, className needs style scoping so this needs wrapping.
+        if (prop === 'className') {
+          node = /** @type {!Node} */wrap(node);
+        }
         node[prop] = value;
       }
     }
@@ -2233,6 +2249,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {Object=} effect Effect metadata object
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static addPropertyEffect(property, type, effect) {
       this.prototype._addPropertyEffect(property, type, effect);
@@ -2247,6 +2264,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   a dependency to the effect.
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createPropertyObserver(property, method, dynamicFn) {
       this.prototype._createPropertyObserver(property, method, dynamicFn);
@@ -2264,6 +2282,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @return {void}
      *   whether method names should be included as a dependency to the effect.
      * @protected
+     * @nocollapse
      */
     static createMethodObserver(expression, dynamicFn) {
       this.prototype._createMethodObserver(expression, dynamicFn);
@@ -2276,6 +2295,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {string} property Property name
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createNotifyingProperty(property) {
       this.prototype._createNotifyingProperty(property);
@@ -2296,6 +2316,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   when `true`.
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createReadOnlyProperty(property, protectedSetter) {
       this.prototype._createReadOnlyProperty(property, protectedSetter);
@@ -2308,6 +2329,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {string} property Property name
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createReflectedProperty(property) {
       this.prototype._createReflectedProperty(property);
@@ -2326,6 +2348,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   method names should be included as a dependency to the effect.
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createComputedProperty(property, expression, dynamicFn) {
       this.prototype._createComputedProperty(property, expression, dynamicFn);
@@ -2342,6 +2365,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   bindings
      * @return {!TemplateInfo} Template metadata object
      * @protected
+     * @nocollapse
      */
     static bindTemplate(template) {
       return this.prototype._bindTemplate(template);
@@ -2410,6 +2434,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {Object=} effect Effect metadata object
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static _addTemplatePropertyEffect(templateInfo, prop, effect) {
       let hostProps = templateInfo.hostProps = templateInfo.hostProps || {};
@@ -2511,9 +2536,12 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   metadata to `nodeInfo`
      * @protected
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _parseTemplateNode(node, templateInfo, nodeInfo) {
-      let noted = super._parseTemplateNode(node, templateInfo, nodeInfo);
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      let noted = propertyEffectsBase._parseTemplateNode.call(this, node, templateInfo, nodeInfo);
       if (node.nodeType === Node.TEXT_NODE) {
         let parts = this._parseBindings(node.textContent, templateInfo);
         if (parts) {
@@ -2545,6 +2573,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   metadata to `nodeInfo`
      * @protected
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _parseTemplateNodeAttribute(node, templateInfo, nodeInfo, name, value) {
       let parts = this._parseBindings(value, templateInfo);
@@ -2590,7 +2619,9 @@ export const PropertyEffects = dedupingMixin(superClass => {
         addBinding(this, templateInfo, nodeInfo, kind, name, parts, literal);
         return true;
       } else {
-        return super._parseTemplateNodeAttribute(node, templateInfo, nodeInfo, name, value);
+        // TODO(https://github.com/google/closure-compiler/issues/3240):
+        //     Change back to just super.methodCall()
+        return propertyEffectsBase._parseTemplateNodeAttribute.call(this, node, templateInfo, nodeInfo, name, value);
       }
     }
 
@@ -2606,9 +2637,12 @@ export const PropertyEffects = dedupingMixin(superClass => {
      *   metadata to `nodeInfo`
      * @protected
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _parseTemplateNestedTemplate(node, templateInfo, nodeInfo) {
-      let noted = super._parseTemplateNestedTemplate(node, templateInfo, nodeInfo);
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      let noted = propertyEffectsBase._parseTemplateNestedTemplate.call(this, node, templateInfo, nodeInfo);
       // Merge host props into outer template and add bindings
       let hostProps = nodeInfo.templateInfo.hostProps;
       let mode = '{';
@@ -2662,6 +2696,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {Object} templateInfo Current template metadata
      * @return {Array<!BindingPart>} Array of binding part metadata
      * @protected
+     * @nocollapse
      */
     static _parseBindings(text, templateInfo) {
       let parts = [];
@@ -2745,6 +2780,7 @@ export const PropertyEffects = dedupingMixin(superClass => {
      * @param {boolean} hasPaths True with `props` contains one or more paths
      * @return {*} Value the binding part evaluated to
      * @protected
+     * @nocollapse
      */
     static _evaluateBinding(inst, part, path, props, oldProps, hasPaths) {
       let value;

@@ -25,16 +25,12 @@ import { addListener, removeListener } from '../utils/gestures.js';
  * @mixinFunction
  * @polymer
  * @summary Element class mixin that provides API for adding Polymer's
- *   cross-platform
- * gesture events to nodes
- */
-export const GestureEventListeners = dedupingMixin(
-/**
+ *   cross-platform gesture events to nodes
  * @template T
  * @param {function(new:T)} superClass Class to apply mixin to.
  * @return {function(new:T)} superClass with mixin applied.
  */
-superClass => {
+export const GestureEventListeners = dedupingMixin(superClass => {
   /**
    * @polymer
    * @mixinClass

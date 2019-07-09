@@ -12,8 +12,6 @@ import '../utils/boot.js';
 
 import { dedupingMixin } from '../utils/mixin.js';
 
-const walker = document.createTreeWalker(document, NodeFilter.SHOW_ALL, null, false);
-
 // 1.x backwards-compatible auto-wrapper for template type extensions
 // This is a clear layering violation and gives favored-nation status to
 // dom-if and dom-repeat templates.  This is a conceit we're choosing to keep
@@ -48,8 +46,7 @@ function findTemplateNode(root, nodeInfo) {
   if (parent) {
     // note: marginally faster than indexing via childNodes
     // (http://jsperf.com/childnodes-lookup)
-    walker.currentNode = parent;
-    for (let n = walker.firstChild(), i = 0; n; n = walker.nextSibling()) {
+    for (let n = parent.firstChild, i = 0; n; n = n.nextSibling) {
       if (nodeInfo.parentIndex === i++) {
         return n;
       }
@@ -108,6 +105,9 @@ function createNodeEventHandler(context, eventName, methodName) {
  * @mixinFunction
  * @polymer
  * @summary Element class mixin that provides basic template parsing and stamping
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const TemplateStamp = dedupingMixin(
 /**
@@ -198,18 +198,30 @@ superClass => {
      * @param {TemplateInfo=} outerTemplateInfo Template metadata from the outer
      *   template, for parsing nested templates
      * @return {!TemplateInfo} Parsed template metadata
+     * @nocollapse
      */
     static _parseTemplate(template, outerTemplateInfo) {
       // since a template may be re-used, memo-ize metadata
       if (!template._templateInfo) {
-        let templateInfo = template._templateInfo = {};
+        // TODO(rictic): fix typing
+        let /** ? */templateInfo = template._templateInfo = {};
         templateInfo.nodeInfoList = [];
         templateInfo.stripWhiteSpace = outerTemplateInfo && outerTemplateInfo.stripWhiteSpace || template.hasAttribute('strip-whitespace');
-        this._parseTemplateContent(template, templateInfo, { parent: null });
+        // TODO(rictic): fix typing
+        this._parseTemplateContent(template, templateInfo, /** @type {?} */{ parent: null });
       }
       return template._templateInfo;
     }
 
+    /**
+     * See docs for _parseTemplateNode.
+     *
+     * @param {!HTMLTemplateElement} template .
+     * @param {!TemplateInfo} templateInfo .
+     * @param {!NodeInfo} nodeInfo .
+     * @return {boolean} .
+     * @nocollapse
+     */
     static _parseTemplateContent(template, templateInfo, nodeInfo) {
       return this._parseTemplateNode(template.content, templateInfo, nodeInfo);
     }
@@ -226,19 +238,19 @@ superClass => {
      * @param {!NodeInfo} nodeInfo Node metadata for current template.
      * @return {boolean} `true` if the visited node added node-specific
      *   metadata to `nodeInfo`
+     * @nocollapse
      */
     static _parseTemplateNode(node, templateInfo, nodeInfo) {
-      let noted;
-      let element = /** @type {Element} */node;
+      let noted = false;
+      let element = /** @type {!HTMLTemplateElement} */node;
       if (element.localName == 'template' && !element.hasAttribute('preserve-content')) {
         noted = this._parseTemplateNestedTemplate(element, templateInfo, nodeInfo) || noted;
       } else if (element.localName === 'slot') {
         // For ShadyDom optimization, indicating there is an insertion point
         templateInfo.hasInsertionPoint = true;
       }
-      walker.currentNode = element;
-      if (walker.firstChild()) {
-        noted = this._parseTemplateChildNodes(element, templateInfo, nodeInfo) || noted;
+      if (element.firstChild) {
+        this._parseTemplateChildNodes(element, templateInfo, nodeInfo);
       }
       if (element.hasAttributes && element.hasAttributes()) {
         noted = this._parseTemplateNodeAttributes(element, templateInfo, nodeInfo) || noted;
@@ -263,8 +275,7 @@ superClass => {
       if (root.localName === 'script' || root.localName === 'style') {
         return;
       }
-      walker.currentNode = root;
-      for (let node = walker.firstChild(), parentIndex = 0, next; node; node = next) {
+      for (let node = root.firstChild, parentIndex = 0, next; node; node = next) {
         // Wrap templates
         if (node.localName == 'template') {
           node = wrapTemplateExtension(node);
@@ -273,13 +284,12 @@ superClass => {
         // text nodes to be inexplicably split =(
         // note that root.normalize() should work but does not so we do this
         // manually.
-        walker.currentNode = node;
-        next = walker.nextSibling();
+        next = node.nextSibling;
         if (node.nodeType === Node.TEXT_NODE) {
           let /** Node */n = next;
           while (n && n.nodeType === Node.TEXT_NODE) {
             node.textContent += n.textContent;
-            next = walker.nextSibling();
+            next = n.nextSibling;
             root.removeChild(n);
             n = next;
           }
@@ -289,13 +299,13 @@ superClass => {
             continue;
           }
         }
-        let childInfo = { parentIndex, parentInfo: nodeInfo };
+        let childInfo =
+        /** @type {!NodeInfo} */{ parentIndex, parentInfo: nodeInfo };
         if (this._parseTemplateNode(node, templateInfo, childInfo)) {
-          childInfo.infoIndex = templateInfo.nodeInfoList.push( /** @type {!NodeInfo} */childInfo) - 1;
+          childInfo.infoIndex = templateInfo.nodeInfoList.push(childInfo) - 1;
         }
         // Increment if not removed
-        walker.currentNode = node;
-        if (walker.parentNode()) {
+        if (node.parentNode) {
           parentIndex++;
         }
       }
@@ -317,11 +327,14 @@ superClass => {
      * @param {!NodeInfo} nodeInfo Node metadata for current template.
      * @return {boolean} `true` if the visited node added node-specific
      *   metadata to `nodeInfo`
+     * @nocollapse
      */
     static _parseTemplateNestedTemplate(node, outerTemplateInfo, nodeInfo) {
-      let templateInfo = this._parseTemplate(node, outerTemplateInfo);
-      let content = templateInfo.content = node.content.ownerDocument.createDocumentFragment();
-      content.appendChild(node.content);
+      // TODO(rictic): the type of node should be non-null
+      let element = /** @type {!HTMLTemplateElement} */node;
+      let templateInfo = this._parseTemplate(element, outerTemplateInfo);
+      let content = templateInfo.content = element.content.ownerDocument.createDocumentFragment();
+      content.appendChild(element.content);
       nodeInfo.templateInfo = templateInfo;
       return true;
     }
@@ -331,10 +344,12 @@ superClass => {
      * for nodes of interest.
      *
      * @param {Element} node Node to parse
-     * @param {TemplateInfo} templateInfo Template metadata for current template
-     * @param {NodeInfo} nodeInfo Node metadata for current template.
+     * @param {!TemplateInfo} templateInfo Template metadata for current
+     *     template
+     * @param {!NodeInfo} nodeInfo Node metadata for current template.
      * @return {boolean} `true` if the visited node added node-specific
      *   metadata to `nodeInfo`
+     * @nocollapse
      */
     static _parseTemplateNodeAttributes(node, templateInfo, nodeInfo) {
       // Make copy of original attribute list, since the order may change
@@ -361,6 +376,7 @@ superClass => {
      * @param {string} value Attribute value
      * @return {boolean} `true` if the visited node added node-specific
      *   metadata to `nodeInfo`
+     * @nocollapse
      */
     static _parseTemplateNodeAttribute(node, templateInfo, nodeInfo, name, value) {
       // events (on-*)
@@ -390,6 +406,7 @@ superClass => {
      *
      * @param {HTMLTemplateElement} template Template to retrieve `content` for
      * @return {DocumentFragment} Content fragment
+     * @nocollapse
      */
     static _contentForTemplate(template) {
       let templateInfo = /** @type {HTMLTemplateElementWithInfo} */template._templateInfo;

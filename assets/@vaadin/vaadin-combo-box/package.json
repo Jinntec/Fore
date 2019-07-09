@@ -1,8 +1,8 @@
 {
   "_from": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_id": "@vaadin/vaadin-combo-box@5.0.3",
+  "_id": "@vaadin/vaadin-combo-box@5.0.5",
   "_inBundle": false,
-  "_integrity": "sha512-FiSv49XYM5XgmRcIp75XQo533qVrmOy4g0/P1bRp110FMZ4fZi7Zj8qEeYo2cP5o65zac61Re2AADoAyiLn3ZA==",
+  "_integrity": "sha512-rOVQzRMcLjUgLlIkreEBe6vc+VB+s7VFut/DxtL6e35vSV0y5TTx5s7l1eUrbdN5tQRYwo3rztYoeEfubx4mqA==",
   "_location": "/@vaadin/vaadin-combo-box",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.3.tgz",
-  "_shasum": "58873e1a6f800169abd218b5e73203109111b910",
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.5.tgz",
+  "_shasum": "987588d97a3decfc8c4aa3ed93f7d684c430cbd8",
   "_spec": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9",
   "author": {
     "name": "Vaadin Ltd"
   },
@@ -89,5 +89,5 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "5.0.3"
+  "version": "5.0.5"
 }

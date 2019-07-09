@@ -84,6 +84,9 @@ function takeRecords() {
  * @mixinFunction
  * @polymer
  * @appliesMixin PropertyAccessors
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const DirMixin = dedupingMixin(base => {
 
@@ -114,9 +117,12 @@ export const DirMixin = dedupingMixin(base => {
      * @param {string} baseURI .
      * @return {string} .
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _processStyleText(cssText, baseURI) {
-      cssText = super._processStyleText(cssText, baseURI);
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      cssText = elementBase._processStyleText.call(this, cssText, baseURI);
       if (!SHIM_SHADOW && DIR_CHECK.test(cssText)) {
         cssText = this._replaceDirInCssText(cssText);
         this.__activateDir = true;
@@ -129,6 +135,7 @@ export const DirMixin = dedupingMixin(base => {
      *
      * @param {string} text CSS text to replace DIR
      * @return {string} Modified CSS
+     * @nocollapse
      */
     static _replaceDirInCssText(text) {
       let replacedText = text;

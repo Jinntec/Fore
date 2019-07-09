@@ -88,6 +88,7 @@ export class CustomStyle extends HTMLElement {
     const include = style.getAttribute(attr);
     if (include) {
       style.removeAttribute(attr);
+      /** @suppress {deprecated} */
       style.textContent = cssFromModules(include) + style.textContent;
     }
     /*

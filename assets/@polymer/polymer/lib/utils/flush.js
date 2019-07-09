@@ -12,8 +12,8 @@ import './boot.js';
 /* eslint-disable no-unused-vars */
 import { Debouncer } from './debounce.js'; // used in type annotations
 /* eslint-enable no-unused-vars */
-import { flushDebouncers } from './debounce.js'; // used in type annotations
-export { enqueueDebouncer } from './debounce.js'; // used in type annotations
+import { enqueueDebouncer, flushDebouncers } from './debounce.js';
+export { enqueueDebouncer };
 
 /**
  * Forces several classes of asynchronously queued tasks to flush:

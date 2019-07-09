@@ -1,13 +1,16 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
-import '../assets/@polymer/paper-toast/paper-toast.js';
+// import '../assets/@polymer/paper-toast/paper-toast.js';
 import '../assets/@polymer/paper-styles/paper-styles.js';
+import '../assets/@polymer/paper-styles/color.js';
 import '../assets/@polymer/paper-styles/typography.js';
 import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
 import '../assets/@polymer/paper-dialog/paper-dialog.js';
 import '../assets/@polymer/paper-button/paper-button.js';
+import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
+
 
 
 /**
@@ -83,7 +86,7 @@ export class XfForm extends PolymerElement {
                 margin:0;
             }
           </style>          
-
+          
           <slot> </slot>
           <iron-ajax id="initForm" 
                      url="/exist/apps/fore/init"
@@ -91,18 +94,12 @@ export class XfForm extends PolymerElement {
                      method="GET"> </iron-ajax>
                      
            
-           <paper-toast id="info" always-on-top="true"> </paper-toast>
-           <paper-toast id="important" class="fit-bottom">
-            <paper-icon-button icon="close" on-click="_closeToast"></paper-icon-button>
-           </paper-toast>
-           
            <paper-dialog id="modalMessage" modal="true">
                 <div id="messageContent"></div>
                 <div class="dialogActions">
                     <paper-button dialog-dismiss autofocus>Close</paper-button>
                 </div>
-           </paper-dialog>
-           
+           </paper-dialog>          
         `;
     }
 
@@ -159,12 +156,9 @@ export class XfForm extends PolymerElement {
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
 
-        // this.addEventListener('model-ready', this._modelReady);
-        // this.addEventListener('form-ready', this._formReady);
         this.addEventListener('item-appended', this._itemAppended);
         this.addEventListener('value-changed', this._handleValueChange);
-        // this.addEventListener('action-performed', this._handleActionPerformed);
-        // this.addEventListener('refresh-done', this._handleRefreshDone);
+        this.addEventListener('message', this._displayMessage);
 
         /*
         form processing starts here when all components have be loaded and instanciated by calling the `update`
@@ -182,8 +176,9 @@ export class XfForm extends PolymerElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('model-ready', this._modelReady);
         this.removeEventListener('item-appended', this._itemAppended);
+        this.removeEventListener('value-change', this._handleValueChange);
+        this.removeEventListener('message', this._displayMessage);
     }
 
 
@@ -255,45 +250,46 @@ export class XfForm extends PolymerElement {
         return result;
     }
 
-    /**
-     * display a 'global' message to the user. Uses paper-toast for this purpose.
-     * @param msg the message to display
-     */
-    message(msg, level) {
-        console.log('xf-form.message ', msg);
+    _displayMessage(e){
 
+        const level = e.detail.level;
+        const msg = e.detail.message;
 
         if (level === 'modal') {
-            // alert(msg);
             this.$.messageContent.innerText = msg;
             this.$.modalMessage.open();
         } else if(level === 'modeless'){
-            this.$.important.duration=0;
-            this.$.important.text = msg;
-            this.$.important.open();
+            // const notification = this.$.modeless;
+
+            const notification = document.createElement('vaadin-notification');
+            notification.duration=0;
+            notification.setAttribute('theme','error');
+            notification.renderer = function(root){
+                console.log('root ', root);
+
+                root.textContent = msg;
+
+                const closeIcon = window.document.createElement('paper-icon-button');
+                closeIcon.setAttribute('icon','close');
+                closeIcon.addEventListener('click',function(e){
+                    console.log(e);
+                   notification.close();
+                });
+                root.appendChild(closeIcon);
+            };
+            this.appendChild(notification);
+            notification.open();
+
         }
         else {
-            this.$.info.fitInto = this;
-            this.$.info.verticalAlign = "bottom";
-            if (this.$.info.opened) {
-                setTimeout(function () {
-                    this.$.info.text = msg;
-                    this.$.info.open();
-                }.bind(this), 1500);
-            } else {
-                this.$.info.text = msg;
-                this.$.info.open();
-            }
-
+            const notification = document.createElement('vaadin-notification');
+            notification.renderer = function(root){
+                root.textContent = msg;
+            };
+            this.appendChild(notification);
+            notification.open();
         }
-
     }
-
-    /*
-        _handleRefreshDone(e){
-            console.log('_handleRefreshDone ',e);
-        }
-    */
 
     _handleValueChange(e) {
         console.log('_handleValueChange ', e.target);
@@ -315,40 +311,6 @@ export class XfForm extends PolymerElement {
 
     }
 
-/*
-    _handleActionPerformed(e) {
-        console.log('_handleActionPerformed ', e.target);
-        // todo: finer-grained updating by using 'changed' array?
-        this.refresh();
-    }
-*/
-
-
-    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
-    _itemAppended(e) {
-        console.log('### item was appended ', e.detail);
-        this.refresh();
-    }
-
-
-    /**
-     * called after `model-ready` event fired to signal that all model initialization is complete.
-     *
-     * @event listener for `model-ready` event
-     * @private
-     */
-    _modelReady() {
-        console.log('### model-ready event fired');
-        // this.refresh();
-        // this._initUI();
-        // document.dispatchEvent(new CustomEvent('ui-initialized', {composed: true, bubbles: true, detail: {}}));
-        // this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: true, detail: {}}));
-
-    }
-
-    _formReady() {
-        console.log('### form-ready event fired');
-    }
 
 
     _initUI() {
@@ -370,26 +332,11 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
     }
 
-
-    /**
-     * creates a ModelItem object which wrap the passed bind object.
-     *
-     * @param bind - the bind to be wrapped
-     * @param index -
-     * @returns {ModelItem}
-     */
-
-    /*
-        createModelItem(bind, index) {
-            const state = new ModelItem(bind);
-            state.index = index;
-
-            if (bind['sequence']) {
-                state.sequence = true;
-            }
-            return state;
-        }
-    */
+    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
+    _itemAppended(e) {
+        console.log('### item was appended ', e.detail);
+        this.refresh();
+    }
 
 
     _isWebComponent(elementName) {

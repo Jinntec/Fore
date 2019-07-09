@@ -25,7 +25,7 @@ import { wrap } from '../utils/wrap.js';
  * Current Polymer version in Semver notation.
  * @type {string} Semver notation of the current version of Polymer.
  */
-export const version = '3.2.0';
+export const version = '3.3.0';
 
 const builtCSS = window.ShadyCSS && window.ShadyCSS['cssBuild'];
 
@@ -96,6 +96,9 @@ const builtCSS = window.ShadyCSS && window.ShadyCSS['cssBuild'];
  *   import strategies.
  * @summary Element class mixin that provides the core API for Polymer's
  * meta-programming features.
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const ElementMixin = dedupingMixin(base => {
   /**
@@ -324,6 +327,7 @@ export const ElementMixin = dedupingMixin(base => {
     /**
      * Current Polymer version in Semver notation.
      * @type {string} Semver notation of the current version of Polymer.
+     * @nocollapse
      */
     static get polymerElementVersion() {
       return version;
@@ -335,9 +339,12 @@ export const ElementMixin = dedupingMixin(base => {
      * @return {void}
      * @protected
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _finalizeClass() {
-      super._finalizeClass();
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      polymerElementBase._finalizeClass.call(this);
       const observers = ownObservers(this);
       if (observers) {
         this.createObservers(observers, this._properties);
@@ -345,6 +352,7 @@ export const ElementMixin = dedupingMixin(base => {
       this._prepareTemplate();
     }
 
+    /** @nocollapse */
     static _prepareTemplate() {
       // note: create "working" template that is finalized at instance time
       let template = /** @type {PolymerElementConstructor} */this.template;
@@ -357,6 +365,7 @@ export const ElementMixin = dedupingMixin(base => {
         }
       }
 
+      /** @override */
       this.prototype._template = template;
     }
 
@@ -366,10 +375,12 @@ export const ElementMixin = dedupingMixin(base => {
      * @param {!Object} props .
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createProperties(props) {
       for (let p in props) {
-        createPropertyFromConfig(this.prototype, p, props[p], props);
+        createPropertyFromConfig(
+        /** @type {?} */this.prototype, p, props[p], props);
       }
     }
 
@@ -383,6 +394,7 @@ export const ElementMixin = dedupingMixin(base => {
      *   reference is changed
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createObservers(observers, dynamicFns) {
       const proto = this.prototype;
@@ -426,6 +438,7 @@ export const ElementMixin = dedupingMixin(base => {
      *   }
      *
      * @return {!HTMLTemplateElement|string} Template to be stamped
+     * @nocollapse
      */
     static get template() {
       // Explanation of template-related properties:
@@ -459,6 +472,7 @@ export const ElementMixin = dedupingMixin(base => {
      * Set the template.
      *
      * @param {!HTMLTemplateElement|string} value Template to set.
+     * @nocollapse
      */
     static set template(value) {
       this._template = value;
@@ -482,6 +496,7 @@ export const ElementMixin = dedupingMixin(base => {
      *
      * @return {string} The import path for this element class
      * @suppress {missingProperties}
+     * @nocollapse
      */
     static get importPath() {
       if (!this.hasOwnProperty(JSCompiler_renameProperty('_importPath', this))) {
@@ -563,6 +578,7 @@ export const ElementMixin = dedupingMixin(base => {
      * @param {string} baseURI Base URI to rebase CSS paths against
      * @return {string} The processed CSS text
      * @protected
+     * @nocollapse
      */
     static _processStyleText(cssText, baseURI) {
       return resolveCss(cssText, baseURI);
@@ -576,6 +592,7 @@ export const ElementMixin = dedupingMixin(base => {
     * @param {string} is Tag name (or type extension name) for this element
     * @return {void}
     * @protected
+    * @nocollapse
     */
     static _finalizeTemplate(is) {
       /** @const {HTMLTemplateElement} */
@@ -662,9 +679,9 @@ export const ElementMixin = dedupingMixin(base => {
       if (n.attachShadow) {
         if (dom) {
           if (!n.shadowRoot) {
-            n.attachShadow({ mode: 'open' });
+            n.attachShadow({ mode: 'open', shadyUpgradeFragment: dom });
+            n.shadowRoot.appendChild(dom);
           }
-          n.shadowRoot.appendChild(dom);
           if (syncInitialRender && window.ShadyDOM) {
             ShadyDOM.flushInitial(n.shadowRoot);
           }
@@ -740,10 +757,13 @@ export const ElementMixin = dedupingMixin(base => {
      * @param {!NodeInfo} nodeInfo Node metadata for current template.
      * @return {boolean} .
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _parseTemplateContent(template, templateInfo, nodeInfo) {
       templateInfo.dynamicFns = templateInfo.dynamicFns || this._properties;
-      return super._parseTemplateContent(template, templateInfo, nodeInfo);
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      return polymerElementBase._parseTemplateContent.call(this, template, templateInfo, nodeInfo);
     }
 
     /**
@@ -756,6 +776,7 @@ export const ElementMixin = dedupingMixin(base => {
      * @return {void}
      * @protected
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+     * @nocollapse
      */
     static _addTemplatePropertyEffect(templateInfo, prop, effect) {
       // Warn if properties are used in template without being declared.
@@ -769,7 +790,9 @@ export const ElementMixin = dedupingMixin(base => {
       if (legacyOptimizations && !(prop in this._properties)) {
         console.warn(`Property '${prop}' used in template but not declared in 'properties'; ` + `attribute will not be observed.`);
       }
-      return super._addTemplatePropertyEffect(templateInfo, prop, effect);
+      // TODO(https://github.com/google/closure-compiler/issues/3240):
+      //     Change back to just super.methodCall()
+      return polymerElementBase._addTemplatePropertyEffect.call(this, templateInfo, prop, effect);
     }
 
   }

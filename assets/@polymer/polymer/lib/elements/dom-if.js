@@ -16,6 +16,7 @@ import { enqueueDebouncer, flush } from '../utils/flush.js';
 import { microTask } from '../utils/async.js';
 import { root } from '../utils/path.js';
 import { wrap } from '../utils/wrap.js';
+import { hideElementsGlobally } from '../utils/hide-template-controls.js';
 
 /**
  * The `<dom-if>` element will stamp a light-dom `<template>` child when
@@ -134,7 +135,9 @@ export class DomIf extends PolymerElement {
    */
   connectedCallback() {
     super.connectedCallback();
-    this.style.display = 'none';
+    if (!hideElementsGlobally()) {
+      this.style.display = 'none';
+    }
     if (this.if) {
       this.__debounceRender();
     }

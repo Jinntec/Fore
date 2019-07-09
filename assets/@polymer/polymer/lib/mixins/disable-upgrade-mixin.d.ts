@@ -69,7 +69,7 @@ interface DisableUpgradeMixin extends ElementMixin, PropertyEffects, TemplateSta
    * @param value The new value for the attribute.
    * @param namespace The XML namespace for the attribute.
    */
-  attributeChangedCallback(name: string, old: string|null, value: string|null, namespace?: string|null): undefined;
+  attributeChangedCallback(name: string, old: string|null, value: string|null, namespace: string|null): void;
   connectedCallback(): void;
   disconnectedCallback(): void;
 }

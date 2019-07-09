@@ -1,8 +1,8 @@
 {
   "_from": "@polymer/polymer@^3.0.0",
-  "_id": "@polymer/polymer@3.2.0",
+  "_id": "@polymer/polymer@3.3.0",
   "_inBundle": false,
-  "_integrity": "sha512-L6uV1oM6T6xbwbVx6t3biG5T2VSSB03LxnIrUd9M2pr6RkHVPFHJ37pC5MUwBAEhkGFJif7eks7fdMMSGZTeEQ==",
+  "_integrity": "sha512-rij7suomS7DxdBamnwr/Xa0V5hpypf7I9oYKseF2FWz5Xh2a3wJNpVjgJy1adXVCxqIyPhghsrthnfCt7EblsQ==",
   "_location": "/@polymer/polymer",
   "_phantomChildren": {},
   "_requested": {
@@ -68,14 +68,15 @@
     "/@vaadin/vaadin-item",
     "/@vaadin/vaadin-lumo-styles",
     "/@vaadin/vaadin-material-styles",
+    "/@vaadin/vaadin-notification",
     "/@vaadin/vaadin-overlay",
     "/@vaadin/vaadin-text-field",
     "/@vaadin/vaadin-themable-mixin"
   ],
-  "_resolved": "https://registry.npmjs.org/@polymer/polymer/-/polymer-3.2.0.tgz",
-  "_shasum": "b41fddec4ecac63b12936b93726678d23add7afd",
+  "_resolved": "https://registry.npmjs.org/@polymer/polymer/-/polymer-3.3.0.tgz",
+  "_shasum": "52a0665ac29654728e8f46e8ee178c02c49efdd0",
   "_spec": "@polymer/polymer@^3.0.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9",
   "author": {
     "name": "The Polymer Project Authors"
   },
@@ -84,7 +85,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "@webcomponents/shadycss": "^1.8.0"
+    "@webcomponents/shadycss": "^1.9.1"
   },
   "deprecated": false,
   "description": "The Polymer library makes it easy to create your own web components. Give your element some markup and properties, and then use it on a site. Polymer provides features like dynamic templates and data binding to reduce the amount of boilerplate you need to write",
@@ -93,7 +94,7 @@
     "@polymer/gen-typescript-declarations": "^1.5.1",
     "@polymer/iron-component-page": "^3.0.0-pre.12",
     "@polymer/test-fixture": "^3.0.0-pre.12",
-    "@webcomponents/webcomponentsjs": "^2.2.7",
+    "@webcomponents/webcomponentsjs": "^2.2.10",
     "babel-eslint": "^7.2.3",
     "babel-preset-minify": "^0.2.0",
     "del": "^3.0.0",
@@ -101,7 +102,7 @@
     "eslint-plugin-html": "^4.0.6",
     "fs-extra": "^5.0.0",
     "google-closure-compiler": "^20180204.0.0",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^4.0.0",
     "gulp-if": "^2.0.1",
@@ -111,8 +112,8 @@
     "lazypipe": "^1.0.2",
     "merge-stream": "^1.0.1",
     "parse5": "^4.0.0",
-    "polymer-build": "^3.1.0",
-    "polymer-cli": "^1.9.4",
+    "polymer-build": "^3.1.4",
+    "polymer-cli": "^1.9.9",
     "through2": "^2.0.0",
     "typescript": "^2.9.2",
     "wct-browser-legacy": "^1.0.2"
@@ -155,5 +156,5 @@
     "serve": "polymer serve --npm --module-resolution=node",
     "test": "npm run lint && polymer test --npm --module-resolution=node"
   },
-  "version": "3.2.0"
+  "version": "3.3.0"
 }

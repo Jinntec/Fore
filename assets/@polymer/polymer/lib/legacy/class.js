@@ -160,7 +160,7 @@ function flattenBehaviors(behaviors, list, exclude) {
  * Copies property descriptors from source to target, overwriting all fields
  * of any previous descriptor for a property *except* for `value`, which is
  * merged in from the target if it does not exist on the source.
- * 
+ *
  * @param {*} target Target properties object
  * @param {*} source Source properties object
  */
@@ -216,10 +216,13 @@ function GenerateClassFromInfo(info, Base, behaviors) {
   class PolymerGenerated extends Base {
 
     // explicitly not calling super._finalizeClass
+    /** @nocollapse */
     static _finalizeClass() {
       // if calling via a subclass that hasn't been generated, pass through to super
       if (!this.hasOwnProperty(JSCompiler_renameProperty('generatedFrom', this))) {
-        super._finalizeClass();
+        // TODO(https://github.com/google/closure-compiler/issues/3240):
+        //     Change back to just super.methodCall()
+        Base._finalizeClass.call(this);
       } else {
         // interleave properties and observers per behavior and `info`
         if (behaviorList) {
@@ -244,6 +247,7 @@ function GenerateClassFromInfo(info, Base, behaviors) {
       }
     }
 
+    /** @nocollapse */
     static get properties() {
       const properties = {};
       if (behaviorList) {
@@ -255,6 +259,7 @@ function GenerateClassFromInfo(info, Base, behaviors) {
       return properties;
     }
 
+    /** @nocollapse */
     static get observers() {
       let observers = [];
       if (behaviorList) {

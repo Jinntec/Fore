@@ -101,10 +101,14 @@ function upgradeTemplate(template, constructor) {
 /**
  * Base class for TemplateInstance.
  * @constructor
+ * @extends {HTMLElement}
  * @implements {Polymer_PropertyEffects}
  * @private
  */
-const templateInstanceBase = PropertyEffects(class {});
+const templateInstanceBase = PropertyEffects(
+// This cast shouldn't be neccessary, but Closure doesn't understand that
+// "class {}" is a constructor function.
+/** @type {function(new:Object)} */class {});
 
 /**
  * @polymer
@@ -119,7 +123,9 @@ class TemplateInstanceBase extends templateInstanceBase {
     /** @type {!StampedTemplate} */
     this.root = this._stampTemplate(this.__dataHost);
     // Save list of stamped children
-    let children = this.children = [];
+    let children = [];
+    /** @suppress {invalidCasts} */
+    this.children = /** @type {!NodeList} */children;
     // Polymer 1.x did not use `Polymer.dom` here so not bothering.
     for (let n = this.root.firstChild; n; n = n.nextSibling) {
       children.push(n);
@@ -293,6 +299,7 @@ class TemplateInstanceBase extends templateInstanceBase {
    *
    * @param {Event} event Event to dispatch
    * @return {boolean} Always true.
+   * @override
    */
   dispatchEvent(event) {
     // eslint-disable-line no-unused-vars
@@ -317,7 +324,10 @@ TemplateInstanceBase.prototype.__hostProps;
  * @implements {Polymer_MutableData}
  * @private
  */
-const MutableTemplateInstanceBase = MutableData(TemplateInstanceBase);
+const MutableTemplateInstanceBase = MutableData(
+// This cast shouldn't be necessary, but Closure doesn't seem to understand
+// this constructor.
+/** @type {function(new:TemplateInstanceBase)} */TemplateInstanceBase);
 
 function findMethodHost(template) {
   // Technically this should be the owner of the outermost template.
@@ -359,11 +369,14 @@ function createTemplatizerClass(template, templateInfo, options) {
 }
 
 /**
+ * Adds propagate effects from the template to the template instance for
+ * properties that the host binds to the template using the `_host_` prefix.
+ * 
  * @suppress {missingProperties} class.prototype is not defined for some reason
  */
 function addPropagateEffects(template, templateInfo, options) {
   let userForwardHostProp = options.forwardHostProp;
-  if (userForwardHostProp) {
+  if (userForwardHostProp && templateInfo.hasHostProps) {
     // Provide data API and property effects on memoized template class
     let klass = templateInfo.templatizeTemplateClass;
     if (!klass) {
@@ -416,6 +429,11 @@ function addNotifyEffects(klass, template, templateInfo, options) {
   }
   if (options.forwardHostProp && template.__dataHost) {
     for (let hprop in hostProps) {
+      // As we're iterating hostProps in this function, note whether
+      // there were any, for an optimization in addPropagateEffects
+      if (!templateInfo.hasHostProps) {
+        templateInfo.hasHostProps = true;
+      }
       klass.prototype._addPropertyEffect(hprop, klass.prototype.PROPERTY_EFFECT_TYPES.NOTIFY, { fn: createNotifyHostPropEffect() });
     }
   }
@@ -507,8 +525,8 @@ function createNotifyHostPropEffect() {
  * @param {Polymer_PropertyEffects=} owner Owner of the template instances;
  *   any optional callbacks will be bound to this owner.
  * @param {Object=} options Options dictionary (see summary for details)
- * @return {function(new:TemplateInstanceBase)} Generated class bound to the template
- *   provided
+ * @return {function(new:TemplateInstanceBase, Object=)} Generated class bound
+ *   to the template provided
  * @suppress {invalidCasts}
  */
 export function templatize(template, owner, options) {

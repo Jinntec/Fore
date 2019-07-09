@@ -18,8 +18,9 @@ import {MutableData} from '../mixins/mutable-data.js';
 
 declare class TemplateInstanceBase extends
   PropertyEffects(
-  Object) {
+  HTMLElement) {
   root: StampedTemplate;
+  children: any;
 
   /**
    * Find the parent model of this template instance.  The parent model
@@ -157,10 +158,10 @@ export {templatize};
  * Inside the callbacks, any contextual information can be accessed
  * through `this`, which points to the `owner`.
  *
- * @returns Generated class bound to the template
- *   provided
+ * @returns Generated class bound
+ *   to the template provided
  */
-declare function templatize(template: HTMLTemplateElement, owner?: PropertyEffects|null, options?: object|null): {new(): TemplateInstanceBase};
+declare function templatize(template: HTMLTemplateElement, owner?: PropertyEffects|null, options?: object|null): {new(p0?: object|null): TemplateInstanceBase};
 
 declare class baseClass extends TemplateInstanceBase {
 }

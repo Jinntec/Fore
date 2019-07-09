@@ -30,6 +30,8 @@ import {timeOut, microTask} from '../utils/async.js';
 
 import {get} from '../utils/path.js';
 
+import {scopeSubtree} from '../utils/scope-subtree.js';
+
 export {LegacyElementMixin};
 
 
@@ -70,7 +72,7 @@ interface LegacyElementMixin extends ElementMixin, PropertyEffects, TemplateStam
    * is contained. This is a shorthand for
    * `this.getRootNode().host`.
    */
-  readonly domHost: any;
+  readonly domHost: Node|null;
   is: string;
 
   /**
@@ -443,10 +445,11 @@ interface LegacyElementMixin extends ElementMixin, PropertyEffects, TemplateStam
    * No-op for backwards compatibility. This should now be handled by
    * ShadyCss library.
    *
-   * @param container Unused
-   * @param shouldObserve Unused
+   * @param container Container element to scope
+   * @param shouldObserve if true, start a mutation observer for added nodes to the container
+   * @returns Returns a new MutationObserver on `container` if `shouldObserve` is true.
    */
-  scopeSubtree(container: any, shouldObserve: any): void;
+  scopeSubtree(container: Element, shouldObserve?: boolean): MutationObserver|null;
 
   /**
    * Returns the computed style value for the given property.
@@ -587,7 +590,7 @@ interface LegacyElementMixin extends ElementMixin, PropertyEffects, TemplateStam
    * @param node Element to apply the transform to.
    * Defaults to `this`.
    */
-  translate3d(x: number, y: number, z: number, node?: Element|null): void;
+  translate3d(x: number|string, y: number|string, z: number|string, node?: Element|null): void;
 
   /**
    * Removes an item from an array, if it exists.

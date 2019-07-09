@@ -17,7 +17,7 @@
 * @interface
 */
 function Polymer_PropertiesChanged() {}
-/** @type {undefined} */
+/** @type {boolean} */
 Polymer_PropertiesChanged.prototype.__dataEnabled;
 
 /**
@@ -127,7 +127,7 @@ Polymer_PropertiesChanged.prototype._shouldPropertyChange = function (property, 
 * @param {string} name Name of attribute that changed
 * @param {?string} old Old attribute value
 * @param {?string} value New attribute value
-* @param {?string=} namespace Attribute namespace.
+* @param {?string} namespace Attribute namespace.
 * @return {void}
 */
 Polymer_PropertiesChanged.prototype.attributeChangedCallback = function (name, old, value, namespace) {};
@@ -300,9 +300,10 @@ Polymer_TemplateStamp.prototype._removeEventListenerFromNode = function (node, e
 */
 Polymer_TemplateStamp._parseTemplate = function (template, outerTemplateInfo) {};
 /**
-* @param {*} template 
-* @param {*} templateInfo 
-* @param {*} nodeInfo 
+* @param {!HTMLTemplateElement} template .
+* @param {!TemplateInfo} templateInfo .
+* @param {!NodeInfo} nodeInfo .
+* @return {boolean}
 */
 Polymer_TemplateStamp._parseTemplateContent = function (template, templateInfo, nodeInfo) {};
 /**
@@ -329,8 +330,9 @@ Polymer_TemplateStamp._parseTemplateChildNodes = function (root, templateInfo, n
 Polymer_TemplateStamp._parseTemplateNestedTemplate = function (node, outerTemplateInfo, nodeInfo) {};
 /**
 * @param {Element} node Node to parse
-* @param {TemplateInfo} templateInfo Template metadata for current template
-* @param {NodeInfo} nodeInfo Node metadata for current template.
+* @param {!TemplateInfo} templateInfo Template metadata for current
+    template
+* @param {!NodeInfo} nodeInfo Node metadata for current template.
 * @return {boolean}
 */
 Polymer_TemplateStamp._parseTemplateNodeAttributes = function (node, templateInfo, nodeInfo) {};
@@ -411,7 +413,7 @@ Polymer_PropertyEffects.prototype.__readOnly;
 /** @type {!TemplateInfo} */
 Polymer_PropertyEffects.prototype.__templateInfo;
 
-/** @type {undefined} */
+/** @type {!Object.<string, string>} */
 Polymer_PropertyEffects.prototype.PROPERTY_EFFECT_TYPES;
 
 /**
@@ -1061,7 +1063,7 @@ Polymer_LegacyElementMixin.prototype.__boundListeners;
 /** @type {?Object.<string, ?Function>} */
 Polymer_LegacyElementMixin.prototype._debouncers;
 
-/** @type {undefined} */
+/** @type {?Node} */
 Polymer_LegacyElementMixin.prototype.domHost;
 
 /** @type {string} */
@@ -1301,9 +1303,9 @@ Polymer_LegacyElementMixin.prototype.isLightDescendant = function (node) {};
 Polymer_LegacyElementMixin.prototype.isLocalDescendant = function (node) {};
 /**
 * @override
-* @param {*} container Unused
-* @param {*} shouldObserve Unused
-* @return {void}
+* @param {!Element} container Container element to scope
+* @param {boolean=} shouldObserve if true, start a mutation observer for added nodes to the container
+* @return {?MutationObserver}
 */
 Polymer_LegacyElementMixin.prototype.scopeSubtree = function (container, shouldObserve) {};
 /**
@@ -1399,9 +1401,9 @@ Defaults to `this`
 Polymer_LegacyElementMixin.prototype.transform = function (transformText, node) {};
 /**
 * @override
-* @param {number} x X offset.
-* @param {number} y Y offset.
-* @param {number} z Z offset.
+* @param {(number | string)} x X offset.
+* @param {(number | string)} y Y offset.
+* @param {(number | string)} z Z offset.
 * @param {Element=} node Element to apply the transform to.
 Defaults to `this`.
 * @return {void}
@@ -1565,8 +1567,8 @@ Polymer_DisableUpgradeMixin.prototype._enableProperties = function () {};
 * @param {string} name Attribute name.
 * @param {?string} old The previous value for the attribute.
 * @param {?string} value The new value for the attribute.
-* @param {?string=} namespace The XML namespace for the attribute.
-* @return {undefined}
+* @param {?string} namespace The XML namespace for the attribute.
+* @return {void}
 */
 Polymer_DisableUpgradeMixin.prototype.attributeChangedCallback = function (name, old, value, namespace) {};
 /**

@@ -2,7 +2,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
 import {BoundElementMixin} from './BoundElementMixin.js';
 
 /**
- * `xf-control`
+ * `xf-abstract-control`
  * general class for bound elements
  *
  * @customElement
@@ -63,7 +63,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     }
 
     init() {
-        // console.log('### init ', this);
+        console.log('### init ', this);
         if (!this.repeated) {
             super.init();
         }
@@ -152,4 +152,4 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     }
 }
 
-window.customElements.define('xf-control', XfAbstractControl);
+window.customElements.define('xf-abstract-control', XfAbstractControl);

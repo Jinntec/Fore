@@ -23,6 +23,8 @@ import {microTask} from '../utils/async.js';
 
 import {root} from '../utils/path.js';
 
+import {hideElementsGlobally} from '../utils/hide-template-controls.js';
+
 export {DomIf};
 
 /**

@@ -1,6 +1,6 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import {BoundElementMixin} from './BoundElementMixin.js';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
+import {XfAbstractControl} from "./xf-abstract-control";
 
 /**
  * `xf-control` allows to embed one form into another.
@@ -12,7 +12,7 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
  * @appliesMixin BoundElementMixin
  * @demo demo/index.html
  */
-export class XfControl extends BoundElementMixin(PolymerElement) {
+export class XfControl extends XfAbstractControl {
     static get template() {
         return html`
       <style>
@@ -42,11 +42,27 @@ export class XfControl extends BoundElementMixin(PolymerElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('### XfControl.connectedCallback ', this);
-        this.$.resourceLoader.generateRequest();
+        console.log('### XfControl connected ', this);
+        console.log('### XfControl connected ', this.resource);
+
     }
 
-    _handleResource(){
+    init() {
+        if (this.resource) {
+            this.$.resourceLoader.generateRequest();
+        } else {
+            console.log('### no resource specified');
+            this.dispatchEvent(new CustomEvent('no-control-resource', {
+                composed: true, bubbles: true,
+                detail: {
+                    'id': this.id
+                }
+            }));
+        }
+
+    }
+
+    _handleResource() {
         console.log('### xf-control._handleResource ', this.$.resourceLoader.lastResponse);
         //todo
     }

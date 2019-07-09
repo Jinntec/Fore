@@ -73,3 +73,11 @@ export {setSyncInitialRender};
  * initial rendering.
  */
 declare function setSyncInitialRender(useSyncInitialRender: boolean): void;
+
+export {setCancelSyntheticClickEvents};
+
+
+/**
+ * Sets `setCancelSyntheticEvents` globally for all elements to cancel synthetic click events.
+ */
+declare function setCancelSyntheticClickEvents(useCancelSyntheticClickEvents: boolean): void;

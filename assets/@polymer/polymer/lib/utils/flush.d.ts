@@ -13,9 +13,9 @@
 
 import {Debouncer} from '../utils/debounce.js';
 
-import {flushDebouncers} from '../utils/debounce.js';
+import {enqueueDebouncer, flushDebouncers} from '../utils/debounce.js';
 
-export {enqueueDebouncer} from '../utils/debounce.js';
+export {enqueueDebouncer};
 
 export {flush};
 

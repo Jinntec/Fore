@@ -21,6 +21,7 @@ import { Debouncer } from '../utils/debounce.js';
 import { timeOut, microTask } from '../utils/async.js';
 import { get } from '../utils/path.js';
 import { wrap } from '../utils/wrap.js';
+import { scopeSubtree } from '../utils/scope-subtree.js';
 
 let styleInterface = window.ShadyCSS;
 
@@ -86,6 +87,7 @@ export const LegacyElementMixin = dedupingMixin(base => {
      * @return {!Object} The `import.meta` object set on the prototype
      * @suppress {missingProperties} `this` is always in the instance in
      *  closure for some reason even in a static method, rather than the class
+     * @nocollapse
      */
     static get importMeta() {
       return this.prototype.importMeta;
@@ -511,6 +513,9 @@ export const LegacyElementMixin = dedupingMixin(base => {
      * is contained. This is a shorthand for
      * `this.getRootNode().host`.
      * @this {Element}
+     * @return {?Node} The element whose local dom within which this element is
+     * contained.
+     * @override
      */
     get domHost() {
       let root = wrap(this).getRootNode();
@@ -694,13 +699,14 @@ export const LegacyElementMixin = dedupingMixin(base => {
     /**
      * No-op for backwards compatibility. This should now be handled by
      * ShadyCss library.
-     * @param  {*} container Unused
-     * @param  {*} shouldObserve Unused
-     * @return {void}
+     * @param  {!Element} container Container element to scope
+     * @param  {boolean=} shouldObserve if true, start a mutation observer for added nodes to the container
+     * @return {?MutationObserver} Returns a new MutationObserver on `container` if `shouldObserve` is true.
      * @override
      */
-    scopeSubtree(container, shouldObserve) {} // eslint-disable-line no-unused-vars
-
+    scopeSubtree(container, shouldObserve = false) {
+      return scopeSubtree(container, shouldObserve);
+    }
 
     /**
      * Returns the computed style value for the given property.
@@ -925,9 +931,9 @@ export const LegacyElementMixin = dedupingMixin(base => {
      * Cross-platform helper for setting an element's CSS `translate3d`
      * property.
      *
-     * @param {number} x X offset.
-     * @param {number} y Y offset.
-     * @param {number} z Z offset.
+     * @param {number|string} x X offset.
+     * @param {number|string} y Y offset.
+     * @param {number|string} z Z offset.
      * @param {Element=} node Element to apply the transform to.
      * Defaults to `this`.
      * @return {void}

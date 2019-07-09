@@ -71,6 +71,7 @@ function styleOutsideTemplateCheck(inst) {
  */
 export class DomModule extends HTMLElement {
 
+  /** @override */
   static get observedAttributes() {
     return ['id'];
   }

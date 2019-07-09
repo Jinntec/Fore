@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import './boot.js';
 
 let CSS_URL_RX = /(url\()([^)]*)(\))/g;
-let ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
+let ABS_URL = /(^\/[^\/])|(^#)|(^[\w-\d]*:)/;
 let workingURL;
 let resolveDoc;
 /**
@@ -29,6 +29,9 @@ export function resolveUrl(url, baseURI) {
   if (url && ABS_URL.test(url)) {
     return url;
   }
+  if (url === '//') {
+    return url;
+  }
   // Lazy feature detection.
   if (workingURL === undefined) {
     workingURL = false;
@@ -44,7 +47,12 @@ export function resolveUrl(url, baseURI) {
     baseURI = document.baseURI || window.location.href;
   }
   if (workingURL) {
-    return new URL(url, baseURI).href;
+    try {
+      return new URL(url, baseURI).href;
+    } catch (e) {
+      // Bad url or baseURI structure. Do not attempt to resolve.
+      return url;
+    }
   }
   // Fallback to creating an anchor into a disconnected document.
   if (!resolveDoc) {

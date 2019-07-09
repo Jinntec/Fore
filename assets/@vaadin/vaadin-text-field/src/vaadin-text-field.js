@@ -80,7 +80,7 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
 
       <label part="label" on-click="focus" id="[[_labelId]]">[[label]]</label>
 
-      <div part="input-field">
+      <div part="input-field" id="[[_inputId]]">
 
         <slot name="prefix"></slot>
 
@@ -104,7 +104,7 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
   }
 
   static get version() {
-    return '2.4.6';
+    return '2.4.7';
   }
 
   static get properties() {

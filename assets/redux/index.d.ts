@@ -1,3 +1,5 @@
+/// <reference types="symbol-observable" />
+
 /**
  * An *action* is a plain object that represents an intention to change the
  * state. Actions are the only way to get data into the store. Any data,
@@ -22,7 +24,8 @@ export interface Action<T = any> {
 /**
  * An Action type which accepts any other properties.
  * This is mainly for the use of the `Reducer` type.
- * This is not part of `Action` itself to prevent users who are extending `Action.
+ * This is not part of `Action` itself to prevent types that extend `Action` from
+ * having an index signature.
  */
 export interface AnyAction extends Action {
   // Allows any extra properties to be defined in an action.
@@ -87,12 +90,13 @@ export type ReducersMapObject<S = any, A extends Action = Action> = {
  * @returns A reducer function that invokes every reducer inside the passed
  *   object, and builds a state object with the same shape.
  */
-export function combineReducers<S>(
-  reducers: ReducersMapObject<S, any>
-): Reducer<S>
-export function combineReducers<S, A extends Action = AnyAction>(
-  reducers: ReducersMapObject<S, A>
-): Reducer<S, A>
+export function combineReducers<T extends ReducersMapObject<any, any>>(
+  reducers: T
+): Reducer<InferStateType<T>, InferActionTypes<InferReducerTypes<T>>>
+
+type InferActionTypes<R> = R extends Reducer<any, infer A> ? A : AnyAction
+type InferReducerTypes<T> = T extends Record<any, infer R> ? R : Reducer
+type InferStateType<T> = T extends ReducersMapObject<infer S, any> ? S : never
 
 /* store */
 
@@ -126,6 +130,32 @@ export interface Dispatch<A extends Action = AnyAction> {
  */
 export interface Unsubscribe {
   (): void
+}
+
+/**
+ * A minimal observable of state changes.
+ * For more information, see the observable proposal:
+ * https://github.com/tc39/proposal-observable
+ */
+export type Observable<T> = {
+  /**
+   * The minimal observable subscription method.
+   * @param {Object} observer Any object that can be used as an observer.
+   * The observer object should have a `next` method.
+   * @returns {subscription} An object with an `unsubscribe` method that can
+   * be used to unsubscribe the observable from the store, and prevent further
+   * emission of values from the observable.
+   */
+  subscribe: (observer: Observer<T>) => { unsubscribe: Unsubscribe }
+  [Symbol.observable](): Observable<T>
+}
+
+/**
+ * An Observer is used to receive data from an Observable, and is supplied as
+ * an argument to subscribe.
+ */
+export type Observer<T> = {
+  next?(value: T): void
 }
 
 /**
@@ -208,9 +238,19 @@ export interface Store<S = any, A extends Action = AnyAction> {
    * @param nextReducer The reducer for the store to use instead.
    */
   replaceReducer(nextReducer: Reducer<S, A>): void
+
+  /**
+   * Interoperability point for observable/reactive libraries.
+   * @returns {observable} A minimal observable of state changes.
+   * For more information, see the observable proposal:
+   * https://github.com/tc39/proposal-observable
+   */
+  [Symbol.observable](): Observable<S>
 }
 
-export type DeepPartial<T> = { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
+}
 
 /**
  * A store creator is a function that creates a Redux store. Like with

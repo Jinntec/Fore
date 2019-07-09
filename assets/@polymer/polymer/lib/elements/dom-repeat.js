@@ -17,6 +17,7 @@ import { OptionalMutableData } from '../mixins/mutable-data.js';
 import { matches, translate } from '../utils/path.js';
 import { timeOut, microTask } from '../utils/async.js';
 import { wrap } from '../utils/wrap.js';
+import { hideElementsGlobally } from '../utils/hide-template-controls.js';
 
 /**
  * @constructor
@@ -300,7 +301,7 @@ export class DomRepeat extends domRepeatBase {
     this.__sortFn = null;
     this.__filterFn = null;
     this.__observePaths = null;
-    /** @type {?function(new:Polymer.TemplateInstanceBase, *)} */
+    /** @type {?function(new:TemplateInstanceBase, Object=)} */
     this.__ctor = null;
     this.__isDetached = true;
     this.template = null;
@@ -324,7 +325,9 @@ export class DomRepeat extends domRepeatBase {
    */
   connectedCallback() {
     super.connectedCallback();
-    this.style.display = 'none';
+    if (!hideElementsGlobally()) {
+      this.style.display = 'none';
+    }
     // only perform attachment if the element was previously detached.
     if (this.__isDetached) {
       this.__isDetached = false;

@@ -297,18 +297,16 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
         type: Boolean
       },
 
-      _labelId: {
-        type: String
-      },
+      _labelId: String,
 
-      _errorId: {
-        type: String
-      }
+      _errorId: String,
+
+      _inputId: String
     };
   }
 
   static get observers() {
-    return ['_stateChanged(disabled, readonly, clearButtonVisible, hasValue)', '_hostPropsChanged(' + HOST_PROPS.default.join(', ') + ')', '_hostAccessiblePropsChanged(' + HOST_PROPS.accessible.join(', ') + ')', '_getActiveErrorId(invalid, errorMessage, _errorId)', '_getActiveLabelId(label, _labelId)', '__observeOffsetHeight(errorMessage, invalid, label)'];
+    return ['_stateChanged(disabled, readonly, clearButtonVisible, hasValue)', '_hostPropsChanged(' + HOST_PROPS.default.join(', ') + ')', '_hostAccessiblePropsChanged(' + HOST_PROPS.accessible.join(', ') + ')', '_getActiveErrorId(invalid, errorMessage, _errorId)', '_getActiveLabelId(label, _labelId, _inputId)', '__observeOffsetHeight(errorMessage, invalid, label)'];
   }
 
   get focusElement() {
@@ -542,6 +540,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     var uniqueId = TextFieldMixin._uniqueId = 1 + TextFieldMixin._uniqueId || 0;
     this._errorId = `${this.constructor.is}-error-${uniqueId}`;
     this._labelId = `${this.constructor.is}-label-${uniqueId}`;
+    this._inputId = `${this.constructor.is}-input-${uniqueId}`;
 
     // Lumo theme defines a max-height transition for the "error-message"
     // part on invalid state change.
@@ -633,11 +632,15 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
   }
 
   _getActiveErrorId(invalid, errorMessage, errorId) {
-    this._setOrToggleAttribute('aria-describedby', errorMessage && invalid ? errorId : undefined, this.inputElement);
+    this._setOrToggleAttribute('aria-describedby', errorMessage && invalid ? errorId : undefined, this.focusElement);
   }
 
-  _getActiveLabelId(label, labelId) {
-    this._setOrToggleAttribute('aria-labelledby', label ? labelId : undefined, this.inputElement);
+  _getActiveLabelId(label, _labelId, _inputId) {
+    let ids = _inputId;
+    if (label) {
+      ids = `${_labelId} ${_inputId}`;
+    }
+    this.focusElement.setAttribute('aria-labelledby', ids);
   }
 
   _getErrorMessageAriaHidden(invalid, errorMessage, errorId) {

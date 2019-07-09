@@ -34,6 +34,9 @@ const microtask = microTask;
  * @polymer
  * @summary Element class mixin for reacting to property changes from
  *   generated property accessors.
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const PropertiesChanged = dedupingMixin(
 /**
@@ -56,6 +59,7 @@ superClass => {
      * @param {!Object} props Object whose keys are names of accessors.
      * @return {void}
      * @protected
+     * @nocollapse
      */
     static createProperties(props) {
       const proto = this.prototype;
@@ -75,6 +79,7 @@ superClass => {
      * @return {string} Attribute name corresponding to the given property.
      *
      * @protected
+     * @nocollapse
      */
     static attributeNameForProperty(property) {
       return property.toLowerCase();
@@ -86,6 +91,7 @@ superClass => {
      * @param {string} name Name of property
      *
      * @protected
+     * @nocollapse
      */
     static typeForProperty(name) {} //eslint-disable-line no-unused-vars
 
@@ -159,7 +165,7 @@ superClass => {
 
     constructor() {
       super();
-      /** @protected {boolean} */
+      /** @type {boolean} */
       this.__dataEnabled = false;
       this.__dataReady = false;
       this.__dataInvalid = false;
@@ -425,7 +431,7 @@ superClass => {
      * @param {string} name Name of attribute that changed
      * @param {?string} old Old attribute value
      * @param {?string} value New attribute value
-     * @param {?string=} namespace Attribute namespace.
+     * @param {?string} namespace Attribute namespace.
      * @return {void}
      * @suppress {missingProperties} Super may or may not implement the callback
      * @override
@@ -494,12 +500,12 @@ superClass => {
      */
     _valueToNodeAttribute(node, value, attribute) {
       const str = this._serializeValue(value);
+      if (attribute === 'class' || attribute === 'name' || attribute === 'slot') {
+        node = /** @type {?Element} */wrap(node);
+      }
       if (str === undefined) {
         node.removeAttribute(attribute);
       } else {
-        if (attribute === 'class' || attribute === 'name' || attribute === 'slot') {
-          node = /** @type {?Element} */wrap(node);
-        }
         node.setAttribute(attribute, str);
       }
     }

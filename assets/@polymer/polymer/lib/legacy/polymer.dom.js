@@ -47,6 +47,9 @@ class DomApiNative {
    * @param {Node} node Node for which to create a Polymer.dom helper object.
    */
   constructor(node) {
+    if (window['ShadyDOM'] && window['ShadyDOM']['inUse']) {
+      window['ShadyDOM']['patch'](node);
+    }
     this.node = node;
   }
 
@@ -397,9 +400,20 @@ if (window['ShadyDOM'] && window['ShadyDOM']['inUse'] && window['ShadyDOM']['noP
 
   Object.defineProperties(EventApi.prototype, {
 
+    // Returns the "lowest" node in the same root as the event's currentTarget.
+    // When in `noPatch` mode, this must be calculated by walking the event's
+    // path.
     localTarget: {
       get() {
-        return this.event.currentTarget;
+        const current = this.event.currentTarget;
+        const currentRoot = current && dom(current).getOwnerRoot();
+        const p$ = this.path;
+        for (let i = 0; i < p$.length; i++) {
+          const e = p$[i];
+          if (dom(e).getOwnerRoot() === currentRoot) {
+            return e;
+          }
+        }
       },
       configurable: true
     },
@@ -422,7 +436,7 @@ if (window['ShadyDOM'] && window['ShadyDOM']['inUse'] && window['ShadyDOM']['noP
   // in v1 Shadow DOM.
   forwardReadOnlyProperties(DomApiNative.prototype, ['parentNode', 'firstChild', 'lastChild', 'nextSibling', 'previousSibling', 'firstElementChild', 'lastElementChild', 'nextElementSibling', 'previousElementSibling', 'childNodes', 'children', 'classList']);
 
-  forwardProperties(DomApiNative.prototype, ['textContent', 'innerHTML']);
+  forwardProperties(DomApiNative.prototype, ['textContent', 'innerHTML', 'className']);
 }
 
 export const DomApi = DomApiImpl;

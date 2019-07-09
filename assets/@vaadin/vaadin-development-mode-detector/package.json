@@ -1,8 +1,8 @@
 {
   "_from": "@vaadin/vaadin-development-mode-detector@^2.0.0",
-  "_id": "@vaadin/vaadin-development-mode-detector@2.0.2",
+  "_id": "@vaadin/vaadin-development-mode-detector@2.0.4",
   "_inBundle": false,
-  "_integrity": "sha512-B6P8sppzubOkcoO0uKgybEWQAsBkRPCL1CnDLgdelGZrRqmUBwLi9dYIG1AJY5i9i+hqa8Sn/O0B/Be0T39k7w==",
+  "_integrity": "sha512-S+PaFrZpK8uBIOnIHxjntTrgumd5ztuCnZww96ydGKXgo9whXfZsbMwDuD/102a/IuPUMyF+dh/n3PbWzJ6igA==",
   "_location": "/@vaadin/vaadin-development-mode-detector",
   "_phantomChildren": {},
   "_requested": {
@@ -20,10 +20,10 @@
     "/@vaadin/vaadin-element-mixin",
     "/@vaadin/vaadin-usage-statistics"
   ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-development-mode-detector/-/vaadin-development-mode-detector-2.0.2.tgz",
-  "_shasum": "67ba4d6e95d8907c8dc699a80049a2995ecebaef",
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-development-mode-detector/-/vaadin-development-mode-detector-2.0.4.tgz",
+  "_shasum": "f49c8009856bead92d248377c36b295b5aae78e5",
   "_spec": "@vaadin/vaadin-development-mode-detector@^2.0.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@vaadin/vaadin-element-mixin",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@vaadin/vaadin-element-mixin",
   "author": {
     "name": "Vaadin Ltd"
   },
@@ -51,5 +51,5 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "2.0.2"
+  "version": "2.0.4"
 }

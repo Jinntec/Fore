@@ -1,5 +1,5 @@
 {
-  "_from": "@webcomponents/shadycss@^1.8.0",
+  "_from": "@webcomponents/shadycss@^1.9.1",
   "_id": "@webcomponents/shadycss@1.9.1",
   "_inBundle": false,
   "_integrity": "sha512-IaZOnWOKXHghqk/WfPNDRIgDBi3RsVPY2IFAw6tYiL9UBGvQRy5R6uC+Fk7qTZsReTJ0xh5MTT8yAcb3MUR4mQ==",
@@ -8,21 +8,21 @@
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "@webcomponents/shadycss@^1.8.0",
+    "raw": "@webcomponents/shadycss@^1.9.1",
     "name": "@webcomponents/shadycss",
     "escapedName": "@webcomponents%2fshadycss",
     "scope": "@webcomponents",
-    "rawSpec": "^1.8.0",
+    "rawSpec": "^1.9.1",
     "saveSpec": null,
-    "fetchSpec": "^1.8.0"
+    "fetchSpec": "^1.9.1"
   },
   "_requiredBy": [
     "/@polymer/polymer"
   ],
   "_resolved": "https://registry.npmjs.org/@webcomponents/shadycss/-/shadycss-1.9.1.tgz",
   "_shasum": "d769fbadfa504f11b84caeef26701f89070ec49a",
-  "_spec": "@webcomponents/shadycss@^1.8.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@polymer/polymer",
+  "_spec": "@webcomponents/shadycss@^1.9.1",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@polymer/polymer",
   "author": {
     "name": "The Polymer Project Authors",
     "url": "https://polymer.github.io/AUTHORS.txt"

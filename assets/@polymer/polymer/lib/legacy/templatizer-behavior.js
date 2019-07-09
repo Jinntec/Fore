@@ -17,7 +17,7 @@ import { TemplateInstanceBase, templatize, modelForElement } from '../utils/temp
  *   _instanceProps: Object,
  *   _forwardHostPropV2: Function,
  *   _notifyInstancePropV2: Function,
- *   ctor: TemplateInstanceBase
+ *   ctor: function(new:TemplateInstanceBase, Object=)
  * }}
  */
 let TemplatizerUser; // eslint-disable-line
@@ -100,7 +100,7 @@ export const Templatizer = {
    */
   templatize(template, mutableData) {
     this._templatizerTemplate = template;
-    this.ctor = templatize(template, this, {
+    this.ctor = templatize(template, /** @type {!Polymer_PropertyEffects} */this, {
       mutableData: Boolean(mutableData),
       parentModel: this._parentModel,
       instanceProps: this._instanceProps,

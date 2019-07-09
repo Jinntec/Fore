@@ -66,7 +66,6 @@ interface PropertiesChangedConstructor {
 export {PropertiesChangedConstructor};
 
 interface PropertiesChanged {
-  __dataEnabled: any;
 
   /**
    * Creates a setter/getter pair for the named property with its own
@@ -244,7 +243,7 @@ interface PropertiesChanged {
    * @param value New attribute value
    * @param namespace Attribute namespace.
    */
-  attributeChangedCallback(name: string, old: string|null, value: string|null, namespace?: string|null): void;
+  attributeChangedCallback(name: string, old: string|null, value: string|null, namespace: string|null): void;
 
   /**
    * Deserializes an attribute to its associated property.

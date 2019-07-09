@@ -306,7 +306,7 @@ interface PropertyEffectsConstructor {
 export {PropertyEffectsConstructor};
 
 interface PropertyEffects extends TemplateStamp, PropertyAccessors, PropertiesChanged {
-  readonly PROPERTY_EFFECT_TYPES: any;
+  readonly PROPERTY_EFFECT_TYPES: {[key: string]: string};
 
   /**
    * Stamps the provided template and performs instance-time setup for

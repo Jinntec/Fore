@@ -19,13 +19,14 @@
   "_requiredBy": [
     "/@vaadin/vaadin-combo-box",
     "/@vaadin/vaadin-item",
+    "/@vaadin/vaadin-notification",
     "/@vaadin/vaadin-overlay",
     "/@vaadin/vaadin-text-field"
   ],
   "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-material-styles/-/vaadin-material-styles-1.2.3.tgz",
   "_shasum": "b769a39a89696f76b87bea607b0168edf7b374b8",
   "_spec": "@vaadin/vaadin-material-styles@^1.1.2",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageFJlllM/node_modules/@vaadin/vaadin-combo-box",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@vaadin/vaadin-combo-box",
   "author": {
     "name": "Vaadin Ltd"
   },

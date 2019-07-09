@@ -26,6 +26,8 @@ import {matches, translate} from '../utils/path.js';
 
 import {timeOut, microTask} from '../utils/async.js';
 
+import {hideElementsGlobally} from '../utils/hide-template-controls.js';
+
 export {DomRepeat};
 
 /**

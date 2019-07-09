@@ -68,6 +68,9 @@ function mutablePropertyChange(inst, property, value, old, mutableData) {
  * @polymer
  * @summary Element class mixin to skip strict dirty-checking for objects
  *   and arrays
+ * @template T
+ * @param {function(new:T)} superClass Class to apply mixin to.
+ * @return {function(new:T)} superClass with mixin applied.
  */
 export const MutableData = dedupingMixin(superClass => {
 
@@ -152,6 +155,7 @@ export const OptionalMutableData = dedupingMixin(superClass => {
    */
   class OptionalMutableData extends superClass {
 
+    /** @nocollapse */
     static get properties() {
       return {
         /**
