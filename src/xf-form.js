@@ -192,6 +192,7 @@ export class XfForm extends PolymerElement {
             // console.log('loading mockup data from : ', this.mockup);
             // this.modelData = JSON.parse(this.mockup);
             const mockupElement = document.getElementById(this.mockup);
+            mockupElement.init(); // init mockup data
             this.modelData = mockupElement.getData();
         } else {
             //todo: load via ajax

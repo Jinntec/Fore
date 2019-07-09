@@ -22,35 +22,32 @@ export class XfJsonData extends PolymerElement {
 
     static get properties() {
         return {
-            data:{
-                type:Object
+            data: {
+                type: Object
             },
-            content:{
-                type:Object
+            content: {
+                type: Object
             }
         }
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.content = this.innerText;
-        try{
+    init(){
+        console.log(this, ' init');
+        try {
             this.data = JSON.parse(this.content);
         } catch (e) {
             this._dispatchError();
         }
-        console.log('### XfJsonData.connectedCallback ', this);
-        console.log('### XfJsonData.connectedCallback ', this.getData());
-
+        // console.log('### XfJsonData.connectedCallback ', this.getData());
     }
 
     getData() {
         return this.data;
     }
 
-    _dispatchError(){
-        console.error('Error while trying to parse JSON data ', this);
-        this.dispatchEvent(new CustomEvent('json-parse-error', {composed: true, bubbles: true, detail: {"element":this}}));
+    _dispatchError() {
+        // console.error('Error while trying to parse JSON data ', this);
+        this.dispatchEvent(new CustomEvent('json-parse-error', {composed: true, bubbles: true, detail: {}}));
     }
 
 }

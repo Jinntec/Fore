@@ -39,6 +39,9 @@ class XfMessage extends PolymerElement {
             },
             id: {
                 type: String
+            },
+            eventTarget:{
+                type: String
             }
         };
     }
@@ -46,8 +49,14 @@ class XfMessage extends PolymerElement {
     connectedCallback() {
         super.connectedCallback();
         console.log('### xf-message connected ', this);
-        this.parentNode.addEventListener(this.event, e => this.execute(e));
-        this.id = "foobar";
+
+        if(this.eventTarget){
+            const targetElem = document.getElementById(this.eventTarget);
+            targetElem.addEventListener(this.event, e => this.execute(e));
+        }else {
+            this.parentNode.addEventListener(this.event, e => this.execute(e));
+        }
+        // this.id = "foobar";
     }
 
     execute(e) {

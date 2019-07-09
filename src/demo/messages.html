@@ -37,12 +37,6 @@
         <template>
             <!-- ##### xf-model is not exposed to the client! ##### -->
             <xf-model id="record">
-                <xf-instance>
-                    <data>
-                        <greeting>World!</greeting>
-                    </data>
-                </xf-instance>
-                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
             </xf-model>
         </template>
     </demo-snippet>
@@ -51,22 +45,12 @@
     <demo-snippet>
         <template>
             <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
-            <xf-json-data id="mockup">
-                [
-                  {
-                    "bind":{
-                      "id":"b-greeting",
-                      "required":true,
-                      "value":"Hello"
-                    }
-                  }
-                ]
-            </xf-json-data>
+            <xf-json-data id="mockup"></xf-json-data>
 
             <xf-form mockup='mockup'>
-<!--                <xf-message event="model-ready">the model is ready</xf-message>-->
                 <xf-message event="model-ready">the model is ready yeah</xf-message>
-                <xf-message event="form-ready" level="modeless">this is a modeless message usually used for errors</xf-message>
+                <xf-message event="form-ready">the form is ready</xf-message>
+                <xf-message  event="json-parse-error" level="modeless" event-target="mockup">JSON data not existent or cannot be parsed</xf-message>
                 <xf-message event="refresh">refresh started</xf-message>
                 <xf-message event="refresh-done" level="modal">refresh has been done (a modal message)</xf-message>
 
