@@ -43,7 +43,7 @@
     -->
     <xf-bind ref="$instances?second">
         <xf-bind id="item" ref="item" required="true()" type="xs:string"></xf-bind>
-        <xf-bind ref="@count" calculate="count(../item)" type="xs:integer" constraint=". = 3"></xf-bind>
+        <xf-bind id="count" ref="@count" calculate="count(../item)" type="xs:integer" constraint=". = 3"></xf-bind>
     </xf-bind>
 
     <xf-instance id="third">

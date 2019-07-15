@@ -3,15 +3,16 @@ xquery version "3.1";
 module namespace runtime="http://existsolutions.com/fore/runtime";
 
 declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element()) {
+    for $ref at $index in $refs
+    return
     map {
+        "bind": map{
         "valid": true(),
-        "bind": ($bind/@id, $bind/@ref)[1],
-        "value": 
-            if (count($refs) = 1) then 
-                $refs/string() 
-            else
-                array { $refs/string() },
-        "relevant": $relevant
+        "id": ($bind/@id, $bind/@ref)[1],
+        "value": $ref/string(),
+        "relevant": $relevant,
+        "nodeid":util:node-id($ref)
+        }
     }
 };
 
@@ -28,12 +29,14 @@ declare function runtime:require($require as xs:boolean, $refs as node()*, $mess
                 ()
             else
                 map {
-                    "valid": false(),
-                    "alert": $message,
-                    "index": $idx,
-                    "bind": ($bind/@id, $bind/@ref)[1],
-                    "required": $require,
-                    "value": $v/string()
+                    "bind":map{
+                        "valid": false(),
+                        "alert": $message,
+                        "index": $idx,
+                        "id": ($bind/@id, $bind/@ref)[1],
+                        "required": $require,
+                        "value": $v/string()
+                    }
                 }
     else
         ()
@@ -54,10 +57,12 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
                         then ( map {"type": $bind/@type})
                         else (),
                     map {
-                        "valid": false(),
-                        "alert": $alert,
-                        "index": $idx,
-                        "bind": ($bind/@id, $bind/@ref)[1]
+                        "bind": map{
+                            "valid": false(),
+                            "alert": $alert,
+                            "index": $idx,
+                            "id": ($bind/@id, $bind/@ref)[1]
+                        }
                     }))
         return
             try {

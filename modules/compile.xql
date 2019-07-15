@@ -89,7 +89,7 @@ declare function compile:get-change-set($bind as element(xf-bind)) {
             </map>
         </item>
     else
-        (),
+        <item><sequence/></item>,
         (: Recursively check sub-bindings :)
         compile:process-nested-binds($bind, compile:get-change-set#1)
 };
@@ -117,7 +117,12 @@ declare function compile:main($model as element(xf-model), $debug as xs:boolean?
                     <expr>
                         <var>instances?default</var>
                         <bang/>
-                        <array>{ for $bind in $model/xf-bind return compile:get-change-set($bind) }</array>
+                        <array>{
+                                if(exists($model/xf-bind/@calculate)) then
+                                    for $bind in $model/xf-bind return compile:get-change-set($bind)
+                                else
+                                    <item><sequence/></item>
+                            }</array>
                     </expr>
                 </let>
                 <let var="instances">

@@ -14,6 +14,7 @@
         import '../xf-refresh.js';
         import '../xf-json-data.js';
         import '../xf-message.js';
+        import '../xf-setvalue.js';
 
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -64,13 +65,17 @@
             </xf-json-data>
 
             <xf-form mockup='mockup'>
+                <xf-message event="value-changed">value has changed</xf-message>
+                <xf-message event="refresh-done">refresh has been done </xf-message>
+
 
                 <h1>Say hello:
                     <xf-output bind="b-greeting" id="output"></xf-output>
                 </h1>
 
                 <xf-button label="refresh">
-                    <xf-refresh></xf-refresh>
+                    <xf-setvalue bind="b-greeting" value="Hello World"></xf-setvalue>
+<!--                    <xf-refresh></xf-refresh>-->
                 </xf-button>
             </xf-form>
         </template>

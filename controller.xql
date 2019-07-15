@@ -27,11 +27,21 @@ else if (ends-with($exist:path, ".json")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
     </dispatch>
-else if (starts-with($exist:path, "/demo/")) then
+else if (starts-with($exist:path, "/src/demo/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/load-form.xql" method="get">
-            <add-parameter name="path" value="{$exist:path}"/>
-        </forward>
+    {
+        let $path := "/db/apps/fore" || $exist:path
+        let $log := util:log('info', 'controller path ' || $path)
+        return
+        if(doc-available($path)) then
+            <forward url="{$exist:controller}/modules/load-form.xql" method="get">
+                <add-parameter name="path" value="{$path}"/>
+            </forward>
+        else
+            <forward url="{$exist:controller}/form-not-found.html" method="get">
+                <add-parameter name="path" value="{$path}"/>
+            </forward>
+    }
     </dispatch>
 
 else if (starts-with($exist:path, "/init")) then

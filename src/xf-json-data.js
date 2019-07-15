@@ -34,7 +34,7 @@ export class XfJsonData extends PolymerElement {
     init(){
         console.log(this, ' init');
         try {
-            this.data = JSON.parse(this.content);
+            this.data = JSON.parse(this.textContent);
         } catch (e) {
             this._dispatchError();
         }

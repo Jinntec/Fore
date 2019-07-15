@@ -63,19 +63,35 @@ declare function local:handleChildren($node as node()){
 
 
 
-(:
-    swallow the 'xf-model' by default. Can be changed in data/config.xml//developer-mode. If set to 'true'
+(: ######################################################################
+
+    Entry point for form processing which happens in two steps:
+    Step 1:
+
+    the form is loaded which means that it the contents of the form file will be returned but filtering out
+    the <xf-model> part. This is done to prevent the client from seeing the model at all.
+
+    Furthermore a token will be generated and placed upon <xf-form> element. This will be used as a session token.
+
+    Step 2:
+    the client will request local URL '/init' (or 'exist/apps/fore/init' when used from outside) to compile form and returns
+    initial state as JSON representation of the bind elements.
+
+    Swallows the 'xf-model' by default. Can be changed in data/config.xml//developer-mode. If set to 'true'
     the model will be output to client for reference. This doesn't help much at the moment but can be used
     as a hook to plugin debugging later.
-:)
-(:let $doc := util:parse(util:binary-to-string(util:binary-doc("/db/apps/fore/demo/seed-form.html"))) :)
 
 
-let $path := request:get-parameter('path',())
-let $doc := doc("/db/apps/fore" || request:get-parameter('path',''))
+ ###################################################################### :)
+
+let $doc := doc(request:get-parameter('path',''))
+
+(: todo: token should be salted :)
 let $token := util:uuid()
+let $session := session:set-attribute('token',$token)
 
-(:return <data>{request:get-uri()}</data>:)
+let $log := util:log('info', 'token ' || session:get-attribute('token'))
+
 return
     if(data($config:developer-mode) eq 'true') then
         local:copy($doc/*,$token)

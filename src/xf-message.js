@@ -40,8 +40,11 @@ class XfMessage extends PolymerElement {
             id: {
                 type: String
             },
-            eventTarget:{
+            eventTarget: {
                 type: String
+            },
+            targetElement:{
+                type: Object
             }
         };
     }
@@ -50,13 +53,19 @@ class XfMessage extends PolymerElement {
         super.connectedCallback();
         console.log('### xf-message connected ', this);
 
-        if(this.eventTarget){
-            const targetElem = document.getElementById(this.eventTarget);
-            targetElem.addEventListener(this.event, e => this.execute(e));
-        }else {
-            this.parentNode.addEventListener(this.event, e => this.execute(e));
+        if (this.eventTarget) {
+            this.targetElement = document.getElementById(this.eventTarget);
+            this.targetElement.addEventListener(this.event, e => this.execute(e));
+        } else {
+            this.targetElement = this.parentNode;
+            this.targetElement.addEventListener(this.event, e => this.execute(e));
         }
         // this.id = "foobar";
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.targetElement.removeEventListener(this.event, e => this.execute(e));
     }
 
     execute(e) {
@@ -73,7 +82,7 @@ class XfMessage extends PolymerElement {
 
         this.dispatchEvent(new CustomEvent('message', {
             composed: true, bubbles: true,
-            detail: {'level': this.level, 'message':result}
+            detail: {'level': this.level, 'message': result}
         }));
 
     }
