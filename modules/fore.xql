@@ -12,7 +12,7 @@ declare function local:processForm (){
 };
 
 (:let $path := session:get-attribute('path'):)
-let $path := '/db/apps/fore/src/demo/messages.html'
+let $path := '/db/apps/fore/src/demo/todo.html'
 let $log := util:log('info', 'path ' || $path)
 
 return

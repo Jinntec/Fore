@@ -48,6 +48,7 @@ export class XfControl extends XfAbstractControl {
     }
 
     init() {
+        super.init();
         if (this.resource) {
             this.$.resourceLoader.generateRequest();
         } else {

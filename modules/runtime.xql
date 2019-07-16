@@ -2,18 +2,78 @@ xquery version "3.1";
 
 module namespace runtime="http://existsolutions.com/fore/runtime";
 
+
 declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element()) {
+(:    let $log := util:log('info', 'runtime output refs ' || $refs):)
+    let $log := util:log('info', 'runtime output bind ' || $bind/@id)
+    let $log := util:log('info', 'runtime output set ' || $bind/@set)
+
+    let $result :=
+        if($bind/@set) then
+            map{
+                "bind": map{
+                    "id":$bind/@id,
+                    "sequence":true,
+                    "nodeid":util:node-id($refs[1]),
+                    "bind":array{
+                        for $ref at $parentIndex in $refs
+                        return
+                            array{
+                                if(exists($bind/xf-bind)) then
+                                    (: evalueate instance data :)
+                                    (: for $vorkommen at $index in $eval(instance) -> array {  :)
+                                    for $child at $index in $bind/xf-bind
+                                        let $childref := ($child/@ref/string(), $child/@set/string())
+
+                                        let $log := util:log('info', 'index: ' || $index)
+        (:                                let $log := util:log('info', 'child: ' || $child/@id):)
+        (:                                let $log := util:log('info', 'child object ref: ' || $childref):)
+
+                                        let $result := util:eval-inline($refs[$parentIndex], $childref)
+                                        let $log := util:log('info', 'result: ' || $result)
+
+                                        return
+                                            map {
+                                                "id": $child/@id/string(),
+                                                "type": $child/@type/string(),
+                                                "value": $result
+                                            }
+
+
+                                else ()
+                            }
+
+                    }
+                }
+            }
+        else (
+            for $ref at $index in $refs
+            return
+            map {
+                "bind": map{
+                "valid": true(),
+                "id": ($bind/@id)[1],
+                "value": $ref/string(),
+                "relevant": $relevant,
+                "nodeid":util:node-id($ref)
+                }
+            }
+        )
+    return $result
+
+(:
     for $ref at $index in $refs
     return
-    map {
-        "bind": map{
-        "valid": true(),
-        "id": ($bind/@id, $bind/@ref)[1],
-        "value": $ref/string(),
-        "relevant": $relevant,
-        "nodeid":util:node-id($ref)
-        }
-    }
+            map {
+                "bind": map{
+                "valid": true(),
+                "id": ($bind/@id)[1],
+                "value": $ref/string(),
+                "relevant": $relevant,
+                "nodeid":util:node-id($ref)
+                }
+            }
+             :)
 };
 
 (:~

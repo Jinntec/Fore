@@ -34,6 +34,8 @@ declare function compile:process-nested-binds($bind as element(xf-bind), $func a
  : Generate code to validate instance nodes based on a specified binding element.
  :)
 declare function compile:validate($bind as element(xf-bind)) {
+    let $log := util:log('info', 'compile:validate bind ' || $bind/@id)
+    return
     <item>
         <let var="invalid">
             <expr>
@@ -59,18 +61,18 @@ declare function compile:validate($bind as element(xf-bind)) {
                     <then>$invalid</then>
                     <else>
                     {
-                        if ($bind/xf-bind) then
-                            <code>()</code>
-                        else
-                            <code>runtime:output({$bind/@ref/string()}, {($bind/@relevant/string(), "true()")[1]}, {serialize($bind)})</code>
+(:                        if ($bind/xf-bind) then:)
+(:                            <code>()</code>:)
+(:                        else:)
+                            <code>runtime:output({($bind/@ref/string(), $bind/@set/string())}, {($bind/@relevant/string(), "true()")[1]}, {serialize($bind)})</code>
                     }
                     </else>
                 </if>
             </return>
         </let>
-    </item>,
+    </item>
     (: Recursively check sub-bindings :)
-    compile:process-nested-binds($bind, compile:validate#1)
+(:    compile:process-nested-binds($bind, compile:validate#1):)
 };
 
 (:~
