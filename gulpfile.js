@@ -11,7 +11,7 @@ var PRODUCTION = (!!process.env.NODE_ENV || process.env.NODE_ENV === 'production
 console.log('Production? %s', PRODUCTION);
 
 exist.defineMimeTypes({
-    'application/xml': ['odd']
+    // 'application/xml': ['odd']
 });
 
 var exClient = exist.createClient({
@@ -27,7 +27,7 @@ var html5TargetConfiguration = {
 };
 
 var targetConfiguration = {
-    target: '/db/apps/exform/',
+    target: '/db/apps/fore/',
     html5AsBinary: true
 };
 
@@ -45,7 +45,7 @@ var stylesPath = 'resources/css/*';
 var componentPaths = [
     '*.html',
     'assets/**/*',
-    'elements/*.js'
+    'src/*.js'
 ];
 
 gulp.task('deploy:components', function () {
@@ -60,8 +60,7 @@ var otherPaths = [
     'resources/**/*',
     '!resources/css/*',
     'modules/**/*',
-    'demo/**/*.html',
-    'elements/demo/*.html'
+    'src/demo/*.html'
 
 ];
 
@@ -72,7 +71,7 @@ gulp.task('deploy:other', function () {
 });
 
 var components = [
-    'elements/*.js'
+    'src/*.js'
 ];
 
 
@@ -80,7 +79,7 @@ gulp.task('deploy', ['deploy:other', 'deploy:components']);
 
 gulp.task('watch', function () {
     gulp.watch(otherPaths, ['deploy:other']);
-    gulp.watch('elements/**/*.js', ['deploy:components'])
+    gulp.watch('src/**/*.js', ['deploy:components'])
 });
 
 gulp.task('default', ['watch']);

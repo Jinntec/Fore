@@ -46,8 +46,7 @@ else if (starts-with($exist:path, "/src/demo/")) then
 
 else if (starts-with($exist:path, "/init")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/init.xql" method="get">
-            <add-parameter name="path" value="{$exist:path}"/>
+        <forward url="{$exist:controller}/modules/fore.xql" method="get">
         </forward>
     </dispatch>
 

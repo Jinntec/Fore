@@ -7,10 +7,10 @@ declare option output:method "json";
 declare option output:media-type "application/json";
 
 
-let $token := request:get-parameter('token','')
-let $path := "/db/apps" || request:get-parameter('url','/fore/demo/todo.html')
+let $doc := session:get-attribute('doc','')
+(:let $path := "/db/apps" || request:get-parameter('url','/fore/demo/todo.html'):)
 
-let $model := doc($path)//xf-model
+let $model := $doc//xf-model
 let $code := compile:main($model, false())
 (:let $session := session:set-attribute('fore.model',$code):)
 return

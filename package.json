@@ -16,6 +16,7 @@
     "@vaadin/vaadin-combo-box": "^5.0.3",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
+    "gulp-exist": "^3.0.0",
     "lit-element": "^2.1.0",
     "polymer-redux": "^2.0.0-beta.2",
     "redux": "^4.0.1",
@@ -27,7 +28,6 @@
     "chai": "^4.2.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
-    "gulp-exist": "^2.0.0",
     "gulp-watch": "^5.0.1",
     "mocha": "^5.2.0",
     "wct-mocha": "^1.0.0"

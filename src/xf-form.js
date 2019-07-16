@@ -11,8 +11,6 @@ import '../assets/@polymer/paper-dialog/paper-dialog.js';
 import '../assets/@polymer/paper-button/paper-button.js';
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 
-
-
 /**
  * `xf-form`
  * an xformish form framework for eXist-db.
@@ -85,12 +83,21 @@ export class XfForm extends PolymerElement {
                 padding: 20px;
                 margin:0;
             }
+            .error {
+                background: var(--paper-red-500);
+                color:white;
+            }
+            .error .dialogActions{
+                color:black;
+            }
           </style>          
           
           <slot> </slot>
           <iron-ajax id="initForm" 
                      url="/exist/apps/fore/init"
-                     handle-as="json" 
+                     handle-as="json"
+                     on-response="_handleInitialState"
+                     on-error="_handleError"
                      method="GET"> </iron-ajax>
                      
            
@@ -120,16 +127,15 @@ export class XfForm extends PolymerElement {
                 value: function () {
                     return [];
                 },
-                notify: true,
-                reflectToAttribute: true
+                notify: true
             },
-            changed: {
-                type: Array,
-                value: []
+            changed:{
+                type:Array,
+                value:[]
             }
-
         };
     }
+
 
     /**
      * checks wether an element is bound or not. A bound element is can be updated from its modelItem.
@@ -151,12 +157,13 @@ export class XfForm extends PolymerElement {
 
     connectedCallback() {
         super.connectedCallback();
+        console.log('### ============================================== ###');
         console.log('### xf-form connected ', window.location.pathname);
 
         // this.$.initForm.params = {"token": this.token};
         // this.$.initForm.generateRequest();
 
-        this.addEventListener('item-appended', this._itemAppended);
+        this.addEventListener('repeat-item-appended', this._itemAppended);
         this.addEventListener('value-changed', this._handleValueChange);
         this.addEventListener('message', this._displayMessage);
 
@@ -165,10 +172,10 @@ export class XfForm extends PolymerElement {
         function.
          */
         window.addEventListener('WebComponentsReady', function () {
-            console.log('---------- WebComponentsReady ----------');
+            console.log('### ----------- WebComponentsReady ----------- ###');
             this.update();
-            this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
-            this._initUI();
+            // this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
+            // this._initUI();
 
         }.bind(this));
 
@@ -176,7 +183,7 @@ export class XfForm extends PolymerElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('item-appended', this._itemAppended);
+        this.removeEventListener('repeat-item-appended', this._itemAppended);
         this.removeEventListener('value-change', this._handleValueChange);
         this.removeEventListener('message', this._displayMessage);
     }
@@ -188,16 +195,51 @@ export class XfForm extends PolymerElement {
      *
      */
     update() {
-        if (this.mockup) {
+
+        // ### if we get a token that means we're running with eXist-db instead of Polymer serve
+        if(this.token){
+            console.log('>>>> token ', this.token);
+            this.$.initForm.params.token = this.token;
+            this.$.initForm.generateRequest();
+            return;
+        } else if (this.mockup) {
             // console.log('loading mockup data from : ', this.mockup);
             // this.modelData = JSON.parse(this.mockup);
             const mockupElement = document.getElementById(this.mockup);
+            if(!mockupElement){
+                this._showError('mockupElement "' + this.mockup + '" not found - stopping');
+                return;
+            }
             mockupElement.init(); // init mockup data
             this.modelData = mockupElement.getData();
+            this._initUI();
         } else {
-            //todo: load via ajax
+            this._showError('Neither server- nor mockup-data available - stopping');
         }
-        // this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
+        this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
+    }
+
+    _handleInitialState(e){
+        console.log('### token as param ', this.$.initForm.params);
+        this.modelData = this.$.initForm.lastResponse;
+        console.log('### initial data loaded from server');
+        if(this.modelData === null){
+            console.log('modelData ', this.modelData);
+            this._showError('server did not return any modelData - stopping');
+        }else{
+            this._initUI();
+            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
+        }
+    }
+
+    _handleError(e){
+        this._showError(this.$.initForm.lastError.error);
+    }
+
+    _showError(error){
+        this.$.modalMessage.classList.add('error');
+        this.$.messageContent.innerText = error;
+        this.$.modalMessage.open();
     }
 
     /**
@@ -329,13 +371,20 @@ export class XfForm extends PolymerElement {
 
         }
         console.groupEnd('initUI');
-
         this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
     }
 
     // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
     _itemAppended(e) {
         console.log('### item was appended ', e.detail);
+
+        const modelItem = e.detail.appendedItem;
+        const index = e.detail.appendLocation;
+
+        const change = {"index":index,"modelItem":modelItem};
+        this.changed.push(change);
+        console.table(this.changed);
+
         this.refresh();
     }
 

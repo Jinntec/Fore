@@ -35,7 +35,7 @@
 
     <demo-snippet>
         <template>
-            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <!-- ##### xf-model is empty for this sample! ##### -->
             <xf-model id="record">
             </xf-model>
         </template>
@@ -45,7 +45,7 @@
     <demo-snippet>
         <template>
             <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
-            <xf-json-data id="mockup"></xf-json-data>
+            <xf-json-data id="mockup">[]</xf-json-data>
 
             <xf-form mockup='mockup'>
                 <xf-message event="model-ready">the model is ready yeah</xf-message>

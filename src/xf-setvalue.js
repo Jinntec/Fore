@@ -24,7 +24,7 @@ class XfSetvalue extends XfAction {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('xf-setvalue connected ');
+        console.log('### xf-setvalue connected ');
     }
 
     init(){
