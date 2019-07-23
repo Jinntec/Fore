@@ -3,42 +3,51 @@ xquery version "3.1";
 module namespace runtime="http://existsolutions.com/fore/runtime";
 
 
-declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element()) {
-(:    let $log := util:log('info', 'runtime output refs ' || $refs):)
-    let $log := util:log('info', 'runtime output bind ' || $bind/@id)
-    let $log := util:log('info', 'runtime output set ' || $bind/@set)
+declare function runtime:get-value($refs as node()*){
+    if ($refs instance of attribute()) then $refs
+    else if($refs instance of element()) then $refs/text()
+    else $refs
+};
 
-    let $result :=
-        if($bind/@set) then
+declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer) {
+
+    let $log := util:log('info','$bind ' || serialize($bind))
+    let $log := util:log('info','>>>>>> $index ' || $index)
+
+    let $out := if(starts-with($bind/@ref,'@')) then '@@@ ' || $bind/@ref
+                else serialize($refs)
+
+    let $log := util:log('info','$refs ' || $out)
+
+    (:  #########
+        handle following cases:
+        - bind has a 'set' attribute
+        - bind has a 'ref' attribute
+    :)
+
+    (: #####
+        handle binds with a 'set' attribute meaning they are referring to a nodeset and need to be output as an array of arrays
+        for the repeated items they are representing.
+    ##### :)
+    let $result := if ($bind/@set) then (
             map{
                 "bind": map{
                     "id":$bind/@id,
-                    "sequence":true,
-                    "nodeid":util:node-id($refs[1]),
+                    "sequence":true(),
+                    "nodeid":util:node-id($refs[$index]),
                     "bind":array{
+                        (: ### create right amount of array entries for the set ### :)
                         for $ref at $parentIndex in $refs
                         return
                             array{
                                 if(exists($bind/xf-bind)) then
-                                    (: evalueate instance data :)
-                                    (: for $vorkommen at $index in $eval(instance) -> array {  :)
                                     for $child at $index in $bind/xf-bind
                                         let $childref := ($child/@ref/string(), $child/@set/string())
-
-                                        let $log := util:log('info', 'index: ' || $index)
-        (:                                let $log := util:log('info', 'child: ' || $child/@id):)
-        (:                                let $log := util:log('info', 'child object ref: ' || $childref):)
-
                                         let $result := util:eval-inline($refs[$parentIndex], $childref)
-                                        let $log := util:log('info', 'result: ' || $result)
-
                                         return
-                                            map {
-                                                "id": $child/@id/string(),
-                                                "type": $child/@type/string(),
-                                                "value": $result
-                                            }
-
+                                            if($result) then
+                                                runtime:output($result,$relevant,$child,$parentIndex)
+                                            else ()
 
                                 else ()
                             }
@@ -46,35 +55,104 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                     }
                 }
             }
-        else (
-            for $ref at $index in $refs
+        )
+        (: #####
+            handle binds that are part of a list of binds. If the parent bind has more than one child we need to output
+            an array of bind objects.
+        ##### :)
+        else if(count($bind/../xf-bind) > 1) then
+            let $log := util:log('info', 'zzzzzzzzzzzzz')
+            return
+                runtime:output-list($refs, $relevant,$bind, $index)
+
+        (: #####
+            handle binds that have a 'ref' attribute. Output a full bind object.
+        ##### :)
+        else if ($bind/@ref) then (
+
+            let $value := runtime:get-value($refs)
             return
             map {
-                "bind": map{
-                "valid": true(),
-                "id": ($bind/@id)[1],
-                "value": $ref/string(),
-                "relevant": $relevant,
-                "nodeid":util:node-id($ref)
-                }
+                "bind": map:merge((
+                    if($value) then
+                        map{
+                            "value":$value
+                        }
+                    else(),
+                    if($relevant and $relevant != true()) then
+                        map{
+                            "relevant":$relevant
+                        }
+                    else(),
+                    map{
+                            "id": $bind/@id,
+                            "nodeid":util:node-id($refs)
+                    },
+                    if(exists($bind/xf-bind)) then (
+
+                        if (count($bind/xf-bind) = 1) then (
+                            let $childref := $bind/xf-bind/@ref/string()
+                            let $result := util:eval-inline($refs, $childref)
+                            return
+                                runtime:output($result,$relevant,$bind/xf-bind,$index)
+                        ) else (
+                            map{
+                                "bind":array {
+                                for $child at $index in $bind/xf-bind
+                                    let $childref := ($child/@ref/string(), $child/@set/string())
+                                    let $result := util:eval-inline($refs, $childref)
+                                    return
+                                        runtime:output-list($result,$relevant,$child,$index)
+                                }
+                            }
+                        )
+                    ) else ()
+
+                ))
             }
         )
+        else ()
+
     return $result
 
-(:
-    for $ref at $index in $refs
-    return
-            map {
-                "bind": map{
-                "valid": true(),
-                "id": ($bind/@id)[1],
-                "value": $ref/string(),
-                "relevant": $relevant,
-                "nodeid":util:node-id($ref)
-                }
-            }
-             :)
 };
+
+declare function runtime:output-list($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer?) {
+    let $log := util:log('info','output-list $ref name: ' || node-name($refs))
+
+    let $value := runtime:get-value($refs)
+
+    let $log := util:log('info','output-list refs: ' || $refs)
+    let $log := util:log('info','output-list value: ' || $value)
+
+
+    return
+    map:merge((
+        if($value) then
+            map{
+                "value":$value
+            }
+        else(),
+        if($relevant and $relevant != true()) then
+            map{
+                "relevant":$relevant
+            }
+        else(),
+        map{
+            "id": $bind/@id,
+            "nodeid":util:node-id($refs)
+        },
+        if($bind/xf-bind) then
+            for $child at $index in $bind/xf-bind
+                let $childref := ($child/@ref/string(), $child/@set/string())
+                let $result := util:eval-inline($refs, $childref)
+                return
+                    runtime:output($result,$relevant,$child,$index)
+        else ()
+    ))
+
+};
+
 
 (:~
  : If a value is required, check for each node in the reference set if it does
@@ -112,7 +190,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
                             data($bind/@alert)
                         else 'constraint'
 
-        let $result-map := map:new((
+        let $result-map := map:merge((
                     if(exists($bind/@type) and $bind/@type != 'xs:string')
                         then ( map {"type": $bind/@type})
                         else (),
@@ -131,7 +209,7 @@ declare function runtime:for-each($refs as node()*, $check as function(*), $mess
                 else
                     $result-map
             } catch * {
-                map:new((
+                map:merge((
                         $result-map,
                         map {
                             "detail": $err:description,
