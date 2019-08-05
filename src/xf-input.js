@@ -55,14 +55,18 @@ class XfInput extends XfAbstractControl {
 
             this.$.input.addEventListener('keyup', function (e) {
                 console.log('keyup....... ', e);
-                this.modelItem.value = e.target.value;
-                this.dispatchValueChange();
+                if(this.modelItem.value !== e.target.value) {
+                    this.modelItem.value = e.target.value;
+                    this.dispatchValueChange();
+                }
             }.bind(this));
 
         } else {
             this.$.input.addEventListener('blur', function (e) {
-                this.modelItem.value = e.target.value;
-                this.dispatchValueChange();
+                if(this.modelItem.value !== e.target.value) {
+                    this.modelItem.value = e.target.value;
+                    this.dispatchValueChange();
+                }
             }.bind(this));
 
         }

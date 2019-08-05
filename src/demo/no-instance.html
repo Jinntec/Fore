@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Messages</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+    <script type="module">
+        import '../xf-form.js';
+        import '../xf-output.js';
+        import '../xf-button.js';
+        import '../xf-refresh.js';
+        import '../xf-json-data.js';
+        import '../xf-message.js';
+
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+        xf-json-data {display:none;}
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is empty for this sample! ##### -->
+            <xf-model id="record">
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+
+    <demo-snippet>
+        <template>
+            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
+            <xf-json-data id="mockup">[]</xf-json-data>
+
+            <xf-form mockup='mockup'>
+                <xf-message event="model-ready">the model is ready yeah</xf-message>
+                <xf-message event="form-ready">the form is ready</xf-message>
+                <xf-message  event="json-parse-error" level="modeless" event-target="mockup">JSON data not existent or cannot be parsed</xf-message>
+                <xf-message event="refresh">refresh started</xf-message>
+                <xf-message event="refresh-done" level="modal">refresh has been done (a modal message)</xf-message>
+
+                <h1>Messages</h1>
+
+                <xf-button label="refresh">
+                    <xf-refresh> </xf-refresh>
+                </xf-button>
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>select</title>
+
+    <script src="../../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script src="../../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
+    <script type="module">
+        import '../../xf-form.js';
+        import '../xf-button.js';
+        import '../xf-output.js';
+        import '../xf-setvalue.js';
+        import '../xf-material-combo.js';
+        import '../xf-items.js';
+        import '../xf-json-data.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+
+        .note {
+            color: red;
+
+        }
+
+        h2 {
+            margin-top: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1><code>xf-material-combo</code></h1>
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <favorite>green</favorite>
+                        <yourown>purple</yourown>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-selected" ref="favorite"></xf-bind>
+                <xf-bind id="b-selected2" ref="yourown"></xf-bind>
+
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <demo-snippet>
+        <template>
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind": {
+                      "id": "b-selected",
+                      "required": true,
+                      "value": "green"
+                    }
+                  },
+                  {
+                    "bind": {
+                      "id": "b-selected2",
+                      "required": true,
+                      "value": "purple"
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+
+                <h1>Select-Autocomplete Control with dynamic list</h1>
+                <h2>Your favorite form the list:
+                    <xf-output bind="b-selected" id="output"></xf-output>
+                </h2>
+
+                <xf-items id='colors'>
+                    [
+                        {"label":"LightGreen","value":"lightgreen"},
+                        {"label":"Green","value":"green"},
+                        {"label":"DarkGreen","value":"darkgreen"},
+                        {"label":"LightBlue","value":"lightblue"},
+                        {"label":"Blue","value":"blue"},
+                        {"label":"DarkBlue","value":"darkblue"},
+                        {"label":"LightRed","value":"lightred"},
+                        {"label":"Red","value":"red"},
+                        {"label":"DarkRed","value":"darkred"},
+                        {"label":"LightYellow","value":"lightyellow"},
+                        {"label":"Yellow","value":"yellow"},
+                        {"label":"DarkYellow","value":"darkyellow"}
+                    ]
+                </xf-items>
+
+                <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
+                <xf-material-combo bind="b-selected" id="selected" itemset="colors"
+                                   label="Which do you like best?"></xf-material-combo>
+
+                <xf-material-combo bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-combo>
+
+
+                <h2>User can provide a value that's not in the list</h2>
+                <xf-material-combo bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
+                                   selection="open"></xf-material-combo>
+                <h2>Your free selection:
+                    <xf-output bind="b-selected2" id="output"></xf-output>
+                </h2>
+
+                <div class="note">Do not use `xf-material-combo` with conflicting 'selection' settings on the same bound
+                    node. This
+                    will lead to unexpected behavior as a selection='closed' control will reset a manually given value.
+                </div>
+
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

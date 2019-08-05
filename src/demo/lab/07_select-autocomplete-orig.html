@@ -6,17 +6,17 @@
 
     <title>select</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <script src="../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
+    <script src="../../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
     <script type="module">
-        import '../xf-form.js';
+        import '../../xf-form.js';
         import '../xf-button.js';
         import '../xf-output.js';
         import '../xf-setvalue.js';
         import '../xf-material-combo.js';
-        import '../xf-key-value-list.js';
         import '../xf-json-data.js';
+        import '../xf-items.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
 
@@ -147,7 +147,8 @@
                     <xf-output bind="b-selected" id="output"></xf-output>
                 </h2>
 
-                <xf-key-value-list data='[
+                <!-- todo: migrate to xf-items   -->
+                <xf-items data='[
                     {"label":"LightGreen","value":"lightgreen"},
                     {"label":"Green","value":"green"},
                     {"label":"DarkGreen","value":"darkgreen"},
@@ -160,7 +161,7 @@
                     {"label":"LightYellow","value":"lightyellow"},
                     {"label":"Yellow","value":"yellow"},
                     {"label":"DarkYellow","value":"darkyellow"}]' id="names">
-                </xf-key-value-list>
+                </xf-items>
 
                 <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
                 <xf-material-combo bind="b-selected" id="selected" items="names"

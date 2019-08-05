@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -6,12 +5,15 @@
 
     <title>Hello</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
     <script type="module">
+        import '../xf-form.js';
+        import '../xf-message.js';
         import '../xf-items.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
-        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
+
 
     <custom-style>
         <style is="custom-style">
@@ -28,6 +30,7 @@
 </head>
 <body unresolved="unresolved">
     <h1>This is a helper element that feeds option lists of comboboxes and list controls</h1>
+<!--
     <demo-snippet>
         <h2>static inline data</h2>
         <template>
@@ -44,16 +47,20 @@
     <demo-snippet>
         <h2>a non-existing URL dispatches a 'resource-error' event.</h2>
         <template>
-            <xf-items id='colors2' url="doesNotExist"></xf-items>
+            <xf-form>
+                <xf-message event="resource-error">Error loading JSON for URL: '${element.url}'</xf-message>
+                <xf-items id='colors2' url="doesNotExist"></xf-items>
+            </xf-form>
         </template>
     </demo-snippet>
+-->
 
-    <demo-snippet>
-        <h2>loading from a JSON file</h2>
-        <template>
-            <xf-items id='colors2' url="items.json"> </xf-items>
-        </template>
-    </demo-snippet>
+        <demo-snippet>
+            <h2>loading from a JSON file</h2>
+            <template>
+                <xf-items id='colors2' url="items.json"> </xf-items>
+            </template>
+        </demo-snippet>
 
 </body>
 </html>

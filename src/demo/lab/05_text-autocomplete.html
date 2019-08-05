@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -6,11 +5,11 @@
 
     <title>Free text autocomplete example</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
-    <script type="module" src="../xf-form.js"> </script>
-    <script type="module" src="../xf-button.js"> </script>
-    <script type="module" src="../xf-output.js"> </script>
-    <script type="module" src="../xf-setvalue.js"> </script>
+    <script src="../../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+    <script type="module" src="../../xf-form.js"> </script>
+    <script type="module" src="../../xf-button.js"> </script>
+    <script type="module" src="../../xf-output.js"> </script>
+    <script type="module" src="../../xf-setvalue.js"> </script>
 
     <style>
         xf-model{
@@ -58,7 +57,7 @@
         <label for="canonical">Name:</label>
         <input id="canonical" bind="b-autocomplete" type="text" incremental="incremental"/>
 
-        <xf-autocomplete id="cname" bind="b-autocomplete" type="text" incremental="incremental" min-query-length="2" closed="no" data-source="persNames.xml//name"/>
+        <xf-autocomplete id="cname" bind="b-autocomplete" type="text" incremental="incremental" min-query-length="2" closed="no" data-source="persNames.xml//name"> </xf-autocomplete>
 
         <xf-button label="set value to 'Joe'">
             <xf-setvalue bind="b-autocomplete" value="Joe"></xf-setvalue>

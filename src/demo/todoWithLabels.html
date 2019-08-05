@@ -1,12 +1,11 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
     <title>todo with subtasks</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
     <script type="module">
         import '../xf-form.js';
         import '../xf-repeat.js';
@@ -232,7 +231,7 @@
             <xf-form mockup='mockup'>
                 <h1>todos</h1>
                 <xf-button label="add">
-                    <xf-append repeat="r-todos"></xf-append>
+                    <xf-append repeat="r-todos"> </xf-append>
                 </xf-button>
                 <br/><br/>
 <!--
@@ -244,30 +243,28 @@
 -->
                 <xf-repeat bind="b-todo" focus-on-create="task" id="r-todos">
                     <template>
-                        <xf-input bind="b-task" id="task" type="text" label="TASK"></xf-input>
-                        <xf-input bind="b-due" type="date" label="DUE"></xf-input>
-                        <xf-input bind="b-state" type="checkbox" label="STATUS"></xf-input>
+                        <xf-input bind="b-task" id="task" type="text" label="TASK"> </xf-input>
+                        <xf-input bind="b-due" type="date" label="DUE"> </xf-input>
+                        <xf-input bind="b-state" type="checkbox" label="STATUS"> </xf-input>
                         <xf-button label="delete">
                             <!--                    <xf-delete bind="b-todo"></xf-delete>-->
-                            <xf-delete></xf-delete>
+                            <xf-delete> </xf-delete>
                         </xf-button>
 
 <!--                        <div class="subtasks">-->
 <!--                            <div class="subheader">Subtasks</>-->
 
                             <xf-button id="subtask" label="add subtask">
-                                <xf-append repeat="r-subtask"></xf-append>
+                                <xf-append repeat="r-subtask"> </xf-append>
                             </xf-button>
 <!--                        </div>-->
                         <xf-repeat bind="b-subtask" id="r-subtask">
                             <template>
-                                <xf-input bind="b-subtask-text" id="subtask" type="text"></xf-input>
-                                <xf-input bind="b-subtask-complete" id="subcomplete" type="checkbox"></xf-input>
+                                <xf-input bind="b-subtask-text" id="subtask" type="text"> </xf-input>
+                                <xf-input bind="b-subtask-complete" id="subcomplete" type="checkbox"> </xf-input>
                                 <xf-button label="delete">
-                                    <!--                    <xf-delete bind="b-todo"></xf-delete>-->
-                                    <xf-delete></xf-delete>
+                                    <xf-delete> </xf-delete>
                                 </xf-button>
-
                             </template>
                         </xf-repeat>
                     </template>

@@ -64,6 +64,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     init() {
         console.log('### init ', this);
+        console.log('### init modelItem', this.modelItem);
         if (!this.repeated) {
             super.init();
         }
@@ -125,7 +126,27 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     dispatchValueChange() {
         console.log('### dispatching value change from ', this);
-        this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
+
+        if(this.repeated){
+            let elem = this.closest('xf-repeat');
+            let inner = elem.bind + ':' + elem.repeatIndex;
+
+            let found = true;
+            while(found){
+                elem = elem.parentNode.closest('xf-repeat');
+                if(elem === null){
+                    found = false;
+                }else{
+                    inner = elem.bind + ':' + elem.repeatIndex + '/' + inner;
+                }
+            }
+            console.log('zzzzzzzzzzzz index ', inner);
+
+            // const idx = this.closest('xf-repeat').index;
+            this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner}}));
+        }else{
+            this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
+        }
     }
 
     _updateAlert() {

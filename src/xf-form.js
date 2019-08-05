@@ -212,6 +212,7 @@ export class XfForm extends PolymerElement {
             }
             mockupElement.init(); // init mockup data
             this.modelData = mockupElement.getData();
+            console.log('### modelData ', this.modelData);
             this._initUI();
         } else {
             this._showError('Neither server- nor mockup-data available - stopping');
@@ -224,9 +225,9 @@ export class XfForm extends PolymerElement {
         this.modelData = this.$.initForm.lastResponse;
         console.log('### initial data loaded from server');
         if(this.modelData === null){
-            console.log('modelData ', this.modelData);
             this._showError('server did not return any modelData - stopping');
         }else{
+            console.log('### modelData from remote ', this.modelData);
             this._initUI();
             this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
         }
@@ -247,15 +248,15 @@ export class XfForm extends PolymerElement {
      * in the UI that have a `bind` attribute and call their `refresh` method.
      */
     refresh() {
-        console.log('### refresh');
+        // console.log('### refresh');
         this.dispatchEvent(new CustomEvent('refresh', {composed: true, bubbles: true, detail: {}}));
 
 
         // console.groupCollapsed('refresh');
-        console.group('refresh');
+        // console.group('refresh');
         const boundElements = this.querySelectorAll('[bind]');
         for (let i = 0; i < boundElements.length; i++) {
-            console.log('### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
+            // console.log('### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
             // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
             const elem = boundElements[i];
             const bindId = elem.getAttribute('bind');
@@ -263,9 +264,43 @@ export class XfForm extends PolymerElement {
                 elem.refresh();
             }
         }
-        console.groupEnd('refresh');
+        // console.groupEnd('refresh');
         this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
     }
+
+/*
+    findById(id, currentNode) {
+
+        if (id == currentNode.id) {
+            return currentNode;
+        } else {
+            for(var index in currentNode.children){
+                var node = currentNode.children[index];
+                if(node.id == id)
+                    return node;
+                findById(id, node);
+            }
+            return "No Node Present";
+        }
+    }
+*/
+
+/*
+    findById(data, id) {
+        var ret = -1
+        for(var i = 0; i < data.length; i++) {
+            if (data[i].id === id) {
+                return data[i];
+            } else if (data[i].children && data[i].children.length && typeof data[i].children === "object") {
+                ret = findById(data[i].children, id);
+                if (ret.id === id) {
+                    return ret;
+                }
+            }
+        }
+        return ret;
+    }
+*/
 
     /**
      * searches the modelData for given bindId and returns the object (ModelItem).
@@ -340,13 +375,17 @@ export class XfForm extends PolymerElement {
 
         //this is for handling deferred update for action blocks
         //check if action block has been started and add changes as necessary
-        const modelItem = e.target.modelItem;
-        if (this.changed.indexOf(modelItem) === -1) {
-            this.changed.push(modelItem);
-        } else {
-            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
-            this.changed[idx] = modelItem;
-        }
+        const modelItem = e.detail.modelItem;
+        const path = e.detail.path;
+
+        const mod = {'action':'setvalue','bind':modelItem.id, 'value':modelItem.value,'nodeid':modelItem.nodeid,'path':path};
+        this.changed.push(mod);
+        // if (this.changed.indexOf(modelItem) === -1) {
+        //     this.changed.push(modelItem);
+        // } else {
+        //     const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
+        //     this.changed[idx] = modelItem;
+        // }
         console.log('### list of changes ###');
         console.table(this.changed);
         console.log('### modelData ', this.modelData);
@@ -376,12 +415,13 @@ export class XfForm extends PolymerElement {
 
     // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
     _itemAppended(e) {
-        console.log('### item was appended ', e.detail);
+        console.log('### _itemAppended ', e.detail);
 
+        const bind = e.detail.bind;
         const modelItem = e.detail.appendedItem;
         const index = e.detail.appendLocation;
 
-        const change = {"index":index,"modelItem":modelItem};
+        const change = {"bind":bind, "index":index,"modelItem":modelItem};
         this.changed.push(change);
         console.table(this.changed);
 

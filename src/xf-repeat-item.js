@@ -36,9 +36,17 @@ export class XfRepeatItem extends PolymerElement {
                 type: Number
             }
 */
+            modelItem:{
+                type: Object,
+                observer:'_debug'
+            }
         };
     }
 
+    _debug(oldval, newVal){
+        console.log('modelItem changed now is', this.modelItem);
+
+    }
 
     connectedCallback() {
         super.connectedCallback();
@@ -61,7 +69,7 @@ export class XfRepeatItem extends PolymerElement {
      * passed in but searches it within its own scope.
      */
     init(){
-        console.log('### repeat item modelitem ', this.modelItem);
+        console.log('### repeat item of ', this.parentNode,' modelitem ', this.modelItem);
         // console.table(this.modelItem);
         const boundElements = this.querySelectorAll('[bind]');
         console.group('initRepeatItem');
@@ -73,10 +81,13 @@ export class XfRepeatItem extends PolymerElement {
             boundElement.modelItem = this.closest('xf-form').findById(this.modelItem,bindId);
 
             // ### if there's no modelItem yet create one
+/*
+todo: unsure what was the intend here - can that be right? At least causes problem with repeatIndex
             if(!boundElement.modelItem){
                 this.modelItem = {};
                 this.modelItem.bind = [];
             }
+*/
 
             if(boundElement.modelItem){
                 boundElement.init();

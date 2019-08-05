@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -14,7 +13,7 @@
         import '../xf-button.js';
         import '../xf-output.js';
         import '../xf-setvalue.js';
-        import '../xf-material-select1.js';
+        import '../xf-material-combo.js';
         import '../xf-itemset.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
@@ -121,9 +120,8 @@
                 <h2>Your favorite:
                     <xf-output bind="b-selected" id="output"></xf-output>
                 </h2>
-                <xf-material-select1 bind="b-selected" id="selected" label="Which do you like best?">
-                    <xf-itemset bind="b-fruit" bind-label="b-fruit-label" bind-value="b-fruit-value"></xf-itemset>
-                </xf-material-select1>
+                <xf-material-combo bind="b-selected" id="selected" label="Which do you like best?" itemset="items">
+                </xf-material-combo>
             </xf-form>
 
         </template>

@@ -1,5 +1,4 @@
 import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfJsonData } from './xf-json-data.js';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
 
 
@@ -18,7 +17,7 @@ import '../assets/@polymer/iron-ajax/iron-ajax.js';
  * @polymer
  * @demo demo/xf-items.html
  */
-class XfItems extends XfJsonData {
+class XfItems extends PolymerElement {
     static get template() {
         return html`
           <style>
@@ -41,6 +40,10 @@ class XfItems extends XfJsonData {
         return {
             url: {
                 type: String
+            },
+            data:{
+                type: Array,
+                value:[]
             }
         };
     }
@@ -51,13 +54,16 @@ class XfItems extends XfJsonData {
             console.log('### load items from URL: ', this.url);
             this.$.itemsLoader.url = this.url;
             this.$.itemsLoader.generateRequest();
+        }else{
+            this.data = JSON.parse(this.textContent);
+            console.log('### inline data loaded ', this.data);
+
         }
-
-
     }
 
     _handleResource(){
-        console.log('### resource loaded ', this.$.itemsLoader.lastResponse);
+        this.data = JSON.parse(this.$.itemsLoader.lastResponse);
+        console.log('### resource loaded ', this.data);
     }
 
     _handleError(){

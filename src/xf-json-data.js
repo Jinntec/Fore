@@ -7,6 +7,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  *
  * @customElement
  * @polymer
+ * @demo demo/xf-json-data.html
  */
 export class XfJsonData extends PolymerElement {
     static get template() {
@@ -31,14 +32,15 @@ export class XfJsonData extends PolymerElement {
         }
     }
 
-    init(){
-        console.log(this, ' init');
+    connectedCallback() {
+        super.connectedCallback();
+        // console.log(this, ' init');
         try {
             this.data = JSON.parse(this.textContent);
         } catch (e) {
             this._dispatchError();
         }
-        // console.log('### XfJsonData.connectedCallback ', this.getData());
+        console.log('### XfJsonData.connectedCallback data', this.getData());
     }
 
     getData() {

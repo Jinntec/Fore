@@ -4,20 +4,20 @@ module namespace runtime="http://existsolutions.com/fore/runtime";
 
 
 declare function runtime:get-value($refs as node()*){
-    if ($refs instance of attribute()) then $refs
+    if ($refs instance of attribute()) then $refs/string()
     else if($refs instance of element()) then $refs/text()
     else $refs
 };
 
 declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer) {
 
-    let $log := util:log('info','$bind ' || serialize($bind))
-    let $log := util:log('info','>>>>>> $index ' || $index)
+(:    let $log := util:log('info','$bind ' || serialize($bind)):)
+(:    let $log := util:log('info','>>>>>> $index ' || $index):)
 
     let $out := if(starts-with($bind/@ref,'@')) then '@@@ ' || $bind/@ref
                 else serialize($refs)
 
-    let $log := util:log('info','$refs ' || $out)
+(:    let $log := util:log('info','$refs ' || $out):)
 
     (:  #########
         handle following cases:
@@ -61,9 +61,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
             an array of bind objects.
         ##### :)
         else if(count($bind/../xf-bind) > 1) then
-            let $log := util:log('info', 'zzzzzzzzzzzzz')
-            return
-                runtime:output-list($refs, $relevant,$bind, $index)
+            runtime:output-list($refs, $relevant,$bind, $index)
 
         (: #####
             handle binds that have a 'ref' attribute. Output a full bind object.
@@ -118,12 +116,12 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
 };
 
 declare function runtime:output-list($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer?) {
-    let $log := util:log('info','output-list $ref name: ' || node-name($refs))
+(:    let $log := util:log('info','output-list $ref name: ' || node-name($refs)):)
 
     let $value := runtime:get-value($refs)
 
-    let $log := util:log('info','output-list refs: ' || $refs)
-    let $log := util:log('info','output-list value: ' || $value)
+(:    let $log := util:log('info','output-list refs: ' || $refs):)
+(:    let $log := util:log('info','output-list value: ' || $value):)
 
 
     return

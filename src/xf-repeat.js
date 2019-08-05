@@ -42,14 +42,23 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             initDone: {
                 type: Boolean,
                 value: false
+            },
+            repeatIndex:{
+                type: Number,
+                value:1,
+                observer:'_showTheBastard'
             }
         };
     }
 
+    _showTheBastard(oldVal, newVal){
+        console.log('_showTheBastard ', this.repeatIndex);
+    }
 
     connectedCallback() {
         super.connectedCallback();
         console.log('### xf-repeat connected ', this);
+        console.log('### xf-repeat connected index', this.repeatIndex);
 
     }
 
@@ -76,8 +85,10 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
     setCurrent(repeatItem) {
         console.log('### select repeat-item ', repeatItem, repeatItem.modelItem);
+        if(repeatItem.hasAttribute('repeat-index')) return;
         const index = this.modelItem.bind.indexOf(repeatItem.modelItem);
         this._setIndex(repeatItem);
+        this.repeatIndex = index + 1;
     }
 
     _setIndex(repeatItem){
@@ -124,6 +135,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
         const first = this.children[1]; // first repeat-item must always be second element as there's the template as first always.
         // first.setAttribute('repeat-index', '');
+
         this._setIndex(first);
     }
 
@@ -147,18 +159,18 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         }
         this.modelItem.bind.push(dTmpl);
 
-
-
-
-
         let index;
         if(this.modelItem){
             index = this.modelItem.bind.length - 1;
         }else{
-            index = 0;
+            index = 1;
         }
+
+        this.index = index +1;
+        console.log('repeat index is now at: ', this.index);
         // const index = this.modelItem.bind.length - 1;
         const item = this._createRepeatItem(index);
+
         // this._removeIndexMarker();
         // this.children[index + 1].setAttribute('repeat-index','');
         this._setIndex(item);
@@ -181,7 +193,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this.dispatchEvent(new CustomEvent('repeat-item-appended', {
             composed: true,
             bubbles: true,
-            detail: {'appendLocation': index, 'appendedItem': item.modelItem}
+            detail: {'bind':this.bind,'nodeId':this.modelItem.nodeId, 'appendLocation': index, 'appendedItem': item.modelItem}
         }));
 
     }
@@ -194,7 +206,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this.appendChild(repeatItem);
 
         // ###  and initialize it
-        repeatItem.index = index;
+        // repeatItem.index = index;
         repeatItem.modelItem = this.modelItem.bind[index];
         repeatItem.addEventListener('repeat-item-created', this._handleItemCreated.bind(this));
         repeatItem.init();
