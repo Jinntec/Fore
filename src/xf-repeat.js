@@ -166,7 +166,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             index = 1;
         }
 
-        this.index = index +1;
+        this.repeatIndex = index + 1;
         console.log('repeat index is now at: ', this.index);
         // const index = this.modelItem.bind.length - 1;
         const item = this._createRepeatItem(index);
@@ -190,10 +190,16 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this._setIndex(item);
 */
 
+        // const path = this.ownerForm.resolveBinding(this);
         this.dispatchEvent(new CustomEvent('repeat-item-appended', {
             composed: true,
             bubbles: true,
-            detail: {'bind':this.bind,'nodeId':this.modelItem.nodeId, 'appendLocation': index, 'appendedItem': item.modelItem}
+            detail: {
+                'bind': this.bind,
+                'nodeId': this.modelItem.nodeId,
+                'appendLocation': this.repeatIndex,
+                'appendedItem': item.modelItem
+            }
         }));
 
     }
@@ -251,16 +257,21 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             if (index <= cnt - 1) {
                 // ### if there's a repeat-item left with the same index as the deleted one it becomes the new repeat index
                 items[index].setAttribute('repeat-index', '');
+                console.log('>>>>> cnt 1 ', cnt);
+                this.repeatIndex = index+1;
             } else if (index > cnt - 1) {
                 // ### if the last one is deleted the new last one will be new repeat-index
                 items[cnt - 1].setAttribute('repeat-index', '');
+                console.log('>>>>> cnt 2', cnt);
+                this.repeatIndex = cnt;
             }
         }
+        console.log('### new repeatIndex: ', this.repeatIndex);
 
         this.dispatchEvent(new CustomEvent('repeat-item-deleted', {
             composed: true,
             bubbles: true,
-            detail: {'deleteLocation': index, 'deleteItems': repeatItem.modelItem}
+            detail: {'bind':this.bind, 'deleteLocation': index+1, 'deleteItems': repeatItem.modelItem}
         }));
 
     }

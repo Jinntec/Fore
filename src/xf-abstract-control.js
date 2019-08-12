@@ -14,7 +14,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     static get properties() {
         return {
-            label:{
+            label: {
                 type: String
             },
             alert: {
@@ -83,6 +83,10 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     applyProperties() {
         // console.log('XfControl.applyProperties ', this.modelItem);
 
+        if (this.modelItem === undefined) {
+            console.warn('no modelItem present for ', this);
+        }
+
         if (this.modelItem.alert !== undefined) {
             // console.log('XfControl.applyProperties alert: ', this.modelItem.alert);
             this.alert = this.modelItem.alert;
@@ -126,27 +130,40 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     dispatchValueChange() {
         console.log('### dispatching value change from ', this);
+        const path = this.ownerForm.resolveBinding(this);
+        this.dispatchEvent(new CustomEvent(
+            'value-changed',
+            {
+                composed: true,
+                bubbles: true,
+                detail: {'modelItem': this.modelItem, "path":path}
+            }));
 
-        if(this.repeated){
-            let elem = this.closest('xf-repeat');
-            let inner = elem.bind + ':' + elem.repeatIndex;
+        /*
+                if(this.repeated){
+                    let elem = this.closest('xf-repeat');
+                    let inner = elem.bind + ':' + elem.repeatIndex;
 
-            let found = true;
-            while(found){
-                elem = elem.parentNode.closest('xf-repeat');
-                if(elem === null){
-                    found = false;
+                    let found = true;
+                    while(found){
+                        elem = elem.parentNode.closest('xf-repeat');
+                        if(elem === null){
+                            found = false;
+                        }else{
+                            inner = elem.bind + ':' + elem.repeatIndex + '/' + inner;
+                        }
+                    }
+                    console.log('zzzzzzzzzzzz index ', inner);
+
+                    console.log('>>>>>>>>>>>>>>>>> resolveBinding: ', this.ownerForm.resolveBinding(this));
+
+                    const idx = this.closest('xf-repeat').repeatIndex;
+                    // this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner,'index':idx}}));
+                    this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner}}));
                 }else{
-                    inner = elem.bind + ':' + elem.repeatIndex + '/' + inner;
+                    this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
                 }
-            }
-            console.log('zzzzzzzzzzzz index ', inner);
-
-            // const idx = this.closest('xf-repeat').index;
-            this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner}}));
-        }else{
-            this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
-        }
+        */
     }
 
     _updateAlert() {

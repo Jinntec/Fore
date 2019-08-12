@@ -34,6 +34,11 @@ class XfSetvalue extends XfAction {
     execute() {
 
         const repeated = this.closest('xf-repeat-item');
+
+        const path = this.ownerForm.resolveBinding(this);
+        console.log('### xf-setvalue path ', path);
+
+
         if(repeated){
             const item = repeated.modelItem;
             const target = this.ownerForm.findById(item,this.bind);
@@ -41,7 +46,7 @@ class XfSetvalue extends XfAction {
             this.dispatchEvent(new CustomEvent('value-changed', {
                 composed: true,
                 bubbles: true,
-                detail: {'modelItem': target}
+                detail: {'modelItem': target,"path":path}
             }));
 
         }else{
@@ -49,7 +54,7 @@ class XfSetvalue extends XfAction {
             this.dispatchEvent(new CustomEvent('value-changed', {
                 composed: true,
                 bubbles: true,
-                detail: {'modelItem': this.modelItem}
+                detail: {'modelItem': this.modelItem,"path":path}
             }));
         }
 

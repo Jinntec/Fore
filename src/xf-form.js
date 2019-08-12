@@ -49,14 +49,14 @@ export class XfForm extends PolymerElement {
         ];
     }
 
-/*
-    static get ACTIONELEMENTS() {
-        return [
-            'XF-APPEND',
-            'XF-DELETE'
-        ];
-    }
-*/
+    /*
+        static get ACTIONELEMENTS() {
+            return [
+                'XF-APPEND',
+                'XF-DELETE'
+            ];
+        }
+    */
 
     static get template() {
         return html`
@@ -129,9 +129,9 @@ export class XfForm extends PolymerElement {
                 },
                 notify: true
             },
-            changed:{
-                type:Array,
-                value:[]
+            changed: {
+                type: Array,
+                value: []
             }
         };
     }
@@ -150,6 +150,9 @@ export class XfForm extends PolymerElement {
         return (XfForm.BOUNDELEMENTS.indexOf(element.nodeName.toUpperCase()) > -1);
     }
 
+    static getPath(element) {
+
+    }
 
     constructor() {
         super();
@@ -164,6 +167,7 @@ export class XfForm extends PolymerElement {
         // this.$.initForm.generateRequest();
 
         this.addEventListener('repeat-item-appended', this._itemAppended);
+        this.addEventListener('repeat-item-deleted', this._itemDeleted);
         this.addEventListener('value-changed', this._handleValueChange);
         this.addEventListener('message', this._displayMessage);
 
@@ -197,7 +201,7 @@ export class XfForm extends PolymerElement {
     update() {
 
         // ### if we get a token that means we're running with eXist-db instead of Polymer serve
-        if(this.token){
+        if (this.token) {
             console.log('>>>> token ', this.token);
             this.$.initForm.params.token = this.token;
             this.$.initForm.generateRequest();
@@ -206,7 +210,7 @@ export class XfForm extends PolymerElement {
             // console.log('loading mockup data from : ', this.mockup);
             // this.modelData = JSON.parse(this.mockup);
             const mockupElement = document.getElementById(this.mockup);
-            if(!mockupElement){
+            if (!mockupElement) {
                 this._showError('mockupElement "' + this.mockup + '" not found - stopping');
                 return;
             }
@@ -220,24 +224,24 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
     }
 
-    _handleInitialState(e){
+    _handleInitialState(e) {
         console.log('### token as param ', this.$.initForm.params);
         this.modelData = this.$.initForm.lastResponse;
         console.log('### initial data loaded from server');
-        if(this.modelData === null){
+        if (this.modelData === null) {
             this._showError('server did not return any modelData - stopping');
-        }else{
+        } else {
             console.log('### modelData from remote ', this.modelData);
             this._initUI();
             this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
         }
     }
 
-    _handleError(e){
+    _handleError(e) {
         this._showError(this.$.initForm.lastError.error);
     }
 
-    _showError(error){
+    _showError(error) {
         this.$.modalMessage.classList.add('error');
         this.$.messageContent.innerText = error;
         this.$.modalMessage.open();
@@ -268,39 +272,39 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
     }
 
-/*
-    findById(id, currentNode) {
+    /*
+        findById(id, currentNode) {
 
-        if (id == currentNode.id) {
-            return currentNode;
-        } else {
-            for(var index in currentNode.children){
-                var node = currentNode.children[index];
-                if(node.id == id)
-                    return node;
-                findById(id, node);
+            if (id == currentNode.id) {
+                return currentNode;
+            } else {
+                for(var index in currentNode.children){
+                    var node = currentNode.children[index];
+                    if(node.id == id)
+                        return node;
+                    findById(id, node);
+                }
+                return "No Node Present";
             }
-            return "No Node Present";
         }
-    }
-*/
+    */
 
-/*
-    findById(data, id) {
-        var ret = -1
-        for(var i = 0; i < data.length; i++) {
-            if (data[i].id === id) {
-                return data[i];
-            } else if (data[i].children && data[i].children.length && typeof data[i].children === "object") {
-                ret = findById(data[i].children, id);
-                if (ret.id === id) {
-                    return ret;
+    /*
+        findById(data, id) {
+            var ret = -1
+            for(var i = 0; i < data.length; i++) {
+                if (data[i].id === id) {
+                    return data[i];
+                } else if (data[i].children && data[i].children.length && typeof data[i].children === "object") {
+                    ret = findById(data[i].children, id);
+                    if (ret.id === id) {
+                        return ret;
+                    }
                 }
             }
+            return ret;
         }
-        return ret;
-    }
-*/
+    */
 
     /**
      * searches the modelData for given bindId and returns the object (ModelItem).
@@ -328,7 +332,7 @@ export class XfForm extends PolymerElement {
         return result;
     }
 
-    _displayMessage(e){
+    _displayMessage(e) {
 
         const level = e.detail.level;
         const msg = e.detail.message;
@@ -336,32 +340,31 @@ export class XfForm extends PolymerElement {
         if (level === 'modal') {
             this.$.messageContent.innerText = msg;
             this.$.modalMessage.open();
-        } else if(level === 'modeless'){
+        } else if (level === 'modeless') {
             // const notification = this.$.modeless;
 
             const notification = document.createElement('vaadin-notification');
-            notification.duration=0;
-            notification.setAttribute('theme','error');
-            notification.renderer = function(root){
+            notification.duration = 0;
+            notification.setAttribute('theme', 'error');
+            notification.renderer = function (root) {
                 console.log('root ', root);
 
                 root.textContent = msg;
 
                 const closeIcon = window.document.createElement('paper-icon-button');
-                closeIcon.setAttribute('icon','close');
-                closeIcon.addEventListener('click',function(e){
+                closeIcon.setAttribute('icon', 'close');
+                closeIcon.addEventListener('click', function (e) {
                     console.log(e);
-                   notification.close();
+                    notification.close();
                 });
                 root.appendChild(closeIcon);
             };
             this.appendChild(notification);
             notification.open();
 
-        }
-        else {
+        } else {
             const notification = document.createElement('vaadin-notification');
-            notification.renderer = function(root){
+            notification.renderer = function (root) {
                 root.textContent = msg;
             };
             this.appendChild(notification);
@@ -376,23 +379,53 @@ export class XfForm extends PolymerElement {
         //this is for handling deferred update for action blocks
         //check if action block has been started and add changes as necessary
         const modelItem = e.detail.modelItem;
-        const path = e.detail.path;
 
-        const mod = {'action':'setvalue','bind':modelItem.id, 'value':modelItem.value,'nodeid':modelItem.nodeid,'path':path};
-        this.changed.push(mod);
-        // if (this.changed.indexOf(modelItem) === -1) {
-        //     this.changed.push(modelItem);
+        // modelItem.changed = true;
+        let path = e.detail.path;
+        let action = {};
+
+        // if (path) {
+            // const idx = e.detail.index
+            // path = path + '/' + modelItem.id + ':' + idx;
+            // path = path + '/' + modelItem.id;
         // } else {
-        //     const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
-        //     this.changed[idx] = modelItem;
+        //     path = modelItem.id;
         // }
+        // action = {'action': 'setvalue', 'bind': modelItem.id, 'value': modelItem.value, 'path': path};
+        action = {'action': 'setvalue', 'value': modelItem.value, 'path': path};
+
+
+        // modelItem.path = path + '/' + modelItem.id + ':' + e.detail.index;
+
+        // const mod = {'action':'setvalue','bind':modelItem.id, 'value':modelItem.value,'path':path};
+        // this.changed.push(mod);
+        // if (this.changed.indexOf(modelItem) === -1) {
+
+
+        const found = this.changed.findIndex((obj) => obj.path == path);
+        console.log('*************** found ', found);
+        if(found !== -1){
+            this.changed[found] = action;
+        }else{
+            this.changed.push(action);
+        }
+
+/*
+        if (this.changed.indexOf(action) === -1) {
+            // this.changed.push(modelItem);
+            this.changed.push(action);
+        } else {
+            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
+            // this.changed[idx] = modelItem;
+            this.changed[idx] = action;
+        }
+*/
         console.log('### list of changes ###');
         console.table(this.changed);
         console.log('### modelData ', this.modelData);
         this.refresh();
 
     }
-
 
 
     _initUI() {
@@ -405,7 +438,7 @@ export class XfForm extends PolymerElement {
             const boundElement = boundElements[i];
             const bindId = boundElement.getAttribute('bind');
             // if(XfForm.isBoundComponent(boundElement)){
-                boundElement.init();
+            boundElement.init();
             // }
 
         }
@@ -420,12 +453,36 @@ export class XfForm extends PolymerElement {
         const bind = e.detail.bind;
         const modelItem = e.detail.appendedItem;
         const index = e.detail.appendLocation;
+        const path = e.detail.path;
 
-        const change = {"bind":bind, "index":index,"modelItem":modelItem};
+        // modelItem.path = bind + ':' + index;
+
+        const change = {
+            "action": "append",
+            "bind": bind,
+            "index": index,
+            "modelItem": modelItem
+        };
         this.changed.push(change);
         console.table(this.changed);
 
         this.refresh();
+    }
+
+    _itemDeleted(e){
+        const bind = e.detail.bind;
+        const item  = e.detail.deleteItems;
+        const idx = e.detail.deleteLocation;
+        const change = {
+            "action": "delete",
+            "bind":bind,
+            "index": idx,
+            "modelItem": item
+        };
+        this.changed.push(change);
+        console.table(this.changed);
+
+
     }
 
 
@@ -435,6 +492,27 @@ export class XfForm extends PolymerElement {
 
     _closeToast(e) {
         this.$.important.close();
+    }
+
+    resolveBinding(boundElement) {
+        if (boundElement.repeated) {
+            let elem = boundElement.closest('xf-repeat');
+            let path = elem.bind + ':' + elem.repeatIndex;
+
+            let found = true;
+            while (found) {
+                elem = elem.parentNode.closest('xf-repeat');
+                if (elem === null) {
+                    found = false;
+                } else {
+                    path = elem.bind + ':' + elem.repeatIndex + '/' + path;
+                }
+            }
+            console.log('### resolveBinding path ', path);
+            return path + '/' + boundElement.bind;
+        }else{
+            return boundElement.bind;
+        }
     }
 }
 

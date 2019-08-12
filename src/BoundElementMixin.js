@@ -40,7 +40,10 @@ let bound = (superClass) =>
         }
 
         init(){
-            this.modelItem = this.ownerForm.findById(this.ownerForm.modelData, this.bind)
+            this.modelItem = this.ownerForm.findById(this.ownerForm.modelData, this.bind);
+            if(this.closest('xf-repeat')){
+                this.repeated = true;
+            }
         }
 
 
