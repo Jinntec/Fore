@@ -3,13 +3,13 @@ xquery version "3.1";
 module namespace runtime="http://existsolutions.com/fore/runtime";
 
 
-declare function runtime:get-value($refs as node()*){
+declare %private function runtime:get-value($refs as node()*){
     if ($refs instance of attribute()) then $refs/string()
     else if($refs instance of element()) then $refs/text()
     else $refs
 };
 
-declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer) {
+declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer,$path as xs:string) {
 
 (:    let $log := util:log('info','$bind ' || serialize($bind)):)
 (:    let $log := util:log('info','>>>>>> $index ' || $index):)
@@ -25,6 +25,11 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
         - bind has a 'ref' attribute
     :)
 
+    let $path := if(string-length($path) = 0) then
+                    $bind/@id || ':' || $index
+                 else
+                    $path || '/' || $bind/@id || ':' || $index
+
     (: #####
         handle binds with a 'set' attribute meaning they are referring to a nodeset and need to be output as an array of arrays
         for the repeated items they are representing.
@@ -32,9 +37,10 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
     let $result := if ($bind/@set) then (
             map{
                 "bind": map{
-                    "id":$bind/@id,
+                    "id":$bind/@id/string(),
                     "sequence":true(),
                     "nodeid":util:node-id($refs[$index]),
+                    "path": $path,
                     "bind":array{
                         (: ### create right amount of array entries for the set ### :)
                         for $ref at $parentIndex in $refs
@@ -46,7 +52,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                                         let $result := util:eval-inline($refs[$parentIndex], $childref)
                                         return
                                             if($result) then
-                                                runtime:output($result,$relevant,$child,$parentIndex)
+                                                runtime:output($result,$relevant,$child,$parentIndex,$path)
                                             else ()
 
                                 else ()
@@ -61,7 +67,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
             an array of bind objects.
         ##### :)
         else if(count($bind/../xf-bind) > 1) then
-            runtime:output-list($refs, $relevant,$bind, $index)
+            runtime:output-list($refs, $relevant,$bind, $index,$path)
 
         (: #####
             handle binds that have a 'ref' attribute. Output a full bind object.
@@ -83,8 +89,9 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                         }
                     else(),
                     map{
-                            "id": $bind/@id,
-                            "nodeid":util:node-id($refs)
+                            "id": $bind/@id/string(),
+                            "nodeid":util:node-id($refs),
+                            "path":$path
                     },
                     if(exists($bind/xf-bind)) then (
 
@@ -92,7 +99,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                             let $childref := $bind/xf-bind/@ref/string()
                             let $result := util:eval-inline($refs, $childref)
                             return
-                                runtime:output($result,$relevant,$bind/xf-bind,$index)
+                                runtime:output($result,$relevant,$bind/xf-bind,$index,$path)
                         ) else (
                             map{
                                 "bind":array {
@@ -100,7 +107,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                                     let $childref := ($child/@ref/string(), $child/@set/string())
                                     let $result := util:eval-inline($refs, $childref)
                                     return
-                                        runtime:output-list($result,$relevant,$child,$index)
+                                        runtime:output-list($result,$relevant,$child,$index,$path)
                                 }
                             }
                         )
@@ -115,7 +122,7 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
 
 };
 
-declare function runtime:output-list($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer?) {
+declare %private function runtime:output-list($refs as node()*, $relevant as xs:boolean?, $bind as element(),$index as xs:integer?, $path as xs:string?) {
 (:    let $log := util:log('info','output-list $ref name: ' || node-name($refs)):)
 
     let $value := runtime:get-value($refs)
@@ -137,15 +144,16 @@ declare function runtime:output-list($refs as node()*, $relevant as xs:boolean?,
             }
         else(),
         map{
-            "id": $bind/@id,
-            "nodeid":util:node-id($refs)
+            "id": $bind/@id/string(),
+            "nodeid":util:node-id($refs),
+            "path":$path
         },
         if($bind/xf-bind) then
             for $child at $index in $bind/xf-bind
                 let $childref := ($child/@ref/string(), $child/@set/string())
                 let $result := util:eval-inline($refs, $childref)
                 return
-                    runtime:output($result,$relevant,$child,$index)
+                    runtime:output($result,$relevant,$child,$index,$path)
         else ()
     ))
 
@@ -231,6 +239,16 @@ declare function runtime:recalculate($instances as map(*), $changes as array(*))
             }
         })
     )
+};
+
+
+declare function runtime:update($instances as map(*), $changes as array(*)){
+    if (array:size($changes) = 0) then
+        $instance
+    else
+        let $change := array:head($changes)
+        let $path := "$instances?default/*/task[1]/./text()[1]"
+        return $path
 };
 
 (:~
