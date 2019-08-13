@@ -99,6 +99,12 @@ export class XfForm extends PolymerElement {
                      on-response="_handleInitialState"
                      on-error="_handleError"
                      method="GET"> </iron-ajax>
+          <iron-ajax id="update" 
+                     url="/exist/apps/fore/update"
+                     handle-as="json"
+                     on-response="_handleUpdate"
+                     on-error="_handleUpdateError"
+                     method="POST"> </iron-ajax>
                      
            
            <paper-dialog id="modalMessage" modal="true">
@@ -270,6 +276,12 @@ export class XfForm extends PolymerElement {
         }
         // console.groupEnd('refresh');
         this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
+    }
+
+    sendUpdates(){
+        this.$.update.params.token = this.token;
+        this.$.update.body = this.changed;
+        this.$.update.generateRequest();
     }
 
     /*
@@ -461,7 +473,8 @@ export class XfForm extends PolymerElement {
             "action": "append",
             "bind": bind,
             "index": index,
-            "modelItem": modelItem
+            "modelItem": modelItem,
+            "path":path
         };
         this.changed.push(change);
         console.table(this.changed);
@@ -473,11 +486,13 @@ export class XfForm extends PolymerElement {
         const bind = e.detail.bind;
         const item  = e.detail.deleteItems;
         const idx = e.detail.deleteLocation;
+        const path = e.detail.path;
         const change = {
             "action": "delete",
             "bind":bind,
             "index": idx,
-            "modelItem": item
+            "modelItem": item,
+            "path":path
         };
         this.changed.push(change);
         console.table(this.changed);
@@ -504,15 +519,27 @@ export class XfForm extends PolymerElement {
                 elem = elem.parentNode.closest('xf-repeat');
                 if (elem === null) {
                     found = false;
+                    if(boundElement.nodeName === 'XF-REPEAT'){
+                        return path;
+                    }
                 } else {
                     path = elem.bind + ':' + elem.repeatIndex + '/' + path;
                 }
             }
             console.log('### resolveBinding path ', path);
             return path + '/' + boundElement.bind;
+            // return path;
         }else{
             return boundElement.bind;
         }
+    }
+
+    _handleUpdate(){
+
+    }
+
+    _handleUpdateError(){
+
     }
 }
 

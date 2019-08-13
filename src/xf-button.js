@@ -49,6 +49,11 @@ class XfButton extends PolymerElement {
     performActions(e) {
         console.log('performActions ', this.children);
 
+        const repeatedItem = this.closest('xf-repeat-item');
+        if(repeatedItem){
+            console.log('repeated click');
+            repeatedItem.click();
+        }
         for (let i = 0; i < this.children.length; i++) {
             // console.log('child ', this.children[i]);
             const child = this.children[i];

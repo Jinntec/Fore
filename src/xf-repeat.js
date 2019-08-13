@@ -190,7 +190,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this._setIndex(item);
 */
 
-        // const path = this.ownerForm.resolveBinding(this);
+        const path = this.ownerForm.resolveBinding(this);
         this.dispatchEvent(new CustomEvent('repeat-item-appended', {
             composed: true,
             bubbles: true,
@@ -198,7 +198,8 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
                 'bind': this.bind,
                 'nodeId': this.modelItem.nodeId,
                 'appendLocation': this.repeatIndex,
-                'appendedItem': item.modelItem
+                'appendedItem': item.modelItem,
+                "path":path
             }
         }));
 
@@ -250,6 +251,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         const items = this.querySelectorAll('xf-repeat-item');
         const cnt = items.length;
 
+        const path = this.ownerForm.resolveBinding(this);
+
+
         // ### update the 'repeat-index' marker attribute
         this._removeIndexMarker();
 
@@ -271,7 +275,12 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this.dispatchEvent(new CustomEvent('repeat-item-deleted', {
             composed: true,
             bubbles: true,
-            detail: {'bind':this.bind, 'deleteLocation': index+1, 'deleteItems': repeatItem.modelItem}
+            detail: {
+                'bind': this.bind,
+                'deleteLocation': index + 1,
+                'deleteItems': repeatItem.modelItem,
+                "path":path
+            }
         }));
 
     }
