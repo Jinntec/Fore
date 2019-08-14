@@ -10,18 +10,70 @@ declare option output:media-type "application/json";
 let $form := session:get-attribute('form')
 let $log := util:log('info', 'form ' || serialize($form))
 
-let $instances :=
-    map {
-        "default": <data>
-                       <task complete="false" due="2019-02-04">Pick up Milk</task>
-                   </data>
-    }
+(: todo: get updates from post request :)
+let $updates := parse-json('
+[
+  {
+    "action": "setvalue",
+    "value": "Pick up Milkasd",
+    "path": "b-todo:1/b-task"
+  },
+  {
+    "action": "setvalue",
+    "value": "2019-03-22",
+    "path": "b-todo:1/b-due"
+  },
+  {
+    "action": "setvalue",
+    "value": "false",
+    "path": "b-todo:1/b-state"
+  },
+  {
+    "action": "setvalue",
+    "value": "Make tutorial part1",
+    "path": "b-todo:2/b-task"
+  },
+  {
+    "action": "setvalue",
+    "value": "true",
+    "path": "b-todo:2/b-state"
+  },
+  {
+    "action": "setvalue",
+    "value": "2019-04-11",
+    "path": "b-todo:2/b-due"
+  },
+  {
+    "action": "append",
+    "bind": "b-todo",
+    "index": 3,
+    "modelItem": [
+      {
+        "id": "b-task",
+        "value": ""
+      },
+      {
+        "id": "b-due",
+        "value": ""
+      },
+      {
+        "id": "b-state",
+        "value": ""
+      }
+    ],
+    "path": "b-todo:3"
+  }
+]')
 
-let $changes := array{
-    map {
-        "path":"b-todo:1/b-task:1",
-        "value":"foobar"
-    }
-}
-
-return runtime:update($changes,$instances)
+return array:for-each($updates, function($update){
+    let $action := $update?action
+    return
+    switch($action)
+        case 'setvalue'
+            return concat('setvalue',':', $update?path, '=', $update?value)
+        case 'append'
+            return 'append'
+        case 'delete'
+            return 'delete'
+        default return ()
+})
