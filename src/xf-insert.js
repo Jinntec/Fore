@@ -1,5 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-
+import { XfAction } from "./xf-action.js";
 
 /**
  * `xf-insert`
@@ -10,7 +9,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @customElement
  * @polymer
  */
-class XfInsert extends PolymerElement {
+class XfInsert extends XfAction {
 
     static get properties() {
         return {
@@ -19,14 +18,37 @@ class XfInsert extends PolymerElement {
             },
             repeat:{
                 type: String
+            },
+            /**
+             * determines where new item is inserted. Valid values are 'before' or 'after'. Any other value will
+             * be ignored and defaulted to 'after'.
+             */
+            position:{
+                type: String,
+                value:'after'
             }
         };
     }
 
     execute(){
         console.log('##### xf-insert executing bindId ', this.bind);
+        super.execute();
 
+        // const repeated = this.closest('xf-repeat-item');
+        const repeated = this.closest('xf-repeat');
+        console.log('### repeated append ', repeated);
+        // console.log('repeated append index', repeated.index);
 
+        // ### find target repeat for this action
+        let targetItem;
+        if (repeated){
+            // if the repeat itself is repeated we need to search in current subtree of the repeat-item
+            targetItem = repeated.querySelector('[id=' + this.repeat + ']');
+        }else{
+            targetItem = document.getElementById(this.repeat);
+        }
+
+        targetItem.insertRepeatItem(this.position);
     }
 
 

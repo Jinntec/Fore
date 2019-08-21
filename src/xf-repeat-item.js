@@ -38,10 +38,12 @@ export class XfRepeatItem extends PolymerElement {
 */
             modelItem:{
                 type: Object,
-                observer:'_debug'
+                observer:'_debug',
+                reflectToAttribute:true
             }
         };
     }
+
 
     _debug(oldval, newVal){
         console.log('modelItem changed now is', this.modelItem);
@@ -103,6 +105,12 @@ todo: unsure what was the intend here - can that be right? At least causes probl
      */
     refresh() {
         console.log('### repeat item refresh');
+
+        const repeat = this.parentNode;
+        const idx = repeat.repeatIndex;
+
+        // this.modelItem = repeat.modelItem.bind[idx-1];
+
         const boundElements = this.querySelectorAll('[bind]');
         for(let i = 0; i < boundElements.length; i++){
             const elem = boundElements[i];

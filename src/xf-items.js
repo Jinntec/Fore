@@ -38,9 +38,15 @@ class XfItems extends PolymerElement {
 
     static get properties() {
         return {
+            /**
+             * the url to load the JSON key/value list from
+             */
             url: {
                 type: String
             },
+            /**
+             * array of key/value objects
+             */
             data:{
                 type: Array,
                 value:[]

@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Simple Things repeat</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../xf-form.js';
+        import '../xf-repeat.js';
+        import '../xf-json-data.js';
+        import '../xf-input.js';
+        import '../xf-button.js';
+        import '../xf-append.js';
+        import '../xf-insert.js';
+
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+        xf-json-data {display:none;}
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is only available on server-side! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <thing>Tree</thing>
+                        <thing>Ball</thing>
+                        <thing>Stone</thing>
+                        <thing>Computer</thing>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-thing" set="thing"></xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+
+    <demo-snippet>
+        <template>
+            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
+            <xf-json-data id="mockup">
+                [
+                    {
+                        "bind": {
+                            "id": "b-thing",
+                            "sequence":true,
+                            "bind": [
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Tree"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Ball"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Stone"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Computer"
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup' debug="false">
+
+
+                <h1>Things</h1>
+
+                <xf-button label="append">
+                    <xf-append repeat="r-things"></xf-append>
+                </xf-button>
+                <xf-button label="insert before current">
+                    <xf-insert repeat="r-things" position="before"></xf-insert>
+                </xf-button>
+                <xf-button label="insert after current">
+                    <xf-insert repeat="r-things"></xf-insert>
+                </xf-button>
+                <xf-repeat bind="b-thing" id="r-things" focus-on-create="thing">
+                    <template>
+                        <xf-input bind="b-thing" id="thing" type="text"> </xf-input>
+                    </template>
+                </xf-repeat>
+
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

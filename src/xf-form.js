@@ -97,7 +97,7 @@ export class XfForm extends PolymerElement {
                      url="/exist/apps/fore/init"
                      handle-as="json"
                      on-response="_handleInitialState"
-                     on-error="_handleError"
+                     on-error="_handleInitError"
                      method="GET"> </iron-ajax>
           <iron-ajax id="update" 
                      url="/exist/apps/fore/update"
@@ -138,6 +138,10 @@ export class XfForm extends PolymerElement {
             changed: {
                 type: Array,
                 value: []
+            },
+            debug:{
+                type:Boolean,
+                value:false
             }
         };
     }
@@ -169,10 +173,8 @@ export class XfForm extends PolymerElement {
         console.log('### ============================================== ###');
         console.log('### xf-form connected ', window.location.pathname);
 
-        // this.$.initForm.params = {"token": this.token};
-        // this.$.initForm.generateRequest();
-
         this.addEventListener('repeat-item-appended', this._itemAppended);
+        this.addEventListener('repeat-item-inserted', this._itemInserted);
         this.addEventListener('repeat-item-deleted', this._itemDeleted);
         this.addEventListener('value-changed', this._handleValueChange);
         this.addEventListener('message', this._displayMessage);
@@ -183,10 +185,7 @@ export class XfForm extends PolymerElement {
          */
         window.addEventListener('WebComponentsReady', function () {
             console.log('### ----------- WebComponentsReady ----------- ###');
-            this.update();
-            // this.dispatchEvent(new CustomEvent('model-ready', {composed: true, bubbles: true, detail: {}}));
-            // this._initUI();
-
+            this.init();
         }.bind(this));
 
     }
@@ -194,17 +193,18 @@ export class XfForm extends PolymerElement {
     disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('repeat-item-appended', this._itemAppended);
+        this.removeEventListener('repeat-item-inserted', this._itemInserted);
+        this.removeEventListener('repeat-item-deleted', this._itemDeleted);
         this.removeEventListener('value-change', this._handleValueChange);
         this.removeEventListener('message', this._displayMessage);
     }
 
 
     /**
-     * updates the model data. As we have limited capabilities on the client _update serves the purpose of the
-     * `rebuild`, `recalculate` and `revalidate` function of XForms.
+     * inits the model data.
      *
      */
-    update() {
+    init() {
 
         // ### if we get a token that means we're running with eXist-db instead of Polymer serve
         if (this.token) {
@@ -230,27 +230,19 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
     }
 
-    _handleInitialState(e) {
-        console.log('### token as param ', this.$.initForm.params);
-        this.modelData = this.$.initForm.lastResponse;
-        console.log('### initial data loaded from server');
-        if (this.modelData === null) {
-            this._showError('server did not return any modelData - stopping');
-        } else {
-            console.log('### modelData from remote ', this.modelData);
-            this._initUI();
-            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
+
+    /**
+     * updates the modelData by sending changed data to server, forcing recalculation and revalidation in one go.
+     */
+    update(){
+        console.log('### trigger update');
+        if(this.changed.size !== 0){
+            console.log("### update - change protocol ", this.changed);
+            this.$.update.params.token = this.token;
+            this.$.update.body = JSON.stringify(this.changed);
+            this.$.update.generateRequest();
         }
-    }
 
-    _handleError(e) {
-        this._showError(this.$.initForm.lastError.error);
-    }
-
-    _showError(error) {
-        this.$.modalMessage.classList.add('error');
-        this.$.messageContent.innerText = error;
-        this.$.modalMessage.open();
     }
 
     /**
@@ -278,45 +270,40 @@ export class XfForm extends PolymerElement {
         this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
     }
 
-    sendUpdates(){
-        this.$.update.params.token = this.token;
-        this.$.update.body = this.changed;
-        this.$.update.generateRequest();
+    /**
+     * resolves the binding of a boundElement into a 'binding path' which consists of the bind id and if repeated an
+     * index. Path steps are separated by '/'. Bindings pathes are used for addressing when sending updates to the server
+     * as well as applying updates from server.
+     *
+     *
+     * @param boundElement
+     * @returns {string|*}
+     */
+    resolveBinding(boundElement) {
+        if (boundElement.repeated) {
+            let elem = boundElement.closest('xf-repeat');
+            let path = elem.bind + ':' + elem.repeatIndex;
+
+            let found = true;
+            while (found) {
+                elem = elem.parentNode.closest('xf-repeat');
+                if (elem === null) {
+                    found = false;
+                    if(boundElement.nodeName === 'XF-REPEAT'){
+                        return path;
+                    }
+                } else {
+                    path = elem.bind + ':' + elem.repeatIndex + '/' + path;
+                }
+            }
+            console.log('### resolveBinding path ', path);
+            return path + '/' + boundElement.bind;
+            // return path;
+        }else{
+            return boundElement.bind;
+        }
     }
 
-    /*
-        findById(id, currentNode) {
-
-            if (id == currentNode.id) {
-                return currentNode;
-            } else {
-                for(var index in currentNode.children){
-                    var node = currentNode.children[index];
-                    if(node.id == id)
-                        return node;
-                    findById(id, node);
-                }
-                return "No Node Present";
-            }
-        }
-    */
-
-    /*
-        findById(data, id) {
-            var ret = -1
-            for(var i = 0; i < data.length; i++) {
-                if (data[i].id === id) {
-                    return data[i];
-                } else if (data[i].children && data[i].children.length && typeof data[i].children === "object") {
-                    ret = findById(data[i].children, id);
-                    if (ret.id === id) {
-                        return ret;
-                    }
-                }
-            }
-            return ret;
-        }
-    */
 
     /**
      * searches the modelData for given bindId and returns the object (ModelItem).
@@ -344,11 +331,49 @@ export class XfForm extends PolymerElement {
         return result;
     }
 
-    _displayMessage(e) {
+    _handleInitialState(e) {
+        console.log('### token as param ', this.$.initForm.params);
+        this.modelData = this.$.initForm.lastResponse;
+        console.log('### initial data loaded from server');
+        if (this.modelData === null) {
+            this._showError('server did not return any modelData - stopping');
+        } else {
+            console.log('### modelData from remote ', this.modelData);
+            this._initUI();
+            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
+        }
+    }
 
+    _initUI() {
+        // console.log('### init the UI');
+        // iterate the UI in search for bound controls
+        const boundElements = this.querySelectorAll('[bind]');
+        console.group('initUI');
+        for (let i = 0; i < boundElements.length; i++) {
+            console.info('### init UI element ', i + 1, ' of ', boundElements.length);
+            const boundElement = boundElements[i];
+            const bindId = boundElement.getAttribute('bind');
+            // if(XfForm.isBoundComponent(boundElement)){
+            boundElement.init();
+            // }
+
+        }
+        console.groupEnd('initUI');
+        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
+    }
+
+    _handleInitError(e) {
+        this._showError(this.$.initForm.lastError.error);
+    }
+
+
+    _displayMessage(e) {
         const level = e.detail.level;
         const msg = e.detail.message;
+        this._showMessage(level,msg);
+    }
 
+    _showMessage(level, msg){
         if (level === 'modal') {
             this.$.messageContent.innerText = msg;
             this.$.modalMessage.open();
@@ -382,6 +407,7 @@ export class XfForm extends PolymerElement {
             this.appendChild(notification);
             notification.open();
         }
+
     }
 
     _handleValueChange(e) {
@@ -396,24 +422,7 @@ export class XfForm extends PolymerElement {
         let path = e.detail.path;
         let action = {};
 
-        // if (path) {
-            // const idx = e.detail.index
-            // path = path + '/' + modelItem.id + ':' + idx;
-            // path = path + '/' + modelItem.id;
-        // } else {
-        //     path = modelItem.id;
-        // }
-        // action = {'action': 'setvalue', 'bind': modelItem.id, 'value': modelItem.value, 'path': path};
         action = {'action': 'setvalue', 'value': modelItem.value, 'path': path};
-
-
-        // modelItem.path = path + '/' + modelItem.id + ':' + e.detail.index;
-
-        // const mod = {'action':'setvalue','bind':modelItem.id, 'value':modelItem.value,'path':path};
-        // this.changed.push(mod);
-        // if (this.changed.indexOf(modelItem) === -1) {
-
-
         const found = this.changed.findIndex((obj) => obj.path == path);
         console.log('*************** found ', found);
         if(found !== -1){
@@ -422,43 +431,14 @@ export class XfForm extends PolymerElement {
             this.changed.push(action);
         }
 
-/*
-        if (this.changed.indexOf(action) === -1) {
-            // this.changed.push(modelItem);
-            this.changed.push(action);
-        } else {
-            const idx = this.changed.findIndex((obj => obj.id == modelItem.id));
-            // this.changed[idx] = modelItem;
-            this.changed[idx] = action;
-        }
-*/
         console.log('### list of changes ###');
         console.table(this.changed);
         console.log('### modelData ', this.modelData);
         this.refresh();
-
     }
 
 
-    _initUI() {
-        // console.log('### init the UI');
-        // iterate the UI in search for bound controls
-        const boundElements = this.querySelectorAll('[bind]');
-        console.group('initUI');
-        for (let i = 0; i < boundElements.length; i++) {
-            console.info('### init UI element ', i + 1, ' of ', boundElements.length);
-            const boundElement = boundElements[i];
-            const bindId = boundElement.getAttribute('bind');
-            // if(XfForm.isBoundComponent(boundElement)){
-            boundElement.init();
-            // }
 
-        }
-        console.groupEnd('initUI');
-        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
-    }
-
-    // this is just a first non-optimized implemenation. Whenever an append has happened a full UI refresh is done.
     _itemAppended(e) {
         console.log('### _itemAppended ', e.detail);
 
@@ -469,6 +449,7 @@ export class XfForm extends PolymerElement {
 
         // modelItem.path = bind + ':' + index;
 
+/*
         const change = {
             "action": "append",
             "bind": bind,
@@ -476,8 +457,22 @@ export class XfForm extends PolymerElement {
             "modelItem": modelItem,
             "path":path
         };
+*/
+        const change = {
+            "action": "append",
+            "modelItem": modelItem,
+            "path":path
+        };
         this.changed.push(change);
         console.table(this.changed);
+
+        this.refresh();
+    }
+
+    _itemInserted(e){
+        console.log('### _itemInserted ', e.detail);
+
+        console.log('#### new modelData: ', this.modelData);
 
         this.refresh();
     }
@@ -489,15 +484,11 @@ export class XfForm extends PolymerElement {
         const path = e.detail.path;
         const change = {
             "action": "delete",
-            "bind":bind,
-            "index": idx,
             "modelItem": item,
             "path":path
         };
         this.changed.push(change);
         console.table(this.changed);
-
-
     }
 
 
@@ -509,38 +500,166 @@ export class XfForm extends PolymerElement {
         this.$.important.close();
     }
 
-    resolveBinding(boundElement) {
-        if (boundElement.repeated) {
-            let elem = boundElement.closest('xf-repeat');
-            let path = elem.bind + ':' + elem.repeatIndex;
 
-            let found = true;
-            while (found) {
-                elem = elem.parentNode.closest('xf-repeat');
-                if (elem === null) {
-                    found = false;
-                    if(boundElement.nodeName === 'XF-REPEAT'){
-                        return path;
-                    }
-                } else {
-                    path = elem.bind + ':' + elem.repeatIndex + '/' + path;
-                }
+    /**
+     * apply updates from server. Come as JSON array of objects
+     * @private
+     */
+    _handleUpdate() {
+
+        const updates = [{
+            "path": "b-todo:1/b-task",
+            "value": "Pick up Honey",
+            "action": "updateState"
+        }, {
+            "path": "b-todo:1/b-state",
+            "value": "true",
+            "action": "updateState"
+        }, {
+            "path": "b-todo:2/b-task",
+            "value": "forget tutorial part1",
+            "action": "updateState"
+        }, {
+            "action": "message",
+            "text":"a message from server"
+        },{
+            "action":"load",
+            "url":"index.html"
+        }];
+
+
+        console.clear();
+        // console.log('### _handleUpdate current model: ', this.modelData);
+        console.log('### _handleUpdate updates: ', updates);
+
+/*
+        let targetItem = this.findById(this.modelData,'b-todo').bind[0][0];
+        console.log('targetItem : ', targetItem);
+
+
+        targetItem.value = "foobar";
+        console.log('targetItem : ', targetItem);
+        console.log('### _handleUpdate new model: ', this.modelData);
+*/
+
+/*
+        const c = this.querySelectorAll("[bind='b-todo']")[0];
+        const ctrl = c.querySelector("[bind='b-task']");
+        console.log('ctrl ', ctrl);
+        ctrl.classList.add('highlight');
+        ctrl.value = 'task has changed';
+*/
+
+
+        // console.log('### _handleUpdate new model: ', this.modelData);
+
+        updates.forEach(update => {
+            // tokenize path expr
+            const path = update.path;
+
+            switch (update.action) {
+                case 'updateState':
+                    this._applyChange(update);
+                    break;
+                case 'message':
+                    break;
+                case 'load':
+                    break;
+                default:
+                    break;
             }
-            console.log('### resolveBinding path ', path);
-            return path + '/' + boundElement.bind;
-            // return path;
-        }else{
-            return boundElement.bind;
-        }
+
+            // console.log('path: ', path);
+            // console.log('<<<<< ',this.resolvePath(path,this.modelData));
+/*
+            console.log('path: ', path.split('/'));
+            const steps = path.split('/');
+            steps.forEach(step => {
+               console.log('step: ', step);
+               if(step.includes(':')){
+                   const idx = step.substring(step.indexOf(':') + 1);
+                   console.log('repeated step index: ', idx)
+               }else{
+                   console.log('not repeated');
+               }
+            });
+*/
+
+        });
     }
 
-    _handleUpdate(){
+    /**
+     * applies an update coming from server.
+     * @param update
+     * @private
+     */
+    _applyChange(update){
+        let targetModelItem = this.resolvePath(update.path, this.modelData);
+
+        console.log('targetItem', targetModelItem);
+
+        if(update.value){
+            targetModelItem.value = update.value;
+        }
+        if(update.readonly){
+            targetModelItem.readonly = update.readonly;
+        }
+        if(update.required){
+            targetModelItem.required = update.required;
+        }
+        if(update.relevant){
+            targetModelItem.relevant = update.relevant;
+        }
+        if(update.valid){
+            targetModelItem.valid = update.valid;
+        }
+        if(update.alert){
+            //todo
+        }
+
+    }
+
+
+    // todo: can be rewritten with reduce
+    resolvePath(path, modelObject){
+        console.log('#### resolvePath ', path, modelObject);
+        const steps = path.split('/');
+        const step = steps[0];
+
+        // console.log('step: ', step);
+        if(step.includes(':')){
+            const b = step.substring(0,step.indexOf(':'));
+            // console.log('repeated step bind: ', b)
+
+            const idx = step.substring(step.indexOf(':') + 1);
+            // console.log('repeated step index: ', idx)
+
+            const targetItem = this.findById(modelObject,b);
+
+            if(path.includes('/')){
+                return this.resolvePath(steps[1],targetItem.bind[idx-1]);
+            }else{
+                return targetItem.bind[idx-1];
+            }
+
+        }else{
+            console.log('##### modelObjecdt ',modelObject);
+            return this.findById(modelObject,path);
+        }
 
     }
 
     _handleUpdateError(){
-
+        console.log(this.$.update.lastError);
+        this._showMessage('modeless',this.$.update.lastError.error.message + " - " + this.$.update.url);
     }
+
+    _showError(error) {
+        this.$.modalMessage.classList.add('error');
+        this.$.messageContent.innerText = error;
+        this.$.modalMessage.open();
+    }
+
 }
 
 window.customElements.define('xf-form', XfForm);

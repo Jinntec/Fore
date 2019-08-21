@@ -138,32 +138,6 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
                 bubbles: true,
                 detail: {'modelItem': this.modelItem, "path":path}
             }));
-
-        /*
-                if(this.repeated){
-                    let elem = this.closest('xf-repeat');
-                    let inner = elem.bind + ':' + elem.repeatIndex;
-
-                    let found = true;
-                    while(found){
-                        elem = elem.parentNode.closest('xf-repeat');
-                        if(elem === null){
-                            found = false;
-                        }else{
-                            inner = elem.bind + ':' + elem.repeatIndex + '/' + inner;
-                        }
-                    }
-                    console.log('zzzzzzzzzzzz index ', inner);
-
-                    console.log('>>>>>>>>>>>>>>>>> resolveBinding: ', this.ownerForm.resolveBinding(this));
-
-                    const idx = this.closest('xf-repeat').repeatIndex;
-                    // this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner,'index':idx}}));
-                    this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem,'path':inner}}));
-                }else{
-                    this.dispatchEvent(new CustomEvent('value-changed', {composed: true, bubbles: true, detail: {'modelItem':this.modelItem}}));
-                }
-        */
     }
 
     _updateAlert() {
@@ -186,7 +160,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     _updateValue() {
         // console.log('### xf-control._updateValue ', this.value);
-        // this.uiState.value = this.value;
+        this.modelItem.value = this.value;
     }
 }
 

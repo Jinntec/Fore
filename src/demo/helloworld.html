@@ -12,7 +12,9 @@
         import '../xf-output.js';
         import '../xf-input.js';
         import '../xf-setvalue.js';
+        import '../xf-update.js';
         import '../xf-json-data.js';
+        import '../xf-message.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
 
@@ -40,12 +42,19 @@
         <template>
             <!-- ##### xf-modelData is not exposed to the client! ##### -->
             <xf-model id="record">
+                <xf-param name="dataroot" value="request:get-param('dataroot','/db/apps/fore/data"></xf-param>
+
                 <xf-instance>
                     <data>
                         <greeting>World!</greeting>
                     </data>
                 </xf-instance>
                 <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+
+                <xf-submission replace="none"
+                               action="xmldb:store('{$dataroot}', 'hello.xml', $instances?default)">
+
+                </xf-submission>
             </xf-model>
             <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
             <xf-json-data id="mockup">
@@ -68,11 +77,16 @@
                 <label for="greeting">Greeting:</label>
                 <xf-input bind="b-greeting" id="greeting" incremental="incremental" type="text"></xf-input>
 
-                <label for="greeting2">This fires onblur</label>
-                <xf-input bind="b-greeting" id="greeting2" type="text"></xf-input>
+                <xf-input bind="b-greeting" id="greeting2" type="text" label="this fires onblur (default)">
+                    <xf-message event="value-changed">value of control 'greeting2' changed.</xf-message>
+                </xf-input>
 
                 <xf-button label="set value to 'girls and boys'">
                     <xf-setvalue bind="b-greeting" value="girls and boys"></xf-setvalue>
+                </xf-button>
+
+                <xf-button label="update">
+                    <xf-update></xf-update>
                 </xf-button>
             </xf-form>
         </template>

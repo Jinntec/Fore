@@ -19,11 +19,11 @@ validation that should ultimately assert the correctness of data to be submitted
 Furthermore the heavy lifting of XPath execution cannot be done within
 the browser as these simply lack a XPath 2 (not to speak of XQuery) implementation.
 
-However it's a definitive goal of Fore to support offline capabilities. 
+However it's a definitive goal of Fore to support offline capabilities whereever possible.
 
 Fore will deliver XForms-like capabilities by processing the model on the server which will in turn pass on
-the results to the client in a defined JSON format. The client may then operate on this structure and eventually
-pass it back to update the model on server. 
+the results to the client in a defined [JSON format](json.md). The client may then operate on this structure and eventually
+pass changes back to update the model on server. (See [client-server exchange format](client-server-exchange.md).) 
 
 The server-side validation will finally decide if given data can be submitted or not.
 
@@ -32,7 +32,8 @@ Advantages of this architecture:
 * strong separation between model and UI
 * the policies a model defines (its bindings) is not exposed to the client
 * a client might still operate decoupled from the server 
-* 2 level validation either on client and on server  
+* 2 level validation either on client and on server
+* datatype support  
 
 ## Syntax
 

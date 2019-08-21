@@ -12,7 +12,9 @@
         import '../xf-button.js';
         import '../xf-delete.js';
         import '../xf-append.js';
+        import '../xf-update.js';
         import '../xf-input.js';
+        import '../xf-refresh.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -49,7 +51,9 @@
         [label=add] {
             background: #29B6F6;
         }
-
+        .highlight{
+            background:red;
+        }
     </style>
 </head>
 <body>
@@ -161,6 +165,14 @@
                         </xf-button>
                     </template>
                 </xf-repeat>
+
+                <xf-button label="update">
+                    <xf-update></xf-update>
+                </xf-button>
+                <xf-button label="refresh">
+                    <xf-refresh></xf-refresh>
+                </xf-button>
+
             </xf-form>
         </template>
     </demo-snippet>
