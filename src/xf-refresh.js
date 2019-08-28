@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
+import { XfAction } from "./xf-action.js";
 
 
 /**
@@ -9,7 +9,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @polymer
  * @demo demo/index.html
  */
-class XfRefresh extends PolymerElement {
+class XfRefresh extends XfAction {
 
 
     execute(){

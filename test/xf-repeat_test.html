@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
 
-    <title>xf-model test</title>
+    <title>xf-repeat init test</title>
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
@@ -122,6 +122,7 @@
             const deleteAction = document.getElementById('deleteAction');
             const append = document.getElementById('append');
 
+
             test('there is a repeat binding to b-todo', () => {
                 assert.isTrue(repeat.bind === 'b-todo');
                 assert.isTrue(repeat.modelItem.id === 'b-todo');
@@ -202,9 +203,8 @@
                 assert.isTrue(input[5].value);
             });
 
-            test('last items has "repeat-index" attribute after appending an entry', (done) => {
 
-
+/*
                 const handler = (ev) => {
                     todo.removeEventListener('repeat-item-appended', handler);
                     const items = repeat.querySelectorAll('xf-repeat-item');
@@ -213,7 +213,9 @@
                     done();
                 };
                 repeat.addEventListener('repeat-item-appended',handler);
-                append.execute();
+*/
+                // append.execute();
+                // assert.isTrue(repeat.querySelectorAll('xf-repeat-item').length === 3);
 
 
 /*
@@ -226,7 +228,7 @@
                     }
                 };
 */
-            });
+            // });
 
 
 

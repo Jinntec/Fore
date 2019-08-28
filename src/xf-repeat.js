@@ -46,13 +46,13 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             repeatIndex:{
                 type: Number,
                 value:1,
-                observer:'_showTheBastard'
+                observer:'_repeatIndexChanged'
             }
         };
     }
 
-    _showTheBastard(oldVal, newVal){
-        console.log('_showTheBastard ', this.repeatIndex);
+    _repeatIndexChanged(oldVal, newVal){
+        console.log('### repeatIndex changed to ', this.repeatIndex);
     }
 
     connectedCallback() {
@@ -146,12 +146,11 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         // ### create a repeat-item in the UI
 
         if(!this.initDone){
-            console.log('hhhhäääääääääääääää');
-            // this.init();
+            console.warn('append before repeat was initialized');
         }
 
         const dTmpl = this._getDataTemplate();
-        console.log('dataTemplate from repeat ', dTmpl);
+        console.log('### dataTemplate from repeat ', dTmpl);
 
         // ### update the model (adding an entry to bind array)
         // if(!this.modelItem || !this.modelItem.bind){
@@ -169,7 +168,6 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         }
 
         this.repeatIndex = index + 1;
-        console.log('repeat index is now at: ', this.index);
         // const index = this.modelItem.bind.length - 1;
         // const item = this._createRepeatItem(index);
         const item = this._appendRepeatItem(index);
@@ -261,7 +259,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         repeatItem.addEventListener('repeat-item-created', this._handleItemCreated.bind(this));
         repeatItem.init();
 
-
+        if(position === 'after'){
+            this.repeatIndex +=1;
+        }
         return repeatItem;
     }
 
@@ -273,7 +273,7 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
     }
 
     _handleItemCreated(e) {
-        console.log('>>> _handleItemCreated ', e);
+        console.log('### _handleItemCreated ', e);
 
         if (!this.initDone) return;
 
@@ -291,11 +291,9 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
         // ### get the index of repeatItem within modelData
         const index = this.modelItem.bind.indexOf(repeatItem.modelItem);
-        // console.log('old item index ', index);
 
         this.modelItem.bind.splice(index, 1);
-        // console.log('after modelItem delete ', this.modelItem.bind);
-        console.log('repeatItems after delete ', this.repeatItems);
+        console.log('### repeatItems after delete ', this.repeatItems);
 
         // ### delete the repeatItem from the DOM
         this.removeChild(repeatItem);
@@ -305,7 +303,6 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
 
         const path = this.ownerForm.resolveBinding(this);
 
-
         // ### update the 'repeat-index' marker attribute
         this._removeIndexMarker();
 
@@ -313,17 +310,13 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             if (index <= cnt - 1) {
                 // ### if there's a repeat-item left with the same index as the deleted one it becomes the new repeat index
                 items[index].setAttribute('repeat-index', '');
-                console.log('>>>>> cnt 1 ', cnt);
                 this.repeatIndex = index+1;
             } else if (index > cnt - 1) {
                 // ### if the last one is deleted the new last one will be new repeat-index
                 items[cnt - 1].setAttribute('repeat-index', '');
-                console.log('>>>>> cnt 2', cnt);
                 this.repeatIndex = cnt;
             }
         }
-        console.log('### new repeatIndex: ', this.repeatIndex);
-
         this.dispatchEvent(new CustomEvent('repeat-item-deleted', {
             composed: true,
             bubbles: true,
@@ -341,20 +334,31 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
         this.template = this.firstElementChild;
         console.log('### template found children ', this.template.content.children);
 
-        let tmp = [];
+        let dataTmpl = [];
         Array.from(this.template.content.children).forEach(child => {
-            console.log('@@@ child ', child);
-
-            if (XfForm.isBoundComponent(child)) {
-                console.log('@@@ bound child ', child);
-                const bindId = child.getAttribute('bind');
-                if (bindId) {
-                    const newObj = {"id": bindId, "value": ""}; // create default object for insertion into repeat
-                    tmp.push(newObj);
-                }
-            }
+            this._processChild(child, dataTmpl);
         });
-        return tmp;
+        if(dataTmpl.length === 0){
+            console.error('### dataTemplate for repeat ', this.id, ' is empty');
+        }
+        return dataTmpl;
+    }
+
+    _processChild(child, dataTmpl){
+        if (XfForm.isBoundComponent(child)) {
+            const bindId = child.getAttribute('bind');
+            if (bindId) {
+                const newObj = {"id": bindId, "value": ""}; // create default object for insertion into repeat
+                dataTmpl.push(newObj);
+            }
+        }
+        const childs = child.children;
+        if(childs.length !== 0){
+            Array.from(childs).forEach(c => {
+               this._processChild(c,dataTmpl);
+            });
+        }
+        console.log('childs ', childs);
     }
 
 

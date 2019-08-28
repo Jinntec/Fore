@@ -48,7 +48,6 @@
 
         const element = document.getElementById('basic');
         const output = document.getElementById('output');
-        const refreshAction = document.getElementById('refresh');
 
 
         test('instantiating the element with mockup data works', () => {
@@ -90,18 +89,6 @@
         test('output control has a value of "World"',function (){
           assert.equal(output.value,'World');
         });
-
-
-        test('refresh without changes does not change state of control',function (){
-          refreshAction.execute();
-          assert.typeOf(output.modelItem,'Object');
-          assert.equal(output.modelItem.id,'b-greeting');
-          assert.equal(output.modelItem.value,'World');
-          assert.equal(output.modelItem.required,true);
-          assert.equal(output.bind,'b-greeting');
-          assert.equal(output.value,'World');
-        });
-
 
 
 /*

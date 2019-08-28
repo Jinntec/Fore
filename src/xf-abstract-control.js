@@ -136,7 +136,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
             {
                 composed: true,
                 bubbles: true,
-                detail: {'modelItem': this.modelItem, "path":path}
+                detail: {'modelItem': this.modelItem, "path":path,"target":this}
             }));
     }
 

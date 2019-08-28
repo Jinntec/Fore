@@ -466,6 +466,7 @@ export class XfForm extends PolymerElement {
         this.changed.push(change);
         console.table(this.changed);
 
+        console.log('>>>>> modelData: ', this.modelData);
         this.refresh();
     }
 
@@ -521,6 +522,7 @@ export class XfForm extends PolymerElement {
             "action": "updateState"
         }, {
             "action": "message",
+            "level":"modeless",
             "text":"a message from server"
         },{
             "action":"load",

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+
+    <title>xf-repeat insert twice</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script src="../src/xf-form.js" type="module"></script>
+    <script src="../src/xf-repeat.js" type="module"></script>
+    <script src="../src/xf-output.js" type="module"></script>
+    <script src="../src/xf-input.js" type="module"></script>
+    <script src="../src/xf-button.js" type="module"></script>
+    <script src="../src/xf-insert.js" type="module"></script>
+    <script src="../src/xf-append.js" type="module"></script>
+    <script src="../src/xf-json-data.js" type="module"></script>
+</head>
+<body>
+
+            <xf-json-data id="mockup">
+                [
+                    {
+                        "bind": {
+                            "id": "b-thing",
+                            "sequence":true,
+                            "bind": [
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Tree"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Ball"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Stone"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "id":"b-thing",
+                                        "value":"Computer"
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            </xf-json-data>
+            <xf-form id="things" mockup='mockup'>
+                <h1>Things</h1>
+
+                <xf-button label="append">
+                    <xf-append repeat="r-things"></xf-append>
+                </xf-button>
+                <xf-button label="insert before current">
+                    <xf-insert id="insertbefore" repeat="r-things" position="before"></xf-insert>
+                </xf-button>
+                <xf-button label="insert after current">
+                    <xf-insert repeat="r-things"></xf-insert>
+                </xf-button>
+                <xf-repeat bind="b-thing" id="r-things" focus-on-create="thing">
+                    <template>
+                        <xf-input bind="b-thing" id="thing" type="text"> </xf-input>
+                    </template>
+                </xf-repeat>
+
+
+    </test-fixture>
+
+
+    <script type="module">
+        suite('xf-repeat', () => {
+            var form;
+
+            test('repeat-index stays 1 when inserting twice before first', () => {
+                const form = document.getElementById('things');
+                const before = document.getElementById('insertbefore');
+                before.execute();
+                const repeat = document.getElementById('r-things');
+                assert.isTrue(repeat.repeatIndex === 1);
+                before.execute();
+                assert.isTrue(repeat.repeatIndex === 1);
+            });
+
+        });
+    </script>
+
+</body>
+</html>

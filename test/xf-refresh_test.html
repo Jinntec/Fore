@@ -25,7 +25,8 @@
           {
             "bind":{
               "id":"b-greeting",
-              "value":"World"
+              "value":"World",
+              "required":true
             }
           }
         ]
@@ -44,23 +45,33 @@
 
     <script type="module">
         suite('xf-refresh', () => {
-            const form = document.getElementById('hello');
-            const output = document.getElementById('greeting');
-            const refresh = document.getElementById('refresh');
-
             test('output has value "World" before and after refresh', () => {
+                const form = document.getElementById('hello');
+                const output = form.querySelector('xf-output');
+                const refresh = form.querySelector('xf-refresh');
 
-                assert.isTrue(output.modelItem.value === 'World');
-                assert.isTrue(output.bind === 'b-greeting');
-                assert.isTrue(output.modelItem.id === 'b-greeting');
+
+                assert.typeOf(output.modelItem,'Object');
+                assert.equal(output.modelItem.id,'b-greeting');
+                assert.equal(output.modelItem.value,'World');
+                assert.equal(output.modelItem.required,true);
+                assert.equal(output.bind,'b-greeting');
+                assert.equal(output.value,'World');
 
                 refresh.execute();
 
-                assert.isTrue(output.modelItem.value === 'World');
-                assert.isTrue(output.bind === 'b-greeting');
-                assert.isTrue(output.modelItem.id === 'b-greeting');
+
+                assert.typeOf(output.modelItem,'Object');
+                assert.equal(output.modelItem.id,'b-greeting');
+                assert.equal(output.modelItem.value,'World');
+                assert.equal(output.modelItem.required,true);
+                assert.equal(output.bind,'b-greeting');
+                assert.equal(output.value,'World');
+
 
             });
+
+
 
 /*
             test('refresh event fires', (done) => {

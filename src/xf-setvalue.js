@@ -46,7 +46,7 @@ class XfSetvalue extends XfAction {
             this.dispatchEvent(new CustomEvent('value-changed', {
                 composed: true,
                 bubbles: true,
-                detail: {'modelItem': target,"path":path}
+                detail: {'modelItem': target,"path":path,"target":this}
             }));
 
         }else{
@@ -54,7 +54,7 @@ class XfSetvalue extends XfAction {
             this.dispatchEvent(new CustomEvent('value-changed', {
                 composed: true,
                 bubbles: true,
-                detail: {'modelItem': this.modelItem,"path":path}
+                detail: {'modelItem': this.modelItem,"path":path,"target":this}
             }));
         }
 
