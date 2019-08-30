@@ -1,17 +1,18 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import {XfAbstractControl} from './xf-abstract-control.js';
-import '../assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js';
+import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
+import {XfAbstractControl} from '../xf-abstract-control.js';
+import '../../assets/@vaadin/vaadin-combo-box';
 
 // import { XfBound } from './xf-bound.js';
 
 /**
- * `xf-material-combo` is a Material Design combobox.
+ * `xf-material-select` is a Material Design select control.
  *
  *
  * @customElement
  * @polymer
+ * @demo ../demo/xf-material-select.html
  */
-class XfMaterialCombo extends XfAbstractControl {
+class XfMaterialSelect extends XfAbstractControl {
     static get template() {
         return html`
       <style>
@@ -103,4 +104,4 @@ class XfMaterialCombo extends XfAbstractControl {
 
 }
 
-window.customElements.define('xf-material-combo', XfMaterialCombo);
+window.customElements.define('xf-material-select', XfMaterialSelect);

@@ -10,10 +10,10 @@
     <script src="../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
     <script type="module">
         import '../xf-form.js';
-        import '../xf-button.js';
+        import '../native/xf-button.js';
         import '../xf-output.js';
         import '../xf-setvalue.js';
-        import '../xf-material-combo.js';
+        import '../material/xf-material-select.js';
         import '../xf-items.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
@@ -42,7 +42,7 @@
 </head>
 <body>
 
-    <h1><code>xf-material-combo</code></h1>
+    <h1><code>xf-material-select</code></h1>
 
     <demo-snippet>
         <template>
@@ -107,20 +107,20 @@
                 </xf-items>
 
                 <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
-                <xf-material-combo bind="b-selected" id="selected" itemset="colors"
-                                   label="Which do you like best?"></xf-material-combo>
+                <xf-material-select bind="b-selected" id="selected" itemset="colors"
+                                   label="Which do you like best?"></xf-material-select>
 
-                <xf-material-combo bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-combo>
+                <xf-material-select bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-select>
 
 
                 <h2>User can provide a value that's not in the list</h2>
-                <xf-material-combo bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
-                                   selection="open"></xf-material-combo>
+                <xf-material-select bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
+                                   selection="open"></xf-material-select>
                 <h2>Your free selection:
                     <xf-output bind="b-selected2" id="output"></xf-output>
                 </h2>
 
-                <div class="note">Do not use `xf-material-combo` with conflicting 'selection' settings on the same bound
+                <div class="note">Do not use `xf-material-select` with conflicting 'selection' settings on the same bound
                     node. This
                     will lead to unexpected behavior as a selection='closed' control will reset a manually given value.
                 </div>

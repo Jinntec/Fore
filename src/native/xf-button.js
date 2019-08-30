@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
+import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
 
 
 /**
@@ -9,7 +9,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @polymer
  * @demo demo/index.html
  */
-class XfButton extends PolymerElement {
+export class XfButton extends PolymerElement {
     static get template() {
         return html`
       <style>

@@ -160,7 +160,7 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     _updateValue() {
         // console.log('### xf-control._updateValue ', this.value);
-        this.modelItem.value = this.value;
+        // this.modelItem.value = this.value;
     }
 }
 

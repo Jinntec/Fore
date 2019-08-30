@@ -1,16 +1,17 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfAbstractControl } from './xf-abstract-control.js';
+import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
+import { XfAbstractControl } from '../xf-abstract-control.js';
+import '../../assets/@polymer/paper-input/paper-input.js';
 
-// import { XfBound } from './xf-bound.js';
 
 /**
- * `xf-input`
+ * `xf-material-input`
  * general class for bound elements
  *
  * @customElement
  * @polymer
+ * @demo ../demo/xf-material-input.html
  */
-class XfInput extends XfAbstractControl {
+class XfMaterialInput extends XfAbstractControl {
     static get template() {
         return html`
       <style>
@@ -18,11 +19,18 @@ class XfInput extends XfAbstractControl {
           display: inline-block;
         }
         label{
-        display:block;
+            display:block;
+        }
+        
+        :host([type='color']){
+                width: 100px;
+                
+                --paper-input-container-underline:{
+                    border:none;
+                }
         }
       </style>
-      <label for="input">[[label]]</label>
-      <input id="input" type="[[type]]" value="{{value}}">
+      <paper-input id="input" type="[[type]]" value="{{value}}" label="[[label]]"></paper-input>
     `;
     }
 
@@ -82,4 +90,4 @@ class XfInput extends XfAbstractControl {
 
 }
 
-window.customElements.define('xf-input', XfInput);
+window.customElements.define('xf-material-input', XfMaterialInput);

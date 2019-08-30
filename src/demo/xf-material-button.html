@@ -3,20 +3,19 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Hello World</title>
+    <title>Button</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script src="../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
     <script type="module">
         import '../xf-form.js';
-        import '../xf-output.js';
-        import '../native/xf-button.js';
-        import '../xf-refresh.js';
+        import '../material/xf-material-button.js';
         import '../xf-json-data.js';
-        import '../xf-message.js';
-        import '../xf-setvalue.js';
 
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
+
 
     <style>
         xf-model {
@@ -26,11 +25,23 @@
         xf-output {
             color: blue;
         }
-        xf-json-data {display:none;}
+
+        .note {
+            color: red;
+
+        }
+
+        h2 {
+            margin-top: 50px;
+        }
+
+
 
     </style>
 </head>
-<body unresolved="unresolved">
+<body>
+
+    <h1><code>xf-material-button</code></h1>
 
 
     <demo-snippet>
@@ -39,43 +50,36 @@
             <xf-model id="record">
                 <xf-instance>
                     <data>
-                        <greeting>World!</greeting>
+                        <value>a bound value</value>
                     </data>
                 </xf-instance>
-                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+                <xf-bind id="b-value" ref="value"></xf-bind>
+
             </xf-model>
         </template>
     </demo-snippet>
 
-
     <demo-snippet>
         <template>
-            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
             <xf-json-data id="mockup">
                 [
                   {
-                    "bind":{
-                      "id":"b-greeting",
-                      "required":true,
-                      "value":"Hello...?"
+                    "bind": {
+                      "id": "b-value",
+                      "value": "a bound value"
                     }
                   }
                 ]
             </xf-json-data>
 
             <xf-form mockup='mockup'>
-                <xf-message event="value-changed">value has changed</xf-message>
-                <xf-message event="refresh-done">refresh has been done </xf-message>
 
+                <h1>Material Button</h1>
 
-                <h1>
-                    <xf-output bind="b-greeting" id="output">
-                    </xf-output>
-                </h1>
+                <xf-material-button>a standard button</xf-material-button>
+                <xf-material-button raised="raised">a raised button</xf-material-button>
+                <xf-material-button raised="raised" toggles="toggles">a toggle button</xf-material-button>
 
-                <xf-button label="say 'hello World'">
-                    <xf-setvalue bind="b-greeting" value="Hello World!"></xf-setvalue>
-                </xf-button>
             </xf-form>
         </template>
     </demo-snippet>
