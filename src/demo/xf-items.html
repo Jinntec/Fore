@@ -14,6 +14,7 @@
         import '../../assets/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
 
+    <link rel="stylesheet" href="demo.css"/>
 
     <custom-style>
         <style is="custom-style">
@@ -30,35 +31,33 @@
 </head>
 <body unresolved="unresolved">
     <h1>This is a helper element that feeds option lists of comboboxes and list controls</h1>
-<!--
-    <demo-snippet>
-        <h2>static inline data</h2>
-        <template>
-            <xf-items id='colors'>
-                [
-                    {"label":"Green","value":"green"},
-                    {"label":"Blue","value":"blue"},
-                    {"label":"Red","value":"red"}
-                ]
-            </xf-items>
-        </template>
-    </demo-snippet>
-
-    <demo-snippet>
-        <h2>a non-existing URL dispatches a 'resource-error' event.</h2>
-        <template>
-            <xf-form>
-                <xf-message event="resource-error">Error loading JSON for URL: '${element.url}'</xf-message>
-                <xf-items id='colors2' url="doesNotExist"></xf-items>
-            </xf-form>
-        </template>
-    </demo-snippet>
--->
-
+    <div class="note">This is the standard way of providing key/value-lists in Fore</div>
         <demo-snippet>
             <h2>loading from a JSON file</h2>
             <template>
-                <xf-items id='colors2' url="items.json"> </xf-items>
+                <xf-items id='colors1' url="items.json"> </xf-items>
+            </template>
+        </demo-snippet>
+
+        <demo-snippet>
+            <h2>loading from a inline JSON</h2>
+            <template>
+                <xf-items id='colors2'>
+                    [
+                        {"label":"LightGreen","value":"lightgreen"},
+                        {"label":"Green","value":"green"},
+                        {"label":"DarkGreen","value":"darkgreen"},
+                        {"label":"LightBlue","value":"lightblue"},
+                        {"label":"Blue","value":"blue"},
+                        {"label":"DarkBlue","value":"darkblue"},
+                        {"label":"LightRed","value":"lightred"},
+                        {"label":"Red","value":"red"},
+                        {"label":"DarkRed","value":"darkred"},
+                        {"label":"LightYellow","value":"lightyellow"},
+                        {"label":"Yellow","value":"yellow"},
+                        {"label":"DarkYellow","value":"darkyellow"}
+                    ]
+                </xf-items>
             </template>
         </demo-snippet>
 

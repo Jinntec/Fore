@@ -58,8 +58,7 @@ class XfItems extends PolymerElement {
         super.connectedCallback();
         if(this.url){
             console.log('### load items from URL: ', this.url);
-            this.$.itemsLoader.url = this.url;
-            this.$.itemsLoader.generateRequest();
+            this.load();
         }else{
             this.data = JSON.parse(this.textContent);
             console.log('### inline data loaded ', this.data);
@@ -67,8 +66,18 @@ class XfItems extends PolymerElement {
         }
     }
 
+    load(){
+        this.$.itemsLoader.url = this.url;
+        this.$.itemsLoader.generateRequest();
+    }
+
+    getAjax(){
+        return this.$.itemsLoader;
+    }
+
     _handleResource(){
-        this.data = JSON.parse(this.$.itemsLoader.lastResponse);
+        // this.data = JSON.parse(this.$.itemsLoader.lastResponse);
+        this.data = this.$.itemsLoader.lastResponse;
         console.log('### resource loaded ', this.data);
     }
 

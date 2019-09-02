@@ -1,0 +1,14 @@
+body{
+    font-family: 'Roboto', 'Noto', sans-serif;
+}
+.note {
+    color: red;
+    margin: 10px 0;
+
+}
+
+h2 {
+    margin-top: 50px;
+}
+
+xf-json-data {display:none;}

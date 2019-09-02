@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+
+    <title>xf-items test</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script src="../src/xf-items.js" type="module"></script>
+</head>
+<body>
+
+
+<xf-items id='colors1' url="../src/demo/items.json"></xf-items>
+
+
+<script type="module">
+    suite('xf-items', () => {
+
+      test('xf-items get loaded from external file', function(done) {
+          const items = document.getElementById('colors1');
+          const loader = items.getAjax();
+
+          loader.addEventListener('response', function(e){
+            assert.isTrue(items.data.length === 12);
+            assert.isTrue(items.data[0].label === 'LightGreen');
+            assert.isTrue(items.data[0].value === 'lightgreen');
+
+            done();
+          });
+
+          items.load();
+      });
+
+
+    });
+</script>
+
+</body>
+</html>
