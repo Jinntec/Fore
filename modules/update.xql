@@ -1,14 +1,19 @@
 xquery version "3.1";
 
 import module namespace runtime="http://existsolutions.com/fore/runtime" at "runtime.xql";
+import module namespace fore="http://exist-db.org/apps/fore" at "fore.xqm";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare option output:method "json";
 declare option output:media-type "application/json";
 
-
-let $form := session:get-attribute('form')
+let $form := fore:get-form()
 let $log := util:log('info', 'form ' || serialize($form))
+
+(:
+let $data := data(request:get-data())
+let $updates := parse-json($data)
+:)
 
 (: todo: get updates from post request :)
 let $updates := parse-json('
@@ -73,6 +78,8 @@ return array:for-each($updates, function($update){
             return concat('setvalue',':', $update?path, '=', $update?value)
         case 'append'
             return 'append'
+        case 'insert'
+            return 'insert'
         case 'delete'
             return 'delete'
         default return ()

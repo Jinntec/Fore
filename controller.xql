@@ -34,7 +34,7 @@ else if (starts-with($exist:path, "/src/demo/")) then
         let $log := util:log('info', 'controller path ' || $path)
         return
         if(doc-available($path)) then
-            <forward url="{$exist:controller}/modules/load-form.xql" method="get">
+            <forward url="{$exist:controller}/modules/load.xql" method="get">
                 <add-parameter name="path" value="{$path}"/>
             </forward>
         else

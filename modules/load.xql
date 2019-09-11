@@ -87,11 +87,11 @@ declare function local:handleChildren($node as node()){
 let $path := request:get-parameter('path','')
 let $doc := doc($path)
 let $token := util:uuid()
-let $session := session:set-attribute('token',$token)
+let $session := session:set-attribute('fore.token',$token)
 (:let $session := session:set-attribute('doc',$doc):)
-let $session := session:set-attribute('path',$path)
+let $session := session:set-attribute('fore.path',$path)
 
-let $log := util:log('info', 'token ' || session:get-attribute('token'))
+let $log := util:log('info', 'token ' || session:get-attribute('fore.token'))
 
 return
     if(data($config:developer-mode) eq 'true') then

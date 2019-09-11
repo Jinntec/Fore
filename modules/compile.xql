@@ -64,7 +64,7 @@ declare function compile:validate($bind as element(xf-bind)) {
 (:                        if ($bind/xf-bind) then:)
 (:                            <code>()</code>:)
 (:                        else:)
-                            <code>runtime:output({($bind/@ref/string(), $bind/@set/string())}, {($bind/@relevant/string(), "true()")[1]}, {serialize($bind)},1)</code>
+                            <code>runtime:output({($bind/@ref/string(), $bind/@set/string())}, {($bind/@relevant/string(), "true()")[1]}, {serialize($bind)},1,"")</code>
                     }
                     </else>
                 </if>

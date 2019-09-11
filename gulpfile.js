@@ -45,7 +45,7 @@ var stylesPath = 'resources/css/*';
 var componentPaths = [
     '*.html',
     'assets/**/*',
-    'src/*.js'
+    'src/**/*.js'
 ];
 
 gulp.task('deploy:components', function () {
