@@ -151,6 +151,17 @@
             <xf-submit-done>
                 <!-- return a message to let the user know everything went fine.   -->
                 <xf-message level="ephemeral">Your data have been stored</xf-message>
+
+                <!-- call a chained submission -->
+                <xf-send submission="s-save"></xf-send>
+            </xf-submit-done>
+
+        </xf-submission>
+
+        <xf-submission id="s-save"
+                       resource="modules/persist.xql"
+                       replace="instance">
+            <xf-submit-done>
                 <!--
                 send the user to a new location. Means to just send a JSON snippet to the client that actually
                 does the request to the new URL.
@@ -159,7 +170,6 @@
                 -->
                 <xf-load url="seed-form.html"/>
             </xf-submit-done>
-
         </xf-submission>
 
 
