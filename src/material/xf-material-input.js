@@ -1,5 +1,6 @@
 import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
 import { XfAbstractControl } from '../xf-abstract-control.js';
+import '../xf-alert.js';
 import '../../assets/@polymer/paper-input/paper-input.js';
 
 
@@ -29,8 +30,17 @@ class XfMaterialInput extends XfAbstractControl {
                     border:none;
                 }
         }
+        paper-input {
+            --paper-input-container:{
+                padding-bottom: 0;
+                margin-bottom: 0;
+            
+            };
+        }
       </style>
       <paper-input id="input" type="[[type]]" value="{{value}}" label="[[label]]"></paper-input>
+      <xf-alert>[[alert]]</xf-alert>
+      <slot></slot>
     `;
     }
 
@@ -87,6 +97,13 @@ class XfMaterialInput extends XfAbstractControl {
     }
 
 
+/*
+    _updateAlert() {
+        console.log('### updateAlert ', this.alert);
+        this.$.input.errorMessage = this.alert;
+        this.$.input.valid = false;
+    }
+*/
 
 }
 

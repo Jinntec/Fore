@@ -31,11 +31,6 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
                 value: false,
                 observer: '_updateRequired'
             },
-            relevant: {
-                type: Boolean,
-                value: true,
-                observer: '_updateRelevant'
-            },
             valid: {
                 type: Boolean,
                 value: true,
@@ -147,9 +142,6 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     }
 
     _updateRequired() {
-    }
-
-    _updateRelevant() {
     }
 
     _updateValid() {

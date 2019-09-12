@@ -27,6 +27,14 @@ let bound = (superClass) =>
                 modelItem:{
                     type:Object
                 },
+                /**
+                 * flag signaling wether a bound element is relevant or not.
+                 */
+                relevant: {
+                    type: Boolean,
+                    value: true,
+                    observer: '_updateRelevant'
+                },
                 repeated:{
                     type: Boolean,
                     value:false
@@ -45,6 +53,15 @@ let bound = (superClass) =>
                 this.repeated = true;
             }
         }
+
+        _updateRelevant() {
+            if(this.relevant){
+                this.hidden = false;
+            }else{
+                this.hidden = true;
+            }
+        }
+
 
 
     };

@@ -1,5 +1,6 @@
 import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
 import { XfAbstractControl } from '../xf-abstract-control.js';
+import '../xf-alert.js';
 
 // import { XfBound } from './xf-bound.js';
 
@@ -20,9 +21,14 @@ class XfInput extends XfAbstractControl {
         label{
         display:block;
         }
+        .alert{
+            color:
+        }
       </style>
       <label for="input">[[label]]</label>
       <input id="input" type="[[type]]" value="{{value}}">
+      <xf-alert id="alert" class="alert">[[alert]]</xf-alert>
+      <slot></slot>
     `;
     }
 
@@ -78,6 +84,9 @@ class XfInput extends XfAbstractControl {
         this.$.input.focus();
     }
 
+    _updateAlert() {
+
+    }
 
 
 }

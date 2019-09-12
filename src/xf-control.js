@@ -22,10 +22,11 @@ export class XfControl extends XfAbstractControl {
       </style>
       <iron-ajax id="resourceLoader"
                  url="[[resource]]"
+                 handle-as="XML"
                  method="GET"
-                 handle-as="document"
                  on-response="_handleResource">
       </iron-ajax>
+      <slot></slot>
     `;
     }
 
@@ -49,6 +50,10 @@ export class XfControl extends XfAbstractControl {
 
     init() {
         super.init();
+        this._loadResource()
+    }
+
+    _loadResource(){
         if (this.resource) {
             this.$.resourceLoader.generateRequest();
         } else {
@@ -60,13 +65,28 @@ export class XfControl extends XfAbstractControl {
                 }
             }));
         }
-
     }
 
     _handleResource() {
-        console.log('### xf-control._handleResource ', this.$.resourceLoader.lastResponse);
-        //todo
+        const resp = this.$.resourceLoader.lastResponse;
+        console.log('### xf-control._handleResource ', resp);
+
+
+        const divElem = document.createElement("div");
+        divElem.innerHTML = resp;
+
+        console.log('target ',divElem);
+        console.log('target ',divElem.firstElementChild);
+        const target = divElem.querySelector('.control');
+        console.log('target ',target);
+
+        this.appendChild(divElem.firstElementChild);
+
+
+
+
     }
+
 
 
 }

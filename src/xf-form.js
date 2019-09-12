@@ -104,6 +104,7 @@ export class XfForm extends PolymerElement {
                      handle-as="json"
                      on-response="_handleUpdate"
                      on-error="_handleUpdateError"
+                     content-type="application/json"
                      method="POST"> </iron-ajax>
                      
            
@@ -177,6 +178,7 @@ export class XfForm extends PolymerElement {
         this.addEventListener('repeat-item-inserted', this._itemInserted);
         this.addEventListener('repeat-item-deleted', this._itemDeleted);
         this.addEventListener('value-changed', this._handleValueChange);
+        this.addEventListener('actions-performed', this._handleActionsPerformed);
         this.addEventListener('message', this._displayMessage);
 
         /*
@@ -196,6 +198,7 @@ export class XfForm extends PolymerElement {
         this.removeEventListener('repeat-item-inserted', this._itemInserted);
         this.removeEventListener('repeat-item-deleted', this._itemDeleted);
         this.removeEventListener('value-change', this._handleValueChange);
+        this.removeEventListener('actions-performed', this._handleActionsPerformed);
         this.removeEventListener('message', this._displayMessage);
     }
 
@@ -492,6 +495,14 @@ export class XfForm extends PolymerElement {
         console.table(this.changed);
     }
 
+    _handleActionsPerformed(e){
+        console.log('### actions performed ',e);
+        // if changes then send update
+        if(this.changed.length > 0){
+            this.$.update.body = this.changed;
+            this.$.update.generateRequest();
+        }
+    }
 
     _isWebComponent(elementName) {
         return (elementName.indexOf('-') > -1);
@@ -507,6 +518,9 @@ export class XfForm extends PolymerElement {
      * @private
      */
     _handleUpdate() {
+
+        // ### clear changed list
+        this.changed = [];
 
         const updates = [{
             "path": "b-todo:1/b-task",
@@ -653,7 +667,9 @@ export class XfForm extends PolymerElement {
 
     _handleUpdateError(){
         console.log(this.$.update.lastError);
-        this._showMessage('modeless',this.$.update.lastError.error.message + " - " + this.$.update.url);
+        if(this.token){
+            this._showMessage('modeless',this.$.update.lastError.error.message + " - " + this.$.update.url);
+        }
     }
 
     _showError(error) {

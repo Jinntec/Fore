@@ -65,6 +65,16 @@ export class XfButton extends PolymerElement {
                 return false;
             }
         }
+
+        // ### signal to form that action-block is complete and changes should be send
+        this.dispatchEvent(new CustomEvent(
+            'actions-performed',
+            {
+                composed: true,
+                bubbles: true,
+                detail: {}
+            }));
+
         return true;
     }
 

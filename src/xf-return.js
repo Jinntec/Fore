@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
+import { XfAction } from "./xf-action.js";
 
 
 /**
@@ -10,20 +10,15 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @customElement
  * @polymer
  */
-class XfReturn extends PolymerElement {
+class XfReturn extends XfAction {
 
     static get properties() {
         return {
-            bind: {
-                type: String
-            },
-            repeat:{
-                type: String
-            }
         };
     }
 
     execute(){
+        super.execute();
         console.log('##### xf-return executing bindId ', this.bind);
 
 
