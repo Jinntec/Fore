@@ -29,12 +29,14 @@
     <xf-model id="control">
         <xf-instance>
             <data>
-                <vehicle type="bicycle">
-                    <color>red</color>
-                    <motor></motor>
-                    <brand></brand>
-                    <registration-number></registration-number>
-                </vehicle>
+                <vehicles>
+                    <vehicle type="bicycle">
+                        <color>red</color>
+                        <motor></motor>
+                        <brand></brand>
+                        <registration-number></registration-number>
+                    </vehicle>
+                </vehicles>
             </data>
         </xf-instance>
 
@@ -50,33 +52,34 @@
         Each of them can be present on a single-node binding at the same time.
          -->
 
+        <xf-bind id="b-vehicles" set="vehicles">
+            <xf-bind id="b-vehicle" ref="vehicle" required="true()">
+                <xf-bind id="b-type" ref="@type" required="true()" constraint=". = 'bicycle' or . = 'car'">
+                    <xf-alert>You did not specify your type of vehicle or it is not a 'car' or 'bicylce'.</xf-alert>
+                    <!--
+                     to allow detailed error-messaging each MIP can also (alternatively) be expressed as
+                     an element which an alert.
+                    -->
+                    <!--
+                    <xf-required expr="true()">
+                        <xf-alert>You need to specify the type of vehicle!</xf-alert>
+                    </xf-required>
+                    <xf-constraint expr=". = 'bicycle' or . = 'car'">
+                        <xf-alert>Your vehicle is neither a 'car' nor a 'bicycle'</xf-alert>
+                    </xf-constraint>
+                    -->
+                </xf-bind>
 
-        <xf-bind id="b-vehicle" ref="vehicle" required="true()">
-            <xf-bind id="b-type" ref="@type" required="true()" constraint=". = 'bicycle' or . = 'car'">
-                <xf-alert>You did not specify your type of vehicle or it is not a 'car' or 'bicylce'.</xf-alert>
-                <!--
-                 to allow detailed error-messaging each MIP can also (alternatively) be expressed as
-                 an element which an alert.
-                -->
-                <!--
-                <xf-required expr="true()">
-                    <xf-alert>You need to specify the type of vehicle!</xf-alert>
-                </xf-required>
-                <xf-constraint expr=". = 'bicycle' or . = 'car'">
-                    <xf-alert>Your vehicle is neither a 'car' nor a 'bicycle'</xf-alert>
-                </xf-constraint>
-                -->
+                <!-- sorry, there are only red vehicles available - you can't choose a different color  -->
+                <xf-bind id="b-color" ref="color" readonly="true()"></xf-bind>
+
+                <!-- The UI of the form will show controls that are bound to 'b-motor' just in case
+                the type of vehicle is a car. -->
+                <xf-bind id="b-motor" ref="motor" relevant="../@type = 'car'"></xf-bind>
+
+                <!-- showing how to specify a datatype. The mapping of types is not fully designed yet.  -->
+                <xf-bind id="b-registration" ref="registration-number" type="xs:integer"></xf-bind>
             </xf-bind>
-
-            <!-- sorry, there are only red vehicles available - you can't choose a different color  -->
-            <xf-bind id="b-color" ref="color" readonly="true()"></xf-bind>
-
-            <!-- The UI of the form will show controls that are bound to 'b-motor' just in case
-            the type of vehicle is a car. -->
-            <xf-bind id="b-motor" ref="motor" relevant="../@type = 'car'"></xf-bind>
-
-            <!-- showing how to specify a datatype. The mapping of types is not fully designed yet.  -->
-            <xf-bind id="b-registration" ref="registration-number" type="xs:integer"></xf-bind>
         </xf-bind>
 
 
