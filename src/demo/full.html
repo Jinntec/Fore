@@ -83,8 +83,9 @@
         </xf-bind>
 
 
-        <!-- bind do NOT need to be nested - it's just an authoring convenience to minimize typing -->
-        <xf-bind id="b-firstVehicleBrand" ref="vehicle/brand"></xf-bind>
+        <!-- bind do NOT need to be nested - it's just an authoring convenience to minimize typing  -->
+        <!-- the calculate here has no effect as the value is already set - just for demonstration.  -->
+        <xf-bind id="b-firstVehicleBrand" ref="vehicles[1]/vehicle/brand/@type" calculate="'bicycle'"></xf-bind>
 
 
         <!-- xf-bind and xf-instance elements can occur in no particular order. It makes sense to group xf-instance
