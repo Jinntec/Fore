@@ -30,7 +30,7 @@
         <xf-instance>
             <data>
                 <vehicles count="">
-                    <vehicle type="bicycle">
+                    <vehicle type="bicycle" wheels="">
                         <color>red</color>
                         <motor></motor>
                         <brand></brand>
@@ -86,7 +86,11 @@
         <!-- bind do NOT need to be nested - it's just an authoring convenience to minimize typing  -->
         <!-- the calculate here has no effect as the value is already set - just for demonstration.  -->
         <xf-bind id="b-firstVehicleBrand" ref="vehicles[1]/vehicle/brand/@type" calculate="'bicycle'"></xf-bind>
+
+
         <xf-bind id="b-count" ref="vehicles/@count" calculate="count(vehicle)"></xf-bind>
+        <xf-bind id="b-wheels" ref="vehicles/@wheels" calculate="if(vehicle/@type='bicycle') then ../vehicles/@count * 2 else ../vehicles/@count * 4"></xf-bind>
+
 
 
         <!-- xf-bind and xf-instance elements can occur in no particular order. It makes sense to group xf-instance
@@ -158,8 +162,14 @@
 
         </xf-submission>
 
+        <!--
+            we probably need some kind of protocol scheme that signals that the resource needs to be called instead
+            of just using store function.
+
+
+        -->
         <xf-submission id="s-save"
-                       resource="modules/persist.xql"
+                       resource="xq:modules/persist.xql"
                        replace="instance">
             <xf-submit-done>
                 <!--
