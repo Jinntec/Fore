@@ -1,3 +1,5 @@
+*** todo: needs update ***
+
 # Architecture
 
 Fore is built specifically for eXist-db to ease quick development of powerful form applications. One central requirement
@@ -31,14 +33,14 @@ the MVC architecture of XForms.
 ![MVC architecture](mvc.png)
 
 
-The model represents the data and it's constraints. The UI binds to the model via the `<fore-bind> elements. Actions can be
+The model represents the data and it's constraints. The UI binds to the model via the `<xf-bind> elements. Actions can be
 fired by the UI or the model to change the state of the model which in turn will trigger the UI to update itself.
 
 
 ### client- and server data model
 
-To allow full offline-capabilities one day Fore has to pass the relevant data to the client and allow
-it manipulate data by itself. 
+To allow full offline-capabilities Fore has to pass the relevant data to the client and allow
+it to manipulate the data by itself. 
 
 The primary goal of the new forms solution is to edit XML data. However browser do not well with XML
 natively. Furthermore JSON has made the race in the client-side world and the use of XML and XPath
@@ -47,10 +49,10 @@ has always had a nice-existence at best. This is not going to change.
 XPath (and XQuery) are the powertools of XML but they are not (really) present in the browser. To circumvent
 these problems and give each side what it deserves we need to introduce some mapping.
 
-On the server we deal with data instances which each represent their own documents. On the client we'd like to 
+On the server we deal with data instances which represent XML documents. On the client we'd like to 
 consume some JSON data to render and update our UI. A plain XML to JSON conversion is possible but still leaves
 us with the problem of resolving path expressions and map those from XPath to e.g. JSONPath. This involves some
-complexity and potential for errors. 
+complexity and potential for errors.
 
 A simpler mechanism would be to use the `bind` elements as intermediates:
 

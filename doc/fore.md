@@ -17,6 +17,20 @@ Fore will be an integral part of eXist-db and make maximum use of its facilities
 The main building blocks of XForms like model, instances, binding, submissions etc. will continue to exist in Fore though
 the concrete element names and the syntax might diverge from it.  
 
+## Warning
+
+Fore is not aimed to be an XForms implementation but tries to take the good parts of XForms
+and make them available for eXist-db applications. 
+
+Do NOT expect Fore to provide all features of XForms. XForms goes far beyond simple form
+processing (sometimes a bit too far for our taste) which makes incredible powerful but
+also hard to learn and even harder to implement fully. 
+
+Instead we try to provide a tool that addresses the most important parts of form
+processing and free developers from the burden of re-implemeting validation, data
+mutations and the like over and over again.
+
+
 ## Getting started
 
 todo: how-to get and install

@@ -9,9 +9,8 @@
 In Fore the processing is devided into client and server parts. The server is responsible to execute
 the model while the client (browser) deals with the rendering.
 
-For maximum independence of the browser a flattened model of the server-side data will be passed to the
-client for local mutation. Local changes are reported back to the server but can happen in a timely
-decoupled way allowing offline use or long-term sessions with local storage of the data.
+While the server handles the original XML (or JSON?) data the client will rely on the bindings only. See
+[documentation on client server communication](client-server-exchange.md) for details.
 
 ### Keeping the model on the server
 

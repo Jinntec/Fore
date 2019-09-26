@@ -3,22 +3,25 @@
 author: joern turner
 date: 06.03.2019
 
-This document describes the exchange format for binding between client and server.
+This document describes the JSON format of the client-side data-model.
 
-The `xf-bind` elements are provided in an JSON format that matches the structure 
-of the bindings. This will be consumed by the client and serves as the datamodel
+`<xf-bind>` elements are converted to an JSON format that matches the structure 
+of the bind elements. This will be consumed by the client and serves as the datamodel
 of the client.
 
-## bind properties
+## bind attributes
 
-A bind may have additional properties that attach certain facets to bound nodes. With
+A `<xf-bind>` may have additional attributes that attach certain facets to bound nodes. With
 the exception of the `type` property these are the result of evaluation of a boolean XPath
 expression.
 
-The following properties exist:
+The following attributes exist:
 
 Property | Meaning | default
 -------- | ------- | -------
+id       | required id | none
+ref or set | XPath expression pointing to one or multiple bound node(s) | none
+calculate | XPath expression calculating a value | none
 readonly | bound node is readonly or readwrite | false
 required | bound node is required or optional | false
 relevant | bound node is relevant or not | true
