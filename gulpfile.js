@@ -60,7 +60,9 @@ var otherPaths = [
     'resources/**/*',
     '!resources/css/*',
     'modules/**/*',
-    'src/demo/*.html'
+    'src/demo/*.html',
+    'doc/**/*.html',
+    'doc/styles.css'
 
 ];
 

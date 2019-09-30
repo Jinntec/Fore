@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Fore Documentation</title>
+    <!--    <link href="styles.css" rel="stylesheet"/>-->
+    <script type="module">
+        import '../src/doc-viewer.js';
+        import '../src/doc-topic.js';
+        import '../assets/@polymer/paper-styles/color.js'
+        import '../assets/@polymer/paper-styles/typography.js'
+        import '../assets/@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+        import '../assets/@polymer/app-layout/app-drawer/app-drawer.js';
+
+    </script>
+
+    <custom-style>
+        <style is="custom-style">
+            body {
+                padding: 0;
+                margin: 0;
+                border: 0;
+                font-family: 'Roboto', 'Noto', sans-serif;
+            }
+
+            .table-of-contents {
+                background: ghostwhite;
+
+            }
+
+
+            app-drawer, .drawer {
+                --app-drawer-width: 200px;
+
+                --app-drawer-content-container: {
+                    background: ghostwhite;
+                };
+            }
+
+            .header{
+                padding: 20px;
+                background: var(--paper-blue-300);
+                color:ghostwhite;
+
+            }
+            .title{
+                font-size:22px;
+            }
+            .subtitle{
+                display: block;
+                font-size:12px;
+            }
+
+
+            .topics{
+                padding: 20px;
+            }
+
+            a {
+                display: block;
+                color: var(--paper-blue-500);
+                padding: 10px 0;
+                font-weight: 300;
+                text-decoration: none;
+            }
+
+            iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+
+        </style>
+    </custom-style>
+</head>
+<body>
+<app-drawer-layout fullbleed="fullbleed">
+    <app-drawer class="drawer" slot="drawer">
+        <div class="header">
+            <span class="title">Fore</span>
+            <span class="subtitle">Forms for eXist-db</span>
+        </div>
+        <div class="topics">
+            <a href="introduction.html" target="topic">Introduction</a>
+            <a href="get-started.html" target="topic">Get started</a>
+            <a href="user-guide.html" target="topic">User Guide</a>
+            <a href="dev-guide.html" target="topic">Developer Guide</a>
+            <a href="../src/demo/index.html" target="topic">Examples</a>
+        </div>
+    </app-drawer>
+    <iframe name="topic" src="introduction.html"></iframe>
+</app-drawer-layout>
+<!--<doc-viewer>
+    <div class="table-of-contents">
+        <div class="header">
+            <h1>Fore</h1>
+        </div>
+        <div class="topics" slot="toc">
+            <a href="get-started.html" target="topic">Get started</a>
+            <a href="user-guide.html" target="topic">User Guide</a>
+            <a href="dev-guide.html" target="topic">Developer Guide</a>
+        </div>
+        <iframe name="topic" slot="topic"></iframe>
+
+    </div>
+</doc-viewer>-->
+</body>
+</html>

@@ -27,7 +27,7 @@ lifecycle of a form session.
 
 After initial load of a form in the browser it will send an 'init' request to load the client-side data-model. 
 
-The response from the server will contain a structural copy of the `<xf-bind>` elements in JSON.
+The response from the server will contain a structural copy of the `<xf-bind>` elements represented in JSON.
 
 Example:
 

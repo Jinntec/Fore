@@ -15,7 +15,7 @@
 
     <target name="xar" depends="prepare">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="bower.json.ignores build.xml ${build.dir}/**, node_modules/**, doc/**, gulpfile.js, package.json"/>
+        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="bower.json.ignores build.xml ${build.dir}/**, node_modules/**, gulpfile.js, package.json"/>
     </target>
 
     <!--

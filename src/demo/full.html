@@ -97,8 +97,10 @@
            with its respective xf-bind elements for readability. -->
         <xf-instance id="second">
             <data>
+                <name>foo</name>
                 <features>
                     <feature>fancy blinking lights</feature>
+                    <relevant>false</relevant>
                 </features>
             </data>
         </xf-instance>
@@ -131,7 +133,8 @@
 
 
         <!--
-        'resource' is the target where to send the submitted data.
+        'resource' is the target where to send the submitted data. AVTs ({}) should be supported as part of the
+        resource value.
 
         'replace' may have these values:
         - 'none' do nothing with the response of the 'resource' endpoint
@@ -146,8 +149,9 @@
         implementation must be maintainable and flexible for extensions.
         -->
         <xf-submission id="s-prepare"
-                       resource="data/foo.xml"
-                       replace="none">
+                       resource="data/{$instances?second/name}.xml"
+                       replace="none"
+                       relevant="$instances?second/relevant">
             <xf-submit-error>
                 <!-- return a message in case something went wrong with the submission.  -->
                 <xf-message modal="false">storing record failed</xf-message>

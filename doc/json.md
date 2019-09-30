@@ -82,6 +82,8 @@ if they have a non-default value to minimize the needed bandwidth
 * a `bind` is identified by the bind id given by the corresponding `xf-bind` element
  ('b-greeting' and 'b-audience').
 * each `xf-bind` MUST have an id
+* the data root element ('data' in this case) is not explicitly included in `ref` or `set` attributes. The default
+context is always xf-instance/*[1] to relax typing effort.
 
 
 ## nested bindings
@@ -99,7 +101,7 @@ this example the bind of `b-type` will evaluate to `address/@type`.
             </address>
         </data>
     </xf-instance>
-    <xf-bind id="b-address">
+    <xf-bind id="b-address" ref="address">
         <xf-bind id="b-type" ref="@type"></xf-bind>
         <xf-bind id="b-street" ref="street"></xf-bind>
     </xf-bind>

@@ -3,8 +3,9 @@
 # User Guide
 
 * author: joern turner
-* date: Feb. 2019 
+* date: 27. Sept. 2019 
 * applies to: Fore 1.0
+
 
 ## Birds-eye view
 
@@ -16,13 +17,16 @@ distributed between client and server.
 The most important rationale behind this is security - form processing should
 never just rely on client-side validation as the data could be compromised in transition
 or even directly within the browser. For a stable solution we therefore need a server-side
-validation that should ultimately assert the correctness of data to be submitted.
+validation that ultimately asserts the correctness of data to be submitted.
 
-Furthermore the heavy lifting of XPath execution cannot be done within
-the browser as these simply lack a XPath 2 (not to speak of XQuery) implementation.
+The primary goal of Fore is certainly to allow easier and safe editing of XML
+data which are stored within eXist-db though other formats like JSON or CSV might
+be supported also. 
 
-However it's a definitive goal of Fore to support offline capabilities whereever possible.
-
+The premier choice to address XML nodes is XPath which is used in Fore to 
+attach constraints to nodes, execute calculations and handle the details
+of submissions.
+ 
 Fore will deliver XForms-like capabilities by processing the model on the server which will in turn pass on
 the results to the client in a defined [JSON format](json.md). The client may then operate on this structure and eventually
 pass changes back to update the model on server. (See [client-server exchange format](client-server-exchange.md).) 
@@ -37,7 +41,7 @@ Advantages of this architecture:
 * 2 level validation either on client and on server
 * datatype support  
 
-## Syntax
+## Syntax - XML versus HTML
 
 XForms is a namespaced XML language that is meant to be embedded into other XML languages.
 In contrast to XForms Fore considers HTML as it's natural habitat and is part of it. Many years
@@ -55,11 +59,17 @@ thing as an empty element (ending in `/>'). However Fore pages must be well-form
  > Remember to always write closing tags even if your element has no content e.g. `<my-element></my-element>` 
  instead of `<my-element/>`.
 
-## An Example
+## An example
 
-This example is taken from the original XForms specification but adapted to Fore syntax to allow easy comparison.
+The model is a required part of a form. It constitutes the data (`<xf-instance>` elements),
+their bindings and one or more `<xf-submission>` elements which will be explained
+in this section.
 
-The model defines WHAT the form does. The UI binding this model implements the visual representation of the form.
+
+The following example is taken from the original XForms specification but adapted to Fore syntax.
+
+The model is designed for a purpose and defines the policies under which a given set of data
+is considered valid. 
 
 The following example model shows a very simple payment form.
 
@@ -82,62 +92,61 @@ The following example model shows a very simple payment form.
 ```
 
 This model collects some values for 'method', 'number' and 'expiry' and allows to submit them to a URL denoted by the
-`action` attribute. 
+`action` attribute. However it does not constrain the data yet in any way meaning that this
+form would always be valid when it comes to submission.
 
-Unlike XForms in Fore we use either native HTML controls or special Fore controls that are implemented as Web
-Components. The latter offer more fine-grained control of the usability. In Fore the developer decides about the
-specific control upfront - there's no mapping from an abstract control to a platform-specific.
+### xf-instance
 
-In this case we use a HTML select control but of course could have choosen radio buttons for the same purpose.
+In this example the instance data are:
+```
+    <ecommerce>
+      <method/>
+      <number/>
+      <expiry/>
+    </ecommerce>
+```
+The instance data is where we gather input data from users. It may be any structure
+provided there's a root node.
+
+| Note: an instance is considered it's own entity. Its evaluation context is
+ the root node. Thus XPath expressions do not need to contain the rootnode. E.g. the above
+bind uses 'ref="method"' instead of 'ecommerce/method'. 
+
+If there are several instances all but the first will need an Id attribute to address them.
+
+To address a certain instance (e.g. in a bind attribute) in Fore you use:
 
 ```
-<label for="methodCtrl">Payment Method</label>
-<select bind="method" id="methodCtrl">
-  <option value="cash">Cash</option>
-  <option value="cc">Credit</option>
-</select>
-
-<label for="numberCtrl">Credit Card Number</label>
-<input id="numberCtrl" bind="number">
-
-<label for "expiryCtrl">Expiration Date</label>
-<input id="expiryCtrl" bind="expiry">
-
-<button type="submit" data-submission="submit">Submit</submit>
-
+$instances?myInstance
 ```
 
-The controls are bound to the model by the XForms binding mechanism with the `bind` attribute. The value of a `bind`
-is an idref to a `xf-bind` element in the model.
+An anonymous instance (if you have just one) will get the id 'default' assigned and
+be accessible by `$instances?default`.
 
- > Why is there no support for the XForms `ref` attribute in the UI? In XForms you can use `ref` attribute as a second way to bind to the 
- model. Refs use XPath statements to link to an instance node. However in Fore we want to keep XPath out of the UI
- as its kind of a foreigner in HTML. Fore is also designed with security in mind - a `ref` already reveals quite some
- detail about the structure of our data which we probably don't want to expose. By using `bind` instead we can strongly
- separate the model from the UI.
- 
-Some things worth pointing out:
+### xf-bind
 
-* we're using native HTML controls in the example above. This approach might be limited
-for more advanced use cases where you want more specific behavior than these controls allow.
-* alternatively we could have used one of the 'xf-*' controls that knows about the specifics
-of binding themselves and will provide automatic update in a more sophisticated way.
+Binds are where the magic happens. They allow us to apply a fine-grained 'contract' to
+the instance data we've loaded. 
 
-### submitting data
-
-If the user triggers the submit the instance would be send as follows:
+In our example all three fields (method, number and expiry) are needed to proceed with
+credit card payment. We can't go on without them so let's enhance our bindings accordingly:
 
 ```
-<ecommerce>
-  <method>cc</method>
-  <number>1235467789012345</number>
-  <expiry>2001-08</expiry>
-</ecommerce>
+  <xf-bind id="method" ref="method" required="true()"></xf-bind>
+  <xf-bind id="number" ref="number" required="true()"></xf-bind>
+  <xf-bind id="expiry" ref="expiry" required="true()"></xf-bind>
 ```
 
-### constraining values
+By adding 'required="true()"' we added a constraint to each of the fields to be fulfilled before we can submit
+the data. The expression given in 'required' is interpreted as an XPath which returns a 
+Boolean value. 
 
-To make sure the incoming data are correct we can use bindings to set constraints.
+'required' is just one of the facets we can attach to a bound instance data node. In XForms 
+these facets are called 'Model Item Properties'.
+
+#### further constraints
+
+To show several facets at work consider this enhancement of the example:
 
 ```
 <xf-bind id="method" ref="method" required="true()"></xf-bind>
@@ -153,11 +162,27 @@ To make sure the incoming data are correct we can use bindings to set constraint
                       
 ```
 
-If we add these bindings the we can make sure that 'number' and 'expiry' are
-correct if the method happens to be 'cc'. The `relevant` property will switch 
-validation on or off for that item. If relevant becomes false the required property
+If we add these bindings the we can make sure that 'number' and 'expiry' have
+correct datatype if the method happens to be 'cc'. The `relevant` property will switch 
+validation on or off for that item. If relevant becomes false for a bound node the required facet
 will have no effect. Relevance will be described in more detail in the remainder of this
 document.
+
+### xf-submission
+
+A valid instance for submission would look like this:
+```
+<payment>
+   <amount>99.00</amount>
+   <method>cc</method>
+   <number>1235467789012345</number>
+   <expiry>2025-12</expiry>
+</payment>
+```
+All constraints were fulfilled and the data can be send along to the location specified
+by the submission element.
+
+
 
 
 ## Document structure
@@ -182,7 +207,7 @@ xf-submission | submission
 
 `xf-model` is the outermost element containing the others.
 
-## The model
+### The model
 
 The model is the heart of a form. It holds an arbitrary amount of `xf-instance`, `xf-bind` and `xf-submission` 
 elements each of which are described in more detail below.
@@ -193,7 +218,7 @@ interaction provide the dynamics to support data editing workflows and a user-fr
 
 The model can be used standalone for server-side validation or in combination with a UI.
 
-### model on duty
+#### model on duty
 
 In XForms land the model establishes a kind of box which is the container for data and logic involved with a 
 specific purpose. 
@@ -212,7 +237,7 @@ This is a shortened version of the reality in XForms but might be sufficient to 
  execution context is the database itself and we're using the XMLDB API to directly access data. In XForms this 
  context would usually default to 'http'. So, if not protocol is given Fore will default to XMLDB:
 
-## xf-instance
+### xf-instance
 
 A `xf-instance` represents a piece of XML with a single root node. It is an error attempting to load
 a nodeset as an instance.  
@@ -240,7 +265,7 @@ be accessible by `$instances?default`.
 
 `$instances` is an internal map that is created by the model at init time. 
 
-### inline instance data
+#### inline instance data
 
 The simplest way to load instance data is to put them inline. 
 
@@ -259,7 +284,7 @@ At init-time the Fore processor will create an appropriate entry in its `$instan
 an explicit `id` will get the id 'default' assigned.
 
 
-### loading via `src` attribute
+#### loading via `src` attribute
 
 When data shall be loaded from an external source the `src` attribute can be used.
 
@@ -272,7 +297,7 @@ Example:
 As no URL scheme is given (such as e.g. 'http:') it will default to 'xmldb:' in Fore and be evaluated relative
 to the location of the form. Here the form directory would need to have a 'data' subdir with a resource `mydata.xml`.
 
-### dynamic resolution of instances
+#### dynamic resolution of instances
 
 To dynamically resolve a `src` attribute you can put your expression within curly brackets like so:
 
@@ -289,7 +314,7 @@ To dynamically resolve a `src` attribute you can put your expression within curl
  nodes of other instance before they are actually defined. When the instance data resolution depends on values in other
  instances a `xf-submission` can be used.  
  
-## JSON instances
+### JSON instances
 
 A `xf-instance` can also contain some JSON data like this:
 
@@ -316,7 +341,7 @@ elements.
 
 todo: not sure about the correct syntax yet. Can you help @wolfgang @juri?
 
-## xf-bind
+### xf-bind
 
 The bindings are the power source of XForms. They allow to attach constraints to nodes, calculate and filter nodes and alert 
 users in detail about validation issues. Arbitrary complex validation logic can be used to make sure that incoming
@@ -325,7 +350,7 @@ data play by the rules. The dense descriptive format greatly helps maintainance 
 XForms defines the so-called 'Model Item Properties' or MIPs for short. You can imagine those
 as facets being applied to a referenced node. 
 
-### attaching MIPs to nodes
+#### attaching MIPs to nodes
 
 To bind MIPs to a Node you use the `ref` attribute. Its value is typically a XPath 
 locationpath expression that refers to one or more XML Nodes.
@@ -335,7 +360,7 @@ locationpath expression that refers to one or more XML Nodes.
  
 This or those nodes also set the evaluation context
  
-### Available Properties  
+#### Available Properties  
 
 Name | Purpose | default
 ----- | ------ | -------
@@ -373,7 +398,7 @@ submit the incomplete form.
 
 This syntax is also applicable to `calculate`, `readonly`, `relevant` and `constraint` properties.
 
-## Actions
+### Actions
 
 There is a pre-defined set of actions in XForms that cover all basic
 procedures.
@@ -410,7 +435,7 @@ in the HTML world we've renamed it.
  
   
 
-## xf-submission
+### xf-submission
 
 Submissions serve different purposes at once:
 
@@ -488,7 +513,7 @@ Data are invalid:
 1. the `xf-submit-error` hook is triggered which returns a message to
 the client with the request to show an error message.
 
-### Chaining submissions
+#### Chaining submissions
 
 Chaining submissions is a powerful tool. It allows to submit several instances
 from a form instead of just one. Furthermore you can react on the outcome
@@ -516,13 +541,53 @@ In this example the submision 'confirm-account' is only called in case the
 'register' submission was sucessful.
 
 
-## UI contols
+## UI Components
+
+Unlike XForms in Fore we use either native HTML controls or special Fore controls that are implemented as Web
+Components. The latter offer more fine-grained control of the usability. In Fore the developer decides about the
+specific control upfront - there's no mapping from an abstract control to a platform-specific.
+
+In this case we use a HTML select control but of course could have choosen radio buttons for the same purpose.
+
+```
+<label for="methodCtrl">Payment Method</label>
+<select bind="method" id="methodCtrl">
+  <option value="cash">Cash</option>
+  <option value="cc">Credit</option>
+</select>
+
+<label for="numberCtrl">Credit Card Number</label>
+<input id="numberCtrl" bind="number">
+
+<label for "expiryCtrl">Expiration Date</label>
+<input id="expiryCtrl" bind="expiry">
+
+<button type="submit" data-submission="submit">Submit</submit>
+
+```
+
+The controls are bound to the model by the XForms binding mechanism with the `bind` attribute. The value of a `bind`
+is an idref to a `xf-bind` element in the model.
+
+ > Why is there no support for the XForms `ref` attribute in the UI? In XForms you can use `ref` attribute as a second way to bind to the 
+ model. Refs use XPath statements to link to an instance node. However in Fore we want to keep XPath out of the UI
+ as its kind of a foreigner in HTML. Fore is also designed with security in mind - a `ref` already reveals quite some
+ detail about the structure of our data which we probably don't want to expose. By using `bind` instead we can strongly
+ separate the model from the UI.
+ 
+Some things worth pointing out:
+
+* we're using native HTML controls in the example above. This approach might be limited
+for more advanced use cases where you want more specific behavior than these controls allow.
+* alternatively we could have used one of the 'xf-*' controls that knows about the specifics
+of binding themselves and will provide automatic update in a more sophisticated way.
+
 
 ## xf-input
 ## xf-textarea
 ## xf-checkbox
 
-## UI container
+### UI container
 
 ### xf-group
 ### xf-repeat

@@ -1,0 +1,38 @@
+body{
+    font-family: 'Roboto', 'Noto', sans-serif;
+    padding: 15px;
+    font-weight: 300;
+}
+
+h1{
+    color:var(--paper-blue-900);
+}
+h2{
+    color:var(--paper-blue-700);
+}
+.topic{
+    max-width: 600px;
+}
+
+.note{
+    background: var(--paper-blue-100);
+    padding:10px;
+    line-height: 1.5;
+}
+
+.source{
+    font-size: small;
+    font-style:italic;
+}
+a {
+    color:var(--paper-blue-900);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+li{
+    padding:4px 0;
+}
+p{
+    line-height: 1.5;
+}

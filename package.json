@@ -17,7 +17,7 @@
     "@vaadin/vaadin-notification": "^1.4.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "gulp-exist": "^3.0.0",
-    "lit-element": "^2.1.0",
+    "lit-element": "^2.2.1",
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
