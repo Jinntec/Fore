@@ -1,0 +1,137 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Architecture</title>
+    <script type="module">
+        import '../assets/@polymer/paper-styles/color.js'
+        import '../assets/@polymer/paper-styles/typography.js'
+    </script>
+    <link href="styles.css"  type="text/css" rel="stylesheet"/>
+    <style>
+        img{
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topic">
+    <div class="hint">
+        For a user or even form writer this topic is of minor interest. However to enhance Fore or build
+        your own components you should have an understanding of the inner workings.
+    </div>
+
+    <h1>Architecture</h1>
+
+    <p>Fore is a forms framework specifically built for and with <a href="https://exist-db.org" target="_blank">eXist-db</a>.</p>
+
+    <p>It distributes form-processing between client and server for maximum security and flexibility.</p>
+
+    <img src="architecture-1.png" alt="Fore architecture" style="width:600px;"/>
+    <figure>high-level architecture</figure>
+
+    <p>The browser client talks to eXist-db via AJAX calls. The server will answer with JSON data
+        to inform about value and state changes.</p>
+
+    <div class="note">Eventually we'll add push capabilities to the server as we see fit. However
+    usual form applications rarely need this feature.</div>
+
+    <h2>XForms and Fore</h2>
+    <p>The <a href="https://www.w3.org/community/xformsusers/wiki/XForms_2.0" target="_blank">XForms</a> architecture has been designed by clever people more than a decade ago. It has been battle-tested in
+        extremely complex scenarios and there's hardly any other form framework in the world that can compete. However
+        it also employs some complexity and learning-curve that is not easy to master for everyone. </p>
+
+    <p>
+        Fore will stay close to the overall XForms architecture and even try to keep element names and attributes whereever
+        it makes sense. We hope to thereby make it easier for experienced XForms users to do the migration to Fore.
+    </p>
+
+    <h2>The XForms MVC</h2>
+
+    <p>
+        The following graphic shows the main building blocks 'model', 'UI' and 'actions'. These modules together make up
+        the MVC architecture of XForms.
+    </p>
+
+    <img src="mvc.png" style="width:600px;" alt="MVC model"/>
+    <figure>XForms MVC</figure>
+
+    <p>
+        The model represents the data and it's constraints. The UI binds to the model via the <a href="xf-bind.html">bind</a> elements. Actions can be
+        fired by the UI or the model to change the state of the model which in turn will trigger the UI to update itself.
+    </p>
+
+    <h2>Client- and Server Data Model</h2>
+
+    <p>
+        The primary goal of the new forms solution is to edit XML data. However browsers do not well with XML
+        natively (except for XHTML). Furthermore JSON has made the race in the client-side world and the use of XML and XPath
+        has always had a niche-existence at best. It's currently very unlikely that this is going to change.
+    </p>
+
+    <p>
+        XPath (and XQuery) are the powertools of XML but they are also not (really) present in the browser. To circumvent
+        these problems and give each side what it deserves we need to introduce some mapping between the worlds.
+    </p>
+
+    <p>
+        On the server we deal with data instances which represent XML documents. On the client we'd like to
+        consume some JSON data to render and update our UI. A plain XML to JSON conversion is possible but still leaves
+        us with the problem of resolving path expressions and map those from XPath to e.g. JSONPath. This involves some
+        complexity and potential for errors.
+    </p>
+
+    <p>Fore uses the bindings as intermediates between the XML and JSON world. The client only knows about
+    bind ids and states while the server will translate those to XPathes that point to nodes in XML. The client
+    gets a JSON representation that mirrors the structure of the <a href="xf-bind.html"><code>xf-bind</code></a> elements.</p>
+
+    <img src="bind1.png"/>
+    <figure>mapping with binds</figure>
+
+    <p>The following graphic shows this in more detail.</p>
+
+    <img src="mapping.png"/>
+    <figure>mapping via binding pathes</figure>
+
+    <div class="note">
+        On the client-side we talk about <b>binding pathes</b> while on the server those get translated to XPathes.
+    </div>
+
+    <h2>Distribution of functionality</h2>
+
+    <p>The folowing table shows roughly how the functionalities of client and server are distributed.</p>
+
+    <table>
+        <thead>
+            <td>Client</td>
+            <td>Server</td>
+        </thead>
+        <tr>
+            <td>
+                <ul>
+                    <li>provides library of components of bound controls></li>
+                    <li>react on state changes</li>
+                    <li>trigger and execute <a href="actions.html">actions</a></li>
+                    <li>fire and handle <a href="events.html">events</a></li>
+                    <li>send updates to server</li>
+                    <li>display messages and alerts</li>
+                </ul>
+
+            </td>
+            <td>
+                <ul>
+                    <li><a href="client-server-protocol.html">'serialize' model as binding objects</a></li>
+                    <li>update</li>
+                    <li>recalculate</li>
+                    <li>revalidate</li>
+                    <li>provide state updates</li>
+                    <li><a href="xf-submission.html">submission</a> of data</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+</body>
+</html>

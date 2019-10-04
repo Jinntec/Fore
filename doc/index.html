@@ -4,13 +4,10 @@
     <title>Fore Documentation</title>
     <!--    <link href="styles.css" rel="stylesheet"/>-->
     <script type="module">
-        import '../src/doc-viewer.js';
-        import '../src/doc-topic.js';
         import '../assets/@polymer/paper-styles/color.js'
         import '../assets/@polymer/paper-styles/typography.js'
         import '../assets/@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
         import '../assets/@polymer/app-layout/app-drawer/app-drawer.js';
-
     </script>
 
     <custom-style>
@@ -55,7 +52,8 @@
                 padding: 20px;
             }
 
-            a {
+
+            .group, a {
                 display: block;
                 color: var(--paper-blue-500);
                 padding: 10px 0;
@@ -63,9 +61,21 @@
                 text-decoration: none;
             }
 
+            .group-label{
+                color:var(--paper-blue-900);
+            }
+
+            .group a{
+                padding-left:20px;
+                padding-top: 20px;
+            }
+
+
+
             iframe {
                 width: 100%;
                 height: 100%;
+
                 border: none;
             }
 
@@ -83,26 +93,38 @@
         <div class="topics">
             <a href="introduction.html" target="topic">Introduction</a>
             <a href="get-started.html" target="topic">Get started</a>
-            <a href="user-guide.html" target="topic">User Guide</a>
-            <a href="dev-guide.html" target="topic">Developer Guide</a>
             <a href="../src/demo/index.html" target="topic">Examples</a>
+            <a href="writing-forms.html" target="topic">Writing forms</a>
+<!--
+            <div class="group">
+                <div class="group-label">Model Reference</div>
+                <a href="xf-model.html" target="topic">xf-model</a>
+                <a href="xf-instance.html" target="topic">xf-instance</a>
+                <a href="xf-bind.html" target="topic">xf-bind</a>
+                <a href="xf-submission.html" target="topic">xf-submission</a>
+                <a href="xf-alert.html" target="topic">xf-alert</a>
+            </div>
+            <div class="group">
+                <div class="group-label">UI Reference</div>
+                <a href="xf-form.html" target="topic">xf-form</a>
+
+            </div>
+            <div class="group">
+                <div class="group-label">Action Reference</div>
+                <a href="xf-message.html" target="topic">xf-message</a>
+            </div>
+-->
+
+            <div class="group">
+                <div class="group-label">Developer Guide</div>
+                <a href="architecture.html" target="topic">Architecture</a>
+                <a href="client-server-protocol.html" target="topic">Client-Server Protocol</a>
+                <a href="../src/docs.html" target="topic">API Docs of UI Components</a>
+            </div>
+
         </div>
     </app-drawer>
     <iframe name="topic" src="introduction.html"></iframe>
 </app-drawer-layout>
-<!--<doc-viewer>
-    <div class="table-of-contents">
-        <div class="header">
-            <h1>Fore</h1>
-        </div>
-        <div class="topics" slot="toc">
-            <a href="get-started.html" target="topic">Get started</a>
-            <a href="user-guide.html" target="topic">User Guide</a>
-            <a href="dev-guide.html" target="topic">Developer Guide</a>
-        </div>
-        <iframe name="topic" slot="topic"></iframe>
-
-    </div>
-</doc-viewer>-->
 </body>
 </html>

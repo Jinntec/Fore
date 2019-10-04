@@ -2,49 +2,94 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
 import {BoundElementMixin} from './BoundElementMixin.js';
 
 /**
- * `xf-abstract-control`
- * general class for bound elements
+ * `xf-abstract-control` -
+ * is a general class for bound elements. It handles the common states of a control and attaches event-listeners.
  *
  * @customElement
  * @polymer
  * @appliesMixin BoundElementMixin
- * @demo demo/index.html
  */
 export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     static get properties() {
         return {
+            /**
+             * the label of a control
+             */
             label: {
                 type: String
             },
+            /**
+             * an alert message as defined by corresponding xf-bind element
+             */
             alert: {
                 type: String,
                 observer: '_updateAlert'
             },
+            /**
+             * Boolean saying if a control is readonly or readwrite.
+             *
+             * Fires template function when value changes.
+             *
+             * @default false
+             */
             readonly: {
                 type: Boolean,
                 value: false,
                 observer: '_updateReadonly'
             },
+            /**
+             * Boolean saying if a control's value is required or optional.
+             *
+             * Fires template function when value changes.
+             *
+             * @default false
+             */
             required: {
                 type: Boolean,
                 value: false,
                 observer: '_updateRequired'
             },
+            /**
+             * Boolean saying if a control is valid or invalid.
+             *
+             * Fires template function when value changes.
+             *
+             * @default true
+             */
             valid: {
                 type: Boolean,
                 value: true,
                 observer: '_updateValid'
             },
+            /**
+             * Datatype of the bound node.
+             *
+             * Fires template function when value changes.
+             *
+             * @default String
+             */
             datatype: {
                 type: String,
                 value: 'String',
                 observer: '_updateDatatype'
             },
+            /**
+             * the value of the bound node. If the `value` changes the `_updateValue' will dispatch
+             * a 'value-changed' event to itself.
+             *
+             * Fires template function when value changes.
+             *
+             */
             value: {
                 type: String,
                 observer: '_updateValue'
             },
+            /**
+             * Boolean saying if a control updates it's model value immediately or on blur.
+             *
+             * @default false
+             */
             incremental: {
                 type: Boolean,
                 value: false
@@ -57,6 +102,11 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
         // console.log('### XfControl connected ', this);
     }
 
+    /**
+     * init is called by xf-form when component is newly setup. It applies the states for a bound element and calls
+     * template function to attach eventlisteners to a specific controls. As these events depend on the type of control
+     * this method needs to be implemented by extenders of `AbstractFormControl`.
+     */
     init() {
         console.log('### init ', this);
         console.log('### init modelItem', this.modelItem);
@@ -68,6 +118,9 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
 
     }
 
+    /**
+     * (re)apply all state properties to this control.
+     */
     refresh() {
         // console.log('### XfControl.refresh on : ', this);
         // this.modelItem = modelItem;
@@ -75,6 +128,10 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
     }
 
 
+    /**
+     * Will check for existence of state properties in modelItem and apply them
+     * to the control as appropriate.
+     */
     applyProperties() {
         // console.log('XfControl.applyProperties ', this.modelItem);
 
@@ -118,11 +175,14 @@ export class XfAbstractControl extends BoundElementMixin(PolymerElement) {
      *
      * As this varies between controls the respective control must override this.
      *
-     * @private
+     * @abstract must be overridden
      */
     attachListeners() {
     }
 
+    /**
+     * dispatches a 'value-changed' event to itself.
+     */
     dispatchValueChange() {
         console.log('### dispatching value change from ', this);
         const path = this.ownerForm.resolveBinding(this);

@@ -1,0 +1,144 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>writing forms</title>
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+    <script src="prism.js"></script>
+    <script type="module">
+        import '../assets/@polymer/paper-styles/color.js'
+        import '../assets/@polymer/paper-styles/typography.js'
+        import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <link href="prism.css" rel="stylesheet" />
+    <link href="styles.css"  type="text/css" rel="stylesheet"/>
+
+    <custom-style>
+        <style is="custom-style">
+
+            demo-snippet {
+                --demo-snippet-demo:{
+                    padding: 0;
+                    display: none;
+                }
+            }
+
+            textarea {
+                width:600px;
+                height:440px;
+            }
+        </style>
+    </custom-style>
+</head>
+<body>
+
+<div class="topic">
+    <h1>Writing forms</h1>
+
+
+    <p>All Fore elements are HTML Custom Elements and are used as any other HTML element. A complete form
+    will therefore be part of a larger HTML file.</p>
+
+    <p>Please study the source code of the<a href="../src/demo/hello.html">Hello World</a> example to see complete examples.</p>
+
+    <h2>Document structure</h2>
+
+    <p>There are 3 things to include for a working form:</p>
+    <ul>
+        <li>add the necessary imports</li>
+        <li>add a <code>xf-model</code></li>
+        <li>add a <code>xf-form</code></li>
+    </ul>
+
+    <h3>adding imports</h3>
+
+    <p>Fore uses Web Components. First thing is to import the <a href="https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs" target="_blank">webcomponents polyfill</a> that makes sure
+    that even older browsers that not yet implement the standard are supported.</p>
+
+    <p>Next we have to load all components that are used on the page.</p>
+
+    <p>Let's assume we just use 2 components:</p>
+    <demo-snippet>
+        <template>
+            <!-- load web components polyfill -->
+            <script src="../fore/assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+            <script type="module">
+                import '../fore/src/xf-form.js';
+                import '../fore/src/xf-output.js';
+            </script>
+        </template>
+    </demo-snippet>
+
+    <p>The polyfill should always be the first script tag in the file. </p>
+
+    <p>In the <code><script type="module"></script></code> section all <strong>UI Components</strong> must be added manually that
+    are used on the page.</p>
+
+    <div class="note">Eventually an auto-import gets added that will take away this burden.</div>
+
+    <h3>Define a model</h3>
+
+    <p>You might have asked yourself why we don't import a <code>xf-model</code> in the above example. The answer is that
+    the <a href="xf-model.html">xf-model</a> element is not returned to the client at all. Instead it gets filtered out
+    on the server when the request comes in. The model is only processed on the server and its details should not
+    be exposed to the client at all.</p>
+
+
+    <div class="note">As the model is not exposed on the client the use of HTML Custom Element syntax may be
+    considered odd. However to keep consistency with the user interface markup the model elements also use Custom Element names.
+    Usually model and user interface will be authored in a single file, so syntax consistency outweights other considerations here.</div>
+
+    <p>A very simple model might look like this:</p>
+    <demo-snippet>
+        <template>
+            <xf-model>
+                <xf-instance>
+                    <data>
+                        <greeting>World!</greeting>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <p>This  model defines a single instance with a piece of XML along with one binding that attaches
+    to the 'greeting' node in the XML. It also add a 'required' facet to this node.</p>
+
+    <p>The model can be placed anywhere in the document but would commonly occur at the beginning of the document body.</p>
+
+    <p>More Information can be found on the <a href="xf-model.html">xf-model page.</a></p>
+
+    <h3>Adding some UI</h3>
+
+    <p>As in HTML the controls are contained in a single element called <code>xf-form</code>. For our simplistic example
+    this looks like this:</p>
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                Hello <xf-output bind="b-greeting"></xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+
+    <p>There's only one control <code>xf-output</code> which binds to 'b-greeting' displaying its value. The output
+    would be 'Hello World!'.</p>
+
+    <h2>Important things to watch</h2>
+
+    <p>If wondering which your form does not work please check these points:</p>
+
+    <ul>
+        <li>Are all necessary module imports in place? Forms may silently fail to work when components are missing.</li>
+        <li>Did you define at least one <code>xf-instance</code> in your model?</li>
+        <li>All bindings need to have a unique id attribute</li>
+        <li>There's one <code>xf-form</code> element present</li>
+        <li>It contains Fore UI components that are bound with the correct ids</li>
+    </ul>
+</div>
+
+</body>
+</html>

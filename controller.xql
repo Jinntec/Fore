@@ -20,7 +20,7 @@ if ($exist:path eq '') then
 else if ($exist:path = "/") then
 (: forward root path to index.html :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="index.html"/>
+        <redirect url="doc/index.html"/>
     </dispatch>
 
 else if (ends-with($exist:path, ".json")) then

@@ -23,7 +23,7 @@ extremely complex scenarios and there's hardly any other form framework in the w
 it also employs some complexity and learning-curve that is not easy to master for everyone. 
 
 Fore will keep close to the overall architecture and even try to keep element names and attributes whereever 
-it makes sense. We hope to thereby make it easier for XForms users to do the migration to Fore.
+it makes sense. We hope to thereby make it easier for experienced XForms users to do the migration to Fore.
 
 ## The XForms MVC
 

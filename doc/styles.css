@@ -6,16 +6,37 @@ body{
 
 h1{
     color:var(--paper-blue-900);
+    font-weight: 600;
 }
 h2{
     color:var(--paper-blue-700);
+    font-weight: 500;
 }
+h3{
+    font-weight: 400;
+    /*font-style: italic;*/
+    letter-spacing: 2px;
+    color:var(--paper-blue-600);
+
+}
+
+.demos a{
+    padding-left:20px;
+    font-weight: 300;
+    text-decoration: underline;
+}
+
 .topic{
     max-width: 600px;
 }
 
 .note{
     background: var(--paper-blue-100);
+    padding:10px;
+    line-height: 1.5;
+}
+.hint{
+    background: var(--paper-blue-grey-100);
     padding:10px;
     line-height: 1.5;
 }
@@ -28,6 +49,9 @@ a {
     color:var(--paper-blue-900);
     font-weight: 700;
     text-decoration: none;
+}
+.demos a{
+    display: block;
 }
 
 li{
