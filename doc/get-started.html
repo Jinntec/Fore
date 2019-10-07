@@ -35,7 +35,7 @@
     <ul>
         <li>You need to have a running installation of <a href="http://exist-db.org/exist/apps/homepage/index.html#downloads" target="_blank">eXist-db 5.0</a>
             or higher</li>
-        <li>visit eXist-dbs' PackageManager </li>
+        <li>visit the eXist-db' PackageManager </li>
         <li>change to 'available' tab to display public repo packages</li>
         <li>scroll to 'Fore' entry and click download icon to install it.</li>
         <li>after installation change to Launcher to start Fore Demos and Documentation.</li>
@@ -152,17 +152,22 @@
     <demo-snippet>
         <template>
             Please pay: <xf-output bind="amount"> </xf-output>
-            <select bind="method" label="Payment Method">
-                <option value="cash">Cash</option>
-                <option value="cc">Credit</option>
-            </select>
-            <input bind="number" label="Card Number"/>
-            <input bind="expiry" label="Expiration Date"/>
+            <xf-select bind="method" label="Payment Method">
+                <xf-option value="cash">Cash</xf-option>
+                <xf-option value="cc">Credit</xf-option>
+            </xf-select>
+            <xf-input bind="number" label="Card Number"/>
+            <xf-input bind="expiry" label="Expiration Date"/>
             <xf-button>
                 <xf-submit label="Submit"> </xf-submit>
             </xf-button>
         </template>
     </demo-snippet>
+
+    <div class="note">
+        This example uses Fore UI controls. <code>xf-select, xf-input etc.</code> which are simple wrappers around
+        the native browser controls with added data-binding.
+    </div>
 
     <p>Controls are bound to their corresponding data items via the <code>bind</code> attribute. This way controls
     get their value and state (e.g. whether it's readonly, required, valid or relevant). When the user selects

@@ -60,3 +60,17 @@ li{
 p{
     line-height: 1.5;
 }
+
+td{
+    vertical-align: top;
+    padding: 10px;
+    font-weight: lighter;
+}
+td:first-child{
+    white-space: nowrap;
+}
+thead td{
+    font-weight: bold;
+    background: var(--paper-blue-grey-100);
+    color:var(--paper-blue-500);
+}

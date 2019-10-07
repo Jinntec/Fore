@@ -30,14 +30,16 @@
 <div class="topic">
     <h1><code>xf-model</code></h1>
 
-    <p>The <code>xf-model</code> element is a <b>required</b> element that defines the policies of a form.</p>
+    <p>The <code>xf-model</code> element is a <b>required</b> element that defines the policies of a form in a descriptive
+    format.</p>
 
     <p>It may occur anywhere in an HTML page but by convention should be put at the beginning of the <code>body</code>
     of an HTML page <b>outside</b> of the <code>xf-form</code> element.</p>
 
     <div class="note">The <code>xf-model</code> element and its children use HTML Custom Element syntax but have no
-    Web Component code attached to them as these elements are never send to the browser. Instead the <code>xf-model</code>
-    and its descendants are processed by eXist-db with XQuery. </div>
+    Web Component code attached to them. These elements are never send to the browser. Instead the <code>xf-model</code>
+    and its descendants are processed by eXist-db with XQuery. The Custom Element syntax is used for consistency
+    with the UI markup when embedded in a single HTML page.</div>
 
     <p>Example</p>
     <demo-snippet>

@@ -9,19 +9,23 @@
     </script>
 
 
-    <link href="styles.css"  type="text/css" rel="stylesheet"/>
+    <link href="styles.css" rel="stylesheet" type="text/css"/>
 
     <custom-style>
         <style is="custom-style">
 
             demo-snippet {
-                --demo-snippet-demo:{
+                --demo-snippet-demo: {
                     padding: 0;
                     display: none;
                 }
             }
 
 
+            tr td:first-child{
+                font-family: monospace;
+                font-weight: bold;
+            }
         </style>
     </custom-style>
 </head>
@@ -29,6 +33,181 @@
 
 <div class="topic">
     <h1>xf-bind</h1>
+
+    <p>The <code>xf-bind</code> element associates properties with values in instance data. </p>
+
+    <p>The binding elements attach constraints, calculations and messages to one or more target items.</p>
+
+    <a name="attach"></a>
+    <h2>Attaching properties to Items</h2>
+
+    <p>Properties are attached to items with <b>bindings attributes</b> which use XPath to select their target(s).</p>
+
+    <table>
+        <thead>
+            <td>Attribute</td>
+            <td>Description</td>
+        </thead>
+        <tr>
+            <td><code>ref</code></td>
+            <td>XPath expression selecting a single item (e.g. XML node)</td>
+        </tr>
+        <tr>
+            <td><code>set</code></td>
+            <td>
+                XPath expression selecting multiple items (e.g. XML nodeset.
+
+                <div class="note">
+                    In XForms there used to be a <code>nodeset</code> attribute to refers to XML nodesets. This
+                    has been deprecated so only <code>ref</code> is left. However for easier static analysis in Fore
+                    the <code>set</code> attribute is used as a replacement for the old <code>nodeset</code>.
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <p>Example 1 - <code>ref</code>:</p>
+    <demo-snippet>
+        <template>
+            <xf-instance>
+                <data>
+                    <item></item>
+                </data>
+            </xf-instance>
+            <xf-bind id="bind1" ref="item"></xf-bind>
+        </template>
+    </demo-snippet>
+
+    <p>'bind1' will select the single item node</p>
+
+    <p>Example 2 - <code>set</code></p>
+
+    <demo-snippet>
+        <template>
+            <xf-instance>
+                <data>
+                    <item></item>
+                    <item></item>
+                    <item></item>
+                </data>
+            </xf-instance>
+            <xf-bind id="bind1" set="item"></xf-bind>
+        </template>
+    </demo-snippet>
+
+    <p>'bind1' will select all three 'item' nodes.</p>
+
+
+    <h2>Expressions</h2>
+
+    <p>Attribute values of <code>xf-bind</code> elements are XPath expressions that are evaluated in
+      context of their binding attribute.
+    </p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-bind id="bind1" ref="item" calculate="concat('hello',' ','world')"></xf-bind>
+        </template>
+    </demo-snippet>
+    <p>This bind will set the value 'Hello world' to the node 'item'.</p>
+
+
+    <h2>Attributes</h2>
+
+    <table>
+        <thead>
+            <td>Attribute</td>
+            <td>Description</td>
+            <td>Default</td>
+        </thead>
+        <tr>
+            <td>Id</td>
+            <td>required identifier used in UI binding expressions</td>
+            <td>none</td>
+        </tr>
+        <tr>
+            <td>ref</td>
+            <td><a href="#attach">see above</a></td>
+            <td>none</td>
+        </tr>
+        <tr>
+            <td>set</td>
+            <td><a href="#attach">see above</a></td>
+            <td>none</td>
+        </tr>
+        <tr>
+            <td>calculate</td>
+            <td>XPath expression to calculate a value for the referenced node(s)</td>
+            <td>none</td>
+        </tr>
+        <tr>
+            <td>constraint</td>
+            <td>Boolean XPath expression defining a validity condition for the referenced node(s)</td>
+            <td>true</td>
+        </tr>
+        <tr>
+            <td>readonly</td>
+            <td>Boolean XPath expression defining if a node is changeable or not</td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td>required</td>
+            <td>Boolean XPath expression describing whether a value is required before submitting instance data.</td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td>relevant</td>
+            <td>Boolean XPath expression determining wether or not associated nodes are relevant or not. Non-relevant
+            nodes are e.g. filtered out by default before submitting instance data. Relevance is also used to
+            show/hide parts of the user interface.</td>
+            <td>true</td>
+        </tr>
+        <tr>
+            <td>type</td>
+            <td>XML Schema datatype to be attached to bound node(s)</td>
+            <td>none</td>
+        </tr>
+
+        <tr>
+            <td>alert</td>
+            <td>attaches a message text for <code>constraint</code> and <code>type</code> validations.</td>
+            <td>none</td>
+        </tr>
+
+        <tr>
+            <td>label</td>
+            <td>attaches a label text to bound UI Controls</td>
+            <td>none</td>
+        </tr>
+
+        <tr>
+            <td>hint</td>
+            <td>attaches a hint text for bound UI Controls</td>
+            <td>none</td>
+        </tr>
+
+    </table>
+
+
+    <h2>Nested bindings</h2>
+
+    <p><code>xf-bind</code> elements can be nested arbitrarily deep.</p>
+
+    <p>A nested bind element <b>inherits the binding context</b> from its parent bind element. In XForms terms this is
+    known as 'scoped resolution' and reduces typing and improves readability.</p>
+
+    <p>Example:</p>
+
+    <demo-snippet>
+        <template>
+            <xf-bind id="bind1" ref="address">
+                <xf-bind id="bind2" ref="street"></xf-bind>
+            </xf-bind>
+        </template>
+    </demo-snippet>
+
+    <p>'bind2' will resolve to 'address/street' in the default instance.</p>
 
 </div>
 

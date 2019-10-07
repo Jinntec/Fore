@@ -21,6 +21,10 @@
                 }
             }
 
+            tbody > td:first-child{
+                font-family: monospace;
+                font-weight: bold;
+            }
 
         </style>
     </custom-style>
@@ -30,6 +34,151 @@
 <div class="topic">
     <h1>xf-submission</h1>
 
+    <p>A <code>xf-submission</code> is triggered by a <code>xf-submit</code> action.</p>
+
+    <p>The submission will select the data for submission, check their validity, serialize and pass them
+    to the action handler.</p>
+
+    <p>The submission also deals with the response received from the action handler.</p>
+
+    <div class="hint">
+        Fore submission will significantly differ from XForms which has a complex set of options. Fore profits from
+        eXist-db here as we can always pass the submitted data to an XQuery function to do whatever complex operations
+        we might have. There is no need to build this directly into the framework.
+    </div>
+
+
+    <h2>Attributes</h2>
+
+    <table>
+        <thead>
+            <td>Attribute</td>
+            <td>Description</td>
+            <td>Default</td>
+        </thead>
+        <tr>
+            <td>action</td>
+            <td>action handler to be called with submitted data.</td>
+            <td>none</td>
+        </tr>
+        <tr class="row">
+            <td>id</td>
+            <td>identifier for submission to be used in <code>xf-submit</code></td>
+            <td>none</td>
+        </tr>
+        <tr>
+            <td>nonrelevant</td>
+            <td>Boolean expression defining wether or not non-relevant nodes are removed before sending to action
+                handler.</td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td>method</td>
+            <td>One of 'get', 'post', 'put' and 'delete'. </td>
+            <td>get</td>
+        </tr>
+        <tr>
+            <td>ref</td>
+            <td>single item binding to select root item for submitted data</td>
+            <td>$instance?default</td>
+        </tr>
+        <tr>
+            <td>replace</td>
+            <td>determines how to handle response data. One of 'all', 'instance', 'text' or 'none' is allowed.
+            See below for details.</td>
+            <td>all</td>
+        </tr>
+        <tr>
+            <td>targetref</td>
+            <td>optional XPath to point to node which will be replaced with response data in case <code>replace</code>
+            is 'instance'.</td>
+            <td>$instance?default</td>
+        </tr>
+        <tr>
+            <td>target</td>
+            <td>optional presentation hint for response handling. One of '_self' or '_blank'</td>
+            <td>_self</td>
+        </tr>
+        <tr>
+            <td>validate</td>
+            <td>Boolean to define wether validation shall be done or not.</td>
+            <td>true</td>
+        </tr>
+
+    </table>
+
+    <h2>Submission Processing</h2>
+
+    <ul>
+        <li>Submission is triggered by <code>xf-submit</code> action</li>
+        <li>The <code>ref</code> attribute will evaluated to determine the target instance data.</li>
+        <li>If <code>nonrelevant</code> evaluates to <code>false()</code> all nonrelevant nodes are filtered
+        from the selected instance. </li>
+        <li>The instance is recalculated and revalidated.</li>
+        <li>If errors occur the relevant alerts are send back to the client and submission stops</li>
+        <li>If validation is successful the data are serialized and passed to the action handler</li>
+        <li>If submission generates an error the <code>xf-submit-error</code> child element is triggered (if any).</li>
+        <li>If submission was successful the response is parsed and and processed depending on the replace mode.
+            <ul>
+                <li>if <code>replace='all'</code> then submission response is passed back to client directly</li>
+                <li>if <code>replace='instance'</code> then submission response is parsed and replaces the
+                    current instance or the node specified in <code>targetref</code>. This might also point to
+                    another instance replacing their entire content.
+                </li>
+                <li>if <code>replace='none'</code> the response is ignored.</li>
+                <li>if <code>replace='text'</code> the response replaces the targetnode's textnode</li>
+            </ul>
+        </li>
+        <li>The <code>xf-submit-done</code> child element is triggered.</li>
+
+    </ul>
+
+    <h2>xf-submit-done</h2>
+
+    <p>The <code>xf-submit-done</code> element is an action handler which is triggered on successful execution
+    of a submission. It is usually used to send messages to the user or trigger loading of another URL. You can
+    think of this element as an trigger for actions.</p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-submission>
+                <xf-submit-done>
+                    <xf-message>Your data have been sent</xf-message>
+                </xf-submit-done>
+            </xf-submission>
+        </template>
+    </demo-snippet>
+
+    <p>This will display a message to the user after submission was successful</p>
+
+
+    <h2>xf-submit-error</h2>
+
+    <p>Triggers the <code>xf-submit-error</code> element when submission fails for some reason.</p>
+
+    <h2>Chaining Submissions</h2>
+
+    <p>A powerful feature is submission chaining. This allows to trigger another submission dependent on the outcome
+    of the first.</p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-submission id="first" targetref="$instances?preprocessed" replace="instance">
+                <xf-submit-done>
+                    <xf-submit submission="second"></xf-submit>
+                </xf-submit-done>
+            </xf-submission>
+
+            <xf-submission id="second" ref="$instance?preprocessed"></xf-submission>
+        </template>
+    </demo-snippet>
+
+    <p>In the example above the first submission will preprocess the instance data and store them in an instance named
+    'preprocessed'. After that has successfully been done the second submission is called.</p>
+
+    <p>Submission chaining can be done in either <code>xf-submit-done</code> and <code>xf-submit-error</code> elements.</p>
 </div>
 
 </body>
