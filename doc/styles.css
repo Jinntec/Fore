@@ -19,6 +19,11 @@ h3{
     color:var(--paper-blue-600);
 
 }
+code{
+    font-size:16px;
+    color:var(--paper-grey-900);
+    font-weight: 600;
+}
 
 .demos a{
     padding-left:20px;
@@ -74,3 +79,11 @@ thead td{
     background: var(--paper-blue-grey-100);
     color:var(--paper-blue-500);
 }
+
+
+.attributes tr td:first-child{
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+}
+

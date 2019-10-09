@@ -22,10 +22,6 @@
             }
 
 
-            tr td:first-child{
-                font-family: monospace;
-                font-weight: bold;
-            }
         </style>
     </custom-style>
 </head>
@@ -41,7 +37,8 @@
     <a name="attach"></a>
     <h2>Attaching properties to Items</h2>
 
-    <p>Properties are attached to items with <b>bindings attributes</b> which use XPath to select their target(s).</p>
+    <p>Properties are attached to items with <a href="terms.html#bindingAttributes">bindings attributes</a> which use
+        XPath to select their target(s).</p>
 
     <table>
         <thead>
@@ -110,12 +107,12 @@
             <xf-bind id="bind1" ref="item" calculate="concat('hello',' ','world')"></xf-bind>
         </template>
     </demo-snippet>
-    <p>This bind will set the value 'Hello world' to the node 'item'.</p>
+    <p>This bind will update the instance value of 'item' to 'Hello world'.</p>
 
 
-    <h2>Attributes</h2>
+    <h2><a name="attributes">Attributes</a></h2>
 
-    <table>
+    <table class="attributes">
         <thead>
             <td>Attribute</td>
             <td>Description</td>

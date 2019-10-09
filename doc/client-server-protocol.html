@@ -30,28 +30,28 @@
     </style>
 </head>
 <body>
-
 <div class="topic">
     <h1>Client Server Protocol</h1>
 
     <p>This document describes the JSON structures that are used in client-server communication.</p>
 
-    <p>Main problem with a distributed architecture is the syncing of identities between server and client.
+    <p>One central problem with a distributed architecture is the syncing of identities between server and client.
         When a data item (aka node) changes on either side the change needs to be propagated to the other side.</p>
 
     <p>Either client and server have their 'preferred' data formats. On the server we'd like to deal mainly with XML
         while JSON is better suited on the client.</p>
 
-    <p>Fore uses <xf-bind> ids to map between the client- and server-side data-model. For more detail refer to
+    <p>Fore uses <code>xf-bind</code> ids to map between the <a href="terms.html#uimodel">UI Model</a> and
+        <a href="terms.html#hostmodel">Host Model</a>. For more detail refer to
         <a href="architecture.html">architecture</a>.</p>
 
     <p>The involved structures are best described in context with their occurrence during the lifecycle of a form session.</p>
 
-    <h2>INIT: the client-side data-model</h2>
+    <h2>Initing the  UI Model</h2>
 
-    <p>After initial load of a form in the browser it will send an 'init' request to load the client-side data-model.</p>
+    <p>After initial load of a form in the browser it will send an 'init' request to load the UI Model.</p>
 
-    <p>The response from the server will contain a structural copy of the <xf-bind> elements represented in JSON.</p>
+    <p>The response from the server will contain a structural copy of the <code>xf-bind</code> elements represented in JSON.</p>
 
     <p>Example:</p>
 
@@ -102,14 +102,14 @@
             to minimize the needed bandwidth</li>
         <li>a bind is identified by the bind id given by the corresponding <code>xf-bind</code> element
             ('b-greeting' and 'b-audience').</li>
-        <li>each <code><xf-bind></code> MUST have an id</li>
+        <li>each <code>xf-bind</code> MUST have an id</li>
     </ul>
 
-    <p>The details of the JSON output is described in JSON format description.</p>
+    <p>The details of the JSON output is described in <a href="json.html">JSON format description.</a></p>
 
-    <h2>UPDATE</h2>
+    <h2>Sending Updates</h2>
 
-    <p>When the user interacts with the form this will be recorded in a changes list that gets send
+    <p>When the user interacts with the form the actions will be recorded in a list of changes that gets send
         to the server when appropriate.</p>
 
     <h3>Binding pathes</h3>
@@ -236,7 +236,7 @@
 
     <p>These are described in the <a href="../src/docs.html">API Docs</a>.</p>
 
-    <h3>State updates from Server</h3>
+    <h3>Receiving Updates from Server</h3>
 
     <p>When the user sends a value that in turn changes the state of other bound nodes this requires to
         return these state changes back to the client for processing.</p>

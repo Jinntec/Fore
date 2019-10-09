@@ -1,0 +1,415 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>UI Model</title>
+    <script type="module">
+        import '../assets/@polymer/paper-styles/color.js'
+        import '../assets/@polymer/paper-styles/typography.js'
+        import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+
+    </script>
+
+
+    <link href="styles.css"  type="text/css" rel="stylesheet"/>
+
+    <custom-style>
+        <style is="custom-style">
+
+            demo-snippet {
+                --demo-snippet-demo:{
+                    padding: 0;
+                    display: none;
+                }
+            }
+
+
+        </style>
+    </custom-style>
+</head>
+<body>
+
+<div class="topic">
+    <h1>UI Model</h1>
+
+    <p>This documents describes the structure of the <a href="terms.html#uimodel">UI model</a>.</p>
+
+    <p>The UI Model is represented by a piece of JSON that is loaded from the server at init time and which will be
+    used to populate the user interface with its initial values and states.</p>
+
+    <h2>Bind Objects</h2>
+    <p>The JSON encodes the set of <a href="terms.html#bindobjects">bind objects</a> that result from the iteration
+    of all <code>xf-bind</code> elements in a <code>xf-model</code>.</p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-model>
+                <xf-instance>
+                    <data>
+                        <greeting>hello</greeting>
+                        <audience>world</audience>
+                    </data>
+                </xf-instance>
+
+                <xf-bind id="b-greeting" ref="greeting" requred="true()"></xf-bind>
+                <xf-bind id="b-audience" ref="audience"><xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <p>There a few things worth pointing out:</p>
+    <ul>
+        <li>the JSON returned is always an array of bind objects</li>
+        <li>bind objects contain a varying amount of <a href="xf-bind.html#attributes">properties</a> that reflect the evaluated state of the bound node
+            (see required in above example). Properties will only be present if they have a non-default value to
+            minimize the needed bandwidth.
+        </li>
+        <li>
+            a bind is identified by the bind id given by the corresponding <code>xf-bind</code> element
+            ('b-greeting' and 'b-audience').
+        </li>
+        <li>each xf-bind <b>must</b> have an id</li>
+        <li>the data root element ('data' in this case) is not explicitly included in ref or set attributes.
+            The default context is always <code>xf-instance/*[1]</code> to relax typing effort.</li>
+    </ul>
+
+    <div class="note">Please refer to the <code><a href="xf-bind.html">xf-bind</a></code> element for details
+    on supported attributes.</div>
+
+    <h2>Nested Bindings</h2>
+    <p>Binds can be nested where child bindings inherit the context from its parents e.g. in this example the
+        bind of 'b-type' will evaluate to <code>address/@type</code>.</p>
+
+    <demo-snippet>
+        <template>
+            <xf-model>
+                <xf-instance>
+                    <data>
+                        <address type="postal">
+                            <street>Kielganstr.</street>
+                        </address>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-address" ref="address">
+                    <xf-bind id="b-type" ref="@type"></xf-bind>
+                    <xf-bind id="b-street" ref="street"></xf-bind>
+                </xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <p>The JSON structure reflects the structure of the bindings like this:</p>
+
+    <demo-snippet>
+        <template>
+            [
+                {
+                    "bind":{
+                        "id":"b-address",
+                        "bind": [
+                            {
+                                "id": "b-type"
+                                "value": "postal"
+                            },
+                            {
+                                "id":"b-street"
+                                "value": "Kielganstr."
+                            }
+                        ]
+                    }
+                }
+            ]
+        </template>
+    </demo-snippet>
+
+
+    <h2>Simple Repeat Bindings</h2>
+
+    <p>The concept of a 'bind object' becomes more clear when dealing with bindings that resolve to multiple targets.</p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-model>
+                <xf-instance>
+                    <data>
+                        <item>item1</item>
+                        <item>item2</item>
+                        <item>item3</item>
+                        <data>
+                </xf-instance>
+                <xf-bind id='b-item' set="item" required="preceding-sibling::node()[1] = 'item1'"></xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <p>In this case the bind targets 3 nodes in the bound instance. For each occurrence a 'bind object' is created
+        that reflects the state of the node with respect to the binding properties (readonly, required, relevant,
+        valid, type, value).</p>
+
+    <p>The resulting JSON:</p>
+
+    <demo-snippet>
+        <template>
+            [
+              {
+                "bind": {
+                  "id": "b-item",
+                  "bind": [
+                    {
+                      "value": "item1",
+                      "required": false
+                    },
+                    {
+                      "value": "item2",
+                      "required": true
+                    },
+                    {
+                      "value": "item3",
+                      "required": false
+                    }
+                  ]
+                }
+              }
+            ]
+        </template>
+    </demo-snippet>
+
+    <div class="note">
+        In XForms there used to be a <code>nodeset</code> attribute on bind elements to bind to nodesets. This was deprecated and
+        changed to the use of the <code>ref</code> attribute in all places. However as Fore is designed as a compiler it is
+        significantly easier to process the bindings if we can rely on static analysis of the bind elements. Therefore
+        we use the <code>set</code> attribute instead of ref to explicitly mark the fact that multiple nodes are referred. As we
+        intend to also bind to JSON instances we use the more generic term 'set' instead of 'nodeset'.
+    </div>
+
+    <h2>Complex nested Bindings</h2>
+
+    <p>If a set contains more than a single bind we have a complex binding. Think of multi-column table rows.</p>
+
+    <p>Example:</p>
+    <demo-snippet>
+        <template>
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <task complete="false" due="2019-02-04">Pick up Milk</task>
+                        <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                    </data>
+                </xf-instance>
+
+                <xf-bind id="b-todo" set="task">
+                    <xf-bind id="b-task" ref="./text()" required="true()"></xf-bind>
+                    <xf-bind id="b-state" ref="@complete" type="xs:boolean"> </xf-bind>
+                    <xf-bind id="b-due" ref="@due"> </xf-bind>
+                </xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <p>This results in slight changes in the resulting JSON:</p>
+
+    <demo-snippet>
+        <template>
+            [
+              {
+                "bind": {
+                  "id": "b-todo",
+                  "bind": [
+                    [
+                      {
+                        "id": "b-task",
+                        "required": true,
+                        "value":"Pick up Milk"
+                      },
+                      {
+                        "id": "b-state",
+                        "type": "boolean",
+                        "value": false
+                      },
+                      {
+                        "id": "b-due",
+                        "type": "date"
+                      }
+                    ],
+                    [
+                      {
+                        "id": "b-task",
+                        "required": true,
+                        "value":"Make tutorial part"
+                      },
+                      {
+                        "id": "b-state",
+                        "type": "boolean",
+                        "value": true
+                      },
+                      {
+                        "id": "b-due",
+                        "type": "date"
+                      }
+                    ]
+                  ]
+                }
+              }
+            ]
+        </template>
+    </demo-snippet>
+
+    <p>Here the set is not just an array but an <b>array of arrays</b> as we need to distinguish 'the rows in our table'.</p>
+
+    <h2>Complex nested Repeat Example</h2>
+
+    <p>This example shows the use of nested sets.</p>
+
+    <demo-snippet>
+        <template>
+            <xf-model id="products">
+                <xf-instance>
+                    <cart total="">
+                        <products>
+                            <product>
+                                <info>
+                                    <serial>123</serial>
+                                    <origin>China</origin>
+                                </info>
+                                <price>22.50</price>
+                            </product>
+                            <product>
+                                <info>
+                                    <serial>456</serial>
+                                    <origin>China</origin>
+                                </info>
+                                <price>34.50</price>
+                            </product>
+                            <product>
+                                <info>
+                                    <serial>678</serial>
+                                    <origin>Bangladesh</origin>
+                                </info>
+                                <price>13.25</price>
+                            </product>
+                        </products>
+                    </cart>
+                </xf-instance>
+
+                <xf-bind id="b-cart" ref="$instances?default/cart">
+                    <xf-bind id="b-total" ref="@total" calculate="sum(../products/price)" constraint=". = 70.20" alert="total must sum up to 70.20"></xf-bind>
+                    <xf-bind id="b-products" set="products/product">
+                        <xf-bind id="b-info" set="info">
+                            <xf-bind id="b-serial" ref="serial" type="xs:integer"></xf-bind>
+                            <xf-bind id="b-origin" ref="origin"></xf-bind>
+                        </xf-bind>
+                        <xf-bind id="price" ref="price" type="xs:double"></xf-bind>
+                    </xf-bind>
+                </xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <demo-snippet>
+        <template>
+            [
+                {
+                    "bind": {
+                        "id": "b-cart",
+                        "bind": [
+                            {
+                                "id": "b-total",
+                                "valid": false,
+                                "alert": "total must sum up to 70.20"
+                            },
+                            {
+                                "id": "b-products",
+                                "bind": [
+                                    [
+                                        {
+                                            "id": "b-info",
+                                            "bind": [
+                                                [
+                                                    {
+                                                        "id": "b-serial",
+                                                        "type": "xs:integer",
+                                                        "value":123
+                                                    },
+                                                    {
+                                                        "id": "b-origin",
+                                                        "value": "China"
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "id": "price",
+                                            "type": "xs:double",
+                                            "value":22.50
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "id": "b-info",
+                                            "bind": [
+                                                [
+                                                    {
+                                                        "id": "b-serial",
+                                                        "type": "xs:integer",
+                                                        "value":456
+                                                    },
+                                                    {
+                                                        "id": "b-origin",
+                                                        "value": "China"
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "id": "price",
+                                            "type": "xs:double",
+                                            "value": 34.50
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "id": "b-info",
+                                            "bind": [
+                                                [
+                                                    {
+                                                        "id": "b-serial",
+                                                        "type": "xs:integer",
+                                                        "value":678
+                                                    },
+                                                    {
+                                                        "id": "b-origin",
+                                                        "value": "Bangladesh"
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "id": "price",
+                                            "type": "xs:double",
+                                            "value": 13.25
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        </template>
+    </demo-snippet>
+
+    <h2>Mapping of Datatypes</h2>
+
+    <p>In xf-bind elements the XSD Simple Types are used. This can be either the predefined as well as extended ones.
+        Obviously those datatypes cannot be supported by a browser natively.</p>
+
+    <p>In order to allow at least basic type-checking the XSD types must be mapped to the datatypes available in the
+        browser.</p>
+
+    todo: Mapping table
+</div>
+
+
+</body>
+</html>

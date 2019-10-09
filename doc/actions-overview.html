@@ -1,0 +1,112 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Actions Overview</title>
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+
+    <script type="module">
+        import '../assets/@polymer/paper-styles/color.js'
+        import '../assets/@polymer/paper-styles/typography.js'
+    </script>
+    <link href="styles.css"  type="text/css" rel="stylesheet"/>
+    <style>
+        img{
+            width: 600px;
+        }
+        table{
+            width: 100%;
+        }
+
+        td:first-child{
+            width: 160px;
+            font-weight: bold;
+            color:var(--paper-grey-900);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topic">
+
+        <h1>Actions</h1>
+
+        <p>Actions are a declarative way to change state and are triggered by events.</p>
+
+        <p>By using a declarative set of actions the need for scripting is massively reduced while
+        providing better readability and maintainence. </p>
+
+        <h2>Action Overview</h2>
+
+        <table>
+            <thead>
+                <td>Action</td>
+                <td>Description</td>
+            </thead>
+            <tr>
+                <td>xf-action</td>
+                <td>allows to group a set of actions</td>
+            </tr>
+            <tr>
+                <td>xf-append</td>
+                <td>appends an entry to a <code>xf-repeat</code></td>
+            </tr>
+
+            <tr>
+                <td>xf-delete</td>
+                <td>deletes one entry from a repeat</td>
+            </tr>
+            <tr>
+                <td>xf-dispatch</td>
+                <td>dispatches an event</td>
+            </tr>
+            <tr>
+                <td>xf-insert</td>
+                <td>insert an item into a <code>xf-repeat</code></td>
+            </tr>
+            <tr>
+                <td>xf-load</td>
+                <td>load a document into the browser</td>
+            </tr>
+            <tr>
+                <td>xf-message</td>
+                <td>display a message to the user</td>
+            </tr>
+            <tr>
+                <td>xf-refresh</td>
+                <td>forces a full UI update reapplying the UI Model to the controls</td>
+            </tr>
+            <tr>
+                <td>xf-reset</td>
+                <td>roll back all data instances to their initial state after init</td>
+            </tr>
+            <tr>
+                <td>xf-return</td>
+                <td>returns values from an embedded form (<code>xf-control</code>)</td>
+            </tr>
+            <tr>
+                <td>xf-setindex</td>
+                <td>set the index of a <code>xf-repeat</code></td>
+            </tr>
+            <tr>
+                <td>xf-setvalue</td>
+                <td>set the value of an data item</td>
+            </tr>
+            <tr>
+                <td>xf-submit</td>
+                <td>triggers execution of a <code>xf-submission</code></td>
+            </tr>
+            <tr>
+                <td>xf-toggle</td>
+                <td>toggles a specific <code>xf-base</code></td>
+            </tr>
+            <tr>
+                <td>xf-update</td>
+                <td>force complete update of UI by passing all changes to server</td>
+            </tr>
+        </table>
+
+    </div>
+
+
+</body>
+</html>

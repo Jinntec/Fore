@@ -40,15 +40,17 @@
     <p>All Fore elements are HTML Custom Elements and are used as any other HTML element. A complete form
     will therefore be part of a larger HTML file.</p>
 
-    <p>Please study the source code of the<a href="../src/demo/hello.html">Hello World</a> example to see complete examples.</p>
+    <p>Please study the source code of the <a href="../src/demo/hello.html">Hello World</a> example to see a complete
+        example document.</p>
 
     <h2>Document structure</h2>
 
-    <p>There are 3 things to include for a working form:</p>
+    <p>There are 4 things to include for a working form:</p>
     <ul>
         <li>add the necessary imports</li>
         <li>add a <code>xf-model</code></li>
         <li>add a <code>xf-form</code></li>
+        <li>add some UI controls</li>
     </ul>
 
     <h3>adding imports</h3>
@@ -113,7 +115,7 @@
 
     <h3>Adding some UI</h3>
 
-    <p>As in HTML the controls are contained in a single element called <code>xf-form</code>. For our simplistic example
+    <p>The controls are contained in a single element called <code>xf-form</code>. For our simplistic example
     this looks like this:</p>
 
     <demo-snippet>
@@ -124,8 +126,8 @@
         </template>
     </demo-snippet>
 
-    <p>There's only one control <code>xf-output</code> which binds to 'b-greeting' displaying its value. The output
-    would be 'Hello World!'.</p>
+    <p>There's only one control <code>xf-output</code> which binds to 'b-greeting' displaying its value. The form will
+        display 'Hello World!'.</p>
 
     <h2>Important things to watch</h2>
 
@@ -138,6 +140,8 @@
         <li>There's one <code>xf-form</code> element present</li>
         <li>It contains Fore UI components that are bound with the correct ids</li>
     </ul>
+
+
 </div>
 
 </body>
