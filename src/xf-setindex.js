@@ -10,7 +10,7 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  * @customElement
  * @polymer
  */
-class XfSetIndex extends PolymerElement {
+class XfSetindex extends PolymerElement {
 
     static get properties() {
         return {
@@ -28,7 +28,7 @@ class XfSetIndex extends PolymerElement {
     }
 
     execute(){
-        console.log('##### xf-set-index executing bindId ', this.bind);
+        console.log('##### xf-setindex executing bindId ', this.bind);
 
 
     }
@@ -36,4 +36,4 @@ class XfSetIndex extends PolymerElement {
 
 }
 
-window.customElements.define('xf-set-index', XfSetIndex);
+window.customElements.define('xf-setindex', XfSetindex);

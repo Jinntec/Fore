@@ -225,12 +225,12 @@ export class XfForm extends PolymerElement {
             }
             mockupElement.init(); // init mockup data
             this.modelData = mockupElement.getData();
+            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
             console.log('### modelData ', this.modelData);
             this._initUI();
         } else {
             this._showError('Neither server- nor mockup-data available - stopping');
         }
-        this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
     }
 
 

@@ -79,6 +79,21 @@
                     <xf-bind id="b-due" ref="@due" type="xs:date"></xf-bind>
                 </xf-bind>
 
+                <states>
+                    <set id="b-todo">
+                        <item>
+                            <modelItem name="b-task" required="true">Pick up Milk</modelItem>
+                            <modelItem name="b-state" type="Boolean">false</modelItem>
+                            <modelItem name="b-state" type="Date">2019-02-04</modelItem>
+                        </item>
+                        <item>
+                            <modelItem name="b-task" required="true">Make tutorial part 1</modelItem>
+                            <modelItem name="b-state" type="Boolean">true</modelItem>
+                            <modelItem name="b-state" type="Date">2019-01-04</modelItem>
+                        </item>
+                    </set>
+                </states>
+
                 <!--
                 'db' scheme here is used as a posssible sample to write to an absolute address
                 -->

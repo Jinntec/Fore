@@ -181,7 +181,6 @@ export class XfRepeat extends BoundElementMixin(PolymerElement) {
             bubbles: true,
             detail: {
                 'bind': this.bind,
-                'nodeId': this.modelItem.nodeId,
                 'appendLocation': this.repeatIndex,
                 'appendedItem': item.modelItem,
                 "path":path

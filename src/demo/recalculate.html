@@ -32,12 +32,28 @@
             <!-- ##### xf-model is not exposed to the client! ##### -->
             <xf-model id="record">
                 <xf-instance>
-                    <data count="">
+                    <data count="" multiply="">
                         <item>Hello!</item>
                         <item>World!</item>
                     </data>
                 </xf-instance>
-                <xf-bind id="b-count" ref="@count" calculate="count(item)"></xf-bind>
+                <xf-bind id="b-item" set="item">
+
+                </xf-bind>
+<!--                <xf-bind id="b-count" ref="@count" calculate="count(item)"></xf-bind>-->
+                <xf-bind id="b-item" set="item"></xf-bind>
+
+                <xf-bind id="b-count" ref="@count" calculate="count(#b-item)"></xf-bind>
+
+
+                <!-- ### address other nodes via XPath leaving the problem parsing XPath to detect dependency  -->
+<!--                <xf-bind id="b-multiply" ref="@multiply" calculate="@count * 2"></xf-bind>-->
+
+                <!-- ### use bindid selector syntax allows to detect dependency easily  -->
+                <xf-bind id="b-multiply" ref="@multiply" calculate="#b-count * 2"></xf-bind>
+
+                <!-- ### as shorthand for XPath conformant syntax -->
+<!--                <xf-bind id="b-multiply" ref="@multiply" calculate="fore:bind('b-count') * 2"></xf-bind>-->
             </xf-model>
         </template>
     </demo-snippet>
