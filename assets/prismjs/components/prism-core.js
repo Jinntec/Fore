@@ -177,9 +177,9 @@ var Prism = function (_self) {
 				selector: 'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'
 			};
 
-			_.hooks.run("before-highlightall", env);
+			_.hooks.run('before-highlightall', env);
 
-			var elements = env.elements || container.querySelectorAll(env.selector);
+			var elements = container.querySelectorAll(env.selector);
 
 			for (var i = 0, element; element = elements[i++];) {
 				_.highlightElement(element, async === true, env.callback);
@@ -188,7 +188,7 @@ var Prism = function (_self) {
 
 		highlightElement: function (element, async, callback) {
 			// Find language
-			var language,
+			var language = 'none',
 			    grammar,
 			    parent = element;
 
@@ -197,7 +197,7 @@ var Prism = function (_self) {
 			}
 
 			if (parent) {
-				language = (parent.className.match(lang) || [, ''])[1].toLowerCase();
+				language = (parent.className.match(lang) || [, 'none'])[1].toLowerCase();
 				grammar = _.languages[language];
 			}
 
@@ -457,25 +457,24 @@ var Prism = function (_self) {
 		this.greedy = !!greedy;
 	}
 
-	Token.stringify = function (o, language, parent) {
+	Token.stringify = function (o, language) {
 		if (typeof o == 'string') {
 			return o;
 		}
 
 		if (Array.isArray(o)) {
 			return o.map(function (element) {
-				return Token.stringify(element, language, o);
+				return Token.stringify(element, language);
 			}).join('');
 		}
 
 		var env = {
 			type: o.type,
-			content: Token.stringify(o.content, language, parent),
+			content: Token.stringify(o.content, language),
 			tag: 'span',
 			classes: ['token', o.type],
 			attributes: {},
-			language: language,
-			parent: parent
+			language: language
 		};
 
 		if (o.alias) {

@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
+import {XfAction} from "./xf-action.js";
 
 
 /**
@@ -6,11 +6,13 @@ import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.j
  *
  * send all local modelData updates and trigger submission on server.
  *
+ * Note: this implementation is still preliminary and may change any time.
+ *
  * @customElement
  * @polymer
  * @demo demo/index.html
  */
-class XfSubmit extends PolymerElement {
+class XfSubmit extends XfAction {
 
     static get properties() {
         return {
@@ -73,12 +75,43 @@ class XfSubmit extends PolymerElement {
             relevant:{
                 type: Boolean,
                 value: true
+            },
+            /**
+             * If present will execute the submission by calling the server-side submission element.
+             */
+            submission:{
+                type: String,
+                value:''
             }
         };
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        console.log('### xf-submit connected ');
+    }
+
+    init(){
+        super.init();
+
+        if(this.submission){
+            //todo - call 'submit' endpoint with submission id sending all data along.
+        }else{
+
+        }
+    }
+
+
     execute(){
-        console.log('xf-submit executing...');
+        console.log('xf-submit executing...', this.ownerForm);
+
+        this.dispatchEvent(new CustomEvent('xf-submit', {
+            composed: true,
+            bubbles: true,
+            detail: {"target":this,"submission":this.submission}
+        }));
+
+
     }
 
 }

@@ -2,6 +2,7 @@
 import { idlePeriod } from '../../@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '../../@polymer/polymer/lib/utils/debounce.js';
 import { enqueueDebouncer } from '../../@polymer/polymer/lib/utils/flush.js';
+
 import { usageStatistics } from '../vaadin-usage-statistics/vaadin-usage-statistics.js';
 if (!window.Vaadin) {
   window['Vaadin'] = {};
@@ -22,17 +23,22 @@ window['Vaadin'].developmentModeCallback['vaadin-usage-statistics'] = function (
 
 let statsJob;
 
+const registered = new Set();
+
 /**
  * @polymerMixin
  */
 export const ElementMixin = superClass => class VaadinElementMixin extends superClass {
   /** @protected */
-  static _finalizeClass() {
-    super._finalizeClass();
+  static finalize() {
+    super.finalize();
+
+    const { is } = this;
 
     // Registers a class prototype for telemetry purposes.
-    if (this.is) {
+    if (is && !registered.has(is)) {
       window.Vaadin.registrations.push(this);
+      registered.add(is);
 
       if (window.Vaadin.developmentModeCallback) {
         statsJob = Debouncer.debounce(statsJob, idlePeriod, () => {
@@ -42,8 +48,8 @@ export const ElementMixin = superClass => class VaadinElementMixin extends super
       }
     }
   }
-  ready() {
-    super.ready();
+  constructor() {
+    super();
     if (document.doctype === null) {
       console.warn('Vaadin components require the "standards mode" declaration. Please add <!DOCTYPE html> to the HTML document.');
     }

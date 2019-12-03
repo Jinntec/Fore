@@ -42,7 +42,7 @@ PolymerInit.prototype.extends;
 PolymerInit.prototype.properties;
 /** @type {(!Array<string> | undefined)} */
 PolymerInit.prototype.observers;
-/** @type {(!HTMLTemplateElement | string | undefined)} */
+/** @type {(!HTMLTemplateElement | string | undefined | null)} */
 PolymerInit.prototype.template;
 /** @type {(!Object<string, *> | undefined)} */
 PolymerInit.prototype.hostAttributes;
@@ -61,7 +61,7 @@ PolymerElementConstructor.extends;
 PolymerElementConstructor.properties;
 /** @type {(!Array<string> | undefined)} */
 PolymerElementConstructor.observers;
-/** @type {(!HTMLTemplateElement | string | undefined)} */
+/** @type {(!HTMLTemplateElement | string | undefined | null)} */
 PolymerElementConstructor.template;
 
 /** @interface */
@@ -143,6 +143,29 @@ Polymer.syncInitialRender;
  * @implements {Polymer_LegacyElementMixin}
  */
 var PolymerElement = function () {};
+
+/**
+ * The tag name of the cutom element type.
+ * @type {string|undefined}
+ */
+PolymerElement.is;
+/**
+ * The template to stamp when creating this element type.
+ * @type {!HTMLTemplateElement|undefined|null}
+ */
+PolymerElement.template;
+/**
+ * The properties of the cutom element type.
+ * @type {!PolymerElementProperties|undefined}
+ */
+PolymerElement.properties;
+/**
+ * The observers of this custom element type.
+ * @type {!Array<string>|undefined}
+ */
+PolymerElement.observers;
+/** @type {!PolymerInit|undefined} */
+PolymerElement.generatedFrom;
 
 /**
  * On create callback.

@@ -99,8 +99,9 @@
 
       if (transformRegExp.lastIndex == string.length) return result;
     }
-  }
-    function numberToLongString(x) {
+  };
+
+  function numberToLongString(x) {
     return x.toFixed(6).replace('.000000', '');
   }
 

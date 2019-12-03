@@ -331,6 +331,14 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     return 'input';
   }
 
+  _createConstraintsObserver() {
+    // This complex observer needs to be added dynamically here (instead of defining it above in the `get observers()`)
+    // so that it runs after complex observers of inheriting classes. Otherwise e.g. `_stepOrMinChanged()` observer of
+    // vaadin-number-field would run after this and the `min` and `step` properties would not yet be propagated to
+    // the `inputElement` when this runs.
+    this._createMethodObserver('_constraintsChanged(required, minlength, maxlength, pattern)');
+  }
+
   _onInput(e) {
     if (this.__preventInput) {
       e.stopImmediatePropagation();
@@ -483,6 +491,18 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  _constraintsChanged(required, minlength, maxlength, pattern) {
+    if (!this.invalid) {
+      return;
+    }
+
+    if (!required && !minlength && !maxlength && !pattern) {
+      this.invalid = false;
+    } else {
+      this.validate();
+    }
+  }
+
   /**
    * Returns true if the current input value satisfies all constraints (if any)
    * @returns {boolean}
@@ -511,6 +531,8 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
   ready() {
     super.ready();
+
+    this._createConstraintsObserver();
 
     this._boundOnInput = this._onInput.bind(this);
     this._boundOnChange = this._onChange.bind(this);
@@ -551,7 +573,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
   /**
    * Returns true if `value` is valid.
-   * `<iron-form>` uses this to check the validity or all its elements.
+   * `<iron-form>` uses this to check the validity for all its elements.
    *
    * @return {boolean} True if the value is valid.
    */
@@ -572,7 +594,12 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
       this.inputElement.select();
       // iOS 9 workaround: https://stackoverflow.com/a/7436574
       setTimeout(() => {
-        this.inputElement.setSelectionRange(0, 9999);
+        try {
+          this.inputElement.setSelectionRange(0, 9999);
+        } catch (e) {
+          // The workaround may cause errors on different input types.
+          // Needs to be suppressed. See https://github.com/vaadin/flow/issues/6070
+        }
       });
     }
   }

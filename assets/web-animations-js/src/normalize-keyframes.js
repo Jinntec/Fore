@@ -94,8 +94,9 @@
     } else {
       result[property] = antiAlias(property, value);
     }
-  }
-    function convertToArrayForm(effectInput) {
+  };
+
+  function convertToArrayForm(effectInput) {
     var normalizedEffectInput = [];
 
     for (var property in effectInput) {
@@ -139,8 +140,9 @@
       return a.offset - b.offset;
     });
     return normalizedEffectInput;
-  }
-    function normalizeKeyframes(effectInput) {
+  };
+
+  function normalizeKeyframes(effectInput) {
     if (effectInput == null) {
       return [];
     }

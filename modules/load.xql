@@ -1,7 +1,7 @@
 xquery version "3.1";
 
 import module namespace config = "http://existsolutions.com/fore/config" at 'config.xqm';
-
+import module namespace fore="http://exist-db.org/apps/fore" at 'fore.xqm';
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option output:method "html5";
@@ -93,9 +93,27 @@ let $session := session:set-attribute('fore.path',$path)
 
 let $log := util:log('info', 'token ' || session:get-attribute('fore.token'))
 
+(:
+    ### init stateful Java model
+    ### store model in session - which type can we use???
+:)
+
+(:let $model := fore:process-model($doc//xf-model):)
+let $model :=     if(data($config:developer-mode) eq 'true') then
+                      local:copy($doc/*,$token)
+                  else
+                      local:filter-model($doc/*,$token)
+
+
+let $session := session:set-attribute('fore.model',$model)
+
+return $model
+
+(:
 return
     if(data($config:developer-mode) eq 'true') then
         local:copy($doc/*,$token)
     else
         local:filter-model($doc/*,$token)
+:)
 

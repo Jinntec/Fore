@@ -347,7 +347,7 @@ interface IronListElement extends Templatizer, IronResizableBehavior, IronScroll
   _scrollerPaddingTop: number;
 
   /**
-   * This value is the same as `scrollTop`.
+   * This value is a cached value of `scrollTop` from the last `scroll` event.
    *    
    */
   _scrollPosition: number;
@@ -412,7 +412,7 @@ interface IronListElement extends Templatizer, IronResizableBehavior, IronScroll
   /**
    * An array of DOM nodes that are currently in the tree
    */
-  _physicalItems: TemplateInstanceBase[]|null;
+  _physicalItems: HTMLElement[]|null;
 
   /**
    * An array of heights for each item in `_physicalItems`
@@ -459,9 +459,8 @@ interface IronListElement extends Templatizer, IronResizableBehavior, IronScroll
   /**
    * The item that backfills the `_offscreenFocusedItem` in the physical items
    * list when that item is moved offscreen.
-   *    
    */
-  _focusBackfillItem: null;
+  _focusBackfillItem: HTMLElement|null;
 
   /**
    * The maximum items per row

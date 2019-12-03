@@ -42,91 +42,159 @@
 </head>
 <body>
 
-    <h1><code>xf-material-select</code></h1>
+<h1><code>xf-material-select</code></h1>
 
-    <demo-snippet>
-        <template>
-            <!-- ##### xf-model is not exposed to the client! ##### -->
-            <xf-model id="record">
-                <xf-instance>
-                    <data>
-                        <favorite>green</favorite>
-                        <yourown>purple</yourown>
-                    </data>
-                </xf-instance>
-                <xf-bind id="b-selected" ref="favorite"></xf-bind>
-                <xf-bind id="b-selected2" ref="yourown"></xf-bind>
+<demo-snippet>
+    <template>
+        <!-- ##### xf-model is not exposed to the client! ##### -->
+        <xf-model id="record">
+            <xf-instance>
+                <data>
+                    <favorite>green</favorite>
+                    <yourown>purple</yourown>
+                </data>
+            </xf-instance>
+            <xf-bind id="b-selected" ref="favorite"></xf-bind>
+            <xf-bind id="b-selected2" ref="yourown"></xf-bind>
 
-            </xf-model>
-        </template>
-    </demo-snippet>
+        </xf-model>
+    </template>
+</demo-snippet>
 
-    <demo-snippet>
-        <template>
-            <xf-json-data id="mockup">
+
+<demo-snippet>
+    <template>
+        <h1>Select with static inline list</h1>
+
+        <xf-form mockup='mockup'>
+
+            <xf-material-select bind="b-selected">
+                <option value="red">RED</option>
+                <option value="blue">BLUE</option>
+                <option value="green">GREEN</option>
+            </xf-material-select>
+        </xf-form>
+
+    </template>
+</demo-snippet>
+
+
+<demo-snippet>
+    <template>
+        <xf-json-data id="mockup">
+            [
+            {
+            "bind": {
+            "id": "b-selected",
+            "required": true,
+            "value": "green"
+            }
+            },
+            {
+            "bind": {
+            "id": "b-selected2",
+            "required": true,
+            "value": "purple"
+            }
+            }
+            ]
+        </xf-json-data>
+
+        <xf-form mockup='mockup'>
+
+
+            <h1>Select-Autocomplete Control with dynamic list</h1>
+            <h2>Your favorite form the list:
+                <xf-output bind="b-selected" id="output"></xf-output>
+            </h2>
+
+            <xf-items id='colors'>
                 [
-                  {
-                    "bind": {
-                      "id": "b-selected",
-                      "required": true,
-                      "value": "green"
-                    }
-                  },
-                  {
-                    "bind": {
-                      "id": "b-selected2",
-                      "required": true,
-                      "value": "purple"
-                    }
-                  }
+                {"label":"LightGreen","value":"lightgreen"},
+                {"label":"Green","value":"green"},
+                {"label":"DarkGreen","value":"darkgreen"},
+                {"label":"LightBlue","value":"lightblue"},
+                {"label":"Blue","value":"blue"},
+                {"label":"DarkBlue","value":"darkblue"},
+                {"label":"LightRed","value":"lightred"},
+                {"label":"Red","value":"red"},
+                {"label":"DarkRed","value":"darkred"},
+                {"label":"LightYellow","value":"lightyellow"},
+                {"label":"Yellow","value":"yellow"},
+                {"label":"DarkYellow","value":"darkyellow"}
                 ]
-            </xf-json-data>
+            </xf-items>
 
-            <xf-form mockup='mockup'>
+            <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
+            <xf-material-select bind="b-selected" id="selected" itemset="colors"
+                                label="Which do you like best?"></xf-material-select>
 
-                <h1>Select-Autocomplete Control with dynamic list</h1>
-                <h2>Your favorite form the list:
-                    <xf-output bind="b-selected" id="output"></xf-output>
-                </h2>
+            <xf-material-select bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-select>
+        </xf-form>
+    </template>
+</demo-snippet>
 
-                <xf-items id='colors'>
-                    [
-                        {"label":"LightGreen","value":"lightgreen"},
-                        {"label":"Green","value":"green"},
-                        {"label":"DarkGreen","value":"darkgreen"},
-                        {"label":"LightBlue","value":"lightblue"},
-                        {"label":"Blue","value":"blue"},
-                        {"label":"DarkBlue","value":"darkblue"},
-                        {"label":"LightRed","value":"lightred"},
-                        {"label":"Red","value":"red"},
-                        {"label":"DarkRed","value":"darkred"},
-                        {"label":"LightYellow","value":"lightyellow"},
-                        {"label":"Yellow","value":"yellow"},
-                        {"label":"DarkYellow","value":"darkyellow"}
-                    ]
-                </xf-items>
+<demo-snippet>
+    <template>
+        <xf-json-data id="mockup">
+            [
+                {
+                    "bind": {
+                    "id": "b-selected",
+                    "required": true,
+                    "value": "green"
+                    }
+                },
+                {
+                    "bind": {
+                    "id": "b-selected2",
+                    "required": true,
+                    "value": "purple"
+                    }
+                }
+            ]
+        </xf-json-data>
 
-                <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
-                <xf-material-select bind="b-selected" id="selected" itemset="colors"
-                                   label="Which do you like best?"></xf-material-select>
-
-                <xf-material-select bind="b-selected" itemset="colors" label="Which do you like best?"></xf-material-select>
+        <xf-form mockup='mockup'>
 
 
-                <h2>User can provide a value that's not in the list</h2>
-                <xf-material-select bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
-                                   selection="open"></xf-material-select>
-                <h2>Your free selection:
-                    <xf-output bind="b-selected2" id="output"></xf-output>
-                </h2>
+            <h1>Select-Autocomplete Control with dynamic list</h1>
+            <h2>Your favorite form the list:
+                <xf-output bind="b-selected" id="output"></xf-output>
+            </h2>
 
-                <div class="note">Do not use `xf-material-select` with conflicting 'selection' settings on the same bound
-                    node. This
-                    will lead to unexpected behavior as a selection='closed' control will reset a manually given value.
-                </div>
+            <xf-items id='colors'>
+                [
+                {"label":"LightGreen","value":"lightgreen"},
+                {"label":"Green","value":"green"},
+                {"label":"DarkGreen","value":"darkgreen"},
+                {"label":"LightBlue","value":"lightblue"},
+                {"label":"Blue","value":"blue"},
+                {"label":"DarkBlue","value":"darkblue"},
+                {"label":"LightRed","value":"lightred"},
+                {"label":"Red","value":"red"},
+                {"label":"DarkRed","value":"darkred"},
+                {"label":"LightYellow","value":"lightyellow"},
+                {"label":"Yellow","value":"yellow"},
+                {"label":"DarkYellow","value":"darkyellow"}
+                ]
+            </xf-items>
 
-            </xf-form>
-        </template>
-    </demo-snippet>
+
+            <h2>User can provide a value that's not in the list</h2>
+            <xf-material-select bind="b-selected2" id="selected2" itemset="colors" label="Which do you like best?"
+                                selection="open"></xf-material-select>
+            <h2>Your free selection:
+                <xf-output bind="b-selected2" id="output"></xf-output>
+            </h2>
+
+            <div class="note">Do not use `xf-material-select` with conflicting 'selection' settings on the same bound
+                node. This
+                will lead to unexpected behavior as a selection='closed' control will reset a manually given value.
+            </div>
+
+        </xf-form>
+    </template>
+</demo-snippet>
 </body>
 </html>

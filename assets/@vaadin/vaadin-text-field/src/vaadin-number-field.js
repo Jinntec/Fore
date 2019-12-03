@@ -14,7 +14,7 @@ const $_documentContainer = document.createElement('template');
 $_documentContainer.innerHTML = `<dom-module id="vaadin-number-field-template">
   <template>
     <style>
-      :host([readonly]) {
+      :host([readonly]) [part\$="button"] {
         pointer-events: none;
       }
 
@@ -69,7 +69,6 @@ let memoizedTemplate;
 * ```
 *
 * @memberof Vaadin
-* @extends Vaadin.TextFieldElement
 * @demo demo/index.html
 */
 class NumberFieldElement extends TextFieldElement {
@@ -78,7 +77,7 @@ class NumberFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.4.7';
+    return '2.4.14';
   }
 
   static get properties() {
@@ -167,6 +166,25 @@ class NumberFieldElement extends TextFieldElement {
     return memoizedTemplate;
   }
 
+  _createConstraintsObserver() {
+    // NOTE: do not call "super" but instead override the method to add extra arguments
+    this._createMethodObserver('_constraintsChanged(required, minlength, maxlength, pattern, min, max, step)');
+  }
+
+  _constraintsChanged(required, minlength, maxlength, pattern, min, max, step) {
+    if (!this.invalid) {
+      return;
+    }
+
+    const isNumUnset = n => !n && n !== 0;
+
+    if (!isNumUnset(min) || !isNumUnset(max)) {
+      this.validate();
+    } else {
+      super._constraintsChanged(required, minlength, maxlength, pattern);
+    }
+  }
+
   _decreaseValue() {
     this._incrementValue(-1);
   }
@@ -176,7 +194,7 @@ class NumberFieldElement extends TextFieldElement {
   }
 
   _incrementValue(incr) {
-    if (this.disabled) {
+    if (this.disabled || this.readonly) {
       return;
     }
 
@@ -222,7 +240,7 @@ class NumberFieldElement extends TextFieldElement {
   }
 
   _setValue(value) {
-    this.value = this.inputElement.value = parseFloat(value).toFixed(this.__decimals);
+    this.value = this.inputElement.value = parseFloat(value);
     this.dispatchEvent(new CustomEvent('change', { bubbles: true }));
   }
 
@@ -234,7 +252,7 @@ class NumberFieldElement extends TextFieldElement {
     const multiplier = Math.max(this._getMultiplier(currentValue), this._getMultiplier(step), this._getMultiplier(min));
 
     step *= multiplier;
-    currentValue *= multiplier;
+    currentValue = Math.round(currentValue * multiplier);
     min *= multiplier;
 
     const margin = (currentValue - min) % step;
@@ -248,15 +266,15 @@ class NumberFieldElement extends TextFieldElement {
     }
   }
 
+  _getDecimalCount(number) {
+    const s = String(number);
+    const i = s.indexOf('.');
+    return i === -1 ? 1 : s.length - i - 1;
+  }
+
   _getMultiplier(number) {
     if (!isNaN(number)) {
-      let multiplier = 1;
-      // Increase the multiplier until the float point will disappear
-      while (Math.floor(number * multiplier) !== number * multiplier) {
-        multiplier = multiplier * 10;
-      }
-
-      return multiplier;
+      return Math.pow(10, this._getDecimalCount(number));
     }
   }
 
@@ -282,7 +300,7 @@ class NumberFieldElement extends TextFieldElement {
 
   _valueChanged(newVal, oldVal) {
     // Validate value to be numeric
-    if (newVal && isNaN(parseFloat(newVal).toFixed(this.__decimals))) {
+    if (newVal && isNaN(parseFloat(newVal))) {
       this.value = '';
     } else if (typeof this.value !== 'string') {
       this.value = String(this.value);
@@ -302,23 +320,18 @@ class NumberFieldElement extends TextFieldElement {
   }
 
   __onInputChange() {
-    this.checkValidity();
+    this.validate();
   }
 
   _stepOrMinChanged(step, min) {
     this.inputElement.step = step;
     this.inputElement.min = this.min;
-    const countDecimalPlaces = number => {
-      return number ? String(Math.abs(number)).replace(/^\d*\.?(.*)?$/, '$1').length : 0;
-    };
-    // Compute number of dedimals to display in input based on provided step
-    this.__decimals = Math.max(countDecimalPlaces(step), countDecimalPlaces(min));
   }
 
   checkValidity() {
-    // text-field mixin does not check against `min` and `max`
-    if (this.min !== undefined || this.max !== undefined || this.step) {
-      this.invalid = !this.inputElement.checkValidity();
+    // text-field mixin does not check against `min`, `max` and `step`
+    if (this.min !== undefined || this.max !== undefined || this.step !== 1) {
+      return this.inputElement.checkValidity();
     }
     return super.checkValidity();
   }

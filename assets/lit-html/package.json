@@ -1,8 +1,8 @@
 {
   "_from": "lit-html@^1.0.0",
-  "_id": "lit-html@1.1.0",
+  "_id": "lit-html@1.1.2",
   "_inBundle": false,
-  "_integrity": "sha512-ZDJHpJi09yknMpjwPI8fuSl5sUG7+pF+eE5WciFtgyX7zebvgMDBgSLq4knXa7grxM00RkQ7PBd7UZQiruA78Q==",
+  "_integrity": "sha512-FFlUMKHKi+qG1x1iHNZ1hrtc/zHmfYTyrSvs3/wBTvaNtpZjOZGWzU7efGYVpgp6KvWeKF6ql9/KsCq6Z/mEDA==",
   "_location": "/lit-html",
   "_phantomChildren": {},
   "_requested": {
@@ -18,10 +18,10 @@
   "_requiredBy": [
     "/lit-element"
   ],
-  "_resolved": "https://registry.npmjs.org/lit-html/-/lit-html-1.1.0.tgz",
-  "_shasum": "6951fb717fb48fe34d915ae163448a04da321562",
+  "_resolved": "https://registry.npmjs.org/lit-html/-/lit-html-1.1.2.tgz",
+  "_shasum": "2e3560a7075210243649c888ad738eaf0daa8374",
   "_spec": "lit-html@^1.0.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/lit-element",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/lit-element",
   "author": {
     "name": "The Polymer Authors"
   },
@@ -35,16 +35,16 @@
   "devDependencies": {
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.0",
-    "@webcomponents/shadycss": "^1.5.2",
+    "@webcomponents/shadycss": "^1.8.0",
     "@webcomponents/webcomponentsjs": "^2.0.4",
     "chai": "^4.1.2",
     "clang-format": "^1.2.4",
-    "lit-html-benchmarks": "^0.2.0",
+    "lit-html-benchmarks": "^0.2.1",
     "mocha": "^5.2.0",
     "rollup": "^0.64.1",
     "rollup-plugin-filesize": "^4.0.1",
     "rollup-plugin-terser": "^1.0.1",
-    "tachometer": "^0.4.0",
+    "tachometer": "^0.4.1",
     "tslint": "^5.11.0",
     "typescript": "^3.4.1",
     "uglify-es": "^3.3.5",
@@ -80,10 +80,11 @@
     "format": "clang-format --version; find src test | grep '\\.js$\\|\\.ts$' | xargs clang-format --style=file -i",
     "lint": "tslint --project ./",
     "prepare": "npm run build",
+    "prepublishOnly": "node check-version-tracker.js && npm run lint && npm test",
     "publish-dev": "npm test && VERSION=${npm_package_version%-*}-dev.`git rev-parse --short HEAD` && npm version --no-git-tag-version $VERSION && npm publish --tag dev",
     "quicktest": "wct -l chrome -p --npm",
     "test": "npm run build && npm run lint && wct --npm"
   },
   "typings": "lit-html.d.ts",
-  "version": "1.1.0"
+  "version": "1.1.2"
 }

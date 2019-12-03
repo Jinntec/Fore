@@ -118,9 +118,11 @@ const FocusablesHelper = {
       // Use shadow root if possible, will check for distributed nodes.
       children = (element.shadowRoot || element).children;
     }
-    for (let i = 0; i < children.length; i++) {
-      // Ensure method is always invoked to collect tabbable children.
-      needsSort = this._collectTabbableNodes(children[i], result) || needsSort;
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        // Ensure method is always invoked to collect tabbable children.
+        needsSort = this._collectTabbableNodes(children[i], result) || needsSort;
+      }
     }
     return needsSort;
   },

@@ -172,7 +172,7 @@
             child.currentTime = -1;
           });
           animation._removeChildAnimations();
-
+          return;
         }
       }
     };

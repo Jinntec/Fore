@@ -19,6 +19,7 @@
   "_requiredBy": [
     "/@vaadin/vaadin-combo-box",
     "/@vaadin/vaadin-item",
+    "/@vaadin/vaadin-list-box",
     "/@vaadin/vaadin-notification",
     "/@vaadin/vaadin-overlay",
     "/@vaadin/vaadin-text-field"
@@ -26,7 +27,7 @@
   "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-lumo-styles/-/vaadin-lumo-styles-1.5.0.tgz",
   "_shasum": "8dec3c4aefea347431c8d184caf72406ea20c564",
   "_spec": "@vaadin/vaadin-lumo-styles@^1.1.1",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@vaadin/vaadin-combo-box",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@vaadin/vaadin-combo-box",
   "author": {
     "name": "Vaadin Ltd"
   },

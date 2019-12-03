@@ -71,4 +71,4 @@ Prism.languages.insertBefore('csharp', 'class-name', {
 	}
 });
 
-Prism.languages.dotnet = Prism.languages.csharp;
+Prism.languages.dotnet = Prism.languages.cs = Prism.languages.csharp;

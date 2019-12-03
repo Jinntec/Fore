@@ -106,6 +106,12 @@ export class XfForm extends PolymerElement {
                      on-error="_handleUpdateError"
                      content-type="application/json"
                      method="POST"> </iron-ajax>
+          <iron-ajax id="submit" 
+                     handle-as="json"
+                     on-response="_handleSubmitResponse"
+                     on-error="_handleSubmitError"
+                     content-type="application/json"
+                     method="POST"> </iron-ajax>
                      
            
            <paper-dialog id="modalMessage" modal="true">
@@ -120,6 +126,17 @@ export class XfForm extends PolymerElement {
 
     static get properties() {
         return {
+            /**
+             * if a form specifies an action attribute it will performs simple submission (client submission). This
+             * will send the raw JSON modelData leaving responsibility for validation and further processing completely
+             * to the receiving endpoint.
+             *
+             * If no action is given there must be a xf-submit specifying the submission to be used.
+             */
+            action:{
+                type: String,
+                value:''
+            },
             token: {
                 type: String
             },
@@ -167,6 +184,7 @@ export class XfForm extends PolymerElement {
 
     constructor() {
         super();
+        console.clear();
     }
 
     connectedCallback() {
@@ -180,6 +198,7 @@ export class XfForm extends PolymerElement {
         this.addEventListener('value-changed', this._handleValueChange);
         this.addEventListener('actions-performed', this._handleActionsPerformed);
         this.addEventListener('message', this._displayMessage);
+        this.addEventListener('xf-submit', this._submit);
 
         /*
         form processing starts here when all components have be loaded and instanciated by calling the `update`
@@ -238,12 +257,17 @@ export class XfForm extends PolymerElement {
      * updates the modelData by sending changed data to server, forcing recalculation and revalidation in one go.
      */
     update(){
-        console.log('### trigger update');
-        if(this.changed.size !== 0){
-            console.log("### update - change protocol ", this.changed);
-            this.$.update.params.token = this.token;
-            this.$.update.body = JSON.stringify(this.changed);
-            this.$.update.generateRequest();
+
+        if(this.action === ''){
+
+            console.log('### trigger update');
+            if(this.changed.size !== 0){
+                console.log("### update - change protocol ", this.changed);
+                this.$.update.params.token = this.token;
+                this.$.update.body = JSON.stringify(this.changed);
+                this.$.update.generateRequest();
+            }
+
         }
 
     }
@@ -335,7 +359,7 @@ export class XfForm extends PolymerElement {
     }
 
     _handleInitialState(e) {
-        console.log('### token as param ', this.$.initForm.params);
+        // console.log('### token as param ', this.$.initForm.params);
         this.modelData = this.$.initForm.lastResponse;
         console.log('### initial data loaded from server');
         if (this.modelData === null) {
@@ -367,6 +391,33 @@ export class XfForm extends PolymerElement {
 
     _handleInitError(e) {
         this._showError(this.$.initForm.lastError.error);
+    }
+
+    _submit(e){
+        console.log('_submit ', e.detail.target);
+        console.log('_submit modelData', this.modelData);
+
+        /*
+        submit can be in one of two modes:
+         - by using an action attribute which will send local modelData as is to the server
+         - by specifying a 'submission' attribute on the xf-submit action. That in turn will call the server-side submission.
+        */
+
+        if(this.action !== ''){
+            this.$.submit.url = this.action;
+        }else{
+            const submission = e.detail.submission;
+            this.$.submit.url = '/submit/' + submission;
+        }
+
+        console.log('submit url ', this.$.submit.url);
+
+        // this.$.submit.params.token = this.token;
+        const data = JSON.stringify(this.modelData);
+        console.log('data ', data);
+        this.$.submit.body = data;
+        this.$.submit.generateRequest();
+
     }
 
 
@@ -498,10 +549,14 @@ export class XfForm extends PolymerElement {
     _handleActionsPerformed(e){
         console.log('### actions performed ',e);
         // if changes then send update
+        this.update();
+
+/*
         if(this.changed.length > 0){
             this.$.update.body = this.changed;
             this.$.update.generateRequest();
         }
+*/
     }
 
     _isWebComponent(elementName) {
@@ -676,6 +731,16 @@ export class XfForm extends PolymerElement {
         this.$.modalMessage.classList.add('error');
         this.$.messageContent.innerText = error;
         this.$.modalMessage.open();
+    }
+
+    _handleSubmitResponse(e){
+        //    todo
+        console.log('_handleSubmitResponse ',e);
+    }
+
+    _handleSubmitError(e){
+    //    todo
+        console.log('_handleSubmitError ',e);
     }
 
 }

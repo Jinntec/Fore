@@ -12,7 +12,7 @@ Prism.languages['visual-basic'] = {
 		greedy: true
 	},
 	'string': {
-		pattern: /["“”](?:["“”]{2}|[^"“”])*["“”]C?/i,
+		pattern: /\$?["“”](?:["“”]{2}|[^"“”])*["“”]C?/i,
 		greedy: true
 	},
 	'date': {

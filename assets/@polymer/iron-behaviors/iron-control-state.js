@@ -71,7 +71,7 @@ export const IronControlState = {
   _focusBlurHandler: function (event) {
     // Polymer takes care of retargeting events.
     this._setFocused(event.type === 'focus');
-
+    return;
   },
 
   _disabledChanged: function (disabled, old) {

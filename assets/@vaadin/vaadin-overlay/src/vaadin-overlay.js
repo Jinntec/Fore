@@ -11,6 +11,7 @@ import { afterNextRender } from '../../../@polymer/polymer/lib/utils/render-stat
 import { FlattenedNodesObserver } from '../../../@polymer/polymer/lib/utils/flattened-nodes-observer.js';
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { FocusablesHelper } from './vaadin-focusables-helper.js';
+import { PositionMixin } from './vaadin-overlay-position-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 let overlayContentCounter = 0;
 const overlayContentCache = {};
@@ -41,14 +42,18 @@ const processOverlayStyles = cssText => {
       return is;
     }
 
-    connectedCallback() {
-      if (window.ShadyCSS) {
-        window.ShadyCSS.styleElement(this);
-      }
+    constructor() {
+      super();
 
       if (!this.shadowRoot) {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(document.importNode(styledTemplate.content, true));
+      }
+    }
+
+    connectedCallback() {
+      if (window.ShadyCSS) {
+        window.ShadyCSS.styleElement(this);
       }
     }
   })();
@@ -151,9 +156,10 @@ const processOverlayStyles = cssText => {
  *
  * @memberof Vaadin
  * @mixes Vaadin.ThemableMixin
+ * @mixes Vaadin.Overlay.PositionMixin
  * @demo demo/index.html
  */
-class OverlayElement extends ThemableMixin(PolymerElement) {
+class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
   static get template() {
     return html`
     <style>
@@ -498,7 +504,7 @@ class OverlayElement extends ThemableMixin(PolymerElement) {
     }
 
     // TAB
-    if (event.key === 'Tab' && this.focusTrap) {
+    if (event.key === 'Tab' && this.focusTrap && !event.defaultPrevented) {
       // if only tab key is pressed, cycle forward, else cycle backwards.
       this._cycleTab(event.shiftKey ? -1 : 1);
 
@@ -955,5 +961,4 @@ class OverlayElement extends ThemableMixin(PolymerElement) {
 }
 
 customElements.define(OverlayElement.is, OverlayElement);
-
 export { OverlayElement };

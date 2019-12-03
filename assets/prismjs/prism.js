@@ -182,9 +182,9 @@ var Prism = function (_self) {
 				selector: 'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'
 			};
 
-			_.hooks.run("before-highlightall", env);
+			_.hooks.run('before-highlightall', env);
 
-			var elements = env.elements || container.querySelectorAll(env.selector);
+			var elements = container.querySelectorAll(env.selector);
 
 			for (var i = 0, element; element = elements[i++];) {
 				_.highlightElement(element, async === true, env.callback);
@@ -193,7 +193,7 @@ var Prism = function (_self) {
 
 		highlightElement: function (element, async, callback) {
 			// Find language
-			var language,
+			var language = 'none',
 			    grammar,
 			    parent = element;
 
@@ -202,7 +202,7 @@ var Prism = function (_self) {
 			}
 
 			if (parent) {
-				language = (parent.className.match(lang) || [, ''])[1].toLowerCase();
+				language = (parent.className.match(lang) || [, 'none'])[1].toLowerCase();
 				grammar = _.languages[language];
 			}
 
@@ -462,25 +462,24 @@ var Prism = function (_self) {
 		this.greedy = !!greedy;
 	}
 
-	Token.stringify = function (o, language, parent) {
+	Token.stringify = function (o, language) {
 		if (typeof o == 'string') {
 			return o;
 		}
 
 		if (Array.isArray(o)) {
 			return o.map(function (element) {
-				return Token.stringify(element, language, o);
+				return Token.stringify(element, language);
 			}).join('');
 		}
 
 		var env = {
 			type: o.type,
-			content: Token.stringify(o.content, language, parent),
+			content: Token.stringify(o.content, language),
 			tag: 'span',
 			classes: ['token', o.type],
 			attributes: {},
-			language: language,
-			parent: parent
+			language: language
 		};
 
 		if (o.alias) {
@@ -664,13 +663,19 @@ Prism.languages.svg = Prism.languages.markup;
 	Prism.languages.css = {
 		'comment': /\/\*[\s\S]*?\*\//,
 		'atrule': {
-			pattern: /@[\w-]+?[\s\S]*?(?:;|(?=\s*\{))/i,
+			pattern: /@[\w-]+[\s\S]*?(?:;|(?=\s*\{))/,
 			inside: {
 				'rule': /@[\w-]+/
 				// See rest below
 			}
 		},
-		'url': RegExp('url\\((?:' + string.source + '|.*?)\\)', 'i'),
+		'url': {
+			pattern: RegExp('url\\((?:' + string.source + '|[^\n\r()]*)\\)', 'i'),
+			inside: {
+				'function': /^url/i,
+				'punctuation': /^\(|\)$/
+			}
+		},
 		'selector': RegExp('[^{}\\s](?:[^{};"\']|' + string.source + ')*?(?=\\s*\\{)'),
 		'string': {
 			pattern: string,
@@ -756,9 +761,9 @@ Prism.languages.javascript = Prism.languages.extend('clike', {
 		pattern: /(^|[^.])\b(?:as|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,
 		lookbehind: true
 	}],
-	'number': /\b(?:(?:0[xX][\dA-Fa-f]+|0[bB][01]+|0[oO][0-7]+)n?|\d+n|NaN|Infinity)\b|(?:\b\d+\.?\d*|\B\.\d+)(?:[Ee][+-]?\d+)?/,
+	'number': /\b(?:(?:0[xX](?:[\dA-Fa-f](?:_[\dA-Fa-f])?)+|0[bB](?:[01](?:_[01])?)+|0[oO](?:[0-7](?:_[0-7])?)+)n?|(?:\d(?:_\d)?)+n|NaN|Infinity)\b|(?:\b(?:\d(?:_\d)?)+\.?(?:\d(?:_\d)?)*|\B\.(?:\d(?:_\d)?)+)(?:[Ee][+-]?(?:\d(?:_\d)?)+)?/,
 	// Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
-	'function': /[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
+	'function': /#?[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
 	'operator': /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/
 });
 
@@ -766,13 +771,13 @@ Prism.languages.javascript['class-name'][0].pattern = /(\b(?:class|interface|ext
 
 Prism.languages.insertBefore('javascript', 'keyword', {
 	'regex': {
-		pattern: /((?:^|[^$\w\xA0-\uFFFF."'\])\s])\s*)\/(\[(?:[^\]\\\r\n]|\\.)*]|\\.|[^/\\\[\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})\]]))/,
+		pattern: /((?:^|[^$\w\xA0-\uFFFF."'\])\s])\s*)\/(\[(?:[^\]\\\r\n]|\\.)*]|\\.|[^/\\\[\r\n])+\/[gimyus]{0,6}(?=\s*($|[\r\n,.;})\]]))/,
 		lookbehind: true,
 		greedy: true
 	},
 	// This must be declared before keyword because we use "function" inside the look-forward
 	'function-variable': {
-		pattern: /[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)\s*=>))/,
+		pattern: /#?[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|[_$a-zA-Z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)\s*=>))/,
 		alias: 'function'
 	},
 	'parameter': [{
@@ -796,11 +801,16 @@ Prism.languages.insertBefore('javascript', 'keyword', {
 
 Prism.languages.insertBefore('javascript', 'string', {
 	'template-string': {
-		pattern: /`(?:\\[\s\S]|\${[^}]+}|[^\\`])*`/,
+		pattern: /`(?:\\[\s\S]|\${(?:[^{}]|{(?:[^{}]|{[^}]*})*})+}|(?!\${)[^\\`])*`/,
 		greedy: true,
 		inside: {
+			'template-punctuation': {
+				pattern: /^`|`$/,
+				alias: 'string'
+			},
 			'interpolation': {
-				pattern: /\${[^}]+}/,
+				pattern: /((?:^|[^\\])(?:\\{2})*)\${(?:[^{}]|{(?:[^{}]|{[^}]*})*})+}/,
+				lookbehind: true,
 				inside: {
 					'interpolation-punctuation': {
 						pattern: /^\${|}$/,

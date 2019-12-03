@@ -44,7 +44,9 @@
             <tr>
                 <td>actions-performed</td>
                 <td>none</td>
-                <td>fired after a block of actions has been executed</td>
+                <td>fired after a block of actions has been executed. When using a server-side submission
+                and the data have been mutated an update request will be send to the server. Otherwise
+                (using client-side submission) no update request is send.</td>
             </tr>
             <tr>
                 <td>form-ready</td>

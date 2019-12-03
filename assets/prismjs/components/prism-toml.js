@@ -10,7 +10,7 @@
 			greedy: true
 		},
 		'table': {
-			pattern: RegExp("(\\[\\s*)" + key + "(?:\\s*\\.\\s*" + key + ")*(?=\\s*\\])"),
+			pattern: RegExp("(^\\s*\\[\\s*(?:\\[\\s*)?)" + key + "(?:\\s*\\.\\s*" + key + ")*(?=\\s*\\])", "m"),
 			lookbehind: true,
 			greedy: true,
 			alias: 'class-name'

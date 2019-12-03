@@ -83,7 +83,7 @@ export class IronMeta {
     this.key = key;
     return this.value;
   }
-}
+};
 
 // This function is used to convince Closure not to remove constructor calls
 // for instances that are not held anywhere. For example, when

@@ -1,8 +1,8 @@
 {
   "_from": "@polymer/polymer@^3.0.0",
-  "_id": "@polymer/polymer@3.3.0",
+  "_id": "@polymer/polymer@3.3.1",
   "_inBundle": false,
-  "_integrity": "sha512-rij7suomS7DxdBamnwr/Xa0V5hpypf7I9oYKseF2FWz5Xh2a3wJNpVjgJy1adXVCxqIyPhghsrthnfCt7EblsQ==",
+  "_integrity": "sha512-8KaB48tzyMjdsHdxo5KvCAaqmTe7rYDzQAoj/pyEfq9Fp4YfUaS+/xqwYj0GbiDAUNzwkmEQ7dw9cgnRNdKO8A==",
   "_location": "/@polymer/polymer",
   "_phantomChildren": {},
   "_requested": {
@@ -50,6 +50,7 @@
     "/@polymer/neon-animation",
     "/@polymer/paper-behaviors",
     "/@polymer/paper-button",
+    "/@polymer/paper-checkbox",
     "/@polymer/paper-dialog",
     "/@polymer/paper-dialog-behavior",
     "/@polymer/paper-dropdown-menu",
@@ -66,6 +67,8 @@
     "/@vaadin/vaadin-control-state-mixin",
     "/@vaadin/vaadin-element-mixin",
     "/@vaadin/vaadin-item",
+    "/@vaadin/vaadin-list-box",
+    "/@vaadin/vaadin-list-mixin",
     "/@vaadin/vaadin-lumo-styles",
     "/@vaadin/vaadin-material-styles",
     "/@vaadin/vaadin-notification",
@@ -73,10 +76,10 @@
     "/@vaadin/vaadin-text-field",
     "/@vaadin/vaadin-themable-mixin"
   ],
-  "_resolved": "https://registry.npmjs.org/@polymer/polymer/-/polymer-3.3.0.tgz",
-  "_shasum": "52a0665ac29654728e8f46e8ee178c02c49efdd0",
+  "_resolved": "https://registry.npmjs.org/@polymer/polymer/-/polymer-3.3.1.tgz",
+  "_shasum": "9ad48992d2a96775f80b0673f3a615d6df8a3dfc",
   "_spec": "@polymer/polymer@^3.0.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8",
   "author": {
     "name": "The Polymer Project Authors"
   },
@@ -133,6 +136,7 @@
   "homepage": "https://github.com/Polymer/polymer",
   "license": "BSD-3-Clause",
   "main": "polymer-element.js",
+  "module": "polymer-element.js",
   "name": "@polymer/polymer",
   "publishConfig": {
     "access": "public"
@@ -156,5 +160,5 @@
     "serve": "polymer serve --npm --module-resolution=node",
     "test": "npm run lint && polymer test --npm --module-resolution=node"
   },
-  "version": "3.3.0"
+  "version": "3.3.1"
 }

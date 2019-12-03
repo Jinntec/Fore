@@ -29,6 +29,12 @@ const matchesSelector = function (selector) {
   return method && method.call(this, selector);
 };
 
+const rootSelector = /:host\s*>\s*/;
+
+function checkRoot(hostScope, selector) {
+  return Boolean(selector.match(rootSelector)) || hostScope === 'html' && selector.indexOf('html') > -1;
+}
+
 const IS_IE = navigator.userAgent.match('Trident');
 
 const XSCOPE_NAME = 'x-scope';
@@ -310,7 +316,7 @@ class StyleProperties {
     let { is, typeExtension } = StyleUtil.getIsExtends(scope);
     let hostScope = is ? StyleTransformer._calcHostScope(is, typeExtension) : 'html';
     let parsedSelector = rule['parsedSelector'];
-    let isRoot = parsedSelector === ':host > *' || parsedSelector === 'html';
+    let isRoot = checkRoot(hostScope, parsedSelector);
     let isHost = parsedSelector.indexOf(':host') === 0 && !isRoot;
     // build info is either in scope (when scope is an element) or in the style
     // when scope is the default scope; note: this allows default scope to have
@@ -332,6 +338,9 @@ class StyleProperties {
         rule.transformedSelector = StyleTransformer._transformRuleCss(rule, StyleTransformer._transformComplexSelector, StyleTransformer._calcElementScope(is), hostScope);
       }
       selectorToMatch = rule.transformedSelector || hostScope;
+    }
+    if (isRoot && hostScope === 'html') {
+      selectorToMatch = rule.transformedSelector || rule.parsedSelector;
     }
     callback({
       selector: selectorToMatch,

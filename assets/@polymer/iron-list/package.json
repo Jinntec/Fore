@@ -1,8 +1,8 @@
 {
   "_from": "@polymer/iron-list@^3.0.0",
-  "_id": "@polymer/iron-list@3.0.2",
+  "_id": "@polymer/iron-list@3.1.0",
   "_inBundle": false,
-  "_integrity": "sha512-A6GMTx/4mWxGn3BC6weaXqRC7B0coNjgEoxwVbEcDNwovqntv0aWs5sT9+PI4zvV/syWL5rAESyJDvOxTatoEw==",
+  "_integrity": "sha512-Eiv6xd3h3oPmn8SXFntXVfC3ZnegH+KHAxiKLKcOASFSRY3mHnr2AdcnExUJ9ItoCMA5UzKaM/0U22eWzGERtA==",
   "_location": "/@polymer/iron-list",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
   "_requiredBy": [
     "/@vaadin/vaadin-combo-box"
   ],
-  "_resolved": "https://registry.npmjs.org/@polymer/iron-list/-/iron-list-3.0.2.tgz",
-  "_shasum": "9e6b80e503328dc29217dbe26f94faa47adb4124",
+  "_resolved": "https://registry.npmjs.org/@polymer/iron-list/-/iron-list-3.1.0.tgz",
+  "_shasum": "9b525249a90a53b6ae249330640b54b12141202a",
   "_spec": "@polymer/iron-list@^3.0.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@vaadin/vaadin-combo-box",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@vaadin/vaadin-combo-box",
   "author": {
     "name": "The Polymer Authors"
   },
@@ -78,5 +78,5 @@
     "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
     "prepare": "npm run generate-types"
   },
-  "version": "3.0.2"
+  "version": "3.1.0"
 }

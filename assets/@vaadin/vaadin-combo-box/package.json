@@ -1,8 +1,8 @@
 {
   "_from": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_id": "@vaadin/vaadin-combo-box@5.0.5",
+  "_id": "@vaadin/vaadin-combo-box@5.0.9",
   "_inBundle": false,
-  "_integrity": "sha512-rOVQzRMcLjUgLlIkreEBe6vc+VB+s7VFut/DxtL6e35vSV0y5TTx5s7l1eUrbdN5tQRYwo3rztYoeEfubx4mqA==",
+  "_integrity": "sha512-BHxU+2POzHu/pTQqfDpWaWh9ScIjHA9vjF70tM4SSP21EO9v8Oyas0JMZUousT+S5Zlw3m8SuGMiGeVtAauPiw==",
   "_location": "/@vaadin/vaadin-combo-box",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.5.tgz",
-  "_shasum": "987588d97a3decfc8c4aa3ed93f7d684c430cbd8",
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.9.tgz",
+  "_shasum": "fce72061a0ccea62311bde219d1d37775eb75976",
   "_spec": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8",
   "author": {
     "name": "Vaadin Ltd"
   },
@@ -48,17 +48,10 @@
   "deprecated": false,
   "description": "Web Component for displaying a list of items with filtering",
   "devDependencies": {
-    "@polymer/iron-ajax": "^3.0.0",
     "@polymer/iron-component-page": "^4.0.0",
     "@polymer/iron-form": "^3.0.0",
-    "@polymer/iron-icon": "^3.0.0",
-    "@polymer/iron-icons": "^3.0.0",
-    "@polymer/iron-input": "^3.0.0",
     "@polymer/iron-test-helpers": "^3.0.0",
-    "@polymer/paper-button": "^3.0.0",
-    "@polymer/paper-icon-button": "^3.0.0",
     "@polymer/paper-input": "^3.0.0",
-    "@polymer/paper-styles": "^3.0.0",
     "@vaadin/vaadin-button": "^2.1.0",
     "@vaadin/vaadin-demo-helpers": "^3.0.0",
     "wct-browser-legacy": "^1.0.1"
@@ -89,5 +82,5 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "5.0.5"
+  "version": "5.0.9"
 }

@@ -97,8 +97,9 @@
 
   function clamp(x, min, max) {
     return Math.max(Math.min(x, max), min);
-  }
-    function quat(fromQ, toQ, f) {
+  };
+
+  function quat(fromQ, toQ, f) {
     var product = scope.dot(fromQ, toQ);
     product = clamp(product, -1.0, 1.0);
 

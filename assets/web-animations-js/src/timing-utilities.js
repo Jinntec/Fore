@@ -192,8 +192,8 @@
           end = 1;
       function f(a, b, m) {
         return 3 * a * (1 - m) * (1 - m) * m + 3 * b * (1 - m) * m * m + m * m * m;
-      }
-        while (start < end) {
+      };
+      while (start < end) {
         var mid = (start + end) / 2;
         var xEst = f(a, c, mid);
         if (Math.abs(x - xEst) < 0.00001) {

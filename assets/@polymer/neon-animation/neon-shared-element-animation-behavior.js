@@ -38,12 +38,14 @@ export const NeonSharedElementAnimationBehaviorImpl = {
     if (!fromPage || !toPage) {
       console.warn(this.is + ':', !fromPage ? 'fromPage' : 'toPage', 'is undefined!');
       return null;
-    }
-      if (!fromPage.sharedElements || !toPage.sharedElements) {
+    };
+
+    if (!fromPage.sharedElements || !toPage.sharedElements) {
       console.warn(this.is + ':', 'sharedElements are undefined for', !fromPage.sharedElements ? fromPage : toPage);
       return null;
-    }
-      var from = fromPage.sharedElements[config.id];
+    };
+
+    var from = fromPage.sharedElements[config.id];
     var to = toPage.sharedElements[config.id];
 
     if (!from || !to) {

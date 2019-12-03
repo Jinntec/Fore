@@ -114,7 +114,7 @@ superClass => {
      */
     _createPropertyAccessor(property, readOnly) {
       this._addPropertyToAttributeMap(property);
-      if (!this.hasOwnProperty('__dataHasAccessor')) {
+      if (!this.hasOwnProperty(JSCompiler_renameProperty('__dataHasAccessor', this))) {
         this.__dataHasAccessor = Object.assign({}, this.__dataHasAccessor);
       }
       if (!this.__dataHasAccessor[property]) {
@@ -132,7 +132,7 @@ superClass => {
      * @override
      */
     _addPropertyToAttributeMap(property) {
-      if (!this.hasOwnProperty('__dataAttributes')) {
+      if (!this.hasOwnProperty(JSCompiler_renameProperty('__dataAttributes', this))) {
         this.__dataAttributes = Object.assign({}, this.__dataAttributes);
       }
       if (!this.__dataAttributes[property]) {

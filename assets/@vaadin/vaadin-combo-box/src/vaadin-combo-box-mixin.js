@@ -216,42 +216,37 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     return ['_filterChanged(filter, itemValuePath, itemLabelPath)', '_itemsOrPathsChanged(items.*, itemValuePath, itemLabelPath)', '_filteredItemsChanged(filteredItems.*, itemValuePath, itemLabelPath)', '_templateOrRendererChanged(_itemTemplate, renderer)', '_loadingChanged(loading)', '_selectedItemChanged(selectedItem, itemLabelPath)', '_toggleElementChanged(_toggleElement)'];
   }
 
+  constructor() {
+    super();
+    this._boundOnFocusout = this._onFocusout.bind(this);
+    this._boundOverlaySelectedItemChanged = this._overlaySelectedItemChanged.bind(this);
+    this._boundClose = this.close.bind(this);
+    this._boundOnOpened = this._onOpened.bind(this);
+    this._boundOnKeyDown = this._onKeyDown.bind(this);
+    this._boundOnClick = this._onClick.bind(this);
+    this._boundOnOverlayTouchAction = this._onOverlayTouchAction.bind(this);
+    this._boundOnTouchend = this._onTouchend.bind(this);
+  }
+
   ready() {
     super.ready();
 
-    this.addEventListener('focusout', e => {
-      // Fixes the problem with `focusout` happening when clicking on the scroll bar on Edge
-      const dropdown = this.$.overlay.$.dropdown;
-      if (dropdown && dropdown.$ && e.relatedTarget === dropdown.$.overlay) {
-        e.composedPath()[0].focus();
-        return;
-      }
-      if (!this._closeOnBlurIsPrevented) {
-        this.close();
-      }
-    });
+    this.addEventListener('focusout', this._boundOnFocusout);
 
     this._lastCommittedValue = this.value;
     IronA11yAnnouncer.requestAvailability();
 
     // 2.0 does not support 'overlay.selection-changed' syntax in listeners
-    this.$.overlay.addEventListener('selection-changed', this._overlaySelectedItemChanged.bind(this));
+    this.$.overlay.addEventListener('selection-changed', this._boundOverlaySelectedItemChanged);
 
-    this.addEventListener('vaadin-combo-box-dropdown-closed', this.close.bind(this));
-    this.addEventListener('vaadin-combo-box-dropdown-opened', this._onOpened.bind(this));
-    this.addEventListener('keydown', this._onKeyDown.bind(this));
-    this.addEventListener('click', this._onClick.bind(this));
+    this.addEventListener('vaadin-combo-box-dropdown-closed', this._boundClose);
+    this.addEventListener('vaadin-combo-box-dropdown-opened', this._boundOnOpened);
+    this.addEventListener('keydown', this._boundOnKeyDown);
+    this.addEventListener('click', this._boundOnClick);
 
-    this.$.overlay.addEventListener('vaadin-overlay-touch-action', this._onOverlayTouchAction.bind(this));
+    this.$.overlay.addEventListener('vaadin-overlay-touch-action', this._boundOnOverlayTouchAction);
 
-    this.addEventListener('touchend', e => {
-      if (!this._clearElement || e.composedPath()[0] !== this._clearElement) {
-        return;
-      }
-
-      e.preventDefault();
-      this._clear();
-    });
+    this.addEventListener('touchend', this._boundOnTouchend);
 
     this._observer = new FlattenedNodesObserver(this, info => {
       this._setTemplateFromNodes(info.addedNodes);
@@ -575,7 +570,10 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
         this.value = '';
       }
     } else {
-      if (this.allowCustomValue) {
+      if (this.allowCustomValue
+      // to prevent a repetitive input value being saved after pressing ESC and Tab.
+      && !(this.filteredItems && this.filteredItems.filter(item => this._getItemLabel(item) === this._inputElementValue).length)) {
+
         const e = new CustomEvent('custom-value-set', { detail: this._inputElementValue, composed: true, cancelable: true, bubbles: true });
         this.dispatchEvent(e);
         if (!e.defaultPrevented) {
@@ -584,7 +582,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
           this.value = customValue;
         }
       } else {
-        this._inputElementValue = this.selectedItem ? this._getItemLabel(this.selectedItem) : '';
+        this._inputElementValue = this.selectedItem ? this._getItemLabel(this.selectedItem) : this.value || '';
       }
     }
 
@@ -823,10 +821,21 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     // Long debounce: sizing updates invoke multiple styling rounds,
     // which is very slow in Edge
     timeOut.after(500), () => {
+      const selector = this.$.overlay._selector;
+      if (!selector._isClientFull()) {
+        // Due to the mismatch of the Y position of the item rendered
+        // at the top of the scrolling list with some specific scroll
+        // position values (2324, 3486, 6972, 60972, 95757 etc.)
+        // iron-list loops the increasing of the pool and adds
+        // too many items to the DOM.
+        // Adjusting scroll position to equal the current scrollTop value
+        // to avoid looping.
+        selector._resetScrollPosition(selector._physicalTop);
+      }
       this._resizeDropdown();
       this.$.overlay.updateViewportBoundaries();
       this.$.overlay.ensureItemsRendered();
-      this.$.overlay._selector.notifyResize();
+      selector.notifyResize();
       flush();
     });
   }
@@ -868,6 +877,27 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
       this.selectedItem = e.detail.item;
       this._detectAndDispatchChange();
     }
+  }
+
+  _onFocusout(event) {
+    // Fixes the problem with `focusout` happening when clicking on the scroll bar on Edge
+    const dropdown = this.$.overlay.$.dropdown;
+    if (dropdown && dropdown.$ && event.relatedTarget === dropdown.$.overlay) {
+      event.composedPath()[0].focus();
+      return;
+    }
+    if (!this._closeOnBlurIsPrevented) {
+      this.close();
+    }
+  }
+
+  _onTouchend(event) {
+    if (!this._clearElement || event.composedPath()[0] !== this._clearElement) {
+      return;
+    }
+
+    event.preventDefault();
+    this._clear();
   }
 
   /**

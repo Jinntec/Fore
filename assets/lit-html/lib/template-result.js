@@ -17,6 +17,7 @@
  */
 import { reparentNodes } from './dom.js';
 import { boundAttributeSuffix, lastAttributeNameRegex, marker, nodeMarker } from './template.js';
+const commentMarker = ` ${marker} `;
 /**
  * The return type of `html`, which holds a Template and the values from
  * interpolated expressions.
@@ -69,7 +70,7 @@ export class TemplateResult {
                 // attribute values like <div foo="<!--${'bar'}">. Cases like
                 // <!-- foo=${'bar'}--> are handled correctly in the attribute branch
                 // below.
-                html += s + (isCommentBinding ? marker : nodeMarker);
+                html += s + (isCommentBinding ? commentMarker : nodeMarker);
             } else {
                 // For attributes we use just a marker sentinel, and also append a
                 // $lit$ suffix to the name to opt-out of attribute-specific parsing

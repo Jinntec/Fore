@@ -35,7 +35,7 @@ describe('is', function () {
             assert.notOk(is.node(42));
             assert.notOk(is.node(NaN));
             assert.notOk(is.node(Infinity));
-            assert.notOk(is.node(Number(42)));
+            assert.notOk(is.node(new Number(42)));
         });
     });
 
@@ -60,14 +60,14 @@ describe('is', function () {
             assert.notOk(is.nodeList(42));
             assert.notOk(is.nodeList(NaN));
             assert.notOk(is.nodeList(Infinity));
-            assert.notOk(is.nodeList(Number(42)));
+            assert.notOk(is.nodeList(new Number(42)));
         });
     });
 
     describe('is.string', function () {
         it('should be considered as string', function () {
             assert.ok(is.string('abc'));
-            assert.ok(is.string(String('abc')));
+            assert.ok(is.string(new String('abc')));
         });
 
         it('should not be considered as string', function () {
@@ -84,7 +84,7 @@ describe('is', function () {
             assert.notOk(is.string(42));
             assert.notOk(is.string(NaN));
             assert.notOk(is.string(Infinity));
-            assert.notOk(is.string(Number(42)));
+            assert.notOk(is.string(new Number(42)));
         });
     });
 
@@ -106,7 +106,7 @@ describe('is', function () {
             assert.notOk(is.fn(42));
             assert.notOk(is.fn(NaN));
             assert.notOk(is.fn(Infinity));
-            assert.notOk(is.fn(Number(42)));
+            assert.notOk(is.fn(new Number(42)));
         });
     });
 });

@@ -1,3 +1,4 @@
+```plantuml
 title Fore interaction sequence
 
 user->+controller: request form doc 
@@ -32,3 +33,4 @@ note right of update
 - applyChanges(json)
 end note
 update-->-user:
+```

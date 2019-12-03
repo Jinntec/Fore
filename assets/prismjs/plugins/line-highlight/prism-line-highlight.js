@@ -14,6 +14,10 @@
 		return (" " + element.className + " ").replace(/[\n\t]/g, " ").indexOf(className) > -1;
 	}
 
+	function callFunction(func) {
+		func();
+	}
+
 	// Some browsers round the line-height, others don't.
 	// We need to test for it to position the elements properly.
 	var isLineHeightRounded = function () {
@@ -36,60 +40,85 @@
 		};
 	}();
 
+	/**
+  * Highlights the lines of the given pre.
+  *
+  * This function is split into a DOM measuring and mutate phase to improve performance.
+  * The returned function mutates the DOM when called.
+  *
+  * @param {HTMLElement} pre
+  * @param {string} [lines]
+  * @param {string} [classes='']
+  * @returns {() => void}
+  */
 	function highlightLines(pre, lines, classes) {
 		lines = typeof lines === 'string' ? lines : pre.getAttribute('data-line');
 
-		var ranges = lines.replace(/\s+/g, '').split(','),
-		    offset = +pre.getAttribute('data-line-offset') || 0;
+		var ranges = lines.replace(/\s+/g, '').split(',');
+		var offset = +pre.getAttribute('data-line-offset') || 0;
 
 		var parseMethod = isLineHeightRounded() ? parseInt : parseFloat;
 		var lineHeight = parseMethod(getComputedStyle(pre).lineHeight);
 		var hasLineNumbers = hasClass(pre, 'line-numbers');
+		var parentElement = hasLineNumbers ? pre : pre.querySelector('code') || pre;
+		var mutateActions = /** @type {(() => void)[]} */[];
 
-		for (var i = 0, currentRange; currentRange = ranges[i++];) {
+		ranges.forEach(function (currentRange) {
 			var range = currentRange.split('-');
 
-			var start = +range[0],
-			    end = +range[1] || start;
+			var start = +range[0];
+			var end = +range[1] || start;
 
 			var line = pre.querySelector('.line-highlight[data-range="' + currentRange + '"]') || document.createElement('div');
 
-			line.setAttribute('aria-hidden', 'true');
-			line.setAttribute('data-range', currentRange);
-			line.className = (classes || '') + ' line-highlight';
+			mutateActions.push(function () {
+				line.setAttribute('aria-hidden', 'true');
+				line.setAttribute('data-range', currentRange);
+				line.className = (classes || '') + ' line-highlight';
+			});
 
-			//if the line-numbers plugin is enabled, then there is no reason for this plugin to display the line numbers
+			// if the line-numbers plugin is enabled, then there is no reason for this plugin to display the line numbers
 			if (hasLineNumbers && Prism.plugins.lineNumbers) {
 				var startNode = Prism.plugins.lineNumbers.getLine(pre, start);
 				var endNode = Prism.plugins.lineNumbers.getLine(pre, end);
 
 				if (startNode) {
-					line.style.top = startNode.offsetTop + 'px';
+					var top = startNode.offsetTop + 'px';
+					mutateActions.push(function () {
+						line.style.top = top;
+					});
 				}
 
 				if (endNode) {
-					line.style.height = endNode.offsetTop - startNode.offsetTop + endNode.offsetHeight + 'px';
+					var height = endNode.offsetTop - startNode.offsetTop + endNode.offsetHeight + 'px';
+					mutateActions.push(function () {
+						line.style.height = height;
+					});
 				}
 			} else {
-				line.setAttribute('data-start', start);
+				mutateActions.push(function () {
+					line.setAttribute('data-start', start);
 
-				if (end > start) {
-					line.setAttribute('data-end', end);
-				}
+					if (end > start) {
+						line.setAttribute('data-end', end);
+					}
 
-				line.style.top = (start - offset - 1) * lineHeight + 'px';
+					line.style.top = (start - offset - 1) * lineHeight + 'px';
 
-				line.textContent = new Array(end - start + 2).join(' \n');
+					line.textContent = new Array(end - start + 2).join(' \n');
+				});
 			}
 
-			//allow this to play nicely with the line-numbers plugin
-			if (hasLineNumbers) {
-				//need to attack to pre as when line-numbers is enabled, the code tag is relatively which screws up the positioning
-				pre.appendChild(line);
-			} else {
-				(pre.querySelector('code') || pre).appendChild(line);
-			}
-		}
+			mutateActions.push(function () {
+				// allow this to play nicely with the line-numbers plugin
+				// need to attack to pre as when line-numbers is enabled, the code tag is relatively which screws up the positioning
+				parentElement.appendChild(line);
+			});
+		});
+
+		return function () {
+			mutateActions.forEach(callFunction);
+		};
 	}
 
 	function applyHash() {
@@ -117,7 +146,8 @@
 			pre.setAttribute('data-line', '');
 		}
 
-		highlightLines(pre, range, 'temporary ');
+		var mutateDom = highlightLines(pre, range, 'temporary ');
+		mutateDom();
 
 		document.querySelector('.temporary.line-highlight').scrollIntoView();
 	}
@@ -133,7 +163,7 @@
 		}
 
 		/*
-  * Cleanup for other plugins (e.g. autoloader).
+   * Cleanup for other plugins (e.g. autoloader).
    *
    * Sometimes <code> blocks are highlighted multiple times. It is necessary
    * to cleanup any left-over tags, because the whitespace inside of the <div>
@@ -166,16 +196,18 @@
 		if (hasClass(pre, 'line-numbers') && hasLineNumbers && !isLineNumbersLoaded) {
 			Prism.hooks.add('line-numbers', completeHook);
 		} else {
-			highlightLines(pre, lines);
+			var mutateDom = highlightLines(pre, lines);
+			mutateDom();
 			fakeTimer = setTimeout(applyHash, 1);
 		}
 	});
 
 	window.addEventListener('hashchange', applyHash);
 	window.addEventListener('resize', function () {
-		var preElements = document.querySelectorAll('pre[data-line]');
-		Array.prototype.forEach.call(preElements, function (pre) {
-			highlightLines(pre);
+		var actions = [];
+		$$('pre[data-line]').forEach(function (pre) {
+			actions.push(highlightLines(pre));
 		});
+		actions.forEach(callFunction);
 	});
 })();

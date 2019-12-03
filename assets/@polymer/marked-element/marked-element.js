@@ -285,8 +285,9 @@ Polymer({
   render: function () {
     if (!this._attached) {
       return;
-    }
-      if (!this.markdown) {
+    };
+
+    if (!this.markdown) {
       dom(this._outputElement).innerHTML = '';
       return;
     }

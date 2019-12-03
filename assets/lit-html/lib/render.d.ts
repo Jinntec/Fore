@@ -13,16 +13,15 @@
  */
 import { NodePart } from './parts.js';
 import { RenderOptions } from './render-options.js';
-import { TemplateResult } from './template-result.js';
 export declare const parts: WeakMap<Node, NodePart>;
 /**
- * Renders a template to a container.
+ * Renders a template result or other value to a container.
  *
  * To update a container with new values, reevaluate the template literal and
  * call `render` with the new result.
  *
- * @param result a TemplateResult created by evaluating a template tag like
- *     `html` or `svg`.
+ * @param result Any value renderable by NodePart - typically a TemplateResult
+ *     created by evaluating a template tag like `html` or `svg`.
  * @param container A DOM parent to render to. The entire contents are either
  *     replaced, or efficiently updated if the same result type was previous
  *     rendered there.
@@ -30,5 +29,5 @@ export declare const parts: WeakMap<Node, NodePart>;
  *     container. Render options must *not* change between renders to the same
  *     container, as those changes will not effect previously rendered DOM.
  */
-export declare const render: (result: TemplateResult, container: Element | DocumentFragment, options?: Partial<RenderOptions> | undefined) => void;
+export declare const render: (result: unknown, container: Element | DocumentFragment, options?: Partial<RenderOptions> | undefined) => void;
 //# sourceMappingURL=render.d.ts.map

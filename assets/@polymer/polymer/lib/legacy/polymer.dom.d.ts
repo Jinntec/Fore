@@ -59,7 +59,7 @@ declare class DomApiNative {
   /**
    * @param node Node for which to create a Polymer.dom helper object.
    */
-  constructor(node: Node|null);
+  constructor(node: Node);
 
   /**
    * Returns an instance of `FlattenedNodesObserver` that

@@ -15,6 +15,7 @@
         import '../xf-update.js';
         import '../native/xf-input.js';
         import '../xf-refresh.js';
+        import '../xf-submit.js';
         import '../xf-json-data.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -160,7 +161,7 @@
                 ]
             </xf-json-data>
 
-            <xf-form mockup='mockup'>
+            <xf-form mockup='mockup' action="/exist/apps/fore/submit">
                 <h1>todos</h1>
                 <xf-button label="add">
                     <xf-append repeat="r-todos"> </xf-append>
@@ -188,6 +189,9 @@
                 </xf-button>
                 <xf-button label="refresh">
                     <xf-refresh></xf-refresh>
+                </xf-button>
+                <xf-button label="submit">
+                    <xf-submit></xf-submit>
                 </xf-button>
 
             </xf-form>

@@ -1,8 +1,8 @@
 {
   "_from": "@webcomponents/shadycss@^1.9.1",
-  "_id": "@webcomponents/shadycss@1.9.1",
+  "_id": "@webcomponents/shadycss@1.9.3",
   "_inBundle": false,
-  "_integrity": "sha512-IaZOnWOKXHghqk/WfPNDRIgDBi3RsVPY2IFAw6tYiL9UBGvQRy5R6uC+Fk7qTZsReTJ0xh5MTT8yAcb3MUR4mQ==",
+  "_integrity": "sha512-fRuET+UGrH84hG0UF4iHbFqWZKUoan4/ki+iCOJ/vnKltPSHv/ZVbcA6sT/pRreznt8aKEGqN2KdHvgRxn4xjA==",
   "_location": "/@webcomponents/shadycss",
   "_phantomChildren": {},
   "_requested": {
@@ -19,45 +19,35 @@
   "_requiredBy": [
     "/@polymer/polymer"
   ],
-  "_resolved": "https://registry.npmjs.org/@webcomponents/shadycss/-/shadycss-1.9.1.tgz",
-  "_shasum": "d769fbadfa504f11b84caeef26701f89070ec49a",
+  "_resolved": "https://registry.npmjs.org/@webcomponents/shadycss/-/shadycss-1.9.3.tgz",
+  "_shasum": "74ee4be13f5374724aecb3d2c2de77523e01ada9",
   "_spec": "@webcomponents/shadycss@^1.9.1",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@polymer/polymer",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@polymer/polymer",
   "author": {
     "name": "The Polymer Project Authors",
     "url": "https://polymer.github.io/AUTHORS.txt"
   },
   "bugs": {
-    "url": "https://github.com/webcomponents/shadycss/issues"
+    "url": "https://github.com/webcomponents/polyfills/issues"
   },
   "bundleDependencies": false,
   "deprecated": false,
   "description": "Styling helpers for ShadyDOM",
   "devDependencies": {
-    "@webcomponents/custom-elements": "^1.2.1",
-    "@webcomponents/html-imports": "^1.2.0",
+    "@webcomponents/custom-elements": "^1.3.1",
+    "@webcomponents/html-imports": "^1.2.2",
     "@webcomponents/shadydom": "1.1.2",
-    "@webcomponents/template": "^1.4.0",
+    "@webcomponents/template": "^1.4.1",
     "@webcomponents/webcomponents-platform": "^1.0.0",
-    "del": "^3.0.0",
     "es6-promise": "^4.2.5",
-    "eslint": "^5.7.0",
-    "eslint-plugin-html": "^4.0.6",
-    "google-closure-compiler": "^20180805.0.0",
-    "gulp": "^4.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-size": "^3.0.0",
-    "gulp-sourcemaps": "^2.6.4",
     "rollup-stream": "=1.23.1",
-    "run-sequence": "^2.2.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "wct-browser-legacy": "^1.0.2",
-    "web-component-tester": "^6.9.0"
+    "wct-browser-legacy": "^1.0.2"
   },
-  "directories": {
-    "test": "tests"
-  },
+  "eslintIgnore": [
+    "tests/module/generated/**/*.js"
+  ],
   "files": [
     "apply-shim.html",
     "apply-shim.min.js*",
@@ -87,14 +77,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webcomponents/shadycss.git"
+    "url": "git+https://github.com/webcomponents/polyfills.git"
   },
   "scripts": {
     "build": "gulp",
     "debug": "gulp debug",
     "lint": "eslint src tests entrypoints",
-    "prepack": "gulp closure",
-    "test": "npm run lint && gulp && wct"
+    "prepack": "npm run build",
+    "test": "wct"
   },
-  "version": "1.9.1"
+  "version": "1.9.3"
 }

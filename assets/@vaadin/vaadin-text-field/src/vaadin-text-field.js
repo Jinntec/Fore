@@ -104,7 +104,7 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
   }
 
   static get version() {
-    return '2.4.7';
+    return '2.4.14';
   }
 
   static get properties() {

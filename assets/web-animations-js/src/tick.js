@@ -56,8 +56,9 @@
     this._animations = [];
     // Android 4.3 browser has window.performance, but not window.performance.now
     this.currentTime = window.performance && performance.now ? performance.now() : 0;
-  }
-    InternalTimeline.prototype = {
+  };
+
+  InternalTimeline.prototype = {
     _play: function (effect) {
       effect._timing = shared.normalizeTimingInput(effect.timing);
       var animation = new scope.Animation(effect);
@@ -169,8 +170,9 @@
 
     inTick = false;
     return [activeAnimations, inactiveAnimations];
-  }
-    if (WEB_ANIMATIONS_TESTING) {
+  };
+
+  if (WEB_ANIMATIONS_TESTING) {
     testing.tick = function (t) {
       timeline.currentTime = t;processRafCallbacks(t);
     };

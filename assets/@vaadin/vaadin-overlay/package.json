@@ -1,8 +1,8 @@
 {
   "_from": "@vaadin/vaadin-overlay@^3.2.0",
-  "_id": "@vaadin/vaadin-overlay@3.2.12",
+  "_id": "@vaadin/vaadin-overlay@3.2.15",
   "_inBundle": false,
-  "_integrity": "sha512-jzSTK0tyvaTPzZbyTwWTd8p5JSNpXel3LFmDSWqXjc4eVfdnNTPq4J6BPP1Arv6jk8Rbeys0VFlabJxmX9UFVA==",
+  "_integrity": "sha512-8mP2YyOwfeDC5/AJxPNytD9/PE2Tr5anMOP5wrewfzmpwJbKTzlmNusY8LEWgBlEXuEmU0J9KPxXo0HLabRxpQ==",
   "_location": "/@vaadin/vaadin-overlay",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
   "_requiredBy": [
     "/@vaadin/vaadin-combo-box"
   ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-overlay/-/vaadin-overlay-3.2.12.tgz",
-  "_shasum": "82507b2675a9159f1111024f6195e698d1263b00",
+  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-overlay/-/vaadin-overlay-3.2.15.tgz",
+  "_shasum": "d920cca53d26842b749fa7962bf7fe324b0b6601",
   "_spec": "@vaadin/vaadin-overlay@^3.2.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@vaadin/vaadin-combo-box",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@vaadin/vaadin-combo-box",
   "author": {
     "name": "Vaadin Ltd"
   },
@@ -45,7 +45,7 @@
     "@polymer/iron-test-helpers": "^3.0.0",
     "@vaadin/vaadin-button": "^2.1.0",
     "@vaadin/vaadin-control-state-mixin": "=2.1.2",
-    "@vaadin/vaadin-demo-helpers": "^2.0.1",
+    "@vaadin/vaadin-demo-helpers": "^3.0.0",
     "@vaadin/vaadin-radio-button": "^1.1.0",
     "@vaadin/vaadin-text-field": "^2.1.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
@@ -80,5 +80,5 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "3.2.12"
+  "version": "3.2.15"
 }

@@ -12,7 +12,6 @@
  * http://polymer.github.io/PATENTS.txt
  */
 import { RenderOptions } from './render-options.js';
-import { TemplateResult } from './template-result.js';
 export { html, svg, TemplateResult } from '../lit-html.js';
 export interface ShadyRenderOptions extends Partial<RenderOptions> {
     scopeName: string;
@@ -73,5 +72,5 @@ export interface ShadyRenderOptions extends Partial<RenderOptions> {
  * non-shorthand names (for example `border` and `border-width`) is not
  * supported.
  */
-export declare const render: (result: TemplateResult, container: Element | DocumentFragment | ShadowRoot, options: ShadyRenderOptions) => void;
+export declare const render: (result: unknown, container: Element | DocumentFragment | ShadowRoot, options: ShadyRenderOptions) => void;
 //# sourceMappingURL=shady-render.d.ts.map

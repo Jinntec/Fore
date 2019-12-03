@@ -1,6 +1,5 @@
 /// BareSpecifier=prismjs/components/prism-json
 Prism.languages.json = {
-	'comment': /\/\/.*|\/\*[\s\S]*?(?:\*\/|$)/,
 	'property': {
 		pattern: /"(?:\\.|[^\\"\r\n])*"(?=\s*:)/,
 		greedy: true
@@ -9,6 +8,7 @@ Prism.languages.json = {
 		pattern: /"(?:\\.|[^\\"\r\n])*"(?!\s*:)/,
 		greedy: true
 	},
+	'comment': /\/\/.*|\/\*[\s\S]*?(?:\*\/|$)/,
 	'number': /-?\d+\.?\d*(e[+-]?\d+)?/i,
 	'punctuation': /[{}[\],]/,
 	'operator': /:/,

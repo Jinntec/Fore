@@ -1,6 +1,8 @@
 import {html, PolymerElement} from '../../assets/@polymer/polymer/polymer-element.js';
 import {XfAbstractControl} from '../xf-abstract-control.js';
-import '../../assets/@vaadin/vaadin-combo-box';
+import '../../assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js';
+import '../../assets/@vaadin/vaadin-list-box/vaadin-list-box.js';
+import '../../assets/@vaadin/vaadin-item/vaadin-item.js';
 
 // import { XfBound } from './xf-bound.js';
 
@@ -22,7 +24,7 @@ class XfMaterialSelect extends XfAbstractControl {
       </style>
       <vaadin-combo-box id="combo" label="[[label]]" clear-button-visible>
         <template>
-        {{item.label}}
+            <vaadin-item label="[[item.label]]">[[item.value]]</vaadin-item>
         </template>
       </vaadin-combo-box>
     `;
@@ -47,14 +49,37 @@ class XfMaterialSelect extends XfAbstractControl {
         super.init();
 
         console.log('modelitem bindings ', this.modelItem);
-        console.log('modelitem bindings ', this.itemset);
-        console.log('modelitem mockup ', document.getElementById(this.itemset).data);
+
+        console.log('selection ', this.selection);
 
         if(this.selection === 'open'){
             this.$.combo.allowCustomValue = true;
+        }else{
+            this.$.combo.allowCustomValue = false;
+            this.$.combo.clearButtonVisible = false;
         }
 
-        this.$.combo.items = document.getElementById(this.itemset).data;
+
+        if(this.itemset){
+            console.log('itemset ', this.itemset);
+            console.log('itemset data ', document.getElementById(this.itemset).data);
+            this.$.combo.items = document.getElementById(this.itemset).data;
+        } else {
+            // look for options
+
+            const options = this.querySelectorAll('option');
+            const items = [];
+            for(let i=0;i<options.length;i++){
+                console.log('option ', options[i]);
+                const val = options[i].getAttribute('value');
+                const lbl = options[i].textContent;
+                items.push({"label":lbl,"value":val})
+            }
+
+            console.log('inline items ', items);
+            this.$.combo.items = items;
+        }
+
     }
 
     attachListeners() {

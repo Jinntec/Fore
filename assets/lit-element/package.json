@@ -1,27 +1,28 @@
 {
-  "_from": "lit-element@^2.1.0",
-  "_id": "lit-element@2.2.0",
+  "_from": "lit-element@^2.2.1",
+  "_id": "lit-element@2.2.1",
   "_inBundle": false,
-  "_integrity": "sha512-Mzs3H7IO4wAnpzqreHw6dQqp9IG+h/oN8X9pgNbMZbE7x6B0aNOwP5Nveox/5HE+65ZfW2PeULEjoHkrwpTnuQ==",
+  "_integrity": "sha512-ipDcgQ1EpW6Va2Z6dWm79jYdimVepO5GL0eYkZrFvdr0OD/1N260Q9DH+K5HXHFrRoC7dOg+ZpED2XE0TgGdXw==",
   "_location": "/lit-element",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "lit-element@^2.1.0",
+    "raw": "lit-element@^2.2.1",
     "name": "lit-element",
     "escapedName": "lit-element",
-    "rawSpec": "^2.1.0",
+    "rawSpec": "^2.2.1",
     "saveSpec": null,
-    "fetchSpec": "^2.1.0"
+    "fetchSpec": "^2.2.1"
   },
   "_requiredBy": [
-    "/"
+    "/",
+    "/@vaadin/vaadin-themable-mixin"
   ],
-  "_resolved": "https://registry.npmjs.org/lit-element/-/lit-element-2.2.0.tgz",
-  "_shasum": "e853be38021f0c7743a10180affdf84b8a02400c",
-  "_spec": "lit-element@^2.1.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9",
+  "_resolved": "https://registry.npmjs.org/lit-element/-/lit-element-2.2.1.tgz",
+  "_shasum": "79c94d8cfdc2d73b245656e37991bd1e4811d96f",
+  "_spec": "lit-element@^2.2.1",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8",
   "author": {
     "name": "The Polymer Authors"
   },
@@ -44,6 +45,7 @@
     "@webcomponents/shadycss": "^1.8.0",
     "@webcomponents/webcomponentsjs": "^2.2.3",
     "chai": "^4.0.2",
+    "clang-format": "^1.2.4",
     "lit-element-benchmarks": "^0.1.0",
     "mocha": "^5.0.5",
     "np": "^4.0.2",
@@ -99,5 +101,5 @@
     "test": "npm run build && npm run build:babel-test && wct"
   },
   "typings": "lit-element.d.ts",
-  "version": "2.2.0"
+  "version": "2.2.1"
 }

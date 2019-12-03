@@ -103,7 +103,7 @@ The `@apply` proposal has been abandoned in favor of the ::part/::theme [Shadow 
 * Nested mixins are not supported.
 * Shorthand properties are not expanded and may conflict with more explicit properties. Whenever shorthand notations are used in conjunction with their expanded forms in `@apply`, depending in the order of usage of the mixins, properties can be overridden. This means that using both `background-color: green;` and `background: red;` in two separate CSS selectors
  can result in `background-color: transparent` in the selector that `background: red;` is specified.
- 
+
    ```css
    #nonexistent {
      --my-mixin: {
@@ -120,8 +120,8 @@ The `@apply` proposal has been abandoned in favor of the ::part/::theme [Shadow 
    }
    ```
    results in the background being `transparent`, as an empty `background` definition replaces
-   the `@apply` definition. 
- 
+   the `@apply` definition.
+
    For this reason, we recommend avoiding shorthand properties.
 
 ### Example:
@@ -349,35 +349,10 @@ ShadyCSS.styleSubtree(el, {'--content-color' : 'red'});
 
 ### Selector scoping
 
-To use the `::slotted` pseudo-element, you must select it as a descendant of some context element.
-```css
-/* Bad */
-::slotted() {}
+You must have a selector for ascendants of the `<slot>` element when using the `::slotted`
+pseudo-element.
 
-/* Good */
-.context ::slotted() {}
-```
-
-Since ShadyCSS removes all `<slot>` elements, you cannot select them directly or use any other selectors along with the `::slotted` pseudo-element selector.
-```html
-<!-- Bad -->
-<style>
-  .foo .bar::slotted(*) {}
-</style>
-<span class="foo">
-  <slot class="bar"></slot>
-</span>
-``` 
-
-```html
-<!-- Good -->
-<style>
-  .foo ::slotted(*) {}
-</style>
-<span class="foo">
-  <slot></slot>
-</span>
-``` 
+You cannot use any selector for the `<slot>` element. Rules like `.foo .bar::slotted(*)` are not supported.
 
 ### Custom properties and `@apply`
 

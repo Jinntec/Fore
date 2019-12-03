@@ -27,6 +27,25 @@ else if (ends-with($exist:path, ".json")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
     </dispatch>
+else if (starts-with($exist:path, "/init")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/init.xql" method="get">
+        </forward>
+    </dispatch>
+
+else if (starts-with($exist:path, "/update")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/update.xql" method="post">
+        </forward>
+    </dispatch>
+
+else if (starts-with($exist:path, "/submit")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/submit.xql" method="post">
+        </forward>
+    </dispatch>
+
+
 else if (starts-with($exist:path, "/src/demo/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
     {
@@ -42,18 +61,6 @@ else if (starts-with($exist:path, "/src/demo/")) then
                 <add-parameter name="path" value="{$path}"/>
             </forward>
     }
-    </dispatch>
-
-else if (starts-with($exist:path, "/init")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/init.xql" method="get">
-        </forward>
-    </dispatch>
-
-else if (starts-with($exist:path, "/update")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/update.xql" method="post">
-        </forward>
     </dispatch>
 
 

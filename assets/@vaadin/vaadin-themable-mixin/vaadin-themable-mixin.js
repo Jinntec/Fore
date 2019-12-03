@@ -4,6 +4,7 @@ import { ThemePropertyMixin } from './vaadin-theme-property-mixin.js';
 
 /**
  * @polymerMixin
+ * @mixes Vaadin.ThemePropertyMixin
  */
 export const ThemableMixin = superClass => class VaadinThemableMixin extends ThemePropertyMixin(superClass) {
 

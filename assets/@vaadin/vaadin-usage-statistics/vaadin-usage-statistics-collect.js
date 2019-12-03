@@ -204,7 +204,7 @@ function maybeGatherAndSendStats() {
         try {
           var version = detector();
           if (version) {
-            frameworks[framework] = { "version": version };
+            frameworks[framework] = { version: version };
           }
         } catch (e) {}
       });
@@ -230,9 +230,9 @@ function maybeGatherAndSendStats() {
         var keys = Object.keys(gatheredStats[type]);
         keys.forEach(function (key) {
           if (!storedStats[type][key] || _typeof(storedStats[type][key]) != _typeof({})) {
-            storedStats[type][key] = { "firstUsed": now };
+            storedStats[type][key] = { firstUsed: now };
           }
-          // Discards any previously logged version numebr
+          // Discards any previously logged version number
           storedStats[type][key].version = gatheredStats[type][key].version;
           storedStats[type][key].lastUsed = now;
         });
@@ -424,7 +424,7 @@ function maybeGatherAndSendStats() {
   }], [{
     key: 'version',
     get: function get$1() {
-      return '2.0.1';
+      return '2.0.10';
     }
   }, {
     key: 'firstUseKey',

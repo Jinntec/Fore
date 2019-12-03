@@ -69,7 +69,6 @@ let memoizedTemplate;
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
  * @memberof Vaadin
- * @extends Vaadin.TextFieldElement
  * @demo demo/index.html
  */
 class PasswordFieldElement extends TextFieldElement {
@@ -78,7 +77,7 @@ class PasswordFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.4.7';
+    return '2.4.14';
   }
 
   static get properties() {

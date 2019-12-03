@@ -39,7 +39,6 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                 "bind": map{
                     "id":$bind/@id/string(),
                     "sequence":true(),
-                    "nodeid":util:node-id($refs[$index]),
                     "path": $path,
                     "bind":array{
                         (: ### create right amount of array entries for the set ### :)
@@ -90,7 +89,6 @@ declare function runtime:output($refs as node()*, $relevant as xs:boolean?, $bin
                     else(),
                     map{
                             "id": $bind/@id/string(),
-                            "nodeid":util:node-id($refs),
                             "path":$path
                     },
                     if(exists($bind/xf-bind)) then (
@@ -145,7 +143,6 @@ declare %private function runtime:output-list($refs as node()*, $relevant as xs:
         else(),
         map{
             "id": $bind/@id/string(),
-            "nodeid":util:node-id($refs),
             "path":$path
         },
         if($bind/xf-bind) then

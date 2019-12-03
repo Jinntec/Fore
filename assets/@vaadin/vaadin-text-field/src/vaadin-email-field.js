@@ -23,7 +23,6 @@ import { TextFieldElement } from './vaadin-text-field.js';
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
  * @memberof Vaadin
- * @extends Vaadin.TextFieldElement
  * @demo demo/index.html
  */
 class EmailFieldElement extends TextFieldElement {
@@ -32,14 +31,20 @@ class EmailFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.4.7';
+    return '2.4.14';
   }
 
   ready() {
     super.ready();
     this.inputElement.type = 'email';
     this.inputElement.autocapitalize = 'off';
+  }
+
+  _createConstraintsObserver() {
+    // NOTE: pattern needs to be set before constraints observer is initialized
     this.pattern = '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';
+
+    super._createConstraintsObserver();
   }
 }
 

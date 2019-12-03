@@ -194,7 +194,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
   }
 
   _pageSizeChanged(pageSize, oldPageSize) {
-    if (Math.floor(pageSize) !== pageSize || pageSize === 0) {
+    if (Math.floor(pageSize) !== pageSize || pageSize < 1) {
       this.pageSize = oldPageSize;
       throw new Error('`pageSize` value must be an integer > 0');
     }

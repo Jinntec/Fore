@@ -21,6 +21,7 @@
     "/@polymer/iron-list",
     "/@polymer/iron-menu-behavior",
     "/@polymer/iron-overlay-behavior",
+    "/@polymer/paper-checkbox",
     "/@polymer/paper-dropdown-menu",
     "/@polymer/paper-input",
     "/@polymer/paper-menu-button",
@@ -30,7 +31,7 @@
   "_resolved": "https://registry.npmjs.org/@polymer/iron-a11y-keys-behavior/-/iron-a11y-keys-behavior-3.0.1.tgz",
   "_shasum": "2868ea72912d2007ffab4734684a91f5aac49b84",
   "_spec": "@polymer/iron-a11y-keys-behavior@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stagen89pf9/node_modules/@polymer/iron-behaviors",
+  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@polymer/iron-behaviors",
   "author": {
     "name": "The Polymer Authors"
   },

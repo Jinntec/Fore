@@ -25,7 +25,7 @@ import { wrap } from '../utils/wrap.js';
  * Current Polymer version in Semver notation.
  * @type {string} Semver notation of the current version of Polymer.
  */
-export const version = '3.3.0';
+export const version = '3.3.1';
 
 const builtCSS = window.ShadyCSS && window.ShadyCSS['cssBuild'];
 
@@ -683,7 +683,7 @@ export const ElementMixin = dedupingMixin(base => {
             n.shadowRoot.appendChild(dom);
           }
           if (syncInitialRender && window.ShadyDOM) {
-            ShadyDOM.flushInitial(n.shadowRoot);
+            window.ShadyDOM.flushInitial(n.shadowRoot);
           }
           return n.shadowRoot;
         }

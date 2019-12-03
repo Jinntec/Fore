@@ -33,7 +33,7 @@ class ComboBoxOverlayElement extends OverlayElement {
     super.ready();
     const loader = document.createElement('div');
     loader.setAttribute('part', 'loader');
-    const content = this.shadowRoot.querySelector(['[part~="content"]']);
+    const content = this.shadowRoot.querySelector('[part~="content"]');
     content.parentNode.insertBefore(loader, content);
   }
 }
