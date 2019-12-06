@@ -1,0 +1,54 @@
+<!--
+  ~ eXist Open Source Native XML Database
+  ~ Copyright (C) 2001-2019 The eXist Project
+  ~ http://exist-db.org
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU Lesser General Public License
+  ~ as published by the Free Software Foundation; either version 2
+  ~ of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  -->
+
+<xf-model>
+    <xf-instance>
+        <data>
+            <item1></item1>
+            <item2>ITEM2</item2>
+            <item3></item3>
+        </data>
+    </xf-instance>
+    <xf-bind id="item1" ref="item1" required="true()" readonly="true()" relevant="true()" constraint="true()"></xf-bind>
+    <xf-bind id="item2" ref="item2" constraint="string-length(.) = 3"></xf-bind>
+    <xf-bind id="item3" ref="item3"></xf-bind>
+
+    <xf-instance id="other">
+        <data>
+            <thing prop1="foo" prop2="bar"></thing>
+        </data>
+    </xf-instance>
+
+    <xf-bind id="thing" ref="instance('other')/thing">
+        <xf-bind id="prop1" ref="@prop1"></xf-bind>
+        <xf-bind id="prop2" ref="@prop2"></xf-bind>
+    </xf-bind>
+
+    <xf-instance id="third">
+        <data>
+            <thing>foo</thing>
+        </data>
+    </xf-instance>
+    <xf-bind id="b-third" ref="instance('third')">
+        <xf-bind id="thirdthing" ref="thing"></xf-bind>
+    </xf-bind>
+
+
+</xf-model>

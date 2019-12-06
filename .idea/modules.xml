@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/exform.iml" filepath="$PROJECT_DIR$/exform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fore.iml" filepath="$PROJECT_DIR$/fore.iml" />
     </modules>
   </component>
 </project>
