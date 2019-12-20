@@ -510,7 +510,7 @@ public class Bind extends XFormsElement {
         }
 //        this.modelItems.add(item);
 
-        updateXPathContext();
+//        updateXPathContext();
 
     }
 

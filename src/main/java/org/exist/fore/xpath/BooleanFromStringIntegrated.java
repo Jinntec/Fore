@@ -28,7 +28,7 @@ import net.sf.saxon.value.SequenceType;
  * @author Nick Van den Bleeken
  * @version $Id$
  */
-public class BooleanFromString extends ExtensionFunctionDefinition {
+public class BooleanFromStringIntegrated extends ExtensionFunctionDefinition {
 
 	private static final StructuredQName qName =
 			new StructuredQName("", NamespaceConstants.XFORMS_NS, "boolean-from-string");
@@ -98,7 +98,7 @@ public class BooleanFromString extends ExtensionFunctionDefinition {
 	/*@NotNull*/
 	public ExtensionFunctionCall makeCallExpression() {
 //		return new IsIdRef.IsIdRefCall();
-		return new BooleanFromString.BooleanFromStringCall();
+		return new BooleanFromStringIntegrated.BooleanFromStringCall();
 	}
 
 	private static class BooleanFromStringCall extends ExtensionFunctionCall {
@@ -117,7 +117,7 @@ public class BooleanFromString extends ExtensionFunctionDefinition {
 		 * @return an iterator over the results of the function. If the result is a single item, it can be
 		 *         returned in the form of a {@link net.sf.saxon.tree.iter.SingletonIterator}. If the result is an empty sequence,
 		 *         the method should return <code>EmptyIterator.getInstance()</code>
-		 * @throws XPathException
+		 * @throws net.sf.saxon.trans.XPathException
 		 *          if a dynamic error occurs during evaluation of the function. The Saxon run-time
 		 *          code will add information about the error location.
 		 */
@@ -134,7 +134,7 @@ public class BooleanFromString extends ExtensionFunctionDefinition {
 		 *
 		 * @param context The context in which the expression is to be evaluated
 		 * @return the effective boolean value
-		 * @throws XPathException
+		 * @throws net.sf.saxon.trans.XPathException
 		 *          if any dynamic error occurs evaluating the
 		 *          expression
 		 */

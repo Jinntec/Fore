@@ -54,7 +54,7 @@ public class XFormsFunctionLibrary extends XPathFunctionLibrary {
         register("boolean-from-string", BooleanFromString.class, 0, 1, 1, BuiltInAtomicType.BOOLEAN, ONE, CORE, 0)
                 .arg(0, BuiltInAtomicType.STRING, ONE, null);
 */
-        register("boolean-from-string",1,BooleanFromString.class,BuiltInAtomicType.BOOLEAN,ONE,CORE,0);
+//        register("boolean-from-string",1,BooleanFromString.class,BuiltInAtomicType.BOOLEAN,ONE,CORE,0);
 
 
 /*

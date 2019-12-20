@@ -1,0 +1,15 @@
+<xf-model>
+    <xf-instance>
+        <data>
+            <greeting>World!</greeting>
+        </data>
+    </xf-instance>
+    <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+
+    <xf-instance id="second">
+        <data>
+            <foo></foo>
+        </data>
+    </xf-instance>
+    <xf-bind id="b-foo" ref="instance('second')/foo" required="true()"></xf-bind>
+</xf-model>

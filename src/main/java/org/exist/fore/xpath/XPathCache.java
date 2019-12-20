@@ -5,7 +5,9 @@
 
 package org.exist.fore.xpath;
 
+import net.sf.saxon.functions.registry.BuiltInFunctionSet;
 import net.sf.saxon.functions.registry.ConstructorFunctionLibrary;
+import net.sf.saxon.functions.registry.XPath20FunctionSet;
 import net.sf.saxon.functions.registry.XPath31FunctionSet;
 import org.exist.fore.XFormsException;
 import net.sf.saxon.sxpath.XPathDynamicContext;
@@ -22,7 +24,6 @@ import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.LookaheadIterator;
-import net.sf.saxon.xpath.XPathFunctionLibrary;
 import org.exist.fore.model.Model;
 import org.w3c.dom.Node;
 
@@ -46,14 +47,10 @@ public class XPathCache {
 
     static {
         fgXFormsFunctionLibrary = new FunctionLibraryList();
+        fgXFormsFunctionLibrary.addFunctionLibrary(ForeFunctionSet.getInstance());
+        fgXFormsFunctionLibrary.addFunctionLibrary(XPath20FunctionSet.getInstance());
         fgXFormsFunctionLibrary.addFunctionLibrary(XPath31FunctionSet.getInstance());
         fgXFormsFunctionLibrary.addFunctionLibrary(new ConstructorFunctionLibrary(XPathCache.kCONFIG));
-        fgXFormsFunctionLibrary.addFunctionLibrary(XFormsFunctionLibrary.getInstance());
-//        fgXFormsFunctionLibrary.addFunctionLibrary(new BetterFormFunctionLibrary());
-//        fgXFormsFunctionLibrary.addFunctionLibrary(new XPathFunctionLibrary());
-
-//        fgXFormsFunctionLibrary.addFunctionLibrary(new JavaExtensionLibrary(XPathCache.kCONFIG));
-
     }
     public static XPathCache getInstance() {
         return fgXPathCache;
@@ -124,6 +121,7 @@ public class XPathCache {
             return null;
         }
     }
+
     /**
      *
      */
@@ -142,7 +140,8 @@ public class XPathCache {
             context.getXPathContextObject().setCurrentIterator(nodesetIt);
             // todo: ??? really needed ?
 
-            context.getXPathContextObject().getController().setUserData(Model.class.toString(), XPathFunctionContext.class.toString(), functionContext);
+//            context.getXPathContextObject().getController().setUserData(Model.class.toString(), XPathFunctionContext.class.toString(), functionContext);
+            context.getXPathContextObject().getController().setUserData("fnContext", XPathFunctionContext.class.toString(), functionContext);
 
             SequenceIterator it = exp.iterate(context);
 
@@ -182,51 +181,29 @@ public class XPathCache {
     public XPathExpression getXPathExpression(String xpathString, Map prefixMapping, Configuration configuration) throws XPathException {
         XPathEvaluator xpe = new XPathEvaluator(configuration);
 
-        //IndependentContext independentContext = (IndependentContext) xpe.getStaticContext();
         IndependentContext independentContext = (IndependentContext) xpe.getStaticContext();
 //        independentContext.setDefaultFunctionNamespace("http://www.w3.org/2005/xpath-functions");
-//        independentContext.setDefaultFunctionNamespace("");
+//        independentContext.setDefaultFunctionNamespace(NamespaceConstants.XFORMS_NS);
         independentContext.setBackwardsCompatibilityMode(true);
 
         // XXX set base URI
 
+        independentContext.declareNamespace("xf", NamespaceConstants.XFORMS_NS);
+
+/*
         if(prefixMapping != null) {
             for (Iterator it = prefixMapping.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry entry = (Map.Entry) it.next();
                 independentContext.declareNamespace((String) entry.getKey(), (String) entry.getValue());
             }
         }
-        //independentContext.declareNamespace("bffn","java:de.betterform.xml.xforms.xpath.BetterFormXPathFunctions");
-        // XXX declare variable
+*/
 
         independentContext.setFunctionLibrary(fgXFormsFunctionLibrary);
         xpe.setStaticContext(independentContext);
-
         XPathExpression exp = xpe.createExpression(xpathString);
 
         return exp;
-    }
-
-    /**
-     * @param prefixMapping
-     * @return
-     */
-    private IndependentContext createIndependentContext(Map prefixMapping) {
-        final IndependentContext independentContext = new IndependentContext();
-        independentContext.setDefaultFunctionNamespace(NamespaceConstants.XFORMS_NS);
-        independentContext.setBackwardsCompatibilityMode(true);
-
-        // XXX set base URI
-
-        for (Iterator it = prefixMapping.entrySet().iterator(); it .hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
-            independentContext.declareNamespace((String) entry.getKey(), (String) entry.getValue());
-        }
-
-        // XXX declare variable
-
-        independentContext.setFunctionLibrary(fgXFormsFunctionLibrary);
-        return independentContext;
     }
 
     private static class ListSequenceIterator implements SequenceIterator, Cloneable, LastPositionFinder, LookaheadIterator {
@@ -234,7 +211,6 @@ public class XPathCache {
         private List nodeset;
         private int position;
 
-        
         /**
          * 
          * @param nodeset

@@ -613,12 +613,15 @@ public class Model extends XFormsElement {
         this.binds.put(bind.getId(), bind);
     }
 
+
     public Bind getBind(String id) {
-        Document doc = this.element.getOwnerDocument();
-        //slightly more inefficient than getElementById but avoids declaring 'id' type
-        Element e = DOMUtil.getElementByAttributeValue(this.element, "xf-bind", "id", id);
-        Bind b = (Bind) e.getUserData("xf-bind");
-        return b;
+//        Document doc = this.element.getOwnerDocument();
+//        //slightly more inefficient than getElementById but avoids declaring 'id' type
+//        Element e = DOMUtil.getElementByAttributeValue(this.element, "xf-bind", "id", id);
+//        Bind b = (Bind) e.getUserData("xf-bind");
+//        return b;
+
+        return this.binds.get(id);
     }
 
 
