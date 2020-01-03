@@ -99,12 +99,12 @@ let $log := util:log('info', 'token ' || session:get-attribute('fore.token'))
 :)
 
 (:let $model := fore:process-model($doc//xf-model):)
-let $model :=     if(data($config:developer-mode) eq 'true') then
+let $clonedDoc :=     if(data($config:developer-mode) eq 'true') then
                       local:copy($doc/*,$token)
                   else
                       local:filter-model($doc/*,$token)
 
-
+let $model := $clonedDoc//xf-model
 let $session := session:set-attribute('fore.model',$model)
 
 return $model
