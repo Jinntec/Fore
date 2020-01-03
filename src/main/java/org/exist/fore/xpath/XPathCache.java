@@ -93,8 +93,6 @@ public class XPathCache {
 	    return XPathUtil.getAsDouble(evaluate(context.getNodeset(), context.getPosition(), xpathString, context.getPrefixMapping(), context.getXPathFunctionContext()), 1);
 	}
 
-
-
     public List evaluate(BetterFormXPathContext context, String xpathString)
         throws XFormsException {
         return evaluate(context.getNodeset(), context.getPosition(), xpathString, context.getPrefixMapping(), context.getXPathFunctionContext());
@@ -138,9 +136,6 @@ public class XPathCache {
             FocusTrackingIterator nodesetIt = new FocusTrackingIterator(new ListSequenceIterator(nodeset, position));
             nodesetIt.next();
             context.getXPathContextObject().setCurrentIterator(nodesetIt);
-            // todo: ??? really needed ?
-
-//            context.getXPathContextObject().getController().setUserData(Model.class.toString(), XPathFunctionContext.class.toString(), functionContext);
             context.getXPathContextObject().getController().setUserData("fnContext", XPathFunctionContext.class.toString(), functionContext);
 
             SequenceIterator it = exp.iterate(context);

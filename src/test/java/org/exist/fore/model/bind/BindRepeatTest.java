@@ -61,7 +61,7 @@ public class BindRepeatTest extends TestCase {
 
         assertEquals(5,this.model.getModelBindings().size());
         assertEquals(3,this.model.getBind("b-dialect").getModelItems().size());
-        assertEquals("[{\"bind\":{\"id\":\"b-op\",\"value\":\"AND\"}},{\"bind\":{\"id\":\"b-dialects\",\"bind\":{\"id\":\"b-dialect\",\"sequence\": true,\"bind\": [[{\"id\":\"b-dialect-text\",\"value\":\"foo\"},{\"id\":\"b-not\",\"value\":\"true\"}],[{\"id\":\"b-dialect-text\",\"value\":\"bar\"},{\"id\":\"b-not\",\"value\":\"false\"}],[{\"id\":\"b-dialect-text\",\"value\":\"baz\"},{\"id\":\"b-not\",\"value\":\"false\"}]]}}}]",model.getUpdates());
+        assertEquals("[{\"bind\":{\"id\":\"b-op\",\"value\":\"AND\"}},{\"bind\":{\"id\":\"b-dialects\",\"bind\":{\"id\":\"b-dialect\",\"sequence\": true,\"bind\": [[{\"id\":\"b-dialect-text\",\"required\":true,\"value\":\"\"},{\"id\":\"b-not\",\"value\":\"true\"}],[{\"id\":\"b-dialect-text\",\"required\":true,\"value\":\"bar\"},{\"id\":\"b-not\",\"value\":\"false\"}],[{\"id\":\"b-dialect-text\",\"required\":true,\"value\":\"baz\"},{\"id\":\"b-not\",\"value\":\"false\"}]]}}}]",model.getUpdates());
 
 
     }

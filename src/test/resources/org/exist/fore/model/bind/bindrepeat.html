@@ -23,7 +23,7 @@
         <data>
             <operator>AND</operator>
             <dialects>
-                <dialect not="true">foo</dialect>
+                <dialect not="true"/>
                 <dialect not="false">bar</dialect>
                 <dialect not="false">baz</dialect>
             </dialects>
@@ -32,7 +32,8 @@
     <xf-bind id="b-op" ref="operator"></xf-bind>
     <xf-bind id="b-dialects" ref="dialects">
         <xf-bind id="b-dialect" set="dialect">
-            <xf-bind id="b-dialect-text" ref="./text()"></xf-bind>
+            <xf-bind id="b-dialect-text" ref="." required="true()"></xf-bind>
+<!--            <xf-bind id="b-dialect-text" ref="./text()" required="true()"></xf-bind>-->
             <xf-bind id="b-not" ref="@not"></xf-bind>
         </xf-bind>
     </xf-bind>

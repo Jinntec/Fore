@@ -273,11 +273,6 @@ public class Model extends XFormsElement {
         List list = DOMUtil.getChildElementsByTagName(this.element, "xf-bind");
 
 
-//        this.jsonGenerator.writeStartArray();// outer array
-
-
-//        JsonArrayBuilder ja = Json.createArrayBuilder();
-
         StringBuilder sb = new StringBuilder();
         sb.append("["); // outer array
         for (int i = 0; i < list.size(); i++) {
@@ -304,16 +299,11 @@ public class Model extends XFormsElement {
                 }
 
 
-//                writeBinding(b);
-//                JsonObject jo = writeBindObject(b);
-//                ja.add(jo);
             }
 
         }
 
         sb.append("]");//outer array end
-
-//        System.out.println(sb.toString());
 
 //        this.updateSequencer.perform();
 
@@ -322,6 +312,7 @@ public class Model extends XFormsElement {
         }
 
         this.updates = sb.toString();
+//        System.out.println("updates in JSON:" + this.updates);
     }
 
     private String escapeJsonString(String raw) {
@@ -339,6 +330,7 @@ public class Model extends XFormsElement {
 
     private void writeJson(Bind bind, StringBuilder builder, boolean isArray, int index, boolean repeated) throws XFormsException {
 
+
         if (bind.getElement().hasAttribute("ref")) {
 
             if (isArray) {
@@ -352,10 +344,13 @@ public class Model extends XFormsElement {
 
             ModelItem m = null;
             if (repeated) {
-                m = bind.getModelItems().get(index); //there can be just one for a single node bind
+                m = bind.getModelItems().get(index);
             } else {
                 m = bind.getModelItems().get(0); //there can be just one for a single node bind
             }
+//            System.out.println("ref index " + index);
+//            System.out.println("ref path " + m.toString());
+
             RefreshView rv = m.getRefreshView();
 
             if (rv.isEnabledMarked()) {
@@ -399,7 +394,8 @@ public class Model extends XFormsElement {
                 builder.append("\"valid\":");
                 builder.append("true");
             }
-            if (m.getValue().length() != 0 && DOMUtil.getChildElement(bind.getElement(), "xf-bind") == null) {
+//            if (m.getValue().length() != 0 && DOMUtil.getChildElement(bind.getElement(), "xf-bind") == null) {
+            if (DOMUtil.getChildElement(bind.getElement(), "xf-bind") == null) {
 
 //                this.jsonGenerator.writeStringField("value", m.getValue());
                 builder.append(",");
@@ -408,7 +404,7 @@ public class Model extends XFormsElement {
                 builder.append(escapeJsonString(m.getValue()));
                 builder.append("\"");
             }
-            processChildBindings(bind, builder);
+            processChildBindings(bind, builder,m);
 
             if (isArray) {
                 builder.append("}");
@@ -429,33 +425,34 @@ public class Model extends XFormsElement {
             builder.append("\"bind\": [");
 
             List modelItems = bind.getModelItems();
-            for (int i = 0; i < modelItems.size(); i++) {
+            int itemCount = modelItems.size();
+            for (int i = 0; i < itemCount; i++) {
                 ModelItem m = (ModelItem) modelItems.get(i);
 
                 builder.append("["); // inner array of repeat (repeatitem)
 
+                //todo: cover case when there are no child bindings
+
+                String val = m.getValue();
+
+                // if b has less modelitems than the set (parent) we have to be cautious
+
                 List childBindings = DOMUtil.getChildElementsByTagName(bind.getElement(), "xf-bind");
                 for (int j = 0; j < childBindings.size(); j++) {
                     Node n = (Node) childBindings.get(j);
-
                     Bind b = (Bind) n.getUserData("xf-bind");
+
                     writeJson(b, builder, true, i, true);
                     if (j < (childBindings.size() - 1)) {
                         builder.append(",");
                     }
                 }
 
-                //todo: process children
-
                 builder.append("]"); // end repeat-item
-
                 if (i < (modelItems.size() - 1)) {
                     builder.append(",");
                 }
-
-
             }
-
 
             builder.append("]");
 
@@ -466,7 +463,7 @@ public class Model extends XFormsElement {
 
     }
 
-    private void processChildBindings(Bind bind, StringBuilder builder) throws XFormsException {
+    private void processChildBindings(Bind bind, StringBuilder builder, ModelItem parentItem) throws XFormsException {
         // ### check for children
         List childBindings = DOMUtil.getChildElementsByTagName(bind.getElement(), "xf-bind");
         if (childBindings.size() > 1) {
