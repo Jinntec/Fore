@@ -1,40 +1,59 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import { XfAbstractControl } from './xf-abstract-control.js';
+import {LitElement, html, css} from 'lit-element';
 
-// import { XfBound } from './xf-bound.js';
+import fx from '../output/fontoxpath.js';
+import evaluateXPathToBoolean from '../output/fontoxpath.js';
+import evaluateXPathToString from '../output/fontoxpath.js';
+import evaluateXPathToFirstNode from '../output/fontoxpath.js';
+import evaluateXPath from '../output/fontoxpath.js';
 
-/**
- * `xf-output`
- * general class for bound elements
- *
- * @customElement
- * @polymer
- */
-class XfOutput extends XfAbstractControl {
-    static get template() {
+export class XfOutput extends LitElement {
+
+    static get styles() {
+        return css`
+            :host {
+                display: inline;
+                height:auto;
+                background:green;
+            }
+        `;
+    }
+
+    static get properties() {
+        return {
+            ref:{
+                type: String
+            },
+            value:{
+                type: String
+            }
+        };
+    }
+
+    constructor() {
+        super();
+        this.ref='';
+    }
+
+    render() {
         return html`
-      <style>
-        :host {
-          display: inline;
-        }
-      </style>
-      <span id="output">
-        <slot></slot>
-      </span>
-    `;
+            <span>${this.value}</span>
+        `;
     }
 
+    firstUpdated(_changedProperties) {
+        super.firstUpdated(_changedProperties);
+        // console.log('xf-output ref ', this.ref);
 
-    /**
-     * @override
-     * @private
-     */
-    _updateValue(){
-        this.innerText = this.value;
+        // this.value = document.querySelector('xf-instance').evalXPath(this.ref);
+        // this.requestUpdate();
+
     }
 
+    defaultInstance(){
+        this.defaultInstance = document.querySelector('xf-instance');
+        console.log('default instance ', this.defaultInstance);
+    }
 
 
 }
-
-window.customElements.define('xf-output', XfOutput);
+customElements.define('xf-output', XfOutput);

@@ -1,748 +1,121 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import '../assets/@polymer/iron-ajax/iron-ajax.js';
-// import '../assets/@polymer/paper-toast/paper-toast.js';
-import '../assets/@polymer/paper-styles/paper-styles.js';
-import '../assets/@polymer/paper-styles/color.js';
-import '../assets/@polymer/paper-styles/typography.js';
-import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
-import '../assets/@polymer/iron-icons/iron-icons.js';
-import '../assets/@polymer/iron-icon/iron-icon.js';
-import '../assets/@polymer/paper-dialog/paper-dialog.js';
-import '../assets/@polymer/paper-button/paper-button.js';
-import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
+import {LitElement, html, css} from 'lit-element';
 
-/**
- * `xf-form`
- * an xformish form framework for eXist-db.
- *
- * 'xf-form' is the main component of the client-side part of Fore. Just like an HTML form it wraps the controls
- * belonging to the form. A complete form consists of a server-side part (the modelData) and a client-side part.
- *
- * On the client the modelData is represented in JSON which reflects the structure of the modelData-bindings. Value updates and
- * simple validations are conducted on the client directly. Second-level validation and submissions are executed on the
- * server.
- *
- * While the data-modelData can be directly inlined within the HTML it will never be exposed to the client at runtime.
- *
- # * @polymer
- * @demo demo/index.html
- */
-export class XfForm extends PolymerElement {
+import * as fontoxpath from '../output/fontoxpath.js';
 
+export class XfForm extends LitElement {
 
-    static get BOUNDELEMENTS() {
-        return [
-            'INPUT',
-            'SELECT',
-            'TEXTAREA',
-            'XF-BUTTON',
-            'XF-INPUT',
-            'XF-ITEMSET',
-            'XF-RANGE',
-            'XF-REPEAT',
-            'XF-REPEAT-ITEM',
-            'XF-SELECT',
-            'XF-SELECT1',
-            'XF-TEXTAREA',
-            'XF-OUTPUT',
-            'XF-UPLOAD'
-        ];
-    }
-
-    /*
-        static get ACTIONELEMENTS() {
-            return [
-                'XF-APPEND',
-                'XF-DELETE'
-            ];
-        }
-    */
-
-    static get template() {
-        return html`
-          <style is="custom-style">
+    static get styles() {
+        return css`
             :host {
-              display: block;
-              @apply(--paper-font-common-base);
+                display: block;
+                height:auto;
+                background:red;
+                padding:10px;
             }
-            paper-icon-button{
-                position: absolute;
-                right: 10px;
-                top:5px;
+            div{
+                background:red;
             }
-            paper-dialog{
-                width:300px;
-            }
-            paper-dialog .dialogActions{
-                background:var(--paper-grey-100);
-                text-align: center;
-                padding: 6px;
-                margin:0;                
-            }
-            #messageContent{
-                padding: 20px;
-                margin:0;
-            }
-            .error {
-                background: var(--paper-red-500);
-                color:white;
-            }
-            .error .dialogActions{
-                color:black;
-            }
-          </style>          
-          
-          <slot> </slot>
-          <iron-ajax id="initForm" 
-                     url="/exist/apps/fore/init"
-                     handle-as="json"
-                     on-response="_handleInitialState"
-                     on-error="_handleInitError"
-                     method="GET"> </iron-ajax>
-          <iron-ajax id="update" 
-                     url="/exist/apps/fore/update"
-                     handle-as="json"
-                     on-response="_handleUpdate"
-                     on-error="_handleUpdateError"
-                     content-type="application/json"
-                     method="POST"> </iron-ajax>
-          <iron-ajax id="submit" 
-                     handle-as="json"
-                     on-response="_handleSubmitResponse"
-                     on-error="_handleSubmitError"
-                     content-type="application/json"
-                     method="POST"> </iron-ajax>
-                     
-           
-           <paper-dialog id="modalMessage" modal="true">
-                <div id="messageContent"></div>
-                <div class="dialogActions">
-                    <paper-button dialog-dismiss autofocus>Close</paper-button>
-                </div>
-           </paper-dialog>          
         `;
     }
 
-
     static get properties() {
         return {
-            /**
-             * if a form specifies an action attribute it will performs simple submission (client submission). This
-             * will send the raw JSON modelData leaving responsibility for validation and further processing completely
-             * to the receiving endpoint.
-             *
-             * If no action is given there must be a xf-submit specifying the submission to be used.
-             */
-            action:{
-                type: String,
-                value:''
+            prop1:{
+                type:String
             },
-            token: {
-                type: String
-            },
-            mockup: {
-                type: String
-            },
-            /**
-             * The modelData are the parsed JSON data that are returned from the server.
-             */
-            modelData: {
-                type: Array,
-                value: function () {
-                    return [];
-                },
-                notify: true
-            },
-            changed: {
-                type: Array,
-                value: []
-            },
-            debug:{
-                type:Boolean,
-                value:false
+            models:{
+                type: Array
             }
         };
     }
 
-
-    /**
-     * checks wether an element is bound or not. A bound element is can be updated from its modelItem.
-     *
-     * Note: actions are not bound elements though they have a binding expression. However they do not receive updates
-     * on state changes etc.
-     *
-     * @param element
-     * @returns {boolean}
-     */
-    static isBoundComponent(element) {
-        return (XfForm.BOUNDELEMENTS.indexOf(element.nodeName.toUpperCase()) > -1);
-    }
-
-    static getPath(element) {
-
-    }
-
     constructor() {
         super();
-        console.clear();
+        this.prop1 = "eeyyyy!"
+        this.models = [];
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        console.log('### ============================================== ###');
-        console.log('### xf-form connected ', window.location.pathname);
+    render() {
+        return html`
+            <slot></slot>
+        `;
+    }
 
-        this.addEventListener('repeat-item-appended', this._itemAppended);
-        this.addEventListener('repeat-item-inserted', this._itemInserted);
-        this.addEventListener('repeat-item-deleted', this._itemDeleted);
-        this.addEventListener('value-changed', this._handleValueChange);
-        this.addEventListener('actions-performed', this._handleActionsPerformed);
-        this.addEventListener('message', this._displayMessage);
-        this.addEventListener('xf-submit', this._submit);
+    firstUpdated(_changedProperties) {
+        console.log('kick off processing...');
+
+        this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // this.addEventListener('ready', this.initUI);
 
         /*
         form processing starts here when all components have be loaded and instanciated by calling the `update`
         function.
          */
-        window.addEventListener('WebComponentsReady', function () {
+        window.addEventListener('WebComponentsReady', () => {
             console.log('### ----------- WebComponentsReady ----------- ###');
-            this.init();
-        }.bind(this));
+            this._init();
+        });
+
+
+
+        // this._init();
 
     }
 
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.removeEventListener('repeat-item-appended', this._itemAppended);
-        this.removeEventListener('repeat-item-inserted', this._itemInserted);
-        this.removeEventListener('repeat-item-deleted', this._itemDeleted);
-        this.removeEventListener('value-change', this._handleValueChange);
-        this.removeEventListener('actions-performed', this._handleActionsPerformed);
-        this.removeEventListener('message', this._displayMessage);
+    _init(){
+        // wait for children to be ready
+        const models = this.querySelectorAll('xf-model');
+        this.models = models;
+        this._dispatchModelConstruct();
     }
 
 
-    /**
-     * inits the model data.
-     *
-     */
-    init() {
-
-        // ### if we get a token that means we're running with eXist-db instead of Polymer serve
-        if (this.token) {
-            console.log('>>>> token ', this.token);
-            this.$.initForm.params.token = this.token;
-            this.$.initForm.generateRequest();
-            return;
-        } else if (this.mockup) {
-            // console.log('loading mockup data from : ', this.mockup);
-            // this.modelData = JSON.parse(this.mockup);
-            const mockupElement = document.getElementById(this.mockup);
-            if (!mockupElement) {
-                this._showError('mockupElement "' + this.mockup + '" not found - stopping');
-                return;
-            }
-            mockupElement.init(); // init mockup data
-            this.modelData = mockupElement.getData();
-            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
-            console.log('### modelData ', this.modelData);
-            this._initUI();
-        } else {
-            this._showError('Neither server- nor mockup-data available - stopping');
-        }
-    }
-
-
-    /**
-     * updates the modelData by sending changed data to server, forcing recalculation and revalidation in one go.
-     */
-    update(){
-
-        if(this.action === ''){
-
-            console.log('### trigger update');
-            if(this.changed.size !== 0){
-                console.log("### update - change protocol ", this.changed);
-                this.$.update.params.token = this.token;
-                this.$.update.body = JSON.stringify(this.changed);
-                this.$.update.generateRequest();
-            }
-
-        }
-
-    }
-
-    /**
-     * refresh is trigged whenever controls need to be updated to the latest state of the modelData. It will visit all elements
-     * in the UI that have a `bind` attribute and call their `refresh` method.
-     */
-    refresh() {
-        // console.log('### refresh');
-        this.dispatchEvent(new CustomEvent('refresh', {composed: true, bubbles: true, detail: {}}));
-
-
-        // console.groupCollapsed('refresh');
-        // console.group('refresh');
-        const boundElements = this.querySelectorAll('[bind]');
-        for (let i = 0; i < boundElements.length; i++) {
-            // console.log('### bound UI element ', boundElements[i], i + 1, ' of ', boundElements.length);
-            // console.log('>>>>> bound UI element ', boundElements[i].getAttribute('bind'));
-            const elem = boundElements[i];
-            const bindId = elem.getAttribute('bind');
-            if (typeof elem.refresh === 'function') {
-                elem.refresh();
-            }
-        }
-        // console.groupEnd('refresh');
-        this.dispatchEvent(new CustomEvent('refresh-done', {composed: true, bubbles: true, detail: {}}));
-    }
-
-    /**
-     * resolves the binding of a boundElement into a 'binding path' which consists of the bind id and if repeated an
-     * index. Path steps are separated by '/'. Bindings pathes are used for addressing when sending updates to the server
-     * as well as applying updates from server.
-     *
-     *
-     * @param boundElement
-     * @returns {string|*}
-     */
-    resolveBinding(boundElement) {
-        if (boundElement.repeated) {
-            let elem = boundElement.closest('xf-repeat');
-            let path = elem.bind + ':' + elem.repeatIndex;
-
-            let found = true;
-            while (found) {
-                elem = elem.parentNode.closest('xf-repeat');
-                if (elem === null) {
-                    found = false;
-                    if(boundElement.nodeName === 'XF-REPEAT'){
-                        return path;
-                    }
-                } else {
-                    path = elem.bind + ':' + elem.repeatIndex + '/' + path;
-                }
-            }
-            console.log('### resolveBinding path ', path);
-            return path + '/' + boundElement.bind;
-            // return path;
-        }else{
-            return boundElement.bind;
-        }
-    }
-
-
-    /**
-     * searches the modelData for given bindId and returns the object (ModelItem).
-     *
-     * @param o the object to search
-     * @param id the bindId
-     * @returns {{id}|*|*}
-     * @private
-     */
-    findById(o, id) {
-        // console.log('_findById o ', o);
-        //Early return
-        if (o.hasOwnProperty('id') && o.id === id) {
-            return o;
-        }
-        var result, p;
-        for (p in o) {
-            if (o.hasOwnProperty(p) && typeof o[p] === 'object') {
-                result = this.findById(o[p], id);
-                if (result) {
-                    return result;
-                }
-            }
-        }
-        return result;
-    }
-
-    _handleInitialState(e) {
-        // console.log('### token as param ', this.$.initForm.params);
-        this.modelData = this.$.initForm.lastResponse;
-        console.log('### initial data loaded from server');
-        if (this.modelData === null) {
-            this._showError('server did not return any modelData - stopping');
-        } else {
-            console.log('### modelData from remote ', this.modelData);
-            this._initUI();
-            this.dispatchEvent(new CustomEvent('model-ready', {composed: false, bubbles: false, detail: {}}));
-        }
-    }
-
-    _initUI() {
-        // console.log('### init the UI');
-        // iterate the UI in search for bound controls
-        const boundElements = this.querySelectorAll('[bind]');
-        console.group('initUI');
-        for (let i = 0; i < boundElements.length; i++) {
-            console.info('### init UI element ', i + 1, ' of ', boundElements.length);
-            const boundElement = boundElements[i];
-            const bindId = boundElement.getAttribute('bind');
-            // if(XfForm.isBoundComponent(boundElement)){
-            boundElement.init();
-            // }
-
-        }
-        console.groupEnd('initUI');
-        this.dispatchEvent(new CustomEvent('form-ready', {composed: true, bubbles: false, detail: {}}));
-    }
-
-    _handleInitError(e) {
-        this._showError(this.$.initForm.lastError.error);
-    }
-
-    _submit(e){
-        console.log('_submit ', e.detail.target);
-        console.log('_submit modelData', this.modelData);
-
-        /*
-        submit can be in one of two modes:
-         - by using an action attribute which will send local modelData as is to the server
-         - by specifying a 'submission' attribute on the xf-submit action. That in turn will call the server-side submission.
-        */
-
-        if(this.action !== ''){
-            this.$.submit.url = this.action;
-        }else{
-            const submission = e.detail.submission;
-            this.$.submit.url = '/submit/' + submission;
-        }
-
-        console.log('submit url ', this.$.submit.url);
-
-        // this.$.submit.params.token = this.token;
-        const data = JSON.stringify(this.modelData);
-        console.log('data ', data);
-        this.$.submit.body = data;
-        this.$.submit.generateRequest();
-
-    }
-
-
-    _displayMessage(e) {
-        const level = e.detail.level;
-        const msg = e.detail.message;
-        this._showMessage(level,msg);
-    }
-
-    _showMessage(level, msg){
-        if (level === 'modal') {
-            this.$.messageContent.innerText = msg;
-            this.$.modalMessage.open();
-        } else if (level === 'modeless') {
-            // const notification = this.$.modeless;
-
-            const notification = document.createElement('vaadin-notification');
-            notification.duration = 0;
-            notification.setAttribute('theme', 'error');
-            notification.renderer = function (root) {
-                console.log('root ', root);
-
-                root.textContent = msg;
-
-                const closeIcon = window.document.createElement('paper-icon-button');
-                closeIcon.setAttribute('icon', 'close');
-                closeIcon.addEventListener('click', function (e) {
-                    console.log(e);
-                    notification.close();
-                });
-                root.appendChild(closeIcon);
-            };
-            this.appendChild(notification);
-            notification.open();
-
-        } else {
-            const notification = document.createElement('vaadin-notification');
-            notification.renderer = function (root) {
-                root.textContent = msg;
-            };
-            this.appendChild(notification);
-            notification.open();
-        }
-
-    }
-
-    _handleValueChange(e) {
-        console.log('_handleValueChange ', e.target);
-        console.log('_handleValueChange ', e.target.modelItem);
-
-        //this is for handling deferred update for action blocks
-        //check if action block has been started and add changes as necessary
-        const modelItem = e.detail.modelItem;
-
-        // modelItem.changed = true;
-        let path = e.detail.path;
-        let action = {};
-
-        action = {'action': 'setvalue', 'value': modelItem.value, 'path': path};
-        const found = this.changed.findIndex((obj) => obj.path == path);
-        console.log('*************** found ', found);
-        if(found !== -1){
-            this.changed[found] = action;
-        }else{
-            this.changed.push(action);
-        }
-
-        console.log('### list of changes ###');
-        console.table(this.changed);
-        console.log('### modelData ', this.modelData);
-        this.refresh();
-    }
-
-
-
-    _itemAppended(e) {
-        console.log('### _itemAppended ', e.detail);
-
-        const bind = e.detail.bind;
-        const modelItem = e.detail.appendedItem;
-        const index = e.detail.appendLocation;
-        const path = e.detail.path;
-
-        // modelItem.path = bind + ':' + index;
-
-/*
-        const change = {
-            "action": "append",
-            "bind": bind,
-            "index": index,
-            "modelItem": modelItem,
-            "path":path
-        };
-*/
-        const change = {
-            "action": "append",
-            "modelItem": modelItem,
-            "path":path
-        };
-        this.changed.push(change);
-        console.table(this.changed);
-
-        console.log('>>>>> modelData: ', this.modelData);
-        this.refresh();
-    }
-
-    _itemInserted(e){
-        console.log('### _itemInserted ', e.detail);
-
-        console.log('#### new modelData: ', this.modelData);
-
-        this.refresh();
-    }
-
-    _itemDeleted(e){
-        const bind = e.detail.bind;
-        const item  = e.detail.deleteItems;
-        const idx = e.detail.deleteLocation;
-        const path = e.detail.path;
-        const change = {
-            "action": "delete",
-            "modelItem": item,
-            "path":path
-        };
-        this.changed.push(change);
-        console.table(this.changed);
-    }
-
-    _handleActionsPerformed(e){
-        console.log('### actions performed ',e);
-        // if changes then send update
-        this.update();
-
-/*
-        if(this.changed.length > 0){
-            this.$.update.body = this.changed;
-            this.$.update.generateRequest();
-        }
-*/
-    }
-
-    _isWebComponent(elementName) {
-        return (elementName.indexOf('-') > -1);
-    }
-
-    _closeToast(e) {
-        this.$.important.close();
-    }
-
-
-    /**
-     * apply updates from server. Come as JSON array of objects
-     * @private
-     */
-    _handleUpdate() {
-
-        // ### clear changed list
-        this.changed = [];
-
-        const updates = [{
-            "path": "b-todo:1/b-task",
-            "value": "Pick up Honey",
-            "action": "updateState"
-        }, {
-            "path": "b-todo:1/b-state",
-            "value": "true",
-            "action": "updateState"
-        }, {
-            "path": "b-todo:2/b-task",
-            "value": "forget tutorial part1",
-            "action": "updateState"
-        }, {
-            "action": "message",
-            "level":"modeless",
-            "text":"a message from server"
-        },{
-            "action":"load",
-            "url":"index.html"
-        }];
-
-
-        console.clear();
-        // console.log('### _handleUpdate current model: ', this.modelData);
-        console.log('### _handleUpdate updates: ', updates);
-
-/*
-        let targetItem = this.findById(this.modelData,'b-todo').bind[0][0];
-        console.log('targetItem : ', targetItem);
-
-
-        targetItem.value = "foobar";
-        console.log('targetItem : ', targetItem);
-        console.log('### _handleUpdate new model: ', this.modelData);
-*/
-
-/*
-        const c = this.querySelectorAll("[bind='b-todo']")[0];
-        const ctrl = c.querySelector("[bind='b-task']");
-        console.log('ctrl ', ctrl);
-        ctrl.classList.add('highlight');
-        ctrl.value = 'task has changed';
-*/
-
-
-        // console.log('### _handleUpdate new model: ', this.modelData);
-
-        updates.forEach(update => {
-            // tokenize path expr
-            const path = update.path;
-
-            switch (update.action) {
-                case 'updateState':
-                    this._applyChange(update);
-                    break;
-                case 'message':
-                    break;
-                case 'load':
-                    break;
-                default:
-                    break;
-            }
-
-            // console.log('path: ', path);
-            // console.log('<<<<< ',this.resolvePath(path,this.modelData));
-/*
-            console.log('path: ', path.split('/'));
-            const steps = path.split('/');
-            steps.forEach(step => {
-               console.log('step: ', step);
-               if(step.includes(':')){
-                   const idx = step.substring(step.indexOf(':') + 1);
-                   console.log('repeated step index: ', idx)
-               }else{
-                   console.log('not repeated');
-               }
-            });
-*/
-
+    _dispatchModelConstruct(){
+        console.log('model-construct');
+        this.models.forEach(model =>  {
+            model.dispatchEvent(new CustomEvent('model-construct', {composed: true, bubbles: true, detail: {}}));
+            // console.log('models update complete');
         });
     }
 
-    /**
-     * applies an update coming from server.
-     * @param update
-     * @private
-     */
-    _applyChange(update){
-        let targetModelItem = this.resolvePath(update.path, this.modelData);
+    _handleModelConstructDone(e){
+        console.log('modelConstructDone', e.detail.model);
+        // console.log('modelConstructDone', e.detail.model.id);
+        // console.log('modelConstructDone', this.models);
+        // console.log('modelConstructDone', this.models.length);
 
-        console.log('targetItem', targetModelItem);
+        // const models = this.querySelectorAll('xf-model');
 
-        if(update.value){
-            targetModelItem.value = update.value;
-        }
-        if(update.readonly){
-            targetModelItem.readonly = update.readonly;
-        }
-        if(update.required){
-            targetModelItem.required = update.required;
-        }
-        if(update.relevant){
-            targetModelItem.relevant = update.relevant;
-        }
-        if(update.valid){
-            targetModelItem.valid = update.valid;
-        }
-        if(update.alert){
-            //todo
-        }
+        if(this.models.length > 0 ){
+            // const cnt = this.models.length;
+            // const last = this.querySelectorAll('xf-model')[cnt-1];
+            const last = this.models[this.models.length-1];
+            // console.log('last ', last);
 
-    }
+            const targetModel = document.getElementById(e.detail.model.id);
+            // console.log('targetModel', targetModel);
 
-
-    // todo: can be rewritten with reduce
-    resolvePath(path, modelObject){
-        console.log('#### resolvePath ', path, modelObject);
-        const steps = path.split('/');
-        const step = steps[0];
-
-        // console.log('step: ', step);
-        if(step.includes(':')){
-            const b = step.substring(0,step.indexOf(':'));
-            // console.log('repeated step bind: ', b)
-
-            const idx = step.substring(step.indexOf(':') + 1);
-            // console.log('repeated step index: ', idx)
-
-            const targetItem = this.findById(modelObject,b);
-
-            if(path.includes('/')){
-                return this.resolvePath(steps[1],targetItem.bind[idx-1]);
-            }else{
-                return targetItem.bind[idx-1];
+            if(targetModel === last){
+                this.initUI();
             }
-
         }else{
-            console.log('##### modelObjecdt ',modelObject);
-            return this.findById(modelObject,path);
+            // there are no instances at model construction time
+            this.initUI();
         }
 
     }
 
-    _handleUpdateError(){
-        console.log(this.$.update.lastError);
-        if(this.token){
-            this._showMessage('modeless',this.$.update.lastError.error.message + " - " + this.$.update.url);
-        }
-    }
+    initUI(){
+        console.log('initUI', this);
+        // console.log('initUI', e.detail.model);
 
-    _showError(error) {
-        this.$.modalMessage.classList.add('error');
-        this.$.messageContent.innerText = error;
-        this.$.modalMessage.open();
-    }
+        // e.detail.model.dispatchEvent(new CustomEvent('ready', {composed: true, bubbles: true, detail: {}}));
+        this.models.forEach(model => {
+            model.dispatchEvent(new CustomEvent('ready', {composed: true, bubbles: true, detail: {}}));
+        });
 
-    _handleSubmitResponse(e){
-        //    todo
-        console.log('_handleSubmitResponse ',e);
-    }
 
-    _handleSubmitError(e){
-    //    todo
-        console.log('_handleSubmitError ',e);
     }
 
 }
-
-window.customElements.define('xf-form', XfForm);
+customElements.define('xf-form', XfForm);
