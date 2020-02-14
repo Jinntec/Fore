@@ -115,30 +115,30 @@ export class XfModel extends LitElement {
         console.group('revalidate');
         const binds = this.querySelectorAll('xf-bind');
         binds.forEach(bind => {
-            console.log('bind ', bind);
-            console.log('bind ', bind.ref);
-            console.log('instanceData ', this.getDefaultInstanceData());
+            // console.log('bind ', bind);
+            // console.log('bind ', bind.ref);
+            // console.log('instanceData ', this.getDefaultInstanceData());
 
             let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
-            console.log('evaluated context node ', contextNode);
+            // console.log('evaluated context node ', contextNode);
 
             let result ='';
             if(bind.readonly !== 'false()'){
-                console.log('evaluating readonly expression', bind.readonly);
+                // console.log('evaluating readonly expression', bind.readonly);
             }
             if(bind.required !== 'false()'){
-                console.log('evaluating required expression', bind.required);
+                // console.log('evaluating required expression', bind.required);
                 result =  fx.evaluateXPath(bind.required, result, null, {});
                 console.log('required evaluated to', result);
             }
             if(bind.relevant !== 'true()'){
-                console.log('evaluating relevant expression', bind.relevant);
+                // console.log('evaluating relevant expression', bind.relevant);
             }
             if(bind.constraint !== 'true()'){
-                console.log('evaluating constraint expression', bind.constraint);
+                // console.log('evaluating constraint expression', bind.constraint);
             }
             if(bind.type !== 'xs:string'){
-                console.log('evaluating type  expression', bind.type);
+                // console.log('evaluating type  expression', bind.type);
             }
         });
         console.groupEnd();

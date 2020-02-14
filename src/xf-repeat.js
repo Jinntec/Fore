@@ -85,9 +85,10 @@ export class XfRepeated extends BoundElement {
         console.log('REPEAT.refresh ', this.nodeset);
         this.requestUpdate();
         //create n repeat-items for nodeset
-        this.nodeset.forEach( item => {
+        this.nodeset.forEach( (item,index) => {
             // const repeatItem = new XfRepeatitem(); //no idea why this is not working
             const repeatItem = document.createElement('xf-repeatitem');
+            repeatItem.nodeset = this.nodeset[index];
             const content = this.template.content;
             const clone = document.importNode(content, true);
             console.log('clone ', clone);

@@ -38,7 +38,7 @@ export class XfRepeatitem extends BoundElement{
     }
 
     firstUpdated(_changedProperties) {
-        console.log('### xf-repeatitem firstUpdated ', this);
+        // console.log('### xf-repeatitem firstUpdated ', this);
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
             bubbles: true,
@@ -59,9 +59,26 @@ export class XfRepeatitem extends BoundElement{
     }
 
     refresh() {
-        console.log('REPEATITEM.refresh');
-        // this.nodeset = this.evalBinding();
-        // console.log('REPEAT.refresh ', this.nodeset);
+        // console.log('REPEATITEM.refresh');
+        console.log('REPEATITEM.refresh nodeset ', this.nodeset);
+
+        const boundElements = this.querySelectorAll('[ref]');
+        boundElements.forEach(bound => {
+
+
+            // console.log('refresh bound element ', bound);
+            // console.log('refresh bound element ', bound.tagName);
+            // console.log('refresh bound element ', bound.closest('xf-model'));
+
+            bound.context = this.nodeset;
+
+            const isModel = bound.closest('xf-model');
+            if(!isModel){
+                bound.refresh();
+            }
+
+        });
+
 
     }
 

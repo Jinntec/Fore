@@ -17,7 +17,7 @@
         import '../src/xf-delete.js';
         import '../src/xf-append.js';
         import '../src/xf-update.js';
-        import '../src/native/xf-input.js';
+        import '../src/xf-input.js';
         import '../src/xf-refresh.js';
         import '../src/xf-submit.js';
         import '../src/xf-json-data.js';
@@ -91,16 +91,11 @@
                         -->
 
 
-        <div class="header">
-            <span>todo</span>
-            <span>due</span>
-            <span>status</span>
-        </div>
         <xf-repeat ref="task" focus-on-create="task" id="r-todos">
             <template>
-                <xf-input ref="task/text()" id="task" type="text"></xf-input>
-                <xf-input ref="@due" type="date"></xf-input>
-                <xf-input ref="@complete" type="checkbox"></xf-input>
+                <xf-input label="Task" ref="text()" id="task" type="text"></xf-input>
+                <xf-input label="Due" ref="@due" type="date"></xf-input>
+                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>
             </template>
         </xf-repeat>
 
