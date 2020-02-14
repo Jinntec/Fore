@@ -39,6 +39,11 @@ export class XfRepeatitem extends BoundElement{
 
     firstUpdated(_changedProperties) {
         console.log('### xf-repeatitem firstUpdated ', this);
+        this.dispatchEvent(new CustomEvent('repeatitem-created', {
+            composed: true,
+            bubbles: true,
+            detail: {item: this}
+        }));
 
     }
 

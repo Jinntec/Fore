@@ -63,6 +63,7 @@ export class XfRepeated extends BoundElement {
         this.initDone = false;
         this.repeatIndex = 1;
         this.nodeset = [];
+        this.inited = false;
     }
 
 
@@ -71,16 +72,21 @@ export class XfRepeated extends BoundElement {
         console.log('### xf-repeat firstUpdated index', this.repeatIndex);
         // this.init();
         this._initTemplate();
+        this.inited = true;
+
+        this.addEventListener('repeatitem-created', this._refreshItem)
     }
 
     refresh() {
+        if(!this.inited) return;
+
         console.log('REPEAT.refresh');
         this.nodeset = this.evalBinding();
         console.log('REPEAT.refresh ', this.nodeset);
         this.requestUpdate();
         //create n repeat-items for nodeset
         this.nodeset.forEach( item => {
-            // const repeatItem = new XfRepeatitem();
+            // const repeatItem = new XfRepeatitem(); //no idea why this is not working
             const repeatItem = document.createElement('xf-repeatitem');
             const content = this.template.content;
             const clone = document.importNode(content, true);
@@ -89,13 +95,11 @@ export class XfRepeated extends BoundElement {
             this.appendChild(repeatItem);
         });
 
-/*
-        const repeatItems = this.querySelectorAll('xf-repeat-item');
-        for (let i = 0; i < repeatItems.length; i++) {
-            const item = repeatItems[i];
-            item.refresh();
-        }
-*/
+    }
+
+    _refreshItem(e){
+        if(!this.inited) return;
+        e.detail.item.refresh();
     }
 
     _initTemplate() {
