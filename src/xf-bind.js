@@ -13,56 +13,81 @@ export class XfBind extends LitElement {
             :host {
                 display: block;
                 height:auto;
-                background:orange;
+                background:var(--paper-blue-500);
+                padding:var(--model-element-padding);
+                margin-top:var(--model-element-margin);
+                margin-bottom:var(--model-element-margin);
+            }
+            
+            :host:before {
+                content:'xf-bind';
+            }
+            
+            .info span{
+                background: orange;
+                border-radius:10px;
+                margin-right:10px;
+                padding:var(--model-element-padding);
             }
         `;
     }
 
     static get properties() {
         return {
-            ref:{
-                type: String
-            },
-            readonly:{
+            id:{
                 type:String
             },
-            required:{
+            ref: {
                 type: String
             },
-            relevant:{
+            readonly: {
                 type: String
             },
-            constraint:{
+            required: {
                 type: String
             },
-            type:{
+            relevant: {
                 type: String
             },
-            calculate:{
+            constraint: {
                 type: String
+            },
+            type: {
+                type: String
+            },
+            calculate: {
+                type: String
+            },
+            nodeset: {
+                type: Array
             }
         };
     }
 
     constructor() {
         super();
-        this.ref='';
+        this.id='';
+        this.ref = '';
         this.readonly = 'false()';
         this.required = 'false()';
         this.relevant = 'true()';
         this.constraint = 'true()';
         this.type = 'xs:string';
         this.calculate = '';
+        this.nodeset = [];
     }
 
     render() {
         return html`
-             ref: ${this.ref}
-             readonly: ${this.readonly}
-             required: ${this.required}
-             relevant: ${this.relevant}
-             type: ${this.type}
-             calculate: ${this.calculate}
+             <span class="info">
+                 <span>id: ${this.id}</span>
+                 <span>ref: ${this.ref}</span>
+                 <span>readonly: ${this.readonly}</span>
+                 <span>required: ${this.required}</span>
+                 <span>relevant: ${this.relevant}</span>
+                 <span>type: ${this.type}</span>
+                 <span>calculate: ${this.calculate}</span>
+             </span>
              <slot></slot>
         `;
     }
@@ -71,13 +96,20 @@ export class XfBind extends LitElement {
         super.firstUpdated(_changedProperties);
     }
 
-    evalXPath(xpath){
+    evalXPath(xpath) {
 
         console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
         return fx.evaluateXPathToString(xpath, this.defaultinstance, null, {});
     }
 
+/*
+    getInstanceData(){
+        return this.closest('xf-model').getDefaultInstanceData();
+    }
+*/
+
 
 }
+
 customElements.define('xf-bind', XfBind);

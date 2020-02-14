@@ -1,6 +1,12 @@
 import {LitElement, html, css} from 'lit-element';
 
-import * as fontoxpath from '../output/fontoxpath.js';
+import '../assets/@polymer/paper-dialog/paper-dialog.js';
+import '../assets/@polymer/paper-button/paper-button.js';
+import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
+import '../assets/@polymer/iron-icons/iron-icons.js';
+import '../assets/@polymer/iron-icon/iron-icon.js';
+
+import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 
 export class XfForm extends LitElement {
 
@@ -9,20 +15,18 @@ export class XfForm extends LitElement {
             :host {
                 display: block;
                 height:auto;
-                background:red;
-                padding:10px;
+                padding:var(--model-element-padding);
+                font-family:Roboto, sans-serif;
+                color:var(--paper-grey-900);
             }
-            div{
-                background:red;
+            :host:before{
+                content:'xf-form';
             }
         `;
     }
 
     static get properties() {
         return {
-            prop1:{
-                type:String
-            },
             models:{
                 type: Array
             }
@@ -38,6 +42,14 @@ export class XfForm extends LitElement {
     render() {
         return html`
             <slot></slot>
+            
+           <paper-dialog id="modalMessage" modal="true">
+                <div id="messageContent"></div>
+                <div class="dialogActions">
+                    <paper-button dialog-dismiss autofocus>Close</paper-button>
+                </div>
+           </paper-dialog>          
+
         `;
     }
 
@@ -45,6 +57,8 @@ export class XfForm extends LitElement {
         console.log('kick off processing...');
 
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        this.addEventListener('message', this._displayMessage);
+
         // this.addEventListener('ready', this.initUI);
 
         /*
@@ -61,6 +75,29 @@ export class XfForm extends LitElement {
         // this._init();
 
     }
+
+    refresh() {
+
+        console.group('refresh');
+        const boundElements = document.querySelectorAll('[ref]');
+        boundElements.forEach(bound => {
+
+
+            // console.log('refresh bound element ', bound);
+            // console.log('refresh bound element ', bound.tagName);
+            // console.log('refresh bound element ', bound.closest('xf-model'));
+
+            const isModel = bound.closest('xf-model');
+            if(!isModel){
+                console.log('refresh bound element ', bound.tagName);
+                bound.refresh();
+            }
+
+        });
+        console.groupEnd();
+
+    }
+
 
     _init(){
         // wait for children to be ready
@@ -106,16 +143,65 @@ export class XfForm extends LitElement {
     }
 
     initUI(){
-        console.log('initUI', this);
-        // console.log('initUI', e.detail.model);
-
-        // e.detail.model.dispatchEvent(new CustomEvent('ready', {composed: true, bubbles: true, detail: {}}));
         this.models.forEach(model => {
             model.dispatchEvent(new CustomEvent('ready', {composed: true, bubbles: true, detail: {}}));
         });
 
+        console.log('initUI', this);
+        this.refresh();
+
+
 
     }
+
+    _displayMessage(e) {
+        const level = e.detail.level;
+        const msg = e.detail.message;
+        this._showMessage(level,msg);
+    }
+
+    _showMessage(level, msg){
+        if (level === 'modal') {
+            // this.$.messageContent.innerText = msg;
+            // this.$.modalMessage.open();
+
+            this.shadowRoot.getElementById('messageContent').innerText = msg;
+            this.shadowRoot.getElementById('modalMessage').open();
+        } else if (level === 'modeless') {
+            // const notification = this.$.modeless;
+
+            const notification = document.createElement('vaadin-notification');
+            notification.duration = 0;
+            notification.setAttribute('theme', 'error');
+            notification.renderer = function (root) {
+                console.log('root ', root);
+
+                root.textContent = msg;
+
+                const closeIcon = window.document.createElement('paper-icon-button');
+                closeIcon.setAttribute('icon', 'close');
+                closeIcon.addEventListener('click', function (e) {
+                    console.log(e);
+                    notification.close();
+                });
+                root.appendChild(closeIcon);
+            };
+            this.appendChild(notification);
+            notification.open();
+
+        } else {
+            const notification = document.createElement('vaadin-notification');
+            notification.renderer = function (root) {
+                root.textContent = msg;
+            };
+            this.appendChild(notification);
+            notification.open();
+        }
+
+    }
+
+
+
 
 }
 customElements.define('xf-form', XfForm);

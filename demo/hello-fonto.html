@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -7,17 +8,15 @@
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
-        import './src/xf-form.js';
-        import './src/xf-model.js';
-        import './src/xf-instance.js';
-        import './src/xf-bind.js';
-        import './src/xf-output.js';
-        import './src/xf-message.js';
-        import * as fontoxpath from '../output/fontoxpath.js';
-
+        import '../src/xf-form.js';
+        import '../src/xf-model.js';
+        import '../src/xf-instance.js';
+        import '../src/xf-bind.js';
+        import '../src/xf-output.js';
+        import '../src/xf-message.js';
     </script>
 
-    <link rel="stylesheet" href="resources/vars.css">
+    <link rel="stylesheet" href="../resources/vars.css">
 </head>
 <body unresolved="unresolved">
 
@@ -26,7 +25,7 @@
         <xf-model id="model1">
             <xf-instance>
                 <data>
-                    <greeting>World!</greeting>
+                    <greeting>Hello World!</greeting>
                 </data>
             </xf-instance>
             <xf-instance id="second">
@@ -36,10 +35,8 @@
             </xf-instance>
             <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
 
-<!--
-            <xf-message event="model-construct-done">Hey it's done</xf-message>
+            <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
             <xf-message event="ready">Hey it's ready</xf-message>
--->
         </xf-model>
 
 <!--        <xf-model id="model2"></xf-model>-->
@@ -51,7 +48,7 @@
         -->
 
         <h1>
-            <xf-output ref="greeting" id="output"></xf-output>
+            Greeting: <xf-output ref="greeting" id="output"></xf-output>
         </h1>
 
 <!--

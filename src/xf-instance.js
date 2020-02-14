@@ -13,7 +13,14 @@ export class XfInstance extends LitElement {
             :host {
                 display: block;
                 height:auto;
-                background:yellow;
+                background:var(--paper-blue-500);
+                padding:var(--model-element-padding);
+                margin-top:var(--model-element-margin);
+                margin-bottom:var(--model-element-margin);
+
+            }
+            :host:before{
+                content:'xf-instance';
             }
         `;
     }
@@ -23,7 +30,7 @@ export class XfInstance extends LitElement {
             id:{
                 type: String
             },
-            defaultinstance:{
+            instanceData:{
                 type: Object
             }
         };
@@ -36,6 +43,7 @@ export class XfInstance extends LitElement {
 
     render() {
         return html`
+            <span>${this.id}</span>
             <pre contenteditable="true">
                  <slot></slot>
             </pre>
@@ -62,20 +70,22 @@ export class XfInstance extends LitElement {
     init(){
         // console.log('INSTANCE.init', this.id);
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
-        this.defaultinstance = instanceData;
-        console.log('xf-instance data ', this.defaultinstance);
+        this.instanceData = instanceData;
+        console.log('xf-instance data ', this.instanceData);
         // console.log('has greeting ', fx.evaluateXPathToBoolean('exists(//greeting)', this.defaultinstance));
-        this.dispatchEvent(new CustomEvent('instance-ready', {composed: true, bubbles: true, detail: {id:this.id}}));
+        // this.dispatchEvent(new CustomEvent('instance-ready', {composed: true, bubbles: true, detail: {id:this.id}}));
     }
 
-/*
     evalXPath(xpath){
-
         console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        return fx.evaluateXPathToString(xpath, this.defaultinstance, null, {});
+        const result = fx.evaluateXPath(xpath, this._getDefaultContext(), null, {});
+        return result;
     }
-*/
+
+    _getDefaultContext(){
+        return this.instanceData.firstElementChild;
+    }
 
 
 }

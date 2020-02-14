@@ -5,15 +5,15 @@ import evaluateXPathToBoolean from '../output/fontoxpath.js';
 import evaluateXPathToString from '../output/fontoxpath.js';
 import evaluateXPathToFirstNode from '../output/fontoxpath.js';
 import evaluateXPath from '../output/fontoxpath.js';
+import {BoundElement} from "./BoundElement";
 
-export class XfOutput extends LitElement {
+export class XfOutput extends BoundElement {
 
     static get styles() {
         return css`
             :host {
                 display: inline;
                 height:auto;
-                background:green;
             }
         `;
     }
@@ -32,6 +32,7 @@ export class XfOutput extends LitElement {
     constructor() {
         super();
         this.ref='';
+        this.model='';
     }
 
     render() {
@@ -40,18 +41,11 @@ export class XfOutput extends LitElement {
         `;
     }
 
-    firstUpdated(_changedProperties) {
-        super.firstUpdated(_changedProperties);
-        // console.log('xf-output ref ', this.ref);
+    refresh(){
+        console.log('refreshing xf-output');
 
-        // this.value = document.querySelector('xf-instance').evalXPath(this.ref);
-        // this.requestUpdate();
-
-    }
-
-    defaultInstance(){
-        this.defaultInstance = document.querySelector('xf-instance');
-        console.log('default instance ', this.defaultInstance);
+        this.value = this.evalBinding();
+        this.requestUpdate();
     }
 
 

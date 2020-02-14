@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../src/xf-form.js';
+        import '../src/xf-model.js';
+        import '../src/xf-bind.js';
+        import '../src/xf-instance.js';
+        import '../src/xf-repeat.js';
+        import '../src/native/xf-button.js';
+        import '../src/xf-delete.js';
+        import '../src/xf-append.js';
+        import '../src/xf-update.js';
+        import '../src/native/xf-input.js';
+        import '../src/xf-refresh.js';
+        import '../src/xf-submit.js';
+        import '../src/xf-json-data.js';
+    </script>
+
+
+    <!--
+        <script>
+            function append() {
+                document.getElementById('r-todos').append();
+            }
+            function remove(elem){
+                const repeatItem = elem.closest('.repeat-item');
+                repeatItem.parentNode.removeChild(repeatItem);
+            }
+
+        </script>
+    -->
+
+    <link href="../resources/vars.css" rel="stylesheet">
+
+    <style>
+        .header, xf-repeat-item {
+            display: grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+
+        [required] {
+            background: lightyellow;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        .highlight {
+            background: red;
+        }
+        xf-repeatitem{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <xf-form>
+        <xf-model id="record">
+
+            <xf-instance>
+                <data>
+                    <task complete="false" due="2019-02-04">Pick up Milk</task>
+                    <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                </data>
+            </xf-instance>
+
+            <xf-bind ref="task">
+                <xf-bind ref="./text()" required="true()"></xf-bind>
+                <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
+                <xf-bind ref="@due" type="xs:date"></xf-bind>
+            </xf-bind>
+
+        </xf-model>
+
+        <h1>todos</h1>
+
+        <!--
+                <xf-button label="add">
+                    <xf-append repeat="r-todos"></xf-append>
+                </xf-button>
+                <br/><br/>
+                        -->
+
+
+        <div class="header">
+            <span>todo</span>
+            <span>due</span>
+            <span>status</span>
+        </div>
+        <xf-repeat ref="task" focus-on-create="task" id="r-todos">
+            <template>
+                <xf-input ref="task/text()" id="task" type="text"></xf-input>
+                <xf-input ref="@due" type="date"></xf-input>
+                <xf-input ref="@complete" type="checkbox"></xf-input>
+            </template>
+        </xf-repeat>
+
+        <xf-button label="update">
+            <xf-update></xf-update>
+        </xf-button>
+        <xf-button label="refresh">
+            <xf-refresh></xf-refresh>
+        </xf-button>
+        <xf-button label="submit">
+            <xf-submit></xf-submit>
+        </xf-button>
+
+    </xf-form>
+</body>
+</html>
