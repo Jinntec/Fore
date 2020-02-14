@@ -17,11 +17,7 @@
 
     </script>
 
-    <script type="application/javascript">
-
-    </script>
-    <style>
-    </style>
+    <link rel="stylesheet" href="resources/vars.css">
 </head>
 <body unresolved="unresolved">
 
@@ -38,7 +34,7 @@
                     <outro>GoodBye</outro>
                 </data>
             </xf-instance>
-            <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+            <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
 
 <!--
             <xf-message event="model-construct-done">Hey it's done</xf-message>
@@ -55,7 +51,7 @@
         -->
 
         <h1>
-            <xf-output ref="/data/greeting" id="output"></xf-output>
+            <xf-output ref="greeting" id="output"></xf-output>
         </h1>
 
 <!--
