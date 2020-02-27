@@ -30,9 +30,6 @@ export class XfModel extends LitElement {
             },
             defaultInstance: {
                 type: Object
-            },
-            constructDone:{
-                type:Boolean
             }
         };
     }
@@ -41,8 +38,6 @@ export class XfModel extends LitElement {
         super();
         this.id = '';
         this.instances = [];
-        this.constructDone = false;
-        this.modelsReady = false;
     }
 
 /*
@@ -95,7 +90,6 @@ export class XfModel extends LitElement {
                 detail: {model: this}
             }));
         }
-        this.constructDone = true;
 
     }
 
@@ -159,7 +153,6 @@ export class XfModel extends LitElement {
 
     _handleModelConstructDone(e){
         console.log('_handleModelConstructDone');
-        this.modelsReady = true;
         this.refresh();
     }
 
