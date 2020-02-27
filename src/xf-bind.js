@@ -102,9 +102,11 @@ export class XfBind extends LitElement {
         super.firstUpdated(_changedProperties);
     }
 
+/*
     initialize() {
 
     }
+*/
 
     evalXPath(xpath) {
 

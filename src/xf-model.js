@@ -38,6 +38,8 @@ export class XfModel extends LitElement {
         super();
         this.id = '';
         this.instances = [];
+        this.addEventListener('model-construct', this._modelConstruct);
+
     }
 
 /*
@@ -50,7 +52,6 @@ export class XfModel extends LitElement {
 
     firstUpdated(_changedProperties) {
         // console.log('MODEL.firstUpdated');
-        this.addEventListener('model-construct', this._modelConstruct);
         // this.addEventListener('instance-ready', this._callUpdate);
 
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
@@ -67,29 +68,30 @@ export class XfModel extends LitElement {
     _modelConstruct() {
         console.log('model-construct received ', this.id);
 
-        const instances = this.querySelectorAll('xf-instance');
 
-        if (instances.length > 0) {
-            instances.forEach(instance => {
-                instance.init();
-            });
-            this.instances = instances;
-            // console.log('model instances ', this.instances);
+            const instances = this.querySelectorAll('xf-instance');
 
-            this.updateModel();
-            console.log('dispatching model-construct-done');
-            this.dispatchEvent(new CustomEvent('model-construct-done', {
-                composed: true,
-                bubbles: true,
-                detail: {model: this}
-            }));
-        } else {
-            this.dispatchEvent(new CustomEvent('model-construct-done', {
-                composed: true,
-                bubbles: true,
-                detail: {model: this}
-            }));
-        }
+            if (instances.length > 0) {
+                instances.forEach(instance => {
+                    instance.init();
+                });
+                this.instances = instances;
+                // console.log('model instances ', this.instances);
+
+                this.updateModel();
+                console.log('dispatching model-construct-done');
+                this.dispatchEvent(new CustomEvent('model-construct-done', {
+                    composed: true,
+                    bubbles: true,
+                    detail: {model: this}
+                }));
+            } else {
+                this.dispatchEvent(new CustomEvent('model-construct-done', {
+                    composed: true,
+                    bubbles: true,
+                    detail: {model: this}
+                }));
+            }
 
     }
 
@@ -97,16 +99,32 @@ export class XfModel extends LitElement {
      * update action triggering the update cycle
      */
     updateModel() {
-        console.group('updateModel', this.id);
         this.rebuild();
         this.recalculate();
         this.revalidate();
-        console.groupEnd();
     }
 
     rebuild() {
         // tbd
         console.log('rebuild');
+
+
+
+        console.group('rebuild');
+        const binds = this.querySelectorAll('xf-bind');
+        binds.forEach(bind => {
+            console.log('bind ', bind);
+            // console.log('bind ', bind.ref);
+            // console.log('instanceData ', this.getDefaultInstanceData());
+
+            let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
+            console.log('evaluated context node ', contextNode);
+
+        });
+        console.groupEnd();
+
+
+
     }
 
     recalculate() {
@@ -168,38 +186,6 @@ export class XfModel extends LitElement {
         //default context of evaluation is always the default instance
         return this.instances[0].evalXPath(bindingExpr);
     }
-
-
-/*
-    _callUpdate(e) {
-
-        // fire construct-done only in case we received the event from the last instance meaning all instances are up
-        const instances = this.querySelectorAll('xf-instance');
-        if (instances.length > 0) {
-            const cnt = instances.length;
-            const last = this.querySelectorAll('xf-instance')[cnt - 1];
-
-            const targetInstance = document.getElementById(e.detail.id);
-            if (targetInstance === last) {
-                console.log('last instance fired ', last.id);
-                this.updateModel();
-                this.dispatchEvent(new CustomEvent('model-construct-done', {
-                    composed: true,
-                    bubbles: true,
-                    detail: {model: this}
-                }));
-            }
-        } else {
-            // there are no instances at model construction time
-            this.dispatchEvent(new CustomEvent('model-construct-done', {
-                composed: true,
-                bubbles: true,
-                detail: {model: this}
-            }));
-        }
-
-    }
-*/
 
     _ready(e) {
         console.log('model is ready');

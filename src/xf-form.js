@@ -46,6 +46,14 @@ export class XfForm extends LitElement {
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
 
+        this.addEventListener('WebComponentsReady', () => {
+            console.log('### ----------- WebComponentsReady ----------- ###');
+
+            // this.componentsReady = true;
+            // this._init();
+        });
+
+
     }
 
     render() {
@@ -64,6 +72,7 @@ export class XfForm extends LitElement {
 
     firstUpdated(_changedProperties) {
         console.log('xf-form: kick off processing...');
+
         this._init();
     }
 
