@@ -16,6 +16,9 @@ export class BoundElement extends LitElement {
             },
             model:{
                 type: String
+            },
+            modelObj:{
+                type: Object
             }
         };
     }
@@ -24,6 +27,7 @@ export class BoundElement extends LitElement {
         super();
         this.ref = '';
         this.model='';
+        this.modelObj = {};
     }
 
     evalBinding(){
@@ -34,7 +38,7 @@ export class BoundElement extends LitElement {
         }else {
             contextModel = document.querySelector('#'+ this.model);
         }
-
+        this.modelObj = contextModel;
         // update value
         return  contextModel.evalBinding(this.ref);
     }

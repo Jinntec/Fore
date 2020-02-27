@@ -1,5 +1,7 @@
 import {LitElement, html, css} from 'lit-element';
 
+
+
 import fx from '../output/fontoxpath.js';
 import evaluateXPathToBoolean from '../output/fontoxpath.js';
 import evaluateXPathToString from '../output/fontoxpath.js';
@@ -60,6 +62,9 @@ export class XfBind extends LitElement {
             },
             nodeset: {
                 type: Array
+            },
+            modelItems:{
+                type: Array
             }
         };
     }
@@ -75,6 +80,7 @@ export class XfBind extends LitElement {
         this.type = 'xs:string';
         this.calculate = '';
         this.nodeset = [];
+        this.modelItems = [];
     }
 
     render() {
@@ -94,6 +100,10 @@ export class XfBind extends LitElement {
 
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);
+    }
+
+    initialize() {
+
     }
 
     evalXPath(xpath) {

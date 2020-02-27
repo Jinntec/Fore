@@ -27,8 +27,11 @@
     "eslint": "^6.1.0",
     "husky": "^1.0.0",
     "lint-staged": "^8.0.0",
+    "lit-html": "^1.1.2",
+    "mocha": "^7.0.1",
     "rimraf": "^2.6.3",
-    "rollup": "^1.15.4"
+    "rollup": "^1.15.4",
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "test": "karma start --coverage",
@@ -37,6 +40,7 @@
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
     "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",

@@ -4,6 +4,10 @@ import '../assets/@polymer/paper-input/paper-input.js';
 import '../assets/@polymer/paper-checkbox/paper-checkbox.js';
 import fx from "../output/fontoxpath";
 
+
+import evaluateUpdatingExpression from '../output/fontoxpath.js';
+import executePendingUpdateList from '../output/fontoxpath.js';
+
 /**
  * `xf-input`
  * general class for bound elements
@@ -53,7 +57,7 @@ class XfInput extends BoundElement {
     render() {
         return html`
             ${this.type === 'text' || this.type === 'date' ?
-                html`<paper-input label="${this.label}" .value="${this.value}" type="${this.type}"></paper-input>` :''}
+                html`<paper-input label="${this.label}" .value="${this.value}" type="${this.type}" @input="${this._handleInput}"></paper-input>` :''}
             
             ${this.type === 'checkbox' ?
             html`<paper-checkbox label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
@@ -74,6 +78,26 @@ class XfInput extends BoundElement {
             this.value = this.evalBinding();
         }
     }
+
+    _handleInput(e){
+        console.log('update context: ', this.context);
+        console.log('update context: ', e);
+        console.log('update model: ', document.querySelector('xf-model'));
+
+        const model = document.querySelector('xf-model');
+
+        console.log('default data: ', model.getDefaultInstanceData());
+
+        // this.context.setAttribute('complete','bar');
+        // this.context.textContent = 'foobar';
+        // console.log('update context: ', this.context);
+        fx.evaluateUpdatingExpression('replace node ' + this.ref + ' with "bla"', this.context)
+            .then(result => {
+                fx.executePendingUpdateList(result.pendingUpdateList);
+                console.log(this.model);
+                // Outputs: "<foo/>"
+            });
+        }
 
     /**
      * @override

@@ -3,6 +3,7 @@ import {LitElement, html, css} from 'lit-element';
 import * as fontoxpath from '../output/fontoxpath.js';
 import fx from "../output/fontoxpath";
 
+
 export class XfModel extends LitElement {
 
     static get styles() {
@@ -29,6 +30,9 @@ export class XfModel extends LitElement {
             },
             defaultInstance: {
                 type: Object
+            },
+            constructDone:{
+                type:Boolean
             }
         };
     }
@@ -37,6 +41,8 @@ export class XfModel extends LitElement {
         super();
         this.id = '';
         this.instances = [];
+        this.constructDone = false;
+        this.modelsReady = false;
     }
 
 /*
@@ -48,7 +54,7 @@ export class XfModel extends LitElement {
 */
 
     firstUpdated(_changedProperties) {
-        console.log('MODEL.firstUpdated');
+        // console.log('MODEL.firstUpdated');
         this.addEventListener('model-construct', this._modelConstruct);
         // this.addEventListener('instance-ready', this._callUpdate);
 
@@ -58,14 +64,30 @@ export class XfModel extends LitElement {
 
     }
 
+    // async _getUpdateComplete() {
+    //     await super._getUpdateComplete();
+    //     await this._myChild.updateComplete;
+    // }
+
     _modelConstruct() {
         console.log('model-construct received ', this.id);
+
         const instances = this.querySelectorAll('xf-instance');
 
         if (instances.length > 0) {
             instances.forEach(instance => {
                 instance.init();
             });
+            this.instances = instances;
+            // console.log('model instances ', this.instances);
+
+            this.updateModel();
+            console.log('dispatching model-construct-done');
+            this.dispatchEvent(new CustomEvent('model-construct-done', {
+                composed: true,
+                bubbles: true,
+                detail: {model: this}
+            }));
         } else {
             this.dispatchEvent(new CustomEvent('model-construct-done', {
                 composed: true,
@@ -73,16 +95,7 @@ export class XfModel extends LitElement {
                 detail: {model: this}
             }));
         }
-
-        this.instances = instances;
-        console.log('model instances ', this.instances);
-
-        this.updateModel();
-        this.dispatchEvent(new CustomEvent('model-construct-done', {
-            composed: true,
-            bubbles: true,
-            detail: {model: this}
-        }));
+        this.constructDone = true;
 
     }
 
@@ -109,8 +122,8 @@ export class XfModel extends LitElement {
 
     revalidate() {
         // tbd
-        console.log('revalidate');
-        console.log('revalidate instances ', this.instances);
+        // console.log('revalidate');
+        // console.log('revalidate instances ', this.instances);
 
         console.group('revalidate');
         const binds = this.querySelectorAll('xf-bind');
@@ -146,6 +159,7 @@ export class XfModel extends LitElement {
 
     _handleModelConstructDone(e){
         console.log('_handleModelConstructDone');
+        this.modelsReady = true;
         this.refresh();
     }
 

@@ -1,0 +1,114 @@
+/* eslint-disable no-unused-expressions */
+import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
+
+import '../src/xf-form.js';
+import '../src/xf-model.js';
+import '../src/xf-instance.js';
+import '../src/xf-bind.js';
+
+describe('initialize form', () => {
+
+    it('receives model-construct', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                    </xf-model>   
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const model = el.querySelector('xf-model');
+        setTimeout(() => el._dispatchModelConstruct());
+
+        let { detail } = await oneEvent(model, 'model-construct');
+        expect(detail.model.id).to.equal('model1');
+
+    });
+
+    it('receives model-construct-done', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                    </xf-model>   
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const model = el.querySelector('xf-model');
+
+        setTimeout(() => el._dispatchModelConstruct());
+
+        let { detail } = await oneEvent(model, 'model-construct-done');
+        expect(detail.model.id).to.equal('model1');
+
+    });
+
+    it('models receive ready event ', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                    </xf-model>   
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const model = el.querySelector('xf-model');
+        console.log('model Element', model);
+
+        setTimeout(() => el._dispatchModelConstruct());
+
+        let { detail } = await oneEvent(model, 'ready');
+        expect(detail.model.id).to.equal('model1');
+
+    });
+
+    it('initialized model', async () => {
+        const el = (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                        <xf-instance id="second">
+                            <data>
+                                <outro>GoodBye</outro>
+                            </data>
+                        </xf-instance>
+                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
+                    </xf-model>
+                </xf-form>
+            `)
+        );
+        const model = el.querySelector('xf-model');
+        // await model.updated();
+        await elementUpdated(model);
+        expect(el.models.length).to.equal(1);
+        expect(el.models[0].id).to.equal('model1');
+        expect(model.instances.length).to.equal(2);
+    });
+
+    it('has paper-dialog', async () => {
+        const el = (
+            await fixtureSync(html`
+                <xf-form>
+                </xf-form>
+            `)
+        );
+        // await model.updated();
+        await elementUpdated(el);
+        const dialog = el.shadowRoot.querySelector('paper-dialog');
+        expect(dialog).to.exist;
+        expect(dialog.id).to.be.equal('modalMessage');
+    });
+
+
+});

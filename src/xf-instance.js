@@ -45,13 +45,13 @@ export class XfInstance extends LitElement {
         return html`
             <span>${this.id}</span>
             <pre contenteditable="true">
-                 <slot></slot>
+                 <slot></slot></code>
             </pre>
         `;
     }
 
     firstUpdated(_changedProperties) {
-        console.log('INSTANCE.firstUpdated ', this.id);
+        // console.log('INSTANCE.firstUpdated ', this.id);
         // super.firstUpdated(_changedProperties);
 
 
@@ -71,7 +71,7 @@ export class XfInstance extends LitElement {
         // console.log('INSTANCE.init', this.id);
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
         this.instanceData = instanceData;
-        console.log('xf-instance data ', this.instanceData);
+        // console.log('xf-instance data ', this.instanceData);
         // console.log('has greeting ', fx.evaluateXPathToBoolean('exists(//greeting)', this.defaultinstance));
         // this.dispatchEvent(new CustomEvent('instance-ready', {composed: true, bubbles: true, detail: {id:this.id}}));
     }
