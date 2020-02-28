@@ -96,6 +96,47 @@ describe('initialize form', () => {
         expect(model.instances.length).to.equal(2);
     });
 
+    it('created modelItem', async () => {
+        const el = (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                        <xf-instance id="second">
+                            <data>
+                                <outro>GoodBye</outro>
+                            </data>
+                        </xf-instance>
+                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
+                    </xf-model>
+                </xf-form>
+            `)
+        );
+        const model = el.querySelector('xf-model');
+        // await model.updated();
+        await elementUpdated(model);
+
+        // there is one binding
+        expect(el.models[0].bindingMap.length).to.equal(1);
+
+        const greetingMap = el.models[0].bindingMap[0];
+
+        //binding refers to <greeting> node
+        expect(greetingMap.refnode.nodeName).to.equal('greeting');
+
+        // modelitem is initialized to correct values
+        const mi = greetingMap.modelItem;
+        expect(mi.readonly).to.equal(false);
+        expect(mi.required).to.equal(true);
+        expect(mi.relevant).to.equal(true);
+        expect(mi.valid).to.equal(true);
+        expect(mi.type).to.equal('xs:string');
+    });
+
     it('has paper-dialog', async () => {
         const el = (
             await fixtureSync(html`

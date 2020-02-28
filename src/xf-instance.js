@@ -11,16 +11,7 @@ export class XfInstance extends LitElement {
     static get styles() {
         return css`
             :host {
-                display: block;
-                height:auto;
-                background:var(--paper-blue-500);
-                padding:var(--model-element-padding);
-                margin-top:var(--model-element-margin);
-                margin-bottom:var(--model-element-margin);
-
-            }
-            :host:before{
-                content:'xf-instance';
+                display: none;
             }
         `;
     }
@@ -45,7 +36,7 @@ export class XfInstance extends LitElement {
         return html`
             <span>${this.id}</span>
             <pre contenteditable="true">
-                 <slot></slot></code>
+                 <slot></slot>
             </pre>
         `;
     }
@@ -68,7 +59,7 @@ export class XfInstance extends LitElement {
     }
 
     init(){
-        console.log('INSTANCE.init', this.id);
+        console.log('INSTANCE::id ', this.id);
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
         this.instanceData = instanceData;
         // console.log('xf-instance data ', this.instanceData);

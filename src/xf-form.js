@@ -22,9 +22,7 @@ export class XfForm extends LitElement {
                 padding:var(--model-element-padding);
                 font-family:Roboto, sans-serif;
                 color:var(--paper-grey-900);
-            }
-            :host:before{
-                content:'xf-form';
+                background:var(--paper-blue-50);
             }
         `;
     }
@@ -45,15 +43,6 @@ export class XfForm extends LitElement {
         this.models = [];
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
-
-        this.addEventListener('WebComponentsReady', () => {
-            console.log('### ----------- WebComponentsReady ----------- ###');
-
-            // this.componentsReady = true;
-            // this._init();
-        });
-
-
     }
 
     render() {
@@ -70,18 +59,20 @@ export class XfForm extends LitElement {
         `;
     }
 
+    /**
+     * kick off from processing...
+     *
+     * @param _changedProperties
+     */
     firstUpdated(_changedProperties) {
         console.log('xf-form: kick off processing...');
-
         this._init();
     }
 
-    async _init(){
-        this.updateComplete.then(() => {
-            const models = this.querySelectorAll('xf-model');
-            this.models = models;
-            this._dispatchModelConstruct();
-        });
+    _init(){
+        const models = this.querySelectorAll('xf-model');
+        this.models = models;
+        this._dispatchModelConstruct();
     }
 
     _dispatchModelConstruct(){
@@ -91,17 +82,22 @@ export class XfForm extends LitElement {
         });
     }
 
+    /**
+     * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
+     * the bound modelItem to the bound element.
+     */
     refresh () {
 
         console.group('refresh');
         const boundElements = document.querySelectorAll('[ref]');
         boundElements.forEach(bound => {
 
-
             // console.log('refresh bound element ', bound);
             // console.log('refresh bound element ', bound.tagName);
             // console.log('refresh bound element ', bound.closest('xf-model'));
 
+
+            // ### do NOT process bindings that are part of the model
             const isModel = /** @type (XfModel) */ (bound.closest('xf-model'));
             if(!isModel){
                 console.log('refresh bound element ', bound.tagName);

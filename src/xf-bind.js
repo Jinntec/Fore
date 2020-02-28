@@ -1,7 +1,5 @@
 import {LitElement, html, css} from 'lit-element';
 
-
-
 import fx from '../output/fontoxpath.js';
 import evaluateXPathToBoolean from '../output/fontoxpath.js';
 import evaluateXPathToString from '../output/fontoxpath.js';
@@ -13,23 +11,7 @@ export class XfBind extends LitElement {
     static get styles() {
         return css`
             :host {
-                display: block;
-                height:auto;
-                background:var(--paper-blue-500);
-                padding:var(--model-element-padding);
-                margin-top:var(--model-element-margin);
-                margin-bottom:var(--model-element-margin);
-            }
-            
-            :host:before {
-                content:'xf-bind';
-            }
-            
-            .info span{
-                background: orange;
-                border-radius:10px;
-                margin-right:10px;
-                padding:var(--model-element-padding);
+                display: none;
             }
         `;
     }
@@ -63,8 +45,8 @@ export class XfBind extends LitElement {
             nodeset: {
                 type: Array
             },
-            modelItems:{
-                type: Array
+            model:{
+                type:Object
             }
         };
     }
@@ -80,20 +62,11 @@ export class XfBind extends LitElement {
         this.type = 'xs:string';
         this.calculate = '';
         this.nodeset = [];
-        this.modelItems = [];
+        this.model = {};
     }
 
     render() {
         return html`
-             <span class="info">
-                 <span>id: ${this.id}</span>
-                 <span>ref: ${this.ref}</span>
-                 <span>readonly: ${this.readonly}</span>
-                 <span>required: ${this.required}</span>
-                 <span>relevant: ${this.relevant}</span>
-                 <span>type: ${this.type}</span>
-                 <span>calculate: ${this.calculate}</span>
-             </span>
              <slot></slot>
         `;
     }
@@ -102,25 +75,73 @@ export class XfBind extends LitElement {
         super.firstUpdated(_changedProperties);
     }
 
-/*
-    initialize() {
+    init(model,refNodes) {
+        console.log('BIND::init ', this);
+        // console.log('BIND::initialize nodes ', refNodes);
 
+        this.model = model;
+        this.nodeset = refNodes;
+
+        this._createModelItems();
     }
-*/
+
 
     evalXPath(xpath) {
 
         console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        return fx.evaluateXPathToString(xpath, this.defaultinstance, null, {});
+        return fx.evaluateXPathToString(xpath, this.nodeset, null, {});
     }
 
-/*
-    getInstanceData(){
-        return this.closest('xf-model').getDefaultInstanceData();
-    }
-*/
+    _createModelItems(){
 
+        //single node or array?
+        if(Array.isArray(this.nodeset)){
+            // todo - iterate and create
+        }else{
+            this._createModelItem(this.nodeset);
+        }
+
+    }
+
+    _createModelItem(node){
+        // console.log('_createModelItem ', this.nodeset);
+        // console.log('_createModelItem ', this.nodeset.nodeType);
+        // console.log('_createModelItem model', this.model);
+
+
+        let value = null;
+        switch (this.nodeset.nodeType) {
+            case Node.ELEMENT_NODE:
+                value = this.nodeset.textContent;
+                 break;
+            case Node.TEXT_NODE:
+                value = this.nodeset.nodeValue;
+                break;
+            case Node.ATTRIBUTE_NODE:
+                value = this.nodeset.nodeValue;
+                break;
+            default:
+                value = ''
+        }
+
+        const ro = fx.evaluateXPath(this.readonly, this.nodeset, null, {});
+        const req = fx.evaluateXPath(this.required, this.nodeset, null, {});
+        const relevant = fx.evaluateXPath(this.relevant, this.nodeset, null, {});
+        const valid = fx.evaluateXPath(this.constraint, this.nodeset, null, {});
+
+
+        const modelItem = {
+            value: value,
+            readonly:ro,
+            required:req,
+            relevant: relevant,
+            valid:valid,
+            type: this.type
+        };
+
+        this.model.registerBinding(this.nodeset, modelItem);
+    }
 
 }
 

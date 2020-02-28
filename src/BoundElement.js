@@ -14,11 +14,11 @@ export class BoundElement extends LitElement {
             ref:{
                 type: String
             },
-            model:{
+            modelId:{
                 type: String
             },
-            modelObj:{
-                type: Object
+            model:{
+                type:Object
             }
         };
     }
@@ -26,21 +26,28 @@ export class BoundElement extends LitElement {
     constructor() {
         super();
         this.ref = '';
-        this.model='';
-        this.modelObj = {};
+        this.modelId='';
+        this.model = {};
     }
 
     evalBinding(){
         let contextModel;
-        if(this.model === ''){
+        if(this.modelId === ''){
             //default model - first in document order
             contextModel = document.querySelector('xf-model');
         }else {
-            contextModel = document.querySelector('#'+ this.model);
+            contextModel = document.querySelector('#'+ this.modelId);
         }
-        this.modelObj = contextModel;
+        this.model = contextModel;
         // update value
         return  contextModel.evalBinding(this.ref);
+    }
+
+    refresh(){
+        console.log('refreshing xf-output');
+
+        this.value = this.evalBinding();
+        this.requestUpdate();
     }
 
 

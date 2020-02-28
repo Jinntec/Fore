@@ -1,21 +1,16 @@
-import {LitElement, html, css} from 'lit-element';
+import {LitElement, css} from 'lit-element';
 
 import * as fontoxpath from '../output/fontoxpath.js';
 import fx from "../output/fontoxpath";
-
+import './xf-instance.js';
+import './xf-bind.js';
 
 export class XfModel extends LitElement {
 
     static get styles() {
         return css`
             :host {
-                display: block;
-                height:auto;
-                background:var(--paper-blue-700);
-                padding:var(--model-element-padding);
-            }
-            :host:before{
-                content:'xf-model';
+                display: none;
             }
         `;
     }
@@ -28,8 +23,23 @@ export class XfModel extends LitElement {
             instances: {
                 type: Array
             },
+/*
             defaultInstance: {
                 type: Object
+            },
+*/
+            /**
+             * array of objects of the structure:
+             * {
+             *     refnode: [referred node],
+             *     modelItem:[modelItem object]
+             * }
+             *
+             * Each array entry represents one node <-> modelItem mapping.
+             *
+             */
+            bindingMap:{
+                type: Array
             }
         };
     }
@@ -38,7 +48,9 @@ export class XfModel extends LitElement {
         super();
         this.id = '';
         this.instances = [];
+        this.bindingMap = [];
         this.addEventListener('model-construct', this._modelConstruct);
+        this.addEventListener('ready', this._ready);
 
     }
 
@@ -50,32 +62,20 @@ export class XfModel extends LitElement {
     }
 */
 
-    firstUpdated(_changedProperties) {
-        // console.log('MODEL.firstUpdated');
-        // this.addEventListener('instance-ready', this._callUpdate);
-
-        // this.addEventListener('model-construct-done', this._handleModelConstructDone);
-
-        this.addEventListener('ready', this._ready);
-
-    }
-
-    // async _getUpdateComplete() {
-    //     await super._getUpdateComplete();
-    //     await this._myChild.updateComplete;
-    // }
-
     _modelConstruct() {
-        console.log('model-construct received ', this.id);
+        console.log('MODEL::model-construct received ', this.id);
 
 
             const instances = this.querySelectorAll('xf-instance');
 
             if (instances.length > 0) {
+                console.group('init instances');
                 instances.forEach(instance => {
                     instance.init();
                 });
                 this.instances = instances;
+                console.groupEnd();
+
                 // console.log('model instances ', this.instances);
 
                 this.updateModel();
@@ -96,6 +96,17 @@ export class XfModel extends LitElement {
     }
 
     /**
+     * registers a binding mapping - called by xf-bind when initializing.
+     *
+     * @param refnode - the node referred to by binding
+     * @param modelItem - the associated modelItem for given node
+     */
+    registerBinding(refnode, modelItem){
+        this.bindingMap.push({refnode: refnode, modelItem: modelItem});
+        console.log('MODEL regsitered bindings ', this.bindingMap);
+    }
+
+    /**
      * update action triggering the update cycle
      */
     updateModel() {
@@ -105,20 +116,16 @@ export class XfModel extends LitElement {
     }
 
     rebuild() {
-        // tbd
-        console.log('rebuild');
 
-
+        //reset
+        this.bindingMap = [];
 
         console.group('rebuild');
         const binds = this.querySelectorAll('xf-bind');
         binds.forEach(bind => {
-            console.log('bind ', bind);
-            // console.log('bind ', bind.ref);
-            // console.log('instanceData ', this.getDefaultInstanceData());
-
-            let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
-            console.log('evaluated context node ', contextNode);
+            let refNodes =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
+            // console.log('evaluated context node ', refNodes);
+            bind.init(this, refNodes);
 
         });
         console.groupEnd();
@@ -184,7 +191,18 @@ export class XfModel extends LitElement {
     evalBinding(bindingExpr){
         console.log('MODEL.evalBinding ', bindingExpr);
         //default context of evaluation is always the default instance
-        return this.instances[0].evalXPath(bindingExpr);
+
+        const result = this.instances[0].evalXPath(bindingExpr);
+
+        console.log('modelitem for bindingeExpr ', this.bindingMap);
+        const out = this.bindingMap.find(node => node.refnode === result);
+
+        console.log('modelitem for bindingeExpr ', out);
+        console.log('modelitem for bindingeExpr ', out.modelItem);
+        // console.log('modelitem for bindingeExpr ', out.modelItem);
+
+        return result;
+
     }
 
     _ready(e) {

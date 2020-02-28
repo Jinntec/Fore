@@ -41,12 +41,6 @@ export class XfOutput extends BoundElement {
         `;
     }
 
-    refresh(){
-        console.log('refreshing xf-output');
-
-        this.value = this.evalBinding();
-        this.requestUpdate();
-    }
 
 
 }
