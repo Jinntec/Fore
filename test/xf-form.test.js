@@ -108,7 +108,7 @@ describe('initialize form', () => {
                         </xf-instance>
                         <xf-instance id="second">
                             <data>
-                                <outro>GoodBye</outro>
+                                <greeting>GoodBye</greeting>
                             </data>
                         </xf-instance>
                         <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>

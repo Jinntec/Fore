@@ -5,6 +5,7 @@ import '../assets/@polymer/paper-button/paper-button.js';
 import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
+import './xf-model.js';
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 
@@ -58,6 +59,15 @@ export class XfForm extends LitElement {
 
         `;
     }
+
+/*
+    getDefaultModel(){
+        if (this.models){
+            return this.models[0];
+        }
+        return null;
+    }
+*/
 
     /**
      * kick off from processing...

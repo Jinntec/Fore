@@ -47,6 +47,9 @@ export class XfBind extends LitElement {
             },
             model:{
                 type:Object
+            },
+            contextNode:{
+                type:Object
             }
         };
     }
@@ -63,6 +66,7 @@ export class XfBind extends LitElement {
         this.calculate = '';
         this.nodeset = [];
         this.model = {};
+        this.contextNode = {};
     }
 
     render() {
@@ -94,10 +98,12 @@ export class XfBind extends LitElement {
     }
 
     _createModelItems(){
+        // console.log('#### ', this.nodeset);
 
         //single node or array?
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
+            console.log('#### ', this.nodeset);
         }else{
             this._createModelItem(this.nodeset);
         }

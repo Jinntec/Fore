@@ -41,30 +41,11 @@ export class XfInstance extends LitElement {
         `;
     }
 
-    firstUpdated(_changedProperties) {
-        // console.log('INSTANCE.firstUpdated ', this.id);
-        // super.firstUpdated(_changedProperties);
-
-
-
-/*
-        const documentNode = new DOMParser().parseFromString('<xml/>', 'text/xml');
-
-        console.log(fx.evaluateXPathToString('$foo', null, null, {'foo': 'bar'}));
-        // Outputs: "bar"
-
-        // We pass the documentNode so the default INodesFactory can be used.
-        console.log(fx.evaluateXPathToFirstNode('<foo>bar</foo>', documentNode, null, null, {language: fx.evaluateXPath.XQUERY_3_1_LANGUAGE}).outerHTML);
-*/
-    }
-
     init(){
         console.log('INSTANCE::id ', this.id);
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
         this.instanceData = instanceData;
         // console.log('xf-instance data ', this.instanceData);
-        // console.log('has greeting ', fx.evaluateXPathToBoolean('exists(//greeting)', this.defaultinstance));
-        // this.dispatchEvent(new CustomEvent('instance-ready', {composed: true, bubbles: true, detail: {id:this.id}}));
     }
 
     evalXPath(xpath){

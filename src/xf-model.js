@@ -41,6 +41,7 @@ export class XfModel extends LitElement {
             bindingMap:{
                 type: Array
             }
+
         };
     }
 
@@ -62,7 +63,7 @@ export class XfModel extends LitElement {
     }
 */
 
-    _modelConstruct() {
+    _modelConstruct(e) {
         console.log('MODEL::model-construct received ', this.id);
 
 
@@ -75,7 +76,6 @@ export class XfModel extends LitElement {
                 });
                 this.instances = instances;
                 console.groupEnd();
-
                 // console.log('model instances ', this.instances);
 
                 this.updateModel();
@@ -121,8 +121,12 @@ export class XfModel extends LitElement {
         this.bindingMap = [];
 
         console.group('rebuild');
-        const binds = this.querySelectorAll('xf-bind');
+
+        //todo: recursive or flat processing of xf-bind elements?
+
+        const binds = this.querySelectorAll('xf-model > xf-bind');
         binds.forEach(bind => {
+            bind.contextNode = this.getDefaultInstanceData();
             let refNodes =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
             // console.log('evaluated context node ', refNodes);
             bind.init(this, refNodes);
@@ -186,6 +190,10 @@ export class XfModel extends LitElement {
         // console.log('default instance data ',this.instances[0].instanceData);
         // console.log('default instance data ',this.instances[0].instanceData.firstElementChild);
         return this.instances[0].instanceData.firstElementChild;
+    }
+
+    getContextItem(){
+        return this.instances[0].instanceData;
     }
 
     evalBinding(bindingExpr){

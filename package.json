@@ -8,7 +8,7 @@
     "test": "test"
   },
   "dependencies": {
-    "fontoxpath": "^3.9.2",
+    "fontoxpath": "^3.11.0",
     "gulp-exist": "^3.0.0",
     "lit-element": "^2.2.1"
   },
