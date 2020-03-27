@@ -64,6 +64,8 @@ export class XfRepeated extends BoundElement {
         this.repeatIndex = 1;
         this.nodeset = [];
         this.inited = false;
+        this.addEventListener('repeatitem-created', this._refreshItem)
+
     }
 
 
@@ -74,14 +76,16 @@ export class XfRepeated extends BoundElement {
         this._initTemplate();
         this.inited = true;
 
-        this.addEventListener('repeatitem-created', this._refreshItem)
     }
 
     refresh() {
+        console.log('REPEAT.refresh');
         if(!this.inited) return;
 
-        console.log('REPEAT.refresh');
         this.nodeset = this.evalBinding();
+        // super.refresh();
+
+
         console.log('REPEAT.refresh ', this.nodeset);
         this.requestUpdate();
         //create n repeat-items for nodeset

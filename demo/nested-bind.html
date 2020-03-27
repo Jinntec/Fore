@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello World</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../src/xf-form.js';
+        import '../src/xf-model.js';
+        import '../src/xf-instance.js';
+        import '../src/xf-bind.js';
+        import '../src/xf-output.js';
+        import '../src/xf-message.js';
+    </script>
+
+    <link rel="stylesheet" href="../resources/vars.css">
+</head>
+<body unresolved="unresolved">
+
+    <xf-form>
+        <xf-model id="model1">
+            <xf-instance>
+                <data>
+                    <greeting type="message">Hello World!</greeting>
+                </data>
+            </xf-instance>
+            <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
+                <xf-bind id="b-type" ref="@type"></xf-bind>
+            </xf-bind>
+        </xf-model>
+
+        <xf-output ref="greeting"> </xf-output> : <xf-output ref="greeting"></xf-output>
+    </xf-form>
+
+</body>
+</html>

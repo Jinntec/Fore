@@ -32,7 +32,9 @@ export class XfOutput extends BoundElement {
     constructor() {
         super();
         this.ref='';
+        this.value='';
         this.model='';
+
     }
 
     render() {
@@ -41,6 +43,14 @@ export class XfOutput extends BoundElement {
         `;
     }
 
+    firstUpdated(_changedProperties) {
+        console.log('firstUpdated')
+    }
+
+    refresh() {
+        super.refresh();
+        this.value = this.getValue();
+    }
 
 
 }

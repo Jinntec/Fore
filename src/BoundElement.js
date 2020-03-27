@@ -19,6 +19,9 @@ export class BoundElement extends LitElement {
             },
             model:{
                 type:Object
+            },
+            nodeset:{
+                type:Object
             }
         };
     }
@@ -28,9 +31,12 @@ export class BoundElement extends LitElement {
         this.ref = '';
         this.modelId='';
         this.model = {};
+        this.nodeset = {};
     }
 
     evalBinding(){
+        console.log('BoundElement.evalBinding ref', this);
+        console.log('BoundElement.evalBinding ref', this.ref);
         let contextModel;
         if(this.modelId === ''){
             //default model - first in document order
@@ -44,13 +50,19 @@ export class BoundElement extends LitElement {
     }
 
     refresh(){
-        console.log('refreshing xf-output');
+        console.log('refreshing ', this);
 
-        this.value = this.evalBinding();
+        this.nodeset = this.evalBinding();
         this.requestUpdate();
     }
 
+    getValue (){
 
+        if(this.nodeset.nodeType === Node.ELEMENT_NODE){
+            return this.nodeset.childNodes[0].nodeValue;
+        }
+        return this.nodeset.nodeValue;
+    }
 
 }
 

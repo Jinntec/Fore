@@ -79,20 +79,41 @@ export class XfBind extends LitElement {
         super.firstUpdated(_changedProperties);
     }
 
-    init(model,refNodes) {
-        console.log('BIND::init ', this);
-        // console.log('BIND::initialize nodes ', refNodes);
-
+    init(model){
         this.model = model;
-        this.nodeset = refNodes;
 
+        console.log('init binding ', this);
+        if(this.parentNode.nodeName === 'XF-MODEL'){
+            this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultInstanceData(), null, {});
+        }else{
+            console.log('parent nodeset ', this.parentNode.nodeset);
+
+            const parentContext = this.parentNode.nodeset;
+            if(Array.isArray(parentContext)){
+                parentContext.forEach((n,index) => {
+                    console.log('parent item ', n, index);
+                    const local = fx.evaluateXPath(this.ref, n, null, {});
+                    this.nodeset.push(local);
+                });
+            }else{
+                this.nodeset = fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
+            }
+
+        }
         this._createModelItems();
+
+        // ### process child bindings
+        const childbinds = this.querySelectorAll('xf-bind');
+        Array.from(childbinds).forEach(bind =>{
+            console.log('init child bind ', bind);
+            bind.init(model);
+        });
+
     }
 
 
     evalXPath(xpath) {
-
-        console.log('eval: ', xpath);
+        // console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
         return fx.evaluateXPathToString(xpath, this.nodeset, null, {});
     }
@@ -103,7 +124,12 @@ export class XfBind extends LitElement {
         //single node or array?
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
-            console.log('#### ', this.nodeset);
+            console.log('################################################ ', this.nodeset);
+            Array.from(this.nodeset).forEach((n, index) => {
+                console.log('>>>> a node ', n, index);
+                this._createModelItem(n);
+
+            });
         }else{
             this._createModelItem(this.nodeset);
         }
@@ -117,24 +143,31 @@ export class XfBind extends LitElement {
 
 
         let value = null;
-        switch (this.nodeset.nodeType) {
+        switch (node.nodeType) {
             case Node.ELEMENT_NODE:
-                value = this.nodeset.textContent;
+                value = node.textContent;
                  break;
             case Node.TEXT_NODE:
-                value = this.nodeset.nodeValue;
+                // value = this.nodeset.nodeValue;
                 break;
             case Node.ATTRIBUTE_NODE:
-                value = this.nodeset.nodeValue;
+                value = node.nodeValue;
                 break;
             default:
-                value = ''
+                value = node;
         }
+/*
+        if(this.nodeset.nodeType === Node.ELEMENT_NODE){
+            value = this.nodeset.textContent;
+        }else{
+            value = this.nodeset;
+        }
+*/
 
-        const ro = fx.evaluateXPath(this.readonly, this.nodeset, null, {});
-        const req = fx.evaluateXPath(this.required, this.nodeset, null, {});
-        const relevant = fx.evaluateXPath(this.relevant, this.nodeset, null, {});
-        const valid = fx.evaluateXPath(this.constraint, this.nodeset, null, {});
+        const ro = fx.evaluateXPath(this.readonly, node, null, {});
+        const req = fx.evaluateXPath(this.required, node, null, {});
+        const relevant = fx.evaluateXPath(this.relevant, node, null, {});
+        const valid = fx.evaluateXPath(this.constraint, node, null, {});
 
 
         const modelItem = {
@@ -146,7 +179,7 @@ export class XfBind extends LitElement {
             type: this.type
         };
 
-        this.model.registerBinding(this.nodeset, modelItem);
+        this.model.registerBinding(node, modelItem);
     }
 
 }

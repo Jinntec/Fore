@@ -102,19 +102,22 @@ export class XfForm extends LitElement {
         const boundElements = document.querySelectorAll('[ref]');
         boundElements.forEach(bound => {
 
-            // console.log('refresh bound element ', bound);
-            // console.log('refresh bound element ', bound.tagName);
             // console.log('refresh bound element ', bound.closest('xf-model'));
 
 
             // ### do NOT process bindings that are part of the model
             const isModel = /** @type (XfModel) */ (bound.closest('xf-model'));
             if(!isModel){
+                // console.log('refresh bound element ', bound);
                 console.log('refresh bound element ', bound.tagName);
                 /** @type (BoundElement) */ (bound).refresh();
             }
 
         });
+
+        console.log('dispatch refresh-done');
+        this.dispatchEvent(new CustomEvent('refresh-done', {}));
+
         console.groupEnd();
 
     }
@@ -146,12 +149,21 @@ export class XfForm extends LitElement {
 
     }
 
-    initUI(){
+    async _getUpdateComplete() {
+        // await super._getUpdateComplete();
+        const op = this.querySelector('xf-output');
+        if(op) {
+            await op.updateComplete;
+        }
+    }
+
+    async initUI(){
         this.models.forEach(model => {
             //notification event only - not used internally
             model.dispatchEvent(new CustomEvent('ready', { detail: {model:model}}));
         });
 
+        await this.updateComplete;
         console.log('initUI', this);
         this.refresh();
     }
@@ -176,14 +188,14 @@ export class XfForm extends LitElement {
             notification.duration = 0;
             notification.setAttribute('theme', 'error');
             notification.renderer = function (root) {
-                console.log('root ', root);
+                // console.log('root ', root);
 
                 root.textContent = msg;
 
                 const closeIcon = window.document.createElement('paper-icon-button');
                 closeIcon.setAttribute('icon', 'close');
                 closeIcon.addEventListener('click', function (e) {
-                    console.log(e);
+                    // console.log(e);
                     notification.close();
                 });
                 root.appendChild(closeIcon);

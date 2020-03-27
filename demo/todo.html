@@ -73,6 +73,7 @@
                 </data>
             </xf-instance>
 
+
             <xf-bind ref="task">
                 <xf-bind ref="./text()" required="true()"></xf-bind>
                 <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
@@ -93,7 +94,7 @@
 
         <xf-repeat ref="task" focus-on-create="task" id="r-todos">
             <template>
-                <xf-input label="Task" ref="text()" id="task" type="text"></xf-input>
+                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
                 <xf-input label="Due" ref="@due" type="date"></xf-input>
                 <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>
             </template>

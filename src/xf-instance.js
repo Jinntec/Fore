@@ -42,7 +42,7 @@ export class XfInstance extends LitElement {
     }
 
     init(){
-        console.log('INSTANCE::id ', this.id);
+        // console.log('INSTANCE::id ', this.id);
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
         this.instanceData = instanceData;
         // console.log('xf-instance data ', this.instanceData);
