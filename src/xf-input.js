@@ -65,7 +65,6 @@ class XfInput extends BoundElement {
         `;
     }
 
-
     refresh() {
         super.refresh();
         this.value = this.getValue();

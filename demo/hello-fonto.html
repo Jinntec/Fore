@@ -27,6 +27,7 @@
             <xf-instance>
                 <data>
                     <greeting>Hello World!</greeting>
+                    <prop></prop>
                 </data>
             </xf-instance>
             <xf-instance id="second">
@@ -35,6 +36,7 @@
                 </data>
             </xf-instance>
             <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
+            <xf-bind ref="prop"></xf-bind>
 
             <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
             <xf-message event="ready">Hey it's ready</xf-message>

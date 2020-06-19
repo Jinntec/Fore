@@ -76,23 +76,27 @@ export class BoundElement extends LitElement {
         this.requestUpdate();
     }
 
-    getValue (){
-
-        if(this.nodeset.nodeType === Node.ELEMENT_NODE){
-            return this.nodeset.childNodes[0].nodeValue;
-        }
-        // return this.nodeset.nodeValue;
-        return this.nodeset;
-    }
-
     setValue(node, newVal){
-        if(node.nodeType === node.ATTRIBUTE_NODE){
+
+        const m = this.getModelItem();
+        // m.setNodeValue(newVal);
+
+        if (node.nodeType === node.ATTRIBUTE_NODE) {
             node.nodeValue = newVal;
-        }else{
+        } else {
             node.textContent = newVal;
         }
 
     }
+
+
+    getValue (){
+        if(this.nodeset.nodeType === Node.ELEMENT_NODE){
+            return this.nodeset.textContent;
+        }
+        return this.nodeset;
+    }
+
 
     getModelItem(){
         return  this.model.bindingMap.find(m => m.refnode === this.nodeset);

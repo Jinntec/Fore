@@ -1,5 +1,3 @@
-import {LitElement, html} from 'lit-element';
-
 
 import fx from '../output/fontoxpath.js';
 import evaluateXPathToBoolean from '../output/fontoxpath.js';
@@ -16,7 +14,7 @@ import evaluateXPath from '../output/fontoxpath.js';
  *
  * Each bound node in an instance has exactly one ModelItem associated with it.
  */
-export class ModelItem extends LitElement {
+export class ModelItem {
 
 
     static get properties() {
@@ -35,26 +33,33 @@ export class ModelItem extends LitElement {
             },
             value: {
                 type: String
+            },
+            node:{
+                type:Object
             }
+
         };
     }
 
     constructor() {
-        super();
         this.readonly = false;
         this.relevant = true;
         this.required = false;
         this.valid = true;
         this.value = '';
+        this.node = {};
     }
 
 
-    getValue() {
-    }
+    setNodeValue (newVal) {
 
-    setValue(node, newVal) {
+        if(this.node.nodeType === Node.ATTRIBUTE_NODE){
+            this.node.nodeValue = newVal;
+        }else{
+            this.node.textContent = newVal;
+        }
+
     }
 
 }
 
-customElements.define('model-item', ModelItem);

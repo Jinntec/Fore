@@ -174,7 +174,7 @@ export class XfModel extends LitElement {
             }
             if(bind.required !== 'false()'){
                 // console.log('evaluating required expression', bind.required);
-                result =  fx.evaluateXPath(bind.required, result, null, {});
+                result =  fx.evaluateXPathToBoolean(bind.required, result, null, {});
                 console.log('required evaluated to', result);
             }
             if(bind.relevant !== 'true()'){
@@ -218,6 +218,7 @@ export class XfModel extends LitElement {
 
 
         const result = this.instances[0].evalXPath(bindingExpr);
+
 
         const out = this.bindingMap.find(node => node.refnode === result);
         console.log('modelitem for bindingeExpr ', out);

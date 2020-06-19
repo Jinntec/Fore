@@ -1,12 +1,10 @@
 import {LitElement, html, css} from 'lit-element';
 
 import fx from '../output/fontoxpath.js';
-import './ModelItem.js';
 import evaluateXPathToBoolean from '../output/fontoxpath.js';
 import evaluateXPathToString from '../output/fontoxpath.js';
 import evaluateXPathToFirstNode from '../output/fontoxpath.js';
 import evaluateXPath from '../output/fontoxpath.js';
-import {ModelItem} from "./ModelItem";
 
 export class XfBind extends LitElement {
 
@@ -185,22 +183,24 @@ export class XfBind extends LitElement {
         const valid = fx.evaluateXPath(this.constraint, node, null, {});
 
 
+/*
         const modelItem = new ModelItem();
         modelItem.readonly = ro;
         modelItem.relevant = relevant;
         modelItem.required = req;
         modelItem.valid = valid;
         modelItem.value = value;
-/*
+        modelItem.node = node;
+*/
         const modelItem = {
             value: value,
             readonly:ro,
             required:req,
             relevant: relevant,
             valid:valid,
-            type: this.type
+            type: this.type,
+            node: node
         };
-*/
 
         // console.log('xf-bind created modelItem: ', modelItem);
 
