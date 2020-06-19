@@ -89,6 +89,13 @@ export class XfRepeated extends BoundElement {
         console.log('REPEAT.refresh ', this.nodeset);
         this.requestUpdate();
         //create n repeat-items for nodeset
+
+        //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
+
+
+        const repeatItemCount = this.querySelectorAll('xf-repeatitem').length;
+        console.log('repeatitems ', repeatItemCount);
+
         this.nodeset.forEach( (item,index) => {
             // const repeatItem = new XfRepeatitem(); //no idea why this is not working
             const repeatItem = document.createElement('xf-repeatitem');

@@ -82,10 +82,10 @@ export class XfForm extends LitElement {
     _init(){
         const models = this.querySelectorAll('xf-model');
         this.models = models;
-        this._dispatchModelConstruct();
+        this._triggerModelConstruct();
     }
 
-    _dispatchModelConstruct(){
+    _triggerModelConstruct(){
         console.log('dispatching model-construct');
         this.models.forEach(model =>  {
             model.dispatchEvent(new CustomEvent('model-construct', { detail: {model:model}}));
@@ -149,6 +149,7 @@ export class XfForm extends LitElement {
 
     }
 
+/*
     async _getUpdateComplete() {
         // await super._getUpdateComplete();
         const op = this.querySelector('xf-output');
@@ -156,6 +157,7 @@ export class XfForm extends LitElement {
             await op.updateComplete;
         }
     }
+*/
 
     async initUI(){
         this.models.forEach(model => {

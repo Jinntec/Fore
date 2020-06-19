@@ -1,0 +1,64 @@
+@startuml
+
+== Initialization ==
+
+actor user
+user -> xform
+activate xform
+note right: _init()
+xform -> xmodels: _triggerModelConstruct
+
+activate xmodels
+note right: _modelConstruct()
+
+xmodels -> xinstances
+activate xinstances
+xinstances -> xinstances: init
+note right: creates standalone DOM document for each instance
+
+
+deactivate xinstances
+
+xmodels -> xmodels: updateModel
+activate xmodels
+xmodels -> xmodels:rebuild
+
+xmodels -> xbinds: init
+activate xbinds
+note right of xbinds
+evaluate bind expression
+and set 'nodeset' property
+end note
+xbinds -> xbinds: _createModelItem*
+note right of xbinds
+evaluate all modelItem properties:
+calculate,
+readonly,
+required,
+relevant,
+valid,
+type,
+value
+for each node in the nodeset
+end note
+
+xbinds -> xmodels: registerBinding
+deactivate xbinds
+
+xmodels -> xmodels:recalculate
+xmodels -> xmodels:revalidate
+deactivate xmodels
+
+xmodels -> xform: dispatch model-construct-done
+xform -> xform: initUI
+activate xform
+xform -> xform: dispatch ready
+xform -> xform: refresh
+activate xform
+
+xform -> boundElements: refresh
+deactivate xform
+boundElements -> boundElements: evalBinding
+note right: sets 'nodeset' property
+
+@enduml

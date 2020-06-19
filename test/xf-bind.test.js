@@ -2,6 +2,7 @@
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
 import '../src/xf-instance.js';
+import '../src/ModelItem.js';
 
 describe('initialize bind', () => {
 
@@ -40,7 +41,7 @@ describe('initialize bind', () => {
 
         expect(mi.modelItem.relevant).to.exist;
         expect(mi.modelItem.valid).to.exist;
-        expect(mi.modelItem.type).to.exist;
+        // expect(mi.modelItem.type).to.exist;
 
 
     });
@@ -110,6 +111,64 @@ describe('initialize bind', () => {
         expect(mi.modelItem.value).to.exist;
         expect(mi.modelItem.value).to.equal('Hello World!');
     });
+
+    it('works for repeated element', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="record">
+            
+                        <xf-instance>
+                            <data>
+                                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            </data>
+                        </xf-instance>
+            
+            
+                        <xf-bind id="task" ref="task">
+                            <xf-bind ref="./text()" required="true()"></xf-bind>
+                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
+                            <xf-bind ref="@due" type="xs:date"></xf-bind>
+                        </xf-bind>
+            
+                    </xf-model>
+            
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const bind1 = document.getElementById('task');
+        expect(bind1).to.exist;
+        expect(bind1.nodeset.length).to.equal(2);
+        expect(bind1.nodeset[0].nodeName).to.equal('task');
+        expect(bind1.nodeset[0].nodeType).to.equal(1);
+        expect(bind1.nodeset[0].textContent).to.equal('Pick up Milk');
+        expect(bind1.nodeset[1].nodeName).to.equal('task');
+        expect(bind1.nodeset[1].nodeType).to.equal(1);
+        expect(bind1.nodeset[1].textContent).to.equal('Make tutorial part 1');
+
+
+        const model = document.getElementById('record');
+        expect(model.bindingMap.length).to.equal(8);
+
+        console.log('model', model.bindingMap);
+        expect(model.bindingMap[0].refnode.nodeType).to.equal(1);
+        expect(model.bindingMap[0].modelItem.value).to.equal('Pick up Milk');
+
+        expect(model.bindingMap[2].refnode.nodeType).to.equal(3);
+        expect(model.bindingMap[2].modelItem.value).to.equal('Pick up Milk');
+
+        expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
+        expect(model.bindingMap[4].modelItem.value).to.equal('false');
+
+        expect(model.bindingMap[6].refnode.nodeType).to.equal(2);
+        expect(model.bindingMap[6].modelItem.value).to.equal('2019-02-04');
+
+    });
+
+
 
 
 

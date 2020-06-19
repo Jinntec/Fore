@@ -13,6 +13,7 @@
         import '../src/xf-instance.js';
         import '../src/xf-bind.js';
         import '../src/xf-output.js';
+        import '../src/xf-input.js';
         import '../src/xf-message.js';
     </script>
 
@@ -48,8 +49,10 @@
         -->
 
         <h1>
-            Greeting: <xf-output ref="greeting" id="output"></xf-output>
+            Greeting: <xf-output ref="./greeting" id="output"></xf-output>
         </h1>
+
+        <xf-input ref="greeting" label="Greeting"></xf-input>
 
 <!--
         <h1>

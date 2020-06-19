@@ -20,9 +20,11 @@ export class XfOutput extends BoundElement {
 
     static get properties() {
         return {
+/*
             ref:{
                 type: String
             },
+*/
             value:{
                 type: String
             }

@@ -1,12 +1,13 @@
 import {html,css} from "lit-element";
-import {BoundElement} from "./BoundElement";
 import '../assets/@polymer/paper-input/paper-input.js';
 import '../assets/@polymer/paper-checkbox/paper-checkbox.js';
-import fx from "../output/fontoxpath";
-
-
-import evaluateUpdatingExpression from '../output/fontoxpath.js';
-import executePendingUpdateList from '../output/fontoxpath.js';
+import fx from '../output/fontoxpath.js';
+import evaluateXPathToBoolean from '../output/fontoxpath.js';
+import evaluateXPathToString from '../output/fontoxpath.js';
+import evaluateXPathToFirstNode from '../output/fontoxpath.js';
+import evaluateXPathToNodes from '../output/fontoxpath.js';
+import evaluateXPath from '../output/fontoxpath.js';
+import {BoundElement} from "./BoundElement";
 
 /**
  * `xf-input`
@@ -37,10 +38,10 @@ class XfInput extends BoundElement {
             type:{
                 type: String
             },
-            context:{
-                type:Object
-            },
             label:{
+                type: String
+            },
+            value:{
                 type: String
             }
         };
@@ -49,69 +50,48 @@ class XfInput extends BoundElement {
     constructor(){
         super();
         this.type = 'text';
-        this.context={};
         this.label='';
+        this.value='';
     }
 
 
     render() {
         return html`
             ${this.type === 'text' || this.type === 'date' ?
-                html`<paper-input label="${this.label}" .value="${this.value}" type="${this.type}" @input="${this._handleInput}"></paper-input>` :''}
+                html`<paper-input id="input" label="${this.label}" .value="${this.value}" type="${this.type}" @input="${this._handleInput}"></paper-input>` :''}
             
             ${this.type === 'checkbox' ?
             html`<paper-checkbox label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
-            
-            
-            
         `;
     }
 
-    refresh() {
-        // console.log('xf-input refresh');
-        // console.log('xf-input refresh context ', this.context);
-        // console.log('xf-input refresh context ', this.ref);
 
-        if(this.context !== {}){
-            this.value = fx.evaluateXPathToString(this.ref, this.context, null, {});
-        } else {
-            this.value = this.evalBinding();
-        }
+    refresh() {
+        super.refresh();
+        this.value = this.getValue();
     }
 
-    _handleInput(e){
-        console.log('update context: ', this.context);
-        console.log('update context: ', e);
-        console.log('update model: ', document.querySelector('xf-model'));
+    _handleInput(e) {
+        const mi = this.getModelItem();
+        console.log('modelItem ', mi);
 
-        const model = document.querySelector('xf-model');
+        const inputValue = this.shadowRoot.querySelector('#input').value;
 
-        console.log('default data: ', model.getDefaultInstanceData());
+        console.log('refnode ', mi.refnode);
+        //todo: probably modelitem should have a getter instead
+        this.setValue(mi.refnode,inputValue);
 
-        // this.context.setAttribute('complete','bar');
-        // this.context.textContent = 'foobar';
-        // console.log('update context: ', this.context);
-        fx.evaluateUpdatingExpression('replace node ' + this.ref + ' with "bla"', this.context)
-            .then(result => {
-                fx.executePendingUpdateList(result.pendingUpdateList);
-                console.log(this.model);
-                // Outputs: "<foo/>"
-            });
-        }
+        // console.log(this.model.instances[0].getInstanceData());
+        document.querySelector('xf-form').refresh();
+        console.log('instanceData ', this.model.instances[0].getInstanceData());
 
-    /**
+    }
+
+/*
+    /!**
      * @override
      * @private
-     */
-/*
-    _updateValue(){
-        if(this.type === 'checkbox'){
-            this.$.input.checked = this.modelItem.value;
-        }else{
-            // this.$.input.value = this.modelItem.value;
-        }
-    }
-*/
+     *!/
 
     attachListeners(){
         super.attachListeners();
@@ -137,6 +117,7 @@ class XfInput extends BoundElement {
 
         }
     }
+*/
 
     focus(){
         this.$.input.focus();

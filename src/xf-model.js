@@ -2,6 +2,8 @@ import {LitElement, css} from 'lit-element';
 
 import * as fontoxpath from '../output/fontoxpath.js';
 import fx from "../output/fontoxpath";
+import evaluateXPathToNodes from '../output/fontoxpath.js';
+
 import './xf-instance.js';
 import './xf-bind.js';
 
@@ -108,6 +110,8 @@ export class XfModel extends LitElement {
      * @param modelItem - the associated modelItem for given node
      */
     registerBinding(refnode, modelItem){
+        console.log('registerBinding ', refnode, modelItem);
+        console.log('registerBinding nodeType ', refnode.nodeType);
         const alreadyThere = this.bindingMap.findIndex(node => node.refnode === refnode);
         if(alreadyThere !== -1){
             this.bindingMap.splice(alreadyThere,1,{refnode: refnode, modelItem: modelItem});
@@ -211,15 +215,18 @@ export class XfModel extends LitElement {
         console.log('MODEL.evalBinding ', bindingExpr);
         //default context of evaluation is always the default instance
 
+
+
         const result = this.instances[0].evalXPath(bindingExpr);
 
-        console.log('modelitem for bindingeExpr ', this.bindingMap);
         const out = this.bindingMap.find(node => node.refnode === result);
+        console.log('modelitem for bindingeExpr ', out);
 
-        console.log('modelitem for bindingExpr ', out);
-        console.log('modelitem for bindingExpr ', out.modelItem);
+        // console.log('modelitem for bindingExpr ', out);
+        // console.log('modelitem for bindingExpr ', out.modelItem);
         // console.log('modelitem for bindingeExpr ', out.modelItem);
 
+        console.log('xf-model.evalBinding result: ', result);
         return result;
 
     }
