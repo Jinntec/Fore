@@ -1,5 +1,4 @@
-import {LitElement, html} from 'lit-element';
-
+import {LitElement, html, css} from 'lit-element';
 
 
 import fx from '../output/fontoxpath.js';
@@ -37,14 +36,14 @@ export class BoundElement extends LitElement {
         this.ref = '';
         this.modelId='';
         this.model = {};
-        this.nodeset = {};
+        this.nodeset = null;
         this.contextNode={};
     }
 
     evalBinding(){
-        console.log('BoundElement.evalBinding ref', this);
-        console.log('BoundElement.evalBinding ref', this.ref);
-        console.log('BoundElement.evalBinding model', this.model);
+        // console.log('BoundElement.evalBinding ref', this);
+        // console.log('BoundElement.evalBinding ref', this.ref);
+        // console.log('BoundElement.evalBinding model', this.model);
         let contextModel;
         if(this.modelId === ''){
             //default model - first in document order
@@ -53,12 +52,31 @@ export class BoundElement extends LitElement {
             contextModel = document.querySelector('#'+ this.modelId);
         }
         this.model = contextModel;
-        console.log('BoundElement.evalBinding contextModel: ', this.model);
+        // console.log('BoundElement.evalBinding contextModel: ', this.model);
 
-        console.log('parent context nodeset ', this.parentNode.nodeset);
+        // console.log('parentNode ', this.parentNode);
+        // console.log('parent context nodeset ', this.parentNode.nodeset);
 
+        const repeatItem = this.closest('xf-repeatitem');
+        // console.log('repeatItem found ', repeatItem);
+        // if(repeatItem.index) {
+        //     console.log('repeatItem index ', repeatItem.index);
+        // }
+
+        if(repeatItem){
+            // console.log('>>>>repeatItem nodeset ', repeatItem.nodeset);
+            // console.log('>>>>#####repeatItem nodeset ', this);
+            if(this.nodeName === 'XF-REPEATITEM'){
+
+            }else{
+                const r = fx.evaluateXPath(this.ref, repeatItem.nodeset, null, {});
+                // console.log('>>>>repeatItem nodeset ', r);
+                return r;
+            }
+        }
 
         if(this.parentNode && this.parentNode.nodeset){
+            // console.log('BoundElement.evalBinding parent ', this.parentNode)
             return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
 
         }else{
@@ -72,8 +90,13 @@ export class BoundElement extends LitElement {
 
     refresh(){
         console.log('refreshing ', this);
-        this.nodeset = this.evalBinding();
-        this.requestUpdate();
+        if(this.ref)
+        {
+            this.nodeset = this.evalBinding();
+            console.log('refreshing evaluated nodeset', this.nodeset);
+
+            this.requestUpdate();
+        }
     }
 
     setValue(node, newVal){
@@ -91,6 +114,7 @@ export class BoundElement extends LitElement {
 
 
     getValue (){
+        console.log('getValue nodeset ', this.nodeset);
         if(this.nodeset.nodeType === Node.ELEMENT_NODE){
             return this.nodeset.textContent;
         }

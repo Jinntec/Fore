@@ -30,13 +30,15 @@
                     <prop></prop>
                 </data>
             </xf-instance>
+            <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
+            <xf-bind ref="prop"></xf-bind>
+
             <xf-instance id="second">
                 <data>
                     <outro>GoodBye</outro>
                 </data>
             </xf-instance>
-            <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
-            <xf-bind ref="prop"></xf-bind>
+            <xf-bind instance="second" ref="outro"></xf-bind>
 
             <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
             <xf-message event="ready">Hey it's ready</xf-message>

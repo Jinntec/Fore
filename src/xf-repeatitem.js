@@ -10,7 +10,7 @@ import {BoundElement} from "./BoundElement.js";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeatitem extends BoundElement{
+export class XfRepeatitem extends LitElement{
 
     static get styles() {
         return css`
@@ -30,15 +30,20 @@ export class XfRepeatitem extends BoundElement{
 
     static get properties() {
         return {
+            index:{
+                type:Number
+            }
         };
     }
 
     constructor(){
         super();
+        this.index = 1;
     }
 
     firstUpdated(_changedProperties) {
-        // console.log('### xf-repeatitem firstUpdated ', this);
+        // console.log('### xf-repeatitem firstUpdated index ', this.index);
+        // console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
             bubbles: true,
@@ -60,9 +65,10 @@ export class XfRepeatitem extends BoundElement{
 
     refresh() {
         // console.log('REPEATITEM.refresh');
-        console.log('REPEATITEM.refresh nodeset ', this.nodeset);
+        console.group('REPEATITEM.refresh nodeset ', this.nodeset);
+        // super.refresh();
 
-        const boundElements = this.querySelectorAll('[ref]');
+        const boundElements = this.querySelectorAll(':scope > [ref]');
         boundElements.forEach(bound => {
 
 
@@ -74,10 +80,11 @@ export class XfRepeatitem extends BoundElement{
 
             const isModel = bound.closest('xf-model');
             if(!isModel){
-                bound.refresh();
+                // bound.refresh();
             }
 
         });
+        console.groupEnd();
 
 
     }

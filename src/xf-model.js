@@ -82,11 +82,12 @@ export class XfModel extends LitElement {
                 instances.forEach(instance => {
                     instance.init();
                 });
-                this.instances = instances;
-                // console.groupEnd();
+                this.instances = Array.from(instances);
+                console.groupEnd();
                 // console.log('model instances ', this.instances);
 
                 this.updateModel();
+                // console.groupEnd();
                 // console.log('dispatching model-construct-done');
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,
@@ -110,8 +111,8 @@ export class XfModel extends LitElement {
      * @param modelItem - the associated modelItem for given node
      */
     registerBinding(refnode, modelItem){
-        console.log('registerBinding ', refnode, modelItem);
-        console.log('registerBinding nodeType ', refnode.nodeType);
+        // console.log('registerBinding ', refnode, modelItem);
+        // console.log('registerBinding nodeType ', refnode.nodeType);
         const alreadyThere = this.bindingMap.findIndex(node => node.refnode === refnode);
         if(alreadyThere !== -1){
             this.bindingMap.splice(alreadyThere,1,{refnode: refnode, modelItem: modelItem});
@@ -128,9 +129,11 @@ export class XfModel extends LitElement {
         this.rebuild();
         this.recalculate();
         this.revalidate();
+
     }
 
     rebuild() {
+        console.group('### rebuild');
 
         //reset
         this.bindingMap = [];
@@ -139,18 +142,20 @@ export class XfModel extends LitElement {
 
 
         //todo: recursive or flat processing of xf-bind elements?
+        // -> flat: binds will take of their children themselves
 
         const binds = this.querySelectorAll('xf-model > xf-bind');
         binds.forEach(bind => {
             bind.init(this);
         });
-        // console.groupEnd();
+        console.log('rebuild finished with modelItems ', this.bindingMap);
+        console.groupEnd();
     //
     }
 
     recalculate() {
         // tbd
-        console.log('recalculate');
+        console.log('### recalculate');
     }
 
     revalidate() {
@@ -158,7 +163,7 @@ export class XfModel extends LitElement {
         // console.log('revalidate');
         // console.log('revalidate instances ', this.instances);
 
-        console.group('revalidate');
+        console.group('### revalidate');
         const binds = this.querySelectorAll('xf-bind');
         binds.forEach(bind => {
             // console.log('bind ', bind);
@@ -190,6 +195,12 @@ export class XfModel extends LitElement {
         console.groupEnd();
     }
 
+    getModelItem(node){
+        return this.bindingMap.find(m => m.refnode === node);
+    }
+
+
+
     _handleModelConstructDone(e){
         console.log('_handleModelConstructDone');
         this.refresh();
@@ -204,15 +215,28 @@ export class XfModel extends LitElement {
         return this.instances[0].instanceData.firstElementChild;
     }
 
+    getDefaultInstance(){
+        return this.instances[0];
+    }
+
     getDefaultInstanceData() {
         // console.log('default instance data ',this.instances[0].instanceData);
         // console.log('default instance data ',this.instances[0].instanceData.firstElementChild);
         return this.instances[0].instanceData.firstElementChild;
     }
 
+    getInstance(id){
+        console.log('getInstance ',id);
+        console.log('instances ',this.instances);
+        // console.log('instances array ',Array.from(this.instances));
+
+        const instArray = Array.from(this.instances);
+        return instArray.find(inst => inst.id === id);
+    }
+
 
     evalBinding(bindingExpr){
-        console.log('MODEL.evalBinding ', bindingExpr);
+        // console.log('MODEL.evalBinding ', bindingExpr);
         //default context of evaluation is always the default instance
 
 
@@ -221,13 +245,13 @@ export class XfModel extends LitElement {
 
 
         const out = this.bindingMap.find(node => node.refnode === result);
-        console.log('modelitem for bindingeExpr ', out);
+        // console.log('modelitem for bindingeExpr ', out);
 
         // console.log('modelitem for bindingExpr ', out);
         // console.log('modelitem for bindingExpr ', out.modelItem);
         // console.log('modelitem for bindingeExpr ', out.modelItem);
 
-        console.log('xf-model.evalBinding result: ', result);
+        // console.log('xf-model.evalBinding result: ', result);
         return result;
 
     }

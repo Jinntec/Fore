@@ -151,20 +151,22 @@ describe('initialize bind', () => {
 
 
         const model = document.getElementById('record');
-        expect(model.bindingMap.length).to.equal(8);
+        expect(model.bindingMap.length).to.equal(6);
 
         console.log('model', model.bindingMap);
         expect(model.bindingMap[0].refnode.nodeType).to.equal(1);
         expect(model.bindingMap[0].modelItem.value).to.equal('Pick up Milk');
 
+/*
         expect(model.bindingMap[2].refnode.nodeType).to.equal(3);
         expect(model.bindingMap[2].modelItem.value).to.equal('Pick up Milk');
 
         expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
         expect(model.bindingMap[4].modelItem.value).to.equal('false');
+*/
 
-        expect(model.bindingMap[6].refnode.nodeType).to.equal(2);
-        expect(model.bindingMap[6].modelItem.value).to.equal('2019-02-04');
+        expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
+        expect(model.bindingMap[4].modelItem.value).to.equal('2019-02-04');
 
     });
 

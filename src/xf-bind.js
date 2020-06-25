@@ -89,14 +89,14 @@ export class XfBind extends LitElement {
             */
             this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultInstanceData(), null, {});
         }else{
-            console.log('parent nodeset ', this.parentNode.nodeset);
+            // console.log('parent nodeset ', this.parentNode.nodeset);
 
             const parentContext = this.parentNode.nodeset;
             if(Array.isArray(parentContext)){
                 parentContext.forEach((n,index) => {
                     // console.log('parent item ', n, index);
                     const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {});
-                    console.log('local type ', local.nodeType);
+                    // console.log('local type ', local.nodeType);
                     this.nodeset.push(local);
                 });
             }else{
@@ -105,7 +105,7 @@ export class XfBind extends LitElement {
 
         }
 
-        console.log('xf-bind init nodeset ', this.nodeset);
+        // console.log('xf-bind init nodeset ', this.nodeset);
 
         this._createModelItems();
 
@@ -131,10 +131,9 @@ export class XfBind extends LitElement {
         //single node or array?
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
-            console.log('################################################ ', this.nodeset);
+            // console.log('################################################ ', this.nodeset);
             Array.from(this.nodeset).forEach((n, index) => {
-                console.log('node ',n);
-                // console.log('node ',n.parentNode);
+                // console.log('node ',n);
                 this._createModelItem(n);
 
             });
@@ -144,43 +143,61 @@ export class XfBind extends LitElement {
 
     }
 
+
+    /**
+     * creates a ModelItem for given instance node.
+     *
+     * Please note that for textnode no ModelItem is created but instead the one of its parent is used which either
+     * must exist and be initialized already when we hit the textnode.
+     * @param node
+     * @private
+     */
     _createModelItem(node){
         // console.log('_createModelItem ', this.nodeset);
         // console.log('_createModelItem ', this.nodeset.nodeType);
         // console.log('_createModelItem model', this.model);
         // console.log('_createModelItem node', node);
-        console.log('_createModelItem node', node);
+        // console.log('_createModelItem node', node);
+        // console.log('_createModelItem nodeType', node.nodeType);
 
 
         let value = null;
-/*
-        switch (node.nodeType) {
-            case Node.ELEMENT_NODE:
-                value = node.textContent;
-                 break;
-            // case Node.TEXT_NODE:
-                // console.log('text value', node);
-                // value = node;
-                // break;
-            case Node.ATTRIBUTE_NODE:
-                value = node.nodeValue;
-                // value = node.getAttribute;
-                // break;
-            default:
-                value = node.nodeValue;
-        }
-*/
 
+
+        let mItem = {};
+        let targetNode = {};
+        if(node.nodeType === node.TEXT_NODE){
+            // const parent = node.parentNode;
+            // console.log('PARENT ', parent);
+            targetNode = node.parentNode;
+        }else {
+            targetNode = node;
+        }
+
+/*
+        console.log('NODE ', node);
         if(node.nodeType === Node.ELEMENT_NODE){
             value = node.textContent;
         }else{
             value = node.nodeValue;
         }
-
         const ro = fx.evaluateXPath(this.readonly, node, null, {});
         const req = fx.evaluateXPath(this.required, node, null, {});
         const relevant = fx.evaluateXPath(this.relevant, node, null, {});
         const valid = fx.evaluateXPath(this.constraint, node, null, {});
+
+*/
+        // console.log('NODE ', targetNode);
+        if(targetNode.nodeType === Node.ELEMENT_NODE){
+            value = targetNode.textContent;
+        }else{
+            value = targetNode.nodeValue;
+        }
+        const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
+        const req = fx.evaluateXPath(this.required, targetNode, null, {});
+        const relevant = fx.evaluateXPath(this.relevant, targetNode, null, {});
+        const valid = fx.evaluateXPath(this.constraint, targetNode, null, {});
+
 
 
 /*
@@ -199,12 +216,12 @@ export class XfBind extends LitElement {
             relevant: relevant,
             valid:valid,
             type: this.type,
-            node: node
+            node: targetNode
         };
 
         // console.log('xf-bind created modelItem: ', modelItem);
 
-        this.model.registerBinding(node, modelItem);
+        this.model.registerBinding(targetNode, modelItem);
 
     }
 

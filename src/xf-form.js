@@ -86,7 +86,7 @@ export class XfForm extends LitElement {
     }
 
     _triggerModelConstruct(){
-        console.log('dispatching model-construct');
+        console.group('### dispatching model-construct');
         this.models.forEach(model =>  {
             model.dispatchEvent(new CustomEvent('model-construct', { detail: {model:model}}));
         });
@@ -98,10 +98,11 @@ export class XfForm extends LitElement {
      */
     refresh () {
 
-        console.group('refresh');
-        const boundElements = document.querySelectorAll('[ref]');
+        console.group('### refresh');
+        const boundElements = this.querySelectorAll(':scope > *');
         boundElements.forEach(bound => {
 
+            if(!bound.nodeName.toLowerCase().startsWith('xf-')) return;
             // console.log('refresh bound element ', bound.closest('xf-model'));
 
 
@@ -110,6 +111,7 @@ export class XfForm extends LitElement {
             if(!isModel){
                 // console.log('refresh bound element ', bound);
                 console.log('refresh bound element ', bound.tagName);
+
                 /** @type (BoundElement) */ (bound).refresh();
             }
 
@@ -121,6 +123,8 @@ export class XfForm extends LitElement {
         console.groupEnd();
 
     }
+
+
 
     _handleModelConstructDone(e){
         console.log('modelConstructDone received', e.detail.model.id);

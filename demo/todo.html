@@ -13,14 +13,12 @@
         import '../src/xf-bind.js';
         import '../src/xf-instance.js';
         import '../src/xf-repeat.js';
-        import '../src/native/xf-button.js';
         import '../src/xf-delete.js';
         import '../src/xf-append.js';
         import '../src/xf-update.js';
         import '../src/xf-input.js';
+        import '../src/xf-button.js';
         import '../src/xf-refresh.js';
-        import '../src/xf-submit.js';
-        import '../src/xf-json-data.js';
     </script>
 
 
@@ -92,14 +90,15 @@
                         -->
 
 
-        <xf-repeat ref="task" focus-on-create="task" id="r-todos">
+        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
             <template>
                 <xf-input label="Task" ref="." id="task" type="text"></xf-input>
-                <xf-input label="Due" ref="@due" type="date"></xf-input>
-                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>
+<!--                <xf-input label="Due" ref="@due" type="date"></xf-input>-->
+<!--                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>-->
             </template>
         </xf-repeat>
 
+<!--
         <xf-button label="update">
             <xf-update></xf-update>
         </xf-button>
@@ -108,6 +107,11 @@
         </xf-button>
         <xf-button label="submit">
             <xf-submit></xf-submit>
+        </xf-button>
+-->
+
+        <xf-button label="append">
+            <xf-append clear="false" repeat="todos" ref="task"></xf-append>
         </xf-button>
 
     </xf-form>
