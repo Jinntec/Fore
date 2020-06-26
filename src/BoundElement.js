@@ -93,7 +93,7 @@ export class BoundElement extends LitElement {
     }
 
     refresh() {
-        // console.log('refreshing ', this);
+        console.log('refreshing ', this);
 
         const repeatItem = this.closest('xf-repeatitem');
 
