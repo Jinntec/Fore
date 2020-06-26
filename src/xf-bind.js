@@ -95,10 +95,19 @@ export class XfBind extends LitElement {
             if(Array.isArray(parentContext)){
                 parentContext.forEach((n,index) => {
                     // console.log('parent item ', n, index);
-                    const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {});
-                    // console.log('local type ', local.nodeType);
-                    this.nodeset.push(local);
+                    if(this.ref !== './text()'
+                        && this.ref !== 'text()'
+                    ){
+                        const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {});
+                        // console.log('>>>>>>>>>>< local: ', local);
+
+                        // console.log('local type ', local.nodeType);
+                        this.nodeset.push(local);
+                    }else{
+                        this.nodeset = parentContext;
+                    }
                 });
+
             }else{
                 this.nodeset = fx.evaluateXPathToFirstNode(this.ref, this.parentNode.nodeset, null, {});
             }
@@ -126,7 +135,7 @@ export class XfBind extends LitElement {
     }
 
     _createModelItems(){
-        // console.log('#### ', this.nodeset);
+        // console.log('#### ', thi+s.nodeset);
 
         //single node or array?
         if(Array.isArray(this.nodeset)){
@@ -174,19 +183,6 @@ export class XfBind extends LitElement {
             targetNode = node;
         }
 
-/*
-        console.log('NODE ', node);
-        if(node.nodeType === Node.ELEMENT_NODE){
-            value = node.textContent;
-        }else{
-            value = node.nodeValue;
-        }
-        const ro = fx.evaluateXPath(this.readonly, node, null, {});
-        const req = fx.evaluateXPath(this.required, node, null, {});
-        const relevant = fx.evaluateXPath(this.relevant, node, null, {});
-        const valid = fx.evaluateXPath(this.constraint, node, null, {});
-
-*/
         // console.log('NODE ', targetNode);
         if(targetNode.nodeType === Node.ELEMENT_NODE){
             value = targetNode.textContent;
@@ -194,7 +190,7 @@ export class XfBind extends LitElement {
             value = targetNode.nodeValue;
         }
         const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
-        const req = fx.evaluateXPath(this.required, targetNode, null, {});
+        const req = fx.evaluateXPathToBoolean(this.required, targetNode, null, {});
         const relevant = fx.evaluateXPath(this.relevant, targetNode, null, {});
         const valid = fx.evaluateXPath(this.constraint, targetNode, null, {});
 

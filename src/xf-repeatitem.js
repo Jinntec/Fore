@@ -1,5 +1,6 @@
 import {LitElement,html, css} from "lit-element";
 import {BoundElement} from "./BoundElement.js";
+import {Fore} from "./fore.js";
 
 
 /**
@@ -10,7 +11,7 @@ import {BoundElement} from "./BoundElement.js";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeatitem extends LitElement{
+export class XfRepeatitem extends BoundElement{
 
     static get styles() {
         return css`
@@ -30,15 +31,16 @@ export class XfRepeatitem extends LitElement{
 
     static get properties() {
         return {
+/*
             index:{
                 type:Number
             }
+*/
         };
     }
 
     constructor(){
         super();
-        this.index = 1;
     }
 
     firstUpdated(_changedProperties) {
@@ -63,31 +65,30 @@ export class XfRepeatitem extends LitElement{
 */
     }
 
-    refresh() {
-        // console.log('REPEATITEM.refresh');
-        console.group('REPEATITEM.refresh nodeset ', this.nodeset);
-        // super.refresh();
+    refresh(){
+        const children = this.querySelectorAll(':scope *');
+        this.updateChildren(children);
 
-        const boundElements = this.querySelectorAll(':scope > [ref]');
-        boundElements.forEach(bound => {
+    }
 
+    updateChildren(children){
+        children.forEach(element => {
 
-            // console.log('refresh bound element ', bound);
-            // console.log('refresh bound element ', bound.tagName);
-            // console.log('refresh bound element ', bound.closest('xf-model'));
+            //todo: later - check for AVTs
+            if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
+            if(element.nodeName.toLowerCase() === 'xf-repeat') return;
 
-            bound.context = this.nodeset;
-
-            const isModel = bound.closest('xf-model');
-            if(!isModel){
-                // bound.refresh();
+            if (typeof element.refresh === 'function') {
+                // console.log('refresh bound element ', bound);
+                console.log('# refresh element ', element);
+                element.refresh();
             }
 
         });
-        console.groupEnd();
-
 
     }
+
+
 
     createRenderRoot() {
         /**

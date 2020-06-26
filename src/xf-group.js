@@ -1,6 +1,6 @@
-import {html, PolymerElement} from '../assets/@polymer/polymer/polymer-element.js';
-import {BoundElementMixin} from './BoundElementMixin.js';
+import {LitElement, html, css} from 'lit-element';
 import  './xf-case.js';
+import {BoundElement} from "./BoundElement";
 
 
 /**
@@ -12,36 +12,14 @@ import  './xf-case.js';
  * @customElement
  * @polymer
  */
-class XfGroup extends BoundElementMixin(PolymerElement) {
+class XfGroup extends BoundElement{
 
-    static get template() {
+
+    render() {
         return html`
-      <style>
-        :host {
-          display: block;
-        }
-      </style>
-      <slot></slot>
-    `;
+            <slot></slot>
+        `;
     }
-
-    /*
-        static get properties() {
-            return {
-            }
-        }
-    */
-
-
-    init() {
-        super.init();
-        console.log('### init ', this);
-        console.log('### init modelItem', this.modelItem);
-        // if (!this.repeated) {
-        // }
-
-    }
-
 
 
 }

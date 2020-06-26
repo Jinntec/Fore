@@ -13,20 +13,20 @@ export class BoundElement extends LitElement {
 
     static get properties() {
         return {
-            ref:{
+            ref: {
                 type: String
             },
-            modelId:{
+            modelId: {
                 type: String
             },
-            model:{
-                type:Object
+            model: {
+                type: Object
             },
-            nodeset:{
-                type:Object
+            nodeset: {
+                type: Object
             },
-            contextNode:{
-                type:Object
+            contextNode: {
+                type: Object
             }
         };
     }
@@ -34,22 +34,22 @@ export class BoundElement extends LitElement {
     constructor() {
         super();
         this.ref = '';
-        this.modelId='';
+        this.modelId = '';
         this.model = {};
         this.nodeset = null;
-        this.contextNode={};
+        this.contextNode = {};
     }
 
-    evalBinding(){
+    evalBinding() {
         // console.log('BoundElement.evalBinding ref', this);
         // console.log('BoundElement.evalBinding ref', this.ref);
         // console.log('BoundElement.evalBinding model', this.model);
         let contextModel;
-        if(this.modelId === ''){
+        if (this.modelId === '') {
             //default model - first in document order
             contextModel = document.querySelector('xf-model');
-        }else {
-            contextModel = document.querySelector('#'+ this.modelId);
+        } else {
+            contextModel = document.querySelector('#' + this.modelId);
         }
         this.model = contextModel;
         // console.log('BoundElement.evalBinding contextModel: ', this.model);
@@ -63,23 +63,27 @@ export class BoundElement extends LitElement {
         //     console.log('repeatItem index ', repeatItem.index);
         // }
 
-        if(repeatItem){
+        if (repeatItem) {
             // console.log('>>>>repeatItem nodeset ', repeatItem.nodeset);
             // console.log('>>>>#####repeatItem nodeset ', this);
-            if(this.nodeName === 'XF-REPEATITEM'){
+/*
+            if (this.nodeName === 'XF-REPEATITEM') {
 
-            }else{
-                const r = fx.evaluateXPath(this.ref, repeatItem.nodeset, null, {});
+            } else {
+*/
+                // const r = fx.evaluateXPath(this.ref, repeatItem.nodeset, null, {});
+                const r = fx.evaluateXPathToFirstNode(this.ref, repeatItem.nodeset, null, {});
                 // console.log('>>>>repeatItem nodeset ', r);
                 return r;
-            }
+            // }
         }
 
-        if(this.parentNode && this.parentNode.nodeset){
+        if (this.parentNode && this.parentNode.nodeset) {
             // console.log('BoundElement.evalBinding parent ', this.parentNode)
+            // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
             return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
 
-        }else{
+        } else {
             // update value
             // const result = contextModel.evalBinding(this.ref);
             return this.model.evalBinding(this.ref);
@@ -88,18 +92,25 @@ export class BoundElement extends LitElement {
         // return  result;
     }
 
-    refresh(){
-        console.log('refreshing ', this);
-        if(this.ref)
-        {
-            this.nodeset = this.evalBinding();
-            console.log('refreshing evaluated nodeset', this.nodeset);
+    refresh() {
+        // console.log('refreshing ', this);
 
-            this.requestUpdate();
-        }
+        const repeatItem = this.closest('xf-repeatitem');
+
+
+        // if (!repeatItem) {
+            if (this.ref) {
+                this.nodeset = this.evalBinding();
+                // console.log('refreshing evaluated nodeset', this.nodeset);
+
+                this.requestUpdate();
+            }
+        // }
+
+
     }
 
-    setValue(node, newVal){
+    setValue(node, newVal) {
 
         const m = this.getModelItem();
         // m.setNodeValue(newVal);
@@ -113,17 +124,18 @@ export class BoundElement extends LitElement {
     }
 
 
-    getValue (){
-        console.log('getValue nodeset ', this.nodeset);
-        if(this.nodeset.nodeType === Node.ELEMENT_NODE){
+    getValue() {
+        // console.log('getValue nodeset ', this.nodeset);
+        if (this.nodeset.nodeType === Node.ELEMENT_NODE) {
             return this.nodeset.textContent;
         }
         return this.nodeset;
+        // return this.getModelItem().modelItem.value;
     }
 
 
-    getModelItem(){
-        return  this.model.bindingMap.find(m => m.refnode === this.nodeset);
+    getModelItem() {
+        return this.model.bindingMap.find(m => m.refnode === this.nodeset);
     }
 
 }

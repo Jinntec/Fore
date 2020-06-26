@@ -9,9 +9,8 @@
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../src/xf-form.js';
-        import '../src/xf-model.js';
-        import '../src/xf-instance.js';
-        import '../src/xf-bind.js';
+        import '../src/xf-group.js';
+
         import '../src/xf-output.js';
         import '../src/xf-message.js';
     </script>
@@ -31,8 +30,9 @@
                 <xf-bind id="b-type" ref="@type"></xf-bind>
             </xf-bind>
         </xf-model>
-
-        <xf-output ref="greeting"> </xf-output> : <xf-output ref="greeting/@type"></xf-output>
+        <xf-group>
+            <xf-output ref="greeting"> </xf-output> : <xf-output ref="greeting/@type"></xf-output>
+        </xf-group>
     </xf-form>
 
 </body>

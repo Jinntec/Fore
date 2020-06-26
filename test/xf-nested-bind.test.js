@@ -23,8 +23,9 @@ describe('initialize nested bindings', () => {
                             <xf-bind id="b-type" ref="@type"></xf-bind>
                         </xf-bind>
                     </xf-model>
-            
-                    <xf-output id="output1" ref="greeting"> </xf-output> : <xf-output id="output2" ref="greeting"></xf-output>
+                    <xf-group>
+                        <xf-output id="output1" ref="greeting"> </xf-output> : <xf-output id="output2" ref="greeting"></xf-output>
+                    </xf-group>
                 </xf-form>               
             `)
         );

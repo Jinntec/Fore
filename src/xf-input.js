@@ -43,7 +43,12 @@ class XfInput extends BoundElement {
             },
             value:{
                 type: String
+            },
+            required:{
+                type:Boolean,
+                reflect:true
             }
+
         };
     }
 
@@ -52,33 +57,50 @@ class XfInput extends BoundElement {
         this.type = 'text';
         this.label='';
         this.value='';
+        this.required = false;
+        // this.modelItem={};
     }
 
 
     render() {
         return html`
             ${this.type === 'text' || this.type === 'date' ?
-                html`<paper-input id="input" label="${this.label}" .value="${this.value}" type="${this.type}" @input="${this._handleInput}"></paper-input>` :''}
+                html`<paper-input id="input" 
+                                  label="${this.label}"
+                                  .value="${this.value}"
+                                  type="${this.type}"
+                                  ?required="${this.required}"
+                                  @input="${this._handleInput}"></paper-input>` :''}
             
             ${this.type === 'checkbox' ?
             html`<paper-checkbox label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
         `;
     }
 
+
+
     refresh() {
         super.refresh();
-        this.value = this.getValue();
+        // console.log('------ this ', this);
+        // console.log('------ nodeset ', this.nodeset);
+        // console.log('------ modelItem ', this.getModelItem());
+        // console.log('------- required', this.getModelItem().modelItem.required);
+        this.required = true;
+        // this.value = this.getValue();
+        this.value = this.getModelItem().modelItem.value;
+        this.requestUpdate();
     }
 
     _handleInput(e) {
         const mi = this.getModelItem();
-        console.log('modelItem ', mi);
+        // console.log('modelItem ', mi);
 
         const inputValue = this.shadowRoot.querySelector('#input').value;
 
-        console.log('refnode ', mi.refnode);
+        // console.log('_handleInput refnode ', mi.refnode);
         //todo: probably modelitem should have a getter instead
         this.setValue(mi.refnode,inputValue);
+        mi.value = inputValue;
 
         // console.log(this.model.instances[0].getInstanceData());
         document.querySelector('xf-form').refresh();

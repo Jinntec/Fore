@@ -5,7 +5,14 @@ import '../assets/@polymer/paper-button/paper-button.js';
 import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
+import {Fore} from './fore.js';
 import './xf-model.js';
+import './xf-group.js';
+import '../src/xf-output.js';
+import '../src/xf-input.js';
+import '../src/xf-message.js';
+
+
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 
@@ -92,6 +99,7 @@ export class XfForm extends LitElement {
         });
     }
 
+
     /**
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
@@ -99,29 +107,14 @@ export class XfForm extends LitElement {
     refresh () {
 
         console.group('### refresh');
-        const boundElements = this.querySelectorAll(':scope > *');
-        boundElements.forEach(bound => {
 
-            if(!bound.nodeName.toLowerCase().startsWith('xf-')) return;
-            // console.log('refresh bound element ', bound.closest('xf-model'));
-
-
-            // ### do NOT process bindings that are part of the model
-            const isModel = /** @type (XfModel) */ (bound.closest('xf-model'));
-            if(!isModel){
-                // console.log('refresh bound element ', bound);
-                console.log('refresh bound element ', bound.tagName);
-
-                /** @type (BoundElement) */ (bound).refresh();
-            }
-
-        });
+        const uiElements = this.querySelectorAll(':scope xf-group *');
+        Fore.updateChildren(uiElements);
 
         console.log('dispatch refresh-done');
         this.dispatchEvent(new CustomEvent('refresh-done', {}));
 
         console.groupEnd();
-
     }
 
 

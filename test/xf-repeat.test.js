@@ -36,19 +36,19 @@ describe('initialize repeat', () => {
                         </xf-bind>
             
                     </xf-model>
-            
-                    <h1>todos</h1>
-                       
-                    <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
-                        <template>
-                            <xf-input label="Task" ref="." id="task" type="text"></xf-input>
-                        </template>
-                    </xf-repeat>
-                       
-                    <xf-button label="append">
-                        <xf-append repeat="todos" ref="task"></xf-append>
-                    </xf-button>
-            
+                    <xf-group>
+                        <h1>todos</h1>
+                           
+                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                            <template>
+                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                            </template>
+                        </xf-repeat>
+                           
+                        <xf-button label="append">
+                            <xf-append repeat="todos" ref="task"></xf-append>
+                        </xf-button>
+                    </xf-group>
                 </xf-form>
             `)
         );

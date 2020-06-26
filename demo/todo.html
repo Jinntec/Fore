@@ -55,30 +55,32 @@
         .highlight {
             background: red;
         }
-        xf-repeatitem{
+
+        xf-repeatitem {
             display: block;
         }
     </style>
 </head>
 <body>
-    <xf-form>
-        <xf-model id="record">
+<xf-form>
+    <xf-model id="record">
 
-            <xf-instance>
-                <data>
-                    <task complete="false" due="2019-02-04">Pick up Milk</task>
-                    <task complete="true" due="2019-01-04">Make tutorial part 1</task>
-                </data>
-            </xf-instance>
+        <xf-instance>
+            <data>
+                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+            </data>
+        </xf-instance>
 
 
-            <xf-bind ref="task">
-                <xf-bind ref="./text()" required="true()"></xf-bind>
-                <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                <xf-bind ref="@due" type="xs:date"></xf-bind>
-            </xf-bind>
+        <xf-bind ref="task">
+            <xf-bind ref="./text()" required="true()"></xf-bind>
+            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
+            <xf-bind ref="@due" type="xs:date"></xf-bind>
+        </xf-bind>
 
-        </xf-model>
+    </xf-model>
+    <xf-group>
 
         <h1>todos</h1>
 
@@ -90,30 +92,31 @@
                         -->
 
 
-        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+        <xf-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
             <template>
-                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
-<!--                <xf-input label="Due" ref="@due" type="date"></xf-input>-->
-<!--                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>-->
+                <xf-input id="task" label="Task" ref="." type="text"></xf-input>
+                <xf-input label="Due" ref="@due" type="date"></xf-input>
+                <!--                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>-->
             </template>
         </xf-repeat>
 
-<!--
-        <xf-button label="update">
-            <xf-update></xf-update>
-        </xf-button>
-        <xf-button label="refresh">
-            <xf-refresh></xf-refresh>
-        </xf-button>
-        <xf-button label="submit">
-            <xf-submit></xf-submit>
-        </xf-button>
--->
+        <!--
+                <xf-button label="update">
+                    <xf-update></xf-update>
+                </xf-button>
+                <xf-button label="refresh">
+                    <xf-refresh></xf-refresh>
+                </xf-button>
+                <xf-button label="submit">
+                    <xf-submit></xf-submit>
+                </xf-button>
+        -->
 
         <xf-button label="append">
-            <xf-append clear="false" repeat="todos" ref="task"></xf-append>
+            <xf-append ref="task" repeat="todos"></xf-append>
         </xf-button>
 
-    </xf-form>
+    </xf-group>
+</xf-form>
 </body>
 </html>

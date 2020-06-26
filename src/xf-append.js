@@ -6,6 +6,8 @@ import './xf-instance.js';
  * `xf-append`
  * appends an entry to a `xf-repeat`.
  *
+ * Setting the optional `clear` attribute to 'false' will append an entry that is a copy of the last repeat item.
+ *
  * @customElement
  */
 class XfAppend extends XfAction {
@@ -19,7 +21,7 @@ class XfAppend extends XfAction {
                 type: String
             },
             clear:{
-                type:Boolean
+                type:String
             }
         };
     }
@@ -27,7 +29,7 @@ class XfAppend extends XfAction {
     constructor(){
         super();
         this.repeat = "";
-        this.clear = true;
+        this.clear = 'true';
     }
 
     execute(){
@@ -38,9 +40,9 @@ class XfAppend extends XfAction {
         const instanceId = this.getInstanceId();
 
         const inst = this.model.getInstance(instanceId);
-        console.log('target instance',inst);
-        console.log('append nodeset',this.nodeset);
-        console.log('append parent nodeset',this.nodeset[0].parentNode);
+        // console.log('target instance',inst);
+        // console.log('append nodeset',this.nodeset);
+        // console.log('append parent nodeset',this.nodeset[0].parentNode);
 
         const parentNodeset = this.nodeset[0].parentNode;
 
@@ -48,14 +50,17 @@ class XfAppend extends XfAction {
         console.log('last in nodeset',last);
 
         let newItem = last.cloneNode(true);
-/*
-        if(this.clear){
+
+        // console.log('clear flag ', this.clear);
+
+        if(this.clear === 'true'){
+        // if(this.clear){
             newItem.textContent = "";
             this._clear(newItem);
             console.log('newItem clear',newItem);
+            newItem.innerText = '';
 
         }
-*/
 
 
         parentNodeset.appendChild(newItem);
