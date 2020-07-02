@@ -33,6 +33,7 @@ export class XfInstance extends LitElement {
         this.id = 'default';
     }
 
+/*
     render() {
         return html`
             <span>${this.id}</span>
@@ -41,12 +42,23 @@ export class XfInstance extends LitElement {
             </pre>
         `;
     }
+*/
 
     init(){
         // console.log('INSTANCE::id ', this.id);
-        const instanceData = new DOMParser().parseFromString(this.innerHTML,'text/xml');
+        const instanceData = new DOMParser().parseFromString(this.innerHTML,'application/xml');
+
+        // console.log('created instanceData ', new XMLSerializer(instanceData));
+        // console.log('namespace ', instanceData.firstElementChild.namespaceURI);
+
         console.log('xf-instance init id:', this.id);
         this.instanceData = instanceData;
+        // console.log('instanceData ', this.instanceData);
+        // console.log('instanceData ', this.instanceData.firstElementChild);
+
+
+        // this.shadowRoot.appendChild(this.instanceData.firstElementChild);
+
         console.log('xf-instance data: ', this.instanceData);
         this.instanceData.firstElementChild.setAttribute('id',this.id);
         // console.log('xf-instance data ', this.instanceData);
@@ -74,6 +86,7 @@ export class XfInstance extends LitElement {
     }
 
     getDefaultContext(){
+        // console.log('getDefaultContext ', this.instanceData.firstElementChild);
         return this.instanceData.firstElementChild;
     }
 

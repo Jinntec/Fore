@@ -1,4 +1,4 @@
-import commonjs from '@rollup/plugin-commonjs'
+import commonjs from 'plugin-commonjs'
 
 export default {
     input: './node_modules/fontoxpath/dist/fontoxpath.js',

@@ -24,6 +24,9 @@ class XfInput extends BoundElement {
         :host {
           display: inline-block;
         }
+        paper-input{
+            display:inline-block;
+        }
         label{
             display:block;
         }

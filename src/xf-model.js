@@ -220,9 +220,8 @@ export class XfModel extends LitElement {
     }
 
     getDefaultInstanceData() {
-        // console.log('default instance data ',this.instances[0].instanceData);
-        // console.log('default instance data ',this.instances[0].instanceData.firstElementChild);
-        return this.instances[0].instanceData.firstElementChild;
+        console.log('default instance data ',this.instances[0].instanceData);
+        return this.instances[0].instanceData;
     }
 
     getInstance(id){

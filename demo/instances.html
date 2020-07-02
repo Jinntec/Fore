@@ -27,32 +27,30 @@
 <body unresolved="unresolved">
 
 
-    <xf-form>
+    <xf-form xmlns:xf="test" xmlns:xf="test">
         <xf-message event="refresh-done">refresh has been done </xf-message>
 
         <xf-model id="model1">
             <xf-instance>
                 <data>
                     <greeting>Hello World!</greeting>
-                    <prop></prop>
-                    <class>dynamic</class>
                 </data>
             </xf-instance>
-            <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-<!--
-                <xf-bind constraint="string-length(.) > 2">
-                    <xf-alert>huh? too short!</xf-alert>
-                </xf-bind>
--->
-            </xf-bind>
-            <xf-bind ref="prop"></xf-bind>
+
+            <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
 
             <xf-instance id="second">
                 <data>
                     <outro>GoodBye</outro>
+                    <foo></foo>
                 </data>
             </xf-instance>
-<!--            <xf-bind instance="second" ref="outro"></xf-bind>-->
+
+<!--
+            <xf-bind instance="second" ref="instance('outro')">
+                <xf-bind ref="outro"></xf-bind>
+            </xf-bind>
+-->
 
             <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
             <xf-message event="ready">Hey it's ready</xf-message>
@@ -67,6 +65,7 @@
 
         <h1 class="{class}">
             Greeting: <xf-output ref="./greeting" id="output"></xf-output>
+<!--            Greeting: <xf-output ref="instance()/greeting" id="output"></xf-output>-->
         </h1>
 
         <xf-input ref="greeting" label="Greeting"></xf-input>

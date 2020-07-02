@@ -14,7 +14,12 @@ import '../src/xf-message.js';
 
 
 
+
+
+
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
+import fx from "../output/fontoxpath";
+import registerCustomXPathFunction from '../output/fontoxpath.js';
 
 
 /**
@@ -82,11 +87,38 @@ export class XfForm extends LitElement {
      * @param _changedProperties
      */
     firstUpdated(_changedProperties) {
-        console.log('xf-form: kick off processing...');
+        console.log('########## FORE: kick off processing... ##########');
         this._init();
     }
 
     _init(){
+
+        console.log('registerCustomXPathFunction');
+        fx.registerCustomXPathFunction(
+            { namespaceURI: 'xf', localName: 'instance' },
+            ['xs:string'],
+            'node()',
+            (dynamicContext, string) => {
+                // console.log('fnInstance dynamicContext: ', dynamicContext);
+                // console.log('fnInstance string: ', string);
+
+                const instance = this.querySelector('xf-instance[id=' + string + ']');
+
+                // const def = instance.getInstanceData();
+                const def = instance.getDefaultContext();
+                // console.log('target instance root node: ', def);
+
+                return def;
+                // return instance.getInstanceData();
+            }
+        );
+
+
+
+        // const result = fx.evaluateXPathToNodes("Q{xf}instance('second')",this);
+        // console.log('eval func' , result);
+
+
         const models = this.querySelectorAll('xf-model');
         this.models = models;
         this._triggerModelConstruct();

@@ -1,10 +1,18 @@
 import {LitElement, html, css} from 'lit-element';
 
+
+/*
+import {
+    evaluateXPath,
+    evaluateXPathToFirstNode,
+    registerCustomXPathFunction } from 'fontoxpath';
+*/
+
 import fx from '../output/fontoxpath.js';
-import evaluateXPathToBoolean from '../output/fontoxpath.js';
-import evaluateXPathToString from '../output/fontoxpath.js';
 import evaluateXPathToFirstNode from '../output/fontoxpath.js';
 import evaluateXPath from '../output/fontoxpath.js';
+import registerCustomXPathFunction from '../output/fontoxpath.js';
+
 
 export class XfBind extends LitElement {
 
@@ -67,6 +75,7 @@ export class XfBind extends LitElement {
         this.nodeset = [];
         this.model = {};
         this.contextNode = {};
+        this.inited = false;
     }
 
     render() {
@@ -77,17 +86,38 @@ export class XfBind extends LitElement {
 
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);
+
+
     }
+
+    namespaceResolver(prefix) {
+        console.log('namespaceResolver  prefix', prefix);
+        var ns = {
+            'xhtml' : 'http://www.w3.org/1999/xhtml',
+        };
+        return ns[prefix] || null;
+        // return null;
+    }
+
 
     init(model){
         this.model = model;
+
+        //if no ref use
+        // a. the nodeset of your parent bind
+        // b. if no parent use default context
+
+
+
+
+
 
         console.log('init binding ', this);
         if(this.parentNode.nodeName === 'XF-MODEL'){
             /*
             * if we have an outermost bind having model as parent the default instance data are used as context.
             */
-            this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultInstanceData(), null, {});
+            this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultContext(), null, {namespaceResolver: this.namespaceResolver});
         }else{
             // console.log('parent nodeset ', this.parentNode.nodeset);
 
@@ -98,7 +128,7 @@ export class XfBind extends LitElement {
                     if(this.ref !== './text()'
                         && this.ref !== 'text()'
                     ){
-                        const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {});
+                        const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
                         // console.log('>>>>>>>>>>< local: ', local);
 
                         // console.log('local type ', local.nodeType);
@@ -109,10 +139,22 @@ export class XfBind extends LitElement {
                 });
 
             }else{
-                this.nodeset = fx.evaluateXPathToFirstNode(this.ref, this.parentNode.nodeset, null, {});
+                this.nodeset = fx.evaluateXPathToFirstNode(this.ref, this.parentNode.nodeset, null, {namespaceResolver: this.namespaceResolver});
             }
 
         }
+
+        // console.log('model namespace ', this.model.isDefaultNamespace(""));
+        // console.log('model namespace ', this.model.lookupNamespaceURI(""));
+        // console.log('nodeset ', this.nodeset);
+
+        let result = fx.evaluateXPath('Q{xf}instance("second")',this.nodeset,null,{});
+        // console.log('????? result ',result);
+
+        // result = fx.evaluateXPath('Q{xf}instance("second")//outro',this.nodeset,null,null,null, {namespaceResolver: this.namespaceResolver});
+        result = fx.evaluateXPath('Q{xf}instance("second")/outro',this.nodeset,null,null,null, {});
+        console.log('????? result ',result);
+
 
         // console.log('xf-bind init nodeset ', this.nodeset);
 
