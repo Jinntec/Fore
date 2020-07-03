@@ -88,7 +88,7 @@ export class XfRepeat extends BoundElement {
 
 
         console.log('REPEAT.refresh nodeset ', this.nodeset);
-        this.requestUpdate();
+        // this.requestUpdate();
         //create n repeat-items for nodeset
 
         //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
@@ -97,17 +97,25 @@ export class XfRepeat extends BoundElement {
         let repeatItems = this.querySelectorAll('xf-repeatitem');
         const repeatItemCount = repeatItems.length;
 
-        const contextSize = this.nodeset.length;
+
+        let nodeCount = 1;
+        if(Array.isArray(this.nodeset)){
+            nodeCount = this.nodeset.length;
+        }
+
+        // const contextSize = this.nodeset.length;
+        const contextSize = nodeCount;
         let modified = [];
         if (contextSize < repeatItemCount){
 
-            for(let position = repeatItemCount; position > contextSize; position-1){
+            for(let position = repeatItemCount; position > contextSize; position--){
                 //remove repeatitem
                 const itemToRemove = repeatItems[position -1];
                 itemToRemove.parentNode.removeChild(itemToRemove);
-                modified.push(itemToRemove);
+                // modified.push(itemToRemove);
             }
 
+            //todo: update index
         }
 
         if(contextSize > repeatItemCount){

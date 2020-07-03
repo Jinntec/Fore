@@ -13,12 +13,12 @@
         import '../src/xf-bind.js';
         import '../src/xf-instance.js';
         import '../src/xf-repeat.js';
-        import '../src/xf-delete.js';
-        import '../src/xf-append.js';
-        import '../src/xf-update.js';
-        import '../src/xf-input.js';
-        import '../src/xf-button.js';
-        import '../src/xf-refresh.js';
+        import '../src/actions/xf-delete.js';
+        import '../src/actions/xf-append.js';
+        import '../src/deprecated/xf-update.js';
+        import '../src/ui/xf-input.js';
+        import '../src/ui/xf-button.js';
+        import '../src/deprecated/xf-refresh.js';
     </script>
 
 
@@ -59,9 +59,12 @@
         xf-repeatitem {
             display: block;
         }
+        [unresolved]{
+            display:none;
+        }
     </style>
 </head>
-<body>
+<body unresolved="unresolved">
 <xf-form>
     <xf-model id="record">
 
@@ -97,20 +100,11 @@
                 <xf-input id="task" label="Task" ref="." type="text"></xf-input>
                 <xf-input label="Due" ref="@due" type="date"></xf-input>
                 <!--                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>-->
+                <xf-button label="delete">
+                    <xf-delete ref="."></xf-delete>
+                </xf-button>
             </template>
         </xf-repeat>
-
-        <!--
-                <xf-button label="update">
-                    <xf-update></xf-update>
-                </xf-button>
-                <xf-button label="refresh">
-                    <xf-refresh></xf-refresh>
-                </xf-button>
-                <xf-button label="submit">
-                    <xf-submit></xf-submit>
-                </xf-button>
-        -->
 
         <xf-button label="append">
             <xf-append ref="task" repeat="todos"></xf-append>

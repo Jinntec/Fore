@@ -5,7 +5,7 @@ import '../src/xf-form.js';
 import '../src/xf-model.js';
 import '../src/xf-instance.js';
 import '../src/xf-bind.js';
-import '../src/xf-output.js';
+import '../src/ui/xf-output.js';
 
 describe('initialize nested bindings', () => {
 
@@ -39,12 +39,12 @@ describe('initialize nested bindings', () => {
 
         //check the modelitems
         const mi = model.bindingMap[0];
-        expect(mi.modelItem.value).to.exist;
-        expect(mi.modelItem.value).to.equal('Hello World!');
+        expect(mi.modelItem.node).to.exist;
+        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
 
         const mi2 = model.bindingMap[1];
-        expect(mi2.modelItem.value).to.exist;
-        expect(mi2.modelItem.value).to.equal('message');
+        expect(mi2.modelItem.node).to.exist;
+        expect(mi2.modelItem.node.textContent).to.equal('message');
 
         //check the controls
         const out1 = document.getElementById('output1');

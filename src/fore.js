@@ -5,7 +5,7 @@ export class Fore{
 
             //todo: later - check for AVTs
             if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
-            // if(element.nodeName.toLowerCase() === 'xf-repeat') return;
+            if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
 
             if (typeof element.refresh === 'function') {
                 element.refresh();

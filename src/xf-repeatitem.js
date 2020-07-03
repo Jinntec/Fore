@@ -80,7 +80,7 @@ export class XfRepeatitem extends BoundElement{
 
             if (typeof element.refresh === 'function') {
                 // console.log('refresh bound element ', bound);
-                console.log('# refresh element ', element);
+                // console.log('# refresh element ', element);
                 element.refresh();
             }
 

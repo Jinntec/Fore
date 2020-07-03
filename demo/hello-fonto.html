@@ -9,17 +9,19 @@
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../src/xf-form.js';
+        import '../src/actions/xf-setvalue.js';
     </script>
 
-    <link rel="stylesheet" href="../resources/vars.css">
+    <link href="../resources/vars.css" rel="stylesheet">
     <style>
-        .dynamic{
+        .dynamic {
             background: #76ff03;
         }
-        xf-input[required]:after{
+
+        xf-input[required]:after {
             content: "*";
             display: inline;
-            color:red;
+            color: red;
         }
 
     </style>
@@ -27,37 +29,37 @@
 <body unresolved="unresolved">
 
 
-    <xf-form>
-        <xf-message event="refresh-done">refresh has been done </xf-message>
+<xf-form>
+    <xf-message event="refresh-done">refresh has been done</xf-message>
 
-        <xf-model id="model1">
-            <xf-instance>
-                <data>
-                    <greeting>Hello World!</greeting>
-                    <prop></prop>
-                    <class>dynamic</class>
-                </data>
-            </xf-instance>
-            <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-<!--
-                <xf-bind constraint="string-length(.) > 2">
-                    <xf-alert>huh? too short!</xf-alert>
-                </xf-bind>
--->
-            </xf-bind>
-            <xf-bind ref="prop"></xf-bind>
+    <xf-model id="model1">
+        <xf-instance>
+            <data>
+                <greeting>Hello World!</greeting>
+                <prop></prop>
+                <class>dynamic</class>
+            </data>
+        </xf-instance>
+        <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
+            <!--
+                            <xf-bind constraint="string-length(.) > 2">
+                                <xf-alert>huh? too short!</xf-alert>
+                            </xf-bind>
+            -->
+        </xf-bind>
+        <xf-bind ref="prop"></xf-bind>
 
-            <xf-instance id="second">
-                <data>
-                    <outro>GoodBye</outro>
-                </data>
-            </xf-instance>
-<!--            <xf-bind instance="second" ref="outro"></xf-bind>-->
+        <xf-instance id="second">
+            <data>
+                <outro>GoodBye</outro>
+            </data>
+        </xf-instance>
+        <!--            <xf-bind instance="second" ref="outro"></xf-bind>-->
 
-            <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
-            <xf-message event="ready">Hey it's ready</xf-message>
-        </xf-model>
-        <xf-group>
+        <xf-message event="model-construct-done">Hey model-construct is done</xf-message>
+        <xf-message event="ready">Hey it's ready</xf-message>
+    </xf-model>
+    <xf-group>
 
 
         <!--
@@ -66,26 +68,23 @@
         -->
 
         <h1 class="{class}">
-            Greeting: <xf-output ref="./greeting" id="output"></xf-output>
+            Greeting:
+            <xf-output id="output" ref="./greeting"></xf-output>
         </h1>
 
-        <xf-input ref="greeting" label="Greeting"></xf-input>
+        <xf-input label="Greeting" ref="greeting"></xf-input>
 
-<!--
-        <h1>
-            <xf-output bind="b-greeting" id="output"></xf-output>
-        </h1>
--->
+
+        <xf-button label="say 'hello Universe'">
+            <xf-setvalue ref="greeting" value="Hello Universe"></xf-setvalue>
+        </xf-button>
 
         <!--
-                        <xf-button label="say 'hello World'">
-                            <xf-setvalue bind="b-greeting" value="Hello World!"></xf-setvalue>
-                        </xf-button>
-                        <xf-button label="submit">
-                            <xf-submit></xf-submit>
-                        </xf-button>
+                                <xf-button label="submit">
+                                    <xf-submit></xf-submit>
+                                </xf-button>
         -->
-        </xf-group>
-    </xf-form>
+    </xf-group>
+</xf-form>
 </body>
 </html>

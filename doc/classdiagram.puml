@@ -1,0 +1,77 @@
+@startuml
+
+class XfForm {
+    refresh()
+}
+class BoundElement{
+    ref
+    evalBinding()
+    getBindingExpr()
+    getModel()
+}
+
+package "model" #DDDDDD {
+    class XfModel{
+        bindingMap[]
+        rebuild()
+        recalculate()
+        revalidate()
+        registerBinding()
+    }
+    class XfInstance{
+        getInstanceData()
+        getDefaultContext()
+    }
+    class XfBind
+    class XfSubmission
+}
+
+
+
+package "view" #DDDDDD{
+    class UIElement{
+        refresh()
+    }
+    abstract class AbstractControl{
+        getValue()
+    }
+    UIElement <|-- AbstractControl
+    AbstractControl <|-- XfInput
+    AbstractControl <|-- XfOutput
+    AbstractControl <|-- XfButton
+    UIElement <|-- XfRepeat
+    UIElement <|-- XfRepeatitem
+    UIElement <|-- XfGroup
+    UIElement <|-- XfSwitch
+    AbstractControl <|-- XfSelect
+    AbstractControl <|-- XfSelect1
+}
+
+package "controller" #DDDDDD{
+    class XfAction{
+        needsRebuild
+        needsRecalculate
+        needsRevalidate
+        needsRefresh
+        execute()
+        actionPerformed()
+    }
+    XfAction <|-- XfDelete
+    XfAction <|-- XfAppend
+    XfAction <|-- XfInsert
+    XfAction <|-- XfSetvalue
+
+}
+
+
+
+BoundElement <|-- UIElement
+BoundElement <|-- XfAction
+BoundElement <|-- XfBind
+BoundElement <|-- XfSubmission
+
+
+
+
+
+@enduml

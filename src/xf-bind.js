@@ -8,10 +8,10 @@ import {
     registerCustomXPathFunction } from 'fontoxpath';
 */
 
-import fx from '../output/fontoxpath.js';
-import evaluateXPathToFirstNode from '../output/fontoxpath.js';
-import evaluateXPath from '../output/fontoxpath.js';
-import registerCustomXPathFunction from '../output/fontoxpath.js';
+import fx from './output/fontoxpath.js';
+import evaluateXPathToFirstNode from './output/fontoxpath.js';
+import evaluateXPath from './output/fontoxpath.js';
+import registerCustomXPathFunction from './output/fontoxpath.js';
 
 
 export class XfBind extends LitElement {
@@ -148,12 +148,12 @@ export class XfBind extends LitElement {
         // console.log('model namespace ', this.model.lookupNamespaceURI(""));
         // console.log('nodeset ', this.nodeset);
 
-        let result = fx.evaluateXPath('Q{xf}instance("second")',this.nodeset,null,{});
+        // let result = fx.evaluateXPath('Q{xf}instance("second")',this.nodeset,null,{});
         // console.log('????? result ',result);
 
         // result = fx.evaluateXPath('Q{xf}instance("second")//outro',this.nodeset,null,null,null, {namespaceResolver: this.namespaceResolver});
-        result = fx.evaluateXPath('Q{xf}instance("second")/outro',this.nodeset,null,null,null, {});
-        console.log('????? result ',result);
+        // result = fx.evaluateXPath('Q{xf}instance("second")/outro',this.nodeset,null,null,null, {});
+        // console.log('????? result ',result);
 
 
         // console.log('xf-bind init nodeset ', this.nodeset);
@@ -248,7 +248,7 @@ export class XfBind extends LitElement {
         modelItem.node = node;
 */
         const modelItem = {
-            value: value,
+            // value: value,
             readonly:ro,
             required:req,
             relevant: relevant,

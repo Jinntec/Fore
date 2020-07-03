@@ -61,30 +61,30 @@ describe('initialize repeat', () => {
         // some modelItem checks
         expect(model.bindingMap[0].modelItem.required).to.equal(true);
         expect(model.bindingMap[0].refnode.nodeName).to.equal('task');
-        expect(model.bindingMap[0].modelItem.value).to.equal('Pick up Milk');
+        expect(model.bindingMap[0].modelItem.node.textContent).to.equal('Pick up Milk');
 
 
         expect(model.bindingMap[1].modelItem.required).to.equal(true);
         expect(model.bindingMap[1].refnode.nodeName).to.equal('task');
-        expect(model.bindingMap[1].modelItem.value).to.equal('Make tutorial part 1');
+        expect(model.bindingMap[1].modelItem.node.textContent).to.equal('Make tutorial part 1');
 
 
         expect(model.bindingMap[2].refnode.nodeName).to.equal('complete'); //text node
         expect(model.bindingMap[2].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[2].modelItem.value).to.equal('false');
+        expect(model.bindingMap[2].modelItem.node.textContent).to.equal('false');
 
 
         expect(model.bindingMap[3].refnode.nodeName).to.equal('complete'); //text node
         expect(model.bindingMap[3].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[3].modelItem.value).to.equal('true');
+        expect(model.bindingMap[3].modelItem.node.textContent).to.equal('true');
 
         expect(model.bindingMap[4].refnode.nodeName).to.equal('due'); //text node
         expect(model.bindingMap[4].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[4].modelItem.value).to.equal('2019-02-04');
+        expect(model.bindingMap[4].modelItem.node.textContent).to.equal('2019-02-04');
 
         expect(model.bindingMap[5].refnode.nodeName).to.equal('due'); //text node
         expect(model.bindingMap[5].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[5].modelItem.value).to.equal('2019-01-04');
+        expect(model.bindingMap[5].modelItem.node.textContent).to.equal('2019-01-04');
 
 
     });

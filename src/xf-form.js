@@ -5,12 +5,22 @@ import '../assets/@polymer/paper-button/paper-button.js';
 import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
+
 import {Fore} from './fore.js';
+
+//model classes
 import './xf-model.js';
-import './xf-group.js';
-import '../src/xf-output.js';
-import '../src/xf-input.js';
-import '../src/xf-message.js';
+
+//ui classes
+import './ui/xf-button.js';
+import './ui/xf-group.js';
+import './ui/xf-output.js';
+import './ui/xf-input.js';
+
+//action classes
+import './actions/xf-action.js';
+import './deprecated/xf-message.js';
+import './actions/xf-delete.js';
 
 
 
@@ -18,8 +28,8 @@ import '../src/xf-message.js';
 
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
-import fx from "../output/fontoxpath";
-import registerCustomXPathFunction from '../output/fontoxpath.js';
+import fx from "./output/fontoxpath";
+import registerCustomXPathFunction from './output/fontoxpath.js';
 
 
 /**
@@ -105,11 +115,13 @@ export class XfForm extends LitElement {
                 const instance = this.querySelector('xf-instance[id=' + string + ']');
 
                 // const def = instance.getInstanceData();
-                const def = instance.getDefaultContext();
-                // console.log('target instance root node: ', def);
+                if(instance) {
+                    const def = instance.getDefaultContext();
+                    // console.log('target instance root node: ', def);
 
-                return def;
-                // return instance.getInstanceData();
+                    return def;
+                }
+                return null;
             }
         );
 

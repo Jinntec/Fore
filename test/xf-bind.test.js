@@ -31,8 +31,9 @@ describe('initialize bind', () => {
 
         const mi = model.bindingMap[0];
         console.log('*****',mi);
-        expect(mi.modelItem.value).to.exist;
-        expect(mi.modelItem.value).to.equal('Hello World!');
+        // expect(mi.modelItem.value).to.exist;
+        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
+        expect(mi.refnode).to.equal(mi.modelItem.node);
 
 
         expect(mi.modelItem.readonly).to.exist;
@@ -74,8 +75,8 @@ describe('initialize bind', () => {
         expect(model.bindingMap.length).to.equal(2);
 
         const mi = model.bindingMap[1];
-        expect(mi.modelItem.value).to.exist;
-        expect(mi.modelItem.value).to.equal('message');
+        expect(mi.modelItem.node).to.exist;
+        expect(mi.modelItem.node.textContent).to.equal('message');
     });
 
     it('works with nested element', async () => {
@@ -108,8 +109,8 @@ describe('initialize bind', () => {
         expect(model.bindingMap.length).to.equal(2);
 
         const mi = model.bindingMap[1];
-        expect(mi.modelItem.value).to.exist;
-        expect(mi.modelItem.value).to.equal('Hello World!');
+        expect(mi.modelItem.node).to.exist;
+        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
     });
 
     it('works for repeated element', async () => {
@@ -155,7 +156,7 @@ describe('initialize bind', () => {
 
         console.log('model', model.bindingMap);
         expect(model.bindingMap[0].refnode.nodeType).to.equal(1);
-        expect(model.bindingMap[0].modelItem.value).to.equal('Pick up Milk');
+        expect(model.bindingMap[0].modelItem.node.textContent).to.equal('Pick up Milk');
 
 /*
         expect(model.bindingMap[2].refnode.nodeType).to.equal(3);
@@ -166,7 +167,7 @@ describe('initialize bind', () => {
 */
 
         expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
-        expect(model.bindingMap[4].modelItem.value).to.equal('2019-02-04');
+        expect(model.bindingMap[4].modelItem.node.textContent).to.equal('2019-02-04');
 
     });
 

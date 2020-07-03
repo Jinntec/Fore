@@ -1,11 +1,4 @@
 
-import fx from '../output/fontoxpath.js';
-import evaluateXPathToBoolean from '../output/fontoxpath.js';
-import evaluateXPathToString from '../output/fontoxpath.js';
-import evaluateXPathToFirstNode from '../output/fontoxpath.js';
-import evaluateXPathToNodes from '../output/fontoxpath.js';
-import evaluateXPath from '../output/fontoxpath.js';
-
 
 /**
  * Class for holding ModelItem facets.
@@ -52,7 +45,6 @@ export class ModelItem {
 
 
     setNodeValue (newVal) {
-
         if(this.node.nodeType === Node.ATTRIBUTE_NODE){
             this.node.nodeValue = newVal;
         }else{
