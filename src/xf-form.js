@@ -57,6 +57,9 @@ export class XfForm extends LitElement {
              */
             models:{
                 type: Array
+            },
+            ready:{
+                type:Boolean
             }
         };
     }
@@ -66,6 +69,7 @@ export class XfForm extends LitElement {
         this.models = [];
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
+        this.ready = false;
     }
 
     render() {
@@ -156,6 +160,7 @@ export class XfForm extends LitElement {
         Fore.updateChildren(uiElements);
 
         console.log('dispatch refresh-done');
+        this.ready = true;
         this.dispatchEvent(new CustomEvent('refresh-done', {}));
 
         console.groupEnd();

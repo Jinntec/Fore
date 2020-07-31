@@ -64,15 +64,14 @@ class XfInput extends XfAbstractControl{
     render() {
         return html`
             ${this.type === 'text' || this.type === 'date' ?
-                html`<paper-input id="input" 
+                html`<paper-input id="control" 
                                   label="${this.label}"
                                   .value="${this.value}"
                                   type="${this.type}"
-                                  ?required="${this.required}"
                                   @input="${this._handleInput}"></paper-input>` :''}
             
             ${this.type === 'checkbox' ?
-            html`<paper-checkbox label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
+                html`<paper-checkbox id="control" label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
         `;
     }
 
@@ -84,10 +83,11 @@ class XfInput extends XfAbstractControl{
         // console.log('------ nodeset ', this.nodeset);
         // console.log('------ modelItem ', this.getModelItem());
         // console.log('------- required', this.getModelItem().modelItem.required);
-        this.required = true;
+        // this.required = this.getModelItem().modelItem.required;
+        // this.valid = this.getModelItem().modelItem.valid;
         // this.value = this.getValue();
         // this.value = this.getModelItem().modelItem.value;
-        this.value = this.getValue();
+        // this.value = this.getValue();
         this.requestUpdate();
     }
 
@@ -95,7 +95,7 @@ class XfInput extends XfAbstractControl{
         const mi = this.getModelItem();
         // console.log('modelItem ', mi);
 
-        const inputValue = this.shadowRoot.querySelector('#input').value;
+        const inputValue = this.shadowRoot.querySelector('#control').value;
 
         // console.log('_handleInput refnode ', mi.refnode);
 

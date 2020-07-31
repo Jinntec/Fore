@@ -167,19 +167,21 @@ export class XfModel extends LitElement {
         const binds = this.querySelectorAll('xf-bind');
         binds.forEach(bind => {
             // console.log('bind ', bind);
-            // console.log('bind ', bind.ref);
-            // console.log('instanceData ', this.getDefaultInstanceData());
+            console.log('bind ', bind.ref);
+            console.log('instanceData ', this.getDefaultInstanceData());
 
-            let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultInstanceData(), null, {});
-            // console.log('evaluated context node ', contextNode);
+            let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultContext(), null, {});
+            console.log('evaluated context node ', contextNode);
 
             let result ='';
             if(bind.readonly !== 'false()'){
-                // console.log('evaluating readonly expression', bind.readonly);
+                console.log('evaluating readonly expression', bind.readonly);
+                result =  fx.evaluateXPathToBoolean(bind.readonly, contextNode, null, {});
+                console.log('readonly evaluated to', result);
             }
             if(bind.required !== 'false()'){
                 // console.log('evaluating required expression', bind.required);
-                result =  fx.evaluateXPathToBoolean(bind.required, result, null, {});
+                result =  fx.evaluateXPathToBoolean(bind.required, contextNode, null, {});
                 console.log('required evaluated to', result);
             }
             if(bind.relevant !== 'true()'){

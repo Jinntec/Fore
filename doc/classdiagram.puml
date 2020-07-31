@@ -1,5 +1,4 @@
 @startuml
-
 class XfForm {
     refresh()
 }
@@ -35,6 +34,9 @@ package "view" #DDDDDD{
     abstract class AbstractControl{
         getValue()
     }
+    class XfSwitch #lightgrey
+    class XfSelect1 #lightgrey
+    class XfSelect #lightgrey
     UIElement <|-- AbstractControl
     AbstractControl <|-- XfInput
     AbstractControl <|-- XfOutput

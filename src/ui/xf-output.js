@@ -1,4 +1,4 @@
-import {LitElement, html, css} from 'lit-element';
+import { html, css} from 'lit-element';
 
 import XfAbstractControl from './xf-abstract-control.js';
 
@@ -15,37 +15,38 @@ export class XfOutput extends XfAbstractControl {
 
     static get properties() {
         return {
-/*
-            ref:{
-                type: String
-            },
-*/
-            value:{
-                type: String
-            }
+            ...super.properties
         };
     }
 
-    constructor() {
-        super();
-        this.value='';
-        this.model='';
-
-    }
 
     render() {
         return html`
-            <span>${this.value}</span>
+            <span id="control">${this.value}</span>
         `;
     }
 
-    firstUpdated(_changedProperties) {
-        console.log('firstUpdated')
+/*
+    getControlValue() {
+        // super.getControlValue();
+        console.log('output control value ', this.value);
+        // console.log('output control value ', this.getValue());
+        return this.shadowRoot.querySelector('#control');
+        // return this.value;
+    }
+*/
+
+    isRequired() {
+        console.log('Output isrequired');
+        return false;
     }
 
-    refresh() {
-        super.refresh();
-        this.value = this.getValue();
+    isReadonly(){
+        return true;
+    }
+
+    handleRequired(mi) {
+        return;
     }
 
 

@@ -66,7 +66,8 @@ export class BoundElement extends LitElement {
     }
 
     getModelItem() {
-        return this.model.bindingMap.find(m => m.refnode === this.nodeset);
+        // return this.model.bindingMap.find(m => m.refnode === this.nodeset);
+        return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
     }
 
     getBindingExpr() {
