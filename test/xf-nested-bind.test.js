@@ -24,7 +24,7 @@ describe('initialize nested bindings', () => {
                         </xf-bind>
                     </xf-model>
                     <xf-group>
-                        <xf-output id="output1" ref="greeting"> </xf-output> : <xf-output id="output2" ref="greeting"></xf-output>
+                        <xf-output id="output1" ref="greeting"> </xf-output> : <xf-output id="output2" ref="greeting/@type"></xf-output>
                     </xf-group>
                 </xf-form>               
             `)
@@ -44,20 +44,26 @@ describe('initialize nested bindings', () => {
 
         const mi2 = model.bindingMap[1];
         expect(mi2.modelItem.node).to.exist;
+        expect(mi2.modelItem.node.nodeType).to.equal(2);//attribute
+        expect(mi2.modelItem.node.nodeName).to.equal("type");//attribute
         expect(mi2.modelItem.node.textContent).to.equal('message');
 
         //check the controls
         const out1 = document.getElementById('output1');
         expect(out1.nodeName).to.equal('XF-OUTPUT');
         expect(out1.nodeset).to.exist;
+        expect("nodeType" in out1.nodeset).to.equal(true);
+        expect(out1.nodeset.nodeType).to.equal(1);
         expect(out1.ref).to.equal('greeting');
         expect(out1.value).to.equal('Hello World!');
 
-        const out2 = document.getElementById('output1');
+        const out2 = document.getElementById('output2');
         expect(out2.nodeName).to.equal('XF-OUTPUT');
         expect(out2.nodeset).to.exist;
-        expect(out1.ref).to.equal('greeting');
-        expect(out1.value).to.equal('Hello World!');
+        console.log('++++++++++++ nodeset ',out2.nodeset);
+        console.log('++++++++++++ nodeset ',out2.nodeset.parentNode);
+        expect(out2.ref).to.equal('greeting/@type');
+        expect(out2.value).to.equal('message');
     });
 
 

@@ -102,8 +102,11 @@ class XfInput extends XfAbstractControl{
         // const setVal = new XfSetvalue();
         // setVal.setValue(this.nodeset,inputValue);
 
-        this.setValue(mi.refnode,inputValue);
-        mi.value = inputValue;
+        // this.setValue(mi.refnode,inputValue);
+
+        // mi.value = inputValue;
+        new XfSetvalue().setValue(mi,this.value);
+
 
         // console.log(this.model.instances[0].getInstanceData());
         this.model.updateModel();

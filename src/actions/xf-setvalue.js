@@ -26,7 +26,8 @@ export default class XfSetvalue extends XfAction {
     execute() {
         super.execute();
 
-        this.setValue(this.nodeset,this.value);
+        const modelItem = this.getModelItem();
+        this.setValue(modelItem,this.value);
 
 /*
         const newVal = this.value;
@@ -76,8 +77,20 @@ export default class XfSetvalue extends XfAction {
         // super.execute();
     }
 
-    setValue(node, newVal){
+    setValue(modelItem, newVal){
         // console.log('setvalue nodeset ', this.nodeset, this.value);
+
+        if(modelItem.value !== newVal){
+            modelItem.value = newVal;
+
+            this.needsRebuild = true;
+            this.needsRecalculate = true;
+            this.needsRevalidate = true;
+            this.needsRefresh = true;
+            this.actionPerformed();
+        }
+
+/*
         if(node.textContent !== newVal) {
             node.textContent = newVal;
             // console.log('setvalue nodeset ', this.nodeset);
@@ -89,6 +102,7 @@ export default class XfSetvalue extends XfAction {
             this.needsRefresh = true;
             this.actionPerformed();
         }
+*/
 
     }
 

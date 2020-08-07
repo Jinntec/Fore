@@ -43,9 +43,11 @@ export class XfAction extends BoundElement{
     }
 
     execute (){
+/*
         if(this.getBindingExpr()){
             this.nodeset = this.evalBinding();
         }
+*/
     }
 
     actionPerformed(){

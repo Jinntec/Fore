@@ -42,12 +42,15 @@ export default class XfAbstractControl extends UiElement {
         console.log('current val ',currentVal);
         super.refresh();
 
+        if(this.isNotBound()) return;
+
         const mi = this.getModelItem();
         if(mi === undefined) return;
         console.log('mip ', mi);
 
 
-        this.value = this.getValue();
+        // this.value = this.getValue();
+        this.value = mi.value;
 
 
         if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
@@ -61,12 +64,14 @@ export default class XfAbstractControl extends UiElement {
         this.handleValid(mi);
         this.handleEnabled(mi);
 
+        this.requestUpdate();
+
     }
 
     handleRequired(mi) {
-        console.log('mip required', mi.modelItem.required);
-        if (this.isRequired() !== mi.modelItem.required) {
-            if (mi.modelItem.required) {
+        console.log('mip required', mi.required);
+        if (this.isRequired() !== mi.required) {
+            if (mi.required) {
                 this.control.setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
@@ -77,13 +82,13 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleReadonly(mi){
-        console.log('mip readonly', mi.modelItem.readonly);
-        if (this.isReadonly() !== mi.modelItem.readonly) {
-            if (mi.modelItem.readonly) {
+        console.log('mip readonly', mi.readonly);
+        if (this.isReadonly() !== mi.readonly) {
+            if (mi.readonly) {
                 this.control.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
-            if(!mi.modelItem.readonly){
+            if(!mi.readonly){
                 this.control.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
@@ -91,9 +96,9 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleValid(mi){
-        console.log('mip valid', mi.modelItem.valid);
-        if (this.isValid() !== mi.modelItem.valid) {
-            if (mi.modelItem.valid) {
+        console.log('mip valid', mi.valid);
+        if (this.isValid() !== mi.valid) {
+            if (mi.valid) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
                 this.dispatchEvent(new CustomEvent('invalid', {}));
@@ -102,9 +107,9 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleEnabled(mi){
-        console.log('mip valid', mi.modelItem.enabled);
-        if (this.isEnabled() !== mi.modelItem.enabled) {
-            if (mi.modelItem.enabled) {
+        console.log('mip valid', mi.enabled);
+        if (this.isEnabled() !== mi.enabled) {
+            if (mi.enabled) {
                 this.dispatchEvent(new CustomEvent('enabled', {}));
             } else {
                 this.dispatchEvent(new CustomEvent('disabled', {}));
@@ -114,9 +119,11 @@ export default class XfAbstractControl extends UiElement {
 
 
 
+/*
     setValue(node, newVal) {
 
         const m = this.getModelItem();
+        m.value =
         // m.setNodeValue(newVal);
 
         if (node.nodeType === node.ATTRIBUTE_NODE) {
@@ -126,8 +133,10 @@ export default class XfAbstractControl extends UiElement {
         }
 
     }
+*/
 
 
+/*
     getValue() {
         // console.log('getValue nodeset ', this.nodeset);
         if (this.nodeset.nodeType === Node.ELEMENT_NODE) {
@@ -136,6 +145,7 @@ export default class XfAbstractControl extends UiElement {
         return this.nodeset;
         // return this.getModelItem().modelItem.value;
     }
+*/
 
     getControlValue(){};
 

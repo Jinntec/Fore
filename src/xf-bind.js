@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'lit-element';
-
+import {ModelItem} from './modelitem.js';
 
 /*
 import {
@@ -156,7 +156,7 @@ export class XfBind extends LitElement {
         // console.log('????? result ',result);
 
 
-        // console.log('xf-bind init nodeset ', this.nodeset);
+        console.log('xf-bind init nodeset ', this.nodeset);
 
         this._createModelItems();
 
@@ -233,8 +233,8 @@ export class XfBind extends LitElement {
         }
         const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
         const req = fx.evaluateXPathToBoolean(this.required, targetNode, null, {});
-        const relevant = fx.evaluateXPath(this.relevant, targetNode, null, {});
-        const valid = fx.evaluateXPath(this.constraint, targetNode, null, {});
+        const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
+        const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
 
 
@@ -251,16 +251,20 @@ export class XfBind extends LitElement {
             // value: value,
             readonly:ro,
             required:req,
-            relevant: relevant,
-            valid:valid,
+            relevant: rel,
+            valid:val,
             type: this.type,
             node: targetNode
         };
 
         // console.log('xf-bind created modelItem: ', modelItem);
 
-        this.model.registerBinding(targetNode, modelItem);
+        const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
+        console.log('new ModelItem from Class ', mi);
 
+
+        this.model.registerBinding(targetNode, modelItem);
+        this.model.registerModelItem(mi);
     }
 
 }

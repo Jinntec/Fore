@@ -45,6 +45,9 @@ export class XfModel extends LitElement {
             },
             defaultContext:{
                 type:Object
+            },
+            modelItems:{
+                type:Array
             }
 
         };
@@ -55,6 +58,7 @@ export class XfModel extends LitElement {
         this.id = '';
         this.instances = [];
         this.bindingMap = [];
+        this.modelItems = [];
         this.defaultContext = {};
 
         this.addEventListener('model-construct', this._modelConstruct);
@@ -122,6 +126,10 @@ export class XfModel extends LitElement {
         // console.log('MODEL registered bindings ', this.bindingMap);
     }
 
+    registerModelItem(modelItem){
+        this.modelItems.push(modelItem);
+    }
+
     /**
      * update action triggering the update cycle
      */
@@ -137,6 +145,7 @@ export class XfModel extends LitElement {
 
         //reset
         this.bindingMap = [];
+        this.modelItems = [];
 
         // console.group('rebuild');
 
@@ -148,7 +157,8 @@ export class XfModel extends LitElement {
         binds.forEach(bind => {
             bind.init(this);
         });
-        console.log('rebuild finished with modelItems ', this.bindingMap);
+        console.log('rebuild finished with bindingMap ', this.bindingMap);
+        console.log('rebuild finished with modelItems ', this.modelItems);
         console.groupEnd();
     //
     }

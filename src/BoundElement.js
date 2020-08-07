@@ -16,11 +16,8 @@ export class BoundElement extends LitElement {
             model: {
                 type: Object
             },
-            nodeset: {
-                type: Object
-            },
-            contextNode: {
-                type: Object
+            modelItem:{
+                type:Object
             }
         };
     }
@@ -28,8 +25,7 @@ export class BoundElement extends LitElement {
     constructor() {
         super();
         this.model = {};
-        this.nodeset = null;
-        this.contextNode = {};
+        this.modelItem = {};
     }
 
     evalBinding() {
@@ -49,7 +45,7 @@ export class BoundElement extends LitElement {
             // console.log('BoundElement.evalBinding parent ', this.parentNode)
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
-            return fx.evaluateXPath(bindingExpr, this.parentNode.nodeset, null, {});
+            return fx.evaluateXPathToNodes(bindingExpr, this.parentNode.nodeset, null, {})[0];
 
         }
 
@@ -67,11 +63,17 @@ export class BoundElement extends LitElement {
 
     getModelItem() {
         // return this.model.bindingMap.find(m => m.refnode === this.nodeset);
-        return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
+        // return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
+        const nodeset = this.evalBinding();
+        return this.getModel().modelItems.find(m => m.node === nodeset);
     }
 
     getBindingExpr() {
         return this.getAttribute('ref');
+    }
+
+    isNotBound(){
+        return !this.hasAttribute('ref');
     }
 
 
