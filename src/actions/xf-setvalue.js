@@ -29,23 +29,6 @@ export default class XfSetvalue extends XfAction {
         const modelItem = this.getModelItem();
         this.setValue(modelItem,this.value);
 
-/*
-        const newVal = this.value;
-        console.log('setvalue nodeset ', this.nodeset, this.value);
-        this.nodeset.textContent = newVal;
-        console.log('setvalue nodeset ', this.nodeset);
-        console.log('setvalue modelItem ', this.getModelItem());
-
-        // this.doRebuild(true);
-        // this.doRecalculate(true);
-        // this.doRevalidate(true);
-        // this.doRefresh(true);
-        this.needsRebuild = true;
-        this.needsRecalculate = true;
-        this.needsRevalidate = true;
-        this.needsRefresh = true;
-        this.actionPerformed();
-*/
 
         /*
                 const repeated = this.closest('xf-repeat-item');
@@ -78,7 +61,7 @@ export default class XfSetvalue extends XfAction {
     }
 
     setValue(modelItem, newVal){
-        // console.log('setvalue nodeset ', this.nodeset, this.value);
+        console.log('setvalue  ', modelItem, newVal);
 
         if(modelItem.value !== newVal){
             modelItem.value = newVal;
@@ -89,20 +72,6 @@ export default class XfSetvalue extends XfAction {
             this.needsRefresh = true;
             this.actionPerformed();
         }
-
-/*
-        if(node.textContent !== newVal) {
-            node.textContent = newVal;
-            // console.log('setvalue nodeset ', this.nodeset);
-            // console.log('setvalue modelItem ', this.getModelItem());
-
-            this.needsRebuild = true;
-            this.needsRecalculate = true;
-            this.needsRevalidate = true;
-            this.needsRefresh = true;
-            this.actionPerformed();
-        }
-*/
 
     }
 

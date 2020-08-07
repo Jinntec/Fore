@@ -34,6 +34,8 @@ export class ModelItem {
     }
 
     set value(newVal) {
+        console.log('modelitem.setvalue oldVal', this.value);
+        console.log('modelitem.setvalue newVal', newVal);
         if(this.node.nodeType === Node.ATTRIBUTE_NODE){
             this.node.nodeValue = newVal;
         }else{

@@ -236,34 +236,9 @@ export class XfBind extends LitElement {
         const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
         const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
-
-
-/*
-        const modelItem = new ModelItem();
-        modelItem.readonly = ro;
-        modelItem.relevant = relevant;
-        modelItem.required = req;
-        modelItem.valid = valid;
-        modelItem.value = value;
-        modelItem.node = node;
-*/
-        const modelItem = {
-            // value: value,
-            readonly:ro,
-            required:req,
-            relevant: rel,
-            valid:val,
-            type: this.type,
-            node: targetNode
-        };
-
-        // console.log('xf-bind created modelItem: ', modelItem);
-
         const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
         console.log('new ModelItem from Class ', mi);
 
-
-        this.model.registerBinding(targetNode, modelItem);
         this.model.registerModelItem(mi);
     }
 

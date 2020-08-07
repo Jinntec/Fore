@@ -97,15 +97,11 @@ class XfInput extends XfAbstractControl{
 
         const inputValue = this.shadowRoot.querySelector('#control').value;
 
-        // console.log('_handleInput refnode ', mi.refnode);
-
-        // const setVal = new XfSetvalue();
-        // setVal.setValue(this.nodeset,inputValue);
-
-        // this.setValue(mi.refnode,inputValue);
-
-        // mi.value = inputValue;
-        new XfSetvalue().setValue(mi,this.value);
+        //doing just the same as the setvalue action
+        // const sv = new XfSetvalue().setValue(mi,inputValue);
+        const sv = document.createElement('xf-setvalue');
+        this.shadowRoot.appendChild(sv);
+        sv.setValue(mi,inputValue);
 
 
         // console.log(this.model.instances[0].getInstanceData());

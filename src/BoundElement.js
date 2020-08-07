@@ -7,6 +7,7 @@ import evaluateXPathToString from './output/fontoxpath.js';
 import evaluateXPathToFirstNode from './output/fontoxpath.js';
 import evaluateXPathToNodes from './output/fontoxpath.js';
 import evaluateXPath from './output/fontoxpath.js';
+// import parseScript from './output/fontoxpath.js';
 
 export class BoundElement extends LitElement {
 
@@ -32,6 +33,18 @@ export class BoundElement extends LitElement {
         this.ref = this.getBindingExpr();
 
         const bindingExpr = this.getBindingExpr();
+
+/*
+        const xqueryx = parseScript(
+            bindingExpr,
+            {
+                language: evaluateXPath.XPATH_3_1_LANGUAGE
+            },
+            new slimdom.Document()
+        );
+        console.log('parsed expression: ', xqueryx);
+*/
+
         this.model = this.getModel();
 
         const repeatItem = this.closest('xf-repeatitem');
@@ -41,11 +54,14 @@ export class BoundElement extends LitElement {
             return r;
         }
 
-        if (this.parentNode && this.parentNode.nodeset) {
+        // if (this.parentNode && this.parentNode.nodeset) {
+        const outer = this.parentNode.closest('[ref]');
+        if (outer) {
+            console.log('ancestor bind ', outer);
             // console.log('BoundElement.evalBinding parent ', this.parentNode)
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
-            return fx.evaluateXPathToNodes(bindingExpr, this.parentNode.nodeset, null, {})[0];
+            return fx.evaluateXPathToFirstNode(bindingExpr, this.parentNode.nodeset, null, {});
 
         }
 

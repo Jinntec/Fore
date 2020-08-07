@@ -52,16 +52,17 @@ export class XfAction extends BoundElement{
 
     actionPerformed(){
         if(this.needsRebuild){
-            this.model.rebuild();
+            this.getModel().rebuild();
         }
         if(this.needsRecalculate){
-            this.model.recalculate();
+            this.getModel().recalculate();
         }
         if(this.needsRevalidate){
-            this.model.revalidate();
+            this.getModel().revalidate();
         }
         if(this.needsRefresh){
-            this.closest('xf-form').refresh();
+            // this.closest('xf-form').refresh();
+            document.querySelector('xf-form').refresh();
         }
     }
 

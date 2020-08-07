@@ -1,5 +1,6 @@
 import {UiElement} from './UiElement.js';
 import  '../xf-model.js';
+
 /**
  * `xf-abstract-control` -
  * is a general class for control elements.
@@ -69,7 +70,7 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleRequired(mi) {
-        console.log('mip required', mi.required);
+        // console.log('mip required', mi.required);
         if (this.isRequired() !== mi.required) {
             if (mi.required) {
                 this.control.setAttribute('required','required');
@@ -82,7 +83,7 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleReadonly(mi){
-        console.log('mip readonly', mi.readonly);
+        // console.log('mip readonly', mi.readonly);
         if (this.isReadonly() !== mi.readonly) {
             if (mi.readonly) {
                 this.control.setAttribute('readonly','readonly');
@@ -96,7 +97,7 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleValid(mi){
-        console.log('mip valid', mi.valid);
+        // console.log('mip valid', mi.valid);
         if (this.isValid() !== mi.valid) {
             if (mi.valid) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
@@ -107,7 +108,7 @@ export default class XfAbstractControl extends UiElement {
     }
 
     handleEnabled(mi){
-        console.log('mip valid', mi.enabled);
+        // console.log('mip valid', mi.enabled);
         if (this.isEnabled() !== mi.enabled) {
             if (mi.enabled) {
                 this.dispatchEvent(new CustomEvent('enabled', {}));

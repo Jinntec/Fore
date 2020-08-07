@@ -30,19 +30,6 @@ export class XfModel extends LitElement {
                 type: Object
             },
 */
-            /**
-             * array of objects of the structure:
-             * {
-             *     refnode: [referred node],
-             *     modelItem:[modelItem object]
-             * }
-             *
-             * Each array entry represents one node <-> modelItem mapping.
-             *
-             */
-            bindingMap:{
-                type: Array
-            },
             defaultContext:{
                 type:Object
             },
@@ -57,7 +44,6 @@ export class XfModel extends LitElement {
         super();
         this.id = '';
         this.instances = [];
-        this.bindingMap = [];
         this.modelItems = [];
         this.defaultContext = {};
 
@@ -108,23 +94,6 @@ export class XfModel extends LitElement {
 
     }
 
-    /**
-     * registers a binding mapping - called by xf-bind when initializing.
-     *
-     * @param refnode - the node referred to by binding
-     * @param modelItem - the associated modelItem for given node
-     */
-    registerBinding(refnode, modelItem){
-        // console.log('registerBinding ', refnode, modelItem);
-        // console.log('registerBinding nodeType ', refnode.nodeType);
-        const alreadyThere = this.bindingMap.findIndex(node => node.refnode === refnode);
-        if(alreadyThere !== -1){
-            this.bindingMap.splice(alreadyThere,1,{refnode: refnode, modelItem: modelItem});
-        }else{
-            this.bindingMap.push({refnode: refnode, modelItem: modelItem});
-        }
-        // console.log('MODEL registered bindings ', this.bindingMap);
-    }
 
     registerModelItem(modelItem){
         this.modelItems.push(modelItem);
@@ -157,7 +126,6 @@ export class XfModel extends LitElement {
         binds.forEach(bind => {
             bind.init(this);
         });
-        console.log('rebuild finished with bindingMap ', this.bindingMap);
         console.log('rebuild finished with modelItems ', this.modelItems);
         console.groupEnd();
     //
@@ -255,14 +223,6 @@ export class XfModel extends LitElement {
         const result = this.instances[0].evalXPath(bindingExpr);
 
 
-        const out = this.bindingMap.find(node => node.refnode === result);
-        // console.log('modelitem for bindingeExpr ', out);
-
-        // console.log('modelitem for bindingExpr ', out);
-        // console.log('modelitem for bindingExpr ', out.modelItem);
-        // console.log('modelitem for bindingeExpr ', out.modelItem);
-
-        // console.log('xf-model.evalBinding result: ', result);
         return result;
 
     }

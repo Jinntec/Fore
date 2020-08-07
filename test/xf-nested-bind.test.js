@@ -35,18 +35,18 @@ describe('initialize nested bindings', () => {
         expect(bind).to.exist;
 
         const model = document.getElementById('model1');
-        expect(model.bindingMap.length).to.equal(2);
+        expect(model.modelItems.length).to.equal(2);
 
         //check the modelitems
-        const mi = model.bindingMap[0];
-        expect(mi.modelItem.node).to.exist;
-        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
+        const mi = model.modelItems[0];
+        expect(mi.node).to.exist;
+        expect(mi.node.textContent).to.equal('Hello World!');
 
-        const mi2 = model.bindingMap[1];
-        expect(mi2.modelItem.node).to.exist;
-        expect(mi2.modelItem.node.nodeType).to.equal(2);//attribute
-        expect(mi2.modelItem.node.nodeName).to.equal("type");//attribute
-        expect(mi2.modelItem.node.textContent).to.equal('message');
+        const mi2 = model.modelItems[1];
+        expect(mi2.node).to.exist;
+        expect(mi2.node.nodeType).to.equal(2);//attribute
+        expect(mi2.node.nodeName).to.equal("type");//attribute
+        expect(mi2.node.textContent).to.equal('message');
 
         //check the controls
         const out1 = document.getElementById('output1');

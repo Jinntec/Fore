@@ -27,21 +27,21 @@ describe('initialize bind', () => {
         expect(bind).to.exist;
 
         const model = document.getElementById('model1');
-        expect(model.bindingMap.length).to.equal(1);
+        expect(model.modelItems.length).to.equal(1);
 
-        const mi = model.bindingMap[0];
+        const mi = model.modelItems[0];
         console.log('*****',mi);
         // expect(mi.modelItem.value).to.exist;
-        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
-        expect(mi.refnode).to.equal(mi.modelItem.node);
+        expect(mi.node.textContent).to.equal('Hello World!');
+        expect(mi.node).to.equal(mi.node);
 
 
-        expect(mi.modelItem.readonly).to.exist;
-        expect(mi.modelItem.required).to.exist;
-        expect(mi.modelItem.required).to.equal(true);
+        expect(mi.readonly).to.exist;
+        expect(mi.required).to.exist;
+        expect(mi.required).to.equal(true);
 
-        expect(mi.modelItem.relevant).to.exist;
-        expect(mi.modelItem.valid).to.exist;
+        expect(mi.relevant).to.exist;
+        expect(mi.valid).to.exist;
         // expect(mi.modelItem.type).to.exist;
 
 
@@ -72,11 +72,11 @@ describe('initialize bind', () => {
         expect(bind2).to.exist;
 
         const model = document.getElementById('model1');
-        expect(model.bindingMap.length).to.equal(2);
+        expect(model.modelItems.length).to.equal(2);
 
-        const mi = model.bindingMap[1];
-        expect(mi.modelItem.node).to.exist;
-        expect(mi.modelItem.node.textContent).to.equal('message');
+        const mi = model.modelItems[1];
+        expect(mi.node).to.exist;
+        expect(mi.node.textContent).to.equal('message');
     });
 
     it('works with nested element', async () => {
@@ -106,11 +106,11 @@ describe('initialize bind', () => {
         expect(bind2).to.exist;
 
         const model = document.getElementById('model1');
-        expect(model.bindingMap.length).to.equal(2);
+        expect(model.modelItems.length).to.equal(2);
 
-        const mi = model.bindingMap[1];
-        expect(mi.modelItem.node).to.exist;
-        expect(mi.modelItem.node.textContent).to.equal('Hello World!');
+        const mi = model.modelItems[1];
+        expect(mi.node).to.exist;
+        expect(mi.node.textContent).to.equal('Hello World!');
     });
 
     it('works for repeated element', async () => {
@@ -152,22 +152,22 @@ describe('initialize bind', () => {
 
 
         const model = document.getElementById('record');
-        expect(model.bindingMap.length).to.equal(6);
+        expect(model.modelItems.length).to.equal(6);
 
-        console.log('model', model.bindingMap);
-        expect(model.bindingMap[0].refnode.nodeType).to.equal(1);
-        expect(model.bindingMap[0].modelItem.node.textContent).to.equal('Pick up Milk');
+        console.log('model', model.modelItems);
+        expect(model.modelItems[0].node.nodeType).to.equal(1);
+        expect(model.modelItems[0].node.textContent).to.equal('Pick up Milk');
 
 /*
-        expect(model.bindingMap[2].refnode.nodeType).to.equal(3);
-        expect(model.bindingMap[2].modelItem.value).to.equal('Pick up Milk');
+        expect(model.modelItems[2].node.nodeType).to.equal(3);
+        expect(model.modelItems[2].modelItem.value).to.equal('Pick up Milk');
 
-        expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
-        expect(model.bindingMap[4].modelItem.value).to.equal('false');
+        expect(model.modelItems[4].node.nodeType).to.equal(2);
+        expect(model.modelItems[4].modelItem.value).to.equal('false');
 */
 
-        expect(model.bindingMap[4].refnode.nodeType).to.equal(2);
-        expect(model.bindingMap[4].modelItem.node.textContent).to.equal('2019-02-04');
+        expect(model.modelItems[4].node.nodeType).to.equal(2);
+        expect(model.modelItems[4].node.textContent).to.equal('2019-02-04');
 
     });
 

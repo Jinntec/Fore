@@ -123,15 +123,15 @@ describe('initialize form', () => {
         await elementUpdated(model);
 
         // there is one binding
-        expect(el.models[0].bindingMap.length).to.equal(1);
+        expect(el.models[0].modelItems.length).to.equal(1);
 
-        const greetingMap = el.models[0].bindingMap[0];
+        const greetingMap = el.models[0].modelItems[0];
 
         //binding refers to <greeting> node
-        expect(greetingMap.refnode.nodeName).to.equal('greeting');
+        expect(greetingMap.node.nodeName).to.equal('greeting');
 
         // modelitem is initialized to correct values
-        const mi = greetingMap.modelItem;
+        const mi = greetingMap;
         expect(mi.readonly).to.equal(false);
         expect(mi.required).to.equal(true);
         expect(mi.relevant).to.equal(true);

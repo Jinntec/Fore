@@ -67,7 +67,7 @@ export class XfInstance extends LitElement {
     evalXPath(xpath){
         // console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        const result = fx.evaluateXPath(xpath, this.getDefaultContext(), null, {});
+        const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
         return result;
     }
 
