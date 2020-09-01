@@ -56,35 +56,32 @@ describe('initialize repeat', () => {
         await elementUpdated(el);
 
         const model = document.getElementById('record');
-        expect(model.bindingMap.length).to.equal(6);
+        expect(model.modelItems.length).to.equal(6);
 
         // some modelItem checks
-        expect(model.bindingMap[0].modelItem.required).to.equal(true);
-        expect(model.bindingMap[0].refnode.nodeName).to.equal('task');
-        expect(model.bindingMap[0].modelItem.node.textContent).to.equal('Pick up Milk');
+        expect(model.modelItems[0].node.nodeName).to.equal('task');
+        expect(model.modelItems[0].value).to.equal('Pick up Milk');
+        expect(model.modelItems[0].required).to.equal(true);
 
+        expect(model.modelItems[1].node.nodeName).to.equal('task');
+        expect(model.modelItems[1].value).to.equal('Make tutorial part 1');
+        expect(model.modelItems[1].modelItem.required).to.equal(true);
 
-        expect(model.bindingMap[1].modelItem.required).to.equal(true);
-        expect(model.bindingMap[1].refnode.nodeName).to.equal('task');
-        expect(model.bindingMap[1].modelItem.node.textContent).to.equal('Make tutorial part 1');
+        expect(model.modelItems[2].node.nodeName).to.equal('complete'); //text node
+        expect(model.modelItems[2].node.nodeType).to.equal(2); //attribute node
+        expect(model.modelItems[2].value).to.equal('false');
 
+        expect(model.modelItems[3].node.nodeName).to.equal('complete'); //text node
+        expect(model.modelItems[3].node.nodeType).to.equal(2); //attribute node
+        expect(model.modelItems[3].value).to.equal('true');
 
-        expect(model.bindingMap[2].refnode.nodeName).to.equal('complete'); //text node
-        expect(model.bindingMap[2].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[2].modelItem.node.textContent).to.equal('false');
+        expect(model.modelItems[4].node.nodeName).to.equal('due'); //text node
+        expect(model.modelItems[4].node.nodeType).to.equal(2); //attribute node
+        expect(model.modelItems[4].value).to.equal('2019-02-04');
 
-
-        expect(model.bindingMap[3].refnode.nodeName).to.equal('complete'); //text node
-        expect(model.bindingMap[3].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[3].modelItem.node.textContent).to.equal('true');
-
-        expect(model.bindingMap[4].refnode.nodeName).to.equal('due'); //text node
-        expect(model.bindingMap[4].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[4].modelItem.node.textContent).to.equal('2019-02-04');
-
-        expect(model.bindingMap[5].refnode.nodeName).to.equal('due'); //text node
-        expect(model.bindingMap[5].refnode.nodeType).to.equal(2); //attribute node
-        expect(model.bindingMap[5].modelItem.node.textContent).to.equal('2019-01-04');
+        expect(model.modelItems[5].node.nodeName).to.equal('due'); //text node
+        expect(model.modelItems[5].node.nodeType).to.equal(2); //attribute node
+        expect(model.modelItems[5].value).to.equal('2019-01-04');
 
 
     });

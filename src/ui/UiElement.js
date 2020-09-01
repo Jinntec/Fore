@@ -26,9 +26,9 @@ export class UiElement extends BoundElement {
     }
 
     refresh () {
-        if(this.getBindingExpr()){
-            this.nodeset = this.evalBinding();
-        }
+        // if(this.getBindingExpr()){
+        //     this.nodeset = this.evalBinding();
+        // }
     }
 
 

@@ -13,6 +13,7 @@ export default class XfAbstractControl extends UiElement {
 
     static get properties() {
         return {
+            ...super.properties,
             value:{
                 type: String
             },
@@ -41,11 +42,12 @@ export default class XfAbstractControl extends UiElement {
 
         const currentVal = this.value;
         console.log('current val ',currentVal);
-        super.refresh();
+        // super.refresh();
 
         if(this.isNotBound()) return;
 
         const mi = this.getModelItem();
+        // const mi = this.modelItem;
         if(mi === undefined) return;
         console.log('mip ', mi);
 

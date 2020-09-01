@@ -51,19 +51,26 @@ describe('initialize nested bindings', () => {
         //check the controls
         const out1 = document.getElementById('output1');
         expect(out1.nodeName).to.equal('XF-OUTPUT');
-        expect(out1.nodeset).to.exist;
-        expect("nodeType" in out1.nodeset).to.equal(true);
-        expect(out1.nodeset.nodeType).to.equal(1);
+        expect(out1.modelItem).to.exist;
+        console.log('modelItem ', out1.getModelItem());
+
+        expect(out1.getModelItem()).to.equal(mi);
+        expect(out1.getModelItem().node.nodeType).to.equal(1);
         expect(out1.ref).to.equal('greeting');
+        expect(out1.getModelItem().value).to.equal('Hello World!');
+
+
         expect(out1.value).to.equal('Hello World!');
 
-        const out2 = document.getElementById('output2');
-        expect(out2.nodeName).to.equal('XF-OUTPUT');
-        expect(out2.nodeset).to.exist;
-        console.log('++++++++++++ nodeset ',out2.nodeset);
-        console.log('++++++++++++ nodeset ',out2.nodeset.parentNode);
-        expect(out2.ref).to.equal('greeting/@type');
-        expect(out2.value).to.equal('message');
+        /*
+                const out2 = document.getElementById('output2');
+                expect(out2.nodeName).to.equal('XF-OUTPUT');
+                expect(out2.nodeset).to.exist;
+                console.log('++++++++++++ nodeset ',out2.nodeset);
+                console.log('++++++++++++ nodeset ',out2.nodeset.parentNode);
+                expect(out2.ref).to.equal('greeting/@type');
+                expect(out2.value).to.equal('message');
+        */
     });
 
 

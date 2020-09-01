@@ -7,17 +7,6 @@ class BoundElement{
     evalBinding()
     getBindingExpr()
     getModel()
-    getModelItem()
-}
-class ModelItem{
-    node
-    getValue
-    setValue
-    readonly
-    required
-    relevant
-    valid
-    type
 }
 package "model" #DDDDDD {
     class XfModel{
@@ -31,11 +20,25 @@ package "model" #DDDDDD {
         getInstanceData()
         getDefaultContext()
     }
+
+    class ModelItem{
+        node
+        getValue
+        setValue
+        readonly
+        required
+        relevant
+        valid
+        type
+    }
+
     class XfBind
     class XfSubmission
+
+
 }
 
-
+XfBind o-- ModelItem
 
 package "view" #DDDDDD{
     class UIElement{

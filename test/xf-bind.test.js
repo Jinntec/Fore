@@ -2,7 +2,7 @@
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
 import '../src/xf-instance.js';
-import '../src/ModelItem.js';
+import { ModelItem } from '../src/ModelItem.js';
 
 describe('initialize bind', () => {
 
@@ -30,6 +30,8 @@ describe('initialize bind', () => {
         expect(model.modelItems.length).to.equal(1);
 
         const mi = model.modelItems[0];
+        expect((mi.node instanceof Node)).to.equal(true);
+
         console.log('*****',mi);
         // expect(mi.modelItem.value).to.exist;
         expect(mi.node.textContent).to.equal('Hello World!');
@@ -158,16 +160,20 @@ describe('initialize bind', () => {
         expect(model.modelItems[0].node.nodeType).to.equal(1);
         expect(model.modelItems[0].node.textContent).to.equal('Pick up Milk');
 
-/*
-        expect(model.modelItems[2].node.nodeType).to.equal(3);
-        expect(model.modelItems[2].modelItem.value).to.equal('Pick up Milk');
+        expect(model.modelItems[1].node.nodeType).to.equal(1);
+        expect(model.modelItems[1].node.textContent).to.equal('Make tutorial part 1');
 
-        expect(model.modelItems[4].node.nodeType).to.equal(2);
-        expect(model.modelItems[4].modelItem.value).to.equal('false');
-*/
+        expect(model.modelItems[2].node.nodeType).to.equal(2);
+        expect(model.modelItems[2].value).to.equal('false');
+
+        expect(model.modelItems[3].node.nodeType).to.equal(2);
+        expect(model.modelItems[3].value).to.equal('true');
 
         expect(model.modelItems[4].node.nodeType).to.equal(2);
         expect(model.modelItems[4].node.textContent).to.equal('2019-02-04');
+
+        expect(model.modelItems[5].node.nodeType).to.equal(2);
+        expect(model.modelItems[5].node.textContent).to.equal('2019-01-04');
 
     });
 

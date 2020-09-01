@@ -180,6 +180,10 @@ export class XfBind extends LitElement {
         // console.log('#### ', thi+s.nodeset);
 
         //single node or array?
+        if(this.ref === '.' || this.ref==='./text()' || this.ref ==='text()'){
+            //todo: update parent modelItem
+            return;
+        }
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
             // console.log('################################################ ', this.nodeset);
@@ -214,7 +218,6 @@ export class XfBind extends LitElement {
 
         let value = null;
 
-
         let mItem = {};
         let targetNode = {};
         if(node.nodeType === node.TEXT_NODE){
@@ -237,7 +240,9 @@ export class XfBind extends LitElement {
         const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
         const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
-        console.log('new ModelItem from Class ', mi);
+
+        // console.log('new ModelItem from Class ', mi);
+        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
 
         this.model.registerModelItem(mi);
     }
