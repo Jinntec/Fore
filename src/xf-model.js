@@ -192,7 +192,10 @@ export class XfModel extends LitElement {
      * @returns {Element} the
      */
     getDefaultContext(){
-        return this.instances[0].instanceData.firstElementChild;
+        console.log('getDefaultContext instanceData ', this.instances[0].instanceData);
+        console.log('getDefaultContext firstChild ', this.instances[0].instanceData.firstElementChild);
+        // return this.instances[0].instanceData.firstElementChild;
+        return this.instances[0].getDefaultContext();
     }
 
     getDefaultInstance(){

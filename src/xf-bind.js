@@ -108,16 +108,14 @@ export class XfBind extends LitElement {
         // b. if no parent use default context
 
 
-
-
-
-
         console.log('init binding ', this);
         if(this.parentNode.nodeName === 'XF-MODEL'){
             /*
             * if we have an outermost bind having model as parent the default instance data are used as context.
             */
             this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultContext(), null, {namespaceResolver: this.namespaceResolver});
+            // this.nodeset = this.model.getDefaultInstance().evalXPath(this.ref);
+
         }else{
             // console.log('parent nodeset ', this.parentNode.nodeset);
 

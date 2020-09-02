@@ -1,11 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
 import fx from './output/fontoxpath.js';
-import evaluateXPathToBoolean from './output/fontoxpath.js';
-import evaluateXPathToString from './output/fontoxpath.js';
-import evaluateXPathToFirstNode from './output/fontoxpath.js';
-import evaluateXPathToNodes from './output/fontoxpath.js';
-import evaluateXPath from './output/fontoxpath.js';
 import {ModelItem} from "./modelitem";
 
 export class XfInstance extends LitElement {
@@ -23,9 +18,6 @@ export class XfInstance extends LitElement {
             id:{
                 type: String
             },
-            instanceData:{
-                type: Object
-            },
             src:{
                 type: String
             },
@@ -38,39 +30,40 @@ export class XfInstance extends LitElement {
     constructor() {
         super();
         this.id = 'default';
-        this.instanceData = {};
+        // this.instanceData = {};
         this.src = '';
         this.model = this.parentNode;
     }
 
-/*
-    render() {
-        return html`
-            <span>${this.id}</span>
-            <pre contenteditable="true">
-                 <slot></slot>
-            </pre>
-        `;
+    firstUpdated(_changedProperties) {
+        console.log("firstupdated instance");
     }
-*/
 
     init(){
-
+        console.log('xf-instance init');
         if(this.src === '#querystring' ){
             const query = new URLSearchParams(location.search);
 
-            const instanceData = new DOMParser().parseFromString('<data></data>','application/xml');
-
+            let instanceData = document.createDocumentFragment();
+            const root = document.createElement('data');
+            instanceData.appendChild(root);
             for(const p of query){
                 let n = document.createElement(p[0]);
                 n.appendChild(document.createTextNode(p[1]));
-                instanceData.firstElementChild.appendChild(n);
+                root.appendChild(n);
             };
 
             this.instanceData = instanceData;
-            // this.instanceData.firstElementChild.setAttribute('id',this.id);
+            this.instanceData.firstElementChild.setAttribute('id',this.id);
 
-            console.log('created instance from queryString ', this.instanceData);
+            // this.instanceData.firstElementChild.setAttribute('id',this.id);
+            // console.log('created instance from queryString ', this.instanceData);
+            // console.log('created instance from queryString ', this.instanceData);
+
+
+            // const result = fx.evaluateXPathToFirstNode('param1', instanceData.childNodes[0], null, {});
+            // console.log(">>>>>result ", result)
+
         }else{
             this._useInlineData();
         }
@@ -79,7 +72,13 @@ export class XfInstance extends LitElement {
     evalXPath(xpath){
         // console.log('eval: ', xpath);
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
+        // const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
+
+        console.log('evalXPath ', xpath);
+        console.log('evalXPath default instance data', this.instanceData);
+        console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
+
+        const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
         return result;
     }
 
@@ -121,6 +120,9 @@ export class XfInstance extends LitElement {
         // console.log('xf-instance data ', this.instanceData);
     }
 
+    createRenderRoot() {
+        return this;
+    }
 
 
 }

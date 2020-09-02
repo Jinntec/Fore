@@ -32,10 +32,10 @@
         <xf-message event="refresh-done">refresh has been done </xf-message>
 
         <xf-model id="model1">
-            <xf-instance src="#querystring">
-                <data></data>
-            </xf-instance>
-            <xf-bind ref="bar" required="true()"></xf-bind>
+            <xf-instance src="#querystring"></xf-instance>
+
+            <xf-bind ref="param1" required="true()"></xf-bind>
+<!--            <xf-bind ref="param2"></xf-bind>-->
 
         </xf-model>
         <xf-group>
@@ -43,7 +43,12 @@
 
             <h1>create xf-instance from queryString</h1>
 
-            <xf-output ref="bar"></xf-output>
+            <xf-output ref="param1">
+                <xf-label>Param1: </xf-label>
+            </xf-output>
+            <xf-output ref="param2">
+                <xf-label>Param1: </xf-label>
+            </xf-output>
         </xf-group>
     </xf-form>
 </body>
