@@ -8,9 +8,11 @@
     "test": "test"
   },
   "dependencies": {
+    "@adobe/lit-mobx": "^1.0.0",
     "fontoxpath": "^3.11.0",
     "gulp-exist": "^3.0.0",
     "lit-element": "^2.3.1",
+    "mobx": "^5.15.6",
     "slimdom": "^2.3.2"
   },
   "devDependencies": {

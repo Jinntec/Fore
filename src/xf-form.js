@@ -22,7 +22,9 @@ import './ui/xf-input.js';
 //action classes
 import './actions/xf-action.js';
 import './deprecated/xf-message.js';
+import './actions/xf-append.js';
 import './actions/xf-delete.js';
+import '../src/actions/xf-setvalue.js';
 
 
 

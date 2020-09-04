@@ -1,7 +1,11 @@
-import {LitElement, html, css} from 'lit-element';
+// import {LitElement, html, css} from 'lit-element';
 
 
 import fx from './output/fontoxpath.js';
+
+
+import { MobxLitElement } from '../node_modules/@adobe/lit-mobx/lit-mobx.js';
+
 import {ModelItem} from './modelitem.js';
 
 import evaluateXPathToBoolean from './output/fontoxpath.js';
@@ -12,7 +16,7 @@ import evaluateXPath from './output/fontoxpath.js';
 
 // import parseScript from './output/fontoxpath.js';
 
-export class BoundElement extends LitElement {
+export class BoundElement extends MobxLitElement {
 
 
     static get properties() {
