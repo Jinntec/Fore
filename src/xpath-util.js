@@ -12,4 +12,8 @@ export class XPathUtil {
         return path != null && (path.startsWith("/") || path.startsWith('instance('));
     }
 
+    static isSelfReference(ref) {
+        return ref === '.' || ref === './text()' || ref === 'text()' || ref === '';
+    }
+
 }

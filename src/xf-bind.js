@@ -169,17 +169,19 @@ export class XfBind extends LitElement {
 
     _evalInContext(){
         const inscopeContext = this._inScopeContext();
-        if(Array.isArray(inscopeContext)){
-            inscopeContext.forEach((n,index) => {
-                // console.log('parent item ', n, index);
-                if(this.ref !== './text()' && this.ref !== 'text()' && this.ref !== '.'){
-                    const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                    console.log('>>>>>>>>>>< local: ', local);
 
-                    // console.log('local type ', local.nodeType);
-                    this.nodeset.push(local);
-                }else{
+        if(this.ref===''){
+            this.nodeset = inscopeContext;
+        }else if(Array.isArray(inscopeContext)){
+
+            inscopeContext.forEach((n,index) => {
+
+                if(XPathUtil.isSelfReference(this.ref)){
                     this.nodeset = inscopeContext;
+                }else{
+                    const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    console.log('local result: ', localResult);
+                    this.nodeset.push(localResult);
                 }
             });
 
@@ -218,11 +220,11 @@ export class XfBind extends LitElement {
     _createModelItems(){
         // console.log('#### ', thi+s.nodeset);
 
-        //single node or array?
-        if(this.ref === '.' || this.ref==='./text()' || this.ref ==='text()'){
-            //todo: update parent modelItem
+/*
+        if(XPathUtil.isSelfReference(this.ref)){
             return;
         }
+*/
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
             // console.log('################################################ ', this.nodeset);
@@ -254,9 +256,7 @@ export class XfBind extends LitElement {
         // console.log('_createModelItem node', node);
         // console.log('_createModelItem nodeType', node.nodeType);
 
-
         let value = null;
-
         let mItem = {};
         let targetNode = {};
         if(node.nodeType === node.TEXT_NODE){
@@ -278,10 +278,26 @@ export class XfBind extends LitElement {
         const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
         const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
-        const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
 
-        this.model.registerModelItem(mi);
+        let targetModelItem;
+        // if(XPathUtil.isSelfReference(this.ref)){
+        // if(this.ref === './text()' || this.ref === 'text()' || this.ref === '.' || this.ref === ''){
+        if(XPathUtil.isSelfReference(this.ref)){
+            console.log('node ', node);
+            console.log('all modelItems ', this.model.modelItems);
+            const parentModelItem = this.model.getModelItem(node);
+            console.log('parentModelItem ', parentModelItem);
+            parentModelItem.required = req;
+
+        }else{
+            const newItem = new ModelItem( ro,rel,req,val,this.type,targetNode);
+            this.model.registerModelItem(newItem);
+        }
+        // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
+
     }
+
+
 
     //todo: more elaborated implementation ;)
     _getInstanceId () {

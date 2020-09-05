@@ -142,11 +142,19 @@ export class XfModel extends LitElement {
         // console.log('revalidate instances ', this.instances);
 
         console.group('### revalidate');
+        this.modelItems.forEach(modelItem =>{
+            console.log('validating node ', modelItem.node);
+        });
+/*
         const binds = this.querySelectorAll('xf-bind');
         binds.forEach(bind => {
             // console.log('bind ', bind);
             console.log('bind ', bind.ref);
             // console.log('instanceData ', this.getDefaultInstanceData());
+
+            if(this.ref === ''){
+                return;
+            }
 
             let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultContext(), null, {});
             console.log('evaluated context node ', contextNode);
@@ -172,14 +180,13 @@ export class XfModel extends LitElement {
                 // console.log('evaluating type  expression', bind.type);
             }
         });
+*/
         console.groupEnd();
     }
 
-/*
     getModelItem(node){
-        return this.bindingMap.find(m => m.refnode === node);
+        return this.modelItems.find(m => m.node === node);
     }
-*/
 
     _initOutermostBindings(){
         console.group('### initialize bindings');

@@ -120,6 +120,33 @@ describe('initialize bind', () => {
         expect(mi.node.textContent).to.equal('Hello World!');
     });
 
+    it('works with nested dot reference', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                        <xf-bind id="greeting" ref="greeting">
+                            <xf-bind ref="."></xf-bind>
+                        </xf-bind>
+                    </xf-model>
+                </xf-form>               
+            `)
+        );
+
+        await elementUpdated(el);
+        const bind1 = document.getElementById('greeting');
+        expect(bind1).to.exist;
+
+        const model = document.getElementById('model1');
+        expect(model.modelItems.length).to.equal(1);
+
+    });
+
     it('works for repeated element', async () => {
         const el =  (
             await fixtureSync(html`
@@ -182,6 +209,63 @@ describe('initialize bind', () => {
 
     });
 
+
+    it('combines facets for dot reference', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                        <xf-bind id="greeting" ref="greeting">
+                            <xf-bind ref="." required="true()"></xf-bind>
+                        </xf-bind>
+                    </xf-model>
+                </xf-form>               
+            `)
+        );
+
+        await elementUpdated(el);
+        const bind1 = document.getElementById('greeting');
+        expect(bind1).to.exist;
+
+        const model = document.getElementById('model1');
+        expect(model.modelItems.length).to.equal(1);
+        expect(model.modelItems[0].required).to.equal(true);
+
+    });
+
+
+    it('uses closest binding expr', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                        <xf-bind id="greeting" ref="greeting">
+                            <xf-bind required="true()"></xf-bind>
+                        </xf-bind>
+                    </xf-model>
+                </xf-form>               
+            `)
+        );
+
+        await elementUpdated(el);
+        const bind1 = document.getElementById('greeting');
+        expect(bind1).to.exist;
+
+        const model = document.getElementById('model1');
+        expect(model.modelItems.length).to.equal(1);
+        expect(model.modelItems[0].required).to.equal(true);
+
+    });
 
 
 
