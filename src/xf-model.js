@@ -76,6 +76,8 @@ export class XfModel extends LitElement {
                 console.groupEnd();
                 // console.log('model instances ', this.instances);
 
+                this._initOutermostBindings();
+
                 this.updateModel();
                 // console.groupEnd();
                 // console.log('dispatching model-construct-done');
@@ -85,6 +87,7 @@ export class XfModel extends LitElement {
                     detail: {model: this}
                 }));
             } else {
+                this._initOutermostBindings();
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,
                     bubbles: true,
@@ -96,6 +99,7 @@ export class XfModel extends LitElement {
 
 
     registerModelItem(modelItem){
+        console.log('ModelItem registered ', modelItem);
         this.modelItems.push(modelItem);
     }
 
@@ -113,19 +117,15 @@ export class XfModel extends LitElement {
         console.group('### rebuild');
 
         //reset
-        this.bindingMap = [];
+        // this.bindingMap = [];
+/*
         this.modelItems = [];
-
-        // console.group('rebuild');
-
-
-        //todo: recursive or flat processing of xf-bind elements?
-        // -> flat: binds will take of their children themselves
 
         const binds = this.querySelectorAll('xf-model > xf-bind');
         binds.forEach(bind => {
             bind.init(this);
         });
+*/
         console.log('rebuild finished with modelItems ', this.modelItems);
         console.groupEnd();
     //
@@ -146,7 +146,7 @@ export class XfModel extends LitElement {
         binds.forEach(bind => {
             // console.log('bind ', bind);
             console.log('bind ', bind.ref);
-            console.log('instanceData ', this.getDefaultInstanceData());
+            // console.log('instanceData ', this.getDefaultInstanceData());
 
             let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultContext(), null, {});
             console.log('evaluated context node ', contextNode);
@@ -175,10 +175,22 @@ export class XfModel extends LitElement {
         console.groupEnd();
     }
 
+/*
     getModelItem(node){
         return this.bindingMap.find(m => m.refnode === node);
     }
+*/
 
+    _initOutermostBindings(){
+        console.group('### initialize bindings');
+
+        this.modelItems = [];
+        const binds = this.querySelectorAll('xf-model > xf-bind');
+        binds.forEach(bind => {
+            bind.init(this);
+        });
+        console.groupEnd();
+    }
 
 
     _handleModelConstructDone(e){
@@ -192,8 +204,8 @@ export class XfModel extends LitElement {
      * @returns {Element} the
      */
     getDefaultContext(){
-        console.log('getDefaultContext instanceData ', this.instances[0].instanceData);
-        console.log('getDefaultContext firstChild ', this.instances[0].instanceData.firstElementChild);
+        // console.log('getDefaultContext instanceData ', this.instances[0].instanceData);
+        // console.log('getDefaultContext firstChild ', this.instances[0].instanceData.firstElementChild);
         // return this.instances[0].instanceData.firstElementChild;
         return this.instances[0].getDefaultContext();
     }

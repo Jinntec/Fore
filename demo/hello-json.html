@@ -35,17 +35,14 @@
     <xf-model id="model1">
         <xf-instance type="json">
             {
-
+                "prop":"value"
             }
         </xf-instance>
-        <xf-bind id="b-greeting" ref="greeting" required="string-length(.) < 6" readonly="string-length(.) < 6">
-<!--        <xf-bind id="b-greeting" ref="greeting">-->
-            <!--
-                            <xf-bind constraint="string-length(.) > 2">
-                                <xf-alert>huh? too short!</xf-alert>
-                            </xf-bind>
-            -->
-        </xf-bind>
+        <xf-bind ref="greeting" required="string-length(.) < 6" readonly="string-length(.) < 6"></xf-bind>
+
+
+
+
         <xf-bind ref="prop"></xf-bind>
 
         <xf-instance id="second">

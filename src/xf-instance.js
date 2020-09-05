@@ -35,16 +35,23 @@ export class XfInstance extends LitElement {
         this.model = this.parentNode;
     }
 
+    render() {
+        return html`
+            <slot></slot>
+        `;
+    }
+
+
     firstUpdated(_changedProperties) {
         console.log("firstupdated instance");
     }
 
     init(){
-        console.log('xf-instance init');
+        // console.log('xf-instance init');
         if(this.src === '#querystring' ){
             const query = new URLSearchParams(location.search);
 
-            let instanceData = document.createDocumentFragment();
+            let instanceData = document.createDocument();
             const root = document.createElement('data');
             instanceData.appendChild(root);
             for(const p of query){
@@ -64,9 +71,11 @@ export class XfInstance extends LitElement {
             // const result = fx.evaluateXPathToFirstNode('param1', instanceData.childNodes[0], null, {});
             // console.log(">>>>>result ", result)
 
-        }else{
+        }else if(this.childNodes.length !== 0){
             this._useInlineData();
         }
+
+        // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
     }
 
     evalXPath(xpath){
@@ -101,6 +110,41 @@ export class XfInstance extends LitElement {
         return this.instanceData.firstElementChild;
     }
 
+
+    lazyCreateModelItem(node){
+        // console.log('_createModelItem ', this.nodeset);
+        // console.log('_createModelItem ', this.nodeset.nodeType);
+        // console.log('_createModelItem model', this.model);
+        // console.log('_createModelItem node', node);
+        // console.log('_createModelItem node', node);
+        // console.log('_createModelItem nodeType', node.nodeType);
+
+        let mItem = {};
+        let targetNode = {};
+        if(node.nodeType === node.TEXT_NODE){
+            // const parent = node.parentNode;
+            // console.log('PARENT ', parent);
+            targetNode = node.parentNode;
+        }else {
+            targetNode = node;
+        }
+/*
+        const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
+        const req = fx.evaluateXPathToBoolean(this.required, targetNode, null, {});
+        const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
+        const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
+*/
+
+        const mi = new ModelItem( false,true,false,true,'xs:string',targetNode);
+
+        // console.log('new ModelItem from Class ', mi);
+        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+
+        this.model.registerModelItem(mi);
+        return mi;
+
+    }
+
     _useInlineData(){
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'application/xml');
 
@@ -120,9 +164,11 @@ export class XfInstance extends LitElement {
         // console.log('xf-instance data ', this.instanceData);
     }
 
+/*
     createRenderRoot() {
         return this;
     }
+*/
 
 
 }

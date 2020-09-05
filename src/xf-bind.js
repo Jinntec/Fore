@@ -154,7 +154,7 @@ export class XfBind extends LitElement {
         // console.log('????? result ',result);
 
 
-        console.log('xf-bind init nodeset ', this.nodeset);
+        console.log('bound nodeset ', this.nodeset);
 
         this._createModelItems();
 
@@ -238,9 +238,6 @@ export class XfBind extends LitElement {
         const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
         const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
-
-        // console.log('new ModelItem from Class ', mi);
-        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
 
         this.model.registerModelItem(mi);
     }

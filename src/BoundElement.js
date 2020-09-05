@@ -90,7 +90,13 @@ export class BoundElement extends LitElement {
         }
 
         const nodeset = this.evalBinding();
-        return this.getModel().modelItems.find(m => m.node === nodeset);
+        const existed = this.getModel().modelItems.find(m => m.node === nodeset);
+        if(!existed){
+            console.log('does not exist ', nodeset);
+            return this.model.getDefaultInstance().lazyCreateModelItem(nodeset);
+        }
+        return existed;
+
     }
 
     getBindingExpr() {
