@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {ModelItem} from './modelitem.js';
+import {XPathUtil} from './xpath-util.js';
 
 /*
 import {
@@ -9,10 +10,6 @@ import {
 */
 
 import fx from './output/fontoxpath.js';
-import evaluateXPathToFirstNode from './output/fontoxpath.js';
-import evaluateXPath from './output/fontoxpath.js';
-import registerCustomXPathFunction from './output/fontoxpath.js';
-
 
 export class XfBind extends LitElement {
 
@@ -26,29 +23,17 @@ export class XfBind extends LitElement {
 
     static get properties() {
         return {
-            id:{
-                type:String
-            },
-            ref: {
+            calculate: {
                 type: String
             },
-            readonly: {
-                type: String
-            },
-            required: {
-                type: String
-            },
-            relevant: {
-                type: String
+            contextNode:{
+                type:Object
             },
             constraint: {
                 type: String
             },
-            type: {
-                type: String
-            },
-            calculate: {
-                type: String
+            id:{
+                type:String
             },
             nodeset: {
                 type: Array
@@ -56,8 +41,20 @@ export class XfBind extends LitElement {
             model:{
                 type:Object
             },
-            contextNode:{
-                type:Object
+            readonly: {
+                type: String
+            },
+            ref: {
+                type: String
+            },
+            relevant: {
+                type: String
+            },
+            required: {
+                type: String
+            },
+            type: {
+                type: String
             }
         };
     }
@@ -103,16 +100,18 @@ export class XfBind extends LitElement {
     init(model){
         this.model = model;
 
-        //if no ref use
-        // a. the nodeset of your parent bind
-        // b. if no parent use default context
-
+        this.instanceId = this._getInstanceId();
 
         console.log('init binding ', this);
+
+
+
+        this._evalInContext();
+/*
         if(this.parentNode.nodeName === 'XF-MODEL'){
-            /*
+            /!*
             * if we have an outermost bind having model as parent the default instance data are used as context.
-            */
+            *!/
             this.nodeset = fx.evaluateXPath(this.ref, model.getDefaultContext(), null, {namespaceResolver: this.namespaceResolver});
             // this.nodeset = this.model.getDefaultInstance().evalXPath(this.ref);
 
@@ -141,6 +140,7 @@ export class XfBind extends LitElement {
             }
 
         }
+*/
 
         // console.log('model namespace ', this.model.isDefaultNamespace(""));
         // console.log('model namespace ', this.model.lookupNamespaceURI(""));
@@ -165,6 +165,47 @@ export class XfBind extends LitElement {
             bind.init(model);
         });
 
+    }
+
+    _evalInContext(){
+        const inscopeContext = this._inScopeContext();
+        if(Array.isArray(inscopeContext)){
+            inscopeContext.forEach((n,index) => {
+                // console.log('parent item ', n, index);
+                if(this.ref !== './text()' && this.ref !== 'text()' && this.ref !== '.'){
+                    const local = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    console.log('>>>>>>>>>>< local: ', local);
+
+                    // console.log('local type ', local.nodeType);
+                    this.nodeset.push(local);
+                }else{
+                    this.nodeset = inscopeContext;
+                }
+            });
+
+        }else{
+            this.nodeset = fx.evaluateXPathToNodes(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+        }
+
+    }
+
+    _inScopeContext(){
+        let resultNodeset;
+
+        const parentBind = this.parentNode.closest('[ref]');
+        console.log('parentBind ', parentBind);
+
+        if(parentBind !== null && parentBind.nodeName === 'XF-BIND'){
+            resultNodeset = parentBind.nodeset;
+        }else if(XPathUtil.isAbsolutePath(this.ref)){
+            resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();
+        }else {
+            resultNodeset = this.model.getDefaultInstance().getDefaultContext();
+        }
+
+        console.log('_inScopeContext ', resultNodeset);
+        //todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
+        return resultNodeset;
     }
 
 
@@ -233,13 +274,18 @@ export class XfBind extends LitElement {
             value = targetNode.nodeValue;
         }
         const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
-        const req = fx.evaluateXPathToBoolean(this.required, targetNode, null, {});
+        const req = fx.evaluateXPath(this.required, targetNode, null, {});
         const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
         const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
 
         const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
 
         this.model.registerModelItem(mi);
+    }
+
+    //todo: more elaborated implementation ;)
+    _getInstanceId () {
+        return 'default';
     }
 
 }

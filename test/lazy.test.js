@@ -30,7 +30,6 @@ describe('lazy initialize modelItem', () => {
         );
 
         await elementUpdated(el);
-        console.log('where are we?');
         const model = el.querySelector('xf-model');
         expect(model.modelItems.length).to.equal(2);
 

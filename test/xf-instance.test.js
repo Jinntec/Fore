@@ -40,7 +40,7 @@ describe('initialize instance', () => {
         expect(el.instanceData.nodeType).to.equal(Node.DOCUMENT_NODE);
     });
 
-    it('evaluates in its default context', async () => {
+    it('evaluates xpath in its default context', async () => {
         const el =  (
             await fixtureSync(html`
                 <xf-instance>
@@ -57,6 +57,27 @@ describe('initialize instance', () => {
         const result = el.evalXPath('//foobar');
         expect(result).to.exist;
         expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
+        expect(result.nodeName).to.equal('foobar');
+    });
+
+    it('provides default evaluation context', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-instance>
+                    <data>
+                        <foobar></foobar>
+                    </data>
+                </xf-instance>
+               
+            `)
+        );
+
+        el.init();
+        await elementUpdated(el);
+        const context = el.getDefaultContext();
+        expect(context).to.exist;
+        expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
+        expect(context.nodeName).to.equal('data');
     });
 
 

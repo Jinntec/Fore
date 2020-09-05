@@ -25,6 +25,7 @@ describe('initialize bind', () => {
         await elementUpdated(el);
         const bind = document.getElementById('b-greeting');
         expect(bind).to.exist;
+        expect(bind.instanceId).to.equal('default');
 
         const model = document.getElementById('model1');
         expect(model.modelItems.length).to.equal(1);
@@ -49,6 +50,7 @@ describe('initialize bind', () => {
 
     });
 
+/*
     it('works with nested attribute', async () => {
         const el =  (
             await fixtureSync(html`
@@ -70,7 +72,9 @@ describe('initialize bind', () => {
         await elementUpdated(el);
         const bind1 = document.getElementById('b-greeting');
         expect(bind1).to.exist;
+        expect(bind1.instanceId).to.equal('default');
         const bind2 = document.getElementById('b-type');
+        expect(bind2.instanceId).to.equal('default');
         expect(bind2).to.exist;
 
         const model = document.getElementById('model1');
@@ -80,6 +84,7 @@ describe('initialize bind', () => {
         expect(mi.node).to.exist;
         expect(mi.node.textContent).to.equal('message');
     });
+*/
 
     it('works with nested element', async () => {
         const el =  (

@@ -91,6 +91,7 @@ export class XfInstance extends LitElement {
         return result;
     }
 
+/*
     setValue(path, newValue){
         const updateExpr = 'replace value of node ' + path + ' with "' + newValue + '"';
         console.log('instance updateExpr: ', updateExpr);
@@ -100,6 +101,7 @@ export class XfInstance extends LitElement {
         });
 
     }
+*/
 
     getInstanceData(){
         return this.instanceData;
@@ -128,21 +130,11 @@ export class XfInstance extends LitElement {
         }else {
             targetNode = node;
         }
-/*
-        const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
-        const req = fx.evaluateXPathToBoolean(this.required, targetNode, null, {});
-        const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
-        const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
-*/
 
         const mi = new ModelItem( false,true,false,true,'xs:string',targetNode);
-
-        // console.log('new ModelItem from Class ', mi);
         console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-
         this.model.registerModelItem(mi);
         return mi;
-
     }
 
     _useInlineData(){
