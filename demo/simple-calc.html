@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Simple Calculate</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        xf-input[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<xf-form>
+
+    <xf-model id="model1">
+        <xf-instance>
+            <data>
+                <value>foobar</value>
+                <computed>Hello World!</computed>
+            </data>
+        </xf-instance>
+        <xf-bind id="computed" ref="computed" calculate="string-length(../value)"></xf-bind>
+
+    </xf-model>
+    <xf-group>
+
+
+        <h1>Compute string-length</h1>
+        <xf-input ref="value">
+            <xf-label>the string</xf-label>
+        </xf-input>
+        <h2>
+            String length is:<xf-output id="output" ref="computed"></xf-output>
+        </h2>
+
+
+    </xf-group>
+</xf-form>
+
+<script type="module" src="../src/app.js"></script>
+
+</body>
+</html>

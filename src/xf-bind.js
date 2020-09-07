@@ -197,7 +197,7 @@ export class XfBind extends LitElement {
         const parentBind = this.parentNode.closest('[ref]');
         console.log('parentBind ', parentBind);
 
-        if(parentBind !== null && parentBind.nodeName === 'XF-BIND'){
+        if(parentBind !== null){
             resultNodeset = parentBind.nodeset;
         }else if(XPathUtil.isAbsolutePath(this.ref)){
             resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();

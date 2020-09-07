@@ -134,6 +134,15 @@ export class XfModel extends LitElement {
     recalculate() {
         // tbd
         console.log('### recalculate');
+
+        const binds = this.querySelectorAll('xf-bind[calculate]');
+        binds.forEach(bind => {
+            const contextNode = bind.nodeset[0];
+            const compute = fx.evaluateXPath(bind.calculate, contextNode, null, {});
+            this.getModelItem(contextNode).value = compute;
+            console.log('computed ', compute);
+        });
+
     }
 
     revalidate() {

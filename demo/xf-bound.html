@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Simple Calculate</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<xf-form>
+
+    <xf-model id="model1">
+        <xf-instance>
+            <data>
+                <item>foobar</item>
+            </data>
+            <xf-bind ref="item"></xf-bind>
+        </xf-instance>
+
+    </xf-model>
+    <xf-group>
+
+
+        <xf-bound ref="item" update-event="onblur" value="value">
+            <input name="value" value="initial">
+        </xf-bound>
+    </xf-group>
+</xf-form>
+
+<script type="module" src="../src/app.js"></script>
+
+</body>
+</html>

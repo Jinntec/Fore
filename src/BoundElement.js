@@ -9,6 +9,7 @@ import evaluateXPathToString from './output/fontoxpath.js';
 import evaluateXPathToFirstNode from './output/fontoxpath.js';
 import evaluateXPathToNodes from './output/fontoxpath.js';
 import evaluateXPath from './output/fontoxpath.js';
+import {XPathUtil} from "./xpath-util";
 
 // import parseScript from './output/fontoxpath.js';
 
@@ -22,6 +23,9 @@ export class BoundElement extends LitElement {
             },
             modelItem:{
                 type:Object
+            },
+            ref:{
+                type:String
             }
         };
     }
@@ -30,12 +34,68 @@ export class BoundElement extends LitElement {
         super();
         this.model = {};
         this.modelItem = {};
+        this.ref="";
     }
 
-    evalBinding() {
-        this.ref = this.getBindingExpr();
+    firstUpdated(_changedProperties) {
+        console.log('firstUpdated ', this);
+        this.init();
+    }
 
-        const bindingExpr = this.getBindingExpr();
+    init(){
+
+    }
+
+    _evalInContext(){
+        this.model = this.getModel();
+        const inscopeContext = this._inScopeContext();
+
+        if(this.ref===''){
+            this.nodeset = inscopeContext;
+        }else if(Array.isArray(inscopeContext)){
+
+            inscopeContext.forEach((n,index) => {
+
+                if(XPathUtil.isSelfReference(this.ref)){
+                    this.nodeset = inscopeContext;
+                }else{
+                    const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    console.log('local result: ', localResult);
+                    this.nodeset.push(localResult);
+                }
+            });
+
+        }else{
+            this.nodeset = fx.evaluateXPathToNodes(this.ref, this.model.getDefaultInstance().getDefaultContext(), null, {namespaceResolver: this.namespaceResolver});
+
+        }
+
+    }
+
+    _inScopeContext(){
+        let resultNodeset;
+
+        const parentBind = this.parentNode.closest('[ref]');
+        console.log('parentBind ', parentBind);
+
+        if(parentBind !== null){
+            resultNodeset = parentBind.nodeset;
+        }else if(XPathUtil.isAbsolutePath(this.ref)){
+            resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();
+        }else {
+            resultNodeset = this.model.getDefaultInstance().getDefaultContext();
+        }
+
+        console.log('_inScopeContext ', resultNodeset);
+        //todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
+        return resultNodeset;
+    }
+
+
+    evalBinding() {
+        this.model = this.getModel();
+
+        // this._evalInContext();
 
 /*
         const xqueryx = parseScript(
@@ -53,24 +113,26 @@ export class BoundElement extends LitElement {
         const repeatItem = this.closest('xf-repeatitem');
         if (repeatItem) {
             // const r = fx.evaluateXPathToFirstNode(this.ref, repeatItem.nodeset, null, {});
-            const r = fx.evaluateXPathToNodes(bindingExpr, repeatItem.nodeset, null, {});
+            const r = fx.evaluateXPathToNodes(this.ref, repeatItem.nodeset, null, {});
             return r;
         }
 
         // if (this.parentNode && this.parentNode.nodeset) {
+/*
         const outer = this.parentNode.closest('[ref]');
         if (outer) {
             console.log('ancestor bind ', outer);
             // console.log('BoundElement.evalBinding parent ', this.parentNode)
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
             // return fx.evaluateXPath(this.ref, this.parentNode.nodeset, null, {});
-            return fx.evaluateXPathToFirstNode(bindingExpr, this.parentNode.nodeset, null, {});
+            return fx.evaluateXPathToFirstNode(this.ref, this.parentNode.nodeset, null, {});
 
         }
+*/
 
         // update value
         // return this.model.evalBinding(this.ref);
-        return this.model.evalBinding(bindingExpr);
+        return this.model.evalBinding(this.ref);
     }
 
 
@@ -89,11 +151,11 @@ export class BoundElement extends LitElement {
             return this.modelItem;
         }
 
-        const nodeset = this.evalBinding();
-        const existed = this.getModel().modelItems.find(m => m.node === nodeset);
+        this.nodeset = this.evalBinding();
+        const existed = this.model.getModelItem(this.nodeset);
         if(!existed){
-            console.log('does not exist ', nodeset);
-            return this.model.getDefaultInstance().lazyCreateModelItem(nodeset);
+            console.log('does not exist ', this.nodeset);
+            return this.model.getDefaultInstance().lazyCreateModelItem(this.nodeset);
         }
         return existed;
 

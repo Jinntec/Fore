@@ -50,14 +50,18 @@ export class XfInstance extends LitElement {
         // console.log('xf-instance init');
         if(this.src === '#querystring' ){
             const query = new URLSearchParams(location.search);
+            console.log('query', query);
 
-            let instanceData = document.createDocument();
-            const root = document.createElement('data');
-            instanceData.appendChild(root);
+            // let instanceData = document.createDocument();
+            let instanceData = document.implementation.createDocument(null,'data');
+            console.log('new doc ', instanceData);
+
+            // const root = document.createElement('data');
+            // instanceData.appendChild(root);
             for(const p of query){
                 let n = document.createElement(p[0]);
                 n.appendChild(document.createTextNode(p[1]));
-                root.appendChild(n);
+                instanceData.documentElement.appendChild(n);
             };
 
             this.instanceData = instanceData;
@@ -87,7 +91,8 @@ export class XfInstance extends LitElement {
         console.log('evalXPath default instance data', this.instanceData);
         console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
 
-        const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
+        // const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
+        const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
         return result;
     }
 
