@@ -53,7 +53,7 @@ export class XfInstance extends LitElement {
             console.log('query', query);
 
             // let instanceData = document.createDocument();
-            let instanceData = document.implementation.createDocument(null,'data');
+            let instanceData = document.implementation.createDocument(null,'data','xml');
             console.log('new doc ', instanceData);
 
             // const root = document.createElement('data');
@@ -136,7 +136,9 @@ export class XfInstance extends LitElement {
             targetNode = node;
         }
 
-        const mi = new ModelItem( ref,false,true,false,true,'xs:string',targetNode);
+        const path = '';
+
+        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
         console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
         this.model.registerModelItem(mi);
         return mi;

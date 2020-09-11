@@ -11,6 +11,13 @@ import {
 
 import fx from './output/fontoxpath.js';
 
+/**
+ * XfBind declaratively attaches constraints to nodes in the data (instances).
+ *
+ * It's major task is to create ModelItem Objects for each Node in the data their ref is pointing to.
+ *
+ * References and constraint attributes use XPath statements to point to the nodes they are attributing.
+ */
 export class XfBind extends LitElement {
 
     static get styles() {
@@ -89,7 +96,7 @@ export class XfBind extends LitElement {
 
     namespaceResolver(prefix) {
         console.log('namespaceResolver  prefix', prefix);
-        var ns = {
+        const ns = {
             'xhtml' : 'http://www.w3.org/1999/xhtml',
         };
         return ns[prefix] || null;
@@ -159,7 +166,7 @@ export class XfBind extends LitElement {
         this._createModelItems();
 
         // ### process child bindings
-        const childbinds = this.querySelectorAll('xf-bind');
+        const childbinds = this.querySelectorAll(':scope > xf-bind');
         Array.from(childbinds).forEach(bind =>{
             // console.log('init child bind ', bind);
             bind.init(model);
@@ -179,15 +186,22 @@ export class XfBind extends LitElement {
                 if(XPathUtil.isSelfReference(this.ref)){
                     this.nodeset = inscopeContext;
                 }else{
-                    const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                    console.log('local result: ', localResult);
-                    this.nodeset.push(localResult);
+                    // const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    localResult.forEach(item =>{
+                       this.nodeset.push(item);
+                    });
+                    // console.log('local result: ', localResult);
+                    // this.nodeset.push(localResult);
                 }
             });
 
         }else{
             this.nodeset = fx.evaluateXPathToNodes(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
         }
+
+        console.log(this.ref, ' : ',this.nodeset.length);
+
 
     }
 
@@ -206,7 +220,7 @@ export class XfBind extends LitElement {
         }
 
         console.log('_inScopeContext ', resultNodeset);
-        //todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
+        // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
         return resultNodeset;
     }
 
@@ -230,7 +244,7 @@ export class XfBind extends LitElement {
             // console.log('################################################ ', this.nodeset);
             Array.from(this.nodeset).forEach((n, index) => {
                 // console.log('node ',n);
-                this._createModelItem(n);
+                this._createModelItem(n,index);
 
             });
         }else{
@@ -248,16 +262,17 @@ export class XfBind extends LitElement {
      * @param node
      * @private
      */
-    _createModelItem(node){
+    _createModelItem(node,index){
         // console.log('_createModelItem ', this.nodeset);
         // console.log('_createModelItem ', this.nodeset.nodeType);
         // console.log('_createModelItem model', this.model);
         // console.log('_createModelItem node', node);
         // console.log('_createModelItem node', node);
         // console.log('_createModelItem nodeType', node.nodeType);
+        // console.log('path() nodeType', fx.evaluateXPath('path()',node));
 
         let value = null;
-        let mItem = {};
+        const mItem = {};
         let targetNode = {};
         if(node.nodeType === node.TEXT_NODE){
             // const parent = node.parentNode;
@@ -290,16 +305,26 @@ export class XfBind extends LitElement {
             parentModelItem.required = req;
 
         }else{
-            const newItem = new ModelItem(this.ref, ro,rel,req,val,this.type,targetNode);
+            const path = fx.evaluateXPath('path()',node);
+            const sp = this._shortenPath(path);
+            const newItem = new ModelItem(sp, this.ref, ro,rel,req,val,this.type,targetNode);
             this.model.registerModelItem(newItem);
         }
         // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
 
     }
 
+    _shortenPath(path){
+        const steps = path.split('/');
+        let result='';
+        for(let i=2;i<steps.length;i++){
+            result += `/${steps[i]}`;
+        }
+        return result;
+    }
 
 
-    //todo: more elaborated implementation ;)
+    // todo: more elaborated implementation ;)
     _getInstanceId () {
         return 'default';
     }
