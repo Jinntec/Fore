@@ -155,9 +155,13 @@ export class BoundElement extends LitElement {
         const existed = this.model.getModelItem(this.nodeset);
         if(!existed){
             console.log('does not exist ', this.nodeset);
-            return this.model.getDefaultInstance().lazyCreateModelItem(this.nodeset);
+            return this.model.getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
         }
         return existed;
+
+    }
+
+    getModelItems(){
 
     }
 

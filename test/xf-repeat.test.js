@@ -30,7 +30,7 @@ describe('initialize repeat', () => {
             
             
                         <xf-bind ref="task">
-                            <xf-bind ref="." required="true()"
+                            <xf-bind ref="." required="true()"></xf-bind>
                             <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
                             <xf-bind ref="@due" type="xs:date"></xf-bind>
                         </xf-bind>
@@ -127,14 +127,16 @@ describe('initialize repeat', () => {
         await elementUpdated(el);
 
         const repeat =  document.getElementById('todos');
-        const items = document.querySelectorAll('xf-repeatitem');
-        console.log('items', items);
-        expect(items.length).to.equal(2);
 
         const repeatNodes = repeat.nodeset;
         console.log('items', repeatNodes);
 
         expect(repeatNodes.length).to.equal(2);
+
+        const items = document.querySelectorAll('xf-repeatitem');
+        console.log('items', items);
+        expect(items.length).to.equal(2);
+
 
     });
 

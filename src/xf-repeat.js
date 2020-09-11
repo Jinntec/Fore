@@ -2,6 +2,7 @@ import {html,css} from "lit-element";
 import {BoundElement} from "./BoundElement.js";
 // import { unsafeHTML } from "lit-html/directives/unsafe-html";
 import "./xf-repeatitem.js"
+import fx from "./output/fontoxpath";
 
 /**
  * `xf-repeat`
@@ -73,6 +74,7 @@ export class XfRepeat extends BoundElement {
 
 
     firstUpdated(_changedProperties) {
+        super.firstUpdated(_changedProperties);
         // console.log('### xf-repeat firstUpdated ', this);
         // console.log('### xf-repeat firstUpdated index', this.repeatIndex);
         // this.init();
@@ -83,7 +85,9 @@ export class XfRepeat extends BoundElement {
     refresh() {
         console.group('xf-repeat.refresh');
         if(!this.inited) return;
-        this.nodeset = this.evalBinding();
+        // this.nodeset = this.evalBinding();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, this.getModel().getDefaultInstance().getDefaultContext(), null, {});
+
         // super.refresh();
 
 
@@ -177,22 +181,33 @@ export class XfRepeat extends BoundElement {
     }
 
     _initRepeatItems() {
-        this.nodeset = this.evalBinding();
-        this.nodeset.forEach((item, index) => {
-            // console.log('initRepeatItem index ', index);
-            // const repeatItem = new XfRepeatitem(); //no idea why this is not working
-            const repeatItem = document.createElement('xf-repeatitem');
+        const model = this.getModel();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
+        console.log('repeat nodeset ', this.nodeset);
 
-            // console.log('initRepeatItem nodeset ',this.nodeset[index]);
-            repeatItem.nodeset = this.nodeset[index];
-            repeatItem.index = index +1; //1-based index
-            const content = this.template.content;
-            const clone = document.importNode(content, true);
 
-            // console.log('clone ', clone);
-            repeatItem.appendChild(clone);
-            this.appendChild(repeatItem);
-        });
+
+        // console.log('repeat ref ', this.ref);
+        // console.log('repeat modelItems ', this.getModel().modelItems);
+        // const modelItems = this.getModel().modelItems.filter(m => m.ref === this.ref);
+        // console.log('repeat modelItems ', modelItems);
+
+                // this.nodeset = this.evalBinding();
+                this.nodeset.forEach((item, index) => {
+                    // console.log('initRepeatItem index ', index);
+                    // const repeatItem = new XfRepeatitem(); //no idea why this is not working
+                    const repeatItem = document.createElement('xf-repeatitem');
+
+                    // console.log('initRepeatItem nodeset ',this.nodeset[index]);
+                    repeatItem.nodeset = this.nodeset[index];
+                    repeatItem.index = index +1; //1-based index
+                    const content = this.template.content;
+                    const clone = document.importNode(content, true);
+
+                    // console.log('clone ', clone);
+                    repeatItem.appendChild(clone);
+                    this.appendChild(repeatItem);
+                });
     }
 
 

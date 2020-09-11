@@ -80,5 +80,61 @@ describe('initialize instance', () => {
         expect(context.nodeName).to.equal('data');
     });
 
+    it('does NOT copy a "body" element from inline data', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-instance>
+                    <data>
+                        <body>
+                            <arm side="left">
+                                <hand>
+                                    <finger index="3">middle</finger>
+                                </hand>
+                            </arm>
+                        </body>
+                    </data>
+                </xf-instance>
+               
+            `)
+        );
+
+        el.init();
+        await elementUpdated(el);
+        const doc = el.getInstanceData();
+        expect(doc).to.exist;
+
+        const root = doc.documentElement;
+        expect(root.nodeName).to.equal('data');
+
+        const body = root.firstElementChild;
+        expect(body.nodeName).to.equal('body');
+
+        const arm = body.firstElementChild;
+        expect(root.nodeName).to.equal('arm');
+
+        const hand = arm.firstElementChild;
+        expect(root.nodeName).to.equal('hand');
+
+        const finger = hand.firstElementChild();
+        expect(root.nodeName).to.equal('finger');
+        expect(root.textContent).to.equal('middle');
+
+
+
+
+
+
+        console.log(body);
+
+
+
+
+/*
+        expect(context).to.exist;
+        expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
+        expect(context.nodeName).to.equal('data');
+*/
+    });
+
 
 });

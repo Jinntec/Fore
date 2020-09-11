@@ -10,12 +10,14 @@
 export class ModelItem {
 
 
-    constructor(readonly,
+    constructor(ref,
+                readonly,
                 relevant,
                 required,
                 valid,
                 type,
                 node) {
+        this.ref = ref;
         this.readonly = readonly;
         this.relevant = relevant;
         this.required = required;

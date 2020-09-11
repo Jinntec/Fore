@@ -10,27 +10,39 @@
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
+        xf-instance{
+            display:none;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
 
 
 <xf-form>
-
     <xf-model id="model1">
         <xf-instance>
             <data>
                 <item>foobar</item>
+                <checked>true</checked>
             </data>
             <xf-bind ref="item"></xf-bind>
+            <xf-bind ref="checked"></xf-bind>
         </xf-instance>
-
     </xf-model>
     <xf-group>
+        <xf-bound ref="item" update-event="blur" value-prop="value">
+            <label slot="label">with onblur handler</label>
+            <input name="value" value="">
+        </xf-bound>
 
+        <xf-bound ref="item" update-event="input">
+            <label slot="label">with incremental handler</label>
+            <input name="value" value="">
+        </xf-bound>
 
-        <xf-bound ref="item" update-event="onblur" value="value">
-            <input name="value" value="initial">
+        <xf-bound ref="checked" update-event="input" value-prop="checked">
+            <label slot="label">with incremental handler</label>
+            <input name="value" type="checkbox">
         </xf-bound>
     </xf-group>
 </xf-form>

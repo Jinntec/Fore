@@ -118,7 +118,7 @@ export class XfInstance extends LitElement {
     }
 
 
-    lazyCreateModelItem(node){
+    lazyCreateModelItem(ref,node){
         // console.log('_createModelItem ', this.nodeset);
         // console.log('_createModelItem ', this.nodeset.nodeType);
         // console.log('_createModelItem model', this.model);
@@ -136,7 +136,7 @@ export class XfInstance extends LitElement {
             targetNode = node;
         }
 
-        const mi = new ModelItem( false,true,false,true,'xs:string',targetNode);
+        const mi = new ModelItem( ref,false,true,false,true,'xs:string',targetNode);
         console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
         this.model.registerModelItem(mi);
         return mi;

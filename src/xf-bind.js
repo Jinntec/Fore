@@ -195,7 +195,7 @@ export class XfBind extends LitElement {
         let resultNodeset;
 
         const parentBind = this.parentNode.closest('[ref]');
-        console.log('parentBind ', parentBind);
+        // console.log('parentBind ', parentBind);
 
         if(parentBind !== null){
             resultNodeset = parentBind.nodeset;
@@ -290,7 +290,7 @@ export class XfBind extends LitElement {
             parentModelItem.required = req;
 
         }else{
-            const newItem = new ModelItem( ro,rel,req,val,this.type,targetNode);
+            const newItem = new ModelItem(this.ref, ro,rel,req,val,this.type,targetNode);
             this.model.registerModelItem(newItem);
         }
         // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
