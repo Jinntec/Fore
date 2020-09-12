@@ -1,7 +1,9 @@
 import {html,css} from "lit-element";
 import {BoundElement} from "./BoundElement.js";
 // import { unsafeHTML } from "lit-html/directives/unsafe-html";
-import "./xf-repeatitem.js"
+import "./xf-repeatitem.js";
+import {UiElement} from './ui/UiElement.js';
+
 import fx from "./output/fontoxpath";
 
 /**
@@ -12,7 +14,7 @@ import fx from "./output/fontoxpath";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeat extends BoundElement {
+export class XfRepeat extends UiElement {
 
     static get styles() {
         return css`
@@ -78,7 +80,7 @@ export class XfRepeat extends BoundElement {
         // console.log('### xf-repeat firstUpdated ', this);
         // console.log('### xf-repeat firstUpdated index', this.repeatIndex);
         // this.init();
-        this._init();
+        // this._init();
 
     }
 
@@ -161,7 +163,8 @@ export class XfRepeat extends BoundElement {
         e.detail.item.refresh();
     }
 
-    _init() {
+    init(model) {
+        super.init(model);
         // ### there must be a single 'template' child
         this.template = this.firstElementChild;
         // this.template = this.querySelector('template');

@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
-import '../deprecated/xf-case.js';
-import {BoundElement} from "../BoundElement.js";
+import {UiElement} from './UiElement.js';
+
 
 
 /**
@@ -12,8 +12,13 @@ import {BoundElement} from "../BoundElement.js";
  * @customElement
  * @polymer
  */
-class XfGroup extends BoundElement{
+class XfGroup extends UiElement{
 
+
+    init(model){
+        super.init(model);
+        console.log(this, this.modelItem);
+    }
 
     render() {
         return html`

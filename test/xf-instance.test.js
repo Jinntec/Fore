@@ -105,6 +105,47 @@ describe('initialize instance', () => {
 
         const root = doc.documentElement;
         expect(root.nodeName).to.equal('data');
+        console.log('root children ', root.children );
+
+        let n = root.firstElementChild;
+        expect(n.nodeName).to.equal('arm');
+
+        n = n.firstElementChild;
+        expect(n.nodeName).to.equal('hand');
+
+        n = n.firstElementChild;
+        expect(n.nodeName).to.equal('finger');
+        expect(n.textContent).to.equal('middle');
+
+    });
+
+/*
+    it('does NOT copy a "body" element from inline data', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-instance>
+                    <data>
+                        <body>
+                            <arm side="left">
+                                <hand>
+                                    <finger index="3">middle</finger>
+                                </hand>
+                            </arm>
+                        </body>
+                    </data>
+                </xf-instance>
+
+            `)
+        );
+
+        el.init();
+        await elementUpdated(el);
+        const doc = el.getInstanceData();
+        expect(doc).to.exist;
+
+        const root = doc.documentElement;
+        expect(root.nodeName).to.equal('data');
+        console.log('root children ', root.children );
 
         const body = root.firstElementChild;
         expect(body.nodeName).to.equal('body');
@@ -118,23 +159,8 @@ describe('initialize instance', () => {
         const finger = hand.firstElementChild();
         expect(root.nodeName).to.equal('finger');
         expect(root.textContent).to.equal('middle');
-
-
-
-
-
-
-        console.log(body);
-
-
-
-
-/*
-        expect(context).to.exist;
-        expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
-        expect(context.nodeName).to.equal('data');
-*/
     });
+*/
 
 
 });

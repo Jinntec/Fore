@@ -4,10 +4,12 @@ class XfForm {
 }
 class BoundElement{
     ref
-    evalBinding()
+    init(model)
+    abstract evalInContext()
     getBindingExpr()
     getModel()
-    getModelItem()
+    isBound()
+    isNotBound()
 }
 class ModelItem{
     node
@@ -40,6 +42,7 @@ package "model" #DDDDDD {
 package "view" #DDDDDD{
     class UIElement{
         refresh()
+        getModelItem()
     }
     abstract class AbstractControl{
         getValue()

@@ -27,10 +27,6 @@ import './actions/xf-delete.js';
 import '../src/actions/xf-setvalue.js';
 
 
-
-
-
-
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 import fx from "./output/fontoxpath";
 import registerCustomXPathFunction from './output/fontoxpath.js';
@@ -68,6 +64,34 @@ export class XfForm extends LitElement {
         };
     }
 
+    static get uiElements(){
+        return [
+            'XF-ALERT',
+            'XF-BOUND',
+            'XF-BUTTON',
+            'XF-CONTROL',
+            'XF-DIALOG',
+            'XF-FILENAME',
+            'XF-MEDIATYPE',
+            'XF-GROUP',
+            'XF-HINT',
+            'XF-INPUT',
+            'XF-ITEMSET',
+            'XF-LABEL',
+            'XF-OUTPUT',
+            'XF-RANGE',
+            'XF-REPEAT',
+            'XF-SWITCH',
+            'XF-SECRET',
+            'XF-SELECT',
+            'XF-SUBMIT',
+            'XF-TEXTAREA',
+            'XF-TRIGGER',
+            'XF-UPLOAD'
+        ];
+    }
+
+
     constructor() {
         super();
         this.models = [];
@@ -89,15 +113,6 @@ export class XfForm extends LitElement {
 
         `;
     }
-
-/*
-    getDefaultModel(){
-        if (this.models){
-            return this.models[0];
-        }
-        return null;
-    }
-*/
 
     /**
      * kick off from processing...
@@ -133,11 +148,8 @@ export class XfForm extends LitElement {
             }
         );
 
-
-
         // const result = fx.evaluateXPathToNodes("Q{xf}instance('second')",this);
         // console.log('eval func' , result);
-
 
         const models = this.querySelectorAll('xf-model');
         this.models = models;
@@ -169,6 +181,46 @@ export class XfForm extends LitElement {
 
         console.groupEnd();
     }
+
+    _initUIControls(){
+        const uiElements = this.querySelectorAll(':scope [ref]');
+        console.log('_initUIControls ', uiElements);
+
+        uiElements.forEach(element => {
+
+            //todo: later - check for AVTs
+            // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
+            // if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
+
+
+
+            // if (this._isUiElement(element.nodeName) && typeof element.init === 'function') {
+            if (this._isUiElement(element.nodeName) && typeof element.init === 'function') {
+                console.log('calling init ', element);
+                const model = this._getModel(element);
+                console.log('model for control ', element, model );
+                element.init(this._getModel(element));
+            }
+
+        });
+
+    }
+
+    _isUiElement(elementName){
+        console.log('_isUiElement ', elementName);
+        const found = XfForm.uiElements.includes(elementName);
+        console.log('_isUiElement ', found);
+
+        return XfForm.uiElements.includes(elementName);
+    }
+
+    _getModel(uiElement) {
+        if(uiElement.hasAttribute('model')){
+            return document.querySelector(`#${  uiElement.getAttribute('model')}`);
+        }
+        return document.querySelector('xf-model');
+    }
+
 
 
 
@@ -217,6 +269,7 @@ export class XfForm extends LitElement {
 
         await this.updateComplete;
         console.log('initUI', this);
+        this._initUIControls();
         this.refresh();
     }
 

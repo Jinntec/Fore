@@ -181,5 +181,85 @@ describe('scoped resolution tests', () => {
         expect(parent.nodeset.length).to.equal(2);
     });
 
+    it('correctly binds form controls', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="record">
+                        <xf-instance>
+                            <data>
+                                <arm side="left">
+                                    <hand>
+                                        <finger index="2">index</finger>
+                                    </hand>
+                                </arm>
+                                <arm side="right">
+                                    <hand>
+                                        <finger index="3">middle</finger>
+                                    </hand>
+                                </arm>
+                            </data>
+                        </xf-instance>
+                        <xf-bind ref="arm">
+                            <xf-bind ref="hand">
+                                <xf-bind ref="finger">middle</xf-bind>
+                            </xf-bind>
+                        </xf-bind>
+                    </xf-model>
+                    <xf-group ref="arm">
+                        <h1>hold up one finger!:
+                            <xf-output ref=".[1]/hand/finger" id="output"></xf-output>
+                        </h1>
+                        <h2>left or right?
+                            <xf-output id="output2" ref="@side"></xf-output>
+                            <xf-output id="output3" ref="/data/arm[2]/@side"></xf-output>
+                        </h2>
+                    </xf-group>
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+        const model = el.querySelector('xf-model');
+        expect(model.modelItems.length).to.equal(8);
+
+        let out = el.querySelector('#output');
+        expect(out.modelItem.value).to.equal('index');
+
+        out = el.querySelector('#output3');
+        expect(out.modelItem.value).to.equal('right');
+
+    });
+
+    it('dispatches a bind exception for non-existing ref', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="record">
+                        <xf-instance>
+                            <data>
+                                <foo></foo>
+                            </data>
+                        </xf-instance>
+                        <xf-bind ref="bar"></xf-bind>
+                    </xf-model>
+                    <xf-group ref="bar">
+                    </xf-group>
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+/*
+        const model = el.querySelector('xf-model');
+        expect(model.modelItems.length).to.equal(8);
+
+        let out = el.querySelector('#output');
+        expect(out.modelItem.value).to.equal('index');
+
+        out = el.querySelector('#output3');
+        expect(out.modelItem.value).to.equal('right');
+*/
+
+    });
+
 
 });

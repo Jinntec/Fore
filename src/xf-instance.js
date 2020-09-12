@@ -42,9 +42,11 @@ export class XfInstance extends LitElement {
     }
 
 
+/*
     firstUpdated(_changedProperties) {
         console.log("firstupdated instance");
     }
+*/
 
     init(){
         // console.log('xf-instance init');
@@ -119,7 +121,7 @@ export class XfInstance extends LitElement {
 
 
     lazyCreateModelItem(ref,node){
-        // console.log('_createModelItem ', this.nodeset);
+        console.log('lazyCreateModelItem ', node);
         // console.log('_createModelItem ', this.nodeset.nodeType);
         // console.log('_createModelItem model', this.model);
         // console.log('_createModelItem node', node);
@@ -136,7 +138,9 @@ export class XfInstance extends LitElement {
             targetNode = node;
         }
 
-        const path = '';
+        // const path = '';
+        const path = fx.evaluateXPath('path()',node);
+
 
         const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
         console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
@@ -145,9 +149,10 @@ export class XfInstance extends LitElement {
     }
 
     _useInlineData(){
+        // console.log('innerText ', this.innerHTML.toString());
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'application/xml');
 
-        // console.log('created instanceData ', new XMLSerializer(instanceData));
+        // console.log('created instanceData ', new XMLSerializer().serializeToString(instanceData));
         // console.log('namespace ', instanceData.firstElementChild.namespaceURI);
 
         console.log('xf-instance init id:', this.id);
