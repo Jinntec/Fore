@@ -16,15 +16,18 @@ class ModelItem{
 class ForeElement{
     model
     abstract evalInContext()
+    isBound()
+    isNotBound()
     _inScopeContext()
 }
 
 class BoundElement{
     ref
+    evalInContext()
     init(model)
     getBindingExpr()
-    isBound()
-    isNotBound()
+    getModelItem()
+
 }
 
 ForeElement <|-- BoundElement
@@ -53,7 +56,6 @@ package "model" #DDDDDD {
 package "view" #DDDDDD{
     class UIElement{
         refresh()
-        getModelItem()
     }
     abstract class AbstractControl{
         getValue()
@@ -61,14 +63,14 @@ package "view" #DDDDDD{
     class XfSwitch #lightgrey
     class XfSelect1 #lightgrey
     class XfSelect #lightgrey
-    UIElement <|-- AbstractControl
+    BoundElement <|-- AbstractControl
     AbstractControl <|-- XfInput
     AbstractControl <|-- XfOutput
     AbstractControl <|-- XfButton
-    UIElement <|-- XfRepeat
-    UIElement <|-- XfRepeatitem
-    UIElement <|-- XfGroup
-    UIElement <|-- XfSwitch
+    BoundElement <|-- XfRepeat
+    BoundElement <|-- XfRepeatitem
+    BoundElement <|-- XfGroup
+    BoundElement <|-- XfSwitch
     AbstractControl <|-- XfSelect
     AbstractControl <|-- XfSelect1
 }
@@ -91,12 +93,9 @@ package "controller" #DDDDDD{
 
 
 
-BoundElement <|-- UIElement
 BoundElement <|-- XfAction
 ForeElement <|-- XfBind
 BoundElement <|-- XfSubmission
-
-
 
 
 

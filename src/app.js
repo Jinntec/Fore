@@ -1,6 +1,5 @@
 import '../src/xf-form.js';
 import '../src/ui/xf-bound.js';
-import '../src/ui/UiElement.js';
 import './xf-model.js';
 import './xf-instance.js';
 import './xf-bind.js';

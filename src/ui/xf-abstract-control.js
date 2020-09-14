@@ -1,5 +1,5 @@
-import {UiElement} from './UiElement.js';
 import  '../xf-model.js';
+import {BoundElement} from "../BoundElement";
 
 /**
  * `xf-abstract-control` -
@@ -9,7 +9,7 @@ import  '../xf-model.js';
  * @polymer
  * @appliesMixin BoundElementMixin
  */
-export default class XfAbstractControl extends UiElement {
+export default class XfAbstractControl extends BoundElement {
 
     static get properties() {
         return {

@@ -1,8 +1,8 @@
 import {LitElement, html} from 'lit-element';
 
-import {BoundElement} from "../BoundElement";
 import "../xf-form.js";
 import "../xf-model.js";
+import {BoundElement} from "../BoundElement.js";
 
 
 /**
@@ -35,7 +35,6 @@ export class XfAction extends BoundElement{
     // eslint-disable-next-line no-useless-constructor
     constructor(){
         super();
-        this.model={};
         this.needsRebuild = false;
         this.needsRecalculate = false;
         this.needsRevalidate = false;
@@ -44,14 +43,13 @@ export class XfAction extends BoundElement{
 
     init(model) {
         super.init(model);
+        console.log('xf-action model ', this);
     }
 
     execute (){
-/*
-        if(this.getBindingExpr()){
-            this.nodeset = this.evalBinding();
+        if(this.isBound()){
+            this.evalInContext();
         }
-*/
     }
 
     actionPerformed(){

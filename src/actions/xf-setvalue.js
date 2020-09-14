@@ -26,8 +26,7 @@ export default class XfSetvalue extends XfAction {
     execute() {
         super.execute();
 
-        const modelItem = this.getModelItem();
-        this.setValue(modelItem,this.value);
+        this.setValue(this.modelItem, this.value);
 
 
         /*
@@ -61,7 +60,7 @@ export default class XfSetvalue extends XfAction {
     }
 
     setValue(modelItem, newVal){
-        console.log('setvalue  ', modelItem, newVal);
+        console.log('setvalue  ', this.modelItem, newVal);
 
         if(modelItem.value !== newVal){
             modelItem.value = newVal;

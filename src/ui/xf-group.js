@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'lit-element';
-import {UiElement} from './UiElement.js';
+import {BoundElement} from "../BoundElement";
 
 
 
@@ -12,7 +12,7 @@ import {UiElement} from './UiElement.js';
  * @customElement
  * @polymer
  */
-class XfGroup extends UiElement{
+class XfGroup extends BoundElement{
 
 
     init(model){

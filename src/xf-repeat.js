@@ -2,7 +2,6 @@ import {html,css} from "lit-element";
 import {BoundElement} from "./BoundElement.js";
 // import { unsafeHTML } from "lit-html/directives/unsafe-html";
 import "./xf-repeatitem.js";
-import {UiElement} from './ui/UiElement.js';
 
 import fx from "./output/fontoxpath";
 
@@ -14,7 +13,7 @@ import fx from "./output/fontoxpath";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeat extends UiElement {
+export class XfRepeat extends BoundElement {
 
     static get styles() {
         return css`
@@ -88,7 +87,7 @@ export class XfRepeat extends UiElement {
         console.group('xf-repeat.refresh');
         if(!this.inited) return;
         // this.nodeset = this.evalBinding();
-        this.nodeset = fx.evaluateXPathToNodes(this.ref, this.getModel().getDefaultInstance().getDefaultContext(), null, {});
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, this.model.getDefaultInstance().getDefaultContext(), null, {});
 
         // super.refresh();
 
@@ -184,15 +183,15 @@ export class XfRepeat extends UiElement {
     }
 
     _initRepeatItems() {
-        const model = this.getModel();
+        const model = this.model;
         this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
         console.log('repeat nodeset ', this.nodeset);
 
 
 
         // console.log('repeat ref ', this.ref);
-        // console.log('repeat modelItems ', this.getModel().modelItems);
-        // const modelItems = this.getModel().modelItems.filter(m => m.ref === this.ref);
+        // console.log('repeat modelItems ', this.model.modelItems);
+        // const modelItems = this.model.modelItems.filter(m => m.ref === this.ref);
         // console.log('repeat modelItems ', modelItems);
 
                 // this.nodeset = this.evalBinding();

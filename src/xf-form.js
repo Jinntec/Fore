@@ -155,10 +155,13 @@ export class XfForm extends LitElement {
     }
 
     _initUIControls(){
-        const uiElements = this.querySelectorAll(':scope [ref]');
+        // const uiElements = this.querySelectorAll(':scope [ref]');
+        const uiElements = this.querySelectorAll('*');
         console.log('_initUIControls ', uiElements);
 
         uiElements.forEach(element => {
+
+            console.log('initUI children ', element);
 
             //todo: later - check for AVTs
             // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
@@ -230,9 +233,11 @@ export class XfForm extends LitElement {
         });
 
         await this.updateComplete;
-        console.log('_initUI', this);
+        console.group('### _initUI');
+
         this._initUIControls();
         this.refresh();
+        console.groupEnd();
     }
 
     _displayMessage(e) {

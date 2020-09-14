@@ -34,6 +34,13 @@ export class ForeElement extends LitElement {
         throw new Error('this function must be overwritten by xf-bind and UiElement classes');
     }
 
+    isNotBound(){
+        return !this.hasAttribute('ref');
+    }
+
+    isBound(){
+        return this.hasAttribute('ref');
+    }
 
     _inScopeContext(){
         let resultNodeset;

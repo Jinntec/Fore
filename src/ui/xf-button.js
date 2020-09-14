@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 import '../../assets/@polymer/paper-button';
 import XfAbstractControl from "./xf-abstract-control.js";
 /**
- * `xf-material-button`
+ * `xf-button`
  * a button triggering Fore actions
  *
  * @customElement
