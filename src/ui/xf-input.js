@@ -2,7 +2,7 @@ import {html,css} from "lit-element";
 import '../../assets/@polymer/paper-input/paper-input.js';
 import '../../assets/@polymer/paper-checkbox/paper-checkbox.js';
 import XfAbstractControl from "./xf-abstract-control.js";
-import XfSetvalue from "../actions/xf-setvalue.js";
+import "../actions/xf-setvalue.js";
 import "../xf-model.js";
 
 /**
@@ -68,7 +68,10 @@ class XfInput extends XfAbstractControl{
                                   label="${this.label}"
                                   .value="${this.value}"
                                   type="${this.type}"
-                                  @input="${this._handleInput}"></paper-input>` :''}
+                                  @input="${this._handleInput}">
+                         <xf-setvalue id="setvalue" ref="."></xf-setvalue>
+                    </paper-input>
+                    ` :''}
             
             ${this.type === 'checkbox' ?
                 html`<paper-checkbox id="control" label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
@@ -92,23 +95,17 @@ class XfInput extends XfAbstractControl{
     }
 
     _handleInput(e) {
-        const mi = this.getModelItem();
+        // const mi = this.getModelItem();
+        console.log('_handleInput ', this.modelItem);
         // console.log('modelItem ', mi);
 
         const inputValue = this.shadowRoot.querySelector('#control').value;
 
-        //doing just the same as the setvalue action
-        // const sv = new XfSetvalue().setValue(mi,inputValue);
-        const sv = document.createElement('xf-setvalue');
-        this.shadowRoot.appendChild(sv);
-        sv.setValue(mi,inputValue);
-
-
-        // console.log(this.model.instances[0].getInstanceData());
+        const setval = this.shadowRoot.querySelector('#setvalue');
+        setval.model = this.model;
+        setval.setValue(this.modelItem, inputValue);
         this.model.updateModel();
         document.querySelector('xf-form').refresh();
-
-
 
         console.log('instanceData ', this.model.instances[0].getInstanceData());
 

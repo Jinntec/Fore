@@ -1,31 +1,24 @@
-import {XfAction} from './xf-action.js';
-
-import "../xf-model.js";
 
 /**
- * `xf-setvalue`
+ * `setvalue`
  *
- * @customElement
- * @polymer
  */
-export default class XfSetvalue extends XfAction {
+export class SetValue {
 
-    static get properties() {
-        return {
-            ...super.properties,
-            value: {
-                type: String
-            }
-        };
-    }
 
-    constructor(){
-        super();
-    }
+    static execute(modelItem, newVal) {
 
-    execute() {
-        super.execute();
-        this.setValue(this.modelItem, this.value);
+        console.log('setvalue  ', this.modelItem, newVal);
+
+        if(modelItem.value !== newVal){
+            modelItem.value = newVal;
+
+            this.needsRebuild = true;
+            this.needsRecalculate = true;
+            this.needsRevalidate = true;
+            this.needsRefresh = true;
+            // this.actionPerformed();
+        }
 
 
         /*
@@ -58,21 +51,5 @@ export default class XfSetvalue extends XfAction {
         // super.execute();
     }
 
-    setValue(modelItem, newVal){
-        console.log('setvalue  ', this.modelItem, newVal);
-
-        if(modelItem.value !== newVal){
-            modelItem.value = newVal;
-
-            this.needsRebuild = true;
-            this.needsRecalculate = true;
-            this.needsRevalidate = true;
-            this.needsRefresh = true;
-            this.actionPerformed();
-        }
-
-    }
-
 }
 
-window.customElements.define('xf-setvalue', XfSetvalue);

@@ -20,7 +20,7 @@ describe('setvalue tests', () => {
                     
                     <xf-group>
                         <xf-output id="output" ref="greeting"></xf-output>
-                        <xf-button label="say 'hello Universe'">
+                        <xf-button id="btn" label="say 'hello Universe'">
                             <xf-setvalue ref="greeting" value="Hello Universe"></xf-setvalue>
                         </xf-button>
                     </xf-group>
@@ -34,6 +34,13 @@ describe('setvalue tests', () => {
         const inst = model.getDefaultInstance().getDefaultContext();
         const xp = fx.evaluateXPath('greeting',inst,null,{});
         console.log('plain eval: ', xp);
+
+        const btn = el.querySelector('#btn');
+        btn.performActions();
+
+        const out = el.querySelector('#output');
+        expect(out.modelItem.value).to.equal('Hello Universe');
+
     });
 
 

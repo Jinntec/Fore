@@ -54,13 +54,13 @@ export class XfAction extends BoundElement{
 
     actionPerformed(){
         if(this.needsRebuild){
-            this.getModel().rebuild();
+            this.model.rebuild();
         }
         if(this.needsRecalculate){
-            this.getModel().recalculate();
+            this.model.recalculate();
         }
         if(this.needsRevalidate){
-            this.getModel().revalidate();
+            this.model.revalidate();
         }
         if(this.needsRefresh){
             // this.closest('xf-form').refresh();
