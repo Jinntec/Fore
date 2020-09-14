@@ -1,15 +1,7 @@
 @startuml
 class XfForm {
+    init()
     refresh()
-}
-class BoundElement{
-    ref
-    init(model)
-    abstract evalInContext()
-    getBindingExpr()
-    getModel()
-    isBound()
-    isNotBound()
 }
 class ModelItem{
     node
@@ -21,6 +13,23 @@ class ModelItem{
     valid
     type
 }
+class ForeElement{
+    model
+    abstract evalInContext()
+    _inScopeContext()
+}
+
+class BoundElement{
+    ref
+    init(model)
+    getBindingExpr()
+    isBound()
+    isNotBound()
+}
+
+ForeElement <|-- BoundElement
+
+
 package "model" #DDDDDD {
     class XfModel{
         bindingMap[]
@@ -82,7 +91,7 @@ package "controller" #DDDDDD{
 
 BoundElement <|-- UIElement
 BoundElement <|-- XfAction
-BoundElement <|-- XfBind
+ForeElement <|-- XfBind
 BoundElement <|-- XfSubmission
 
 

@@ -137,6 +137,20 @@ describe('initialize repeat', () => {
         console.log('items', items);
         expect(items.length).to.equal(2);
 
+        let m = repeat.model.getModelItem(repeatNodes[0]);
+        console.log('repeatnode 1 ', m);
+        console.log('repeatnode 1 ', m.value);
+
+        expect(m.value).to.equal('Pick up Milk');
+
+        m = repeat.model.getModelItem(repeatNodes[1]);
+        console.log('repeatnode 1 ', m);
+        console.log('repeatnode 1 ', m.value);
+
+        expect(m.value).to.equal('Make tutorial part 1');
+
+
+
 
     });
 

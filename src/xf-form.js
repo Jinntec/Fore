@@ -121,10 +121,10 @@ export class XfForm extends LitElement {
      */
     firstUpdated(_changedProperties) {
         console.log('########## FORE: kick off processing... ##########');
-        this._init();
+        this.init();
     }
 
-    _init(){
+    init(){
 
         console.log('registerCustomXPathFunction');
         fx.registerCustomXPathFunction(
@@ -242,11 +242,11 @@ export class XfForm extends LitElement {
             // console.log('targetModel', targetModel);
 
             if(targetModel === last){
-                this.initUI();
+                this._initUI();
             }
         }else{
             // there are no instances at model construction time
-            this.initUI();
+            this._initUI();
         }
 
     }
@@ -261,14 +261,14 @@ export class XfForm extends LitElement {
     }
 */
 
-    async initUI(){
+    async _initUI(){
         this.models.forEach(model => {
             //notification event only - not used internally
             model.dispatchEvent(new CustomEvent('ready', { detail: {model:model}}));
         });
 
         await this.updateComplete;
-        console.log('initUI', this);
+        console.log('_initUI', this);
         this._initUIControls();
         this.refresh();
     }

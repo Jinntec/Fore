@@ -5,21 +5,17 @@ import fx from './output/fontoxpath.js';
 import {ModelItem} from './modelitem.js';
 
 import {XPathUtil} from "./xpath-util";
-import {ForeElement} from "./ForeElement";
 
 // import parseScript from './output/fontoxpath.js';
 
 
-export class BoundElement extends ForeElement {
+export class ForeElement extends LitElement {
 
 
     static get properties() {
         return {
             model: {
                 type: Object
-            },
-            ref:{
-                type:String
             }
         };
     }
@@ -27,7 +23,6 @@ export class BoundElement extends ForeElement {
     constructor() {
         super();
         this.model = {};
-        this.ref="";
     }
 
     init(model){
@@ -35,24 +30,10 @@ export class BoundElement extends ForeElement {
         this.model = model;
     }
 
-    /**
-     * evaluation of xf-bind and UiElements differ in details so that each class needs it's own implementation.
-     */
     evalInContext(){
         throw new Error('this function must be overwritten by xf-bind and UiElement classes');
     }
 
-    getBindingExpr() {
-        return this.getAttribute('ref');
-    }
-
-    isNotBound(){
-        return !this.hasAttribute('ref');
-    }
-
-    isBound(){
-        return this.hasAttribute('ref');
-    }
 
     _inScopeContext(){
         let resultNodeset;
@@ -78,4 +59,4 @@ export class BoundElement extends ForeElement {
 
 }
 
-customElements.define('bound-element', BoundElement);
+customElements.define('fore-element', ForeElement);

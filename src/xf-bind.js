@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
 import fx from './output/fontoxpath.js';
-import {BoundElement} from "./BoundElement.js";
+import {ForeElement} from "./ForeElement.js";
 
 /**
  * XfBind declaratively attaches constraints to nodes in the data (instances).
@@ -11,8 +11,7 @@ import {BoundElement} from "./BoundElement.js";
  *
  * References and constraint attributes use XPath statements to point to the nodes they are attributing.
  */
-// export class XfBind extends LitElement {
-export class XfBind extends BoundElement {
+export class XfBind extends ForeElement {
 
     static get styles() {
         return css`
