@@ -10,6 +10,10 @@ import {ForeElement} from "./ForeElement.js";
  * It's major task is to create ModelItem Objects for each Node in the data their ref is pointing to.
  *
  * References and constraint attributes use XPath statements to point to the nodes they are attributing.
+ *
+ * Note: why is xf-bind not extending BoundElement? Though xf-bind has a 'ref' attr it is not bound in the sense of
+ * getting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by
+ * BoundElements to track their state.
  */
 export class XfBind extends ForeElement {
 

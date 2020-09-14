@@ -2,8 +2,9 @@ import {LitElement, html, css} from 'lit-element';
 
 import fx from './output/fontoxpath.js';
 import {ModelItem} from "./modelitem";
+import {ForeElement} from "./ForeElement";
 
-export class XfInstance extends LitElement {
+export class XfInstance extends ForeElement {
 
     static get styles() {
         return css`

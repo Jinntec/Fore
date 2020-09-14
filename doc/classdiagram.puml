@@ -38,10 +38,12 @@ package "model" #DDDDDD {
         revalidate()
         registerBinding()
     }
+    ForeElement <-- XfModel
     class XfInstance{
         getInstanceData()
         getDefaultContext()
     }
+    ForeElement <-- XfInstance
     class XfBind
     class XfSubmission
 }
