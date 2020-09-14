@@ -64,34 +64,6 @@ export class XfForm extends LitElement {
         };
     }
 
-    static get uiElements(){
-        return [
-            'XF-ALERT',
-            'XF-BOUND',
-            'XF-BUTTON',
-            'XF-CONTROL',
-            'XF-DIALOG',
-            'XF-FILENAME',
-            'XF-MEDIATYPE',
-            'XF-GROUP',
-            'XF-HINT',
-            'XF-INPUT',
-            'XF-ITEMSET',
-            'XF-LABEL',
-            'XF-OUTPUT',
-            'XF-RANGE',
-            'XF-REPEAT',
-            'XF-SWITCH',
-            'XF-SECRET',
-            'XF-SELECT',
-            'XF-SUBMIT',
-            'XF-TEXTAREA',
-            'XF-TRIGGER',
-            'XF-UPLOAD'
-        ];
-    }
-
-
     constructor() {
         super();
         this.models = [];
@@ -173,7 +145,7 @@ export class XfForm extends LitElement {
         console.group('### refresh');
 
         const uiElements = this.querySelectorAll(':scope xf-group *');
-        Fore.updateChildren(uiElements);
+        Fore.refreshChildren(uiElements);
 
         console.log('dispatch refresh-done');
         this.ready = true;
@@ -195,7 +167,7 @@ export class XfForm extends LitElement {
 
 
             // if (this._isUiElement(element.nodeName) && typeof element.init === 'function') {
-            if (this._isUiElement(element.nodeName) && typeof element.init === 'function') {
+            if (Fore.isUiElement(element.nodeName) && typeof element.init === 'function') {
                 console.log('calling init ', element);
                 const model = this._getModel(element);
                 console.log('model for control ', element, model );
@@ -206,22 +178,12 @@ export class XfForm extends LitElement {
 
     }
 
-    _isUiElement(elementName){
-        console.log('_isUiElement ', elementName);
-        const found = XfForm.uiElements.includes(elementName);
-        console.log('_isUiElement ', found);
-
-        return XfForm.uiElements.includes(elementName);
-    }
-
     _getModel(uiElement) {
         if(uiElement.hasAttribute('model')){
             return document.querySelector(`#${  uiElement.getAttribute('model')}`);
         }
         return document.querySelector('xf-model');
     }
-
-
 
 
     _handleModelConstructDone(e){

@@ -33,6 +33,7 @@ export class BoundElement extends ForeElement {
     init(model){
         console.log('init ', this);
         this.model = model;
+        this._initializeActions();
     }
 
     /**
@@ -54,27 +55,9 @@ export class BoundElement extends ForeElement {
         return this.hasAttribute('ref');
     }
 
-    _inScopeContext(){
-        let resultNodeset;
+    _initializeActions(){
 
-        const parentBind = this.parentNode.closest('[ref]');
-        // console.log('parentBind ', parentBind);
-
-        if(parentBind !== null){
-            resultNodeset = parentBind.nodeset;
-        }else if(XPathUtil.isAbsolutePath(this.ref)){
-            resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();
-        }else if(this.model.getDefaultInstance() !== null){
-            resultNodeset = this.model.getDefaultInstance().getDefaultContext();
-        }else{
-            return [];
-        }
-
-        // console.log('_inScopeContext ', resultNodeset);
-        // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
-        return resultNodeset;
     }
-
 
 }
 

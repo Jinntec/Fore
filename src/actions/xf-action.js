@@ -42,6 +42,10 @@ export class XfAction extends BoundElement{
         this.needsRefresh = false;
     }
 
+    init(model) {
+        super.init(model);
+    }
+
     execute (){
 /*
         if(this.getBindingExpr()){
