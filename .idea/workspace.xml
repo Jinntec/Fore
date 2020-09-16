@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment=".gitignore">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/XFormsElementTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/InstanceFunctionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/InstanceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/ModelTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/XFormsDatatypes11.xsd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/bind/BasicTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/bind/BindRepeatTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/exist/fore/model/bind/BindTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/bind/basic.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/bind/bind.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/bind/bindrepeat.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/simple-duplicate-id.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/simple.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/simpleNoId.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/model/two-instances.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/org/exist/fore/nested.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,16 +142,17 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/elements/model" />
-      <recent name="$PROJECT_DIR$/elements" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/elements" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/elements/demo" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/elements/model" />
+      <recent name="$PROJECT_DIR$/elements" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -283,7 +267,7 @@
       <workItem from="1559727008781" duration="22793000" />
       <workItem from="1559810592244" duration="28214000" />
       <workItem from="1559896270798" duration="30829000" />
-      <workItem from="1600249086286" duration="690000" />
+      <workItem from="1600249086286" duration="1183000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -551,7 +535,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600249496024</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary=".gitignore">
+      <created>1600249928828</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1600249928828</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
