@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello World</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../../src/xf-form.js';
+        import '../ui/xf-output.js';
+        import '../deprecated/native/xf-button.js';
+        import '../deprecated/xf-refresh.js';
+        import '../deprecated/xf-json-data.js';
+        import '../deprecated/xf-message.js';
+        import '../actions/xf-setvalue.js';
+        import '../deprecated/xf-submit.js';
+
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+        xf-json-data {display:none;}
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <greeting>World!</greeting>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+
+    <demo-snippet>
+        <template>
+            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind":{
+                      "id":"b-greeting",
+                      "required":true,
+                      "value":"Hello...?"
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup' action="/exist/apps/fore/submit">
+                <xf-message event="value-changed">value has changed</xf-message>
+                <xf-message event="refresh-done">refresh has been done </xf-message>
+
+
+                <h1>
+                    <xf-output bind="b-greeting" id="output">
+                    </xf-output>
+                </h1>
+
+                <xf-button label="say 'hello World'">
+                    <xf-setvalue bind="b-greeting" value="Hello World!"></xf-setvalue>
+                </xf-button>
+                <xf-button label="submit">
+                    <xf-submit></xf-submit>
+                </xf-button>
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>
