@@ -30,6 +30,26 @@ to `export default fontoxpath;` to make it work.
 
 To check if installation was correct run `npm run test`. Tests should run green.
 
+
+## Preparing assets
+
+To allow browser-compatible module loading there is a npm script called 'empathy'. This must
+be called whenever new node modules are introduced into the project.
+
+`npm run empathy`
+
+This will create a directory 'assets' with all dependencies converted to use local pathes instead
+of node_module pathes.
+
+This approach will eventually change.
+
+## Running
+
+`npm run start`
+
+starts the testserver with 'doc/index.html' as entry page. Under 'examples' on the left
+you find 
+
 ## Ideas
 
 ### make model editable in dev mode

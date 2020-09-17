@@ -8,6 +8,21 @@
     "test": "test"
   },
   "dependencies": {
+    "@polymer/iron-ajax": "^3.0.1",
+    "@polymer/iron-component-page": "^4.0.1",
+    "@polymer/iron-demo-helpers": "^3.1.0",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-dialog": "^3.0.1",
+    "@polymer/paper-dropdown-menu": "github:PolymerElements/paper-dropdown-menu",
+    "@polymer/paper-item": "^3.0.1",
+    "@polymer/paper-listbox": "github:PolymerElements/paper-listbox",
+    "@polymer/paper-toast": "^3.0.1",
+    "@polymer/polymer": "^3.0.0",
+    "@vaadin/vaadin-combo-box": "^5.0.3",
+    "@vaadin/vaadin-list-box": "^1.2.0",
+    "@vaadin/vaadin-notification": "^1.4.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
     "fontoxpath": "^3.11.0",
     "lit-element": "^2.3.1",
     "slimdom": "^2.3.2"
@@ -31,7 +46,8 @@
     "mocha": "^7.0.1",
     "rimraf": "^2.6.3",
     "rollup": "^1.15.4",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "@0xcda7a/empathy": "0.0.9"
   },
   "scripts": {
     "test": "karma start --coverage",
@@ -52,7 +68,8 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
     "fontoxpath": "rollup -c fontoxpath.rollup.config.js",
-    "parseExpr": "rollup -c parseexpr.rollup.config.js"
+    "parseExpr": "rollup -c parseexpr.rollup.config.js",
+    "empathy": "./node_modules/@0xcda7a/empathy/bin/empathy install"
   },
   "repository": {
     "type": "git",
