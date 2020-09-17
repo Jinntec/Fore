@@ -2,7 +2,637 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment=".gitignore">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/font-roboto/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/font-roboto/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/iron-a11y-announcer.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/iron-a11y-announcer.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/iron-a11y-announcer.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/iron-a11y-announcer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-a11y-announcer/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-a11y-keys-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-a11y-keys-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-ajax/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-ajax/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/iron-autogrow-textarea.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/iron-autogrow-textarea.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/iron-autogrow-textarea.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/iron-autogrow-textarea.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-autogrow-textarea/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-behaviors/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-behaviors/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-checked-element-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-checked-element-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-component-page/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-component-page/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-demo-helpers/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-demo-helpers/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-dropdown/demo/polymer.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-dropdown/demo/polymer.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-dropdown/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-dropdown/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-fit-behavior/iron-fit-behavior.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-fit-behavior/iron-fit-behavior.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-fit-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-fit-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-flex-layout/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-flex-layout/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-form-element-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-form-element-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-icon/hero.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-icon/hero.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-icon/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-icon/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-iconset-svg/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-iconset-svg/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-input/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-input/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-list/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-list/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-location/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-location/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-menu-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-menu-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-meta/hero.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-meta/hero.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-meta/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-meta/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-focusables-helper.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-focusables-helper.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-focusables-helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-focusables-helper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-backdrop.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-backdrop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-behavior.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-behavior.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-behavior.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-behavior.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-manager.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-manager.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-overlay-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-scroll-manager.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-scroll-manager.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-scroll-manager.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/iron-scroll-manager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-overlay-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-resizable-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-resizable-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-scroll-target-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-scroll-target-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-selector/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-selector/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/iron-validatable-behavior/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/iron-validatable-behavior/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/marked-element/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/marked-element/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/neon-animation/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/neon-animation/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-behaviors/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-behaviors/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/demo/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/demo/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-light.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-light.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-light.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-light.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-shared-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu-shared-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-dropdown-menu/paper-dropdown-menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/demo/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/demo/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-behavior.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-behavior.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-behavior.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-behavior.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-char-counter.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-char-counter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-container.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-container.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-error.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input-error.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-textarea.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-input/paper-textarea.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-item/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-item/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-listbox/hero.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-listbox/hero.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-listbox/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-listbox/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/demo/polymer.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/demo/polymer.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/hero.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/hero.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-menu-button/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-ripple/hero.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-ripple/hero.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-ripple/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-ripple/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-ripple/paper-ripple.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-ripple/paper-ripple.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/paper-styles/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/paper-styles/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/externs/closure-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/externs/closure-types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-dom-api-externs.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-dom-api-externs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-externs.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-externs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-internal-shared-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/externs/polymer-internal-shared-types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/externs/webcomponents-externs.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/externs/webcomponents-externs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/interfaces.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/interfaces.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/array-selector.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/array-selector.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/custom-style.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/custom-style.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-bind.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-bind.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-if.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-if.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-if.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-if.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-module.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-module.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-repeat.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-repeat.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/elements/dom-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/class.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/class.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/class.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/class.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-data-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-data-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-element-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-element-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-element-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/legacy-element-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/mutable-data-behavior.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/mutable-data-behavior.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer-fn.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer-fn.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer-fn.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer-fn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer.dom.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer.dom.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer.dom.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/polymer.dom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/templatizer-behavior.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/legacy/templatizer-behavior.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/dir-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/dir-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/disable-upgrade-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/disable-upgrade-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/disable-upgrade-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/disable-upgrade-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/element-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/element-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/element-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/element-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/gesture-event-listeners.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/gesture-event-listeners.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/mutable-data.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/mutable-data.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-changed.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-changed.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-changed.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-changed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/properties-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-accessors.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-accessors.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-effects.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-effects.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/property-effects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/strict-binding-parser.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/strict-binding-parser.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/template-stamp.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/template-stamp.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/template-stamp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/mixins/template-stamp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/array-splice.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/array-splice.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/async.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/async.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/async.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/async.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/boot.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/boot.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/boot.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/boot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/case-map.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/case-map.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/debounce.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/debounce.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/flattened-nodes-observer.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/flattened-nodes-observer.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/flush.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/flush.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/gestures.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/gestures.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/html-tag.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/html-tag.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/mixin.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/mixin.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/path.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/path.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/render-status.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/render-status.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/resolve-url.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/resolve-url.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/settings.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/settings.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/style-gather.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/style-gather.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/telemetry.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/telemetry.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/templatize.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/templatize.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/templatize.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/templatize.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/unresolved.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/unresolved.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/wrap.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/lib/utils/wrap.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/polymer-element.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/polymer-element.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/polymer/polymer-legacy.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/polymer/polymer-legacy.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@polymer/prism-element/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@polymer/prism-element/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-data-provider-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-data-provider-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown-wrapper.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown-wrapper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-light.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-light.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/src/vaadin-combo-box.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box-dropdown-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box-dropdown-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box-item-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box-item-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box-dropdown-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box-dropdown-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/vaadin-combo-box-light.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/vaadin-combo-box-light.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-combo-box/vaadin-combo-box.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/vaadin-control-state-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-control-state-mixin/vaadin-control-state-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-development-mode-detector/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-development-mode-detector/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-element-mixin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-element-mixin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-element-mixin/vaadin-element-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-element-mixin/vaadin-element-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/src/vaadin-item-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/src/vaadin-item-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/src/vaadin-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/src/vaadin-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/theme/material/vaadin-item-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/theme/material/vaadin-item-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/vaadin-item-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/vaadin-item-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/vaadin-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-item/vaadin-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/badge.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/badge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/mixins/required-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/mixins/required-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/typography.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/typography.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/version.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-lumo-styles/version.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/mixins/required-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/mixins/required-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/typography.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/typography.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/version.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-material-styles/version.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/src/vaadin-focusables-helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/src/vaadin-focusables-helper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/src/vaadin-overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/src/vaadin-overlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/vaadin-overlay.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-overlay/vaadin-overlay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-email-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-email-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-number-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-number-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-password-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-password-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-area.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-area.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-field-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-field-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/src/vaadin-text-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-email-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-email-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-number-field-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-number-field-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-text-field-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/lumo/vaadin-text-field-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/material/vaadin-text-field-styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/theme/material/vaadin-text-field-styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-email-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-email-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-number-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-number-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-password-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-password-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-text-area.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-text-area.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-text-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-text-field/vaadin-text-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-themable-mixin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-themable-mixin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/vaadin-usage-statistics-collect.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@vaadin/vaadin-usage-statistics/vaadin-usage-statistics-collect.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/apply-shim.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/apply-shim.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/apply-shim.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/apply-shim.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/scoping-shim.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/scoping-shim.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/scoping-shim.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/scoping-shim.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/css-parse.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/css-parse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-properties.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-properties.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-transformer.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-transformer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-util.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/style-util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/unscoped-style-handler.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/shadycss/src/unscoped-style-handler.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-ce.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-ce.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-ce.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-ce.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/bundles/webcomponents-sd.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/webcomponents-bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/webcomponents-bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/webcomponents-bundle.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/@webcomponents/webcomponentsjs/webcomponents-bundle.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/.babelrc" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/.babelrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/bower.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/dist/clipboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/dist/clipboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/dist/clipboard.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/dist/clipboard.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/karma.conf.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/karma.conf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/package.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/package.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/src/clipboard-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/src/clipboard-action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/src/clipboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/src/clipboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/test/clipboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/test/clipboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/clipboard/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/clipboard/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/delegate/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/delegate/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/good-listener/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/good-listener/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/css-tag.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/decorators.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/decorators.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/decorators.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/decorators.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/decorators.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/decorators.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/decorators.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/decorators.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lib/updating-element.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lit-element.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lit-element.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lit-element.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lit-element.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lit-element.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lit-element.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/lit-element.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/lit-element.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/src/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/src/env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/src/lib/css-tag.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/src/lib/css-tag.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/src/lib/decorators.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/src/lib/decorators.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/src/lib/updating-element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/src/lib/updating-element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-element/src/lit-element.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-element/src/lit-element.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/async-append.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/async-append.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/async-append.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/async-append.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/async-replace.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/async-replace.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/async-replace.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/async-replace.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/cache.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/cache.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/class-map.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/class-map.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/class-map.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/class-map.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/class-map.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/class-map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/class-map.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/class-map.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/if-defined.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/repeat.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/repeat.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/repeat.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/repeat.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/style-map.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/style-map.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/style-map.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/style-map.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/style-map.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/style-map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/style-map.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/style-map.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/until.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/until.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/directives/until.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/directives/until.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/default-template-processor.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/directive.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/directive.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/directive.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/directive.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/directive.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/directive.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/dom.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/dom.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/dom.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/dom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/dom.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/dom.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/modify-template.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/part.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/part.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/part.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/part.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/part.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/part.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/parts.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/parts.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/parts.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/parts.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/parts.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/parts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/parts.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/parts.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render-options.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render-options.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render-options.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render-options.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render-options.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render-options.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/render.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/render.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/shady-render.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-factory.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-instance.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-processor.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-result.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-result.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-result.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-result.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-result.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-result.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template-result.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template-result.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lib/template.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lib/template.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lit-html.d.ts.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lit-html.d.ts.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lit-html.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lit-html.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/lit-html.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/lit-html.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/polyfills/template_polyfill.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/cache.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/cache.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/class-map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/class-map.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/if-defined.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/if-defined.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/repeat.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/repeat.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/style-map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/style-map.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/directives/until.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/directives/until.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/default-template-processor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/default-template-processor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/directive.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/directive.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/dom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/dom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/modify-template.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/modify-template.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/part.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/part.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/parts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/parts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/render-options.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/render-options.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/render.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/render.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/shady-render.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/shady-render.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/template-factory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/template-factory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/template-instance.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/template-instance.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/template-processor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/template-processor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/template-result.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/template-result.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lib/template.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lib/template.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/lit-html.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/lit-html.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/lit-html/src/polyfills/template_polyfill.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/lit-html/src/polyfills/template_polyfill.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/marked/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/marked/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/marked/www/demo.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/marked/www/demo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/marked/www/demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/assets/marked/www/demo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-actionscript.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-actionscript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-actionscript.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-actionscript.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-apl.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-apl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-apl.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-apl.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-applescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-applescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-applescript.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-applescript.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-asciidoc.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-asciidoc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-asciidoc.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-asciidoc.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-asm6502.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-asm6502.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-asm6502.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-asm6502.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-aspnet.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-aspnet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-aspnet.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-aspnet.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-autohotkey.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-autohotkey.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-autohotkey.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-autohotkey.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-bash.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-bash.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-bash.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-bash.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-batch.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-batch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-batch.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-batch.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-c.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-c.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-c.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-c.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-cil.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-cil.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-cil.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-cil.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-clike.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-clike.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-clike.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-clike.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-clojure.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-clojure.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-clojure.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-clojure.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-core.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-core.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-core.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-cpp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-cpp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-cpp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-cpp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-csharp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-csharp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-csharp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-csharp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-csp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-csp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-csp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-csp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-css-extras.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-css-extras.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-css-extras.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-css-extras.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-css.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-css.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-css.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-css.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-d.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-d.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-d.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-d.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-dart.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-dart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-dart.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-dart.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-diff.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-diff.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-diff.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-diff.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-docker.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-docker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-docker.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-docker.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ebnf.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ebnf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ebnf.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ebnf.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-eiffel.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-eiffel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-eiffel.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-eiffel.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ejs.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ejs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ejs.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ejs.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-elixir.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-elixir.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-elixir.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-elixir.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-elm.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-elm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-elm.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-elm.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-fsharp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-fsharp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-fsharp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-fsharp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-gherkin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-gherkin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-gherkin.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-gherkin.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-glsl.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-glsl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-glsl.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-glsl.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-gml.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-gml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-gml.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-gml.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-go.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-go.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-go.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-go.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-graphql.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-graphql.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-graphql.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-graphql.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-groovy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-groovy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-groovy.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-groovy.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-haml.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-haml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-haml.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-haml.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-handlebars.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-handlebars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-handlebars.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-handlebars.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-haskell.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-haskell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-haskell.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-haskell.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hcl.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hcl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hcl.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hcl.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hpkp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hpkp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hpkp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hpkp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hsts.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hsts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-hsts.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-hsts.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-http.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-http.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-http.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-http.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-io.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-io.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-io.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-io.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-j.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-j.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-j.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-j.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-java.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-java.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-java.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-java.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoc.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoc.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoc.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoclike.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoclike.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoclike.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javadoclike.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javascript.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javascript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-javascript.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-javascript.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jolie.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jolie.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jolie.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jolie.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jsdoc.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jsdoc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jsdoc.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jsdoc.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-json.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-json.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-json.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-json.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-json5.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-json5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-json5.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-json5.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jsx.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jsx.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-jsx.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-jsx.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-julia.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-julia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-julia.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-julia.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-kotlin.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-kotlin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-kotlin.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-kotlin.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-less.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-less.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-less.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-less.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-lisp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-lisp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-lisp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-lisp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-livescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-livescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-livescript.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-livescript.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-lolcode.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-lolcode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-lolcode.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-lolcode.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-markdown.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-markdown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-markdown.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-markdown.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-markup.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-markup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-markup.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-markup.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-nsis.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-nsis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-nsis.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-nsis.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-objectivec.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-objectivec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-objectivec.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-objectivec.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ocaml.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ocaml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ocaml.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ocaml.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-opencl.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-opencl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-opencl.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-opencl.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-oz.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-oz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-oz.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-oz.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-parigp.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-parigp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-parigp.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-parigp.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pascal.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pascal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pascal.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pascal.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-perl.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-perl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-perl.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-perl.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-php.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-php.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-php.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-php.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-phpdoc.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-phpdoc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-phpdoc.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-phpdoc.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-powershell.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-powershell.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-powershell.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-powershell.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-protobuf.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-protobuf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-protobuf.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-protobuf.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pug.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pug.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pug.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pug.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pure.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pure.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-pure.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-pure.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-python.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-python.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-python.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-python.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-q.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-q.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-q.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-q.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-qore.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-qore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-qore.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-qore.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-reason.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-reason.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-reason.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-reason.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-regex.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-regex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-regex.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-regex.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-renpy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-renpy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-renpy.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-renpy.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-rip.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-rip.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-rip.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-rip.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ruby.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ruby.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-ruby.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-ruby.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-rust.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-rust.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-rust.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-rust.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-sas.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-sas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-sas.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-sas.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-scala.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-scala.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-scala.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-scala.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-scheme.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-scheme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-scheme.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-scheme.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-smalltalk.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-smalltalk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-smalltalk.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-smalltalk.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-sql.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-sql.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-sql.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-sql.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-stylus.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-stylus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-stylus.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-stylus.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-swift.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-swift.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-swift.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-swift.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-t4-vb.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-t4-vb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-t4-vb.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-t4-vb.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-textile.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-textile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-textile.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-textile.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-toml.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-toml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-toml.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-toml.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-tt2.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-tt2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-tt2.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-tt2.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-typescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-typescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-typescript.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-typescript.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-vala.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-vala.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-vala.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-vala.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-velocity.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-velocity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-visual-basic.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-visual-basic.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-visual-basic.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-visual-basic.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-wiki.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-wiki.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-wiki.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-wiki.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-xeora.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-xeora.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-xeora.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-xeora.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-xquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-xquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-xquery.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-xquery.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-yaml.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-yaml.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/components/prism-yaml.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/components/prism-yaml.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/autoloader/prism-autoloader.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/autoloader/prism-autoloader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/autoloader/prism-autoloader.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/autoloader/prism-autoloader.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/command-line/prism-command-line.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/command-line/prism-command-line.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/command-line/prism-command-line.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/command-line/prism-command-line.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/custom-class/prism-custom-class.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/custom-class/prism-custom-class.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/custom-class/prism-custom-class.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/custom-class/prism-custom-class.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/file-highlight/prism-file-highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/file-highlight/prism-file-highlight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/file-highlight/prism-file-highlight.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/file-highlight/prism-file-highlight.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/jsonp-highlight/prism-jsonp-highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/jsonp-highlight/prism-jsonp-highlight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/jsonp-highlight/prism-jsonp-highlight.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/jsonp-highlight/prism-jsonp-highlight.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/keep-markup/prism-keep-markup.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/keep-markup/prism-keep-markup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/keep-markup/prism-keep-markup.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/keep-markup/prism-keep-markup.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-highlight/prism-line-highlight.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/line-numbers/prism-line-numbers.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/previewers/prism-previewers.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/previewers/prism-previewers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/previewers/prism-previewers.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/previewers/prism-previewers.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/show-language/prism-show-language.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/show-language/prism-show-language.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/show-language/prism-show-language.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/show-language/prism-show-language.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/toolbar/prism-toolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/toolbar/prism-toolbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/toolbar/prism-toolbar.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/toolbar/prism-toolbar.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/unescaped-markup/prism-unescaped-markup.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/unescaped-markup/prism-unescaped-markup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/plugins/unescaped-markup/prism-unescaped-markup.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/plugins/unescaped-markup/prism-unescaped-markup.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/prism.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/prism.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-coy.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-coy.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-funky.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-funky.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-okaidia.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-okaidia.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-solarizedlight.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-solarizedlight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism-twilight.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism-twilight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/prismjs/themes/prism.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/prismjs/themes/prism.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/select/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/select/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tiny-emitter/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tiny-emitter/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -123,36 +753,43 @@
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
+  <component name="ProjectId" id="1hdFfNzVKYgkyXf1dMwMi0WJA8j" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="XHTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/elements" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v7.2.0/bin/node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
-    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/elements" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/elements/demo" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/doc" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/elements/model" />
       <recent name="$PROJECT_DIR$/elements" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/elements" />
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/elements/demo" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -267,7 +904,9 @@
       <workItem from="1559727008781" duration="22793000" />
       <workItem from="1559810592244" duration="28214000" />
       <workItem from="1559896270798" duration="30829000" />
-      <workItem from="1600249086286" duration="1183000" />
+      <workItem from="1600249086286" duration="1426000" />
+      <workItem from="1600333171130" duration="105000" />
+      <workItem from="1600333512073" duration="6773000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -542,7 +1181,21 @@
       <option name="project" value="LOCAL" />
       <updated>1600249928828</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary=".gitignore">
+      <created>1600250281324</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1600250281324</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs">
+      <created>1600335942506</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1600335942506</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -578,7 +1231,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="changed prefix 'fore-' into 'xf-'" />
     <MESSAGE value="loading first form into browser and sending init request via ajax;&#10;fixed and sorted gulpfile;&#10;basic query to swallow xf-model;&#10;using configfile now" />
     <MESSAGE value="now serving all files from 'demo' as forms;" />
     <MESSAGE value="renamed 'error' JSON field to 'alert'. 'alert' is used to pass a validation failure. It is not an error condition&#10;of the software but an expected one. Keep name also to stay closer to original spec." />
@@ -603,7 +1255,8 @@
     <MESSAGE value="new sample with nested bindings (body.html);&#10;actions are not boundElements any more for now;&#10;simple repeats working;&#10;all tests adapted and working;" />
     <MESSAGE value="major step forward: refactored again; simple repeat delete and append&#10;actions working; data-binding reworked to use a decorator instead of proxy." />
     <MESSAGE value=".gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value=".gitignore" />
+    <MESSAGE value="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs" />
   </component>
   <component name="masterDetails">
     <states>

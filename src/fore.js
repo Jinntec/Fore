@@ -62,7 +62,9 @@ export class Fore{
 
     static isUiElement(elementName){
         const found = Fore.UI_ELEMENTS.includes(elementName);
-        console.log('_isUiElement ', found);
+        if(found){
+            console.log('_isUiElement ', found);
+        }
         return Fore.UI_ELEMENTS.includes(elementName);
     }
 

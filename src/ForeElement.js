@@ -26,7 +26,7 @@ export class ForeElement extends LitElement {
     }
 
     init(model){
-        console.log('init ', this);
+        // console.log('init ', this);
         this.model = model;
     }
 
@@ -45,8 +45,8 @@ export class ForeElement extends LitElement {
     _inScopeContext(){
         let resultNodeset;
 
-        console.log('this ', this);
-        console.log('this ', this.parentNode);
+        // console.log('this ', this);
+        // console.log('this ', this.parentNode);
 
         const parentBind = this.parentNode.closest('[ref]');
         // console.log('parentBind ', parentBind);

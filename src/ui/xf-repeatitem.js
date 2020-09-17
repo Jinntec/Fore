@@ -1,6 +1,6 @@
 import {LitElement,html, css} from "lit-element";
-import {BoundElement} from "./BoundElement.js";
-import {Fore} from "./fore.js";
+import {BoundElement} from "../BoundElement.js";
+import {Fore} from "../fore.js";
 
 
 /**

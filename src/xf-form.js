@@ -161,7 +161,7 @@ export class XfForm extends LitElement {
 
         uiElements.forEach(element => {
 
-            console.log('initUI children ', element);
+            // console.log('initUI children ', element);
 
             //todo: later - check for AVTs
             // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
@@ -173,7 +173,7 @@ export class XfForm extends LitElement {
             if (Fore.isUiElement(element.nodeName) && typeof element.init === 'function') {
                 console.log('calling init ', element);
                 const model = this._getModel(element);
-                console.log('model for control ', element, model );
+                // console.log('model for control ', element, model );
                 element.init(this._getModel(element));
             }
 

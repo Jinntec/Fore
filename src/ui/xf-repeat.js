@@ -1,9 +1,7 @@
 import {html,css} from "lit-element";
-import {BoundElement} from "./BoundElement.js";
-// import { unsafeHTML } from "lit-html/directives/unsafe-html";
+import {BoundElement} from "../BoundElement.js";
 import "./xf-repeatitem.js";
-
-import fx from "./output/fontoxpath";
+import fx from "../output/fontoxpath";
 
 /**
  * `xf-repeat`
