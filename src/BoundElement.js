@@ -58,7 +58,7 @@ export class BoundElement extends ForeElement {
         }else{
             this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
         }
-        console.log('UiElement evaluated to nodeset: ', this.nodeset);
+        // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
 
 
