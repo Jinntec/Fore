@@ -149,8 +149,8 @@ export class XfForm extends LitElement {
         this._refreshChildren();
 
 
-        const r = this.querySelectorAll('xf-repeat');
-        await r[r.length-1].updateComplete;
+        // const r = this.querySelectorAll('xf-repeat');
+        // await r[r.length-1].updateComplete;
 
         this.ready = true;
 

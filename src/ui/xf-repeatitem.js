@@ -87,12 +87,14 @@ export class XfRepeatitem extends BoundElement{
 */
     }
 
+/*
     refresh(){
         const children = this.querySelectorAll('[ref]');
         this.updateChildren(children);
         this.requestUpdate();
 
     }
+*/
 
     updateChildren(children){
         children.forEach(element => {

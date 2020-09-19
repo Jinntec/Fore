@@ -49,7 +49,7 @@ export class XfRepeat extends BoundElement {
         const rItem = e.detail.item;
         // console.log('_doInit passing nodeset',rItem.nodeset);
         // rItem.init();
-        rItem.refresh();
+        // rItem.refresh();
     }
 
     static get properties() {
@@ -90,6 +90,9 @@ export class XfRepeat extends BoundElement {
 
     }
 
+    firstUpdated(_changedProperties) {
+        this.init();
+    }
 
     init() {
         // ### there must be a single 'template' child
@@ -129,12 +132,13 @@ export class XfRepeat extends BoundElement {
     }
 
 
+/*
     refresh() {
         console.group('xf-repeat.refresh');
         if(!this.inited) this.init();
         // this.nodeset = this.evalBinding();
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, this.model.getDefaultInstance().getDefaultContext(), null, {});
-
+        // this._evalNodeset();
 
 
         console.log('REPEAT.refresh nodeset ', this.nodeset);
@@ -146,7 +150,7 @@ export class XfRepeat extends BoundElement {
 
         let repeatItems = this.querySelectorAll('xf-repeatitem');
         // const repeatItemCount = repeatItems.length;
-        /*
+        /!*
 
 
                 let nodeCount = 1;
@@ -190,20 +194,21 @@ export class XfRepeat extends BoundElement {
                     })
                 }
 
-        */
-        this._refreshChildren(repeatItems);
+        *!/
+        // this._refreshChildren(repeatItems);
 
-/*
+/!*
         if(repeatItems){
             repeatItems = this.querySelectorAll('xf-repeatitem');
             repeatItems.forEach(bound => {
                 bound.refresh();
             });
         }
-*/
+*!/
         this.requestUpdate();
         console.groupEnd();
     }
+*/
 
     _refreshChildren(repeatItems){
         if(repeatItems){

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="refresh with repeat fixed for single repeat">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -210,14 +211,7 @@
       <workItem from="1600333512073" duration="27199000" />
       <workItem from="1600371565523" duration="7680000" />
       <workItem from="1600432250803" duration="15376000" />
-      <workItem from="1600515820910" duration="25908000" />
-    </task>
-    <task id="LOCAL-00001" summary="polymer2 initialised">
-      <created>1538846767259</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1538846767259</updated>
+      <workItem from="1600515820910" duration="27417000" />
     </task>
     <task id="LOCAL-00002" summary="docs">
       <created>1539339833102</created>
@@ -555,7 +549,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600540582383</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage">
+      <created>1600542001046</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1600542001047</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -591,7 +592,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="updated and fixed some errors" />
     <MESSAGE value="basic client-side parsing of states; started implementation of repeat" />
     <MESSAGE value="made sure initial state is applied once all controls are up;&#10;initialisation of repeat for todo sample;" />
     <MESSAGE value="added a comment" />
@@ -616,7 +616,8 @@
     <MESSAGE value="shutting up" />
     <MESSAGE value="factored out eval" />
     <MESSAGE value="refresh with repeat fixed for single repeat" />
-    <option name="LAST_COMMIT_MESSAGE" value="refresh with repeat fixed for single repeat" />
+    <MESSAGE value="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage" />
+    <option name="LAST_COMMIT_MESSAGE" value="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
