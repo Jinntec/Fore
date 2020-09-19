@@ -17,19 +17,43 @@ import XfAbstractControl from "./xf-abstract-control";
 class XfGroup extends XfAbstractControl{
 
 
-/*
-    init(model){
-        super.init(model);
-        console.log(this, this.modelItem);
-
-        // this.initializeChildren(this);
+    static get properties() {
+        return{
+            collapse:{
+                type:Boolean,
+                reflect:true
+            }
+        }
     }
-*/
+        /*
+            init(model){
+                super.init(model);
+                console.log(this, this.modelItem);
+
+                // this.initializeChildren(this);
+            }
+        */
+
+    constructor(){
+        super();
+        this.collapse = false;
+    }
 
     render() {
         return html`
-            <slot></slot>
+            <div>
+                <slot></slot>
+            </div>
         `;
+    }
+
+    /**
+     * overwrites Abstract Control.
+     *
+     * Groups only reacts to 'relevant' property.
+     */
+    handleModelItemProperties(){
+        this.handleRelevant();
     }
 
     initializeChildren(node){
