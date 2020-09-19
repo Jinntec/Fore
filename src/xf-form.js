@@ -140,18 +140,39 @@ export class XfForm extends LitElement {
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
      */
-    refresh () {
+    async refresh () {
 
         console.group('### refresh');
 
-        const uiElements = this.querySelectorAll('*');
-        Fore.refreshChildren(uiElements);
+        // const uiElements = this.querySelectorAll('*');
+
+        await this._refreshChildren();
 
         console.log('dispatch refresh-done');
         this.ready = true;
-        this.dispatchEvent(new CustomEvent('refresh-done', {}));
 
         console.groupEnd();
+        this.dispatchEvent(new CustomEvent('refresh-done', {}));
+
+    }
+
+    _refreshChildren(){
+        const uiElements = this.querySelectorAll('*');
+
+        uiElements.forEach(element => {
+
+            //todo: later - check for AVTs
+            // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
+            // if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
+
+            if (typeof element.refresh === 'function') {
+                if(element.nodeName !== 'XF-REPEATITEM'){
+                    element.refresh();
+                }
+            }
+
+        });
+
     }
 
     _handleModelConstructDone(e){

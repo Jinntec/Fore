@@ -16,6 +16,9 @@ export class ForeElement extends LitElement {
         return {
             model: {
                 type: Object
+            },
+            repeated:{
+                type:Boolean
             }
         };
     }
@@ -23,6 +26,7 @@ export class ForeElement extends LitElement {
     constructor() {
         super();
         this.model = null;
+        this.repeated = false;
     }
 
     getModel(){
@@ -70,11 +74,13 @@ export class ForeElement extends LitElement {
         // console.log('this ', this);
         // console.log('this ', this.parentNode);
 
+/*
         if(this.nodeName.toUpperCase() === 'XF-REPEATITEM'){
             const index = this.index;
             console.log('>>>>>>>>>>< index ', index);
             return this.parentNode.host.nodeset[this.index -1];
         }
+*/
 
         if(this.repeated){
             return this.parentNode.nodeset;

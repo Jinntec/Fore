@@ -96,8 +96,10 @@ export class XfRepeat extends BoundElement {
         console.log('##### repeat init');
 
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
-        const inscope = this._inScopeContext();
-        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        this._evalNodeset();
+
+        // const inscope = this._inScopeContext();
+        // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
 
         // this.template = this.querySelector('template');
         console.log('### init template for repeat ', this.id , this.template);
@@ -117,6 +119,15 @@ export class XfRepeat extends BoundElement {
         this.inited = true;
     }
 
+    /**
+     * repeat has no own modelItems
+     * @private
+     */
+    _evalNodeset(){
+        const inscope = this._inScopeContext();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+    }
+
 
     refresh() {
         console.group('xf-repeat.refresh');
@@ -133,53 +144,54 @@ export class XfRepeat extends BoundElement {
         //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
 
 
-/*
-        let repeatItems = this.querySelectorAll('xf-repeatitem');
-        const repeatItemCount = repeatItems.length;
+        // let repeatItems = this.querySelectorAll('xf-repeatitem');
+        // const repeatItemCount = repeatItems.length;
+        /*
 
 
-        let nodeCount = 1;
-        if(Array.isArray(this.nodeset)){
-            nodeCount = this.nodeset.length;
-        }
+                let nodeCount = 1;
+                if(Array.isArray(this.nodeset)){
+                    nodeCount = this.nodeset.length;
+                }
 
-        // const contextSize = this.nodeset.length;
-        const contextSize = nodeCount;
-        let modified = [];
-        if (contextSize < repeatItemCount){
+                // const contextSize = this.nodeset.length;
+                const contextSize = nodeCount;
+                let modified = [];
+                if (contextSize < repeatItemCount){
 
-            for(let position = repeatItemCount; position > contextSize; position--){
-                //remove repeatitem
-                const itemToRemove = repeatItems[position -1];
-                itemToRemove.parentNode.removeChild(itemToRemove);
-                // modified.push(itemToRemove);
-            }
+                    for(let position = repeatItemCount; position > contextSize; position--){
+                        //remove repeatitem
+                        const itemToRemove = repeatItems[position -1];
+                        itemToRemove.parentNode.removeChild(itemToRemove);
+                        // modified.push(itemToRemove);
+                    }
 
-            //todo: update index
-        }
+                    //todo: update index
+                }
 
-        if(contextSize > repeatItemCount){
+                if(contextSize > repeatItemCount){
 
-            for(let position = repeatItemCount +1; position <= contextSize; position++){
-                //add new repeatitem
-                const lastRepeatItem = repeatItems[repeatItemCount-1];
-                const newItem = lastRepeatItem.cloneNode(true);
-                newItem.nodeset = this.nodeset[position-1];
-                this.appendChild(newItem);
-                modified.push(newItem);
+                    for(let position = repeatItemCount +1; position <= contextSize; position++){
+                        //add new repeatitem
+                        const lastRepeatItem = repeatItems[repeatItemCount-1];
+                        const newItem = lastRepeatItem.cloneNode(true);
+                        newItem.nodeset = this.nodeset[position-1];
+                        this.appendChild(newItem);
+                        modified.push(newItem);
 
-            }
+                    }
 
 
-        }
+                }
 
-        if(modified.length > 0){
-            modified.forEach(mod => {
-                mod.refresh();
-            })
-        }
+                if(modified.length > 0){
+                    modified.forEach(mod => {
+                        mod.refresh();
+                    })
+                }
 
-*/
+        */
+        // await this._refreshChildren(repeatItems);
 /*
         if(repeatItems){
             repeatItems = this.querySelectorAll('xf-repeatitem');
@@ -192,6 +204,14 @@ export class XfRepeat extends BoundElement {
         console.groupEnd();
     }
 
+    _refreshChildren(repeatItems){
+        if(repeatItems){
+            repeatItems = this.querySelectorAll('xf-repeatitem');
+            repeatItems.forEach(bound => {
+                bound.refresh();
+            });
+        }
+    }
 
     _refreshItem(e){
         if(!this.inited) return;

@@ -50,8 +50,6 @@ export class XfRepeatitem extends BoundElement{
         console.log('_initializeChildren ', children);
 
         children.forEach(child => {
-            console.log('child ', child);
-
             if (Fore.isUiElement(child.nodeName)) {
                 child.repeated = true;
             } else if (child.children.length !== 0) {
@@ -66,8 +64,8 @@ export class XfRepeatitem extends BoundElement{
 
     firstUpdated(_changedProperties) {
         // console.log('### xf-repeatitem firstUpdated index ', this.index);
-        console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
-        console.log('### xf-repeatitem firstUpdated model ', this.model);
+        // console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
+        // console.log('### xf-repeatitem firstUpdated model ', this.model);
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
             bubbles: true,
@@ -88,9 +86,9 @@ export class XfRepeatitem extends BoundElement{
 */
     }
 
-    refresh(){
+    async refresh(){
         const children = this.querySelectorAll('[ref]');
-        this.updateChildren(children);
+        await this.updateChildren(children);
         this.requestUpdate();
 
     }
