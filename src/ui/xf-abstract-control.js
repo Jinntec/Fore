@@ -39,7 +39,7 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     firstUpdated(_changedProperties) {
-        console.log('firstUpdated ', this);
+        // console.log('firstUpdated ', this);
         this.control = this.shadowRoot.querySelector('#control');
     }
 
@@ -55,7 +55,7 @@ export default class XfAbstractControl extends BoundElement {
         this.control = this.shadowRoot.querySelector('#control');
 
         const currentVal = this.value;
-        console.log('current val ',currentVal);
+        // console.log('current val ',currentVal);
         // super.refresh();
 
         if(this.isNotBound()) return;
@@ -90,11 +90,21 @@ export default class XfAbstractControl extends BoundElement {
             this.dispatchEvent(new CustomEvent('value-changed', {}));
         }
 
+        this.handleModelItemProperties();
+/*
         this.handleRequired();
         this.handleReadonly();
         this.handleValid();
-        this.handleEnabled();
+        this.handleRelevant();
+*/
         this.requestUpdate();
+    }
+
+    handleModelItemProperties(){
+        this.handleRequired();
+        this.handleReadonly();
+        this.handleValid();
+        this.handleRelevant();
     }
 
     _getForm(){
@@ -139,7 +149,7 @@ export default class XfAbstractControl extends BoundElement {
         }
     }
 
-    handleEnabled(){
+    handleRelevant(){
         // console.log('mip valid', this.modelItem.enabled);
         if (this.isEnabled() !== this.modelItem.enabled) {
             if (this.modelItem.enabled) {
