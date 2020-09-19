@@ -61,8 +61,22 @@
             display:none;
         }
 
+        xf-repeat{
+            padding: 20px;
+            background: steelblue;
+            display: block;
+            height: auto;
+        }
+        xf-repeatitem{
+            border:thin solid white;
+            background: lightsteelblue;
+            margin:4px 0;
+        }
         xf-input{
-            background:red;
+            background:white;
+            border-radius: 5px;
+            padding: 6px;
+            margin: 4px;
         }
     </style>
 </head>
@@ -85,7 +99,7 @@
         </xf-bind>
 
     </xf-model>
-    <xf-group>
+<!--    <xf-group>-->
 
         <h1>todos</h1>
 
@@ -112,7 +126,7 @@
             <xf-append ref="task" repeat="todos"></xf-append>
         </xf-button>
 
-    </xf-group>
+<!--    </xf-group>-->
 </xf-form>
 </body>
 </html>

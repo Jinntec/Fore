@@ -134,7 +134,7 @@ describe('initialize repeat', () => {
 
         expect(repeatNodes.length).to.equal(2);
 
-        const items = repeat.shadowRoot.querySelectorAll('xf-repeatitem');
+        const items = repeat.querySelectorAll('xf-repeatitem');
         // const items = document.querySelectorAll('xf-repeatitem');
         // console.log('items', items);
         expect(items.length).to.equal(2);
@@ -216,13 +216,13 @@ describe('initialize repeat', () => {
         console.log('items', items);
         expect(items.length).to.equal(2);
 
-        let m = repeat.model.getModelItem(repeatNodes[0]);
+        let m = repeat.getModel().getModelItem(repeatNodes[0]);
         console.log('repeatnode 1 ', m);
         console.log('repeatnode 1 ', m.value);
 
         expect(m.value).to.equal('Pick up Milk');
 
-        m = repeat.model.getModelItem(repeatNodes[1]);
+        m = repeat.getModel().getModelItem(repeatNodes[1]);
         console.log('repeatnode 1 ', m);
         console.log('repeatnode 1 ', m.value);
 
@@ -230,6 +230,53 @@ describe('initialize repeat', () => {
 
 
 
+
+    });
+    it('has initialized repeat with 2 repeat items and proper UI state', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="record">
+            
+                        <xf-instance>
+                            <data>
+                                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            </data>
+                        </xf-instance>
+            
+            
+                        <xf-bind ref="task">
+                            <xf-bind ref="./text()" required="true()"></xf-bind>
+                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
+                            <xf-bind ref="@due" type="xs:date"></xf-bind>
+                        </xf-bind>
+            
+                    </xf-model>
+                    <xf-group>
+                        <h1>todos</h1>
+                           
+                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                            <template>
+                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                            </template>
+                        </xf-repeat>
+                           
+                        <xf-button label="append">
+                            <xf-append repeat="todos" ref="task"></xf-append>
+                        </xf-button>            
+                    </xf-group>
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+
+        const inputs = el.querySelectorAll('xf-repeatitem xf-input');
+        await elementUpdated(inputs);
+
+        expect(inputs[0].getAttribute('value')).to.equal('Pick up Milk');
+        expect(inputs[1].getAttribute('value')).to.equal('Make tutorial part 1');
 
     });
 

@@ -40,31 +40,16 @@ export class XfRepeat extends BoundElement {
     }
 
     _getTemplate(){
-        // console.log('_getTemplate() ', this.template.content);
         return this.template.content.cloneNode(true);
     }
 
     _doInit(e,index){
-        console.log('_doInit ', e.detail.item);
-        console.log('_doInit ', index);
+        // console.log('_doInit ', e.detail.item);
+        // console.log('_doInit ', index);
         const rItem = e.detail.item;
-        // rItem.nodeset = this.nodeset[index];
-        console.log('_doInit passing nodeset',rItem.nodeset);
+        // console.log('_doInit passing nodeset',rItem.nodeset);
         rItem.init();
         rItem.refresh();
-
-
-/*
-        if(index === this.nodeset.length -1){
-            const items = this.shadowRoot.querySelectorAll('xf-repeatitem');
-            Array.from(items).forEach(item => {
-               item.refresh();
-            });
-            rItem.refresh();
-        }
-*/
-
-
     }
 
     static get properties() {
@@ -93,13 +78,14 @@ export class XfRepeat extends BoundElement {
     constructor(){
         super();
         this.ref='';
-        this.template='';
         this.dataTemplate = [];
         this.focusOnCreate = '';
         this.initDone = false;
         this.repeatIndex = 1;
         this.nodeset = [];
         this.inited = false;
+
+        this.template = this.firstElementChild;
         // this.addEventListener('repeatitem-created', this._refreshItem)
 
     }
@@ -108,7 +94,6 @@ export class XfRepeat extends BoundElement {
     init() {
         // ### there must be a single 'template' child
         console.log('##### repeat init');
-        this.template = this.firstElementChild;
 
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
         const inscope = this._inScopeContext();
@@ -129,21 +114,9 @@ export class XfRepeat extends BoundElement {
 
         this._initRepeatItems();
 
-
-        // BoundElement.initializeChildren(this);
-
         this.inited = true;
     }
 
-
-    firstUpdated(_changedProperties) {
-        super.firstUpdated(_changedProperties);
-        // console.log('### xf-repeat firstUpdated ', this);
-        // console.log('### xf-repeat firstUpdated index', this.repeatIndex);
-        // this.init();
-        // this._init();
-
-    }
 
     refresh() {
         console.group('xf-repeat.refresh');
@@ -231,8 +204,9 @@ export class XfRepeat extends BoundElement {
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
         console.log('repeat nodeset ', this.nodeset);
 
-        const repeatItems = this.shadowRoot.querySelectorAll('xf-repeatitem');
+        const repeatItems = this.querySelectorAll('xf-repeatitem');
         Array.from(repeatItems).forEach(item => item.init(this.getModel()));
+        //setting index to first
 
         // this.itemTemplates = [];
 
@@ -282,15 +256,13 @@ export class XfRepeat extends BoundElement {
         });
     }
 
-/*
     createRenderRoot() {
-        /!**
+        /**
          * Render template without shadow DOM. Note that shadow DOM features like
          * encapsulated CSS and slots are unavailable.
-         *!/
+         */
         return this;
     }
-*/
 
 }
 

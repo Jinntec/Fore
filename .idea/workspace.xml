@@ -626,19 +626,8 @@
       <change beforePath="$PROJECT_DIR$/assets/select/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/select/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/tiny-emitter/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tiny-emitter/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/setvalue.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-setvalue.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -844,7 +833,7 @@
       <workItem from="1600333512073" duration="27199000" />
       <workItem from="1600371565523" duration="7680000" />
       <workItem from="1600432250803" duration="15376000" />
-      <workItem from="1600515820910" duration="5570000" />
+      <workItem from="1600515820910" duration="10986000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -1140,7 +1129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600345112594</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="using model getter now everywhere;&#10;fixed refresh behavior in certain situations - now async;&#10;basic repeat working but still using shadowDOM;&#10;all except repeat tests running">
+      <created>1600521620145</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1600521620145</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1176,7 +1172,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="now serving all files from 'demo' as forms;" />
     <MESSAGE value="renamed 'error' JSON field to 'alert'. 'alert' is used to pass a validation failure. It is not an error condition&#10;of the software but an expected one. Keep name also to stay closer to original spec." />
     <MESSAGE value="output 'type' only if it is NOT 'string'" />
     <MESSAGE value="use 'default' as default id for instance if there's none;" />
@@ -1201,7 +1196,8 @@
     <MESSAGE value=".gitignore" />
     <MESSAGE value="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs" />
     <MESSAGE value="additional tests;&#10;moved files" />
-    <option name="LAST_COMMIT_MESSAGE" value="additional tests;&#10;moved files" />
+    <MESSAGE value="using model getter now everywhere;&#10;fixed refresh behavior in certain situations - now async;&#10;basic repeat working but still using shadowDOM;&#10;all except repeat tests running" />
+    <option name="LAST_COMMIT_MESSAGE" value="using model getter now everywhere;&#10;fixed refresh behavior in certain situations - now async;&#10;basic repeat working but still using shadowDOM;&#10;all except repeat tests running" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -41,7 +41,9 @@ class XfInput extends XfAbstractControl{
                 type: String
             },
             value:{
-                type: String
+                type: String,
+                attribute:'value',
+                reflect:true
             },
             required:{
                 type:Boolean,
