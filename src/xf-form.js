@@ -148,17 +148,25 @@ export class XfForm extends LitElement {
 
         this._refreshChildren();
 
-        const r = this.querySelector('xf-repeat');
-        // await Promise.all(uiElements.updateComplete);
-        await r.updateComplete;
 
-        console.log('### <<<<< dispatch refresh-done - end of update cycle >>>>>');
+        const r = this.querySelectorAll('xf-repeat');
+        await r[r.length-1].updateComplete;
+
         this.ready = true;
 
+        console.log('### <<<<< dispatch refresh-done - end of update cycle >>>>>');
         console.groupEnd();
+
         this.dispatchEvent(new CustomEvent('refresh-done', {}));
+    }
+
+/*
+    async _awaitRepeats(){
+        const r = this.querySelectorAll('xf-repeat');
+        await
 
     }
+*/
 
     _refreshChildren(){
         const uiElements = this.querySelectorAll('*');

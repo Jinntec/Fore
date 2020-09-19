@@ -97,19 +97,19 @@ class XfInput extends XfAbstractControl{
     }
 
     _handleInput(e) {
-        // const mi = this.getModelItem();
+        // const mi = this.getmdelItem();
         console.log('_handleInput ', this.modelItem);
         // console.log('modelItem ', mi);
 
         const inputValue = this.shadowRoot.querySelector('#control').value;
 
         const setval = this.shadowRoot.querySelector('#setvalue');
-        setval.model = this.model;
+        setval.model = this.getModel();
         setval.setValue(this.modelItem, inputValue);
-        this.model.updateModel();
+        this.getModel().updateModel();
         document.querySelector('xf-form').refresh();
 
-        console.log('instanceData ', this.model.instances[0].getInstanceData());
+        console.log('instanceData ', this.getModel().instances[0].getInstanceData());
 
     }
 
