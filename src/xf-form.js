@@ -144,11 +144,15 @@ export class XfForm extends LitElement {
 
         console.group('### refresh');
 
-        // const uiElements = this.querySelectorAll('*');
+        const uiElements = this.querySelectorAll('*');
 
-        await this._refreshChildren();
+        this._refreshChildren();
 
-        console.log('dispatch refresh-done');
+        const r = this.querySelector('xf-repeat');
+        // await Promise.all(uiElements.updateComplete);
+        await r.updateComplete;
+
+        console.log('### <<<<< dispatch refresh-done - end of update cycle >>>>>');
         this.ready = true;
 
         console.groupEnd();
@@ -166,7 +170,8 @@ export class XfForm extends LitElement {
             // if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
 
             if (typeof element.refresh === 'function') {
-                if(element.nodeName !== 'XF-REPEATITEM'){
+                // if(element.nodeName !== 'XF-REPEATITEM'){
+                if(!element.repeated){
                     element.refresh();
                 }
             }

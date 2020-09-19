@@ -48,7 +48,7 @@ export class XfRepeat extends BoundElement {
         // console.log('_doInit ', index);
         const rItem = e.detail.item;
         // console.log('_doInit passing nodeset',rItem.nodeset);
-        rItem.init();
+        // rItem.init();
         rItem.refresh();
     }
 
@@ -144,7 +144,7 @@ export class XfRepeat extends BoundElement {
         //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
 
 
-        // let repeatItems = this.querySelectorAll('xf-repeatitem');
+        let repeatItems = this.querySelectorAll('xf-repeatitem');
         // const repeatItemCount = repeatItems.length;
         /*
 
@@ -191,7 +191,8 @@ export class XfRepeat extends BoundElement {
                 }
 
         */
-        // await this._refreshChildren(repeatItems);
+        this._refreshChildren(repeatItems);
+
 /*
         if(repeatItems){
             repeatItems = this.querySelectorAll('xf-repeatitem');
