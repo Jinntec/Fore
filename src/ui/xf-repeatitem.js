@@ -73,7 +73,6 @@ export class XfRepeatitem extends BoundElement{
             detail: {item: this}
         }));
         this.init();
-        // this.refresh();
     }
 
     updated(_changedProperties) {

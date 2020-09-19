@@ -71,7 +71,7 @@ export class BoundElement extends ForeElement {
         // return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
 
         if(this.modelItem.node instanceof Node){
-            console.log('modelItem is already initialized ', this.modelItem);
+            // console.log('modelItem is already initialized ', this.modelItem);
             return this.modelItem;
         }
 
