@@ -25,10 +25,16 @@ export class ForeElement extends LitElement {
         this.model = null;
     }
 
-    init(model){
-        // console.log('init ', this);
-        this.model = model;
+    getModel(){
+        if(this.hasAttribute('model')){
+            const modelId = this.getAttribute('model');
+            return document.getElementById('modelId');
+        }else{
+            //defaults to first model in document order
+            return document.querySelector('xf-model');
+        }
     }
+
 
     evalInContext(){
         throw new Error('this function must be overwritten by xf-bind and UiElement classes');
@@ -42,21 +48,53 @@ export class ForeElement extends LitElement {
         return this.hasAttribute('ref');
     }
 
+    _getParentBindingElement(start){
+        if(start.parentNode.host){
+            const host = start.parentNode.host;
+            if(host.hasAttribute('ref')){
+                return host;
+            }
+        }else if(start.parentNode){
+            if(start.parentNode.hasAttribute('ref')){
+                return this.parentNode;
+            }else{
+                this._getParentBindingElement(this.parentNode)
+            }
+        }
+        return null;
+    }
+
     _inScopeContext(){
         let resultNodeset;
 
         // console.log('this ', this);
         // console.log('this ', this.parentNode);
 
-        const parentBind = this.parentNode.closest('[ref]');
+        if(this.nodeName.toUpperCase() === 'XF-REPEATITEM'){
+            const index = this.index;
+            console.log('>>>>>>>>>>< index ', index);
+            return this.parentNode.host.nodeset[this.index -1];
+        }
+
+        if(this.repeated){
+            return this.parentNode.nodeset;
+        }
+
+        let parentBind;
+        if(this.parentNode.host){
+            parentBind = this.parentNode.host;
+        }else{
+            parentBind = this.parentNode.closest('[ref]');
+        }
+        // const parentBind = this.parentNode.closest('[ref]');
         // console.log('parentBind ', parentBind);
 
         if(parentBind !== null){
             resultNodeset = parentBind.nodeset;
         }else if(XPathUtil.isAbsolutePath(this.ref)){
             resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();
-        }else if(this.model.getDefaultInstance() !== null){
-            resultNodeset = this.model.getDefaultInstance().getDefaultContext();
+        }else if(this.getModel().getDefaultInstance() !== null){
+            resultNodeset = this.getModel().getDefaultInstance().getDefaultContext();
         }else{
             return [];
         }

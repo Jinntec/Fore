@@ -21,21 +21,17 @@ export class XfRepeatitem extends BoundElement{
         `;
     }
 
-/*
     render() {
         return html`
           <slot></slot>
         `;
     }
-*/
 
     static get properties() {
         return {
-/*
             index:{
                 type:Number
             }
-*/
         };
     }
 
@@ -43,15 +39,42 @@ export class XfRepeatitem extends BoundElement{
         super();
     }
 
+    init(){
+        console.log('repeatitem init model ', this.nodeset);
+        this.initializeChildren(this);
+
+    }
+
+    initializeChildren(node) {
+        const children = Array.from(node.children);
+        console.log('_initializeChildren ', children);
+
+        children.forEach(child => {
+            console.log('child ', child);
+
+            if (Fore.isUiElement(child.nodeName)) {
+                child.repeated = true;
+            } else if (child.children.length !== 0) {
+                const grantChildren = Array.from(child.children);
+                grantChildren.forEach(grantChild => {
+                    this.initializeChildren(grantChild);
+                });
+            }
+
+        });
+    }
+
     firstUpdated(_changedProperties) {
         // console.log('### xf-repeatitem firstUpdated index ', this.index);
-        // console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
+        console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
+        console.log('### xf-repeatitem firstUpdated model ', this.model);
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
             bubbles: true,
             detail: {item: this}
         }));
 
+        // this.refresh();
     }
 
     updated(_changedProperties) {
@@ -66,8 +89,9 @@ export class XfRepeatitem extends BoundElement{
     }
 
     refresh(){
-        const children = this.querySelectorAll(':scope *');
+        const children = this.querySelectorAll('[ref]');
         this.updateChildren(children);
+        this.requestUpdate();
 
     }
 
@@ -75,8 +99,8 @@ export class XfRepeatitem extends BoundElement{
         children.forEach(element => {
 
             //todo: later - check for AVTs
-            if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
-            if(element.nodeName.toLowerCase() === 'xf-repeat') return;
+            // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
+            // if(element.nodeName.toLowerCase() === 'xf-repeat') return;
 
             if (typeof element.refresh === 'function') {
                 // console.log('refresh bound element ', bound);
@@ -90,13 +114,15 @@ export class XfRepeatitem extends BoundElement{
 
 
 
+/*
     createRenderRoot() {
-        /**
+        /!**
          * Render template without shadow DOM. Note that shadow DOM features like
          * encapsulated CSS and slots are unavailable.
-         */
+         *!/
         return this;
     }
+*/
 
 }
 

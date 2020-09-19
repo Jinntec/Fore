@@ -28,7 +28,7 @@ export class Fore{
 
     static isActionElement(elementName){
         const found = Fore.ACTION_ELEMENTS.includes(elementName);
-        console.log('isActionElement ', found);
+        // console.log('isActionElement ', found);
         return Fore.ACTION_ELEMENTS.includes(elementName);
     }
 
@@ -63,7 +63,7 @@ export class Fore{
     static isUiElement(elementName){
         const found = Fore.UI_ELEMENTS.includes(elementName);
         if(found){
-            console.log('_isUiElement ', found);
+            // console.log('_isUiElement ', found);
         }
         return Fore.UI_ELEMENTS.includes(elementName);
     }

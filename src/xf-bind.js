@@ -118,7 +118,6 @@ export class XfBind extends ForeElement {
      */
     init(model){
         console.log('init binding ', this);
-        super.init(model);
         this.instanceId = this._getInstanceId();
 
         this.evalInContext();
@@ -254,7 +253,7 @@ export class XfBind extends ForeElement {
         if(XPathUtil.isSelfReference(this.ref)){
             // console.log('node ', node);
             // console.log('all modelItems ', this.model.modelItems);
-            const parentModelItem = this.model.getModelItem(node);
+            const parentModelItem = this.getModel().getModelItem(node);
             // console.log('parentModelItem ', parentModelItem);
             parentModelItem.required = req;
 
@@ -262,7 +261,7 @@ export class XfBind extends ForeElement {
             const path = fx.evaluateXPath('path()',node);
             const sp = this._shortenPath(path);
             const newItem = new ModelItem(sp, this.ref, ro,rel,req,val,this.type,targetNode);
-            this.model.registerModelItem(newItem);
+            this.getModel().registerModelItem(newItem);
         }
         // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
 

@@ -35,17 +35,6 @@ export class BoundElement extends ForeElement {
         this.ref="";
     }
 
-    init(model){
-        console.log('init ', this);
-        this.model = model;
-        this.evalInContext();
-
-        if(this.isBound()){
-            this.modelItem = this.getModelItem();
-        }
-        this._initializeActions();
-    }
-
     /**
      * evaluation of xf-bind and UiElements differ in details so that each class needs it's own implementation.
      */
@@ -99,29 +88,15 @@ export class BoundElement extends ForeElement {
                 }
         */
 
-        const existed = this.model.getModelItem(this.nodeset);
+        const existed = this.getModel().getModelItem(this.nodeset);
         if(!existed){
             // if(existed === undefined){
             console.log('does not exist ', this.nodeset);
-            return this.model.getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
+            return this.getModel().getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
         }
         return existed;
     }
 
-    _initializeActions(){
-        const children = Array.from(this.children);
-
-        const actionElements = children.filter( action => Fore.isActionElement(action.nodeName));
-        console.log('children ', actionElements);
-        console.group('init actions');
-        if(actionElements.length > 0){
-            actionElements.forEach( action => {
-                console.log('action ', action);
-                action.init(this.model);
-            });
-        }
-        console.groupEnd();
-    }
 
 }
 

@@ -144,7 +144,7 @@ export class XfForm extends LitElement {
 
         console.group('### refresh');
 
-        const uiElements = this.querySelectorAll(':scope xf-group *');
+        const uiElements = this.querySelectorAll('*');
         Fore.refreshChildren(uiElements);
 
         console.log('dispatch refresh-done');
@@ -153,41 +153,6 @@ export class XfForm extends LitElement {
 
         console.groupEnd();
     }
-
-    _initUIControls(){
-        // const uiElements = this.querySelectorAll(':scope [ref]');
-        const uiElements = this.querySelectorAll('*');
-        console.log('_initUIControls ', uiElements);
-
-        uiElements.forEach(element => {
-
-            // console.log('initUI children ', element);
-
-            //todo: later - check for AVTs
-            // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
-            // if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
-
-
-
-            // if (this._isUiElement(element.nodeName) && typeof element.init === 'function') {
-            if (Fore.isUiElement(element.nodeName) && typeof element.init === 'function') {
-                console.log('calling init ', element);
-                const model = this._getModel(element);
-                // console.log('model for control ', element, model );
-                element.init(this._getModel(element));
-            }
-
-        });
-
-    }
-
-    _getModel(uiElement) {
-        if(uiElement.hasAttribute('model')){
-            return document.querySelector(`#${  uiElement.getAttribute('model')}`);
-        }
-        return document.querySelector('xf-model');
-    }
-
 
     _handleModelConstructDone(e){
         console.log('modelConstructDone received', e.detail.model.id);
@@ -218,6 +183,7 @@ export class XfForm extends LitElement {
 
 /*
     async _getUpdateComplete() {
+    +
         // await super._getUpdateComplete();
         const op = this.querySelector('xf-output');
         if(op) {
@@ -233,11 +199,7 @@ export class XfForm extends LitElement {
         });
 
         await this.updateComplete;
-        console.group('### _initUI');
-
-        this._initUIControls();
         this.refresh();
-        console.groupEnd();
     }
 
     _displayMessage(e) {
@@ -285,7 +247,6 @@ export class XfForm extends LitElement {
         }
 
     }
-
 
 
 

@@ -41,11 +41,6 @@ export class XfAction extends BoundElement{
         this.needsRefresh = false;
     }
 
-    init(model) {
-        super.init(model);
-        console.log('xf-action model ', this);
-    }
-
     execute (){
         if(this.isBound()){
             this.evalInContext();
@@ -54,13 +49,13 @@ export class XfAction extends BoundElement{
 
     actionPerformed(){
         if(this.needsRebuild){
-            this.model.rebuild();
+            this.getModel().rebuild();
         }
         if(this.needsRecalculate){
-            this.model.recalculate();
+            this.getModel().recalculate();
         }
         if(this.needsRevalidate){
-            this.model.revalidate();
+            this.getModel().revalidate();
         }
         if(this.needsRefresh){
             // this.closest('xf-form').refresh();

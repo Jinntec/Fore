@@ -23,6 +23,15 @@ export default class XfAbstractControl extends BoundElement {
         };
     }
 
+/*
+    render() {
+        return html`
+            <slot></slot>
+        `;
+    }
+*/
+
+
     constructor(){
         super();
         this.value = "";
@@ -30,7 +39,7 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     firstUpdated(_changedProperties) {
-        // console.log('firstUpdated ', this);
+        console.log('firstUpdated ', this);
         this.control = this.shadowRoot.querySelector('#control');
     }
 
@@ -39,8 +48,11 @@ export default class XfAbstractControl extends BoundElement {
     /**
      * (re)apply all state properties to this control.
      */
-    refresh() {
+    async refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
+
+        await this.updateComplete;
+        this.control = this.shadowRoot.querySelector('#control');
 
         const currentVal = this.value;
         console.log('current val ',currentVal);
@@ -48,9 +60,32 @@ export default class XfAbstractControl extends BoundElement {
 
         if(this.isNotBound()) return;
 
+        this.evalInContext();
+        if(this.isBound()){
+            this.modelItem = this.getModelItem();
+        }
+
         this.value = this.modelItem.value;
 
-        if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
+/*
+        if(this.repeated){
+            const rItem = this.parentNode.closest('xf-repeatitem');
+            console.log('closest ref ',rItem);
+
+            const host = rItem.host;
+            console.log('host ', rItem.parentNode.host);
+            const ownerRepeat = rItem.parentNode.host;
+            console.log('host ', ownerRepeat.closest('xf-form'));
+
+        }
+
+        console.log('MODEL ', this.model);
+        console.log('FORM ', this.model.parentNode);
+*/
+
+
+        // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
+        if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if(currentVal !== this.value){
             this.dispatchEvent(new CustomEvent('value-changed', {}));
         }
@@ -60,6 +95,10 @@ export default class XfAbstractControl extends BoundElement {
         this.handleValid();
         this.handleEnabled();
         this.requestUpdate();
+    }
+
+    _getForm(){
+        return this.getModel().parentNode;
     }
 
     handleRequired() {
@@ -146,6 +185,8 @@ export default class XfAbstractControl extends BoundElement {
 
     isRequired(){
         // if(this.control.required){
+        this.control = this.shadowRoot.querySelector('#control');
+
         if(this.control.hasAttribute('required')){
             return true;
         }

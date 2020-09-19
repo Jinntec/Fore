@@ -117,7 +117,6 @@ export class XfModel extends LitElement {
         console.group('### rebuild');
 
         //reset
-        // this.bindingMap = [];
 /*
         this.modelItems = [];
 
@@ -126,7 +125,7 @@ export class XfModel extends LitElement {
             bind.init(this);
         });
 */
-        console.log('rebuild finished with modelItems ', this.modelItems);
+        console.log(`rebuild finished with modelItems ${this.modelItems.length} item(s)`, this.modelItems);
         console.groupEnd();
     //
     }

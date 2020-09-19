@@ -11,6 +11,7 @@ import '../src/xf-repeat.js';
 import '../src/xf-repeatitem.js';
 */
 import '../src/ui/xf-repeat.js';
+import {XfModel} from '../src/xf-model.js';
 
 
 describe('initialize repeat', () => {
@@ -133,17 +134,27 @@ describe('initialize repeat', () => {
 
         expect(repeatNodes.length).to.equal(2);
 
-        const items = document.querySelectorAll('xf-repeatitem');
-        console.log('items', items);
+        const items = repeat.shadowRoot.querySelectorAll('xf-repeatitem');
+        // const items = document.querySelectorAll('xf-repeatitem');
+        // console.log('items', items);
         expect(items.length).to.equal(2);
 
-        let m = repeat.model.getModelItem(repeatNodes[0]);
+        expect(repeat.getModel() instanceof XfModel).to.be.true;
+
+        let m = repeat.getModel().getModelItem(repeatNodes[0]);
         console.log('repeatnode 1 ', m);
         console.log('repeatnode 1 ', m.value);
 
         expect(m.value).to.equal('Pick up Milk');
 
-        m = repeat.model.getModelItem(repeatNodes[1]);
+        //check if control has correct value
+        const inputs = el.querySelectorAll('xf-input');
+
+        expect(inputs.length).to.equal(2);
+
+
+
+        m = repeat.getModel().getModelItem(repeatNodes[1]);
         console.log('repeatnode 1 ', m);
         console.log('repeatnode 1 ', m.value);
 

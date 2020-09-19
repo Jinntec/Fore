@@ -626,12 +626,19 @@
       <change beforePath="$PROJECT_DIR$/assets/select/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/select/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/tiny-emitter/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tiny-emitter/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/setvalue.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/xf-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-setvalue.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -664,78 +671,6 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>refresh</find>
-      <find>elem.refrsh</find>
-      <find>01.03.2019</find>
-      <find>_applyPropertiesToNativeControls</find>
-      <find>foreach</find>
-      <find>window</find>
-      <find>DELETE</find>
-      <find>resolveProxy</find>
-      <find>dispatch</find>
-      <find>_rebuild</find>
-      <find>template</find>
-      <find>_unroll</find>
-      <find>add</find>
-      <find>////</find>
-      <find>&gt;&gt;&gt;</find>
-      <find>UIState</find>
-      <find>uiState</find>
-      <find>bound</find>
-      <find>uiStates</find>
-      <find>proxy</find>
-      <find>proxymod</find>
-      <find>p</find>
-      <find>state</find>
-      <find>proxies</find>
-      <find>window.BOUND_ELEMENTS</find>
-      <find>BOUNDELEMENTS</find>
-      <find>_resolve</find>
-      <find>createModelItem</find>
-      <find>modelItems</find>
-      <find>_findById</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>XfButton</replace>
-      <replace>xf-append</replace>
-      <replace>xf-button</replace>
-      <replace>XfOutput</replace>
-      <replace>XfSetvalue</replace>
-      <replace>model</replace>
-      <replace>subitem</replace>
-      <replace>XfItemset</replace>
-      <replace>xf-itemset</replace>
-      <replace>xf-select1</replace>
-      <replace>proxy,</replace>
-      <replace>proxy.</replace>
-      <replace>this.proxy</replace>
-      <replace>_handleSelected</replace>
-      <replace>XfBoundElement</replace>
-      <replace>XfControlElement</replace>
-      <replace>xf-bound-element</replace>
-      <replace>XfControl</replace>
-      <replace>xf-control</replace>
-      <replace>XfDelete</replace>
-      <replace>xf-delete</replace>
-      <replace>xf-repeat-item</replace>
-      <replace>XfRepeatItem</replace>
-      <replace>resolveProxy</replace>
-      <replace>xf-test</replace>
-      <replace>uiStates</replace>
-      <replace>ModelItem</replace>
-      <replace>uiState</replace>
-      <replace>modelItem</replace>
-      <replace>modelItems</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/modules</dir>
-      <dir>$PROJECT_DIR$/node_modules/@polymer</dir>
-      <dir>$PROJECT_DIR$</dir>
-      <dir>$PROJECT_DIR$/elements</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -760,7 +695,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/ui" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -785,11 +720,11 @@
       <recent name="$PROJECT_DIR$/elements" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/elements" />
       <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/elements/demo" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -906,7 +841,10 @@
       <workItem from="1559896270798" duration="30829000" />
       <workItem from="1600249086286" duration="1426000" />
       <workItem from="1600333171130" duration="105000" />
-      <workItem from="1600333512073" duration="6773000" />
+      <workItem from="1600333512073" duration="27199000" />
+      <workItem from="1600371565523" duration="7680000" />
+      <workItem from="1600432250803" duration="15376000" />
+      <workItem from="1600515820910" duration="5570000" />
     </task>
     <task id="LOCAL-00001" summary="polymer2 initialised">
       <created>1538846767259</created>
@@ -1195,7 +1133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600335942506</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="additional tests;&#10;moved files">
+      <created>1600345112594</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1600345112594</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1231,7 +1176,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="loading first form into browser and sending init request via ajax;&#10;fixed and sorted gulpfile;&#10;basic query to swallow xf-model;&#10;using configfile now" />
     <MESSAGE value="now serving all files from 'demo' as forms;" />
     <MESSAGE value="renamed 'error' JSON field to 'alert'. 'alert' is used to pass a validation failure. It is not an error condition&#10;of the software but an expected one. Keep name also to stay closer to original spec." />
     <MESSAGE value="output 'type' only if it is NOT 'string'" />
@@ -1256,7 +1200,19 @@
     <MESSAGE value="major step forward: refactored again; simple repeat delete and append&#10;actions working; data-binding reworked to use a decorator instead of proxy." />
     <MESSAGE value=".gitignore" />
     <MESSAGE value="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs" />
+    <MESSAGE value="additional tests;&#10;moved files" />
+    <option name="LAST_COMMIT_MESSAGE" value="additional tests;&#10;moved files" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
+          <line>43</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="masterDetails">
     <states>
