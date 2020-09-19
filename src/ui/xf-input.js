@@ -82,6 +82,7 @@ class XfInput extends XfAbstractControl{
 
 
 
+/*
     refresh() {
         super.refresh();
         // console.log('------ this ', this);
@@ -95,6 +96,7 @@ class XfInput extends XfAbstractControl{
         // this.value = this.getValue();
         this.requestUpdate();
     }
+*/
 
     _handleInput(e) {
         // const mi = this.getmdelItem();
@@ -106,8 +108,6 @@ class XfInput extends XfAbstractControl{
         const setval = this.shadowRoot.querySelector('#setvalue');
         setval.model = this.getModel();
         setval.setValue(this.modelItem, inputValue);
-        this.getModel().updateModel();
-        document.querySelector('xf-form').refresh();
 
         console.log('instanceData ', this.getModel().instances[0].getInstanceData());
 
