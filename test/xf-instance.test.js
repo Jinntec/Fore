@@ -119,48 +119,84 @@ describe('initialize instance', () => {
 
     });
 
-/*
-    it('does NOT copy a "body" element from inline data', async () => {
+    it('reolves instances with the instance() function', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
-                    <data>
-                        <body>
-                            <arm side="left">
-                                <hand>
-                                    <finger index="3">middle</finger>
-                                </hand>
-                            </arm>
-                        </body>
-                    </data>
-                </xf-instance>
+                <xf-form>
+                    <xf-model id="model1">
 
+                        <xf-instance>
+                            <data>
+                                <foobar></foobar>
+                            </data>
+                        </xf-instance>
+                        <xf-instance id="second">
+                            <data>
+                                <item>second</item>
+                            </data>
+                        </xf-instance>
+                        
+                        <xf-bind ref="instance('second')/item"></xf-bind>
+                    </xf-model>
+                </xf-form>
             `)
         );
 
-        el.init();
         await elementUpdated(el);
-        const doc = el.getInstanceData();
-        expect(doc).to.exist;
 
-        const root = doc.documentElement;
-        expect(root.nodeName).to.equal('data');
-        console.log('root children ', root.children );
+        const instances = el.querySelectorAll('xf-instance');
+        expect(instances[0]).to.equal('default');
+        expect(instances[1]).to.equal('second');
 
-        const body = root.firstElementChild;
-        expect(body.nodeName).to.equal('body');
+        const model = el.querySelector('xf-model');
+        const modelItems = model.modelItems;
+        expect(modelItems[0].value).to.equal('second');
 
-        const arm = body.firstElementChild;
-        expect(root.nodeName).to.equal('arm');
-
-        const hand = arm.firstElementChild;
-        expect(root.nodeName).to.equal('hand');
-
-        const finger = hand.firstElementChild();
-        expect(root.nodeName).to.equal('finger');
-        expect(root.textContent).to.equal('middle');
     });
-*/
+
+
+    /*
+        it('does NOT copy a "body" element from inline data', async () => {
+            const el =  (
+                await fixtureSync(html`
+                    <xf-instance>
+                        <data>
+                            <body>
+                                <arm side="left">
+                                    <hand>
+                                        <finger index="3">middle</finger>
+                                    </hand>
+                                </arm>
+                            </body>
+                        </data>
+                    </xf-instance>
+
+                `)
+            );
+
+            el.init();
+            await elementUpdated(el);
+            const doc = el.getInstanceData();
+            expect(doc).to.exist;
+
+            const root = doc.documentElement;
+            expect(root.nodeName).to.equal('data');
+            console.log('root children ', root.children );
+
+            const body = root.firstElementChild;
+            expect(body.nodeName).to.equal('body');
+
+            const arm = body.firstElementChild;
+            expect(root.nodeName).to.equal('arm');
+
+            const hand = arm.firstElementChild;
+            expect(root.nodeName).to.equal('hand');
+
+            const finger = hand.firstElementChild();
+            expect(root.nodeName).to.equal('finger');
+            expect(root.textContent).to.equal('middle');
+        });
+    */
 
 
 });
