@@ -28,8 +28,7 @@ import '../src/actions/xf-setvalue.js';
 
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
-import fx from "./output/fontoxpath";
-import registerCustomXPathFunction from './output/fontoxpath.js';
+import {registerCustomXPathFunction} from 'fontoxpath';
 
 
 /**
@@ -99,7 +98,7 @@ export class XfForm extends LitElement {
     init(){
 
         console.log('registerCustomXPathFunction');
-        fx.registerCustomXPathFunction(
+        registerCustomXPathFunction(
             { namespaceURI: 'xf', localName: 'instance' },
             ['xs:string'],
             'node()',

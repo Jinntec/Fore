@@ -1,8 +1,8 @@
 import {LitElement, css} from 'lit-element';
 
-import * as fontoxpath from './output/fontoxpath.js';
-import fx from "./output/fontoxpath";
-import evaluateXPathToNodes from './output/fontoxpath.js';
+import fx from "fontoxpath";
+import evaluateXPathToNodes from 'fontoxpath';
+import * as fontoxpath from 'fontoxpath';
 
 import './xf-instance.js';
 import './xf-bind.js';

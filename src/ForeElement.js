@@ -1,7 +1,7 @@
 import {LitElement, html, css} from 'lit-element';
 
 
-import fx from './output/fontoxpath.js';
+import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 
 import {XPathUtil} from "./xpath-util";

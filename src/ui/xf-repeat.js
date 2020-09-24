@@ -3,7 +3,7 @@ import { unsafeHTML } from "lit-html/directives/unsafe-html";
 import {repeat} from 'lit-html/directives/repeat.js';
 import {BoundElement} from "../BoundElement.js";
 import "./xf-repeatitem.js";
-import fx from "../output/fontoxpath";
+import * as fx from "fontoxpath";
 
 /**
  * `xf-repeat`
