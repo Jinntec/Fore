@@ -98,7 +98,7 @@ export class ForeElement extends LitElement {
         if(parentBind !== null){
             resultNodeset = parentBind.nodeset;
         }else if(XPathUtil.isAbsolutePath(this.ref)){
-            resultNodeset = this.model.getInstance(this.instanceId).getDefaultContext();
+            resultNodeset = this.getModel().getInstance(this.instanceId).getDefaultContext();
         }else if(this.getModel().getDefaultInstance() !== null){
             resultNodeset = this.getModel().getDefaultInstance().getDefaultContext();
         }else{

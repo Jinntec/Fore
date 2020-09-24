@@ -148,6 +148,7 @@ export class XfBind extends ForeElement {
         console.log('namespaceResolver  prefix', prefix);
         const ns = {
             'xhtml' : 'http://www.w3.org/1999/xhtml',
+            ''    : 'http://www.w3.org/2002/xforms'
         };
         return ns[prefix] || null;
         // return null;
@@ -169,7 +170,7 @@ export class XfBind extends ForeElement {
                     this.nodeset = inscopeContext;
                 }else{
                     // const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                    const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {namespaceResolver:  this.namespaceResolver},{ defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms'});
                     localResult.forEach(item =>{
                        this.nodeset.push(item);
                     });
@@ -179,7 +180,7 @@ export class XfBind extends ForeElement {
             });
 
         }else{
-            this.nodeset = fx.evaluateXPathToNodes(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+            this.nodeset = fx.evaluateXPathToNodes(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver},{ defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms'});
         }
     }
 

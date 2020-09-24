@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-instance.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-instance.test.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,6 +74,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
@@ -212,6 +213,12 @@
       <workItem from="1600371565523" duration="7680000" />
       <workItem from="1600432250803" duration="15376000" />
       <workItem from="1600515820910" duration="28623000" />
+      <workItem from="1600779280338" duration="1554000" />
+      <workItem from="1600786844203" duration="1378000" />
+      <workItem from="1600808750555" duration="52000" />
+      <workItem from="1600943886253" duration="976000" />
+      <workItem from="1600950942156" duration="1490000" />
+      <workItem from="1600953198649" duration="1609000" />
     </task>
     <task id="LOCAL-00004" summary="cleanup + using 'fore-' as prefix everywhere now">
       <created>1549979906413</created>
@@ -626,6 +633,11 @@
           <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
           <line>44</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/xf-model.js</url>
+          <line>3</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
