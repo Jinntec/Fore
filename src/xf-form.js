@@ -6,29 +6,55 @@ import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
 
+import {registerCustomXPathFunction} from 'fontoxpath';
 import {Fore} from './fore.js';
 
-//model classes
+// model classes
 import './xf-model.js';
 import './xf-instance.js';
 import './xf-bind.js';
 
-//ui classes
+// ui classes
 import './ui/xf-group.js';
 import './ui/xf-button.js';
 import './ui/xf-output.js';
 import './ui/xf-input.js';
 
-//action classes
+// action classes
 import './actions/xf-action.js';
 import './deprecated/xf-message.js';
 import './actions/xf-append.js';
 import './actions/xf-delete.js';
-import '../src/actions/xf-setvalue.js';
+import "./actions/xf-setvalue.js";
 
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
-import {registerCustomXPathFunction} from 'fontoxpath';
+
+registerCustomXPathFunction(
+	{ namespaceURI: Fore.XFORMS_NAMESPACE_URI, localName: 'instance' },
+	['xs:string?'],
+	'element()?',
+	(dynamicContext, string) => {
+		// Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
+		// TODO: handle no string passed (null will be passed instead)
+
+		const {formElement} = dynamicContext.currentContext || this;
+
+		// console.log('fnInstance dynamicContext: ', dynamicContext);
+		// console.log('fnInstance string: ', string);
+
+		const instance = formElement.querySelector(`xf-instance[id=${  string  }]`);
+
+		// const def = instance.getInstanceData();
+		if(instance) {
+			const def = instance.getDefaultContext();
+			// console.log('target instance root node: ', def);
+
+			return def;
+		}
+		return null;
+	}
+);
 
 
 /**
@@ -74,13 +100,13 @@ export class XfForm extends LitElement {
     render() {
         return html`
             <slot></slot>
-            
+
            <paper-dialog id="modalMessage" modal="true">
                 <div id="messageContent"></div>
                 <div class="dialogActions">
                     <paper-button dialog-dismiss autofocus>Close</paper-button>
                 </div>
-           </paper-dialog>          
+           </paper-dialog>
 
         `;
     }
@@ -98,26 +124,7 @@ export class XfForm extends LitElement {
     init(){
 
         console.log('registerCustomXPathFunction');
-        registerCustomXPathFunction(
-            { namespaceURI: 'xf', localName: 'instance' },
-            ['xs:string'],
-            'node()',
-            (dynamicContext, string) => {
-                // console.log('fnInstance dynamicContext: ', dynamicContext);
-                // console.log('fnInstance string: ', string);
 
-                const instance = this.querySelector('xf-instance[id=' + string + ']');
-
-                // const def = instance.getInstanceData();
-                if(instance) {
-                    const def = instance.getDefaultContext();
-                    // console.log('target instance root node: ', def);
-
-                    return def;
-                }
-                return null;
-            }
-        );
 
         // const result = fx.evaluateXPathToNodes("Q{xf}instance('second')",this);
         // console.log('eval func' , result);
@@ -130,7 +137,7 @@ export class XfForm extends LitElement {
     _triggerModelConstruct(){
         console.group('### dispatching model-construct');
         this.models.forEach(model =>  {
-            model.dispatchEvent(new CustomEvent('model-construct', { detail: {model:model}}));
+            model.dispatchEvent(new CustomEvent('model-construct', { detail: {model}}));
         });
     }
 
@@ -220,8 +227,8 @@ export class XfForm extends LitElement {
 
     async _initUI(){
         this.models.forEach(model => {
-            //notification event only - not used internally
-            model.dispatchEvent(new CustomEvent('ready', { detail: {model:model}}));
+            // notification event only - not used internally
+            model.dispatchEvent(new CustomEvent('ready', { detail: {model}}));
         });
 
         await this.updateComplete;
@@ -229,7 +236,7 @@ export class XfForm extends LitElement {
     }
 
     _displayMessage(e) {
-        const level = e.detail.level;
+        const {level} = e.detail;
         const msg = e.detail.message;
         this._showMessage(level,msg);
     }
@@ -254,7 +261,7 @@ export class XfForm extends LitElement {
 
                 const closeIcon = window.document.createElement('paper-icon-button');
                 closeIcon.setAttribute('icon', 'close');
-                closeIcon.addEventListener('click', function (e) {
+                closeIcon.addEventListener('click', (e) => {
                     // console.log(e);
                     notification.close();
                 });

@@ -145,10 +145,20 @@ export class XfBind extends ForeElement {
 */
 
     namespaceResolver(prefix) {
+		// TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+
+		/**
+		 * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
+		 * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
+		 *   // Return value
+		 *  }
+		 * }
+		 */
+
         console.log('namespaceResolver  prefix', prefix);
         const ns = {
             'xhtml' : 'http://www.w3.org/1999/xhtml',
-            ''    : 'http://www.w3.org/2002/xforms'
+            // ''    : Fore.XFORMS_NAMESPACE_URI
         };
         return ns[prefix] || null;
         // return null;
@@ -180,7 +190,26 @@ export class XfBind extends ForeElement {
             });
 
         }else{
-            this.nodeset = fx.evaluateXPathToNodes(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver},{ defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms'});
+			let formElement;
+			for (let anc = this; anc; anc = anc.parentNode) {
+				if (anc.localName === 'xf-form') {
+					formElement = anc;
+					break;
+				}
+			}
+
+            this.nodeset = fx.evaluateXPathToNodes(
+				this.ref,
+				inscopeContext,
+				null,
+				{},
+				{
+					namespaceResolver: this.namespaceResolver,
+					defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+					currentContext: {
+						formElement
+					}
+				});
         }
     }
 

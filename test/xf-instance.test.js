@@ -13,7 +13,7 @@ describe('initialize instance', () => {
                         <foobar></foobar>
                     </data>
                 </xf-instance>
-               
+
             `)
         );
 
@@ -30,7 +30,7 @@ describe('initialize instance', () => {
                         <foobar></foobar>
                     </data>
                 </xf-instance>
-               
+
             `)
         );
 
@@ -48,7 +48,7 @@ describe('initialize instance', () => {
                         <foobar></foobar>
                     </data>
                 </xf-instance>
-               
+
             `)
         );
 
@@ -68,7 +68,7 @@ describe('initialize instance', () => {
                         <foobar></foobar>
                     </data>
                 </xf-instance>
-               
+
             `)
         );
 
@@ -94,7 +94,7 @@ describe('initialize instance', () => {
                         </body>
                     </data>
                 </xf-instance>
-               
+
             `)
         );
 
@@ -135,7 +135,7 @@ describe('initialize instance', () => {
                                 <item>second</item>
                             </data>
                         </xf-instance>
-                        
+
                         <xf-bind ref="instance('second')/item"></xf-bind>
                     </xf-model>
                 </xf-form>
@@ -145,11 +145,11 @@ describe('initialize instance', () => {
         await elementUpdated(el);
 
         const instances = el.querySelectorAll('xf-instance');
-        expect(instances[0]).to.equal('default');
-        expect(instances[1]).to.equal('second');
+        expect(instances[0].id).to.equal('default');
+        expect(instances[1].id).to.equal('second');
 
         const model = el.querySelector('xf-model');
-        const modelItems = model.modelItems;
+        const {modelItems} = model;
         expect(modelItems[0].value).to.equal('second');
 
     });
