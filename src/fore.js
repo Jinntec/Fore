@@ -1,3 +1,17 @@
+import {registerXQueryModule} from 'fontoxpath';
+
+const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+
+registerXQueryModule(`
+module namespace xf="${XFORMS_NAMESPACE_URI}";
+
+declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
+	lower-case($str) = "true" or $str = "1"
+};
+
+
+`);
+
 export class Fore{
 
 
@@ -25,6 +39,9 @@ export class Fore{
         ];
     }
 
+	static get XFORMS_NAMESPACE_URI () {
+		return XFORMS_NAMESPACE_URI
+	}
 
     static isActionElement(elementName){
         const found = Fore.ACTION_ELEMENTS.includes(elementName);
@@ -72,7 +89,7 @@ export class Fore{
     static refreshChildren(children){
         children.forEach(element => {
 
-            //todo: later - check for AVTs
+            // todo: later - check for AVTs
             if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
             if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
 
