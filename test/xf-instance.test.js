@@ -119,7 +119,7 @@ describe('initialize instance', () => {
 
     });
 
-    it('reolves instances with the instance() function', async () => {
+    it('resolves instances with the instance() function', async () => {
         const el =  (
             await fixtureSync(html`
                 <xf-form>
@@ -154,6 +154,40 @@ describe('initialize instance', () => {
 
     });
 
+	it('Allows calling the boolean-from-string function', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+
+                        <xf-instance>
+                            <data>
+                                <foobar></foobar>
+                            </data>
+                        </xf-instance>
+                        <xf-instance id="second">
+                            <data>
+                                <item>Maybe</item>
+                            </data>
+                        </xf-instance>
+
+                        <xf-bind ref="instance('second')/item" required="boolean-from-string('maybe!~')"></xf-bind>
+                    </xf-model>
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+
+        const instances = el.querySelectorAll('xf-instance');
+        expect(instances[0].id).to.equal('default');
+        expect(instances[1].id).to.equal('second');
+
+        const model = el.querySelector('xf-model');
+        const {modelItems} = model;
+        expect(modelItems[0].required).to.be.false;
+
+    });
 
     /*
         it('does NOT copy a "body" element from inline data', async () => {

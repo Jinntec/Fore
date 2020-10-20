@@ -4,6 +4,39 @@ import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
 import {ForeElement} from "./ForeElement.js";
 
+function evaluateXFormsXPathToNodes (xpath, contextNode, formElement, namespaceResolver) {
+	return fx.evaluateXPathToNodes(
+		xpath,
+		contextNode,
+		null,
+		{},
+		{
+		namespaceResolver,
+		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+		moduleImports: {
+			xf: 'http://www.w3.org/2002/xforms'
+		},
+		currentContext: {formElement}
+	});
+}
+
+
+function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespaceResolver) {
+	return fx.evaluateXPathToBoolean(
+		xpath,
+		contextNode,
+		null,
+		{},
+		{
+		namespaceResolver,
+		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+		moduleImports: {
+			xf: 'http://www.w3.org/2002/xforms'
+		},
+		currentContext: {formElement}
+	});
+}
+
 /**
  * XfBind declaratively attaches constraints to nodes in the data (instances).
  *
@@ -16,6 +49,8 @@ import {ForeElement} from "./ForeElement.js";
  * BoundElements to track their state.
  */
 export class XfBind extends ForeElement {
+
+
 
     static get styles() {
         return css`
@@ -180,8 +215,8 @@ export class XfBind extends ForeElement {
                     this.nodeset = inscopeContext;
                 }else{
                     // const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                    const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {namespaceResolver:  this.namespaceResolver},{ defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms'});
-                    localResult.forEach(item =>{
+					const localResult = evaluateXFormsXPathToNodes(this.ref, n, this, this.namespaceResolver);
+					localResult.forEach(item =>{
                        this.nodeset.push(item);
                     });
                     // console.log('local result: ', localResult);
@@ -198,18 +233,7 @@ export class XfBind extends ForeElement {
 				}
 			}
 
-            this.nodeset = fx.evaluateXPathToNodes(
-				this.ref,
-				inscopeContext,
-				null,
-				{},
-				{
-					namespaceResolver: this.namespaceResolver,
-					defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
-					currentContext: {
-						formElement
-					}
-				});
+            this.nodeset = evaluateXFormsXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
         }
     }
 
@@ -271,10 +295,10 @@ export class XfBind extends ForeElement {
         }else{
             value = targetNode.nodeValue;
         }
-        const ro = fx.evaluateXPath(this.readonly, targetNode, null, {});
-        const req = fx.evaluateXPath(this.required, targetNode, null, {});
-        const rel = fx.evaluateXPath(this.relevant, targetNode, null, {});
-        const val = fx.evaluateXPath(this.constraint, targetNode, null, {});
+        const ro = evaluateXFormsXPathToBoolean(this.readonly, targetNode, this, this.namespaceResolver);
+		const req = evaluateXFormsXPathToBoolean(this.required, targetNode, this, this.namespaceResolver);
+        const rel = evaluateXFormsXPathToBoolean(this.relevant, targetNode, this, this.namespaceResolver);
+		const val = evaluateXFormsXPathToBoolean(this.constraint, targetNode, this, this.namespaceResolver);
 
 
         let targetModelItem;
