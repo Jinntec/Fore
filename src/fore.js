@@ -9,6 +9,15 @@ declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean
 	lower-case($str) = "true" or $str = "1"
 };
 
+declare %public function xf:false() as xs:boolean {
+	fn:false()
+};
+declare %public function xf:true() as xs:boolean {
+	fn:true()
+};
+declare %public function xf:count($arg as item()*) as xs:integer {
+	fn:count($arg)
+};
 
 `);
 
