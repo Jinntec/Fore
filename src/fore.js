@@ -1,7 +1,8 @@
-import {registerXQueryModule} from 'fontoxpath';
+import {evaluateUpdatingExpressionSync, executePendingUpdateList, registerXQueryModule} from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
+// These modules can use full XQuery 3.1 + XQuery update facility 3.0
 registerXQueryModule(`
 module namespace xf="${XFORMS_NAMESPACE_URI}";
 
@@ -20,6 +21,29 @@ declare %public function xf:count($arg as item()*) as xs:integer {
 };
 
 `);
+
+// How to run XQUF:
+/**
+registerXQueryModule(`
+module namespace my-custom-namespace = "my-custom-uri";
+(:~
+	Insert attribute somewhere
+	~:)
+declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
+	if ($ele/@done) then false() else
+	(insert node
+	attribute done {"true"}
+	into $ele, true())
+};
+`)
+// At some point:
+const contextNode = null;
+const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
+
+console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
+
+executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
+*/
 
 export class Fore{
 
