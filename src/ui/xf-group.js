@@ -1,8 +1,8 @@
 import {LitElement, html, css} from 'lit-element';
 import {BoundElement} from "../BoundElement";
 import {Fore} from "../fore";
-import XfAbstractControl from "./xf-abstract-control";
-
+// import XfAbstractControl from "./xf-abstract-control";
+import {XfContainer} from './xf-container';
 
 
 /**
@@ -14,11 +14,12 @@ import XfAbstractControl from "./xf-abstract-control";
  * @customElement
  * @polymer
  */
-class XfGroup extends XfAbstractControl{
+class XfGroup extends XfContainer{
 
 
     static get properties() {
         return{
+            ... super.properties,
             collapse:{
                 type:Boolean,
                 reflect:true

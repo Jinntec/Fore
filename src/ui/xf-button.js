@@ -39,7 +39,7 @@ class XfButton extends XfAbstractControl {
         `;
     }
 
-    performActions(e) {
+    performActions() {
         console.log('performActions ', this.children);
 
         const repeatedItem = this.closest('xf-repeatitem');

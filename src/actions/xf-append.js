@@ -1,6 +1,8 @@
 import { XfAction } from "./xf-action.js";
 // import '../xf-model.js';
 // import '../xf-instance.js';
+import * as fx from 'fontoxpath';
+import {XfInstance} from "../xf-instance";
 
 /**
  * `xf-append`
@@ -29,20 +31,25 @@ class XfAppend extends XfAction {
     constructor(){
         super();
         this.repeat = "";
-        this.clear = 'true';
+        this.clear = 'false';
     }
 
     execute(){
-        super.execute();
+        // super.execute();
         // get instance for binding expr
         // const instanceId = this.getInstanceId();
         // const inst = this.model.getInstance(instanceId);
         // console.log('target instance',inst);
-        // console.log('append nodeset',this.nodeset);
         // console.log('append parent nodeset',this.nodeset[0].parentNode);
 
-        const parentNodeset = this.nodeset[0].parentNode;
-        const last = this.nodeset[this.nodeset.length -1];
+        const inscope = this._inScopeContext();
+        // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        console.log('append nodeset',this.nodeset);
+
+
+        // const parentNodeset = this.nodeset[0].parentNode;
+        // const last = this.nodeset[this.nodeset.length -1];
+        const last = inscope.lastElementChild;
         console.log('last in nodeset',last);
 
         let newItem = last.cloneNode(true);
@@ -58,14 +65,24 @@ class XfAppend extends XfAction {
 
         }
 
-        parentNodeset.appendChild(newItem);
+        inscope.appendChild(newItem);
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        console.log('new nodeset',this.nodeset);
+
+
+        console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
+
+        //todo: create modelItems as appropriate for newly inserted entry
+        const existed = this.getModel().getModelItem(this.nodeset);
+        if(!existed) {
+            XfInstance.lazyCreateModelitems(this.getModel(), this.ref, newItem);
+        }
 
         this.needsRebuild=true;
         this.needsRecalculate=true;
         this.needsRevalidate=true;
         this.needsRefresh=true;
         this.actionPerformed();
-        console.log('modified instance ', this.model.getDefaultInstance().getInstanceData());
 
         //always call superClass at the end of processing.
         // super.execute();

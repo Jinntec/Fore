@@ -4,6 +4,9 @@ import {repeat} from 'lit-html/directives/repeat.js';
 import {BoundElement} from "../BoundElement.js";
 import "./xf-repeatitem.js";
 import * as fx from "fontoxpath";
+import {XfContainer} from "./xf-container.js";
+
+import {Fore} from "../fore";
 
 /**
  * `xf-repeat`
@@ -13,7 +16,7 @@ import * as fx from "fontoxpath";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeat extends BoundElement {
+export class XfRepeat extends XfContainer {
 
     static get styles() {
         return css`
@@ -48,12 +51,13 @@ export class XfRepeat extends BoundElement {
         // console.log('_doInit ', index);
         const rItem = e.detail.item;
         // console.log('_doInit passing nodeset',rItem.nodeset);
-        // rItem.init();
+        rItem.init();
         // rItem.refresh();
     }
 
     static get properties() {
         return {
+            ... super.properties,
             ref: {
                 type: String
             },
@@ -92,17 +96,17 @@ export class XfRepeat extends BoundElement {
 
     firstUpdated(_changedProperties) {
         this.init();
+        console.log('firstupdated done');
     }
 
     init() {
         // ### there must be a single 'template' child
         console.log('##### repeat init');
-
+        // if(!this.inited) this.init();
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
-        this._evalNodeset();
 
-        // const inscope = this._inScopeContext();
-        // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        // this.updateComplete;
+        this._evalNodeset();
 
         // this.template = this.querySelector('template');
         console.log('### init template for repeat ', this.id , this.template);
@@ -115,9 +119,8 @@ export class XfRepeat extends BoundElement {
                 detail: {"message": "no template found for repeat:" + this.id}
             }));
         }
-        this.requestUpdate();
 
-        this._initRepeatItems();
+        // this._initRepeatItems();
 
         this.inited = true;
     }
@@ -131,8 +134,26 @@ export class XfRepeat extends BoundElement {
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
     }
 
-
+    /**
+     * repeat has no own modelItems
+     * @private
+     */
 /*
+    async refresh(){
+        console.log('repeat refresh ');
+
+        await this.updateComplete;
+        const inscope = this._inScopeContext();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        console.log('repeat refresh nodeset ', this.nodeset);
+        this.requestUpdate();
+        // Fore.refreshChildren(this.children);
+    }
+*/
+
+
+
+/* 
     refresh() {
         console.group('xf-repeat.refresh');
         if(!this.inited) this.init();
@@ -148,68 +169,14 @@ export class XfRepeat extends BoundElement {
         //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
 
 
-        let repeatItems = this.querySelectorAll('xf-repeatitem');
-        // const repeatItemCount = repeatItems.length;
-        /!*
-
-
-                let nodeCount = 1;
-                if(Array.isArray(this.nodeset)){
-                    nodeCount = this.nodeset.length;
-                }
-
-                // const contextSize = this.nodeset.length;
-                const contextSize = nodeCount;
-                let modified = [];
-                if (contextSize < repeatItemCount){
-
-                    for(let position = repeatItemCount; position > contextSize; position--){
-                        //remove repeatitem
-                        const itemToRemove = repeatItems[position -1];
-                        itemToRemove.parentNode.removeChild(itemToRemove);
-                        // modified.push(itemToRemove);
-                    }
-
-                    //todo: update index
-                }
-
-                if(contextSize > repeatItemCount){
-
-                    for(let position = repeatItemCount +1; position <= contextSize; position++){
-                        //add new repeatitem
-                        const lastRepeatItem = repeatItems[repeatItemCount-1];
-                        const newItem = lastRepeatItem.cloneNode(true);
-                        newItem.nodeset = this.nodeset[position-1];
-                        this.appendChild(newItem);
-                        modified.push(newItem);
-
-                    }
-
-
-                }
-
-                if(modified.length > 0){
-                    modified.forEach(mod => {
-                        mod.refresh();
-                    })
-                }
-
-        *!/
         // this._refreshChildren(repeatItems);
 
-/!*
-        if(repeatItems){
-            repeatItems = this.querySelectorAll('xf-repeatitem');
-            repeatItems.forEach(bound => {
-                bound.refresh();
-            });
-        }
-*!/
         this.requestUpdate();
         console.groupEnd();
     }
-*/
 
+ */
+/*
     _refreshChildren(repeatItems){
         if(repeatItems){
             repeatItems = this.querySelectorAll('xf-repeatitem');
@@ -218,6 +185,7 @@ export class XfRepeat extends BoundElement {
             });
         }
     }
+*/
 
     _refreshItem(e){
         if(!this.inited) return;

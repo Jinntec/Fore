@@ -99,6 +99,7 @@ export class Fore{
             'XF-OUTPUT',
             'XF-RANGE',
             'XF-REPEAT',
+            'XF-REPEATITEM',
             'XF-SWITCH',
             'XF-SECRET',
             'XF-SELECT',
@@ -119,18 +120,23 @@ export class Fore{
     }
 
 
-    static refreshChildren(children){
-        children.forEach(element => {
 
-            // todo: later - check for AVTs
-            if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
-            if(element.nodeName.toLowerCase() === 'xf-repeatitem') return;
+    static refreshChildren(startElement){
+        const children = startElement.children;
+        if(children){
+            Array.from(children).forEach(element => {
 
-            if (typeof element.refresh === 'function') {
-                element.refresh();
-            }
+                // todo: later - check for AVTs
+                if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+                    element.refresh();
+                }else{
+                    if(element.nodeName !== 'XF-MODEL'){
+                        Fore.refreshChildren(element);
+                    }
+                }
 
-        });
+            });
+        }
 
     }
 

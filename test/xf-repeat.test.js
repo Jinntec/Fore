@@ -328,6 +328,63 @@ describe('initialize repeat', () => {
 
 
     });
+    
+    it('appends an item', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="record">
+            
+                        <xf-instance>
+                            <data>
+                                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            </data>
+                        </xf-instance>
+            
+            
+                        <xf-bind ref="task" readonly="count(../task) < 3">
+                            <xf-bind ref="./text()" required="true()"></xf-bind>
+                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
+                            <xf-bind ref="@due" type="xs:date"></xf-bind>
+                        </xf-bind>
+            
+                    </xf-model>
+                    <xf-group>
+                        <h1>todos</h1>
+                           
+                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                            <template>
+                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                            </template>
+                        </xf-repeat>
+                           
+                        <xf-button label="append">
+                            <xf-append repeat="todos" ref="task"></xf-append>
+                        </xf-button>            
+                    </xf-group>
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+
+        const button = el.querySelector('xf-button');
+        await elementUpdated(button);
+
+        button.performActions();
+
+        const repeat = el.querySelector('xf-repeat');
+        await elementUpdated(repeat);
+
+        expect(repeat).to.exist;
+        const rItems = repeat.querySelectorAll('xf-repeatitem');
+        console.log('xf-repeat ', repeat);
+        expect(rItems.length).to.equal(3);
+        // expect(repeat.getModelItem()).to.equal(null);
+
+
+    });
 
 
 });

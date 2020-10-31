@@ -241,6 +241,22 @@ export class XfBind extends ForeElement {
         }
     }
 
+    static createModelItems(nodeset){
+        if(Array.isArray(nodeset)){
+            // todo - iterate and create
+            // console.log('################################################ ', this.nodeset);
+            Array.from(nodeset).forEach((n, index) => {
+                // console.log('node ',n);
+                this._createModelItem(n,index);
+
+            });
+        }else{
+            this._createModelItem(nodeset);
+        }
+    }
+    static createModelItem(node,index){
+
+    }
 
     _createModelItems(){
         // console.log('#### ', thi+s.nodeset);

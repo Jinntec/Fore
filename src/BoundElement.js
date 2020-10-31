@@ -6,6 +6,8 @@ import {ModelItem} from './modelitem.js';
 
 import {XPathUtil} from "./xpath-util";
 import {ForeElement} from "./ForeElement";
+import {XfInstance} from './xf-instance.js';
+
 import {Fore} from './fore.js';
 
 // import parseScript from './output/fontoxpath.js';
@@ -16,6 +18,7 @@ export class BoundElement extends ForeElement {
 
     static get properties() {
         return {
+            ... super.properties,
             model: {
                 type: Object
             },
@@ -92,7 +95,11 @@ export class BoundElement extends ForeElement {
         if(!existed){
             // if(existed === undefined){
             console.log('does not exist ', this.nodeset);
-            return this.getModel().getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
+            // const mi = this.getModel().getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
+            // this.getModel().registerModelItem(mi);
+            // return mi;
+            // return this.getModel().getDefaultInstance().lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+            return XfInstance.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
         }
         return existed;
     }

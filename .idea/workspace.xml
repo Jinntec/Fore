@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that.">
+      <change afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-button.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-button.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-instance.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-instance.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-instance.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-bind.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bind.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,13 +72,20 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="fonto" />
+        <entry key="$PROJECT_DIR$" value="bind-in-modelitem" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="8d9abcc5-0d96-4e4b-b9fc-4e126643c86f" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
@@ -57,6 +95,12 @@
   </component>
   <component name="ProjectId" id="1hdFfNzVKYgkyXf1dMwMi0WJA8j" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="XHTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -64,10 +108,13 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/ui" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v7.2.0/bin/node" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -75,18 +122,11 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/doc" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/elements/model" />
-      <recent name="$PROJECT_DIR$/elements" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/src" />
@@ -94,18 +134,13 @@
       <recent name="$PROJECT_DIR$/elements" />
       <recent name="$PROJECT_DIR$/test" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/doc" />
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/elements/model" />
+      <recent name="$PROJECT_DIR$/elements" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Applet">
@@ -116,6 +151,17 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -146,6 +192,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -219,6 +266,17 @@
       <workItem from="1600943886253" duration="976000" />
       <workItem from="1600950942156" duration="1490000" />
       <workItem from="1600953198649" duration="1609000" />
+      <workItem from="1601381071703" duration="1792000" />
+      <workItem from="1601460624692" duration="257000" />
+      <workItem from="1601461029539" duration="49000" />
+      <workItem from="1601461111362" duration="434000" />
+      <workItem from="1601461564580" duration="246000" />
+      <workItem from="1603195657407" duration="2085000" />
+      <workItem from="1603449432816" duration="287000" />
+      <workItem from="1603733192909" duration="5214000" />
+      <workItem from="1603815469804" duration="7463000" />
+      <workItem from="1604145703903" duration="4739000" />
+      <workItem from="1604150650987" duration="1494000" />
     </task>
     <task id="LOCAL-00004" summary="cleanup + using 'fore-' as prefix everywhere now">
       <created>1549979906413</created>
@@ -567,16 +625,14 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -595,6 +651,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -626,12 +683,46 @@
     <MESSAGE value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
     <option name="LAST_COMMIT_MESSAGE" value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
   </component>
+  <component name="WindowStateProjectService">
+    <state x="-1031" y="434" key="#ESLint" timestamp="1604148313177">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1031" y="434" key="#ESLint/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604148313177" />
+    <state x="-1911" y="39" key="CommitChangelistDialog2" timestamp="1603733219914">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
+    <state x="-2097" y="82" key="SettingsEditor" timestamp="1601461547197">
+      <screen x="-2560" y="-176" width="2560" height="1417" />
+    </state>
+    <state x="-2097" y="82" key="SettingsEditor/-2560.-176.2560.1417/0.23.1440.877@-2560.-176.2560.1417" timestamp="1601461547197" />
+    <state width="625" height="500" key="SwitcherDM" timestamp="1604146490429">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state width="625" height="500" key="SwitcherDM/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604146490429" />
+    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1603819984511">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603819984511" />
+    <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604145757344">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604145757344" />
+    <state x="-1232" y="247" width="744" height="616" key="find.popup" timestamp="1604148707981">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604148707981" />
+    <state x="-1727" y="164" width="838" height="1032" key="search.everywhere.popup" timestamp="1603820012026">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1727" y="164" width="838" height="1032" key="search.everywhere.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603820012026" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
-          <line>44</line>
+          <line>43</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

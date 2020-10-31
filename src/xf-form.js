@@ -151,12 +151,9 @@ export class XfForm extends LitElement {
         console.group('### refresh');
 
         const uiElements = this.querySelectorAll('*');
-
-        this._refreshChildren();
-
-
-        // const r = this.querySelectorAll('xf-repeat');
-        // await r[r.length-1].updateComplete;
+        await this.updateComplete;
+        // this._refreshChildren();
+        Fore.refreshChildren(this);
 
         this.ready = true;
 
@@ -179,7 +176,7 @@ export class XfForm extends LitElement {
 
         uiElements.forEach(element => {
 
-            if (typeof element.refresh === 'function') {
+            if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
                 element.refresh();
             }
 

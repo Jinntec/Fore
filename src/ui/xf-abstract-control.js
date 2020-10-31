@@ -48,10 +48,12 @@ export default class XfAbstractControl extends BoundElement {
     /**
      * (re)apply all state properties to this control.
      */
-    async refresh() {
+    refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
 
-        await this.updateComplete;
+        // if(this.repeated) return;
+
+        // await this.updateComplete;
         this.control = this.shadowRoot.querySelector('#control');
 
         const currentVal = this.value;

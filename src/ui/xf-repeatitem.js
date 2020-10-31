@@ -39,11 +39,9 @@ export class XfRepeatitem extends BoundElement{
         super();
     }
 
-
     init(){
         console.log('repeatitem init model ', this.nodeset);
         this.initializeChildren(this);
-
     }
 
     initializeChildren(node) {
@@ -72,7 +70,7 @@ export class XfRepeatitem extends BoundElement{
             bubbles: true,
             detail: {item: this}
         }));
-        this.init();
+        // this.init();
     }
 
     updated(_changedProperties) {
@@ -89,7 +87,8 @@ export class XfRepeatitem extends BoundElement{
 /*
     refresh(){
         const children = this.querySelectorAll('[ref]');
-        this.updateChildren(children);
+        // this.updateChildren(children);
+        Fore.refreshChildren(children);
         this.requestUpdate();
 
     }

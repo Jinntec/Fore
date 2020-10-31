@@ -65,7 +65,7 @@ export class XfInstance extends ForeElement {
                 let n = document.createElement(p[0]);
                 n.appendChild(document.createTextNode(p[1]));
                 instanceData.documentElement.appendChild(n);
-            };
+            }
 
             this.instanceData = instanceData;
             this.instanceData.firstElementChild.setAttribute('id',this.id);
@@ -120,8 +120,17 @@ export class XfInstance extends ForeElement {
         return this.instanceData.firstElementChild;
     }
 
+    static lazyCreateModelitems(model,ref,nodeset){
+        if(Array.isArray(nodeset)){
+            Array.from(nodeset).forEach((n, index) => {
+                XfInstance.lazyCreateModelItem(model, ref,n);
+            });
+        }else{
+            XfInstance.lazyCreateModelItem(model, ref,nodeset);
+        }
 
-    lazyCreateModelItem(ref,node){
+    }
+    static lazyCreateModelItem(model,ref,node){
         console.log('lazyCreateModelItem ', node);
         // console.log('_createModelItem ', this.nodeset.nodeType);
         // console.log('_createModelItem model', this.model);
@@ -145,7 +154,7 @@ export class XfInstance extends ForeElement {
 
         const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
         console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-        this.model.registerModelItem(mi);
+        model.registerModelItem(mi);
         return mi;
     }
 
