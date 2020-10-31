@@ -43,6 +43,7 @@ export class XfRepeat extends XfContainer {
     }
 
     _getTemplate(){
+        console.log('###### getTemplate() ')
         return this.template.content.cloneNode(true);
     }
 
@@ -140,12 +141,12 @@ export class XfRepeat extends XfContainer {
      */
     refresh(){
         console.log('repeat refresh ');
-
+        // await this.updateComplete;
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
+        Fore.refreshChildren(this);
         this.requestUpdate();
-        // Fore.refreshChildren(this);
     }
 
 

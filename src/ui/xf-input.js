@@ -34,6 +34,7 @@ class XfInput extends XfAbstractControl{
 
     static get properties() {
         return {
+            ... super.properties,
             type:{
                 type: String
             },

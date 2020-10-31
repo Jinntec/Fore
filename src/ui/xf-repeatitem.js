@@ -1,6 +1,7 @@
 import {LitElement,html, css} from "lit-element";
 import {BoundElement} from "../BoundElement.js";
 import {Fore} from "../fore.js";
+import {XfContainer} from "./xf-container";
 
 
 /**
@@ -11,7 +12,7 @@ import {Fore} from "../fore.js";
  * @polymer
  * @demo demo/index.html
  */
-export class XfRepeatitem extends BoundElement{
+export class XfRepeatitem extends XfContainer{
 
     static get styles() {
         return css`
@@ -86,11 +87,11 @@ export class XfRepeatitem extends BoundElement{
 
 /*
     refresh(){
-        const children = this.querySelectorAll('[ref]');
-        // this.updateChildren(children);
-        Fore.refreshChildren(children);
-        this.requestUpdate();
+        this.evalInContext();
+        this.modelItem = this.getModelItem();
 
+        Fore.refreshChildren(children);
+        // this.requestUpdate();
     }
 */
 

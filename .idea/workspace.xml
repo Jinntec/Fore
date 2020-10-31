@@ -22,14 +22,14 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="refactoring of lazy modelItem creation complete: functions moved to xf-bind;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-instance.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,14 +267,7 @@
       <workItem from="1603733192909" duration="5214000" />
       <workItem from="1603815469804" duration="7463000" />
       <workItem from="1604145703903" duration="4739000" />
-      <workItem from="1604150650987" duration="3351000" />
-    </task>
-    <task id="LOCAL-00005" summary="pushing current state - still prototyping">
-      <created>1550140529954</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1550140529954</updated>
+      <workItem from="1604150650987" duration="7616000" />
     </task>
     <task id="LOCAL-00006" summary="another example with 2 instances and nested binds">
       <created>1550141721569</created>
@@ -612,7 +605,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604152543603</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="refactoring of lazy modelItem creation complete: functions moved to xf-bind;">
+      <created>1604154332631</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1604154332631</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -647,7 +647,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="local binding and updating of values works" />
     <MESSAGE value="refactored xf-form; implemented basic setvalue action" />
     <MESSAGE value="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties" />
     <MESSAGE value="new sample for select control;&#10;filtering controls from bound elements (ignoring actions which also have a 'bind');&#10;listening for select changes;" />
@@ -672,7 +671,8 @@
     <MESSAGE value="back to flat refresh - repeat has no special magic" />
     <MESSAGE value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
     <MESSAGE value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
-    <option name="LAST_COMMIT_MESSAGE" value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
+    <MESSAGE value="refactoring of lazy modelItem creation complete: functions moved to xf-bind;" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactoring of lazy modelItem creation complete: functions moved to xf-bind;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="-1031" y="434" key="#ESLint" timestamp="1604148313177">
@@ -695,6 +695,10 @@
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
     <state width="625" height="500" key="SwitcherDM/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604146490429" />
+    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2" timestamp="1604154335307">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604154335307" />
     <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1603819984511">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
@@ -717,7 +721,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
-          <line>43</line>
+          <line>46</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

@@ -51,9 +51,6 @@ export default class XfAbstractControl extends BoundElement {
     refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
 
-        // if(this.repeated) return;
-
-        // await this.updateComplete;
         this.control = this.shadowRoot.querySelector('#control');
 
         const currentVal = this.value;
@@ -69,36 +66,13 @@ export default class XfAbstractControl extends BoundElement {
 
         this.value = this.modelItem.value;
 
-/*
-        if(this.repeated){
-            const rItem = this.parentNode.closest('xf-repeatitem');
-            console.log('closest ref ',rItem);
-
-            const host = rItem.host;
-            console.log('host ', rItem.parentNode.host);
-            const ownerRepeat = rItem.parentNode.host;
-            console.log('host ', ownerRepeat.closest('xf-form'));
-
-        }
-
-        console.log('MODEL ', this.model);
-        console.log('FORM ', this.model.parentNode);
-*/
-
-
         // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
-        if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
+        // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if(currentVal !== this.value){
             this.dispatchEvent(new CustomEvent('value-changed', {}));
         }
 
         this.handleModelItemProperties();
-/*
-        this.handleRequired();
-        this.handleReadonly();
-        this.handleValid();
-        this.handleRelevant();
-*/
         this.requestUpdate();
     }
 

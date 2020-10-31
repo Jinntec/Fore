@@ -49,17 +49,16 @@ export class XfContainer extends BoundElement {
         if(this.isBound()){
             this.evalInContext();
             this.modelItem = this.getModelItem();
+            this.value = this.modelItem.value;
         }
-
-        this.value = this.modelItem.value;
 
         // state change event do not fire during init phase (initial refresh)
         if(this._getForm().ready) {
             this.handleModelItemProperties();
         }
+        // this.requestUpdate();
 
         Fore.refreshChildren(this);
-        this.requestUpdate();
     }
 
     handleModelItemProperties(){
@@ -76,11 +75,11 @@ export class XfContainer extends BoundElement {
         // console.log('mip readonly', this.modelItem.readonly);
         if (this.isReadonly() !== this.modelItem.readonly) {
             if (this.modelItem.readonly) {
-                this.control.setAttribute('readonly','readonly');
+                this.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
             if(!this.modelItem.readonly){
-                this.control.removeAttribute('readonly');
+                this.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
         }
@@ -101,7 +100,7 @@ export class XfContainer extends BoundElement {
 
 
     isReadonly(){
-        if(this.control.hasAttribute('readonly')){
+        if(this.hasAttribute('readonly')){
             return true;
         }
         return false;
