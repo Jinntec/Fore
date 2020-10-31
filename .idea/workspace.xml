@@ -22,22 +22,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that.">
-      <change afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BoundElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/BoundElement.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-button.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-button.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-group.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-instance.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-bind.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bind.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -276,14 +267,7 @@
       <workItem from="1603733192909" duration="5214000" />
       <workItem from="1603815469804" duration="7463000" />
       <workItem from="1604145703903" duration="4739000" />
-      <workItem from="1604150650987" duration="1494000" />
-    </task>
-    <task id="LOCAL-00004" summary="cleanup + using 'fore-' as prefix everywhere now">
-      <created>1549979906413</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1549979906413</updated>
+      <workItem from="1604150650987" duration="3351000" />
     </task>
     <task id="LOCAL-00005" summary="pushing current state - still prototyping">
       <created>1550140529954</created>
@@ -621,7 +605,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600544052111</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;">
+      <created>1604152543603</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1604152543603</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,7 +647,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="added a comment" />
     <MESSAGE value="local binding and updating of values works" />
     <MESSAGE value="refactored xf-form; implemented basic setvalue action" />
     <MESSAGE value="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties" />
@@ -681,7 +671,8 @@
     <MESSAGE value="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage" />
     <MESSAGE value="back to flat refresh - repeat has no special magic" />
     <MESSAGE value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
+    <MESSAGE value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
+    <option name="LAST_COMMIT_MESSAGE" value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="-1031" y="434" key="#ESLint" timestamp="1604148313177">
@@ -692,6 +683,10 @@
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
+    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog" timestamp="1604154005497">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604154005497" />
     <state x="-2097" y="82" key="SettingsEditor" timestamp="1601461547197">
       <screen x="-2560" y="-176" width="2560" height="1417" />
     </state>
@@ -708,10 +703,10 @@
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
     <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604145757344" />
-    <state x="-1232" y="247" width="744" height="616" key="find.popup" timestamp="1604148707981">
+    <state x="-1232" y="247" width="744" height="616" key="find.popup" timestamp="1604153006818">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
-    <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604148707981" />
+    <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604153006818" />
     <state x="-1727" y="164" width="838" height="1032" key="search.everywhere.popup" timestamp="1603820012026">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>

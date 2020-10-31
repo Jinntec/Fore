@@ -120,44 +120,6 @@ export class XfInstance extends ForeElement {
         return this.instanceData.firstElementChild;
     }
 
-    static lazyCreateModelitems(model,ref,nodeset){
-        if(Array.isArray(nodeset)){
-            Array.from(nodeset).forEach((n, index) => {
-                XfInstance.lazyCreateModelItem(model, ref,n);
-            });
-        }else{
-            XfInstance.lazyCreateModelItem(model, ref,nodeset);
-        }
-
-    }
-    static lazyCreateModelItem(model,ref,node){
-        console.log('lazyCreateModelItem ', node);
-        // console.log('_createModelItem ', this.nodeset.nodeType);
-        // console.log('_createModelItem model', this.model);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem nodeType', node.nodeType);
-
-        let mItem = {};
-        let targetNode = {};
-        if(node.nodeType === node.TEXT_NODE){
-            // const parent = node.parentNode;
-            // console.log('PARENT ', parent);
-            targetNode = node.parentNode;
-        }else {
-            targetNode = node;
-        }
-
-        // const path = '';
-        const path = fx.evaluateXPath('path()',node);
-
-
-        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
-        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-        model.registerModelItem(mi);
-        return mi;
-    }
-
     _useInlineData(){
         // console.log('innerText ', this.innerHTML.toString());
         const instanceData = new DOMParser().parseFromString(this.innerHTML,'application/xml');

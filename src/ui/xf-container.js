@@ -108,7 +108,7 @@ export class XfContainer extends BoundElement {
     }
 
     isEnabled(){
-        if(this.control.style.display === 'none'){
+        if(this.style.display === 'none'){
             return false;
         }
         return true;

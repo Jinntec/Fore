@@ -47,8 +47,8 @@ export class XfRepeat extends XfContainer {
     }
 
     _doInit(e,index){
-        // console.log('_doInit ', e.detail.item);
-        // console.log('_doInit ', index);
+        console.log('_doInit ', e.detail.item);
+        console.log('_doInit ', index);
         const rItem = e.detail.item;
         // console.log('_doInit passing nodeset',rItem.nodeset);
         rItem.init();
@@ -138,18 +138,15 @@ export class XfRepeat extends XfContainer {
      * repeat has no own modelItems
      * @private
      */
-/*
-    async refresh(){
+    refresh(){
         console.log('repeat refresh ');
 
-        await this.updateComplete;
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
         this.requestUpdate();
-        // Fore.refreshChildren(this.children);
+        // Fore.refreshChildren(this);
     }
-*/
 
 
 

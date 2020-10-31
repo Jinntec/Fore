@@ -3,6 +3,7 @@ import { XfAction } from "./xf-action.js";
 // import '../xf-instance.js';
 import * as fx from 'fontoxpath';
 import {XfInstance} from "../xf-instance";
+import {XfBind} from "../xf-bind";
 
 /**
  * `xf-append`
@@ -75,7 +76,7 @@ class XfAppend extends XfAction {
         //todo: create modelItems as appropriate for newly inserted entry
         const existed = this.getModel().getModelItem(this.nodeset);
         if(!existed) {
-            XfInstance.lazyCreateModelitems(this.getModel(), this.ref, newItem);
+            XfBind.lazyCreateModelitems(this.getModel(), this.ref, newItem);
         }
 
         this.needsRebuild=true;

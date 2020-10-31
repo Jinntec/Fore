@@ -7,6 +7,8 @@ import {ModelItem} from './modelitem.js';
 import {XPathUtil} from "./xpath-util";
 import {ForeElement} from "./ForeElement";
 import {XfInstance} from './xf-instance.js';
+import {XfBind} from './xf-bind.js';
+
 
 import {Fore} from './fore.js';
 
@@ -99,7 +101,8 @@ export class BoundElement extends ForeElement {
             // this.getModel().registerModelItem(mi);
             // return mi;
             // return this.getModel().getDefaultInstance().lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
-            return XfInstance.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+            // return XfInstance.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+            return XfBind.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
         }
         return existed;
     }

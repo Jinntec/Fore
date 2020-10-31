@@ -241,22 +241,6 @@ export class XfBind extends ForeElement {
         }
     }
 
-    static createModelItems(nodeset){
-        if(Array.isArray(nodeset)){
-            // todo - iterate and create
-            // console.log('################################################ ', this.nodeset);
-            Array.from(nodeset).forEach((n, index) => {
-                // console.log('node ',n);
-                this._createModelItem(n,index);
-
-            });
-        }else{
-            this._createModelItem(nodeset);
-        }
-    }
-    static createModelItem(node,index){
-
-    }
 
     _createModelItems(){
         // console.log('#### ', thi+s.nodeset);
@@ -278,6 +262,43 @@ export class XfBind extends ForeElement {
             this._createModelItem(this.nodeset);
         }
 
+    }
+    static lazyCreateModelitems(model,ref,nodeset){
+        if(Array.isArray(nodeset)){
+            Array.from(nodeset).forEach((n, index) => {
+                XfBind.lazyCreateModelItem(model, ref,n);
+            });
+        }else{
+            XfBind.lazyCreateModelItem(model, ref,nodeset);
+        }
+
+    }
+    static lazyCreateModelItem(model,ref,node){
+        console.log('lazyCreateModelItem ', node);
+        // console.log('_createModelItem ', this.nodeset.nodeType);
+        // console.log('_createModelItem model', this.model);
+        // console.log('_createModelItem node', node);
+        // console.log('_createModelItem node', node);
+        // console.log('_createModelItem nodeType', node.nodeType);
+
+        let mItem = {};
+        let targetNode = {};
+        if(node.nodeType === node.TEXT_NODE){
+            // const parent = node.parentNode;
+            // console.log('PARENT ', parent);
+            targetNode = node.parentNode;
+        }else {
+            targetNode = node;
+        }
+
+        // const path = '';
+        const path = fx.evaluateXPath('path()',node);
+
+
+        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
+        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+        model.registerModelItem(mi);
+        return mi;
     }
 
 

@@ -275,6 +275,8 @@ describe('initialize repeat', () => {
         const inputs = el.querySelectorAll('xf-repeatitem xf-input');
         await elementUpdated(inputs);
 
+        expect(inputs.length).to.equal(2);
+        console.log('inputs ', inputs);
         expect(inputs[0].getAttribute('value')).to.equal('Pick up Milk');
         expect(inputs[1].getAttribute('value')).to.equal('Make tutorial part 1');
 
