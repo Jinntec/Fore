@@ -49,9 +49,6 @@ function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespace
  * BoundElements to track their state.
  */
 export class XfBind extends ForeElement {
-
-
-
     static get styles() {
         return css`
             :host {
@@ -141,7 +138,7 @@ export class XfBind extends ForeElement {
         this.nodeset = [];
         this.model = {};
         this.contextNode = {};
-        this.inited = false;
+		this.inited = false;
     }
 
     /**
@@ -165,6 +162,13 @@ export class XfBind extends ForeElement {
             bind.init(model);
         });
 
+		/**
+		 * @todo: AST manipulation for minimal updates / dependency graphs!
+		// Output the XQueryX format of this expression. https://www.w3.org/TR/xqueryx-31/
+		// this is an XML document, over which you can run XPath
+		const ast = fx.parseScript('self::p', {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
+		console.log(ast);
+		*/
     }
 
     render() {
