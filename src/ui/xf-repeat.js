@@ -35,16 +35,25 @@ export class XfRepeat extends XfContainer {
             (item, index) =>
                 html`
                     <xf-repeatitem .nodeset="${item}" index="${index+1}" @repeatitem-created="${ (e) => this._doInit(e,index)}">
-                        ${this._getTemplate()}
+                        ${this._getTemplate(item)}
                     </xf-repeatitem>
             ` // the template for each item
         )}
         `;
     }
 
-    _getTemplate(){
+    _getTemplate(item){
         console.log('###### getTemplate() ')
-        return this.template.content.cloneNode(true);
+/*
+        await item.updateComplete.then({
+            this.template.content.cloneNode(true);
+        });
+*/
+
+        const cloned = this.template.content.cloneNode(true);
+        // console.log('cloned: ', cloned.content);
+        // return html`${cloned}`;
+        return cloned;
     }
 
     _doInit(e,index){
@@ -200,7 +209,7 @@ export class XfRepeat extends XfContainer {
         Array.from(repeatItems).forEach(item => item.init(this.getModel()));
         //setting index to first
 
-        // this.itemTemplates = [];
+        this.itemTemplates = [];
 
         // console.log('repeat ref ', this.ref);
         // console.log('repeat modelItems ', this.model.modelItems);
@@ -208,30 +217,31 @@ export class XfRepeat extends XfContainer {
         // console.log('repeat modelItems ', modelItems);
 
                 // this.nodeset = this.evalBinding();
-/*
-                this.nodeset.forEach((item, index) => {
+        const inscope = this._inScopeContext();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
 
-                    // console.log('initRepeatItem index ', index);
-                    // const repeatItem = new XfRepeatitem(); //no idea why this is not working
+        this.nodeset.forEach((item, index) => {
 
-                    const repeatItem = document.createElement('xf-repeatitem');
+            // console.log('initRepeatItem index ', index);
+            // const repeatItem = new XfRepeatitem(); //no idea why this is not working
 
-                    // console.log('initRepeatItem nodeset ',this.nodeset[index]);
-                    repeatItem.nodeset = this.nodeset[index];
-                    repeatItem.index = index +1; //1-based index
-                    const content = this.template.content;
-                    const clone = document.importNode(content, true);
+            const repeatItem = document.createElement('xf-repeatitem');
+
+            // console.log('initRepeatItem nodeset ',this.nodeset[index]);
+            repeatItem.nodeset = this.nodeset[index];
+            repeatItem.index = index +1; //1-based index
+            const content = this.template.content.cloneNode(true);
+            const clone = document.importNode(content, true);
 
 
 
-                    // console.log('clone ', clone);
-                    repeatItem.appendChild(clone);
+            // console.log('clone ', clone);
+            repeatItem.appendChild(clone);
 
-                    this.itemTemplates.push(html`repeatItem`);
+            this.itemTemplates.push(html`repeatItem`);
 
-                    this.appendChild(repeatItem);
-                });
-*/
+            this.appendChild(repeatItem);
+        });
 
 
     }

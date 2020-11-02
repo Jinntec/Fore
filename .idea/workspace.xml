@@ -22,14 +22,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="refactoring of lazy modelItem creation complete: functions moved to xf-bind;">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="all tests running but todo.html not showing its values">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-repeat.test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,17 +147,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -267,14 +257,8 @@
       <workItem from="1603733192909" duration="5214000" />
       <workItem from="1603815469804" duration="7463000" />
       <workItem from="1604145703903" duration="4739000" />
-      <workItem from="1604150650987" duration="7616000" />
-    </task>
-    <task id="LOCAL-00006" summary="another example with 2 instances and nested binds">
-      <created>1550141721569</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1550141721569</updated>
+      <workItem from="1604150650987" duration="22328000" />
+      <workItem from="1604330638914" duration="1383000" />
     </task>
     <task id="LOCAL-00007" summary="documentation">
       <created>1550569764390</created>
@@ -612,7 +596,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604154332631</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="all tests running but todo.html not showing its values">
+      <created>1604158658395</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1604158658395</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -647,7 +638,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="refactored xf-form; implemented basic setvalue action" />
     <MESSAGE value="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties" />
     <MESSAGE value="new sample for select control;&#10;filtering controls from bound elements (ignoring actions which also have a 'bind');&#10;listening for select changes;" />
     <MESSAGE value="extracted initialization code to xf-bound;&#10;fixed model-data processing;&#10;initialization now differenciates between native controls and web components;&#10;xf-output now extends xf-bound" />
@@ -672,7 +662,8 @@
     <MESSAGE value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
     <MESSAGE value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
     <MESSAGE value="refactoring of lazy modelItem creation complete: functions moved to xf-bind;" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring of lazy modelItem creation complete: functions moved to xf-bind;" />
+    <MESSAGE value="all tests running but todo.html not showing its values" />
+    <option name="LAST_COMMIT_MESSAGE" value="all tests running but todo.html not showing its values" />
   </component>
   <component name="WindowStateProjectService">
     <state x="-1031" y="434" key="#ESLint" timestamp="1604148313177">
@@ -683,10 +674,15 @@
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog" timestamp="1604154005497">
+    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog" timestamp="1604309264914">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
-    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604154005497" />
+    <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604309264914" />
+    <state x="-1620" y="-53" width="1520" height="1217" maximized="true" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1604172300463" />
+    <state x="-1698" y="196" key="RollbackChangesDialog" timestamp="1604169209475">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1698" y="196" key="RollbackChangesDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604169209475" />
     <state x="-2097" y="82" key="SettingsEditor" timestamp="1601461547197">
       <screen x="-2560" y="-176" width="2560" height="1417" />
     </state>
@@ -695,14 +691,18 @@
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
     <state width="625" height="500" key="SwitcherDM/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604146490429" />
-    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2" timestamp="1604154335307">
+    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2" timestamp="1604158660285">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
-    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604154335307" />
-    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1603819984511">
+    <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
+    <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1604331294022">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
-    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603819984511" />
+    <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604331294022" />
+    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604171970715">
+      <screen x="-3440" y="-153" width="3440" height="1417" />
+    </state>
+    <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604171970712" />
     <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604145757344">
       <screen x="-3440" y="-153" width="3440" height="1417" />
     </state>
@@ -721,7 +721,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
-          <line>46</line>
+          <line>38</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

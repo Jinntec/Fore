@@ -278,7 +278,9 @@ describe('initialize repeat', () => {
         expect(inputs.length).to.equal(2);
         console.log('inputs ', inputs);
         expect(inputs[0].getAttribute('value')).to.equal('Pick up Milk');
+        expect(inputs[0].value).to.equal('Pick up Milk');
         expect(inputs[1].getAttribute('value')).to.equal('Make tutorial part 1');
+        expect(inputs[1].value).to.equal('Make tutorial part 1');
 
     });
 
@@ -383,6 +385,8 @@ describe('initialize repeat', () => {
         const rItems = repeat.querySelectorAll('xf-repeatitem');
         console.log('xf-repeat ', repeat);
         expect(rItems.length).to.equal(3);
+
+
         // expect(repeat.getModelItem()).to.equal(null);
 
 

@@ -54,9 +54,8 @@ export default class XfAbstractControl extends BoundElement {
         this.control = this.shadowRoot.querySelector('#control');
 
         const currentVal = this.value;
-        // console.log('current val ',currentVal);
-        // super.refresh();
 
+        // if(this.repeated) return ;
         if(this.isNotBound()) return;
 
         this.evalInContext();

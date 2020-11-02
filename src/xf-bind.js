@@ -296,7 +296,7 @@ export class XfBind extends ForeElement {
 
 
         const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
-        console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+        // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
         model.registerModelItem(mi);
         return mi;
     }

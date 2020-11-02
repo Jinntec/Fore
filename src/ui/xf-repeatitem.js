@@ -22,12 +22,6 @@ export class XfRepeatitem extends XfContainer{
         `;
     }
 
-    render() {
-        return html`
-          <slot></slot>
-        `;
-    }
-
     static get properties() {
         return {
             index:{
@@ -42,10 +36,10 @@ export class XfRepeatitem extends XfContainer{
 
     init(){
         console.log('repeatitem init model ', this.nodeset);
-        this.initializeChildren(this);
+        this._initializeChildren(this);
     }
 
-    initializeChildren(node) {
+    _initializeChildren(node) {
         const children = Array.from(node.children);
         console.log('_initializeChildren ', children);
 
@@ -71,11 +65,12 @@ export class XfRepeatitem extends XfContainer{
             bubbles: true,
             detail: {item: this}
         }));
-        // this.init();
+        this.init();
     }
 
     updated(_changedProperties) {
         super.updated(_changedProperties);
+
 /*
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
@@ -86,11 +81,11 @@ export class XfRepeatitem extends XfContainer{
     }
 
 /*
-    refresh(){
-        this.evalInContext();
-        this.modelItem = this.getModelItem();
-
-        Fore.refreshChildren(children);
+    async refresh(){
+        console.log('refresh repeatitem: ',this.nodeset);
+        super.refresh();
+        await this.updateComplete;
+        // Fore.refreshChildren(children);
         // this.requestUpdate();
     }
 */
@@ -114,15 +109,13 @@ export class XfRepeatitem extends XfContainer{
 
 
 
-/*
     createRenderRoot() {
-        /!**
+        /**
          * Render template without shadow DOM. Note that shadow DOM features like
          * encapsulated CSS and slots are unavailable.
-         *!/
+         */
         return this;
     }
-*/
 
 }
 
