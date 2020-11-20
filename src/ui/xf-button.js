@@ -34,7 +34,7 @@ class XfButton extends XfAbstractControl {
 
     render() {
         return html`
-           <paper-button @click="${this.performActions}" raised>${this.label}</paper-button>
+           <paper-button id="control" @click="${this.performActions}" raised>${this.label}</paper-button>
            <slot></slot>         
         `;
     }

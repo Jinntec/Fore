@@ -93,7 +93,19 @@ export class BoundElement extends ForeElement {
                 }
         */
 
-        const existed = this.getModel().getModelItem(this.nodeset);
+        let repeated = this.closest('xf-repeatitem');
+        let existed;
+        if(repeated){
+            const index = this.closest('xf-repeatitem').index;
+            if(Array.isArray(this.nodeset)){
+                existed = this.getModel().getModelItem(this.nodeset[index-1]);
+            }else {
+                existed = this.getModel().getModelItem(this.nodeset);
+            }
+        }else{
+            existed = this.getModel().getModelItem(this.nodeset);
+        }
+
         if(!existed){
             // if(existed === undefined){
             console.log('does not exist ', this.nodeset);

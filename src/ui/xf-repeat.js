@@ -26,45 +26,6 @@ export class XfRepeat extends XfContainer {
         `;
     }
 
-
-    render() {
-        return html`
-            ${repeat(
-            this.nodeset, // the array of items
-            item => item.node, // the identify function
-            (item, index) =>
-                html`
-                    <xf-repeatitem .nodeset="${item}" index="${index+1}" @repeatitem-created="${ (e) => this._doInit(e,index)}">
-                        ${this._getTemplate(item)}
-                    </xf-repeatitem>
-            ` // the template for each item
-        )}
-        `;
-    }
-
-    _getTemplate(item){
-        console.log('###### getTemplate() ')
-/*
-        await item.updateComplete.then({
-            this.template.content.cloneNode(true);
-        });
-*/
-
-        const cloned = this.template.content.cloneNode(true);
-        // console.log('cloned: ', cloned.content);
-        // return html`${cloned}`;
-        return cloned;
-    }
-
-    _doInit(e,index){
-        console.log('_doInit ', e.detail.item);
-        console.log('_doInit ', index);
-        const rItem = e.detail.item;
-        // console.log('_doInit passing nodeset',rItem.nodeset);
-        rItem.init();
-        // rItem.refresh();
-    }
-
     static get properties() {
         return {
             ... super.properties,
@@ -99,7 +60,7 @@ export class XfRepeat extends XfContainer {
         this.nodeset = [];
         this.inited = false;
 
-        this.template = this.firstElementChild;
+        // this.template = this.firstElementChild;
         // this.addEventListener('repeatitem-created', this._refreshItem)
 
     }
@@ -130,7 +91,8 @@ export class XfRepeat extends XfContainer {
             }));
         }
 
-        // this._initRepeatItems();
+        this._initTemplate();
+        this._initRepeatItems();
 
         this.inited = true;
     }
@@ -148,16 +110,117 @@ export class XfRepeat extends XfContainer {
      * repeat has no own modelItems
      * @private
      */
-    refresh(){
+    _refresh(){
         console.log('repeat refresh ');
         // await this.updateComplete;
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
+
+
+        const rItems = this.querySelectorAll('xf-repeatitem');
+
+
+        // this._initRepeatItems();
         Fore.refreshChildren(this);
         this.requestUpdate();
     }
 
+    refresh() {
+        console.group('xf-repeat.refresh');
+        if(!this.inited) return;
+        const inscope = this._inScopeContext();
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        console.log('repeat refresh nodeset ', this.nodeset);
+
+        // super.refresh();
+
+
+        console.log('REPEAT.refresh nodeset ', this.nodeset);
+        // this.requestUpdate();
+        //create n repeat-items for nodeset
+
+        //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
+
+
+        let repeatItems = this.querySelectorAll('xf-repeatitem');
+        const repeatItemCount = repeatItems.length;
+
+        let nodeCount = 1;
+        if(Array.isArray(this.nodeset)){
+            nodeCount = this.nodeset.length;
+        }
+
+        // const contextSize = this.nodeset.length;
+        const contextSize = nodeCount;
+        let modified = [];
+        if (contextSize < repeatItemCount){
+
+            for(let position = repeatItemCount; position > contextSize; position--){
+                //remove repeatitem
+                const itemToRemove = repeatItems[position -1];
+                itemToRemove.parentNode.removeChild(itemToRemove);
+                // modified.push(itemToRemove);
+            }
+
+            //todo: update index
+        }
+
+        if(contextSize > repeatItemCount){
+
+            for(let position = repeatItemCount +1; position <= contextSize; position++){
+                //add new repeatitem
+                const lastRepeatItem = repeatItems[repeatItemCount-1];
+                const newItem = lastRepeatItem.cloneNode(true);
+                newItem.nodeset = this.nodeset[position-1];
+                newItem.index = position;
+                this.appendChild(newItem);
+                modified.push(newItem);
+
+            }
+
+
+        }
+/*
+        if(modified.length > 0){
+            modified.forEach(mod => {
+                mod.refresh();
+            })
+        }
+
+        if(contextSize == repeatItemCount){
+            Fore.refreshChildren(this);
+        }
+*/
+        Fore.refreshChildren(this);
+
+        /*
+                if(repeatItems){
+                    repeatItems = this.querySelectorAll('xf-repeatitem');
+                    repeatItems.forEach(bound => {
+                        bound.refresh();
+                    });
+                }
+        */
+
+        console.groupEnd();
+    }
+
+
+    _initTemplate() {
+        // ### there must be a single 'template' child
+        this.template = this.firstElementChild;
+        console.log('### init template for repeat ', this.id , this.template);
+        if (this.template === null) {
+            // console.error('### no template found for this repeat:', this.id);
+            //todo: catch this on form element
+            this.dispatchEvent(new CustomEvent('no-template-error', {
+                composed: true,
+                bubbles: true,
+                detail: {"message": "no template found for repeat:" + this.id}
+            }));
+        }
+    }
 
 
 /* 
@@ -202,23 +265,22 @@ export class XfRepeat extends XfContainer {
 
     _initRepeatItems() {
         const model = this.getModel();
+
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
         console.log('repeat nodeset ', this.nodeset);
 
-        const repeatItems = this.querySelectorAll('xf-repeatitem');
-        Array.from(repeatItems).forEach(item => item.init(this.getModel()));
+        // const repeatItems = this.querySelectorAll('xf-repeatitem');
+        // Array.from(repeatItems).forEach(item => item.init(this.getModel()));
         //setting index to first
 
         this.itemTemplates = [];
+
+        this.textContent = '';
 
         // console.log('repeat ref ', this.ref);
         // console.log('repeat modelItems ', this.model.modelItems);
         // const modelItems = this.model.modelItems.filter(m => m.ref === this.ref);
         // console.log('repeat modelItems ', modelItems);
-
-                // this.nodeset = this.evalBinding();
-        const inscope = this._inScopeContext();
-        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
 
         this.nodeset.forEach((item, index) => {
 
@@ -233,13 +295,9 @@ export class XfRepeat extends XfContainer {
             const content = this.template.content.cloneNode(true);
             const clone = document.importNode(content, true);
 
-
-
             // console.log('clone ', clone);
             repeatItem.appendChild(clone);
-
             this.itemTemplates.push(html`repeatItem`);
-
             this.appendChild(repeatItem);
         });
 
@@ -259,13 +317,8 @@ export class XfRepeat extends XfContainer {
     }
 
     createRenderRoot() {
-        /**
-         * Render template without shadow DOM. Note that shadow DOM features like
-         * encapsulated CSS and slots are unavailable.
-         */
         return this;
     }
-
 }
 
 window.customElements.define('xf-repeat', XfRepeat);

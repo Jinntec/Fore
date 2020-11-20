@@ -26,17 +26,28 @@ export class XfRepeatitem extends XfContainer{
         return {
             index:{
                 type:Number
+            },
+            inited:{
+                type:Boolean
             }
         };
     }
 
     constructor(){
         super();
+        this.inited = false;
     }
 
     init(){
         console.log('repeatitem init model ', this.nodeset);
         this._initializeChildren(this);
+        this.inited = true;
+    }
+
+    getModelItem(){
+        super.getModelItem();
+        console.log('modelItem in repeatitem ', this.getModelItem()[this.index]);
+        return this.getModelItem()[this.index];
     }
 
     _initializeChildren(node) {
@@ -65,7 +76,7 @@ export class XfRepeatitem extends XfContainer{
             bubbles: true,
             detail: {item: this}
         }));
-        this.init();
+        // this.init();
     }
 
     updated(_changedProperties) {
@@ -80,16 +91,23 @@ export class XfRepeatitem extends XfContainer{
 */
     }
 
-/*
-    async refresh(){
+    refresh(){
         console.log('refresh repeatitem: ',this.nodeset);
+        if(!this.inited){
+            this.init();
+        }
         super.refresh();
-        await this.updateComplete;
-        // Fore.refreshChildren(children);
+        // await this.updateComplete;
+/*
+        this.evalInContext();
+        this.modelItem = this.getModelItem();
+
+        Fore.refreshChildren(children);
+*/
         // this.requestUpdate();
     }
-*/
 
+/*
     updateChildren(children){
         children.forEach(element => {
 
@@ -106,6 +124,7 @@ export class XfRepeatitem extends XfContainer{
         });
 
     }
+*/
 
 
 

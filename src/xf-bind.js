@@ -225,6 +225,9 @@ export class XfBind extends ForeElement {
     evalInContext(){
         const inscopeContext = this._inScopeContext();
 
+        //reset nodeset
+        this.nodeset=[];
+
         if(this.ref===''){
             this.nodeset = inscopeContext;
         }else if(Array.isArray(inscopeContext)){

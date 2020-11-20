@@ -44,16 +44,43 @@ class XfAppend extends XfAction {
         // console.log('append parent nodeset',this.nodeset[0].parentNode);
 
         const inscope = this._inScopeContext();
-        // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('append nodeset',this.nodeset);
 
 
         // const parentNodeset = this.nodeset[0].parentNode;
         // const last = this.nodeset[this.nodeset.length -1];
         const last = inscope.lastElementChild;
+        const originModelItem = this.getModel().getModelItem(last);
+
+
         console.log('last in nodeset',last);
+        console.log('modelItem for last',originModelItem);
+
+        //clone origin ModelItem
+        // const originClone = { ...originModelItem };
+        // console.log('cloned original ModelItem ', originClone);
 
         let newItem = last.cloneNode(true);
+        inscope.appendChild(newItem);
+
+        // originClone.node = newItem;
+
+        // const path = fx.evaluateXPath('path()',newItem);
+/*
+        const newModelItem = new ModelItem(
+                                           originModelItem.bind,
+                                           path,
+                                           originModelItem.readonly,
+                                           originModelItem.relevant,
+                                           originModelItem.required,
+                                           originModelItem.valid,
+                                           newItem);
+*/
+
+
+        // this.getModel().registerModelItem(newModelItem);
+        console.log('All modelItems in append - ', this.getModel().modelItems);
 
         // console.log('clear flag ', this.clear);
 
@@ -66,24 +93,24 @@ class XfAppend extends XfAction {
 
         }
 
-        inscope.appendChild(newItem);
-        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
-        console.log('new nodeset',this.nodeset);
-
+newItem.textContent="new";
 
         console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
 
         //todo: create modelItems as appropriate for newly inserted entry
-        const existed = this.getModel().getModelItem(this.nodeset);
-        if(!existed) {
-            XfBind.lazyCreateModelitems(this.getModel(), this.ref, newItem);
-        }
+        // const existed = this.getModel().getModelItem(this.nodeset);
+        // if(!existed) {
+        //     XfBind.lazyCreateModelitems(this.getModel(), this.ref, newItem);
+        // }
 
         this.needsRebuild=true;
         this.needsRecalculate=true;
         this.needsRevalidate=true;
         this.needsRefresh=true;
         this.actionPerformed();
+
+
+
 
         //always call superClass at the end of processing.
         // super.execute();

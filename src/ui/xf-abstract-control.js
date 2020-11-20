@@ -39,8 +39,9 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     firstUpdated(_changedProperties) {
-        // console.log('firstUpdated ', this);
-        this.control = this.shadowRoot.querySelector('#control');
+        console.log('AbstractControl firstUpdated ', this);
+        // this.control = this.shadowRoot.querySelector('#control');
+        // this.control = this.shadowRoot.getElementById('control');
     }
 
 
@@ -74,6 +75,13 @@ export default class XfAbstractControl extends BoundElement {
         this.handleModelItemProperties();
         this.requestUpdate();
     }
+
+/*
+    updated(){
+        super.updated();
+        this.handleModelItemProperties();
+    }
+*/
 
     handleModelItemProperties(){
         this.handleRequired();
@@ -170,8 +178,10 @@ export default class XfAbstractControl extends BoundElement {
 
     isRequired(){
         // if(this.control.required){
-        this.control = this.shadowRoot.querySelector('#control');
-
+        console.log('isRequired',this);
+        // this.control = this.shadowRoot.querySelector('#control');
+        this.control = this.shadowRoot.getElementById('control');
+        if(!this.control) return false;
         if(this.control.hasAttribute('required')){
             return true;
         }
