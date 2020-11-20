@@ -62,18 +62,16 @@ export default class XfAbstractControl extends BoundElement {
         this.evalInContext();
         if(this.isBound()){
             this.modelItem = this.getModelItem();
+            this.value = this.modelItem.value;
+
+            // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
+            // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
+            if(currentVal !== this.value){
+                this.dispatchEvent(new CustomEvent('value-changed', {}));
+            }
+            this.requestUpdate();
+            this.handleModelItemProperties();
         }
-
-        this.value = this.modelItem.value;
-
-        // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
-        // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        if(currentVal !== this.value){
-            this.dispatchEvent(new CustomEvent('value-changed', {}));
-        }
-
-        this.handleModelItemProperties();
-        this.requestUpdate();
     }
 
 /*
