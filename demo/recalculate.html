@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Recalculate</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        xf-input[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<xf-form>
+    <xf-message event="refresh-done">refresh has been done</xf-message>
+
+    <xf-model id="model1">
+        <xf-instance>
+            <data>
+                <a>A</a>
+                <b>B</b>
+                <c>C</c>
+            </data>
+        </xf-instance>
+        <xf-bind  ref="a" required="../b = 'B'"></xf-bind>
+        <xf-bind  ref="b" required="../c = 'C'"></xf-bind>
+        <xf-bind ref="c" valid="../a = 'B'"></xf-bind>
+
+
+    </xf-model>
+    <xf-group collapse="true">
+
+
+        <h1 class="{class}">
+            Recalculation
+            <xf-output id="output" ref="a"></xf-output>
+            <xf-output id="output" ref="b"></xf-output>
+            <xf-output id="output" ref="c"></xf-output>
+        </h1>
+
+        <xf-input label="A" ref="a"></xf-input>
+        <xf-input label="B" ref="b"></xf-input>
+
+
+        <xf-button label="set A to B">
+            <xf-setvalue ref="a" value="B"></xf-setvalue>
+        </xf-button>
+        <xf-button label="set A to A">
+            <xf-setvalue ref="a" value="A"></xf-setvalue>
+        </xf-button>
+    </xf-group>
+</xf-form>
+
+<script type="module" src="../src/app.js"></script>
+
+</body>
+</html>

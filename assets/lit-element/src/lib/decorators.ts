@@ -12,12 +12,20 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
+/*
+ * IMPORTANT: For compatibility with tsickle and the Closure JS compiler, all
+ * property decorators (but not class decorators) in this file that have
+ * an @ExportDecoratedItems annotation must be defined as a regular function,
+ * not an arrow function.
+ */
+
 import {LitElement} from '../lit-element.js';
 
 import {PropertyDeclaration, UpdatingElement} from './updating-element.js';
 
 export type Constructor<T> = {
-  new (...args: unknown[]): T
+  // tslint:disable-next-line:no-any
+  new (...args: any[]): T
 };
 
 // From the TC39 Decorators proposal
@@ -66,7 +74,16 @@ const standardCustomElement =
 /**
  * Class decorator factory that defines the decorated class as a custom element.
  *
- * @param tagName the name of the custom element to define
+ * ```
+ * @customElement('my-element')
+ * class MyElement {
+ *   render() {
+ *     return html``;
+ *   }
+ * }
+ * ```
+ * @category Decorator
+ * @param tagName The name of the custom element to define.
  */
 export const customElement = (tagName: string) =>
     (classOrDescriptor: Constructor<HTMLElement>|ClassDescriptor) =>
@@ -125,9 +142,20 @@ const legacyProperty =
 
 /**
  * A property decorator which creates a LitElement property which reflects a
- * corresponding attribute value. A `PropertyDeclaration` may optionally be
+ * corresponding attribute value. A [[`PropertyDeclaration`]] may optionally be
  * supplied to configure property features.
  *
+ * This decorator should only be used for public fields. Private or protected
+ * fields should use the [[`internalProperty`]] decorator.
+ *
+ * @example
+ * ```ts
+ * class MyElement {
+ *   @property({ type: Boolean })
+ *   clicked = false;
+ * }
+ * ```
+ * @category Decorator
  * @ExportDecoratedItems
  */
 export function property(options?: PropertyDeclaration) {
@@ -138,18 +166,129 @@ export function property(options?: PropertyDeclaration) {
       standardProperty(options!, protoOrDescriptor as ClassElement);
 }
 
+export interface InternalPropertyDeclaration<Type = unknown> {
+  /**
+   * A function that indicates if a property should be considered changed when
+   * it is set. The function should take the `newValue` and `oldValue` and
+   * return `true` if an update should be requested.
+   */
+  hasChanged?(value: Type, oldValue: Type): boolean;
+}
+
+/**
+ * Declares a private or protected property that still triggers updates to the
+ * element when it changes.
+ *
+ * Properties declared this way must not be used from HTML or HTML templating
+ * systems, they're solely for properties internal to the element. These
+ * properties may be renamed by optimization tools like closure compiler.
+ * @category Decorator
+ */
+export function internalProperty(options?: InternalPropertyDeclaration) {
+  return property({attribute: false, hasChanged: options?.hasChanged});
+}
+
 /**
  * A property decorator that converts a class property into a getter that
  * executes a querySelector on the element's renderRoot.
  *
- * @ExportDecoratedItems
+ * @param selector A DOMString containing one or more selectors to match.
+ * @param cache An optional boolean which when true performs the DOM query only
+ * once and caches the result.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+ *
+ * @example
+ *
+ * ```ts
+ * class MyElement {
+ *   @query('#first')
+ *   first;
+ *
+ *   render() {
+ *     return html`
+ *       <div id="first"></div>
+ *       <div id="second"></div>
+ *     `;
+ *   }
+ * }
+ * ```
+ * @category Decorator
  */
-export function query(selector: string) {
+export function query(selector: string, cache?: boolean) {
   return (protoOrDescriptor: Object|ClassElement,
           // tslint:disable-next-line:no-any decorator
           name?: PropertyKey): any => {
     const descriptor = {
       get(this: LitElement) {
+        return this.renderRoot.querySelector(selector);
+      },
+      enumerable: true,
+      configurable: true,
+    };
+    if (cache) {
+      const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
+      descriptor.get = function(this: LitElement) {
+        if ((this as unknown as
+             {[key: string]: Element | null})[key as string] === undefined) {
+          ((this as unknown as {[key: string]: Element | null})[key as string] =
+               this.renderRoot.querySelector(selector));
+        }
+        return (
+            this as unknown as {[key: string]: Element | null})[key as string];
+      };
+    }
+    return (name !== undefined) ?
+        legacyQuery(descriptor, protoOrDescriptor as Object, name) :
+        standardQuery(descriptor, protoOrDescriptor as ClassElement);
+  };
+}
+
+// Note, in the future, we may extend this decorator to support the use case
+// where the queried element may need to do work to become ready to interact
+// with (e.g. load some implementation code). If so, we might elect to
+// add a second argument defining a function that can be run to make the
+// queried element loaded/updated/ready.
+/**
+ * A property decorator that converts a class property into a getter that
+ * returns a promise that resolves to the result of a querySelector on the
+ * element's renderRoot done after the element's `updateComplete` promise
+ * resolves. When the queried property may change with element state, this
+ * decorator can be used instead of requiring users to await the
+ * `updateComplete` before accessing the property.
+ *
+ * @param selector A DOMString containing one or more selectors to match.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+ *
+ * @example
+ * ```ts
+ * class MyElement {
+ *   @queryAsync('#first')
+ *   first;
+ *
+ *   render() {
+ *     return html`
+ *       <div id="first"></div>
+ *       <div id="second"></div>
+ *     `;
+ *   }
+ * }
+ *
+ * // external usage
+ * async doSomethingWithFirst() {
+ *  (await aMyElement.first).doSomething();
+ * }
+ * ```
+ * @category Decorator
+ */
+export function queryAsync(selector: string) {
+  return (protoOrDescriptor: Object|ClassElement,
+          // tslint:disable-next-line:no-any decorator
+          name?: PropertyKey): any => {
+    const descriptor = {
+      async get(this: LitElement) {
+        await this.updateComplete;
         return this.renderRoot.querySelector(selector);
       },
       enumerable: true,
@@ -165,7 +304,26 @@ export function query(selector: string) {
  * A property decorator that converts a class property into a getter
  * that executes a querySelectorAll on the element's renderRoot.
  *
- * @ExportDecoratedItems
+ * @param selector A DOMString containing one or more selectors to match.
+ *
+ * See:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
+ *
+ * @example
+ * ```ts
+ * class MyElement {
+ *   @queryAll('div')
+ *   divs;
+ *
+ *   render() {
+ *     return html`
+ *       <div id="first"></div>
+ *       <div id="second"></div>
+ *     `;
+ *   }
+ * }
+ * ```
+ * @category Decorator
  */
 export function queryAll(selector: string) {
   return (protoOrDescriptor: Object|ClassElement,
@@ -218,37 +376,106 @@ const legacyEventOptions =
  * Adds event listener options to a method used as an event listener in a
  * lit-html template.
  *
- * @param options An object that specifis event listener options as accepted by
+ * @param options An object that specifies event listener options as accepted by
  * `EventTarget#addEventListener` and `EventTarget#removeEventListener`.
  *
  * Current browsers support the `capture`, `passive`, and `once` options. See:
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters
  *
  * @example
+ * ```ts
+ * class MyElement {
+ *   clicked = false;
  *
- *     class MyElement {
+ *   render() {
+ *     return html`
+ *       <div @click=${this._onClick}`>
+ *         <button></button>
+ *       </div>
+ *     `;
+ *   }
  *
- *       clicked = false;
- *
- *       render() {
- *         return html`<div @click=${this._onClick}`><button></button></div>`;
- *       }
- *
- *       @eventOptions({capture: true})
- *       _onClick(e) {
- *         this.clicked = true;
- *       }
- *     }
+ *   @eventOptions({capture: true})
+ *   _onClick(e) {
+ *     this.clicked = true;
+ *   }
+ * }
+ * ```
+ * @category Decorator
  */
-export const eventOptions = (options: AddEventListenerOptions) =>
-    // Return value typed as any to prevent TypeScript from complaining that
-    // standard decorator function signature does not match TypeScript decorator
-    // signature
-    // TODO(kschaaf): unclear why it was only failing on this decorator and not
-    // the others
-    ((protoOrDescriptor: Object|ClassElement, name?: string) =>
-         (name !== undefined) ?
-         legacyEventOptions(options, protoOrDescriptor as Object, name) :
-         standardEventOptions(options, protoOrDescriptor as ClassElement)) as
-        // tslint:disable-next-line:no-any decorator
-        any;
+export function eventOptions(options: AddEventListenerOptions) {
+  // Return value typed as any to prevent TypeScript from complaining that
+  // standard decorator function signature does not match TypeScript decorator
+  // signature
+  // TODO(kschaaf): unclear why it was only failing on this decorator and not
+  // the others
+  return ((protoOrDescriptor: Object|ClassElement, name?: string) =>
+              (name !== undefined) ?
+              legacyEventOptions(options, protoOrDescriptor as Object, name) :
+              standardEventOptions(
+                  options, protoOrDescriptor as ClassElement)) as
+             // tslint:disable-next-line:no-any decorator
+             any;
+}
+
+// x-browser support for matches
+// tslint:disable-next-line:no-any
+const ElementProto = Element.prototype as any;
+const legacyMatches =
+    ElementProto.msMatchesSelector || ElementProto.webkitMatchesSelector;
+
+/**
+ * A property decorator that converts a class property into a getter that
+ * returns the `assignedNodes` of the given named `slot`. Note, the type of
+ * this property should be annotated as `NodeListOf<HTMLElement>`.
+ *
+ * @param slotName A string name of the slot.
+ * @param flatten A boolean which when true flattens the assigned nodes,
+ * meaning any assigned nodes that are slot elements are replaced with their
+ * assigned nodes.
+ * @param selector A string which filters the results to elements that match
+ * the given css selector.
+ *
+ * * @example
+ * ```ts
+ * class MyElement {
+ *   @queryAssignedNodes('list', true, '.item')
+ *   listItems;
+ *
+ *   render() {
+ *     return html`
+ *       <slot name="list"></slot>
+ *     `;
+ *   }
+ * }
+ * ```
+ * @category Decorator
+ */
+export function queryAssignedNodes(
+    slotName = '', flatten = false, selector = '') {
+  return (protoOrDescriptor: Object|ClassElement,
+          // tslint:disable-next-line:no-any decorator
+          name?: PropertyKey): any => {
+    const descriptor = {
+      get(this: LitElement) {
+        const slotSelector =
+            `slot${slotName ? `[name=${slotName}]` : ':not([name])'}`;
+        const slot = this.renderRoot.querySelector(slotSelector);
+        let nodes = slot && (slot as HTMLSlotElement).assignedNodes({flatten});
+        if (nodes && selector) {
+          nodes = nodes.filter(
+              (node) => node.nodeType === Node.ELEMENT_NODE &&
+                      (node as Element).matches ?
+                  (node as Element).matches(selector) :
+                  legacyMatches.call(node as Element, selector));
+        }
+        return nodes;
+      },
+      enumerable: true,
+      configurable: true,
+    };
+    return (name !== undefined) ?
+        legacyQuery(descriptor, protoOrDescriptor as Object, name) :
+        standardQuery(descriptor, protoOrDescriptor as ClassElement);
+  };
+}

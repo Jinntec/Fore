@@ -161,6 +161,10 @@ function maybeGatherAndSendStats() {
     value: function getUsedVaadinElements(elements) {
       var version = getPolymerVersion();
       var elementClasses = void 0;
+      // NOTE: In case you edit the code here, YOU MUST UPDATE any statistics reporting code in Flow.
+      // Check all locations calling the method getEntries() in
+      // https://github.com/vaadin/flow/blob/master/flow-server/src/main/java/com/vaadin/flow/internal/UsageStatistics.java#L106
+      // Currently it is only used by BootstrapHandler.
       if (version && version.indexOf('2') === 0) {
         // Polymer 2: components classes are stored in window.Vaadin
         elementClasses = Object.keys(window.Vaadin).map(function (c) {
@@ -370,7 +374,7 @@ function maybeGatherAndSendStats() {
   }, {
     key: 'lottery',
     value: function lottery() {
-      return Math.random() <= 0.05;
+      return true;
     }
   }, {
     key: 'currentMonth',
@@ -424,7 +428,7 @@ function maybeGatherAndSendStats() {
   }], [{
     key: 'version',
     get: function get$1() {
-      return '2.0.10';
+      return '2.1.0';
     }
   }, {
     key: 'firstUseKey',

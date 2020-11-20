@@ -1,31 +1,13 @@
 {
-  "_from": "@vaadin/vaadin-usage-statistics@^2.0.4",
-  "_id": "@vaadin/vaadin-usage-statistics@2.0.11",
-  "_inBundle": false,
-  "_integrity": "sha512-6isKfOQnb6BSj181nehId4w8SOUKDLNcNza1RKdiNGgnOlqjZx/p4+FbJS9PQ4q0lwP1/TQa3Vx7SAWdoVfNOQ==",
-  "_location": "/@vaadin/vaadin-usage-statistics",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@vaadin/vaadin-usage-statistics@^2.0.4",
-    "name": "@vaadin/vaadin-usage-statistics",
-    "escapedName": "@vaadin%2fvaadin-usage-statistics",
-    "scope": "@vaadin",
-    "rawSpec": "^2.0.4",
-    "saveSpec": null,
-    "fetchSpec": "^2.0.4"
+  "description": "Gathers usage statistics for components used during application development",
+  "repository": "vaadin/vaadin-usage-statistics",
+  "homepage": "https://github.com/vaadin/vaadin-usage-statistics#readme",
+  "name": "@vaadin/vaadin-usage-statistics",
+  "version": "2.1.0",
+  "directories": {
+    "test": "test"
   },
-  "_requiredBy": [
-    "/@vaadin/vaadin-element-mixin"
-  ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-usage-statistics/-/vaadin-usage-statistics-2.0.11.tgz",
-  "_shasum": "6712d389089f248d2865ed2d74c665103b354378",
-  "_spec": "@vaadin/vaadin-usage-statistics@^2.0.4",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@vaadin/vaadin-element-mixin",
-  "author": {
-    "name": "Vaadin Ltd"
-  },
+  "main": "vaadin-usage-statistics.js",
   "browserslist": [
     "last 2 Chrome major versions",
     "last 2 Android major versions",
@@ -37,34 +19,20 @@
     "iOS 9",
     "IE 11"
   ],
-  "bugs": {
-    "url": "https://github.com/vaadin/vaadin-usage-statistics/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "@vaadin/vaadin-development-mode-detector": "^2.0.0"
-  },
-  "deprecated": false,
-  "description": "Gathers usage statistics for components used during application development",
-  "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "wct-browser-legacy": "^1.0.1"
-  },
-  "directories": {
-    "test": "test"
-  },
   "files": [
     "vaadin-usage-statistics-collect.js",
     "vaadin-usage-statistics-optout.js",
     "check.js"
   ],
-  "homepage": "https://github.com/vaadin/vaadin-usage-statistics#readme",
+  "author": "Vaadin Ltd",
   "license": "Apache-2.0",
-  "main": "vaadin-usage-statistics.js",
-  "name": "@vaadin/vaadin-usage-statistics",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vaadin/vaadin-usage-statistics.git"
+"scripts": {
+"postinstall": "node check.js",
+"disable": "npm config set @vaadin/vaadin-usage-statistics:disabled true && npm run postinstall",
+"enable": "npm config set @vaadin/vaadin-usage-statistics:disabled false && npm run postinstall"
+},
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-usage-statistics/issues"
   },
   "resolutions": {
     "inherits": "2.0.3",
@@ -72,10 +40,11 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "scripts": {
-    "disable": "npm config set @vaadin/vaadin-usage-statistics:disabled true && npm run postinstall",
-    "enable": "npm config set @vaadin/vaadin-usage-statistics:disabled false && npm run postinstall",
-    "postinstall": "node check.js"
+  "dependencies": {
+    "@vaadin/vaadin-development-mode-detector": "^2.0.0"
   },
-  "version": "2.0.11"
+  "devDependencies": {
+    "wct-browser-legacy": "^1.0.1",
+    "@webcomponents/webcomponentsjs": "^2.0.0"
+  }
 }

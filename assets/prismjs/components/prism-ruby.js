@@ -3,7 +3,7 @@
  * Original by Samuel Flores
  *
  * Adds the following new token classes:
- * 		constant, builtin, variable, symbol, regex
+ *     constant, builtin, variable, symbol, regex
  */
 (function (Prism) {
 	Prism.languages.ruby = Prism.languages.extend('clike', {
@@ -11,7 +11,14 @@
 			pattern: /^=begin\s[\s\S]*?^=end/m,
 			greedy: true
 		}],
-		'keyword': /\b(?:alias|and|BEGIN|begin|break|case|class|def|define_method|defined|do|each|else|elsif|END|end|ensure|false|for|if|in|module|new|next|nil|not|or|protected|private|public|raise|redo|require|rescue|retry|return|self|super|then|throw|true|undef|unless|until|when|while|yield)\b/
+		'class-name': {
+			pattern: /(\b(?:class)\s+|\bcatch\s+\()[\w.\\]+/i,
+			lookbehind: true,
+			inside: {
+				'punctuation': /[.\\]/
+			}
+		},
+		'keyword': /\b(?:alias|and|BEGIN|begin|break|case|class|def|define_method|defined|do|each|else|elsif|END|end|ensure|extend|for|if|in|include|module|new|next|nil|not|or|prepend|protected|private|public|raise|redo|require|rescue|retry|return|self|super|then|throw|undef|unless|until|when|while|yield)\b/
 	});
 
 	var interpolation = {
@@ -29,38 +36,15 @@
 
 	Prism.languages.insertBefore('ruby', 'keyword', {
 		'regex': [{
-			pattern: /%r([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1[gim]{0,3}/,
-			greedy: true,
-			inside: {
-				'interpolation': interpolation
-			}
-		}, {
-			pattern: /%r\((?:[^()\\]|\\[\s\S])*\)[gim]{0,3}/,
-			greedy: true,
-			inside: {
-				'interpolation': interpolation
-			}
-		}, {
+			pattern: RegExp(/%r/.source + '(?:' + [/([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1[gim]{0,3}/.source, /\((?:[^()\\]|\\[\s\S])*\)[gim]{0,3}/.source,
 			// Here we need to specifically allow interpolation
-			pattern: /%r\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}[gim]{0,3}/,
+			/\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}[gim]{0,3}/.source, /\[(?:[^\[\]\\]|\\[\s\S])*\][gim]{0,3}/.source, /<(?:[^<>\\]|\\[\s\S])*>[gim]{0,3}/.source].join('|') + ')'),
 			greedy: true,
 			inside: {
 				'interpolation': interpolation
 			}
 		}, {
-			pattern: /%r\[(?:[^\[\]\\]|\\[\s\S])*\][gim]{0,3}/,
-			greedy: true,
-			inside: {
-				'interpolation': interpolation
-			}
-		}, {
-			pattern: /%r<(?:[^<>\\]|\\[\s\S])*>[gim]{0,3}/,
-			greedy: true,
-			inside: {
-				'interpolation': interpolation
-			}
-		}, {
-			pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\\\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/,
+			pattern: /(^|[^/])\/(?!\/)(?:\[[^\r\n\]]+\]|\\.|[^[/\\\r\n])+\/[gim]{0,3}(?=\s*(?:$|[\r\n,.;})]))/,
 			lookbehind: true,
 			greedy: true
 		}],
@@ -85,32 +69,9 @@
 	});
 
 	Prism.languages.ruby.string = [{
-		pattern: /%[qQiIwWxs]?([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1/,
-		greedy: true,
-		inside: {
-			'interpolation': interpolation
-		}
-	}, {
-		pattern: /%[qQiIwWxs]?\((?:[^()\\]|\\[\s\S])*\)/,
-		greedy: true,
-		inside: {
-			'interpolation': interpolation
-		}
-	}, {
+		pattern: RegExp(/%[qQiIwWxs]?/.source + '(?:' + [/([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1/.source, /\((?:[^()\\]|\\[\s\S])*\)/.source,
 		// Here we need to specifically allow interpolation
-		pattern: /%[qQiIwWxs]?\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}/,
-		greedy: true,
-		inside: {
-			'interpolation': interpolation
-		}
-	}, {
-		pattern: /%[qQiIwWxs]?\[(?:[^\[\]\\]|\\[\s\S])*\]/,
-		greedy: true,
-		inside: {
-			'interpolation': interpolation
-		}
-	}, {
-		pattern: /%[qQiIwWxs]?<(?:[^<>\\]|\\[\s\S])*>/,
+		/\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}/.source, /\[(?:[^\[\]\\]|\\[\s\S])*\]/.source, /<(?:[^<>\\]|\\[\s\S])*>/.source].join('|') + ')'),
 		greedy: true,
 		inside: {
 			'interpolation': interpolation

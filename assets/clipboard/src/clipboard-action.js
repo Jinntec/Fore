@@ -136,7 +136,7 @@ class ClipboardAction {
         if (this.trigger) {
             this.trigger.focus();
         }
-
+        document.activeElement.blur();
         window.getSelection().removeAllRanges();
     }
 
@@ -199,4 +199,4 @@ class ClipboardAction {
     }
 }
 
-module.exports = ClipboardAction;
+export default ClipboardAction;

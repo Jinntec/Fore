@@ -9,7 +9,10 @@ found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
 part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
 */
-export const supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype;
+/**
+ * Whether the current browser supports `adoptedStyleSheets`.
+ */
+export const supportsAdoptingStyleSheets = window.ShadowRoot && (window.ShadyCSS === undefined || window.ShadyCSS.nativeShadow) && 'adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype;
 const constructionToken = Symbol();
 export class CSSResult {
     constructor(cssText, safeToken) {
@@ -22,8 +25,8 @@ export class CSSResult {
     // stylesheets are not created until the first element instance is made.
     get styleSheet() {
         if (this._styleSheet === undefined) {
-            // Note, if `adoptedStyleSheets` is supported then we assume CSSStyleSheet
-            // is constructable.
+            // Note, if `supportsAdoptingStyleSheets` is true then we assume
+            // CSSStyleSheet is constructable.
             if (supportsAdoptingStyleSheets) {
                 this._styleSheet = new CSSStyleSheet();
                 this._styleSheet.replaceSync(this.cssText);
@@ -38,7 +41,7 @@ export class CSSResult {
     }
 }
 /**
- * Wrap a value for interpolation in a css tagged template literal.
+ * Wrap a value for interpolation in a [[`css`]] tagged template literal.
  *
  * This is unsafe because untrusted CSS text can be used to phone home
  * or exfiltrate data to an attacker controlled site. Take care to only use
@@ -58,10 +61,10 @@ const textFromCSSResult = value => {
     }
 };
 /**
- * Template tag which which can be used with LitElement's `style` property to
- * set element styles. For security reasons, only literal string values may be
- * used. To incorporate non-literal values `unsafeCSS` may be used inside a
- * template string part.
+ * Template tag which which can be used with LitElement's [[LitElement.styles |
+ * `styles`]] property to set element styles. For security reasons, only literal
+ * string values may be used. To incorporate non-literal values [[`unsafeCSS`]]
+ * may be used inside a template string part.
  */
 export const css = (strings, ...values) => {
     const cssText = values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);

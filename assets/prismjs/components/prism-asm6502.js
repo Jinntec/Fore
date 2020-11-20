@@ -11,15 +11,15 @@ Prism.languages.asm6502 = {
 		alias: 'property'
 	},
 	'hexnumber': {
-		pattern: /#?\$[\da-f]{2,4}/i,
+		pattern: /#?\$[\da-f]{2,4}\b/i,
 		alias: 'string'
 	},
 	'binarynumber': {
-		pattern: /#?%[01]+/,
+		pattern: /#?%[01]+\b/,
 		alias: 'string'
 	},
 	'decimalnumber': {
-		pattern: /#?\d+/,
+		pattern: /#?\b\d+\b/,
 		alias: 'string'
 	},
 	'register': {

@@ -14,9 +14,7 @@
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-dialog": "^3.0.1",
-    "@polymer/paper-dropdown-menu": "github:PolymerElements/paper-dropdown-menu",
     "@polymer/paper-item": "^3.0.1",
-    "@polymer/paper-listbox": "github:PolymerElements/paper-listbox",
     "@polymer/paper-toast": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
     "@vaadin/vaadin-combo-box": "^5.0.3",
@@ -28,8 +26,8 @@
     "slimdom": "^2.3.2"
   },
   "devDependencies": {
+    "@0xcda7a/empathy": "0.0.9",
     "@open-wc/building-rollup": "^0.21.0",
-    "@open-wc/demoing-storybook": "^1.0.1",
     "@open-wc/eslint-config": "^2.0.0",
     "@open-wc/prettier-config": "^0.1.10",
     "@open-wc/testing": "^2.0.0",
@@ -46,8 +44,7 @@
     "mocha": "^7.0.1",
     "rimraf": "^2.6.3",
     "rollup": "^1.15.4",
-    "typescript": "^3.7.5",
-    "@0xcda7a/empathy": "0.0.9"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "test": "karma start --coverage",
@@ -62,8 +59,6 @@
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:bs": "karma start karma.bs.config.js --coverage",
-    "storybook": "start-storybook --node-resolve --watch --open",
-    "storybook:build": "build-storybook",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",

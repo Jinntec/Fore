@@ -14,6 +14,8 @@ import {IronResizableBehavior} from '@polymer/iron-resizable-behavior/iron-resiz
 
 import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
+import {IronOverlayManagerClass} from './iron-overlay-manager.js';
+
 import {pushScrollLock, removeScrollLock} from './iron-scroll-manager.js';
 
 export {IronOverlayBehaviorImpl};

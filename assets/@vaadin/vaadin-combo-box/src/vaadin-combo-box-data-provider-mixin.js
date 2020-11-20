@@ -16,6 +16,8 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
 
       /**
        * Number of items fetched at a time from the dataprovider.
+       * @attr {number} page-size
+       * @type {number}
        */
       pageSize: {
         type: Number,
@@ -25,6 +27,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
 
       /**
        * Total number of items.
+       * @type {number | undefined}
        */
       size: {
         type: Number,
@@ -43,18 +46,21 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
        * `callback(items, size)` Callback function with arguments:
        *   - `items` Current page of items
        *   - `size` Total number of items.
+       * @type {ComboBoxDataProvider | undefined}
        */
       dataProvider: {
         type: Object,
         observer: '_dataProviderChanged'
       },
 
+      /** @private */
       _pendingRequests: {
         value: () => {
           return {};
         }
       },
 
+      /** @private */
       __placeHolder: {
         value: new ComboBoxPlaceholder()
       }
@@ -66,10 +72,11 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     return ['_dataProviderFilterChanged(filter, dataProvider)', '_dataProviderClearFilter(dataProvider, opened, value)', '_warnDataProviderValue(dataProvider, value)', '_ensureFirstPage(opened)'];
   }
 
+  /** @private */
   _dataProviderClearFilter(dataProvider, opened, value) {
-    // Can't depend on filter in this obsever as we don't want
+    // Can't depend on filter in this observer as we don't want
     // to clear the filter whenever it's set
-    if (dataProvider && this.filter) {
+    if (dataProvider && !this.loading && this.filter) {
       this.size = undefined;
       this._pendingRequests = {};
       this.filter = '';
@@ -77,6 +84,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     }
   }
 
+  /** @protected */
   ready() {
     super.ready();
     this.clearCache();
@@ -91,20 +99,35 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     });
   }
 
+  /** @private */
   _dataProviderFilterChanged() {
-    if (this.dataProvider && this.opened) {
-      this.size = undefined;
-      this._pendingRequests = {};
-      this.clearCache();
+    if (!this._shouldFetchData()) {
+      return;
     }
+
+    this.size = undefined;
+    this._pendingRequests = {};
+    this.clearCache();
   }
 
+  /** @private */
+  _shouldFetchData() {
+
+    if (!this.dataProvider) {
+      return false;
+    }
+
+    return this.opened || this.filter && this.filter.length;
+  }
+
+  /** @private */
   _ensureFirstPage(opened) {
     if (opened && this._shouldLoadPage(0)) {
       this._loadPage(0);
     }
   }
 
+  /** @private */
   _shouldLoadPage(page) {
     if (!this.filteredItems || this._forceNextRequest) {
       this._forceNextRequest = false;
@@ -119,6 +142,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     }
   }
 
+  /** @private */
   _loadPage(page) {
     // make sure same page isn't requested multiple times.
     if (!this._pendingRequests[page] && this.dataProvider) {
@@ -143,6 +167,9 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
           if (this._isValidValue(this.value) && this._getItemValue(this.selectedItem) !== this.value) {
             this._selectItemForValue(this.value);
           }
+          if (!this.opened && !this.hasAttribute('focused')) {
+            this._commitValue();
+          }
           this.size = size;
 
           delete this._pendingRequests[page];
@@ -161,6 +188,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     }
   }
 
+  /** @private */
   _getPageForIndex(index) {
     return Math.floor(index / this.pageSize);
   }
@@ -178,21 +206,27 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
       filteredItems.push(this.__placeHolder);
     }
     this.filteredItems = filteredItems;
-    if (this.opened) {
+    if (this._shouldFetchData()) {
       this._loadPage(0);
     } else {
       this._forceNextRequest = true;
     }
   }
 
+  /** @private */
   _sizeChanged(size = 0) {
     const filteredItems = (this.filteredItems || []).slice(0, size);
     for (let i = 0; i < size; i++) {
       filteredItems[i] = filteredItems[i] !== undefined ? filteredItems[i] : this.__placeHolder;
     }
     this.filteredItems = filteredItems;
+
+    // Cleans up the redundant pending requests for pages > size
+    // Refers to https://github.com/vaadin/vaadin-flow-components/issues/229
+    this._flushPendingRequests(size);
   }
 
+  /** @private */
   _pageSizeChanged(pageSize, oldPageSize) {
     if (Math.floor(pageSize) !== pageSize || pageSize < 1) {
       this.pageSize = oldPageSize;
@@ -201,12 +235,14 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     this.clearCache();
   }
 
+  /** @private */
   _dataProviderChanged(dataProvider, oldDataProvider) {
     this._ensureItemsOrDataProvider(() => {
       this.dataProvider = oldDataProvider;
     });
   }
 
+  /** @private */
   _ensureItemsOrDataProvider(restoreOldValueCallback) {
     if (this.items !== undefined && this.dataProvider !== undefined) {
       restoreOldValueCallback();
@@ -216,6 +252,7 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     }
   }
 
+  /** @private */
   _warnDataProviderValue(dataProvider, value) {
     if (dataProvider && value !== '' && (this.selectedItem === undefined || this.selectedItem === null)) {
       const valueIndex = this._indexOfValue(value, this.filteredItems);
@@ -223,6 +260,32 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
         /* eslint-disable no-console */
         console.warn('Warning: unable to determine the label for the provided `value`. ' + 'Nothing to display in the text field. This usually happens when ' + 'setting an initial `value` before any items are returned from ' + 'the `dataProvider` callback. Consider setting `selectedItem` ' + 'instead of `value`');
         /* eslint-enable no-console */
+      }
+    }
+  }
+
+  /**
+   * This method cleans up the page callbacks which refers to the
+   * non-existing pages, i.e. which item indexes are greater than the
+   * changed size.
+   * This case is basically happens when:
+   * 1. Users scroll fast to the bottom and combo box generates the
+   * redundant page request/callback
+   * 2. Server side uses undefined size lazy loading and suddenly reaches
+   * the exact size which is on the range edge
+   * (for default page size = 50, it will be 100, 200, 300, ...).
+   * @param size the new size of items
+   * @private
+   */
+  _flushPendingRequests(size) {
+    if (this._pendingRequests) {
+      const lastPage = Math.ceil(size / this.pageSize);
+      const pendingRequestsKeys = Object.keys(this._pendingRequests);
+      for (let reqIdx = 0; reqIdx < pendingRequestsKeys.length; reqIdx++) {
+        const page = parseInt(pendingRequestsKeys[reqIdx]);
+        if (page >= lastPage) {
+          this._pendingRequests[page]([], size);
+        }
       }
     }
   }

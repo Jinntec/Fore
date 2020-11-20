@@ -23,6 +23,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     return {
       /**
        * True if the dropdown is open, false otherwise.
+       * @type {boolean}
        */
       opened: {
         type: Boolean,
@@ -33,7 +34,14 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
       },
 
       /**
+       * Set true to prevent the overlay from opening automatically.
+       * @attr {boolean} auto-open-disabled
+       */
+      autoOpenDisabled: Boolean,
+
+      /**
        * Set to true to disable this element.
+       * @type {boolean}
        */
       disabled: {
         type: Boolean,
@@ -43,6 +51,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
       /**
        * When present, it specifies that the element field is read-only.
+       * @type {boolean}
        */
       readonly: {
         type: Boolean,
@@ -60,12 +69,14 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        *   item, contains:
        *   - `model.index` The index of the rendered item.
        *   - `model.item` The item.
+       * @type {ComboBoxRenderer | undefined}
        */
       renderer: Function,
 
       /**
        * A full set of items to filter the visible options from.
        * The items can be of either `String` or `Object` type.
+       * @type {!Array<!ComboBoxItem | string> | undefined}
        */
       items: {
         type: Array,
@@ -77,6 +88,8 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        * `value` property will be set to the input value in this case.
        * Also, when `value` is set programmatically, the input value will be set
        * to reflect that value.
+       * @attr {boolean} allow-custom-value
+       * @type {boolean}
        */
       allowCustomValue: {
         type: Boolean,
@@ -87,6 +100,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        * A subset of items, filtered based on the user input. Filtered items
        * can be assigned directly to omit the internal filtering functionality.
        * The items can be of either `String` or `Object` type.
+       * @type {!Array<!ComboBoxItem | string> | undefined}
        */
       filteredItems: {
         type: Array
@@ -100,6 +114,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        *
        * Use `selectedItem` property to get the raw selected item from
        * the `items` array.
+       * @type {string}
        */
       value: {
         type: String,
@@ -110,11 +125,13 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
       /**
        * Used to detect user value changes and fire `change` events.
+       * @private
        */
       _lastCommittedValue: String,
 
-      /*
+      /**
        * When set to `true`, "loading" attribute is added to host and the overlay element.
+       * @type {boolean}
        */
       loading: {
         type: Boolean,
@@ -122,6 +139,10 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
         reflectToAttribute: true
       },
 
+      /**
+       * @type {number}
+       * @protected
+       */
       _focusedIndex: {
         type: Number,
         value: -1
@@ -129,6 +150,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
       /**
        * Filtering string the user has typed into the input field.
+       * @type {string}
        */
       filter: {
         type: String,
@@ -138,6 +160,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
       /**
        * The selected item from the `items` array.
+       * @type {ComboBoxItem | string | undefined}
        */
       selectedItem: {
         type: Object,
@@ -154,6 +177,8 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        *
        * When using item templates, the property is still needed because it is used
        * for filtering, and for displaying the selected item value in the input box.
+       * @attr {string} item-label-path
+       * @type {string}
        */
       itemLabelPath: {
         type: String,
@@ -168,6 +193,8 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        *
        * The item value is used in the `value` property of the combo box,
        * to provide the form value.
+       * @attr {string} item-value-path
+       * @type {string}
        */
       itemValuePath: {
         type: String,
@@ -179,6 +206,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
        * the `itemIdPath` is used to compare and identify the same item
        * in `selectedItem` and `filteredItems` (items given by the
        * `dataProvider` callback).
+       * @attr {string} item-id-path
        */
       itemIdPath: String,
 
@@ -191,6 +219,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
       /**
        * Set to true if the value is invalid.
+       * @type {boolean}
        */
       invalid: {
         type: Boolean,
@@ -199,15 +228,28 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
         value: false
       },
 
+      /**
+       * @type {!HTMLElement | undefined}
+       * @protected
+       */
       _toggleElement: Object,
+
+      /**
+       * @type {!HTMLElement | undefined}
+       * @protected
+       */
       _clearElement: Object,
 
+      /** @protected */
       _inputElementValue: String,
 
+      /** @private */
       _closeOnBlurIsPrevented: Boolean,
 
+      /** @private */
       _previousDocumentPointerEvents: String,
 
+      /** @private */
       _itemTemplate: Object
     };
   }
@@ -228,6 +270,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._boundOnTouchend = this._onTouchend.bind(this);
   }
 
+  /** @protected */
   ready() {
     super.ready();
 
@@ -251,6 +294,20 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._observer = new FlattenedNodesObserver(this, info => {
       this._setTemplateFromNodes(info.addedNodes);
     });
+
+    const bringToFrontListener = e => {
+      const overlay = this.$.overlay;
+      const dropdown = overlay && overlay.$.dropdown;
+      // Check dropdown.$ because overlay is lazily instantiated
+      if (dropdown && dropdown.$ && this.$.overlay.$.dropdown.$.overlay.bringToFront) {
+        requestAnimationFrame(() => {
+          dropdown.$.overlay.bringToFront();
+        });
+      }
+    };
+
+    this.addEventListener('mousedown', bringToFrontListener);
+    this.addEventListener('touchstart', bringToFrontListener);
   }
 
   /**
@@ -262,10 +319,12 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _setTemplateFromNodes(nodes) {
     this._itemTemplate = nodes.filter(node => node.localName && node.localName === 'template')[0] || this._itemTemplate;
   }
 
+  /** @private */
   _removeNewRendererOrTemplate(template, oldTemplate, renderer, oldRenderer) {
     if (template !== oldTemplate) {
       this._itemTemplate = undefined;
@@ -274,6 +333,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _templateOrRendererChanged(template, renderer) {
     if (template && renderer) {
       this._removeNewRendererOrTemplate(template, this._oldTemplate, renderer, this._oldRenderer);
@@ -301,6 +361,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this.opened = false;
   }
 
+  /** @private */
   _openedChanged(value, old) {
     // Prevent _close() being called when opened is set to its default value (false).
     if (old === undefined) {
@@ -321,6 +382,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _onOverlayTouchAction(event) {
     // On touch devices, blur the input on touch start inside the overlay, in order to hide
     // the virtual keyboard. But don't close the overlay on this blur.
@@ -329,6 +391,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._closeOnBlurIsPrevented = false;
   }
 
+  /** @private */
   _onClick(e) {
     this._closeOnBlurIsPrevented = true;
 
@@ -340,7 +403,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     } else if (path.indexOf(this.inputElement) !== -1) {
       if (path.indexOf(this._toggleElement) > -1 && this.opened) {
         this.close();
-      } else {
+      } else if (path.indexOf(this._toggleElement) > -1 || !this.autoOpenDisabled) {
         this.open();
       }
     }
@@ -350,8 +413,8 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
   /**
    * Keyboard navigation
+   * @private
    */
-
   _onKeyDown(e) {
     if (this._isEventKey(e, 'down')) {
       this._closeOnBlurIsPrevented = true;
@@ -374,14 +437,22 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
-  _isEventKey(e, k) {
-    return IronA11yKeysBehavior.keyboardEventMatchesKeys(e, k);
+  /**
+   * @param {!KeyboardEvent} event
+   * @param {string} key
+   * @return {boolean}
+   * @protected
+   */
+  _isEventKey(event, key) {
+    return IronA11yKeysBehavior.keyboardEventMatchesKeys(event, key);
   }
 
+  /** @private */
   _getItemLabel(item) {
     return this.$.overlay.getItemLabel(item);
   }
 
+  /** @private */
   _getItemValue(item) {
     let value = item && this.itemValuePath ? this.get(this.itemValuePath, item) : undefined;
     if (value === undefined) {
@@ -390,6 +461,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     return value;
   }
 
+  /** @private */
   _onArrowDown() {
     if (this.opened) {
       if (this.$.overlay._items) {
@@ -401,6 +473,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _onArrowUp() {
     if (this.opened) {
       if (this._focusedIndex > -1) {
@@ -417,6 +490,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _prefillFocusedItemLabel() {
     if (this._focusedIndex > -1) {
       // Reset the input value asyncronously to prevent partial value changes
@@ -430,6 +504,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _setSelectionRange(start, end) {
     // vaadin-text-field does not implement setSelectionRange, hence we need the native input
     const input = this._nativeInput || this.inputElement;
@@ -448,12 +523,14 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _markAllSelectionRange() {
     if (this._inputElementValue !== undefined) {
       this._setSelectionRange(0, this._inputElementValue.length);
     }
   }
 
+  /** @private */
   _clearSelectionRange() {
     if (this._inputElementValue !== undefined) {
       const pos = this._inputElementValue ? this._inputElementValue.length : 0;
@@ -461,11 +538,21 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
+  _closeOrCommit() {
+    if (!this.opened && !this.loading) {
+      this._commitValue();
+    } else {
+      this.close();
+    }
+  }
+
+  /** @private */
   _onEnter(e) {
     // should close on enter when custom values are allowed, input field is cleared, or when an existing
-    // item is focused with keyboard.
-    if (this.opened && (this.allowCustomValue || this._inputElementValue === '' || this._focusedIndex > -1)) {
-      this.close();
+    // item is focused with keyboard. If auto open is disabled, under the same conditions, commit value.
+    if ((this.opened || this.autoOpenDisabled) && (this.allowCustomValue || this._inputElementValue === '' || this._focusedIndex > -1)) {
+      this._closeOrCommit();
 
       // Do not submit the surrounding form.
       e.preventDefault();
@@ -475,8 +562,15 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /**
+   * @param {!KeyboardEvent} e
+   * @protected
+   */
   _onEscape(e) {
-    if (this.opened) {
+    if (this.autoOpenDisabled) {
+      this._focusedIndex = -1;
+      this.cancel();
+    } else if (this.opened) {
       this._stopPropagation(e);
 
       if (this._focusedIndex > -1) {
@@ -488,6 +582,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _toggleElementChanged(toggleElement) {
     if (toggleElement) {
       // Don't blur the input on toggle mousedown
@@ -503,6 +598,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
   /**
    * Clears the current value.
+   * @protected
    */
   _clear() {
     this.selectedItem = null;
@@ -521,9 +617,10 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._revertInputValueToValue();
     // In the next _detectAndDispatchChange() call, the change detection should not pass
     this._lastCommittedValue = this.value;
-    this.close();
+    this._closeOrCommit();
   }
 
+  /** @private */
   _onOpened() {
     // Pre P2 iron-list used a debouncer to render. Now that we synchronously render items,
     // we need to flush the DOM to make sure it doesn't get flushed in the middle of _render call
@@ -549,13 +646,20 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._lastCommittedValue = this.value;
   }
 
+  /** @private */
   _onClosed() {
-
     // Happens when the overlay is closed by clicking outside
     if (this.opened) {
       this.close();
     }
 
+    if (!this.loading || this.allowCustomValue) {
+      this._commitValue();
+    }
+  }
+
+  /** @private */
+  _commitValue() {
     if (this.$.overlay._items && this._focusedIndex > -1) {
       const focusedItem = this.$.overlay._items[this._focusedIndex];
       if (this.selectedItem !== focusedItem) {
@@ -570,9 +674,10 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
         this.value = '';
       }
     } else {
+      const itemsMatchedByLabel = this.filteredItems && this.filteredItems.filter(item => this._getItemLabel(item) === this._inputElementValue) || [];
       if (this.allowCustomValue
       // to prevent a repetitive input value being saved after pressing ESC and Tab.
-      && !(this.filteredItems && this.filteredItems.filter(item => this._getItemLabel(item) === this._inputElementValue).length)) {
+      && !itemsMatchedByLabel.length) {
 
         const e = new CustomEvent('custom-value-set', { detail: this._inputElementValue, composed: true, cancelable: true, bubbles: true });
         this.dispatchEvent(e);
@@ -581,6 +686,8 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
           this._selectItemForValue(customValue);
           this.value = customValue;
         }
+      } else if (!this.allowCustomValue && !this.opened && itemsMatchedByLabel.length == 1) {
+        this.value = this._getItemValue(itemsMatchedByLabel[0]);
       } else {
         this._inputElementValue = this.selectedItem ? this._getItemLabel(this.selectedItem) : this.value || '';
       }
@@ -595,12 +702,18 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /**
+   * @return {string}
+   * @protected
+   */
   get _propertyForValue() {
     return 'value';
   }
 
   /**
-   *  Filtering and items handling
+   * Filtering and items handling
+   * @param {!Event} e
+   * @protected
    */
   _inputValueChanged(e) {
     // Handle only input events from our inputElement.
@@ -610,8 +723,9 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _filterFromInput(e) {
-    if (!this.opened && !e.__fromClearButton) {
+    if (!this.opened && !e.__fromClearButton && !this.autoOpenDisabled) {
       this.open();
     }
 
@@ -625,16 +739,23 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _itemLabelPathChanged(itemLabelPath, oldItemLabelPath) {
     if (typeof itemLabelPath !== 'string') {
       console.error('You should set itemLabelPath to a valid string');
     }
   }
 
+  /** @private */
   _filterChanged(filter, itemValuePath, itemLabelPath) {
     if (filter === undefined) {
       return;
     }
+
+    // Notify the dropdown about filter changing, so to let it skip the
+    // scrolling restore
+    this.$.overlay.filterChanged = true;
+
     if (this.items) {
       this.filteredItems = this._filterItems(this.items, filter);
     } else {
@@ -645,12 +766,14 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _loadingChanged(loading) {
     if (loading) {
       this._focusedIndex = -1;
     }
   }
 
+  /** @protected */
   _revertInputValue() {
     if (this.filter !== '') {
       this._inputElementValue = this.filter;
@@ -660,6 +783,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._clearSelectionRange();
   }
 
+  /** @private */
   _revertInputValueToValue() {
     if (this.allowCustomValue && !this.selectedItem) {
       this._inputElementValue = this.value;
@@ -668,10 +792,12 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _resizeDropdown() {
     this.$.overlay.$.dropdown.notifyResize();
   }
 
+  /** @private */
   _updateHasValue(hasValue) {
     if (hasValue) {
       this.setAttribute('has-value', '');
@@ -680,6 +806,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _selectedItemChanged(selectedItem, itemLabelPath) {
     if (selectedItem === null || selectedItem === undefined) {
       if (this.filteredItems) {
@@ -716,6 +843,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _valueChanged(value, oldVal) {
     if (value === '' && oldVal === undefined) {
       // initializing, no need to do anything (#554)
@@ -742,6 +870,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     this._lastCommittedValue = undefined;
   }
 
+  /** @private */
   _detectAndDispatchChange() {
     if (this.value !== this._lastCommittedValue) {
       this.dispatchEvent(new CustomEvent('change', { bubbles: true }));
@@ -749,12 +878,14 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _itemsChanged(items, oldItems) {
     this._ensureItemsOrDataProvider(() => {
       this.items = oldItems;
     });
   }
 
+  /** @private */
   _itemsOrPathsChanged(e, itemValuePath, itemLabelPath) {
     if (e.value === undefined) {
       return;
@@ -772,6 +903,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _filteredItemsChanged(e, itemValuePath, itemLabelPath) {
     if (e.value === undefined) {
       return;
@@ -779,7 +911,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     if (e.path === 'filteredItems' || e.path === 'filteredItems.splices') {
       this._setOverlayItems(this.filteredItems);
 
-      this._focusedIndex = this.opened ? this.$.overlay.indexOfLabel(this.filter) : this._indexOfValue(this.value, this.filteredItems);
+      this._focusedIndex = this.opened || this.autoOpenDisabled ? this.$.overlay.indexOfLabel(this.filter) : this._indexOfValue(this.value, this.filteredItems);
 
       if (this.opened) {
         this._repositionOverlay();
@@ -787,18 +919,22 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _filterItems(arr, filter) {
     if (!arr) {
       return arr;
     }
 
-    return arr.filter(item => {
+    const filteredItems = arr.filter(item => {
       filter = filter ? filter.toString().toLowerCase() : '';
       // Check if item contains input value.
       return this._getItemLabel(item).toString().toLowerCase().indexOf(filter) > -1;
     });
+
+    return filteredItems;
   }
 
+  /** @private */
   _selectItemForValue(value) {
     const valueIndex = this._indexOfValue(value, this.filteredItems);
     const previouslySelectedItem = this.selectedItem;
@@ -810,10 +946,12 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _setOverlayItems(items) {
     this.$.overlay.set('_items', items);
   }
 
+  /** @private */
   _repositionOverlay() {
     // async needed to reposition correctly after filtering
     // (especially when aligned on top of input)
@@ -840,6 +978,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     });
   }
 
+  /** @private */
   _indexOfValue(value, items) {
     if (items && this._isValidValue(value)) {
       for (let i = 0; i < items.length; i++) {
@@ -854,13 +993,13 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
   /**
    * Checks if the value is supported as an item value in this control.
-   *
-   * @return {boolean}
+   * @private
    */
   _isValidValue(value) {
     return value !== undefined && value !== null;
   }
 
+  /** @private */
   _overlaySelectedItemChanged(e) {
     // stop this private event from leaking outside.
     e.stopPropagation();
@@ -879,6 +1018,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _onFocusout(event) {
     // Fixes the problem with `focusout` happening when clicking on the scroll bar on Edge
     const dropdown = this.$.overlay.$.dropdown;
@@ -887,10 +1027,11 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
       return;
     }
     if (!this._closeOnBlurIsPrevented) {
-      this.close();
+      this._closeOrCommit();
     }
   }
 
+  /** @private */
   _onTouchend(event) {
     if (!this._clearElement || event.composedPath()[0] !== this._clearElement) {
       return;
@@ -913,6 +1054,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
    * Returns true if the current input value satisfies all constraints (if any)
    *
    * You can override the `checkValidity` method for custom validations.
+   * @return {boolean | undefined}
    */
   checkValidity() {
     if (this.inputElement.validate) {
@@ -920,6 +1062,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   get _instanceProps() {
     return {
       item: true,
@@ -929,6 +1072,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     };
   }
 
+  /** @protected */
   _ensureTemplatized() {
     if (!this._TemplateClass) {
       const tpl = this._itemTemplate || this._getRootTemplate();
@@ -949,10 +1093,12 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _getRootTemplate() {
     return Array.prototype.filter.call(this.children, elem => elem.tagName === 'TEMPLATE')[0];
   }
 
+  /** @protected */
   _preventInputBlur() {
     if (this._toggleElement) {
       this._toggleElement.addEventListener('click', this._preventDefault);
@@ -962,6 +1108,7 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @protected */
   _restoreInputBlur() {
     if (this._toggleElement) {
       this._toggleElement.removeEventListener('click', this._preventDefault);
@@ -971,10 +1118,15 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
     }
   }
 
+  /** @private */
   _preventDefault(e) {
     e.preventDefault();
   }
 
+  /**
+   * @param {!Event} e
+   * @protected
+   */
   _stopPropagation(e) {
     e.stopPropagation();
   }

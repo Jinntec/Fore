@@ -1,66 +1,34 @@
 {
-  "_from": "@polymer/iron-location@^3.0.0-pre.26",
-  "_id": "@polymer/iron-location@3.0.2",
-  "_inBundle": false,
-  "_integrity": "sha512-75XlPsrm6RQUPNzWWaA0TnTQaWZUYX8UB4Q6WCjikKWzmaSCCxlBrVVYf8WRqtCxw/PeCvLn5kGL6qhTlNTCEA==",
-  "_location": "/@polymer/iron-location",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/iron-location@^3.0.0-pre.26",
-    "name": "@polymer/iron-location",
-    "escapedName": "@polymer%2firon-location",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.26",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.26"
-  },
-  "_requiredBy": [
-    "/@polymer/iron-demo-helpers",
-    "/@polymer/iron-doc-viewer"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/iron-location/-/iron-location-3.0.2.tgz",
-  "_shasum": "7ca2df089c57deb8a6f54f5cc3722af0ff871441",
-  "_spec": "@polymer/iron-location@^3.0.0-pre.26",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@polymer/iron-doc-viewer",
-  "author": {
-    "name": "The Polymer Authors"
-  },
-  "bugs": {
-    "url": "https://github.com/PolymerElements/iron-location/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0"
-  },
-  "deprecated": false,
   "description": "Bidirectional data binding into the page's URL.",
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.5.1",
-    "@polymer/iron-demo-helpers": "^3.0.1",
-    "@polymer/iron-flex-layout": "^3.0.0-pre.26",
-    "@polymer/test-fixture": "^4.0.1",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "wct-browser-legacy": "^1.0.1",
-    "webmat": "^0.2.0"
-  },
-  "homepage": "https://github.com/PolymerElements/iron-location",
   "keywords": [
     "web-components",
     "polymer",
     "routing"
   ],
-  "license": "BSD-3-Clause",
-  "name": "@polymer/iron-location",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-location.git"
+  },
+  "homepage": "https://github.com/PolymerElements/iron-location",
+  "name": "@polymer/iron-location",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "webmat": "^0.2.0",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.26",
+    "@polymer/iron-demo-helpers": "^3.0.1",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@polymer/test-fixture": "^4.0.1",
+    "wct-browser-legacy": "^1.0.1",
+    "@polymer/gen-typescript-declarations": "^1.5.1"
   },
   "scripts": {
     "format": "webmat",
     "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
     "prepare": "npm run generate-types"
   },
-  "version": "3.0.2"
+  "version": "3.0.2",
+  "author": "The Polymer Authors",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0"
+  }
 }

@@ -7,9 +7,10 @@ This program is available under Apache License Version 2.0, available at https:/
 import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 
 import { TextFieldMixin } from './vaadin-text-field-mixin.js';
+import { ControlStateMixin } from '../../vaadin-control-state-mixin/vaadin-control-state-mixin.js';
+import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { ElementMixin } from '../../vaadin-element-mixin/vaadin-element-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
-import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
 /**
  * `<vaadin-text-area>` is a Web Component for text area control in forms.
  *
@@ -50,6 +51,8 @@ import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin
  * `disabled` | Set to a disabled text field | :host
  * `has-value` | Set when the element has a value | :host
  * `has-label` | Set when the element has a label | :host
+ * `has-helper` | Set when the element has helper text | :host
+ * `has-error-message` | Set when the element has an error message | :host
  * `invalid` | Set when the element is invalid | :host
  * `focused` | Set when the element is focused | :host
  * `focus-ring` | Set when the element is keyboard focused | :host
@@ -57,12 +60,14 @@ import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
- * @mixes Vaadin.TextFieldMixin
- * @mixes Vaadin.ThemableMixin
+ * @extends PolymerElement
+ * @mixes TextFieldMixin
+ * @mixes ControlStateMixin
+ * @mixes ElementMixin
+ * @mixes ThemableMixin
  * @demo demo/index.html
  */
-class TextAreaElement extends ElementMixin(TextFieldMixin(ThemableMixin(PolymerElement))) {
+class TextAreaElement extends ElementMixin(TextFieldMixin(ControlStateMixin(ThemableMixin(PolymerElement)))) {
   static get template() {
     return html`
     <style include="vaadin-text-field-shared-styles">
@@ -72,8 +77,9 @@ class TextAreaElement extends ElementMixin(TextFieldMixin(ThemableMixin(PolymerE
         min-height: inherit; /* MSIE 11 */
       }
 
-      /* The label and the error message should neither grow nor shrink. */
+      /* The label, helper text and the error message should neither grow nor shrink. */
       [part="label"],
+      [part="helper-text"],
       [part="error-message"] {
         flex: none;
       }
@@ -120,6 +126,10 @@ class TextAreaElement extends ElementMixin(TextFieldMixin(ThemableMixin(PolymerE
 
       </div>
 
+      <div part="helper-text" on-click="focus" id="[[_helperTextId]]">
+        <slot name="helper">[[helperText]]</slot>
+      </div>
+
       <div part="error-message" id="[[_errorId]]" aria-live="assertive" aria-hidden\$="[[_getErrorMessageAriaHidden(invalid, errorMessage, _errorId)]]">[[errorMessage]]</div>
 
     </div>
@@ -131,33 +141,41 @@ class TextAreaElement extends ElementMixin(TextFieldMixin(ThemableMixin(PolymerE
   }
 
   static get version() {
-    return '2.4.14';
+    return '2.8.1';
   }
 
   static get observers() {
     return ['_textAreaValueChanged(value)'];
   }
 
+  /** @protected */
   ready() {
     super.ready();
     this._updateHeight();
     this.addEventListener('animationend', this._onAnimationEnd);
   }
 
+  /** @private */
   _onAnimationEnd(e) {
     if (e.animationName.indexOf('vaadin-text-area-appear') === 0) {
       this._updateHeight();
     }
   }
 
+  /**
+   * @return {string}
+   * @protected
+   */
   get _slottedTagName() {
     return 'textarea';
   }
 
+  /** @private */
   _textAreaValueChanged(value) {
     this._updateHeight();
   }
 
+  /** @private */
   _updateHeight() {
     const inputField = this.root.querySelector('[part=input-field]');
     const scrollTop = inputField.scrollTop;

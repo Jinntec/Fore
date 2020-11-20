@@ -1,62 +1,30 @@
 {
-  "_from": "@polymer/font-roboto@^3.0.1",
-  "_id": "@polymer/font-roboto@3.0.2",
-  "_inBundle": false,
-  "_integrity": "sha512-tx5TauYSmzsIvmSqepUPDYbs4/Ejz2XbZ1IkD7JEGqkdNUJlh+9KU85G56Tfdk/xjEZ8zorFfN09OSwiMrIQWA==",
-  "_location": "/@polymer/font-roboto",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/font-roboto@^3.0.1",
-    "name": "@polymer/font-roboto",
-    "escapedName": "@polymer%2ffont-roboto",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.1",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.1"
-  },
-  "_requiredBy": [
-    "/@polymer/iron-demo-helpers",
-    "/@polymer/paper-styles"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/font-roboto/-/font-roboto-3.0.2.tgz",
-  "_shasum": "80cdaa7225db2359130dfb2c6d9a3be1820020c3",
-  "_spec": "@polymer/font-roboto@^3.0.1",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@polymer/paper-styles",
-  "author": {
-    "name": "The Polymer Authors"
-  },
-  "authors": [
-    "The Polymer Authors"
-  ],
-  "bugs": {
-    "url": "https://github.com/PolymerElements/font-roboto/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {},
-  "deprecated": false,
   "description": "An HTML import for Roboto",
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.5.1",
-    "webmat": "^0.2.2"
-  },
-  "homepage": "https://github.com/PolymerElements/font-roboto/",
   "keywords": [
     "font",
     "roboto"
   ],
-  "license": "BSD-3-Clause",
-  "main": "roboto.js",
-  "name": "@polymer/font-roboto",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/font-roboto.git"
   },
+  "homepage": "https://github.com/PolymerElements/font-roboto/",
+  "name": "@polymer/font-roboto",
+  "version": "3.0.2",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "main": "roboto.js",
+  "license": "BSD-3-Clause",
+  "author": "The Polymer Authors",
   "scripts": {
     "format": "webmat",
     "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
     "prepare": "npm run generate-types"
   },
-  "version": "3.0.2"
+  "dependencies": {},
+  "devDependencies": {
+    "webmat": "^0.2.2",
+    "@polymer/gen-typescript-declarations": "^1.5.1"
+  }
 }

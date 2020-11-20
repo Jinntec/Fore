@@ -66,3 +66,46 @@ declare function _lockScrollInteractions(): void;
 export {_unlockScrollInteractions};
 
 declare function _unlockScrollInteractions(): void;
+
+export {_shouldPreventScrolling};
+
+
+/**
+ * Returns true if the event causes scroll outside the current locking
+ * element, e.g. pointer/keyboard interactions, or scroll "leaking"
+ * outside the locking element when it is already at its scroll boundaries.
+ */
+declare function _shouldPreventScrolling(event: Event): boolean;
+
+export {_getScrollableNodes};
+
+
+/**
+ * Returns an array of scrollable nodes up to the current locking element,
+ * which is included too if scrollable.
+ *
+ * @returns scrollables
+ */
+declare function _getScrollableNodes(nodes: Node[]): Node[];
+
+export {_getScrollingNode};
+
+
+/**
+ * Returns the node that is scrolling. If there is no scrolling,
+ * returns undefined.
+ */
+declare function _getScrollingNode(nodes: Node[], deltaX: number, deltaY: number): Node|undefined;
+
+export {_getScrollInfo};
+
+
+/**
+ * Returns scroll `deltaX` and `deltaY`.
+ *
+ * @returns Object containing the
+ * x-axis scroll delta (positive: scroll right, negative: scroll left,
+ * 0: no scroll), and the y-axis scroll delta (positive: scroll down,
+ * negative: scroll up, 0: no scroll).
+ */
+declare function _getScrollInfo(event: Event): {deltaX: number, deltaY: number};

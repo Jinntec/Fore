@@ -35,7 +35,7 @@ export interface ComplexAttributeConverter<Type = unknown, TypeHint = unknown> {
      */
     toAttribute?(value: Type, type?: TypeHint): unknown;
 }
-declare type AttributeConverter<Type = unknown, TypeHint = unknown> = ComplexAttributeConverter<Type> | ((value: string, type?: TypeHint) => Type);
+declare type AttributeConverter<Type = unknown, TypeHint = unknown> = ComplexAttributeConverter<Type> | ((value: string | null, type?: TypeHint) => Type);
 /**
  * Defines options for a property accessor.
  */
@@ -99,7 +99,11 @@ export interface PropertyDeclaration<Type = unknown, TypeHint = unknown> {
 export interface PropertyDeclarations {
     readonly [key: string]: PropertyDeclaration;
 }
-export declare type PropertyValues = Map<PropertyKey, unknown>;
+/**
+ * Map of changed properties with old values. Takes an optional generic
+ * interface corresponding to the declared element properties.
+ */
+export declare type PropertyValues<T = any> = keyof T extends PropertyKey ? Map<keyof T, unknown> : never;
 export declare const defaultConverter: ComplexAttributeConverter;
 export interface HasChanged {
     (value: unknown, old: unknown): boolean;
@@ -120,6 +124,7 @@ declare const finalized = "finalized";
  * Base element class which manages element properties and attributes. When
  * properties change, the `update` method is asynchronously called. This method
  * should be supplied by subclassers to render updates as desired.
+ * @noInheritDoc
  */
 export declare abstract class UpdatingElement extends HTMLElement {
     /**
@@ -146,7 +151,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * Returns a list of attributes corresponding to the registered properties.
      * @nocollapse
      */
-    static readonly observedAttributes: string[];
+    static get observedAttributes(): string[];
     /**
      * Ensures the private `_classProperties` property metadata is created.
      * In addition to `finalize` this is also called in `createProperty` to
@@ -155,13 +160,71 @@ export declare abstract class UpdatingElement extends HTMLElement {
     /** @nocollapse */
     private static _ensureClassProperties;
     /**
-     * Creates a property accessor on the element prototype if one does not exist.
+     * Creates a property accessor on the element prototype if one does not exist
+     * and stores a PropertyDeclaration for the property with the given options.
      * The property setter calls the property's `hasChanged` property option
      * or uses a strict identity check to determine whether or not to request
      * an update.
+     *
+     * This method may be overridden to customize properties; however,
+     * when doing so, it's important to call `super.createProperty` to ensure
+     * the property is setup correctly. This method calls
+     * `getPropertyDescriptor` internally to get a descriptor to install.
+     * To customize what properties do when they are get or set, override
+     * `getPropertyDescriptor`. To customize the options for a property,
+     * implement `createProperty` like this:
+     *
+     * static createProperty(name, options) {
+     *   options = Object.assign(options, {myOption: true});
+     *   super.createProperty(name, options);
+     * }
+     *
      * @nocollapse
      */
     static createProperty(name: PropertyKey, options?: PropertyDeclaration): void;
+    /**
+     * Returns a property descriptor to be defined on the given named property.
+     * If no descriptor is returned, the property will not become an accessor.
+     * For example,
+     *
+     *   class MyElement extends LitElement {
+     *     static getPropertyDescriptor(name, key, options) {
+     *       const defaultDescriptor =
+     *           super.getPropertyDescriptor(name, key, options);
+     *       const setter = defaultDescriptor.set;
+     *       return {
+     *         get: defaultDescriptor.get,
+     *         set(value) {
+     *           setter.call(this, value);
+     *           // custom action.
+     *         },
+     *         configurable: true,
+     *         enumerable: true
+     *       }
+     *     }
+     *   }
+     *
+     * @nocollapse
+     */
+    protected static getPropertyDescriptor(name: PropertyKey, key: string | symbol, options: PropertyDeclaration): {
+        get(): any;
+        set(this: UpdatingElement, value: unknown): void;
+        configurable: boolean;
+        enumerable: boolean;
+    };
+    /**
+     * Returns the property options associated with the given property.
+     * These options are defined with a PropertyDeclaration via the `properties`
+     * object or the `@property` decorator and are registered in
+     * `createProperty(...)`.
+     *
+     * Note, this method should be considered "final" and not overridden. To
+     * customize the options for a given property, override `createProperty`.
+     *
+     * @nocollapse
+     * @final
+     */
+    protected static getPropertyOptions(name: PropertyKey): PropertyDeclaration<unknown, unknown>;
     /**
      * Creates property accessors for registered properties and ensures
      * any superclasses are also finalized.
@@ -197,9 +260,9 @@ export declare abstract class UpdatingElement extends HTMLElement {
      */
     private static _propertyValueToAttribute;
     private _updateState;
-    private _instanceProperties;
+    private _instanceProperties?;
     private _updatePromise;
-    private _hasConnectedResolver;
+    private _enableUpdatingResolver;
     /**
      * Map with keys for any properties that have changed since the last
      * update cycle with previous values.
@@ -208,7 +271,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
     /**
      * Map with keys of properties that should be reflected when updated.
      */
-    private _reflectingProperties;
+    private _reflectingProperties?;
     constructor();
     /**
      * Performs element initialization. By default captures any pre-set values for
@@ -233,6 +296,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      */
     private _applyInstanceProperties;
     connectedCallback(): void;
+    protected enableUpdating(): void;
     /**
      * Allows for `super.disconnectedCallback()` in extensions while
      * reserving the possibility of making non-breaking feature additions
@@ -246,11 +310,11 @@ export declare abstract class UpdatingElement extends HTMLElement {
     private _propertyToAttribute;
     private _attributeToProperty;
     /**
-     * This private version of `requestUpdate` does not access or return the
+     * This protected version of `requestUpdate` does not access or return the
      * `updateComplete` promise. This promise can be overridden and is therefore
      * not free to access.
      */
-    private _requestUpdate;
+    protected requestUpdateInternal(name?: PropertyKey, oldValue?: unknown, options?: PropertyDeclaration): void;
     /**
      * Requests an update which is processed asynchronously. This should
      * be called when an element should update based on some state not triggered
@@ -269,9 +333,8 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * Sets up the element to asynchronously update.
      */
     private _enqueueUpdate;
-    private readonly _hasConnected;
-    private readonly _hasRequestedUpdate;
-    protected readonly hasUpdated: number;
+    private get _hasRequestedUpdate();
+    protected get hasUpdated(): number;
     /**
      * Performs an element update. Note, if an exception is thrown during the
      * update, `firstUpdated` and `updated` will not be called.
@@ -305,7 +368,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * @returns {Promise} The Promise returns a boolean that indicates if the
      * update resolved without triggering another update.
      */
-    readonly updateComplete: Promise<unknown>;
+    get updateComplete(): Promise<unknown>;
     /**
      * Override point for the `updateComplete` promise.
      *
@@ -328,7 +391,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * an update. By default, this method always returns `true`, but this can be
      * customized to control when to update.
      *
-     * * @param _changedProperties Map of changed properties with old values
+     * @param _changedProperties Map of changed properties with old values
      */
     protected shouldUpdate(_changedProperties: PropertyValues): boolean;
     /**
@@ -337,7 +400,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * Setting properties inside this method will *not* trigger
      * another update.
      *
-     * * @param _changedProperties Map of changed properties with old values
+     * @param _changedProperties Map of changed properties with old values
      */
     protected update(_changedProperties: PropertyValues): void;
     /**
@@ -347,7 +410,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * Setting properties inside this method will trigger the element to update
      * again after this update cycle completes.
      *
-     * * @param _changedProperties Map of changed properties with old values
+     * @param _changedProperties Map of changed properties with old values
      */
     protected updated(_changedProperties: PropertyValues): void;
     /**
@@ -357,7 +420,7 @@ export declare abstract class UpdatingElement extends HTMLElement {
      * Setting properties inside this method will trigger the element to update
      * again after this update cycle completes.
      *
-     * * @param _changedProperties Map of changed properties with old values
+     * @param _changedProperties Map of changed properties with old values
      */
     protected firstUpdated(_changedProperties: PropertyValues): void;
 }

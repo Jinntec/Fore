@@ -4,6 +4,23 @@ import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
 import {ForeElement} from "./ForeElement.js";
 
+function evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
+	return fx.evaluateXPath(
+		xpath,
+		contextNode,
+		null,
+		{},
+		fx.ANY_TYPE,
+        {
+		namespaceResolver,
+		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+		moduleImports: {
+			xf: 'http://www.w3.org/2002/xforms'
+		},
+		currentContext: {formElement}
+	});
+}
+
 function evaluateXFormsXPathToNodes (xpath, contextNode, formElement, namespaceResolver) {
 	return fx.evaluateXPathToNodes(
 		xpath,
@@ -196,11 +213,10 @@ export class XfBind extends ForeElement {
 
         console.log('namespaceResolver  prefix', prefix);
         const ns = {
-            'xhtml' : 'http://www.w3.org/1999/xhtml',
+            'xhtml' : 'http://www.w3.org/1999/xhtml'
             // ''    : Fore.XFORMS_NAMESPACE_URI
         };
         return ns[prefix] || null;
-        // return null;
     }
 
     /**
@@ -295,7 +311,7 @@ export class XfBind extends ForeElement {
         const path = fx.evaluateXPath('path()',node);
 
 
-        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode);
+        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode,null);
         // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
         model.registerModelItem(mi);
         return mi;
@@ -355,7 +371,7 @@ export class XfBind extends ForeElement {
         }else{
             const path = fx.evaluateXPath('path()',node);
             const sp = this._shortenPath(path);
-            const newItem = new ModelItem(sp, this.ref, ro,rel,req,val,this.type,targetNode);
+            const newItem = new ModelItem(sp, this.ref, ro,rel,req,val,this.type,targetNode,this);
             this.getModel().registerModelItem(newItem);
         }
         // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);

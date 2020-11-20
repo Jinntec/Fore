@@ -1,10 +1,18 @@
 /// BareSpecifier=@vaadin/vaadin-material-styles/typography
+/* Import Roboto from Google Fonts */
+/* MAGI REMOVE START */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
 import './version.js';
+
 import '../../@polymer/polymer/lib/elements/custom-style.js';
 import '../../@polymer/polymer/lib/elements/dom-module.js';
-import { html } from '../../@polymer/polymer/lib/utils/html-tag.js';
+const $_documentContainer = document.createElement('template');
 
-const $_documentContainer = html`<custom-style>
+$_documentContainer.innerHTML = `<custom-style>
   <style>
     html {
       /* Font family */
@@ -105,5 +113,19 @@ const $_documentContainer = html`<custom-style>
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
+if (!window.polymerSkipLoadingFontRoboto) {
+  const font = 'https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic';
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.crossOrigin = 'anonymous';
+  link.href = font;
+  document.head.appendChild(link);
+}
 
-import './font-roboto.js';
+/* MAGI REMOVE END */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/

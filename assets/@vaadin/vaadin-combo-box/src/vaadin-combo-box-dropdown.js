@@ -11,6 +11,19 @@ import { OverlayElement } from '../../vaadin-overlay/src/vaadin-overlay.js';
 import { IronResizableBehavior } from '../../../@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 import { mixinBehaviors } from '../../../@polymer/polymer/lib/legacy/class.js';
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-module id="vaadin-combo-box-overlay-styles" theme-for="vaadin-combo-box-overlay">
+  <template>
+    <style>
+      :host {
+        width: var(--vaadin-combo-box-overlay-width, var(--_vaadin-combo-box-overlay-default-width, auto));
+      }
+    </style>
+  </template>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);
 /**
  * The overlay element.
  *
@@ -21,12 +34,24 @@ import { mixinBehaviors } from '../../../@polymer/polymer/lib/legacy/class.js';
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
+ * @extends PolymerElement
  * @private
  */
 class ComboBoxOverlayElement extends OverlayElement {
   static get is() {
     return 'vaadin-combo-box-overlay';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    const dropdown = this.__dataHost;
+    const comboBoxOverlay = dropdown.getRootNode().host;
+    const comboBox = comboBoxOverlay && comboBoxOverlay.getRootNode().host;
+    const hostDir = comboBox && comboBox.getAttribute('dir');
+    if (hostDir) {
+      this.setAttribute('dir', hostDir);
+    }
   }
 
   ready() {
@@ -43,7 +68,7 @@ customElements.define(ComboBoxOverlayElement.is, ComboBoxOverlayElement);
 /**
  * Element for internal use only.
  *
- * @memberof Vaadin
+ * @extends PolymerElement
  * @private
  */
 class ComboBoxDropdownElement extends DisableUpgradeMixin(mixinBehaviors(IronResizableBehavior, PolymerElement)) {
@@ -163,7 +188,7 @@ class ComboBoxDropdownElement extends DisableUpgradeMixin(mixinBehaviors(IronRes
       window.addEventListener('scroll', this._boundSetPosition, true);
       document.addEventListener('click', this._boundOutsideClickListener, true);
       this.dispatchEvent(new CustomEvent('vaadin-combo-box-dropdown-opened', { bubbles: true, composed: true }));
-    } else {
+    } else if (!this.__emptyItems) {
       window.removeEventListener('scroll', this._boundSetPosition, true);
       document.removeEventListener('click', this._boundOutsideClickListener, true);
       this.dispatchEvent(new CustomEvent('vaadin-combo-box-dropdown-closed', { bubbles: true, composed: true }));
@@ -210,6 +235,30 @@ class ComboBoxDropdownElement extends DisableUpgradeMixin(mixinBehaviors(IronRes
     return spaceBelow < 0.30;
   }
 
+  _getCustomWidth() {
+    return window.ShadyCSS ? window.ShadyCSS.getComputedStyleValue(this, '--vaadin-combo-box-overlay-width') : getComputedStyle(this).getPropertyValue('--vaadin-combo-box-overlay-width');
+  }
+
+  _setOverlayWidth() {
+    const inputWidth = this.positionTarget.clientWidth + 'px';
+    const customWidth = this._getCustomWidth();
+
+    if (window.ShadyCSS && !window.ShadyCSS.nativeCss) {
+      window.ShadyCSS.styleSubtree(this.$.overlay, {
+        '--vaadin-combo-box-overlay-width': customWidth,
+        '--_vaadin-combo-box-overlay-default-width': inputWidth
+      });
+    } else {
+      this.$.overlay.style.setProperty('--_vaadin-combo-box-overlay-default-width', inputWidth);
+
+      if (customWidth === '') {
+        this.$.overlay.style.removeProperty('--vaadin-combo-box-overlay-width');
+      } else {
+        this.$.overlay.style.setProperty('--vaadin-combo-box-overlay-width', customWidth);
+      }
+    }
+  }
+
   _setPosition(e) {
     if (this.hidden) {
       return;
@@ -234,8 +283,9 @@ class ComboBoxDropdownElement extends DisableUpgradeMixin(mixinBehaviors(IronRes
     this._translateY = Math.round(this._translateY * _devicePixelRatio) / _devicePixelRatio;
     this.$.overlay.style.transform = `translate3d(${this._translateX}px, ${this._translateY}px, 0)`;
 
-    this.$.overlay.style.width = this.positionTarget.clientWidth + 'px';
     this.$.overlay.style.justifyContent = this.alignedAbove ? 'flex-end' : 'flex-start';
+
+    this._setOverlayWidth();
 
     // TODO: fire only when position actually changes changes
     this.dispatchEvent(new CustomEvent('position-changed'));

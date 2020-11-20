@@ -18,6 +18,7 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
        * Used for mixin detection because `instanceof` does not work with mixins.
        * e.g. in VaadinListMixin it filters items by using the
        * `element._hasVaadinItemMixin` condition.
+       * @type {boolean}
        */
       _hasVaadinItemMixin: {
         value: true
@@ -25,6 +26,7 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
 
       /**
        * If true, the user cannot interact with this element.
+       * @type {boolean}
        */
       disabled: {
         type: Boolean,
@@ -35,6 +37,7 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
 
       /**
        * If true, the item is in selected state.
+       * @type {boolean}
        */
       selected: {
         type: Boolean,
@@ -43,18 +46,26 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
         observer: '_selectedChanged'
       },
 
+      /** @private */
       _value: String
     };
   }
 
+  /**
+   * @return {string}
+   */
   get value() {
     return this._value !== undefined ? this._value : this.textContent.trim();
   }
 
+  /**
+   * @param {string} value
+   */
   set value(value) {
     this._value = value;
   }
 
+  /** @protected */
   ready() {
     super.ready();
 
@@ -77,9 +88,7 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     this.addEventListener('keyup', e => this._onKeyup(e));
   }
 
-  /**
-   * @protected
-   */
+  /** @protected */
   disconnectedCallback() {
     super.disconnectedCallback();
 
@@ -91,10 +100,12 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     }
   }
 
+  /** @private */
   _selectedChanged(selected) {
     this.setAttribute('aria-selected', selected);
   }
 
+  /** @private */
   _disabledChanged(disabled) {
     if (disabled) {
       this.selected = false;
@@ -105,6 +116,10 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     }
   }
 
+  /**
+   * @param {boolean} focused
+   * @protected
+   */
   _setFocused(focused) {
     if (focused) {
       this.setAttribute('focused', '');
@@ -118,6 +133,10 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     }
   }
 
+  /**
+   * @param {boolean} active
+   * @protected
+   */
   _setActive(active) {
     if (active) {
       this.setAttribute('active', '');
@@ -126,6 +145,10 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     }
   }
 
+  /**
+   * @param {!KeyboardEvent} event
+   * @protected
+   */
   _onKeydown(event) {
     if (/^( |SpaceBar|Enter)$/.test(event.key) && !event.defaultPrevented) {
       event.preventDefault();
@@ -133,6 +156,10 @@ export const ItemMixin = superClass => class VaadinItemMixin extends superClass 
     }
   }
 
+  /**
+   * @param {!KeyboardEvent} event
+   * @protected
+   */
   _onKeyup(event) {
     if (this.hasAttribute('active')) {
       this._setActive(false);

@@ -58,6 +58,12 @@ $_documentContainer.innerHTML = `<dom-module id="material-required-field">
           opacity: 0;
         }
       }
+
+      /* RTL specific styles */
+
+      :host([dir="rtl"]) [part="label"] {
+        transform-origin: 100% 75%;
+      }
     </style>
   </template>
 </dom-module>`;

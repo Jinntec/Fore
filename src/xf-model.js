@@ -4,6 +4,8 @@ import fx from "fontoxpath";
 import evaluateXPathToNodes from 'fontoxpath';
 import * as fontoxpath from 'fontoxpath';
 
+import {Fore} from './fore.js';
+
 import './xf-instance.js';
 import './xf-bind.js';
 
@@ -76,7 +78,7 @@ export class XfModel extends LitElement {
                 console.groupEnd();
                 // console.log('model instances ', this.instances);
 
-                this._initOutermostBindings();
+                // this._initOutermostBindings();
 
                 this.updateModel();
                 // console.groupEnd();
@@ -85,9 +87,9 @@ export class XfModel extends LitElement {
                     composed: true,
                     bubbles: true,
                     detail: {model: this}
-                }));
+               }));
             } else {
-                this._initOutermostBindings();
+                // this._initOutermostBindings();
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,
                     bubbles: true,
@@ -116,15 +118,9 @@ export class XfModel extends LitElement {
     rebuild() {
         console.group('### rebuild');
 
-        //reset
-/*
-        this.modelItems = [];
+        // this will trigger evaluation of all bind elements of this model
+        this._initOutermostBindings();
 
-        const binds = this.querySelectorAll('xf-model > xf-bind');
-        binds.forEach(bind => {
-            bind.init(this);
-        });
-*/
         console.log(`rebuild finished with modelItems ${this.modelItems.length} item(s)`, this.modelItems);
         console.groupEnd();
     //
@@ -134,10 +130,53 @@ export class XfModel extends LitElement {
         // tbd
         console.log('### recalculate');
 
+
+        this.modelItems.forEach(item => {
+            console.log('recalculate modelItem ', item);
+
+            const bind = item.bind;
+            if(bind){
+                console.log('bind for modelItem ', bind);
+
+
+                // const compute = fx.evaluateXPath(bind.calculate, item.node, null, {});
+                // const compute = fx.evaluateXPath(bind.calculate, item.node, null, {});
+
+                if(bind){
+
+                    const calculate = bind.calculate;
+                    if(calculate){
+                        const compute =  Fore.evaluateXPath (calculate, item.node, this, Fore.namespaceResolver) ;
+                        item.value = compute;
+                    }
+
+                    const required = bind.required;
+                    if(required){
+                        const compute =  Fore.evaluateXPath (bind.required, item.node, this, Fore.namespaceResolver) ;
+                        item.required = compute;
+                    }
+
+                    const readonly = bind.readonly;
+                    if(readonly){
+
+                    }
+
+
+                }
+
+
+
+                // const ro = evaluateXFormsXPathToBoolean(this.readonly, targetNode, this, this.namespaceResolver);
+
+                // item.value = compute;
+                console.log('computed ', compute);
+            }
+        });
+
         const binds = this.querySelectorAll('xf-bind[calculate]');
         binds.forEach(bind => {
             const contextNode = bind.nodeset[0];
-            const compute = fx.evaluateXPath(bind.calculate, contextNode, null, {});
+            const compute = fx.evaluateXPath(bind.required, contextNode, null, {});
             this.getModelItem(contextNode).value = compute;
             console.log('computed ', compute);
         });

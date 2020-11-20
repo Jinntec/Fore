@@ -136,6 +136,24 @@ Polymer.legacyOptimizations;
 /** @type {boolean} */
 Polymer.syncInitialRender;
 
+/** @type {boolean} */
+Polymer.legacyUndefined;
+
+/** @type {boolean} */
+Polymer.legacyWarnings;
+
+/** @type {boolean} */
+Polymer.orderedComputed;
+
+/** @type {boolean} */
+Polymer.fastDomIf;
+
+/** @type {boolean} */
+Polymer.removeNestedTemplates;
+
+/** @type {boolean} */
+Polymer.suppressTemplateNotifications;
+
 // nb. This is explicitly 'var', as Closure Compiler checks that this is the case.
 /**
  * @constructor

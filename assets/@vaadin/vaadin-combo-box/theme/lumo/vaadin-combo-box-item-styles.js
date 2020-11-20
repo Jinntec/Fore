@@ -43,6 +43,12 @@ const $_documentContainer = html`<dom-module id="lumo-combo-box-item" theme-for=
           box-shadow: none;
         }
       }
+
+      /* RTL specific styles */
+      :host([dir="rtl"]) {
+        padding-right: calc(var(--lumo-border-radius) / 4);
+        padding-left: calc(var(--lumo-space-l) + var(--lumo-border-radius) / 4);
+      }
     </style>
   </template>
 </dom-module>`;

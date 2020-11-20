@@ -2,7 +2,7 @@
 Prism.languages.lolcode = {
 	'comment': [/\bOBTW\s+[\s\S]*?\s+TLDR\b/, /\bBTW.+/],
 	'string': {
-		pattern: /"(?::.|[^"])*"/,
+		pattern: /"(?::.|[^":])*"/,
 		inside: {
 			'variable': /:\{[^}]+\}/,
 			'symbol': [/:\([a-f\d]+\)/i, /:\[[^\]]+\]/, /:[)>o":]/]

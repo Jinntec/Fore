@@ -31,7 +31,6 @@ Polymer_PropertiesChanged.prototype._createPropertyAccessor = function (property
 /**
 * @override
 * @param {string} property Name of the property
-* @return {void}
 */
 Polymer_PropertiesChanged.prototype._addPropertyToAttributeMap = function (property) {};
 /**
@@ -79,6 +78,11 @@ Polymer_PropertiesChanged.prototype._getProperty = function (property) {};
 * @return {boolean}
 */
 Polymer_PropertiesChanged.prototype._setPendingProperty = function (property, value, ext) {};
+/**
+* @param {string} property Name of the property
+* @return {boolean}
+*/
+Polymer_PropertiesChanged.prototype._isPropertyPending = function (property) {};
 /**
 * @override
 * @return {void}
@@ -210,6 +214,12 @@ Polymer_PropertyAccessors.prototype._definePropertyAccessor = function (property
 Polymer_PropertyAccessors.prototype._initializeProperties = function () {};
 /**
 * @override
+* @param {string} prop Property name
+* @return {boolean}
+*/
+Polymer_PropertyAccessors.prototype._isPropertyPending = function (prop) {};
+/**
+* @override
 * @param {*} value Property value to serialize.
 * @return {(string | undefined)}
 */
@@ -242,12 +252,6 @@ Polymer_PropertyAccessors.prototype._ensureAttribute = function (attribute, valu
 */
 Polymer_PropertyAccessors.prototype._hasAccessor = function (property) {};
 /**
-* @override
-* @param {string} prop Property name
-* @return {boolean}
-*/
-Polymer_PropertyAccessors.prototype._isPropertyPending = function (prop) {};
-/**
 * @param {string} property Property to convert
 * @return {string}
 */
@@ -263,9 +267,12 @@ function Polymer_TemplateStamp() {}
 /**
 * @override
 * @param {!HTMLTemplateElement} template Template to stamp
+* @param {TemplateInfo=} templateInfo Optional template info associated
+  with the template to be stamped; if omitted the template will be
+  automatically parsed.
 * @return {!StampedTemplate}
 */
-Polymer_TemplateStamp.prototype._stampTemplate = function (template) {};
+Polymer_TemplateStamp.prototype._stampTemplate = function (template, templateInfo) {};
 /**
 * @override
 * @param {!EventTarget} node Node to add listener on
@@ -396,6 +403,9 @@ Polymer_PropertyEffects.prototype.__dataOld;
 Polymer_PropertyEffects.prototype.__computeEffects;
 
 /** @type {Object} */
+Polymer_PropertyEffects.prototype.__computeInfo;
+
+/** @type {Object} */
 Polymer_PropertyEffects.prototype.__reflectEffects;
 
 /** @type {Object} */
@@ -413,15 +423,21 @@ Polymer_PropertyEffects.prototype.__readOnly;
 /** @type {!TemplateInfo} */
 Polymer_PropertyEffects.prototype.__templateInfo;
 
-/** @type {!Object.<string, string>} */
+/** @type {boolean} */
+Polymer_PropertyEffects.prototype._overrideLegacyUndefined;
+
+/** @type {undefined} */
 Polymer_PropertyEffects.prototype.PROPERTY_EFFECT_TYPES;
 
 /**
 * @override
 * @param {!HTMLTemplateElement} template Template to stamp
+* @param {TemplateInfo=} templateInfo Optional bound template info associated
+  with the template to be stamped; if omitted the template will be
+  automatically bound.
 * @return {!StampedTemplate}
 */
-Polymer_PropertyEffects.prototype._stampTemplate = function (template) {};
+Polymer_PropertyEffects.prototype._stampTemplate = function (template, templateInfo) {};
 /**
 * @override
 * @return {void}
@@ -461,11 +477,6 @@ Polymer_PropertyEffects.prototype._setPendingProperty = function (property, valu
 Polymer_PropertyEffects.prototype._invalidateProperties = function () {};
 /**
 * @override
-* @return {void}
-*/
-Polymer_PropertyEffects.prototype._flushProperties = function () {};
-/**
-* @override
 * @param {!Object} currentProps Bag of all current accessor values
 * @param {?Object} changedProps Bag of properties changed since the last
   call to `_propertiesChanged`
@@ -480,6 +491,10 @@ Polymer_PropertyEffects.prototype._propertiesChanged = function (currentProps, c
 * @return {void}
 */
 Polymer_PropertyEffects.prototype._initializeProtoProperties = function (props) {};
+/**
+* @return {void}
+*/
+Polymer_PropertyEffects.prototype._registerHost = function () {};
 /**
 * @override
 * @param {string} property Property that should trigger the effect
@@ -584,6 +599,14 @@ Polymer_PropertyEffects.prototype.setProperties = function (props, setReadOnly) 
 */
 Polymer_PropertyEffects.prototype._propagatePropertyChanges = function (changedProps, oldProps, hasPaths) {};
 /**
+* @param {*} templateInfo 
+* @param {*} changedProps 
+* @param {*} oldProps 
+* @param {*} hasPaths 
+* @return {void}
+*/
+Polymer_PropertyEffects.prototype._runEffectsForTemplate = function (templateInfo, changedProps, oldProps, hasPaths) {};
+/**
 * @override
 * @param {(string | !Array.<(string | number)>)} to Target path to link.
 * @param {(string | !Array.<(string | number)>)} from Source path to link.
@@ -661,7 +684,7 @@ Polymer_PropertyEffects.prototype.pop = function (path) {};
 * @param {number} start Index from which to start removing/inserting.
 * @param {number=} deleteCount Number of items to remove.
 * @param {...*} items Items to insert into array.
-* @return {Array}
+* @return {!Array}
 */
 Polymer_PropertyEffects.prototype.splice = function (path, start, deleteCount, items) {};
 /**
@@ -734,12 +757,12 @@ Polymer_PropertyEffects.prototype._createComputedProperty = function (property, 
 /**
 * @override
 * @param {!HTMLTemplateElement} template Template containing binding
-  bindings
+bindings
 * @param {boolean=} instanceBinding When false (default), performs
-  "prototypical" binding of the template and overwrites any previously
-  bound template for the class. When true (as passed from
-  `_stampTemplate`), the template info is instanced and linked into
-  the list of bound templates.
+"prototypical" binding of the template and overwrites any previously
+bound template for the class. When true (as passed from
+`_stampTemplate`), the template info is instanced and linked into the
+list of bound templates.
 * @return {!TemplateInfo}
 */
 Polymer_PropertyEffects.prototype._bindTemplate = function (template, instanceBinding) {};
@@ -928,6 +951,12 @@ Polymer_ElementMixin.prototype._readyClients = function () {};
 Polymer_ElementMixin.prototype.connectedCallback = function () {};
 /**
 * @override
+* @param {string} property Name of the property
+* @return {boolean}
+*/
+Polymer_ElementMixin.prototype._canApplyPropertyDefault = function (property) {};
+/**
+* @override
 * @param {StampedTemplate} dom to attach to the element.
 * @return {ShadowRoot}
 */
@@ -1051,7 +1080,49 @@ Polymer_DirMixin._replaceDirInCssText = function (text) {};
 /**
 * @interface
 * @extends {Polymer_ElementMixin}
+*/
+function Polymer_DisableUpgradeMixin() {}
+/** @type {(boolean | undefined)} */
+Polymer_DisableUpgradeMixin.prototype.__isUpgradeDisabled;
+
+/**
+* @override
+* @return {void}
+*/
+Polymer_DisableUpgradeMixin.prototype._initializeProperties = function () {};
+/**
+* @override
+* @return {void}
+*/
+Polymer_DisableUpgradeMixin.prototype._enableProperties = function () {};
+/**
+* @override
+* @param {string} name Attribute name.
+* @param {?string} old The previous value for the attribute.
+* @param {?string} value The new value for the attribute.
+* @param {?string} namespace The XML namespace for the attribute.
+* @return {void}
+*/
+Polymer_DisableUpgradeMixin.prototype.attributeChangedCallback = function (name, old, value, namespace) {};
+/**
+* @override
+* @return {void}
+*/
+Polymer_DisableUpgradeMixin.prototype.connectedCallback = function () {};
+/**
+* @override
+* @return {void}
+*/
+Polymer_DisableUpgradeMixin.prototype.disconnectedCallback = function () {};
+/**
+* @override
+*/
+Polymer_DisableUpgradeMixin.prototype._canApplyPropertyDefault = function (property) {};
+/**
+* @interface
+* @extends {Polymer_ElementMixin}
 * @extends {Polymer_GestureEventListeners}
+* @extends {Polymer_DirMixin}
 */
 function Polymer_LegacyElementMixin() {}
 /** @type {boolean} */
@@ -1062,6 +1133,15 @@ Polymer_LegacyElementMixin.prototype.__boundListeners;
 
 /** @type {?Object.<string, ?Function>} */
 Polymer_LegacyElementMixin.prototype._debouncers;
+
+/** @type {(boolean | undefined)} */
+Polymer_LegacyElementMixin.prototype.__isUpgradeDisabled;
+
+/** @type {(boolean | undefined)} */
+Polymer_LegacyElementMixin.prototype.__needsAttributesAtConnected;
+
+/** @type {(boolean | undefined)} */
+Polymer_LegacyElementMixin.prototype._legacyForceObservedAttributes;
 
 /** @type {?Node} */
 Polymer_LegacyElementMixin.prototype.domHost;
@@ -1079,6 +1159,11 @@ Polymer_LegacyElementMixin.prototype.ready = function () {};
 * @return {void}
 */
 Polymer_LegacyElementMixin.prototype._initializeProperties = function () {};
+/**
+* @override
+* @return {void}
+*/
+Polymer_LegacyElementMixin.prototype._enableProperties = function () {};
 /**
 * @override
 * @param {string} name Name of attribute.
@@ -1100,9 +1185,26 @@ Polymer_LegacyElementMixin.prototype.connectedCallback = function () {};
 Polymer_LegacyElementMixin.prototype.disconnectedCallback = function () {};
 /**
 * @override
+*/
+Polymer_LegacyElementMixin.prototype._canApplyPropertyDefault = function (property) {};
+/**
+* @override
 * @return {void}
 */
 Polymer_LegacyElementMixin.prototype.created = function () {};
+/**
+* @override
+* @param {string} name The name of the attribute to change.
+* @param {(string | number | boolean | !TrustedHTML | !TrustedScriptURL | !TrustedURL)} value The new attribute value.
+* @return {void}
+*/
+Polymer_LegacyElementMixin.prototype.setAttribute = function (name, value) {};
+/**
+* @override
+* @param {string} name The name of the attribute to remove.
+* @return {void}
+*/
+Polymer_LegacyElementMixin.prototype.removeAttribute = function (name) {};
 /**
 * @override
 * @return {void}
@@ -1121,6 +1223,10 @@ Polymer_LegacyElementMixin.prototype.detached = function () {};
 * @return {void}
 */
 Polymer_LegacyElementMixin.prototype.attributeChanged = function (name, old, value) {};
+/**
+* @return {void}
+*/
+Polymer_LegacyElementMixin.prototype._takeAttributes = function () {};
 /**
 * @override
 * @return {void}
@@ -1447,7 +1553,7 @@ Polymer_LegacyElementMixin.prototype._error = function (args) {};
 * @override
 * @param {string} methodName Method name to associate with message
 * @param {...*} args Array of strings or objects to log
-* @return {Array}
+* @return {!Array}
 */
 Polymer_LegacyElementMixin.prototype._logf = function (methodName, args) {};
 /**
@@ -1547,40 +1653,6 @@ function Polymer_StrictBindingParser() {}
 * @return {Array.<!BindingPart>}
 */
 Polymer_StrictBindingParser._parseBindings = function (text, templateInfo) {};
-/**
-* @interface
-* @extends {Polymer_ElementMixin}
-*/
-function Polymer_DisableUpgradeMixin() {}
-/**
-* @override
-* @return {void}
-*/
-Polymer_DisableUpgradeMixin.prototype._initializeProperties = function () {};
-/**
-* @override
-* @return {void}
-*/
-Polymer_DisableUpgradeMixin.prototype._enableProperties = function () {};
-/**
-* @override
-* @param {string} name Attribute name.
-* @param {?string} old The previous value for the attribute.
-* @param {?string} value The new value for the attribute.
-* @param {?string} namespace The XML namespace for the attribute.
-* @return {void}
-*/
-Polymer_DisableUpgradeMixin.prototype.attributeChangedCallback = function (name, old, value, namespace) {};
-/**
-* @override
-* @return {void}
-*/
-Polymer_DisableUpgradeMixin.prototype.connectedCallback = function () {};
-/**
-* @override
-* @return {void}
-*/
-Polymer_DisableUpgradeMixin.prototype.disconnectedCallback = function () {};
 /**
 * @interface
 */

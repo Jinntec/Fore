@@ -1,58 +1,5 @@
 {
-  "_from": "@vaadin/vaadin-item@^2.1.0",
-  "_id": "@vaadin/vaadin-item@2.1.1",
-  "_inBundle": false,
-  "_integrity": "sha512-uWwsSDoOtjiiHjmEANP29JMacJoSeO5kHCTYyqdVu0fQoT6WalLV1aQWIEJUmVSp2MnB3qRziYpAw3igF9uXxw==",
-  "_location": "/@vaadin/vaadin-item",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@vaadin/vaadin-item@^2.1.0",
-    "name": "@vaadin/vaadin-item",
-    "escapedName": "@vaadin%2fvaadin-item",
-    "scope": "@vaadin",
-    "rawSpec": "^2.1.0",
-    "saveSpec": null,
-    "fetchSpec": "^2.1.0"
-  },
-  "_requiredBy": [
-    "/@vaadin/vaadin-combo-box",
-    "/@vaadin/vaadin-list-box"
-  ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-item/-/vaadin-item-2.1.1.tgz",
-  "_shasum": "067a090e52fee0fc31410e19b6a70097c6e9fab8",
-  "_spec": "@vaadin/vaadin-item@^2.1.0",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@vaadin/vaadin-combo-box",
-  "author": {
-    "name": "Vaadin Ltd"
-  },
-  "bugs": {
-    "url": "https://github.com/vaadin/vaadin-item/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0",
-    "@vaadin/vaadin-lumo-styles": "^1.1.0",
-    "@vaadin/vaadin-material-styles": "^1.1.0",
-    "@vaadin/vaadin-themable-mixin": "^1.2.1"
-  },
-  "deprecated": false,
   "description": "vaadin-item",
-  "devDependencies": {
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.0.0",
-    "@polymer/iron-test-helpers": "^3.0.0",
-    "@vaadin/vaadin-demo-helpers": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "wct-browser-legacy": "^1.0.1"
-  },
-  "files": [
-    "vaadin-*.js",
-    "src",
-    "theme"
-  ],
-  "homepage": "https://vaadin.com/components",
   "keywords": [
     "Vaadin",
     "vaadin-item",
@@ -60,18 +7,44 @@
     "web-component",
     "polymer"
   ],
-  "license": "Apache-2.0",
-  "main": "vaadin-item.js",
+  "repository": "vaadin/vaadin-item",
+  "homepage": "https://vaadin.com/components",
   "name": "@vaadin/vaadin-item",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vaadin/vaadin-item.git"
+  "version": "2.3.0",
+  "main": "vaadin-item.js",
+  "author": "Vaadin Ltd",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-item/issues"
   },
+  "files": [
+    "vaadin-*.d.ts",
+    "vaadin-*.js",
+    "src",
+    "theme"
+  ],
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "2.1.1"
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0",
+    "@vaadin/vaadin-themable-mixin": "^1.6.1",
+    "@vaadin/vaadin-element-mixin": "^2.4.1",
+    "@vaadin/vaadin-lumo-styles": "^1.1.0",
+    "@vaadin/vaadin-material-styles": "^1.1.0"
+  },
+  "scripts": {
+    "generate-typings": "gen-typescript-declarations --outDir . --verify"
+  },
+  "devDependencies": {
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-demo-helpers": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1",
+    "@vaadin/vaadin-demo-helpers": "^3.0.0"
+  }
 }

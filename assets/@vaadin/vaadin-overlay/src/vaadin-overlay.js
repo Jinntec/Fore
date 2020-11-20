@@ -10,8 +10,8 @@ import { templatize } from '../../../@polymer/polymer/lib/utils/templatize.js';
 import { afterNextRender } from '../../../@polymer/polymer/lib/utils/render-status.js';
 import { FlattenedNodesObserver } from '../../../@polymer/polymer/lib/utils/flattened-nodes-observer.js';
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { DirMixin } from '../../vaadin-element-mixin/vaadin-dir-mixin.js';
 import { FocusablesHelper } from './vaadin-focusables-helper.js';
-import { PositionMixin } from './vaadin-overlay-position-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 let overlayContentCounter = 0;
 const overlayContentCache = {};
@@ -36,8 +36,7 @@ const processOverlayStyles = cssText => {
 
   // NOTE(platosha): Have to use an awkward IIFE returning class here
   // to prevent this class from showing up in analysis.json & API docs.
-  /** @private */
-  const klass = (() => class extends HTMLElement {
+  const klass = (() => /** @private */class extends HTMLElement {
     static get is() {
       return is;
     }
@@ -154,12 +153,11 @@ const processOverlayStyles = cssText => {
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
- * @mixes Vaadin.ThemableMixin
- * @mixes Vaadin.Overlay.PositionMixin
+ * @extends PolymerElement
+ * @mixes ThemableMixin
  * @demo demo/index.html
  */
-class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
+class OverlayElement extends ThemableMixin(DirMixin(PolymerElement)) {
   static get template() {
     return html`
     <style>
@@ -246,6 +244,9 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
 
   static get properties() {
     return {
+      /**
+       * When true, the overlay is visible and attached to body.
+       */
       opened: {
         type: Boolean,
         notify: true,
@@ -255,6 +256,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
 
       /**
        * Owner element passed with renderer function
+       * @type {HTMLElement}
        */
       owner: Element,
 
@@ -265,11 +267,13 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
        * - `root` The root container DOM element. Append your content to it.
        * - `owner` The host element of the renderer function.
        * - `model` The object with the properties related with rendering.
+       * @type {OverlayRenderer | null | undefined}
        */
       renderer: Function,
 
       /**
        * The template of the overlay content.
+       * @type {HTMLTemplateElement | null | undefined}
        */
       template: {
         type: Object,
@@ -285,12 +289,17 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
 
       /**
        * References the content container after the template is stamped.
+       * @type {!HTMLElement | undefined}
        */
       content: {
         type: Object,
         notify: true
       },
 
+      /**
+       * When true the overlay has backdrop on top of content when opened.
+       * @type {boolean}
+       */
       withBackdrop: {
         type: Boolean,
         value: false,
@@ -305,6 +314,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
       /**
        * When true the overlay won't disable the main content, showing
        * it doesn’t change the functionality of the user interface.
+       * @type {boolean}
        */
       modeless: {
         type: Boolean,
@@ -316,6 +326,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
       /**
        * When set to true, the overlay is hidden. This also closes the overlay
        * immediately in case there is a closing animation in progress.
+       * @type {boolean}
        */
       hidden: {
         type: Boolean,
@@ -326,6 +337,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
       /**
        * When true move focus to the first focusable element in the overlay,
        * or to the overlay if there are no focusable elements.
+       * @type {boolean}
        */
       focusTrap: {
         type: Boolean,
@@ -334,38 +346,50 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
 
       /**
        * Set to true to enable restoring of focus when overlay is closed.
+       * @type {boolean}
        */
       restoreFocusOnClose: {
         type: Boolean,
         value: false
       },
 
+      /** @private */
       _mouseDownInside: {
         type: Boolean
       },
 
+      /** @private */
       _mouseUpInside: {
         type: Boolean
       },
 
+      /** @private */
       _instance: {
         type: Object
       },
 
+      /** @private */
       _originalContentPart: Object,
 
+      /** @private */
       _contentNodes: Array,
 
+      /** @private */
       _oldOwner: Element,
 
+      /** @private */
       _oldModel: Object,
 
+      /** @private */
       _oldTemplate: Object,
 
+      /** @private */
       _oldInstanceProps: Object,
 
+      /** @private */
       _oldRenderer: Object,
 
+      /** @private */
       _oldOpened: Boolean
     };
   }
@@ -406,6 +430,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     this.$.backdrop.addEventListener('click', () => {});
   }
 
+  /** @private */
   _detectIosNavbar() {
     if (!this.opened) {
       return;
@@ -425,11 +450,16 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /**
+   * @param {!Array<!Element>} nodes
+   * @protected
+   */
   _setTemplateFromNodes(nodes) {
     this.template = nodes.filter(node => node.localName && node.localName === 'template')[0] || this.template;
   }
 
   /**
+   * @param {Event=} sourceEvent
    * @event vaadin-overlay-close
    * fired before the `vaadin-overlay` will be closed. If canceled the closing of the overlay is canceled as well.
    */
@@ -456,14 +486,17 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     this._boundIosResizeListener && window.removeEventListener('resize', this._boundIosResizeListener);
   }
 
+  /** @private */
   _ironOverlayCanceled(event) {
     event.preventDefault();
   }
 
+  /** @private */
   _mouseDownListener(event) {
     this._mouseDownInside = event.composedPath().indexOf(this.$.overlay) >= 0;
   }
 
+  /** @private */
   _mouseUpListener(event) {
     this._mouseUpInside = event.composedPath().indexOf(this.$.overlay) >= 0;
   }
@@ -475,6 +508,8 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
    *
    * @event vaadin-overlay-outside-click
    * fired before the `vaadin-overlay` will be closed on outside click. If canceled the closing of the overlay is canceled as well.
+   *
+   * @private
    */
   _outsideClickListener(event) {
     if (event.composedPath().indexOf(this.$.overlay) !== -1 || this._mouseDownInside || this._mouseUpInside) {
@@ -497,6 +532,8 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
   /**
    * @event vaadin-overlay-escape-press
    * fired before the `vaadin-overlay` will be closed on ESC button press. If canceled the closing of the overlay is canceled as well.
+   *
+   * @private
    */
   _keydownListener(event) {
     if (!this._last) {
@@ -521,6 +558,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _ensureTemplatized() {
     this._setTemplateFromNodes(Array.from(this.children));
   }
@@ -528,6 +566,8 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
   /**
    * @event vaadin-overlay-open
    * fired after the `vaadin-overlay` is opened.
+   *
+   * @private
    */
   _openedChanged(opened, wasOpened) {
     if (!this._instance) {
@@ -560,21 +600,34 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @private */
   _hiddenChanged(hidden) {
     if (hidden && this.hasAttribute('closing')) {
       this._flushAnimation('closing');
     }
   }
 
+  /**
+   * @return {boolean}
+   * @protected
+   */
   _shouldAnimate() {
     const name = getComputedStyle(this).getPropertyValue('animation-name');
     const hidden = getComputedStyle(this).getPropertyValue('display') === 'none';
     return !hidden && name && name != 'none';
   }
 
+  /**
+   * @param {string} type
+   * @param {Function} callback
+   * @protected
+   */
   _enqueueAnimation(type, callback) {
     const handler = `__${type}Handler`;
-    const listener = () => {
+    const listener = event => {
+      if (event && event.target !== this) {
+        return;
+      }
       callback();
       this.removeEventListener('animationend', listener);
       delete this[handler];
@@ -583,6 +636,10 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     this.addEventListener('animationend', listener);
   }
 
+  /**
+   * @param {string} type
+   * @protected
+   */
   _flushAnimation(type) {
     const handler = `__${type}Handler`;
     if (typeof this[handler] === 'function') {
@@ -590,20 +647,21 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _animatedOpening() {
     if (this.parentNode === document.body && this.hasAttribute('closing')) {
       this._flushAnimation('closing');
     }
     this._attachOverlay();
+    if (!this.modeless) {
+      this._enterModalState();
+    }
     this.setAttribute('opening', '');
 
     const finishOpening = () => {
-      this.removeAttribute('opening');
       document.addEventListener('iron-overlay-canceled', this._boundIronOverlayCanceledListener);
 
-      if (!this.modeless) {
-        this._enterModalState();
-      }
+      this.removeAttribute('opening');
     };
 
     if (this._shouldAnimate()) {
@@ -613,41 +671,43 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _attachOverlay() {
     this._placeholder = document.createComment('vaadin-overlay-placeholder');
     this.parentNode.insertBefore(this._placeholder, this);
     document.body.appendChild(this);
+    this.bringToFront();
   }
 
+  /** @protected */
   _animatedClosing() {
     if (this.hasAttribute('opening')) {
       this._flushAnimation('opening');
     }
     if (this._placeholder) {
+      this._exitModalState();
+
+      if (this.restoreFocusOnClose && this.__restoreFocusNode) {
+        // If the activeElement is `<body>` or inside the overlay,
+        // we are allowed to restore the focus. In all the other
+        // cases focus might have been moved elsewhere by another
+        // component or by the user interaction (e.g. click on a
+        // button outside the overlay).
+        const activeElement = this._getActiveElement();
+
+        if (activeElement === document.body || this._deepContains(activeElement)) {
+          this.__restoreFocusNode.focus();
+        }
+        this.__restoreFocusNode = null;
+      }
+
       this.setAttribute('closing', '');
 
       const finishClosing = () => {
-        this.shadowRoot.querySelector('[part="overlay"]').style.removeProperty('pointer-events');
-
-        this._exitModalState();
-
         document.removeEventListener('iron-overlay-canceled', this._boundIronOverlayCanceledListener);
         this._detachOverlay();
+        this.shadowRoot.querySelector('[part="overlay"]').style.removeProperty('pointer-events');
         this.removeAttribute('closing');
-
-        if (this.restoreFocusOnClose && this.__restoreFocusNode) {
-          // If the activeElement is `<body>` or inside the overlay,
-          // we are allowed to restore the focus. In all the other
-          // cases focus might have been moved elsewhere by another
-          // component or by the user interaction (e.g. click on a
-          // button outside the overlay).
-          const activeElement = this._getActiveElement();
-
-          if (activeElement === document.body || this._deepContains(activeElement)) {
-            this.__restoreFocusNode.focus();
-          }
-          this.__restoreFocusNode = null;
-        }
       };
 
       if (this._shouldAnimate()) {
@@ -658,25 +718,30 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _detachOverlay() {
     this._placeholder.parentNode.insertBefore(this, this._placeholder);
     this._placeholder.parentNode.removeChild(this._placeholder);
   }
 
   /**
-   * Returns all attached overlays.
+   * Returns all attached overlays in visual stacking order.
+   * @private
    */
   static get __attachedInstances() {
-    return Array.from(document.body.children).filter(el => el instanceof OverlayElement);
+    return Array.from(document.body.children).filter(el => el instanceof OverlayElement && !el.hasAttribute('closing')).sort((a, b) => a.__zIndex - b.__zIndex || 0);
   }
 
   /**
    * returns true if this is the last one in the opened overlays stack
+   * @return {boolean}
+   * @protected
    */
   get _last() {
     return this === OverlayElement.__attachedInstances.pop();
   }
 
+  /** @private */
   _modelessChanged(modeless) {
     if (!modeless) {
       if (this.opened) {
@@ -689,6 +754,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _addGlobalListeners() {
     document.addEventListener('mousedown', this._boundMouseDownListener);
     document.addEventListener('mouseup', this._boundMouseUpListener);
@@ -698,6 +764,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     document.addEventListener('keydown', this._boundKeydownListener);
   }
 
+  /** @protected */
   _enterModalState() {
     if (document.body.style.pointerEvents !== 'none') {
       // Set body pointer-events to 'none' to disable mouse interactions with
@@ -708,12 +775,13 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
 
     // Disable pointer events in other attached overlays
     OverlayElement.__attachedInstances.forEach(el => {
-      if (el !== this && !el.hasAttribute('opening') && !el.hasAttribute('closing')) {
+      if (el !== this) {
         el.shadowRoot.querySelector('[part="overlay"]').style.pointerEvents = 'none';
       }
     });
   }
 
+  /** @protected */
   _removeGlobalListeners() {
     document.removeEventListener('mousedown', this._boundMouseDownListener);
     document.removeEventListener('mouseup', this._boundMouseUpListener);
@@ -721,6 +789,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     document.removeEventListener('keydown', this._boundKeydownListener);
   }
 
+  /** @protected */
   _exitModalState() {
     if (this._previousDocumentPointerEvents !== undefined) {
       // Restore body pointer-events
@@ -745,6 +814,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @protected */
   _removeOldContent() {
     if (!this.content || !this._contentNodes) {
       return;
@@ -771,6 +841,11 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     this.content = undefined;
   }
 
+  /**
+   * @param {!HTMLTemplateElement} template
+   * @param {object} instanceProps
+   * @protected
+   */
   _stampOverlayTemplate(template, instanceProps) {
     this._removeOldContent();
 
@@ -842,6 +917,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @private */
   _removeNewRendererOrTemplate(template, oldTemplate, renderer, oldRenderer) {
     if (template !== oldTemplate) {
       this.template = undefined;
@@ -859,6 +935,7 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /** @private */
   _templateOrRendererChanged(template, renderer, owner, model, instanceProps, opened) {
     if (template && renderer) {
       this._removeNewRendererOrTemplate(template, this._oldTemplate, renderer, this._oldRenderer);
@@ -896,15 +973,30 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     }
   }
 
+  /**
+   * @param {Element} element
+   * @return {boolean}
+   * @protected
+   */
   _isFocused(element) {
     return element && element.getRootNode().activeElement === element;
   }
 
+  /**
+   * @param {Element[]} elements
+   * @return {number}
+   * @protected
+   */
   _focusedIndex(elements) {
     elements = elements || this._getFocusableElements();
     return elements.indexOf(elements.filter(this._isFocused).pop());
   }
 
+  /**
+   * @param {number} increment
+   * @param {number | undefined} index
+   * @protected
+   */
   _cycleTab(increment, index) {
     const focusableElements = this._getFocusableElements();
 
@@ -925,11 +1017,19 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     focusableElements[index].focus();
   }
 
+  /**
+   * @return {!Array<!HTMLElement>}
+   * @protected
+   */
   _getFocusableElements() {
     // collect all focusable elements
     return FocusablesHelper.getTabbableNodes(this.$.overlay);
   }
 
+  /**
+   * @return {!Element}
+   * @protected
+   */
   _getActiveElement() {
     let active = document._activeElement || document.activeElement;
     // document.activeElement can be null
@@ -946,6 +1046,11 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
     return active;
   }
 
+  /**
+   * @param {!Node} node
+   * @return {boolean}
+   * @protected
+   */
   _deepContains(node) {
     if (this.contains(node)) {
       return true;
@@ -957,6 +1062,20 @@ class OverlayElement extends ThemableMixin(PositionMixin(PolymerElement)) {
       n = n.parentNode || n.host;
     }
     return n === this;
+  }
+
+  /**
+   * Brings the overlay as visually the frontmost one
+   */
+  bringToFront() {
+    let zIndex = '';
+    const frontmost = OverlayElement.__attachedInstances.filter(o => o !== this).pop();
+    if (frontmost) {
+      const frontmostZIndex = frontmost.__zIndex;
+      zIndex = frontmostZIndex + 1;
+    }
+    this.style.zIndex = zIndex;
+    this.__zIndex = zIndex || parseFloat(getComputedStyle(this).zIndex);
   }
 }
 

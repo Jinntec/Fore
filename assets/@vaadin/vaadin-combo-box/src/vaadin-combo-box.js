@@ -9,7 +9,6 @@ import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 import '../../vaadin-text-field/src/vaadin-text-field.js';
 import { ControlStateMixin } from '../../vaadin-control-state-mixin/vaadin-control-state-mixin.js';
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
-import { ThemePropertyMixin } from '../../vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import { ComboBoxMixin } from './vaadin-combo-box-mixin.js';
 import './vaadin-combo-box-dropdown-wrapper.js';
 import { ComboBoxDataProviderMixin } from './vaadin-combo-box-data-provider-mixin.js';
@@ -170,16 +169,15 @@ import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
- * @mixes Vaadin.ElementMixin
- * @mixes Vaadin.ControlStateMixin
- * @mixes Vaadin.ComboBoxDataProviderMixin
- * @mixes Vaadin.ComboBoxMixin
- * @mixes Vaadin.ThemableMixin
- * @mixes Vaadin.ThemePropertyMixin
+ * @extends PolymerElement
+ * @mixes ElementMixin
+ * @mixes ControlStateMixin
+ * @mixes ComboBoxDataProviderMixin
+ * @mixes ComboBoxMixin
+ * @mixes ThemableMixin
  * @demo demo/index.html
  */
-class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(ThemableMixin(ComboBoxDataProviderMixin(ComboBoxMixin(PolymerElement)))))) {
+class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemableMixin(ComboBoxDataProviderMixin(ComboBoxMixin(PolymerElement))))) {
   static get template() {
     return html`
     <style>
@@ -201,8 +199,9 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
       }
     </style>
 
-    <vaadin-text-field part="text-field" id="input" pattern="[[pattern]]" prevent-invalid-input="[[preventInvalidInput]]" value="{{_inputElementValue}}" autocomplete="off" invalid="[[invalid]]" label="[[label]]" name="[[name]]" placeholder="[[placeholder]]" required="[[required]]" disabled="[[disabled]]" readonly="[[readonly]]" error-message="[[errorMessage]]" autocapitalize="none" autofocus="[[autofocus]]" on-change="_stopPropagation" on-input="_inputValueChanged" clear-button-visible="[[clearButtonVisible]]" theme\$="[[theme]]">
+    <vaadin-text-field part="text-field" id="input" pattern="[[pattern]]" prevent-invalid-input="[[preventInvalidInput]]" value="{{_inputElementValue}}" autocomplete="off" invalid="[[invalid]]" label="[[label]]" name="[[name]]" placeholder="[[placeholder]]" required="[[required]]" disabled="[[disabled]]" readonly="[[readonly]]" helper-text="[[helperText]]" error-message="[[errorMessage]]" autocapitalize="none" autofocus="[[autofocus]]" on-change="_stopPropagation" on-input="_inputValueChanged" clear-button-visible="[[clearButtonVisible]]" theme\$="[[theme]]">
       <slot name="prefix" slot="prefix"></slot>
+      <slot name="helper" slot="helper">[[helperText]]</slot>
 
       <div part="toggle-button" id="toggleButton" slot="suffix" role="button" aria-label="Toggle"></div>
 
@@ -226,7 +225,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
   }
 
   static get version() {
-    return '5.0.9';
+    return '5.4.6';
   }
 
   static get properties() {
@@ -241,6 +240,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
 
       /**
        * Set to true to mark the input as required.
+       * @type {boolean}
        */
       required: {
         type: Boolean,
@@ -249,6 +249,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
 
       /**
        * Set to true to disable this input.
+       * @type {boolean}
        */
       disabled: {
         type: Boolean,
@@ -257,6 +258,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
 
       /**
        * Set to true to prevent the user from entering invalid input.
+       * @attr {boolean} prevent-invalid-input
        */
       preventInvalidInput: {
         type: Boolean
@@ -271,23 +273,36 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
 
       /**
        * The error message to display when the input is invalid.
+       * @attr {string} error-message
        */
       errorMessage: {
         type: String
       },
 
+      /** @type {boolean} */
       autofocus: {
         type: Boolean
       },
 
       /**
        * A placeholder string in addition to the label.
+       * @type {string}
        */
       placeholder: {
         type: String,
         value: ''
       },
 
+      /**
+       * String used for the helper text.
+       * @attr {string} helper-text
+       */
+      helperText: {
+        type: String,
+        value: ''
+      },
+
+      /** @type {boolean} */
       readonly: {
         type: Boolean,
         value: false
@@ -295,6 +310,8 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
 
       /**
        * Set to true to display the clear icon which clears the input.
+       * @attr {boolean} clear-button-visible
+       * @type {boolean}
        */
       clearButtonVisible: {
         type: Boolean,
@@ -307,7 +324,14 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
     return ['_updateAriaExpanded(opened)'];
   }
 
-  attributeChanged(name, type) {
+  /**
+   * @param {string} name
+   * @param {?string} oldValue
+   * @param {?string} newValue
+   * @protected
+   */
+  attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
     // Safari has an issue with repainting shadow root element styles when a host attribute changes.
     // Need this workaround (toggle any inline css property on and off) until the issue gets fixed.
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -319,6 +343,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
     }
   }
 
+  /** @protected */
   ready() {
     super.ready();
 
@@ -346,20 +371,24 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
     this._updateAriaExpanded();
   }
 
+  /** @protected */
   connectedCallback() {
     super.connectedCallback();
     this._preventInputBlur();
   }
 
+  /** @protected */
   disconnectedCallback() {
     super.disconnectedCallback();
     this._restoreInputBlur();
   }
 
+  /** @private */
   _getPositionTarget() {
     return this.$.input;
   }
 
+  /** @private */
   _updateAriaExpanded() {
     if (this._nativeInput) {
       this._nativeInput.setAttribute('aria-expanded', this.opened);
@@ -367,12 +396,14 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemePropertyMixin(
     }
   }
 
+  /** @return {!TextFieldElement | undefined} */
   get inputElement() {
     return this.$.input;
   }
 
   /**
    * Focusable element used by vaadin-control-state-mixin
+   * @return {!HTMLElement}
    */
   get focusElement() {
     // inputElement might not be defined on property changes before ready.

@@ -7,9 +7,10 @@ This program is available under Apache License Version 2.0, available at https:/
 import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 
 import { TextFieldMixin } from './vaadin-text-field-mixin.js';
+import { ControlStateMixin } from '../../vaadin-control-state-mixin/vaadin-control-state-mixin.js';
+import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
 import { ElementMixin } from '../../vaadin-element-mixin/vaadin-element-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
-import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
 /**
  * `<vaadin-text-field>` is a Web Component for text field control in forms.
  *
@@ -56,6 +57,8 @@ import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin
  * `disabled` | Set to a disabled text field | :host
  * `has-value` | Set when the element has a value | :host
  * `has-label` | Set when the element has a label | :host
+ * `has-helper` | Set when the element has helper text or slot | :host
+ * `has-error-message` | Set when the element has an error message | :host
  * `invalid` | Set when the element is invalid | :host
  * `input-prevented` | Temporarily set when invalid input is prevented | :host
  * `focused` | Set when the element is focused | :host
@@ -64,12 +67,14 @@ import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
- * @mixes Vaadin.TextFieldMixin
- * @mixes Vaadin.ThemableMixin
+ * @extends PolymerElement
+ * @mixes TextFieldMixin
+ * @mixes ControlStateMixin
+ * @mixes ThemableMixin
+ * @mixes ElementMixin
  * @demo demo/index.html
  */
-class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(PolymerElement))) {
+class TextFieldElement extends ElementMixin(TextFieldMixin(ControlStateMixin(ThemableMixin(PolymerElement)))) {
   static get template() {
     return html`
     <style include="vaadin-text-field-shared-styles">
@@ -93,6 +98,10 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
 
       </div>
 
+      <div part="helper-text" on-click="focus" id="[[_helperTextId]]">
+        <slot name="helper">[[helperText]]</slot>
+      </div>
+
       <div part="error-message" id="[[_errorId]]" aria-live="assertive" aria-hidden\$="[[_getErrorMessageAriaHidden(invalid, errorMessage, _errorId)]]">[[errorMessage]]</div>
 
     </div>
@@ -104,7 +113,7 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
   }
 
   static get version() {
-    return '2.4.14';
+    return '2.8.1';
   }
 
   static get properties() {
@@ -126,7 +135,8 @@ class TextFieldElement extends ElementMixin(TextFieldMixin(ThemableMixin(Polymer
       },
 
       /**
-       * Message to show to the user when validation fails.
+       * The text usually displayed in a tooltip popup when the mouse is over the field.
+       * @type {string}
        */
       title: {
         type: String

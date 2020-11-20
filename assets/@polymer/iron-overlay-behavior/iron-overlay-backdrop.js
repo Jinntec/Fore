@@ -31,6 +31,7 @@ Custom property | Description | Default
 `--iron-overlay-backdrop-opened`           | Mixin applied to `iron-overlay-backdrop` when it is displayed | {}
 */
 Polymer({
+  /** @override */
   _template: html`
     <style>
       :host {
@@ -76,11 +77,13 @@ Polymer({
     'transitionend': '_onTransitionend'
   },
 
+  /** @override */
   created: function () {
     // Used to cancel previous requestAnimationFrame calls when opened changes.
     this.__openedRaf = null;
   },
 
+  /** @override */
   attached: function () {
     this.opened && this._openedChanged(this.opened);
   },

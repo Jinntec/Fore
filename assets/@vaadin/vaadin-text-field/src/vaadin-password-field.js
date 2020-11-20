@@ -9,9 +9,9 @@ import '../../../@polymer/polymer/polymer-element.js';
 import '../../../@polymer/polymer/lib/elements/custom-style.js';
 import { TextFieldElement } from './vaadin-text-field.js';
 import { DomModule } from '../../../@polymer/polymer/lib/elements/dom-module.js';
-const $_documentContainer = document.createElement('template');
+import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 
-$_documentContainer.innerHTML = `<custom-style>
+const $_documentContainer = html`<custom-style>
   <style>
     @font-face {
       font-family: 'vaadin-password-field-icons';
@@ -68,7 +68,7 @@ let memoizedTemplate;
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
+ * @extends TextFieldElement
  * @demo demo/index.html
  */
 class PasswordFieldElement extends TextFieldElement {
@@ -77,13 +77,15 @@ class PasswordFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.4.14';
+    return '2.8.1';
   }
 
   static get properties() {
     return {
       /**
        * Set to true to hide the eye icon which toggles the password visibility.
+       * @attr {boolean} reveal-button-hidden
+       * @type {boolean}
        */
       revealButtonHidden: {
         type: Boolean,
@@ -92,6 +94,8 @@ class PasswordFieldElement extends TextFieldElement {
 
       /**
        * True if the password is visible ([type=text]).
+       * @attr {boolean} password-visible
+       * @type {boolean}
        */
       passwordVisible: {
         type: Boolean,
@@ -122,6 +126,7 @@ class PasswordFieldElement extends TextFieldElement {
     return memoizedTemplate;
   }
 
+  /** @protected */
   ready() {
     super.ready();
     this.inputElement.type = 'password';
@@ -137,6 +142,10 @@ class PasswordFieldElement extends TextFieldElement {
     });
   }
 
+  /**
+   * @param {!Event} e
+   * @protected
+   */
   _onChange(e) {
     const slotted = this.querySelector(`${this._slottedTagName}[slot="${this._slottedTagName}"]`);
     if (slotted) {
@@ -150,12 +159,14 @@ class PasswordFieldElement extends TextFieldElement {
     }
   }
 
+  /** @private */
   _revealButtonMouseDown(e) {
     if (this.hasAttribute('focused')) {
       e.preventDefault();
     }
   }
 
+  /** @private */
   _togglePasswordVisibilityTouchend(e) {
     // Cancel the following click event
     e.preventDefault();
@@ -163,6 +174,7 @@ class PasswordFieldElement extends TextFieldElement {
     this.inputElement.focus();
   }
 
+  /** @private */
   _togglePasswordVisibility() {
     this._passwordVisibilityChanging = true;
     this.inputElement.blur();
@@ -171,6 +183,7 @@ class PasswordFieldElement extends TextFieldElement {
     this._passwordVisibilityChanging = false;
   }
 
+  /** @private */
   _passwordVisibleChange(passwordVisible) {
     this.inputElement.type = passwordVisible ? 'text' : 'password';
   }

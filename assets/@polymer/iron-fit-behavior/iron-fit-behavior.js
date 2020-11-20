@@ -236,12 +236,21 @@ export const IronFitBehavior = {
     return (this.horizontalAlign || this.verticalAlign) && this.positionTarget;
   },
 
-  attached: function () {
+  /**
+   * True if the component is RTL.
+   * @private
+   */
+  get _isRTL() {
     // Memoize this to avoid expensive calculations & relayouts.
     // Make sure we do it only once
-    if (typeof this._isRTL === 'undefined') {
-      this._isRTL = window.getComputedStyle(this).direction == 'rtl';
+    if (typeof this._memoizedIsRTL === 'undefined') {
+      this._memoizedIsRTL = window.getComputedStyle(this).direction == 'rtl';
     }
+    return this._memoizedIsRTL;
+  },
+
+  /** @override */
+  attached: function () {
     this.positionTarget = this.positionTarget || this._defaultPositionTarget;
     if (this.autoFitOnAttach) {
       if (window.getComputedStyle(this).display === 'none') {
@@ -258,6 +267,7 @@ export const IronFitBehavior = {
     }
   },
 
+  /** @override */
   detached: function () {
     if (this.__deferredFit) {
       clearTimeout(this.__deferredFit);

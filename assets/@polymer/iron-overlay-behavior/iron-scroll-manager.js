@@ -40,24 +40,15 @@ var scrollEvents = [
 'touchstart', 'touchmove'];
 // must be defined for modulizer
 var _boundScrollHandler;
-var currentLockingElement;
-
-/**
- * The IronScrollManager is intended to provide a central source
- * of authority and control over which elements in a document are currently
- * allowed to scroll.
- *
- */
-`TODO(modulizer): A namespace named Polymer.IronScrollManager was
-declared here. The surrounding comments should be reviewed,
-and this string can then be deleted`;
 
 /**
  * The current element that defines the DOM boundaries of the
  * scroll lock. This is always the most recently locking element.
  *
- * @return {!Node|undefined}
+ * @type {!Node|undefined}
  */
+var currentLockingElement;
+
 export { currentLockingElement };
 
 /**
@@ -210,7 +201,7 @@ export function _scrollInteractionHandler(event) {
 }
 
 /**
- * @private
+ * @package
  */
 export { _boundScrollHandler };
 
@@ -237,7 +228,7 @@ export function _unlockScrollInteractions() {
  * outside the locking element when it is already at its scroll boundaries.
  * @param {!Event} event
  * @return {boolean}
- * @private
+ * @package
  */
 export function _shouldPreventScrolling(event) {
   // Update if root target changed. For touch events, ensure we don't
@@ -268,11 +259,11 @@ export function _shouldPreventScrolling(event) {
  * which is included too if scrollable.
  * @param {!Array<!Node>} nodes
  * @return {!Array<!Node>} scrollables
- * @private
+ * @package
  */
 export function _getScrollableNodes(nodes) {
   var scrollables = [];
-  var lockingIndex = nodes.indexOf(currentLockingElement);
+  var lockingIndex = nodes.indexOf( /** @type {!Node} */currentLockingElement);
   // Loop from root target to locking element (included).
   for (var i = 0; i <= lockingIndex; i++) {
     // Skip non-Element nodes.
@@ -299,7 +290,7 @@ export function _getScrollableNodes(nodes) {
  * @param {number} deltaX Scroll delta on the x-axis
  * @param {number} deltaY Scroll delta on the y-axis
  * @return {!Node|undefined}
- * @private
+ * @package
  */
 export function _getScrollingNode(nodes, deltaX, deltaY) {
   // No scroll.
@@ -332,7 +323,7 @@ export function _getScrollingNode(nodes, deltaX, deltaY) {
  * x-axis scroll delta (positive: scroll right, negative: scroll left,
  * 0: no scroll), and the y-axis scroll delta (positive: scroll down,
  * negative: scroll up, 0: no scroll).
- * @private
+ * @package
  */
 export function _getScrollInfo(event) {
   var info = { deltaX: event.deltaX, deltaY: event.deltaY };

@@ -7,7 +7,6 @@ This program is available under Apache License Version 2.0, available at https:/
 import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
-import { ThemePropertyMixin } from '../../vaadin-themable-mixin/vaadin-theme-property-mixin.js';
 import { ComboBoxMixin } from './vaadin-combo-box-mixin.js';
 import { ComboBoxDataProviderMixin } from './vaadin-combo-box-data-provider-mixin.js';
 import './vaadin-combo-box-dropdown-wrapper.js';
@@ -55,13 +54,12 @@ import { dashToCamelCase } from '../../../@polymer/polymer/lib/utils/case-map.js
  *   </paper-input>
  * </vaadin-combo-box-light>
  * ```
- * @memberof Vaadin
- * @mixes Vaadin.ComboBoxDataProviderMixin
- * @mixes Vaadin.ComboBoxMixin
- * @mixes Vaadin.ThemableMixin
- * @mixes Vaadin.ThemePropertyMixin
+ * @extends PolymerElement
+ * @mixes ComboBoxDataProviderMixin
+ * @mixes ComboBoxMixin
+ * @mixes ThemableMixin
  */
-class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxDataProviderMixin(ComboBoxMixin(PolymerElement)))) {
+class ComboBoxLightElement extends ThemableMixin(ComboBoxDataProviderMixin(ComboBoxMixin(PolymerElement))) {
   static get template() {
     return html`
     <style>
@@ -86,12 +84,17 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
       /**
        * Name of the two-way data-bindable property representing the
        * value of the custom input field.
+       * @attr {string} attr-for-value
+       * @type {string}
        */
       attrForValue: {
         type: String,
         value: 'value'
       },
 
+      /**
+       * @type {!Element | undefined}
+       */
       inputElement: {
         type: Element,
         readOnly: true
@@ -105,6 +108,7 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
     this.__boundInputValueCommitted = this.__inputValueCommitted.bind(this);
   }
 
+  /** @protected */
   ready() {
     super.ready();
     this._toggleElement = this.querySelector('.toggle-button');
@@ -119,10 +123,14 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
     }
   }
 
+  /**
+   * @return {boolean}
+   */
   get focused() {
     return this.getRootNode().activeElement === this.inputElement;
   }
 
+  /** @protected */
   connectedCallback() {
     super.connectedCallback();
     const cssSelector = 'vaadin-text-field,iron-input,paper-input,.paper-input-input,.input';
@@ -133,6 +141,7 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
     this._preventInputBlur();
   }
 
+  /** @protected */
   disconnectedCallback() {
     super.disconnectedCallback();
     this.inputElement.removeEventListener('input', this._boundInputValueChanged);
@@ -140,6 +149,7 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
     this._restoreInputBlur();
   }
 
+  /** @private */
   __inputValueCommitted(e) {
     // Detect if the input was cleared (by clicking the clear button on a vaadin-text-field)
     // and propagate the value change to combo box value immediately.
@@ -148,14 +158,26 @@ class ComboBoxLightElement extends ThemePropertyMixin(ThemableMixin(ComboBoxData
     }
   }
 
+  /**
+   * @return {string}
+   * @protected
+   */
   get _propertyForValue() {
     return dashToCamelCase(this.attrForValue);
   }
 
+  /**
+   * @return {string}
+   * @protected
+   */
   get _inputElementValue() {
     return this.inputElement && this.inputElement[this._propertyForValue];
   }
 
+  /**
+   * @param {string} value
+   * @protected
+   */
   set _inputElementValue(value) {
     if (this.inputElement) {
       this.inputElement[this._propertyForValue] = value;

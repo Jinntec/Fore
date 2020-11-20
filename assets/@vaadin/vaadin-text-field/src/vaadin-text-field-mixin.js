@@ -4,14 +4,12 @@
 Copyright (c) 2017 Vaadin Ltd.
 This program is available under Apache License Version 2.0, available at https://vaadin.com/license/
 */
-import '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { timeOut, animationFrame } from '../../../@polymer/polymer/lib/utils/async.js';
 
-import { ControlStateMixin } from '../../vaadin-control-state-mixin/vaadin-control-state-mixin.js';
-import { timeOut } from '../../../@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '../../../@polymer/polymer/lib/utils/debounce.js';
-const $_documentContainer = document.createElement('template');
+import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 
-$_documentContainer.innerHTML = `<dom-module id="vaadin-text-field-shared-styles">
+const $_documentContainer = html`<dom-module id="vaadin-text-field-shared-styles">
   <template>
     <style>
       :host {
@@ -114,8 +112,8 @@ $_documentContainer.innerHTML = `<dom-module id="vaadin-text-field-shared-styles
 document.head.appendChild($_documentContainer.content);
 
 const HOST_PROPS = {
-  default: ['list', 'autofocus', 'pattern', 'autocapitalize', 'autocorrect', 'maxlength', 'minlength', 'name', 'placeholder', 'autocomplete', 'title'],
-  accessible: ['disabled', 'readonly', 'required', 'invalid']
+  default: ['list', 'autofocus', 'pattern', 'autocapitalize', 'autocorrect', 'maxlength', 'minlength', 'name', 'placeholder', 'autocomplete', 'title', 'disabled', 'readonly', 'required'],
+  accessible: ['invalid']
 };
 
 const PROP_TYPE = {
@@ -125,9 +123,8 @@ const PROP_TYPE = {
 
 /**
  * @polymerMixin
- * @mixes Vaadin.ControlStateMixin
  */
-export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends ControlStateMixin(subclass) {
+export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends subclass {
   static get properties() {
     return {
       /**
@@ -145,6 +142,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
        * Possible values are:
        * on: Enable autocorrection.
        * off: Disable autocorrection.
+       * @type {!TextFieldAutoCorrect | undefined}
        */
       autocorrect: {
         type: String
@@ -158,6 +156,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
        * words: Words capitalization.
        * sentences: Sentences capitalization.
        * none: No capitalization.
+       * @type {!TextFieldAutoCapitalize | undefined}
        */
       autocapitalize: {
         type: String
@@ -165,6 +164,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * Specify that the value should be automatically selected when the field gains focus.
+       * @type {boolean}
        */
       autoselect: {
         type: Boolean,
@@ -173,6 +173,8 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * Set to true to display the clear icon which clears the input.
+       * @attr {boolean} clear-button-visible
+       * @type {boolean}
        */
       clearButtonVisible: {
         type: Boolean,
@@ -181,10 +183,13 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * Error to show when the input value is invalid.
+       * @attr {string} error-message
+       * @type {string}
        */
       errorMessage: {
         type: String,
-        value: ''
+        value: '',
+        observer: '_errorMessageChanged'
       },
 
       /**
@@ -197,6 +202,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
        *   clear: 'Clear'
        * }
        * ```
+       * @type {{clear: string}}
        */
       i18n: {
         type: Object,
@@ -209,11 +215,23 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * String used for the label element.
+       * @type {string}
        */
       label: {
         type: String,
         value: '',
         observer: '_labelChanged'
+      },
+
+      /**
+       * String used for the helper text.
+       * @attr {string} helper-text
+       * @type {string | null}
+       */
+      helperText: {
+        type: String,
+        value: '',
+        observer: '_helperTextChanged'
       },
 
       /**
@@ -263,6 +281,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
       /**
        * The initial value of the control.
        * It can be used for two-way data binding.
+       * @type {string}
        */
       value: {
         type: String,
@@ -273,6 +292,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * This property is set to true when the control value is invalid.
+       * @type {boolean}
        */
       invalid: {
         type: Boolean,
@@ -283,6 +303,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
       /**
        * Specifies that the text field has value.
+       * @attr {boolean} has-value
        */
       hasValue: {
         type: Boolean,
@@ -292,23 +313,50 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
       /**
        * When set to true, user is prevented from typing a value that
        * conflicts with the given `pattern`.
+       * @attr {boolean} prevent-invalid-input
        */
       preventInvalidInput: {
         type: Boolean
       },
 
+      /**
+       * A pattern matched against individual characters the user inputs.
+       * When set, the field will prevent:
+       * - `keyDown` events if the entered key doesn't match `/^_enabledCharPattern$/`
+       * - `paste` events if the pasted text doesn't match `/^_enabledCharPattern*$/`
+       * - `drop` events if the dropped text doesn't match `/^_enabledCharPattern*$/`
+       *
+       * For example, to enable entering only numbers and minus signs,
+       * `_enabledCharPattern = "[\\d-]"`
+       * @protected
+       */
+      _enabledCharPattern: String,
+
+      /** @private */
       _labelId: String,
 
+      /** @private */
+      _helperTextId: String,
+
+      /** @private */
       _errorId: String,
 
-      _inputId: String
+      /** @private */
+      _inputId: String,
+
+      /** @private */
+      _hasSlottedHelper: Boolean
     };
   }
 
   static get observers() {
-    return ['_stateChanged(disabled, readonly, clearButtonVisible, hasValue)', '_hostPropsChanged(' + HOST_PROPS.default.join(', ') + ')', '_hostAccessiblePropsChanged(' + HOST_PROPS.accessible.join(', ') + ')', '_getActiveErrorId(invalid, errorMessage, _errorId)', '_getActiveLabelId(label, _labelId, _inputId)', '__observeOffsetHeight(errorMessage, invalid, label)'];
+    return ['_stateChanged(disabled, readonly, clearButtonVisible, hasValue)', '_hostPropsChanged(' + HOST_PROPS.default.join(', ') + ')', '_hostAccessiblePropsChanged(' + HOST_PROPS.accessible.join(', ') + ')', '_getActiveErrorId(invalid, errorMessage, _errorId, helperText, _helperTextId, _hasSlottedHelper)', '_getActiveLabelId(label, _labelId, _inputId)', '__observeOffsetHeight(errorMessage, invalid, label, helperText)', '__enabledCharPatternChanged(_enabledCharPattern)'];
   }
 
+  /**
+   * @return {HTMLElement | undefined}
+   * @protected
+   */
   get focusElement() {
     if (!this.shadowRoot) {
       return;
@@ -321,16 +369,22 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
   }
 
   /**
-   * @private
+   * @return {HTMLElement | undefined}}
+   * @protected
    */
   get inputElement() {
     return this.focusElement;
   }
 
+  /**
+   * @return {string}
+   * @protected
+   */
   get _slottedTagName() {
     return 'input';
   }
 
+  /** @protected */
   _createConstraintsObserver() {
     // This complex observer needs to be added dynamically here (instead of defining it above in the `get observers()`)
     // so that it runs after complex observers of inheriting classes. Otherwise e.g. `_stepOrMinChanged()` observer of
@@ -339,6 +393,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this._createMethodObserver('_constraintsChanged(required, minlength, maxlength, pattern)');
   }
 
+  /** @private */
   _onInput(e) {
     if (this.__preventInput) {
       e.stopImmediatePropagation();
@@ -362,11 +417,14 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     if (!e.__fromClearButton) {
       this.__userInput = true;
     }
+
     this.value = e.target.value;
+    this.__userInput = false;
   }
 
   // NOTE(yuriy): Workaround needed for IE11 and Edge for proper displaying
   // of the clear button instead of setting display property for it depending on state.
+  /** @private */
   _stateChanged(disabled, readonly, clearButtonVisible, hasValue) {
     if (!disabled && !readonly && clearButtonVisible && hasValue) {
       this.$.clearButton.removeAttribute('hidden');
@@ -375,6 +433,10 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /**
+   * @param {!Event} e
+   * @protected
+   */
   _onChange(e) {
     if (this._valueClearing) {
       return;
@@ -392,6 +454,11 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this.dispatchEvent(changeEvent);
   }
 
+  /**
+   * @param {unknown} newVal
+   * @param {unknown} oldVal
+   * @protected
+   */
   _valueChanged(newVal, oldVal) {
     // setting initial value to empty string, skip validation
     if (newVal === '' && oldVal === undefined) {
@@ -405,7 +472,6 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
 
     if (this.__userInput) {
-      this.__userInput = false;
       return;
     } else if (newVal !== undefined) {
       this.inputElement.value = newVal;
@@ -418,14 +484,37 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /** @private */
   _labelChanged(label) {
-    if (label !== '' && label != null) {
-      this.setAttribute('has-label', '');
-    } else {
-      this.removeAttribute('has-label');
+    this._setOrToggleAttribute('has-label', !!label, this);
+  }
+
+  /** @private */
+  _helperTextChanged(helperText) {
+    this._setOrToggleAttribute('has-helper', !!helperText, this);
+  }
+
+  /** @private */
+  _errorMessageChanged(errorMessage) {
+    this._setOrToggleAttribute('has-error-message', !!errorMessage, this);
+  }
+
+  /** @private */
+  _onHelperSlotChange() {
+    const slottedNodes = this.shadowRoot.querySelector(`[name="helper"]`).assignedNodes({ flatten: true });
+    // Only has slotted helper if not a text node
+    // Text nodes are added by the helperText prop and not the helper slot
+    // The filter is added due to shady DOM triggering this callback on helperText prop change
+    this._hasSlottedHelper = slottedNodes.filter(node => node.nodeType !== 3).length;
+
+    if (this._hasSlottedHelper) {
+      this.setAttribute('has-helper', 'slotted');
+    } else if (this.helperText === '' || this.helperText === null) {
+      this.removeAttribute('has-helper');
     }
   }
 
+  /** @private */
   _onSlotChange() {
     const slotted = this.querySelector(`${this._slottedTagName}[slot="${this._slottedTagName}"]`);
 
@@ -448,14 +537,17 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     Object.keys(PROP_TYPE).map(key => PROP_TYPE[key]).forEach(type => this._propagateHostAttributes(HOST_PROPS[type].map(attr => this[attr]), type));
   }
 
+  /** @private */
   _hostPropsChanged(...attributesValues) {
     this._propagateHostAttributes(attributesValues, PROP_TYPE.DEFAULT);
   }
 
+  /** @private */
   _hostAccessiblePropsChanged(...attributesValues) {
     this._propagateHostAttributes(attributesValues, PROP_TYPE.ACCESSIBLE);
   }
 
+  /** @private */
   _validateSlottedValue(slotted) {
     if (slotted.value !== this.value) {
       console.warn('Please define value on the vaadin-text-field component!');
@@ -463,14 +555,15 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /** @private */
   _propagateHostAttributes(attributesValues, type) {
     const input = this.inputElement;
     const attributeNames = HOST_PROPS[type];
 
-    if (type === 'accessible') {
+    if (type === PROP_TYPE.ACCESSIBLE) {
       attributeNames.forEach((attr, index) => {
         this._setOrToggleAttribute(attr, attributesValues[index], input);
-        this._setOrToggleAttribute(`aria-${attr}`, attributesValues[index], input);
+        this._setOrToggleAttribute(`aria-${attr}`, attributesValues[index] ? 'true' : false, input);
       });
     } else {
       attributeNames.forEach((attr, index) => {
@@ -479,6 +572,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /** @private */
   _setOrToggleAttribute(name, value, node) {
     if (!name || !node) {
       return;
@@ -491,6 +585,13 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /**
+   * @param {boolean | undefined} required
+   * @param {number | undefined} minlength
+   * @param {number | undefined} maxlength
+   * @param {string | undefined} maxlength
+   * @protected
+   */
   _constraintsChanged(required, minlength, maxlength, pattern) {
     if (!this.invalid) {
       return;
@@ -505,30 +606,41 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
 
   /**
    * Returns true if the current input value satisfies all constraints (if any)
-   * @returns {boolean}
+   * @return {boolean}
    */
   checkValidity() {
-    if (this.required || this.pattern || this.maxlength || this.minlength) {
+    // Note (Yuriy): `__forceCheckValidity` is used in containing components (i.e. `vaadin-date-picker`) in order
+    // to force the checkValidity instead of returning the previous invalid state.
+    if (this.required || this.pattern || this.maxlength || this.minlength || this.__forceCheckValidity) {
       return this.inputElement.checkValidity();
     } else {
       return !this.invalid;
     }
   }
 
+  /** @private */
   _addInputListeners(node) {
     node.addEventListener('input', this._boundOnInput);
     node.addEventListener('change', this._boundOnChange);
     node.addEventListener('blur', this._boundOnBlur);
     node.addEventListener('focus', this._boundOnFocus);
+    node.addEventListener('paste', this._boundOnPaste);
+    node.addEventListener('drop', this._boundOnDrop);
+    node.addEventListener('beforeinput', this._boundOnBeforeInput);
   }
 
+  /** @private */
   _removeInputListeners(node) {
     node.removeEventListener('input', this._boundOnInput);
     node.removeEventListener('change', this._boundOnChange);
     node.removeEventListener('blur', this._boundOnBlur);
     node.removeEventListener('focus', this._boundOnFocus);
+    node.removeEventListener('paste', this._boundOnPaste);
+    node.removeEventListener('drop', this._boundOnDrop);
+    node.removeEventListener('beforeinput', this._boundOnBeforeInput);
   }
 
+  /** @protected */
   ready() {
     super.ready();
 
@@ -538,6 +650,9 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this._boundOnChange = this._onChange.bind(this);
     this._boundOnBlur = this._onBlur.bind(this);
     this._boundOnFocus = this._onFocus.bind(this);
+    this._boundOnPaste = this._onPaste.bind(this);
+    this._boundOnDrop = this._onDrop.bind(this);
+    this._boundOnBeforeInput = this._onBeforeInput.bind(this);
 
     const defaultInput = this.shadowRoot.querySelector('[part="value"]');
     this._slottedInput = this.querySelector(`${this._slottedTagName}[slot="${this._slottedTagName}"]`);
@@ -549,6 +664,9 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
 
     this.shadowRoot.querySelector('[name="input"], [name="textarea"]').addEventListener('slotchange', this._onSlotChange.bind(this));
+
+    this._onHelperSlotChange();
+    this.shadowRoot.querySelector('[name="helper"]').addEventListener('slotchange', this._onHelperSlotChange.bind(this));
 
     if (!(window.ShadyCSS && window.ShadyCSS.nativeCss)) {
       this.updateStyles();
@@ -562,6 +680,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     var uniqueId = TextFieldMixin._uniqueId = 1 + TextFieldMixin._uniqueId || 0;
     this._errorId = `${this.constructor.is}-error-${uniqueId}`;
     this._labelId = `${this.constructor.is}-label-${uniqueId}`;
+    this._helperTextId = `${this.constructor.is}-helper-${uniqueId}`;
     this._inputId = `${this.constructor.is}-input-${uniqueId}`;
 
     // Lumo theme defines a max-height transition for the "error-message"
@@ -585,10 +704,12 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this.value = '';
   }
 
+  /** @private */
   _onBlur() {
     this.validate();
   }
 
+  /** @private */
   _onFocus() {
     if (this.autoselect) {
       this.inputElement.select();
@@ -604,6 +725,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /** @private */
   _onClearButtonClick(e) {
     e.preventDefault();
     // NOTE(yuriy): This line won't affect focus on the host. Cannot be properly tested.
@@ -623,14 +745,66 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this.inputElement.dispatchEvent(changeEvent);
   }
 
+  /**
+   * @param {!KeyboardEvent} e
+   * @protected
+   */
   _onKeyDown(e) {
     if (e.keyCode === 27 && this.clearButtonVisible) {
       const dispatchChange = !!this.value;
       this.clear();
       dispatchChange && this.inputElement.dispatchEvent(new Event('change', { bubbles: !this._slottedInput }));
     }
+
+    if (this._enabledCharPattern && !this.__shouldAcceptKey(e)) {
+      e.preventDefault();
+    }
   }
 
+  /** @private */
+  __shouldAcceptKey(event) {
+    return event.metaKey || event.ctrlKey || !event.key // allow typing anything if event.key is not supported
+    || event.key.length !== 1 // allow "Backspace", "ArrowLeft" etc.
+    || this.__enabledCharRegExp.test(event.key);
+  }
+
+  /** @private */
+  _onPaste(e) {
+    if (this._enabledCharPattern) {
+      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      if (!this.__enabledTextRegExp.test(pastedText)) {
+        e.preventDefault();
+      }
+    }
+  }
+
+  /** @private */
+  _onDrop(e) {
+    if (this._enabledCharPattern) {
+      const draggedText = e.dataTransfer.getData('text');
+      if (!this.__enabledTextRegExp.test(draggedText)) {
+        e.preventDefault();
+      }
+    }
+  }
+
+  /** @private */
+  _onBeforeInput(e) {
+    // The `beforeinput` event covers all the cases for `_enabledCharPattern`: keyboard, pasting and dropping,
+    // but it is still experimental technology so we can't rely on it. It's used here just as an additional check,
+    // because it seems to be the only way to detect and prevent specific keys on mobile devices. See issue #429.
+    if (this._enabledCharPattern && e.data && !this.__enabledTextRegExp.test(e.data)) {
+      e.preventDefault();
+    }
+  }
+
+  /** @private */
+  __enabledCharPatternChanged(_enabledCharPattern) {
+    this.__enabledCharRegExp = _enabledCharPattern && new RegExp('^' + _enabledCharPattern + '$');
+    this.__enabledTextRegExp = _enabledCharPattern && new RegExp('^' + _enabledCharPattern + '*$');
+  }
+
+  /** @private */
   _addIEListeners(node) {
     /* istanbul ignore if */
     if (navigator.userAgent.match(/Trident/)) {
@@ -650,6 +824,7 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
+  /** @private */
   _removeIEListeners(node) {
     /* istanbul ignore if */
     if (navigator.userAgent.match(/Trident/)) {
@@ -658,10 +833,19 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     }
   }
 
-  _getActiveErrorId(invalid, errorMessage, errorId) {
-    this._setOrToggleAttribute('aria-describedby', errorMessage && invalid ? errorId : undefined, this.focusElement);
+  /** @private */
+  _getActiveErrorId(invalid, errorMessage, errorId, helperText, helperTextId, hasSlottedHelper) {
+    const ids = [];
+    if (helperText || hasSlottedHelper) {
+      ids.push(helperTextId);
+    }
+    if (errorMessage && invalid) {
+      ids.push(errorId);
+    }
+    this._setOrToggleAttribute('aria-describedby', ids.join(' '), this.focusElement);
   }
 
+  /** @private */
   _getActiveLabelId(label, _labelId, _inputId) {
     let ids = _inputId;
     if (label) {
@@ -670,10 +854,12 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this.focusElement.setAttribute('aria-labelledby', ids);
   }
 
+  /** @private */
   _getErrorMessageAriaHidden(invalid, errorMessage, errorId) {
     return (!(errorMessage && invalid ? errorId : undefined)).toString();
   }
 
+  /** @private */
   _dispatchIronResizeEventIfNeeded(sizePropertyName, value) {
     const previousSizePropertyName = '__previous' + sizePropertyName;
     if (this[previousSizePropertyName] !== undefined && this[previousSizePropertyName] !== value) {
@@ -683,11 +869,17 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
     this[previousSizePropertyName] = value;
   }
 
+  /** @private */
   __observeOffsetHeight() {
-    this._dispatchIronResizeEventIfNeeded('Height', this.offsetHeight);
+    this.__observeOffsetHeightDebouncer = Debouncer.debounce(this.__observeOffsetHeightDebouncer, animationFrame, () => {
+      this._dispatchIronResizeEventIfNeeded('Height', this.offsetHeight);
+    });
   }
 
   /**
+   * @param {string} prop
+   * @param {string} oldVal
+   * @param {string} newVal
    * @protected
    */
   attributeChangedCallback(prop, oldVal, newVal) {
@@ -709,6 +901,15 @@ export const TextFieldMixin = subclass => class VaadinTextFieldMixin extends Con
         el.style[WEBKIT_PROPERTY] = '';
       });
     }
+  }
+
+  // Workaround for https://github.com/Polymer/polymer/issues/5259
+  get __data() {
+    return this.__dataValue || {};
+  }
+
+  set __data(value) {
+    this.__dataValue = value;
   }
 
   /**

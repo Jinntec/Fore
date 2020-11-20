@@ -1,9 +1,5 @@
 /// BareSpecifier=prismjs/components/prism-reason
 Prism.languages.reason = Prism.languages.extend('clike', {
-	'comment': {
-		pattern: /(^|[^\\])\/\*[\s\S]*?\*\//,
-		lookbehind: true
-	},
 	'string': {
 		pattern: /"(?:\\(?:\r\n|[\s\S])|[^\\\r\n"])*"/,
 		greedy: true

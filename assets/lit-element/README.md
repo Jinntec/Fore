@@ -3,6 +3,7 @@ A simple base class for creating fast, lightweight web components with [lit-html
 
 [![Build Status](https://travis-ci.org/Polymer/lit-element.svg?branch=master)](https://travis-ci.org/Polymer/lit-element)
 [![Published on npm](https://img.shields.io/npm/v/lit-element.svg)](https://www.npmjs.com/package/lit-element)
+[![Join our Slack](https://img.shields.io/badge/slack-join%20chat-4a154b.svg)](https://www.polymer-project.org/slack-invite)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lit-element)
 [![Mentioned in Awesome lit-html](https://awesome.re/mentioned-badge.svg)](https://github.com/web-padawan/awesome-lit-html)
 

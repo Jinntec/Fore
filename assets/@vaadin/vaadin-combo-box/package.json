@@ -1,67 +1,5 @@
 {
-  "_from": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_id": "@vaadin/vaadin-combo-box@5.0.9",
-  "_inBundle": false,
-  "_integrity": "sha512-BHxU+2POzHu/pTQqfDpWaWh9ScIjHA9vjF70tM4SSP21EO9v8Oyas0JMZUousT+S5Zlw3m8SuGMiGeVtAauPiw==",
-  "_location": "/@vaadin/vaadin-combo-box",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@vaadin/vaadin-combo-box@^5.0.3",
-    "name": "@vaadin/vaadin-combo-box",
-    "escapedName": "@vaadin%2fvaadin-combo-box",
-    "scope": "@vaadin",
-    "rawSpec": "^5.0.3",
-    "saveSpec": null,
-    "fetchSpec": "^5.0.3"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/@vaadin/vaadin-combo-box/-/vaadin-combo-box-5.0.9.tgz",
-  "_shasum": "fce72061a0ccea62311bde219d1d37775eb75976",
-  "_spec": "@vaadin/vaadin-combo-box@^5.0.3",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8",
-  "author": {
-    "name": "Vaadin Ltd"
-  },
-  "bugs": {
-    "url": "https://github.com/vaadin/vaadin-combo-box/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "@polymer/iron-a11y-announcer": "^3.0.0",
-    "@polymer/iron-a11y-keys-behavior": "^3.0.0",
-    "@polymer/iron-list": "^3.0.0",
-    "@polymer/iron-resizable-behavior": "^3.0.0",
-    "@polymer/polymer": "^3.0.0",
-    "@vaadin/vaadin-control-state-mixin": "^2.1.1",
-    "@vaadin/vaadin-element-mixin": "^2.0.0",
-    "@vaadin/vaadin-item": "^2.1.0",
-    "@vaadin/vaadin-lumo-styles": "^1.1.1",
-    "@vaadin/vaadin-material-styles": "^1.1.2",
-    "@vaadin/vaadin-overlay": "^3.2.0",
-    "@vaadin/vaadin-text-field": "^2.4.3",
-    "@vaadin/vaadin-themable-mixin": "^1.3.2"
-  },
-  "deprecated": false,
   "description": "Web Component for displaying a list of items with filtering",
-  "devDependencies": {
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-form": "^3.0.0",
-    "@polymer/iron-test-helpers": "^3.0.0",
-    "@polymer/paper-input": "^3.0.0",
-    "@vaadin/vaadin-button": "^2.1.0",
-    "@vaadin/vaadin-demo-helpers": "^3.0.0",
-    "wct-browser-legacy": "^1.0.1"
-  },
-  "files": [
-    "vaadin-*.js",
-    "src",
-    "theme"
-  ],
-  "homepage": "https://vaadin.com/components",
   "keywords": [
     "Vaadin",
     "combo-box",
@@ -69,18 +7,57 @@
     "web-component",
     "polymer"
   ],
-  "license": "Apache-2.0",
-  "main": "vaadin-combo-box.js",
+  "repository": "vaadin/vaadin-combo-box",
+  "homepage": "https://vaadin.com/components",
   "name": "@vaadin/vaadin-combo-box",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vaadin/vaadin-combo-box.git"
+  "version": "5.4.6",
+  "main": "vaadin-combo-box.js",
+  "author": "Vaadin Ltd",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vaadin/vaadin-combo-box/issues"
   },
+  "files": [
+    "vaadin-*.d.ts",
+    "vaadin-*.js",
+    "@types",
+    "src",
+    "theme"
+  ],
   "resolutions": {
+    "es-abstract": "1.17.6",
+    "@types/doctrine": "0.0.3",
     "inherits": "2.0.3",
     "samsam": "1.1.3",
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "version": "5.0.9"
+  "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0",
+    "@polymer/iron-a11y-announcer": "^3.0.0",
+    "@polymer/iron-list": "^3.0.0",
+    "@polymer/iron-resizable-behavior": "^3.0.0",
+    "@polymer/polymer": "^3.0.0",
+    "@vaadin/vaadin-control-state-mixin": "^2.2.2",
+    "@vaadin/vaadin-overlay": "^3.5.0",
+    "@vaadin/vaadin-text-field": "^2.8.0",
+    "@vaadin/vaadin-themable-mixin": "^1.6.1",
+    "@vaadin/vaadin-lumo-styles": "^1.1.1",
+    "@vaadin/vaadin-material-styles": "^1.1.2",
+    "@vaadin/vaadin-item": "^2.3.0",
+    "@vaadin/vaadin-element-mixin": "^2.4.1"
+  },
+  "scripts": {
+    "generate-typings": "gen-typescript-declarations --outDir . --verify"
+  },
+  "devDependencies": {
+    "@polymer/iron-form": "^3.0.0",
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@polymer/paper-input": "^3.0.0",
+    "@vaadin/vaadin-button": "^2.4.0",
+    "wct-browser-legacy": "^1.0.1",
+    "@vaadin/vaadin-demo-helpers": "^3.1.0",
+    "@vaadin/vaadin-dialog": "^2.5.0"
+  }
 }

@@ -4,10 +4,25 @@
 Copyright (c) 2017 Vaadin Ltd.
 This program is available under Apache License Version 2.0, available at https://vaadin.com/license/
 */
+// We consider the keyboard to be active if the window has received a keydown
+// event since the last mousedown event.
+let keyboardActive = false;
+
+// Listen for top-level keydown and mousedown events.
+// Use capture phase so we detect events even if they're handled.
+window.addEventListener('keydown', () => {
+  keyboardActive = true;
+}, { capture: true });
+
+window.addEventListener('mousedown', () => {
+  keyboardActive = false;
+}, { capture: true });
+
 /**
  * A private mixin to avoid problems with dynamic properties and Polymer Analyzer.
  * No need to expose these properties in the API docs.
  * @polymerMixin
+ * @private
  */
 const TabIndexMixin = superClass => class VaadinTabIndexMixin extends superClass {
   static get properties() {
@@ -52,6 +67,7 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
 
       /**
        * Stores the previous value of tabindex attribute of the disabled element
+       * @private
        */
       _previousTabIndex: {
         type: Number
@@ -66,16 +82,25 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
         reflectToAttribute: true
       },
 
+      /**
+       * @private
+       */
       _isShiftTabbing: {
         type: Boolean
       }
     };
   }
 
+  /**
+   * @protected
+   */
   ready() {
     this.addEventListener('focusin', e => {
       if (e.composedPath()[0] === this) {
-        this._focus(e);
+        // Only focus if the focus is received from somewhere outside
+        if (!this.contains(e.relatedTarget)) {
+          this._focus();
+        }
       } else if (e.composedPath().indexOf(this.focusElement) !== -1 && !this.disabled) {
         this._setFocused(true);
       }
@@ -120,7 +145,7 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
           if (firefox && parseFloat(firefox[1]) >= 63 && parseFloat(firefox[1]) < 66 && this.parentNode && this.nextSibling) {
             const fakeTarget = document.createElement('input');
             fakeTarget.style.position = 'absolute';
-            fakeTarget.style.opacity = 0;
+            fakeTarget.style.opacity = '0';
             fakeTarget.tabIndex = this.tabIndex;
 
             this.parentNode.insertBefore(fakeTarget, this.nextSibling);
@@ -131,26 +156,13 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
       }
     });
 
-    if (this.autofocus && !this.focused && !this.disabled) {
+    if (this.autofocus && !this.disabled) {
       window.requestAnimationFrame(() => {
         this._focus();
         this._setFocused(true);
         this.setAttribute('focus-ring', '');
       });
     }
-
-    this._boundKeydownListener = this._bodyKeydownListener.bind(this);
-    this._boundKeyupListener = this._bodyKeyupListener.bind(this);
-  }
-
-  /**
-   * @protected
-   */
-  connectedCallback() {
-    super.connectedCallback();
-
-    document.body.addEventListener('keydown', this._boundKeydownListener, true);
-    document.body.addEventListener('keyup', this._boundKeyupListener, true);
   }
 
   /**
@@ -159,9 +171,6 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    document.body.removeEventListener('keydown', this._boundKeydownListener, true);
-    document.body.removeEventListener('keyup', this._boundKeyupListener, true);
-
     // in non-Chrome browsers, blur does not fire on the element when it is disconnected.
     // reproducible in `<vaadin-date-picker>` when closing on `Cancel` or `Today` click.
     if (this.hasAttribute('focused')) {
@@ -169,6 +178,10 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
     }
   }
 
+  /**
+   * @param {boolean} focused
+   * @protected
+   */
   _setFocused(focused) {
     if (focused) {
       this.setAttribute('focused', '');
@@ -178,32 +191,28 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
 
     // focus-ring is true when the element was focused from the keyboard.
     // Focus Ring [A11ycasts]: https://youtu.be/ilj2P5-5CjI
-    if (focused && this._tabPressed) {
+    if (focused && keyboardActive) {
       this.setAttribute('focus-ring', '');
     } else {
       this.removeAttribute('focus-ring');
     }
   }
 
-  _bodyKeydownListener(e) {
-    this._tabPressed = e.keyCode === 9;
-  }
-
-  _bodyKeyupListener() {
-    this._tabPressed = false;
-  }
-
   /**
    * Any element extending this mixin is required to implement this getter.
    * It returns the actual focusable element in the component.
+   * @return {Element | null | undefined}
    */
   get focusElement() {
     window.console.warn(`Please implement the 'focusElement' property in <${this.localName}>`);
     return this;
   }
 
-  _focus(e) {
-    if (this._isShiftTabbing) {
+  /**
+   * @protected
+   */
+  _focus() {
+    if (!this.focusElement || this._isShiftTabbing) {
       return;
     }
 
@@ -230,10 +239,17 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
    * @private
    */
   blur() {
+    if (!this.focusElement) {
+      return;
+    }
     this.focusElement.blur();
     this._setFocused(false);
   }
 
+  /**
+   * @param {boolean} disabled
+   * @private
+   */
   _disabledChanged(disabled) {
     this.focusElement.disabled = disabled;
     if (disabled) {
@@ -249,6 +265,10 @@ export const ControlStateMixin = superClass => class VaadinControlStateMixin ext
     }
   }
 
+  /**
+   * @param {number | null | undefined} tabindex
+   * @private
+   */
   _tabindexChanged(tabindex) {
     if (tabindex !== undefined) {
       this.focusElement.tabIndex = tabindex;

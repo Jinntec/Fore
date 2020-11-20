@@ -135,10 +135,18 @@ superClass => {
       if (!this.hasOwnProperty(JSCompiler_renameProperty('__dataAttributes', this))) {
         this.__dataAttributes = Object.assign({}, this.__dataAttributes);
       }
-      if (!this.__dataAttributes[property]) {
-        const attr = this.constructor.attributeNameForProperty(property);
+      // This check is technically not correct; it's an optimization that
+      // assumes that if a _property_ name is already in the map (note this is
+      // an attr->property map), the property mapped directly to the attribute
+      // and it has already been mapped.  This would fail if
+      // `attributeNameForProperty` were overridden such that this was not the
+      // case.
+      let attr = this.__dataAttributes[property];
+      if (!attr) {
+        attr = this.constructor.attributeNameForProperty(property);
         this.__dataAttributes[attr] = property;
       }
+      return attr;
     }
 
     /**
@@ -153,11 +161,15 @@ superClass => {
         /* eslint-disable valid-jsdoc */
         /** @this {PropertiesChanged} */
         get() {
-          return this._getProperty(property);
+          // Inline for perf instead of using `_getProperty`
+          return this.__data[property];
         },
         /** @this {PropertiesChanged} */
         set: readOnly ? function () {} : function (value) {
-          this._setProperty(property, value);
+          // Inline for perf instead of using `_setProperty`
+          if (this._setPendingProperty(property, value, true)) {
+            this._invalidateProperties();
+          }
         }
         /* eslint-enable */
       });
@@ -173,6 +185,9 @@ superClass => {
       this.__dataPending = null;
       this.__dataOld = null;
       this.__dataInstanceProps = null;
+      /** @type {number} */
+      // NOTE: used to track re-entrant calls to `_flushProperties`
+      this.__dataCounter = 0;
       this.__serializing = false;
       this._initializeProperties();
     }
@@ -299,6 +314,14 @@ superClass => {
     /* eslint-enable */
 
     /**
+     * @param {string} property Name of the property
+     * @return {boolean} Returns true if the property is pending.
+     */
+    _isPropertyPending(property) {
+      return !!(this.__dataPending && this.__dataPending.hasOwnProperty(property));
+    }
+
+    /**
      * Marks the properties as invalid, and enqueues an async
      * `_propertiesChanged` callback.
      *
@@ -352,6 +375,7 @@ superClass => {
      * @override
      */
     _flushProperties() {
+      this.__dataCounter++;
       const props = this.__data;
       const changedProps = this.__dataPending;
       const old = this.__dataOld;
@@ -360,6 +384,7 @@ superClass => {
         this.__dataOld = null;
         this._propertiesChanged(props, changedProps, old);
       }
+      this.__dataCounter--;
     }
 
     /**

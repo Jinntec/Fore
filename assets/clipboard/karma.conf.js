@@ -3,11 +3,11 @@ var webpackConfig = require('./webpack.config.js');
 
 module.exports = function (karma) {
     karma.set({
-        plugins: ['karma-webpack', 'karma-chai', 'karma-sinon', 'karma-mocha', 'karma-phantomjs-launcher'],
+        plugins: ['karma-webpack', 'karma-chai', 'karma-sinon', 'karma-mocha', 'karma-chrome-launcher'],
 
         frameworks: ['chai', 'sinon', 'mocha'],
 
-        files: ['src/**/*.js', 'test/**/*.js', './node_modules/phantomjs-polyfill/bind-polyfill.js'],
+        files: ['src/**/*.js', 'test/**/*.js'],
 
         preprocessors: {
             'src/**/*.js': ['webpack'],
@@ -23,6 +23,6 @@ module.exports = function (karma) {
             stats: 'errors-only'
         },
 
-        browsers: ['PhantomJS']
+        browsers: ['ChromeHeadless']
     });
 };

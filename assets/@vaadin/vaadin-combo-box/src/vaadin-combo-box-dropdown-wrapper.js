@@ -24,7 +24,7 @@ const TOUCH_DEVICE = (() => {
 /**
  * Element for internal use only.
  *
- * @memberof Vaadin
+ * @extends PolymerElement
  * @private
  */
 class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
@@ -102,6 +102,26 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
        */
       theme: String,
 
+      /**
+       * Used to recognize scroller reset after new items have been set
+       * to iron-list and to ignore unwanted pages load. If 'true', then
+       * skip loading of the pages until it becomes 'false'.
+       */
+      resetScrolling: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Used to recognize if the filter changed, so to skip the
+       * scrolling restore. If true, then scroll to 0 position. Restore
+       * the previous position otherwise.
+       */
+      filterChanged: {
+        type: Boolean,
+        value: false
+      },
+
       _selectedItem: {
         type: Object
       },
@@ -133,12 +153,21 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
 
       _selector: Object,
 
-      _itemIdPath: String
+      _itemIdPath: String,
+
+      /**
+       * Stores the scroller position before updating the 'items', in
+       * order to restore it immediately after 'items' have been updated
+       */
+      _oldScrollerPosition: {
+        type: Number,
+        value: 0
+      }
     };
   }
 
   static get observers() {
-    return ['_selectorChanged(_selector)', '_loadingChanged(loading)', '_openedChanged(opened, _items, loading)'];
+    return ['_selectorChanged(_selector)', '_loadingChanged(loading)', '_openedChanged(opened, _items, loading)', '_restoreScrollerPosition(_items)'];
   }
 
   _fireTouchAction(sourceEvent) {
@@ -148,7 +177,44 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
   }
 
   _getItems(opened, items) {
-    return opened ? items : [];
+    if (opened) {
+      if (this._isNotEmpty(items) && this._selector && !this.filterChanged) {
+        // iron-list triggers the scroller's reset after items update, and
+        // this is not appropriate for undefined size lazy loading.
+        // see https://github.com/vaadin/vaadin-combo-box-flow/issues/386
+        // We store iron-list scrolling position in order to restore
+        // it later on after the items have been updated.
+        const currentScrollerPosition = this._selector.firstVisibleIndex;
+        if (currentScrollerPosition !== 0) {
+          this._oldScrollerPosition = currentScrollerPosition;
+          this.resetScrolling = true;
+        }
+      }
+      // Let the position to be restored in the future calls unless it's not
+      // caused by filtering
+      this.filterChanged = false;
+      return items;
+    }
+    return [];
+  }
+
+  _restoreScrollerPosition(items) {
+    if (this._isNotEmpty(items) && this._selector && this._oldScrollerPosition !== 0) {
+      // new items size might be less than old scrolling position
+      this._scrollIntoView(Math.min(items.length - 1, this._oldScrollerPosition));
+      this.resetScrolling = false;
+      // reset position to 0 again in order to properly handle the filter
+      // cases (scroll to 0 after typing the filter)
+      this._oldScrollerPosition = 0;
+    }
+  }
+
+  _isNotEmpty(items) {
+    return !this._isEmpty(items);
+  }
+
+  _isEmpty(items) {
+    return !items || !items.length;
   }
 
   _openedChanged(opened, items, loading) {
@@ -159,9 +225,12 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
         this._initDropdown();
       }
     }
-    // Do not attach if no items
-    // Do not dettach if opened but user types an invalid search
-    this.$.dropdown.opened = !!(opened && (loading || this.$.dropdown.opened || items && items.length));
+
+    if (this._isEmpty(items)) {
+      this.$.dropdown.__emptyItems = true;
+    }
+    this.$.dropdown.opened = !!(opened && (loading || this._isNotEmpty(items)));
+    this.$.dropdown.__emptyItems = false;
   }
 
   _initDropdown() {
@@ -232,12 +301,10 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
   _maxOverlayHeight(targetRect) {
     const margin = 8;
     const minHeight = 116; // Height of two items in combo-box
-    const bottom = Math.min(window.innerHeight, document.body.scrollHeight - document.body.scrollTop);
-
     if (this.$.dropdown.alignedAbove) {
       return Math.max(targetRect.top - margin + Math.min(document.body.scrollTop, 0), minHeight) + 'px';
     } else {
-      return Math.max(bottom - targetRect.bottom - margin, minHeight) + 'px';
+      return Math.max(document.documentElement.clientHeight - targetRect.bottom - margin, minHeight) + 'px';
     }
   }
 
@@ -267,7 +334,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
 
   /**
    * Gets the index of the item with the provided label.
-   * @return {Number}
+   * @return {number}
    */
   indexOfLabel(label) {
     if (this._items && label) {
@@ -285,10 +352,10 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
    * If dataProvider is used, dispatch a request for the item’s index if
    * the item is a placeholder object.
    *
-   * @return {Number}
+   * @return {number}
    */
   __requestItemByIndex(item, index) {
-    if (item instanceof ComboBoxPlaceholder && index !== undefined) {
+    if (item instanceof ComboBoxPlaceholder && index !== undefined && !this.resetScrolling) {
       this.dispatchEvent(new CustomEvent('index-requested', { detail: { index } }));
     }
 
@@ -297,7 +364,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
 
   /**
    * Gets the label string for the item based on the `_itemLabelPath`.
-   * @return {String}
+   * @return {string}
    */
   getItemLabel(item, itemLabelPath) {
     itemLabelPath = itemLabelPath || this._itemLabelPath;
@@ -445,7 +512,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
   }
 
   _hidden(itemsChange) {
-    return !this.loading && (!this._items || !this._items.length);
+    return !this.loading && this._isEmpty(this._items);
   }
 }
 

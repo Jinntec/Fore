@@ -16,8 +16,7 @@
  * Module to add shady DOM/shady CSS polyfill support to lit-html template
  * rendering. See the [[render]] method for details.
  *
- * @module shady-render
- * @preferred
+ * @packageDocumentation
  */
 /**
  * Do not remove this comment; it keeps typedoc from misplacing the module
@@ -43,7 +42,7 @@ if (typeof window.ShadyCSS === 'undefined') {
  * Template factory which scopes template DOM using ShadyCSS.
  * @param scopeName {string}
  */
-const shadyTemplateFactory = scopeName => result => {
+export const shadyTemplateFactory = scopeName => result => {
     const cacheKey = getTemplateCacheKey(result.type, scopeName);
     let templateCache = templateCaches.get(cacheKey);
     if (templateCache === undefined) {

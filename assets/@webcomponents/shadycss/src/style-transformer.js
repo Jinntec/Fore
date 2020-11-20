@@ -38,6 +38,7 @@ import { nativeShadow } from './style-settings.js';
 const SCOPE_NAME = 'style-scope';
 
 class StyleTransformer {
+  /** @return {string} */
   get SCOPE_NAME() {
     return SCOPE_NAME;
   }
@@ -70,7 +71,7 @@ class StyleTransformer {
 
   /**
    * @param {!Node} startNode
-   * @param {!function(!Node)} transformer
+   * @param {function(!Node)} transformer
    */
   _transformDom(startNode, transformer) {
     if (startNode.nodeType === Node.ELEMENT_NODE) {
@@ -186,7 +187,7 @@ class StyleTransformer {
     scope = this._calcElementScope(scope);
     let self = this;
     return StyleUtil.toCssText(rules, function ( /** StyleNode */rule) {
-      if (!rule.isScoped) {
+      if (! /** @type {?} */rule.isScoped) {
         self.rule(rule, scope, hostScope);
         rule.isScoped = true;
       }
@@ -223,7 +224,7 @@ class StyleTransformer {
   _transformRule(rule, transformer, scope, hostScope) {
     // NOTE: save transformedSelector for subsequent matching of elements
     // against selectors (e.g. when calculating style properties)
-    rule['selector'] = rule.transformedSelector = this._transformRuleCss(rule, transformer, scope, hostScope);
+    rule['selector'] = /** @type {?} */rule.transformedSelector = this._transformRuleCss(rule, transformer, scope, hostScope);
   }
 
   /**

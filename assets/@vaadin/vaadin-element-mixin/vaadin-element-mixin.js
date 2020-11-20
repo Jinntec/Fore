@@ -3,6 +3,7 @@ import { idlePeriod } from '../../@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '../../@polymer/polymer/lib/utils/debounce.js';
 import { enqueueDebouncer } from '../../@polymer/polymer/lib/utils/flush.js';
 
+import { DirMixin } from './vaadin-dir-mixin.js';
 import { usageStatistics } from '../vaadin-usage-statistics/vaadin-usage-statistics.js';
 if (!window.Vaadin) {
   window['Vaadin'] = {};
@@ -27,8 +28,9 @@ const registered = new Set();
 
 /**
  * @polymerMixin
+ * @mixes DirMixin
  */
-export const ElementMixin = superClass => class VaadinElementMixin extends superClass {
+export const ElementMixin = superClass => class VaadinElementMixin extends DirMixin(superClass) {
   /** @protected */
   static finalize() {
     super.finalize();
@@ -48,6 +50,7 @@ export const ElementMixin = superClass => class VaadinElementMixin extends super
       }
     }
   }
+
   constructor() {
     super();
     if (document.doctype === null) {

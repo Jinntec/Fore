@@ -1,4 +1,5 @@
 import {evaluateUpdatingExpressionSync, executePendingUpdateList, registerXQueryModule} from 'fontoxpath';
+import * as fx from "fontoxpath";
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -20,7 +21,13 @@ declare %public function xf:count($arg as item()*) as xs:integer {
 	fn:count($arg)
 };
 
+declare %public function xf:string-length($arg as item()) as xs:integer{
+    fn:string-length($arg)
+};
+
 `);
+
+
 
 // How to run XQUF:
 /**
@@ -72,6 +79,74 @@ export class Fore{
         ];
     }
 
+    static namespaceResolver(prefix) {
+        // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+
+        /**
+         * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
+         * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
+         *   // Return value
+         *  }
+         * }
+         */
+
+        console.log('namespaceResolver  prefix', prefix);
+        const ns = {
+            'xhtml' : 'http://www.w3.org/1999/xhtml'
+            // ''    : Fore.XFORMS_NAMESPACE_URI
+        };
+        return ns[prefix] || null;
+    }
+
+    static evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
+        return fx.evaluateXPath(
+            xpath,
+            contextNode,
+            null,
+            {},
+            'xs:anyType',
+            {
+                namespaceResolver,
+                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                moduleImports: {
+                    xf: 'http://www.w3.org/2002/xforms'
+                },
+                currentContext: {formElement}
+            });
+    }
+
+    static evaluateToNodes (xpath, contextNode, formElement, namespaceResolver) {
+        return fx.evaluateXPathToNodes(
+            xpath,
+            contextNode,
+            null,
+            {},
+            {
+                namespaceResolver,
+                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                moduleImports: {
+                    xf: 'http://www.w3.org/2002/xforms'
+                },
+                currentContext: {formElement}
+            });
+    }
+
+
+    static evaluateToBoolean(xpath, contextNode, formElement, namespaceResolver) {
+        return fx.evaluateXPathToBoolean(
+            xpath,
+            contextNode,
+            null,
+            {},
+            {
+                namespaceResolver,
+                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                moduleImports: {
+                    xf: 'http://www.w3.org/2002/xforms'
+                },
+                currentContext: {formElement}
+            });
+    }
 	static get XFORMS_NAMESPACE_URI () {
 		return XFORMS_NAMESPACE_URI
 	}

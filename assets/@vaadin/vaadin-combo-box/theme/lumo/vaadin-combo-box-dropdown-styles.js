@@ -85,6 +85,16 @@ const $_documentContainer = html`<dom-module id="lumo-combo-box-overlay" theme-f
           transform: rotate(360deg);
         }
       }
+
+      /* RTL specific styles */
+
+      :host([loading][dir="rtl"]) [part~="loader"] {
+        left: auto;
+        margin-left: 0;
+        margin-right: auto;
+        margin-inline-start: 0;
+        margin-inline-end: auto;
+      }
     </style>
   </template>
 </dom-module>`;

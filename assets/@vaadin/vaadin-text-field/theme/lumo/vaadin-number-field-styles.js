@@ -36,6 +36,13 @@ const $_documentContainer = html`<dom-module id="lumo-number-field" theme-for="v
       [part="increase-button"]::before {
         margin-top: 0.2em;
       }
+
+      /* RTL specific styles */
+
+      :host([dir="rtl"]) [part="value"],
+      :host([dir="rtl"]) [part="input-field"] ::slotted(input) {
+        --_lumo-text-field-overflow-mask-image: linear-gradient(to left, transparent, #000 1.25em);
+      }
     </style>
   </template>
 </dom-module>`;

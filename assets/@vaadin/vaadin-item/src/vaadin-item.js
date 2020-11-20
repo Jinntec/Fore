@@ -7,6 +7,7 @@ This program is available under Apache License Version 2.0, available at https:/
 import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { DirMixin } from '../../vaadin-element-mixin/vaadin-dir-mixin.js';
 import { ItemMixin } from './vaadin-item-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 /**
@@ -44,11 +45,12 @@ import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
  * `selected` | Set when the item is selected | :host
  * `active` | Set when mousedown or enter/spacebar pressed | :host
  *
- * @memberof Vaadin
- * @mixes Vaadin.ItemMixin
- * @mixes Vaadin.ThemableMixin
+ * @extends PolymerElement
+ * @mixes ItemMixin
+ * @mixes ThemableMixin
+ * @mixes DirMixin
  */
-class ItemElement extends ItemMixin(ThemableMixin(PolymerElement)) {
+class ItemElement extends ItemMixin(ThemableMixin(DirMixin(PolymerElement))) {
   static get template() {
     return html`
     <style>
@@ -71,7 +73,7 @@ class ItemElement extends ItemMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get version() {
-    return '2.1.1';
+    return '2.3.0';
   }
 
   constructor() {

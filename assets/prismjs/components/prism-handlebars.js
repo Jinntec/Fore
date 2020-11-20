@@ -22,8 +22,8 @@
 				variable: /[\s\S]+/
 			}
 		},
-		'punctuation': /[!"#%&'()*+,.\/;<=>@\[\\\]^`{|}~]/,
-		'variable': /[^!"#%&'()*+,.\/;<=>@\[\\\]^`{|}~\s]+/
+		'punctuation': /[!"#%&':()*+,.\/;<=>@\[\\\]^`{|}~]/,
+		'variable': /[^!"#%&'()*+,\/;<=>@\[\\\]^`{|}~\s]+/
 	};
 
 	Prism.hooks.add('before-tokenize', function (env) {

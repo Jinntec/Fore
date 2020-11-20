@@ -4,7 +4,7 @@ import { ThemePropertyMixin } from './vaadin-theme-property-mixin.js';
 
 /**
  * @polymerMixin
- * @mixes Vaadin.ThemePropertyMixin
+ * @mixes ThemePropertyMixin
  */
 export const ThemableMixin = superClass => class VaadinThemableMixin extends ThemePropertyMixin(superClass) {
 
@@ -26,7 +26,7 @@ export const ThemableMixin = superClass => class VaadinThemableMixin extends The
     this._includeMatchingThemes(template);
   }
 
-  /** @protected */
+  /** @private */
   static _includeMatchingThemes(template) {
     const domModule = DomModule;
     const modules = domModule.prototype.modules;

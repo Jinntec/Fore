@@ -50,6 +50,13 @@ const $_documentContainer = html`<dom-module id="material-item" theme-for="vaadi
         cursor: default;
         pointer-events: none;
       }
+
+      /* RTL specific styles */
+
+      :host([dir="rtl"])::before {
+        margin-right: 0;
+        margin-left: 10px;
+      }
     </style>
   </template>
 </dom-module>`;

@@ -18,8 +18,8 @@ export class ModelItem {
                 required,
                 valid,
                 type,
-                node
-                ) {
+                node,
+                bind) {
         this.path = path;
         this.ref = ref;
         this.readonly = readonly;
@@ -28,6 +28,7 @@ export class ModelItem {
         this.valid = valid;
         this.type = type;
         this.node = node;
+        this.bind = bind;
         // this.value = this._getValue();
     }
 

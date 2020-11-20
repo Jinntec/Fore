@@ -40,6 +40,7 @@ const IS_IE = navigator.userAgent.match('Trident');
 const XSCOPE_NAME = 'x-scope';
 
 class StyleProperties {
+  /** @return {string} */
   get XSCOPE_NAME() {
     return XSCOPE_NAME;
   }
@@ -47,7 +48,7 @@ class StyleProperties {
    * decorates styles with rule info and returns an array of used style property names
    *
    * @param {StyleNode} rules
-   * @return {Array<string>}
+   * @return {!Array<string>}
    */
   decorateStyles(rules) {
     let self = this,
@@ -307,10 +308,10 @@ class StyleProperties {
    * @param {function(Object)} callback
    */
   whenHostOrRootRule(scope, rule, cssBuild, callback) {
-    if (!rule.propertyInfo) {
+    if (! /** @type {?} */rule.propertyInfo) {
       this.decorateRule(rule);
     }
-    if (!rule.propertyInfo.properties) {
+    if (! /** @type {?} */rule.propertyInfo.properties) {
       return;
     }
     let { is, typeExtension } = StyleUtil.getIsExtends(scope);
@@ -333,14 +334,16 @@ class StyleProperties {
     let selectorToMatch = hostScope;
     if (isHost) {
       // need to transform :host because `:host` does not work with `matches`
-      if (!rule.transformedSelector) {
+      if (! /** @type {?} */rule.transformedSelector) {
         // transform :host into a matchable selector
         rule.transformedSelector = StyleTransformer._transformRuleCss(rule, StyleTransformer._transformComplexSelector, StyleTransformer._calcElementScope(is), hostScope);
       }
-      selectorToMatch = rule.transformedSelector || hostScope;
+      selectorToMatch =
+      /** @type {?} */rule.transformedSelector || hostScope;
     }
     if (isRoot && hostScope === 'html') {
-      selectorToMatch = rule.transformedSelector || rule.parsedSelector;
+      selectorToMatch = /** @type {?} */rule.transformedSelector ||
+      /** @type {?} */rule.parsedSelector;
     }
     callback({
       selector: selectorToMatch,
@@ -352,7 +355,7 @@ class StyleProperties {
    * @param {Element} scope
    * @param {StyleNode} rules
    * @param {string} cssBuild
-   * @return {Object}
+   * @return {!Object}
    */
   hostAndRootPropertiesForScope(scope, rules, cssBuild) {
     let hostProps = {},
@@ -402,7 +405,7 @@ class StyleProperties {
    * @param {Element} element
    * @param {StyleNode} rules
    * @param {string} scopeSelector
-   * @return {Object}
+   * @return {!Object}
    */
   _elementKeyframeTransforms(element, rules, scopeSelector) {
     let keyframesRules = rules._keyframes;
@@ -427,7 +430,9 @@ class StyleProperties {
    */
   _keyframesRuleTransformer(keyframesRule) {
     return function (cssText) {
-      return cssText.replace(keyframesRule.keyframesNameRx, keyframesRule.transformedKeyframesName);
+      return cssText.replace(
+      /** @type {?} */keyframesRule.keyframesNameRx,
+      /** @type {?} */keyframesRule.transformedKeyframesName);
     };
   }
 
@@ -444,8 +449,10 @@ class StyleProperties {
     // a non-word boundary or `-` at the end.
     rule.keyframesNameRx = new RegExp(`\\b${rule['keyframesName']}(?!\\B|-)`, 'g');
     rule.transformedKeyframesName = rule['keyframesName'] + '-' + scopeId;
-    rule.transformedSelector = rule.transformedSelector || rule['selector'];
-    rule['selector'] = rule.transformedSelector.replace(rule['keyframesName'], rule.transformedKeyframesName);
+    rule.transformedSelector =
+    /** @type {?} */rule.transformedSelector || rule['selector'];
+    rule['selector'] =
+    /** @type {?} */rule.transformedSelector.replace(rule['keyframesName'], rule.transformedKeyframesName);
   }
 
   // Strategy: x scope shim a selector e.g. to scope `.x-foo-42` (via classes):
@@ -463,7 +470,8 @@ class StyleProperties {
    * @param {string} scopeId
    */
   _scopeSelector(rule, hostRx, hostSelector, scopeId) {
-    rule.transformedSelector = rule.transformedSelector || rule['selector'];
+    rule.transformedSelector =
+    /** @type {?} */rule.transformedSelector || rule['selector'];
     let selector = rule.transformedSelector;
     let scope = '.' + scopeId;
     let parts = StyleUtil.splitSelectorList(selector);
@@ -561,7 +569,8 @@ class StyleProperties {
     let self = this;
     style.textContent = StyleUtil.toCssText(rules, function ( /** StyleNode */rule) {
       let css = rule['cssText'] = rule['parsedCssText'];
-      if (rule.propertyInfo && rule.propertyInfo.cssText) {
+      if ( /** @type {?} */rule.propertyInfo &&
+      /** @type {?} */rule.propertyInfo.cssText) {
         // remove property assignments
         // so next function isn't confused
         // NOTE: we have 3 categories of css:

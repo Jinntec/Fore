@@ -1,7 +1,7 @@
 /// BareSpecifier=prismjs/plugins/unescaped-markup/prism-unescaped-markup
 (function () {
 
-	if (typeof self === 'undefined' || !self.Prism || !self.document || !Prism.languages.markup) {
+	if (typeof self === 'undefined' || !self.Prism || !self.document) {
 		return;
 	}
 

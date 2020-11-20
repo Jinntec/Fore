@@ -1,64 +1,18 @@
 {
-  "_from": "@webcomponents/shadycss@^1.9.1",
-  "_id": "@webcomponents/shadycss@1.9.3",
-  "_inBundle": false,
-  "_integrity": "sha512-fRuET+UGrH84hG0UF4iHbFqWZKUoan4/ki+iCOJ/vnKltPSHv/ZVbcA6sT/pRreznt8aKEGqN2KdHvgRxn4xjA==",
-  "_location": "/@webcomponents/shadycss",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@webcomponents/shadycss@^1.9.1",
-    "name": "@webcomponents/shadycss",
-    "escapedName": "@webcomponents%2fshadycss",
-    "scope": "@webcomponents",
-    "rawSpec": "^1.9.1",
-    "saveSpec": null,
-    "fetchSpec": "^1.9.1"
+  "name": "@webcomponents/shadycss",
+  "version": "1.10.2",
+  "description": "Polyfill for Scoped CSS",
+  "main": "src/interface.js",
+  "module": "src/interface.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcomponents/polyfills.git",
+    "directory": "packages/shadycss"
   },
-  "_requiredBy": [
-    "/@polymer/polymer"
-  ],
-  "_resolved": "https://registry.npmjs.org/@webcomponents/shadycss/-/shadycss-1.9.3.tgz",
-  "_shasum": "74ee4be13f5374724aecb3d2c2de77523e01ada9",
-  "_spec": "@webcomponents/shadycss@^1.9.1",
-  "_where": "/private/var/folders/p7/bz774dq9345cvlw_pqqxjz3w0000gn/T/asset_stageGoUSU8/node_modules/@polymer/polymer",
-  "author": {
-    "name": "The Polymer Project Authors",
-    "url": "https://polymer.github.io/AUTHORS.txt"
-  },
-  "bugs": {
-    "url": "https://github.com/webcomponents/polyfills/issues"
-  },
-  "bundleDependencies": false,
-  "deprecated": false,
-  "description": "Styling helpers for ShadyDOM",
-  "devDependencies": {
-    "@webcomponents/custom-elements": "^1.3.1",
-    "@webcomponents/html-imports": "^1.2.2",
-    "@webcomponents/shadydom": "1.1.2",
-    "@webcomponents/template": "^1.4.1",
-    "@webcomponents/webcomponents-platform": "^1.0.0",
-    "es6-promise": "^4.2.5",
-    "rollup-stream": "=1.23.1",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "wct-browser-legacy": "^1.0.2"
-  },
-  "eslintIgnore": [
-    "tests/module/generated/**/*.js"
-  ],
-  "files": [
-    "apply-shim.html",
-    "apply-shim.min.js*",
-    "custom-style-interface.html",
-    "custom-style-interface.min.js*",
-    "scoping-shim.min.js*",
-    "entrypoints/**/*.js",
-    "src/**/*.js",
-    "externs/**/*.js"
-  ],
-  "homepage": "https://webcomponents.org/polyfills",
+  "bugs": "https://github.com/webcomponents/polyfills/issues?q=is%3Aissue+is%3Aopen+label%3A\"Package%3A+shadycss\"",
+  "homepage": "https://github.com/webcomponents/polyfills/tree/master/packages/shadycss",
+  "author": "The Polymer Project Authors (https://polymer.github.io/AUTHORS.txt)",
+  "license": "BSD-3-Clause",
   "keywords": [
     "shady-css",
     "shadycss",
@@ -69,22 +23,42 @@
     "polyfill",
     "shim"
   ],
-  "license": "BSD-3-Clause",
-  "main": "shadycss.min.js",
-  "name": "@webcomponents/shadycss",
+  "scripts": {
+    "build": "npm run build:interface && gulp",
+    "build:interface": "npm run clean:interface && tsc",
+    "clean:interface": "rimraf 'src/interface.*' .tsbuildinfo",
+    "build:watch": "chokidar --initial 'src/**/*.js' 'ts_src/**/*.ts' --ignore 'src/interface.js' -c 'npm run build'",
+    "debug": "gulp debug",
+    "lint": "eslint src entrypoints",
+    "lint:interface": "(cd ts_src && eslint '**/*.ts')",
+    "format:interface": "prettier --write 'ts_src/**/*.ts'",
+    "prepack": "npm run build"
+  },
+  "files": [
+    "apply-shim.html",
+    "apply-shim.min.js*",
+    "custom-style-interface.html",
+    "custom-style-interface.min.js*",
+    "scoping-shim.min.js*",
+    "entrypoints/**/*.js",
+    "src/**/*.js",
+    "src/**/*.js.map",
+    "src/**/*.d.ts",
+    "externs/**/*.js",
+    "ts_src/**/*.ts"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "rollup-stream": "=1.23.1",
+    "typescript": "^3.8.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/webcomponents/polyfills.git"
-  },
-  "scripts": {
-    "build": "gulp",
-    "debug": "gulp debug",
-    "lint": "eslint src tests entrypoints",
-    "prepack": "npm run build",
-    "test": "wct"
-  },
-  "version": "1.9.3"
+  "gitHead": "2f9e4c15853a7963e99e886e053f2483459f4407"
 }

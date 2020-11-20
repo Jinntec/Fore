@@ -34,6 +34,22 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
         color: var(--lumo-primary-text-color);
       }
 
+      :host([has-helper]) [part="helper-text"]::before {
+        content: "";
+        display: block;
+        height: 0.4em;
+      }
+
+      [part="helper-text"],
+      [part="helper-text"] ::slotted(*) {
+        display: block;
+        color: var(--lumo-secondary-text-color);
+        font-size: var(--lumo-font-size-xs);
+        line-height: var(--lumo-line-height-xs);
+        margin-left: calc(var(--lumo-border-radius-m) / 4);
+        transition: color 0.2s;
+      }
+
       [part="value"],
       [part="input-field"] ::slotted(input),
       [part="input-field"] ::slotted(textarea),
@@ -47,8 +63,8 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
       }
 
       [part="value"]:focus,
-      [part="input-field"] ::slotted(input):focus,
-      [part="input-field"] ::slotted(textarea):focus {
+      :host([focused]) [part="input-field"] ::slotted(input),
+      :host([focused]) [part="input-field"] ::slotted(textarea) {
         -webkit-mask-image: none;
         mask-image: none;
       }
@@ -118,7 +134,9 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
 
       /* Hover */
 
-      :host(:hover:not([readonly]):not([focused])) [part="label"] {
+      :host(:hover:not([readonly]):not([focused])) [part="label"],
+      :host(:hover:not([readonly])) [part="helper-text"],
+      :host(:hover:not([readonly])) [part="helper-text"] ::slotted(*) {
         color: var(--lumo-body-text-color);
       }
 
@@ -199,6 +217,7 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
       }
 
       :host([disabled]) [part="label"],
+      :host([disabled]) [part="helper-text"],
       :host([disabled]) [part="value"],
       :host([disabled]) [part="input-field"] ::slotted(*) {
         color: var(--lumo-disabled-text-color);
@@ -240,6 +259,11 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
 
       /* Text align */
 
+      :host([theme~="align-left"]) [part="value"] {
+        text-align: left;
+        --_lumo-text-field-overflow-mask-image: none;
+      }
+
       :host([theme~="align-center"]) [part="value"] {
         text-align: center;
         --_lumo-text-field-overflow-mask-image: none;
@@ -255,6 +279,41 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
         :host([theme~="align-right"]) [part="value"] {
           --_lumo-text-field-overflow-mask-image: linear-gradient(to right, transparent 0.25em, #000 1.5em);
         }
+      }
+
+      @-moz-document url-prefix() {
+        /* Firefox is smart enough to align overflowing text to right */
+        :host([theme~="align-left"]) [part="value"] {
+          --_lumo-text-field-overflow-mask-image: linear-gradient(to left, transparent 0.25em, #000 1.5em);
+        }
+      }
+      /* helper-text position */
+
+      :host([has-helper][theme~="helper-above-field"]) [part="helper-text"]::before {
+        display: none;
+      }
+
+      :host([has-helper][theme~="helper-above-field"]) [part="helper-text"]::after {
+        content: "";
+        display: block;
+        height: 0.4em;
+      }
+
+      :host([has-helper][theme~="helper-above-field"]) [part="label"] {
+        order: 0;
+        padding-bottom: 0.4em;
+      }
+
+      :host([has-helper][theme~="helper-above-field"]) [part="helper-text"] {
+        order: 1;
+      }
+
+      :host([has-helper][theme~="helper-above-field"]) [part="input-field"] {
+        order: 2;
+      }
+
+      :host([has-helper][theme~="helper-above-field"]) [part="error-message"] {
+        order: 3;
       }
 
       /* Slotted content */
@@ -280,6 +339,60 @@ const $_documentContainer = html`<dom-module id="lumo-text-field" theme-for="vaa
 
       [part="clear-button"]::before {
         content: var(--lumo-icons-cross);
+      }
+
+      /* RTL specific styles */
+
+      :host([dir="rtl"]) [part="input-field"]::after {
+        transform-origin: 0% 0;
+      }
+
+      :host([dir="rtl"]) [part="value"],
+      :host([dir="rtl"]) [part="input-field"] ::slotted(input),
+      :host([dir="rtl"]) [part="input-field"] ::slotted(textarea) {
+        --_lumo-text-field-overflow-mask-image: linear-gradient(to right, transparent, #000 1.25em);
+      }
+
+      :host([dir="rtl"]) [part="value"]:focus,
+      :host([focused][dir="rtl"]) [part="input-field"] ::slotted(input),
+      :host([focused][dir="rtl"]) [part="input-field"] ::slotted(textarea) {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+
+      @-moz-document url-prefix() {
+        :host([dir="rtl"]) [part="value"],
+        :host([dir="rtl"]) [part="input-field"] ::slotted(input),
+        :host([dir="rtl"]) [part="input-field"] ::slotted(textarea),
+        :host([dir="rtl"]) [part="input-field"] ::slotted([part="value"]) {
+          mask-image: var(--_lumo-text-field-overflow-mask-image);
+        }
+      }
+
+      :host([theme~="align-left"][dir="rtl"]) [part="value"] {
+        --_lumo-text-field-overflow-mask-image: none;
+      }
+
+      :host([theme~="align-center"][dir="rtl"]) [part="value"] {
+        --_lumo-text-field-overflow-mask-image: none;
+      }
+
+      :host([theme~="align-right"][dir="rtl"]) [part="value"] {
+        --_lumo-text-field-overflow-mask-image: none;
+      }
+
+      @-moz-document url-prefix() {
+        /* Firefox is smart enough to align overflowing text to right */
+        :host([theme~="align-right"][dir="rtl"]) [part="value"] {
+          --_lumo-text-field-overflow-mask-image: linear-gradient(to right, transparent 0.25em, #000 1.5em);
+        }
+      }
+
+      @-moz-document url-prefix() {
+        /* Firefox is smart enough to align overflowing text to right */
+        :host([theme~="align-left"][dir="rtl"]) [part="value"] {
+          --_lumo-text-field-overflow-mask-image: linear-gradient(to left, transparent 0.25em, #000 1.5em);
+        }
       }
     </style>
   </template>

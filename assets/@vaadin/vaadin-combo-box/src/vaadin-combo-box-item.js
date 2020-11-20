@@ -7,6 +7,7 @@ This program is available under Apache License Version 2.0, available at https:/
 import { PolymerElement } from '../../../@polymer/polymer/polymer-element.js';
 
 import { ThemableMixin } from '../../vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { DirMixin } from '../../vaadin-element-mixin/vaadin-dir-mixin.js';
 import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 /**
  * The default element used for items in the vaadin-combo-box.
@@ -28,11 +29,11 @@ import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @memberof Vaadin
- * @mixes Vaadin.ThemableMixin
+ * @extends PolymerElement
+ * @mixes ThemableMixin
  * @private
  */
-class ComboBoxItemElement extends ThemableMixin(PolymerElement) {
+class ComboBoxItemElement extends ThemableMixin(DirMixin(PolymerElement)) {
   static get template() {
     return html`
     <style>
@@ -123,6 +124,11 @@ class ComboBoxItemElement extends ThemableMixin(PolymerElement) {
         this.$.content.textContent = '';
         this.$.content.appendChild(this._itemTemplateInstance.root);
       }
+    }
+
+    const hostDir = this._comboBox.getAttribute('dir');
+    if (hostDir) {
+      this.setAttribute('dir', hostDir);
     }
   }
 

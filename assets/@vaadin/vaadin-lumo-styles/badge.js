@@ -144,6 +144,18 @@ $_documentContainer.innerHTML = `<dom-module id="lumo-badge">
       [theme~="badge"][theme~="pill"] {
         --lumo-border-radius-s: 1em;
       }
+
+      /* RTL specific styles */
+
+      [dir="rtl"][theme~="badge"] iron-icon:first-child {
+        margin-right: -0.375em;
+        margin-left: 0;
+      }
+
+      [dir="rtl"][theme~="badge"] iron-icon:last-child {
+        margin-left: -0.375em;
+        margin-right: 0;
+      }
     </style>
   </template>
 </dom-module>`;

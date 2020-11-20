@@ -9,9 +9,9 @@ import '../../../@polymer/polymer/polymer-element.js';
 import '../../../@polymer/polymer/lib/elements/custom-style.js';
 import { TextFieldElement } from './vaadin-text-field.js';
 import { DomModule } from '../../../@polymer/polymer/lib/elements/dom-module.js';
-const $_documentContainer = document.createElement('template');
+import { html } from '../../../@polymer/polymer/lib/utils/html-tag.js';
 
-$_documentContainer.innerHTML = `<dom-module id="vaadin-number-field-template">
+const $_documentContainer = html`<dom-module id="vaadin-number-field-template">
   <template>
     <style>
       :host([readonly]) [part\$="button"] {
@@ -45,6 +45,36 @@ $_documentContainer.innerHTML = `<dom-module id="vaadin-number-field-template">
         /* Older Firefox versions (v47.0) requires !important */
         -moz-appearance: textfield !important;
       }
+
+      :host([dir="rtl"]) [part="input-field"] {
+        direction: ltr;
+      }
+
+      :host([dir="rtl"]) [part="value"]::placeholder {
+        direction: rtl;
+      }
+
+      :host([dir="rtl"]) [part="input-field"] ::slotted(input)::placeholder {
+        direction: rtl;
+      }
+
+      :host([dir="rtl"]) [part="value"]:-ms-input-placeholder,
+      :host([dir="rtl"]) [part="input-field"] ::slotted(input):-ms-input-placeholder {
+        direction: rtl;
+      }
+
+      :host([dir="rtl"]:not([has-controls])) [part="value"]::placeholder {
+        text-align: left;
+      }
+
+      :host([dir="rtl"]:not([has-controls])) [part="input-field"] ::slotted(input)::placeholder {
+        text-align: left;
+      }
+
+      :host([dir="rtl"]:not([has-controls])) [part="value"]:-ms-input-placeholder,
+      :host([dir="rtl"]:not([has-controls])) [part="input-field"] ::slotted(input):-ms-input-placeholder {
+        text-align: left;
+      }
     </style>
 
     <div disabled\$="[[!_allowed(-1, value, min, max, step)]]" part="decrease-button" on-click="_decreaseValue" on-touchend="_decreaseButtonTouchend" hidden\$="[[!hasControls]]">
@@ -61,30 +91,31 @@ document.head.appendChild($_documentContainer.content);
 let memoizedTemplate;
 
 /**
-* `<vaadin-number-field>` is a Polymer 2 element for number field control in forms.
-*
-* ```html
-* <vaadin-number-field label="Number">
-* </vaadin-number-field>
-* ```
-*
-* @memberof Vaadin
-* @demo demo/index.html
-*/
+ * `<vaadin-number-field>` is a Web Component for number field control in forms.
+ *
+ * ```html
+ * <vaadin-number-field label="Number">
+ * </vaadin-number-field>
+ * ```
+ * @extends TextFieldElement
+ * @demo demo/index.html
+ */
 class NumberFieldElement extends TextFieldElement {
   static get is() {
     return 'vaadin-number-field';
   }
 
   static get version() {
-    return '2.4.14';
+    return '2.8.1';
   }
 
   static get properties() {
     return {
       /**
-      * Set to true to display value increase/decrease controls.
-      */
+       * Set to true to display value increase/decrease controls.
+       * @attr {boolean} has-controls
+       * @type {boolean}
+       */
       hasControls: {
         type: Boolean,
         value: false,
@@ -92,11 +123,12 @@ class NumberFieldElement extends TextFieldElement {
       },
 
       /**
-      * The minimum value of the field.
-      */
+       * The minimum value of the field.
+       */
       min: {
         type: Number,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: '_minChanged'
       },
 
       /**
@@ -110,34 +142,33 @@ class NumberFieldElement extends TextFieldElement {
 
       /**
        * Specifies the allowed number intervals of the field.
+       * @type {number}
        */
       step: {
         type: Number,
-        reflectToAttribute: true,
-        value: 1
+        value: 1,
+        observer: '_stepChanged'
       }
 
     };
   }
 
-  static get observers() {
-    return ['_stepOrMinChanged(step, min)'];
-  }
-
+  /** @protected */
   ready() {
     super.ready();
     this.__previousValidInput = this.value || '';
     this.inputElement.type = 'number';
-    this.inputElement.addEventListener('keydown', this.__onKeyDown.bind(this));
     this.inputElement.addEventListener('change', this.__onInputChange.bind(this));
   }
 
+  /** @private */
   _decreaseButtonTouchend(e) {
     // Cancel the following click and focus events
     e.preventDefault();
     this._decreaseValue();
   }
 
+  /** @private */
   _increaseButtonTouchend(e) {
     // Cancel the following click and focus events
     e.preventDefault();
@@ -166,11 +197,13 @@ class NumberFieldElement extends TextFieldElement {
     return memoizedTemplate;
   }
 
+  /** @protected */
   _createConstraintsObserver() {
     // NOTE: do not call "super" but instead override the method to add extra arguments
     this._createMethodObserver('_constraintsChanged(required, minlength, maxlength, pattern, min, max, step)');
   }
 
+  /** @private */
   _constraintsChanged(required, minlength, maxlength, pattern, min, max, step) {
     if (!this.invalid) {
       return;
@@ -185,14 +218,17 @@ class NumberFieldElement extends TextFieldElement {
     }
   }
 
+  /** @private */
   _decreaseValue() {
     this._incrementValue(-1);
   }
 
+  /** @private */
   _increaseValue() {
     this._incrementValue(1);
   }
 
+  /** @private */
   _incrementValue(incr) {
     if (this.disabled || this.readonly) {
       return;
@@ -239,11 +275,13 @@ class NumberFieldElement extends TextFieldElement {
     }
   }
 
+  /** @private */
   _setValue(value) {
-    this.value = this.inputElement.value = parseFloat(value);
+    this.value = this.inputElement.value = String(parseFloat(value));
     this.dispatchEvent(new CustomEvent('change', { bubbles: true }));
   }
 
+  /** @private */
   _getIncrement(incr, currentValue) {
     let step = this.step || 1,
         min = this.min || 0;
@@ -266,18 +304,21 @@ class NumberFieldElement extends TextFieldElement {
     }
   }
 
+  /** @private */
   _getDecimalCount(number) {
     const s = String(number);
     const i = s.indexOf('.');
     return i === -1 ? 1 : s.length - i - 1;
   }
 
+  /** @private */
   _getMultiplier(number) {
     if (!isNaN(number)) {
       return Math.pow(10, this._getDecimalCount(number));
     }
   }
 
+  /** @private */
   _incrementIsInsideTheLimits(incr, value) {
     if (incr < 0) {
       return this.min == null || this._getIncrement(incr, value) >= this.min;
@@ -288,16 +329,42 @@ class NumberFieldElement extends TextFieldElement {
     }
   }
 
+  /** @private */
   _allowed(sign) {
     const incr = sign * (this.step || 1);
     const value = parseFloat(this.value);
     return !this.value || !this.disabled && this._incrementIsInsideTheLimits(incr, value);
   }
 
-  _maxChanged() {
-    this.inputElement.max = this.max;
+  /**
+   * @param {number} newVal
+   * @param {number | undefined} oldVal
+   * @protected
+   */
+  _stepChanged(newVal, oldVal) {
+    // Avoid using initial value in validation
+    this.__validateByStep = this.__stepChangedCalled || this.getAttribute('step') !== null;
+    this.inputElement.step = this.__validateByStep ? newVal : 'any';
+
+    this.__stepChangedCalled = true;
+    this.setAttribute('step', newVal);
   }
 
+  /** @private */
+  _minChanged(min) {
+    this.inputElement.min = min;
+  }
+
+  /** @private */
+  _maxChanged(max) {
+    this.inputElement.max = max;
+  }
+
+  /**
+   * @param {unknown} newVal
+   * @param {unknown} oldVal
+   * @protected
+   */
   _valueChanged(newVal, oldVal) {
     // Validate value to be numeric
     if (newVal && isNaN(parseFloat(newVal))) {
@@ -309,7 +376,11 @@ class NumberFieldElement extends TextFieldElement {
     super._valueChanged(this.value, oldVal);
   }
 
-  __onKeyDown(e) {
+  /**
+   * @param {!KeyboardEvent} e
+   * @protected
+   */
+  _onKeyDown(e) {
     if (e.keyCode == 38) {
       e.preventDefault();
       this._increaseValue();
@@ -317,22 +388,23 @@ class NumberFieldElement extends TextFieldElement {
       e.preventDefault();
       this._decreaseValue();
     }
+    super._onKeyDown(e);
   }
 
+  /** @private */
   __onInputChange() {
     this.validate();
   }
 
-  _stepOrMinChanged(step, min) {
-    this.inputElement.step = step;
-    this.inputElement.min = this.min;
-  }
-
+  /**
+   * @return {boolean}
+   */
   checkValidity() {
     // text-field mixin does not check against `min`, `max` and `step`
-    if (this.min !== undefined || this.max !== undefined || this.step !== 1) {
+    if (this.min !== undefined || this.max !== undefined || this.__validateByStep) {
       return this.inputElement.checkValidity();
     }
+
     return super.checkValidity();
   }
 }
