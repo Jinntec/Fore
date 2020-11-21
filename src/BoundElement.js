@@ -75,12 +75,15 @@ export class BoundElement extends ForeElement {
         // return this.model.bindingMap.find(m => m.refnode === this.nodeset);
         // return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
 
+        const mi = this.getModel().getModelItem(this.nodeset);
+        if(mi){
+            this.modelItem = mi;
+        }
         if(this.modelItem.node instanceof Node){
             // console.log('modelItem is already initialized ', this.modelItem);
             return this.modelItem;
         }
 
-        this.evalInContext();
         //if the nodeset is null after evaluation we have a binding error
         /*
                 if(this.nodeset === null){
