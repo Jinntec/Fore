@@ -185,7 +185,8 @@ describe('initialize instance', () => {
 
         const model = el.querySelector('xf-model');
         const {modelItems} = model;
-        expect(modelItems[0].required).to.be.false;
+        expect(modelItems[0].isRequired).to.be.false;
+        expect(modelItems[0].isRequired).to.equal(false);
 
     });
 

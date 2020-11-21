@@ -3,6 +3,7 @@ import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
 import {ForeElement} from "./ForeElement.js";
+import {Fore} from "./fore";
 
 function evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
 	return fx.evaluateXPath(
@@ -66,6 +67,17 @@ function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespace
  * BoundElements to track their state.
  */
 export class XfBind extends ForeElement {
+
+    static READONLY_DEFAULT = false;
+
+    static REQUIRED_DEFAULT = false;
+
+    static RELEVANT_DEFAULT = true;
+
+    static CONSTRAINT_DEFAULT = true;
+
+    static TYPE_DEFAULT = 'xs:string';
+
     static get styles() {
         return css`
             :host {
@@ -311,10 +323,22 @@ export class XfBind extends ForeElement {
         }
 
         // const path = '';
+        // const path = fx.evaluateXPath('path()',node);
         const path = fx.evaluateXPath('path()',node);
+        // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
+
+        // const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode,null);
+        const mi = new ModelItem(path,
+            ref,
+            XfBind.READONLY_DEFAULT,
+            XfBind.RELEVANT_DEFAULT,
+            XfBind.REQUIRED_DEFAULT,
+            XfBind.CONSTRAINT_DEFAULT,
+            XfBind.TYPE_DEFAULT,
+            targetNode,
+            this);
 
 
-        const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode,null);
         // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
         model.registerModelItem(mi);
         return mi;
@@ -330,15 +354,27 @@ export class XfBind extends ForeElement {
      * @private
      */
     _createModelItem(node,index){
-        // console.log('_createModelItem ', this.nodeset);
-        // console.log('_createModelItem ', this.nodeset.nodeType);
-        // console.log('_createModelItem model', this.model);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem nodeType', node.nodeType);
-        // console.log('path() nodeType', fx.evaluateXPath('path()',node));
+        // console.log('_createModelItem node', node, index);
 
-        let value = null;
+        /*
+        if bind is the dot expression we use the modelitem of the parent
+         */
+        if(XPathUtil.isSelfReference(this.ref)){
+
+            const parentBoundElement = this.parentElement.closest('xf-bind[ref]');
+            console.log('parent bound element ', parentBoundElement);
+
+            if(parentBoundElement){
+                //todo: Could be fancier by combining them
+                parentBoundElement.required = this.required; //overwrite parent property!
+            }else{
+                console.error('no parent bound element');
+            }
+
+            return;
+        }
+
+        // let value = null;
         const mItem = {};
         let targetNode = {};
         if(node.nodeType === node.TEXT_NODE){
@@ -349,36 +385,46 @@ export class XfBind extends ForeElement {
             targetNode = node;
         }
 
-        // console.log('NODE ', targetNode);
-        if(targetNode.nodeType === Node.ELEMENT_NODE){
-            value = targetNode.textContent;
-        }else{
-            value = targetNode.nodeValue;
+
+        // const isReadonly = this._initReadonly(targetNode);
+        // const isValid = this._initBooleanModelItemProperty('constraint', targetNode);
+        // const isReadonly = this._initBooleanModelItemProperty('readonly', targetNode);
+        // const isRequired = this._initBooleanModelItemProperty('required', targetNode);
+        // const isRelevant = this._initBooleanModelItemProperty('relevant', targetNode);
+
+        const path = fx.evaluateXPath('path()',node);
+        const shortPath = this._shortenPath(path);
+        //constructiong default modelitem - will get evaluated during reaalculate()
+        const newItem = new ModelItem(shortPath,
+                                      this.ref,
+                                      XfBind.READONLY_DEFAULT,
+                                      XfBind.RELEVANT_DEFAULT,
+                                      XfBind.REQUIRED_DEFAULT,
+                                      XfBind.CONSTRAINT_DEFAULT,
+                                      this.type,
+                                      targetNode,
+                                      this);
+
+        this.getModel().registerModelItem(newItem);
+    }
+
+    _initlPropertyReferences(property, node){
+
+    }
+
+    _initBooleanModelItemProperty(property, node){
+        //evaluate expression to boolean
+        const propertyExpr = this[property];
+        console.log('####### ', propertyExpr);
+        const result = evaluateXFormsXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
+
+        //if expression not simply true() or false() detect nodes referenced by readonly expr
+        if(propertyExpr !== 'true()' && propertyExpr !== 'false()'){
+            const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
+            console.log(`AST for ${propertyExpr}`, ast.innerHTML);
+
         }
-        const ro = evaluateXFormsXPathToBoolean(this.readonly, targetNode, this, this.namespaceResolver);
-		const req = evaluateXFormsXPathToBoolean(this.required, targetNode, this, this.namespaceResolver);
-        const rel = evaluateXFormsXPathToBoolean(this.relevant, targetNode, this, this.namespaceResolver);
-		const val = evaluateXFormsXPathToBoolean(this.constraint, targetNode, this, this.namespaceResolver);
-
-
-        let targetModelItem;
-        // if(XPathUtil.isSelfReference(this.ref)){
-        // if(this.ref === './text()' || this.ref === 'text()' || this.ref === '.' || this.ref === ''){
-        if(XPathUtil.isSelfReference(this.ref)){
-            // console.log('node ', node);
-            // console.log('all modelItems ', this.model.modelItems);
-            const parentModelItem = this.getModel().getModelItem(node);
-            // console.log('parentModelItem ', parentModelItem);
-            parentModelItem.required = req;
-
-        }else{
-            const path = fx.evaluateXPath('path()',node);
-            const sp = this._shortenPath(path);
-            const newItem = new ModelItem(sp, this.ref, ro,rel,req,val,this.type,targetNode,this);
-            this.getModel().registerModelItem(newItem);
-        }
-        // const mi = new ModelItem( ro,rel,req,val,this.type,targetNode);
-
+        return result;
     }
 
     _shortenPath(path){

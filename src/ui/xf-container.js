@@ -72,13 +72,13 @@ export class XfContainer extends BoundElement {
 
 
     handleReadonly(){
-        // console.log('mip readonly', this.modelItem.readonly);
-        if (this.isReadonly() !== this.modelItem.readonly) {
-            if (this.modelItem.readonly) {
+        // console.log('mip readonly', this.modelItem.isReadonly);
+        if (this.isReadonly() !== this.modelItem.isReadonly) {
+            if (this.modelItem.isReadonly) {
                 this.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
-            if(!this.modelItem.readonly){
+            if(!this.modelItem.isReadonly){
                 this.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }

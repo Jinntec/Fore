@@ -1,13 +1,11 @@
 import {LitElement, css} from 'lit-element';
 
 import fx from "fontoxpath";
-import evaluateXPathToNodes from 'fontoxpath';
-import * as fontoxpath from 'fontoxpath';
-
+import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
-
 import './xf-instance.js';
 import './xf-bind.js';
+import {XPathUtil} from "./xpath-util";
 
 export class XfModel extends LitElement {
 
@@ -52,53 +50,40 @@ export class XfModel extends LitElement {
         this.addEventListener('model-construct', this._modelConstruct);
         this.addEventListener('ready', this._ready);
 
-
+        this.mainGraph = new DepGraph(false);
     }
-
-/*
-    render() {
-        return html`
-             <slot></slot>
-        `;
-    }
-*/
 
     _modelConstruct(e) {
         // console.log('MODEL::model-construct received ', this.id);
+        const instances = this.querySelectorAll('xf-instance');
+        if (instances.length > 0) {
+            // console.group('init instances');
+            instances.forEach(instance => {
+                instance.init();
+            });
+            this.instances = Array.from(instances);
+            console.groupEnd();
+            // console.log('model instances ', this.instances);
 
+            // this._initOutermostBindings();
 
-            const instances = this.querySelectorAll('xf-instance');
-
-            if (instances.length > 0) {
-                // console.group('init instances');
-                instances.forEach(instance => {
-                    instance.init();
-                });
-                this.instances = Array.from(instances);
-                console.groupEnd();
-                // console.log('model instances ', this.instances);
-
-                // this._initOutermostBindings();
-
-                this.updateModel();
-                // console.groupEnd();
-                // console.log('dispatching model-construct-done');
-                this.dispatchEvent(new CustomEvent('model-construct-done', {
-                    composed: true,
-                    bubbles: true,
-                    detail: {model: this}
-               }));
-            } else {
-                // this._initOutermostBindings();
-                this.dispatchEvent(new CustomEvent('model-construct-done', {
-                    composed: true,
-                    bubbles: true,
-                    detail: {model: this}
-                }));
-            }
-
+            this.updateModel();
+            // console.groupEnd();
+            // console.log('dispatching model-construct-done');
+            this.dispatchEvent(new CustomEvent('model-construct-done', {
+                composed: true,
+                bubbles: true,
+                detail: {model: this}
+           }));
+        } else {
+            // this._initOutermostBindings();
+            this.dispatchEvent(new CustomEvent('model-construct-done', {
+                composed: true,
+                bubbles: true,
+                detail: {model: this}
+            }));
+        }
     }
-
 
     registerModelItem(modelItem){
         console.log('ModelItem registered ', modelItem);
@@ -112,67 +97,98 @@ export class XfModel extends LitElement {
         this.rebuild();
         this.recalculate();
         this.revalidate();
-
     }
 
     rebuild() {
         console.group('### rebuild');
 
-        // this will trigger evaluation of all bind elements of this model
-        this._initOutermostBindings();
+/*
+        console.log('%%%%%% graph ', this.mainGraph);
 
+        this.mainGraph.addNode('a');
+        this.mainGraph.addNode('b');
+        this.mainGraph.addNode('c');
+        // this.mainGraph.getSize();
+        console.log('%%%%%% deps size ', this.mainGraph.size);
+
+        this.mainGraph.addDependency('a','b');
+        this.mainGraph.addDependency('b','c');
+
+        console.log('%%%%%% deps of a ', this.mainGraph.dependenciesOf('a'));
+        console.log('%%%%%% deps of b ', this.mainGraph.dependenciesOf('b'));
+        console.log('%%%%%% deps of c ', this.mainGraph.dependantsOf('c'));
+        console.log('%%%%%% graph ', this.mainGraph.overallOrder());
+*/
+
+        this.modelItems = [];
+
+        // trigger recursive initialization of the xf-bind elements
+        const binds = this.querySelectorAll('xf-model > xf-bind');
+        binds.forEach(bind => {
+            bind.init(this);
+        });
         console.log(`rebuild finished with modelItems ${this.modelItems.length} item(s)`, this.modelItems);
         console.groupEnd();
     //
     }
 
     recalculate() {
-        // tbd
-        console.log('### recalculate');
-
-
+        console.group('### recalculate');
         this.modelItems.forEach(item => {
             console.log('recalculate modelItem ', item);
 
             const bind = item.bind;
             if(bind){
-                console.log('bind for modelItem ', bind);
+                console.log('modelItem bind ', bind);
 
+                /*
+                if there is a bind for this modelitem we'll evaluate all of its modelitem properties.
 
-                // const compute = fx.evaluateXPath(bind.calculate, item.node, null, {});
-                // const compute = fx.evaluateXPath(bind.calculate, item.node, null, {});
-
+                In case modelItems are lazy-created there won't be any bind element for them.
+                 */
                 if(bind){
 
+                    //do calculate first as it may influence the others
                     const calculate = bind.calculate;
+                    console.log('calculate expr: ', calculate);
                     if(calculate){
                         const compute =  Fore.evaluateXPath (calculate, item.node, this, Fore.namespaceResolver) ;
-                        item.value = compute;
+                        item.value = compute; // immediately update the node value through setter
                     }
 
-                    const required = bind.required;
+                    const {required} = bind;
                     if(required){
-                        const compute =  Fore.evaluateXPath (bind.required, item.node, this, Fore.namespaceResolver) ;
-                        item.required = compute;
+                        const compute =  Fore.evaluateToBoolean (required, item.node, this, Fore.namespaceResolver) ;
+                        item.isRequired = compute;
                     }
 
-                    const readonly = bind.readonly;
+                    const {readonly} = bind;
                     if(readonly){
-
+                        const compute =  Fore.evaluateToBoolean (readonly, item.node, this, Fore.namespaceResolver) ;
+                        item.isReadonly = compute;
                     }
 
+                    const {relevant} = bind;
+                    if(relevant){
+                        const compute =  Fore.evaluateToBoolean (relevant, item.node, this, Fore.namespaceResolver) ;
+                        item.isRelevant = compute;
+                    }
 
+                    const {constraint} = bind;
+                    if(constraint){
+                        const compute =  Fore.evaluateToBoolean (constraint, item.node, this, Fore.namespaceResolver) ;
+                        item.isValid = compute;
+                    }
                 }
-
-
 
                 // const ro = evaluateXFormsXPathToBoolean(this.readonly, targetNode, this, this.namespaceResolver);
 
                 // item.value = compute;
-                console.log('computed ', compute);
+                // console.log('computed ', compute);
             }
         });
 
+/*
         const binds = this.querySelectorAll('xf-bind[calculate]');
         binds.forEach(bind => {
             const contextNode = bind.nodeset[0];
@@ -180,7 +196,9 @@ export class XfModel extends LitElement {
             this.getModelItem(contextNode).value = compute;
             console.log('computed ', compute);
         });
-
+*/
+        console.log(`recalculate finished with modelItems ${this.modelItems.length} item(s)`, this.modelItems);
+        console.groupEnd();
     }
 
     revalidate() {
@@ -235,6 +253,7 @@ export class XfModel extends LitElement {
         return this.modelItems.find(m => m.node === node);
     }
 
+/*
     _initOutermostBindings(){
         console.group('### initialize bindings');
 
@@ -245,6 +264,7 @@ export class XfModel extends LitElement {
         });
         console.groupEnd();
     }
+*/
 
 
     _handleModelConstructDone(e){

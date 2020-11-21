@@ -13,10 +13,10 @@ export class ModelItem {
      *
      * @param {path} calculated normalized path expression linking to data
      * @param {ref} ref relative binding expression
-     * @param {*} readonly - boolean expression to calculate readonly/readwrite state
-     * @param {*} relevant - boolean expression to calculate relevant/non-relevant state
-     * @param {*} required - boolean expression to calculate required/optional state
-     * @param {*} valid - boolean expression to calculate valid/invalid state
+     * @param {*} isReadonly - boolean to signal readonly/readwrite state
+     * @param {*} isRelevant - boolean to signal relevant/non-relevant state
+     * @param {*} isRequired - boolean to signal required/optional state
+     * @param {*} isValid - boolean boolean to signal valid/invalid state
      * @param {*} type - string expression to set a datatype
      * @param {*} node - the node the 'ref' expression is referring to
      * @param {*} bind - the xf-bind element having created this modelItem
@@ -33,10 +33,10 @@ export class ModelItem {
                 bind) {
         this.path = path;
         this.ref = ref;
-        this.readonly = readonly;
-        this.relevant = relevant;
-        this.required = required;
-        this.valid = valid;
+        this.isReadonly = readonly;
+        this.isRelevant = relevant;
+        this.isRequired = required;
+        this.isValid = valid;
         this.type = type;
         this.node = node;
         this.bind = bind;

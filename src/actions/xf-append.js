@@ -71,10 +71,10 @@ class XfAppend extends XfAction {
         const newModelItem = new ModelItem(
                                            originModelItem.bind,
                                            path,
-                                           originModelItem.readonly,
-                                           originModelItem.relevant,
-                                           originModelItem.required,
-                                           originModelItem.valid,
+                                           originmodelItem.isReadonly,
+                                           originModelItem.isRelevant,
+                                           originModelItem.isRequired,
+                                           originModelItem.isValid,
                                            newItem);
 */
 

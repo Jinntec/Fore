@@ -25,6 +25,10 @@ declare %public function xf:string-length($arg as item()) as xs:integer{
     fn:string-length($arg)
 };
 
+declare %public function xf:path() as xs:string{
+    fn:path()
+};
+
 `);
 
 

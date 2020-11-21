@@ -35,18 +35,18 @@ describe('lazy initialize modelItem', () => {
 
         const mi1 = model.modelItems[0];
         expect(mi1.value).to.equal('message:');
-        expect(mi1.readonly).to.equal(false);
-        expect(mi1.required).to.equal(false);
-        expect(mi1.relevant).to.equal(true);
-        expect(mi1.valid).to.equal(true);
+        expect(mi1.isReadonly).to.equal(false);
+        expect(mi1.isRequired).to.equal(false);
+        expect(mi1.isRelevant).to.equal(true);
+        expect(mi1.isValid).to.equal(true);
         expect(mi1.type).to.equal('xs:string');
 
         const mi2 = model.modelItems[1];
         expect(mi2.value).to.equal('Hello World!');
-        expect(mi2.readonly).to.equal(false);
-        expect(mi2.required).to.equal(false);
-        expect(mi2.relevant).to.equal(true);
-        expect(mi2.valid).to.equal(true);
+        expect(mi2.isReadonly).to.equal(false);
+        expect(mi2.isRequired).to.equal(false);
+        expect(mi2.isRelevant).to.equal(true);
+        expect(mi2.isValid).to.equal(true);
         expect(mi2.type).to.equal('xs:string');
 
 

@@ -52,7 +52,7 @@ export default class XfAbstractControl extends BoundElement {
     refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
 
-        this.control = this.shadowRoot.querySelector('#control');
+        this.control = this.shadowRoot.getElementById('control');
 
         const currentVal = this.value;
 
@@ -93,9 +93,9 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     handleRequired() {
-        // console.log('mip required', this.modelItem.required);
-        if (this.isRequired() !== this.modelItem.required) {
-            if (this.modelItem.required) {
+        // console.log('mip required', this.modelItem.isRequired);
+        if (this.isRequired() !== this.modelItem.isRequired) {
+            if (this.modelItem.isRequired) {
                 this.control.setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
@@ -106,13 +106,13 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     handleReadonly(){
-        // console.log('mip readonly', this.modelItem.readonly);
-        if (this.isReadonly() !== this.modelItem.readonly) {
-            if (this.modelItem.readonly) {
+        // console.log('mip readonly', this.modelItem.isReadonly);
+        if (this.isReadonly() !== this.modelItem.isReadonly) {
+            if (this.modelItem.isReadonly) {
                 this.control.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
-            if(!this.modelItem.readonly){
+            if(!this.modelItem.isReadonly){
                 this.control.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
@@ -120,9 +120,9 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     handleValid(){
-        // console.log('mip valid', this.modelItem.valid);
-        if (this.isValid() !== this.modelItem.valid) {
-            if (this.modelItem.valid) {
+        // console.log('mip valid', this.modelItem.isRequired);
+        if (this.isValid() !== this.modelItem.isRequired) {
+            if (this.modelItem.isRequired) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
                 this.dispatchEvent(new CustomEvent('invalid', {}));
