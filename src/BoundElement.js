@@ -84,7 +84,7 @@ export class BoundElement extends ForeElement {
             return this.modelItem;
         }
 
-        //if the nodeset is null after evaluation we have a binding error
+        // if the nodeset is null after evaluation we have a binding error
         /*
                 if(this.nodeset === null){
                     this.dispatchEvent(new CustomEvent('binding-error', {
@@ -96,7 +96,7 @@ export class BoundElement extends ForeElement {
                 }
         */
 
-        let repeated = this.closest('xf-repeatitem');
+        const repeated = this.closest('xf-repeatitem');
         let existed;
         if(repeated){
             const index = this.closest('xf-repeatitem').index;

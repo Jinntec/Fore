@@ -1,5 +1,6 @@
 import  '../xf-model.js';
 import {BoundElement} from "../BoundElement";
+import {css} from "lit-element";
 
 /**
  * `xf-abstract-control` -
@@ -40,6 +41,7 @@ export default class XfAbstractControl extends BoundElement {
 
     firstUpdated(_changedProperties) {
         console.log('AbstractControl firstUpdated ', this);
+        this.display = this.style.display;
         // this.control = this.shadowRoot.querySelector('#control');
         // this.control = this.shadowRoot.getElementById('control');
     }
@@ -69,7 +71,7 @@ export default class XfAbstractControl extends BoundElement {
             if(currentVal !== this.value){
                 this.dispatchEvent(new CustomEvent('value-changed', {}));
             }
-            this.requestUpdate();
+            // this.requestUpdate();
             this.handleModelItemProperties();
         }
     }
@@ -132,11 +134,13 @@ export default class XfAbstractControl extends BoundElement {
 
     handleRelevant(){
         // console.log('mip valid', this.modelItem.enabled);
-        if (this.isEnabled() !== this.modelItem.enabled) {
-            if (this.modelItem.enabled) {
+        if (this.isEnabled() !== this.modelItem.isRelevant) {
+            if (this.modelItem.isRelevant) {
                 this.dispatchEvent(new CustomEvent('enabled', {}));
+                this._fadeIn(this, this.display);
             } else {
                 this.dispatchEvent(new CustomEvent('disabled', {}));
+                this._fadeOut(this);
             }
         }
     }
@@ -201,13 +205,36 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     isEnabled(){
-        if(this.control.style.display === 'none'){
+        if(this.style.display === 'none' || this.classList.contains('non-relevant')){
             return false;
         }
         return true;
     }
 
+    _fadeOut(el){
+        el.style.opacity = 1;
 
+        (function fade() {
+            if ((el.style.opacity -= .1) < 0) {
+                el.style.display = "none";
+            } else {
+                requestAnimationFrame(fade);
+            }
+        })();
+    };
+
+    _fadeIn(el, display){
+        el.style.opacity = 0;
+        el.style.display = display || "block";
+
+        (function fade() {
+            var val = parseFloat(el.style.opacity);
+            if (!((val += .1) > 1)) {
+                el.style.opacity = val;
+                requestAnimationFrame(fade);
+            }
+        })();
+    };
 
 }
 

@@ -202,50 +202,42 @@ export class XfModel extends LitElement {
     }
 
     revalidate() {
-        // tbd
-        // console.log('revalidate');
-        // console.log('revalidate instances ', this.instances);
-
         console.group('### revalidate');
+
         this.modelItems.forEach(modelItem =>{
             console.log('validating node ', modelItem.node);
+
+            const bind = modelItem.bind;
+            if(bind){
+                console.log('modelItem bind ', bind);
+
+                /*
+                if there is a bind for this modelitem we'll evaluate all of its modelitem properties.
+
+                In case modelItems are lazy-created there won't be any bind element for them.
+                 */
+                if(bind){
+
+                    const {constraint} = bind;
+                    let constraintValid;
+                    if(constraint){
+                        const compute =  Fore.evaluateToBoolean (constraint, modelItem.node, this, Fore.namespaceResolver) ;
+                        // item.isValid = compute;
+                        constraintValid = compute;
+                    }
+
+                    const {type} = bind;
+                    if(type){
+                        // todo: datatype check
+                        const check = true;
+                        modelItem.isValid = constraintValid && check;
+                    }
+
+                }
+            }
+
         });
-/*
-        const binds = this.querySelectorAll('xf-bind');
-        binds.forEach(bind => {
-            // console.log('bind ', bind);
-            console.log('bind ', bind.ref);
-            // console.log('instanceData ', this.getDefaultInstanceData());
 
-            if(this.ref === ''){
-                return;
-            }
-
-            let contextNode =  fx.evaluateXPath(bind.ref, this.getDefaultContext(), null, {});
-            console.log('evaluated context node ', contextNode);
-
-            let result ='';
-            if(bind.readonly !== 'false()'){
-                console.log('evaluating readonly expression', bind.readonly);
-                result =  fx.evaluateXPathToBoolean(bind.readonly, contextNode, null, {});
-                console.log('readonly evaluated to', result);
-            }
-            if(bind.required !== 'false()'){
-                // console.log('evaluating required expression', bind.required);
-                result =  fx.evaluateXPathToBoolean(bind.required, contextNode, null, {});
-                console.log('required evaluated to', result);
-            }
-            if(bind.relevant !== 'true()'){
-                // console.log('evaluating relevant expression', bind.relevant);
-            }
-            if(bind.constraint !== 'true()'){
-                // console.log('evaluating constraint expression', bind.constraint);
-            }
-            if(bind.type !== 'xs:string'){
-                // console.log('evaluating type  expression', bind.type);
-            }
-        });
-*/
         console.groupEnd();
     }
 

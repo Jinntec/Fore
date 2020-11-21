@@ -19,14 +19,13 @@
             display: inline;
             color: red;
         }
-
     </style>
 </head>
 <body unresolved="unresolved">
 
 
 <xf-form>
-    <xf-message event="refresh-done">refresh has been done</xf-message>
+<!--    <xf-message event="refresh-done">refresh has been done</xf-message>-->
 
     <xf-model id="model1">
         <xf-instance>
@@ -38,7 +37,7 @@
         </xf-instance>
         <xf-bind  ref="a" readonly=".='A'" required="../b = 'B'"></xf-bind>
         <xf-bind  ref="b" readonly="false()" required="../c = 'C'"></xf-bind>
-        <xf-bind ref="c" valid="../a = 'B'"></xf-bind>
+        <xf-bind ref="c" valid="../a = 'B'" relevant="../b='B'"></xf-bind>
 
 
     </xf-model>
@@ -47,9 +46,15 @@
 
         <h1 class="{class}">
             Recalculation
-            <xf-output id="output" ref="a"></xf-output>
-            <xf-output id="output" ref="b"></xf-output>
-            <xf-output id="output" ref="c"></xf-output>
+            <xf-output id="output" ref="a">
+                <xf-label>a:</xf-label>
+            </xf-output>
+            <xf-output id="output" ref="b">
+                <xf-label>b:</xf-label>
+            </xf-output>
+            <xf-output id="output" ref="c">
+                <xf-label>c:</xf-label>
+            </xf-output>
         </h1>
 
         <xf-input label="A" ref="a"></xf-input>
