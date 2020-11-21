@@ -220,6 +220,8 @@ describe('scoped resolution tests', () => {
 
         await elementUpdated(el);
         const model = el.querySelector('xf-model');
+
+        await model.updateComplete;
         expect(model.modelItems.length).to.equal(8);
 
         let out = el.querySelector('#output');

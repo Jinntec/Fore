@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'lit-element';
-import '../../assets/@polymer/paper-button';
+import '../../assets/@polymer/paper-button/paper-button.js';
 import XfAbstractControl from "./xf-abstract-control.js";
 /**
  * `xf-button`
@@ -73,7 +73,7 @@ class XfButton extends XfAbstractControl {
     }
 
     refresh(){
-        super.refresh();
+        // super.refresh();
         // console.log('xf-button refresh');
 
         const elements = this.querySelectorAll(':scope > *');
@@ -88,6 +88,9 @@ class XfButton extends XfAbstractControl {
 
 
 
+    }
+
+    handleRequired () {
     }
 
 

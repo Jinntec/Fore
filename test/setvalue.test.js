@@ -29,6 +29,8 @@ describe('setvalue tests', () => {
 
         await elementUpdated(el);
         const model = el.querySelector('xf-model');
+
+        await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
 
         const inst = model.getDefaultInstance().getDefaultContext();

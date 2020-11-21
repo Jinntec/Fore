@@ -51,10 +51,9 @@ export default class XfAbstractControl extends BoundElement {
     /**
      * (re)apply all state properties to this control.
      */
-    refresh() {
+    async refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
 
-        this.control = this.shadowRoot.getElementById('control');
 
         const currentVal = this.value;
 
@@ -62,7 +61,9 @@ export default class XfAbstractControl extends BoundElement {
         if(this.isNotBound()) return;
 
         this.evalInContext();
+        await this.updateComplete;
         if(this.isBound()){
+            this.control = this.shadowRoot.getElementById('control');
             this.modelItem = this.getModelItem();
             this.value = this.modelItem.value;
 
@@ -98,7 +99,8 @@ export default class XfAbstractControl extends BoundElement {
         // console.log('mip required', this.modelItem.isRequired);
         if (this.isRequired() !== this.modelItem.isRequired) {
             if (this.modelItem.isRequired) {
-                this.control.setAttribute('required','required');
+                // this.control.setAttribute('required','required');
+                this.shadowRoot.getElementById('control').setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
                 this.control.removeAttribute('required');
