@@ -1,34 +1,64 @@
-import {evaluateUpdatingExpressionSync, executePendingUpdateList, registerXQueryModule} from 'fontoxpath';
+import {
+    evaluateUpdatingExpressionSync,
+    executePendingUpdateList,
+    registerCustomXPathFunction,
+    registerXQueryModule
+} from 'fontoxpath';
 import * as fx from "fontoxpath";
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
+registerCustomXPathFunction(
+    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
+    ['xs:string?'],
+    'element()?',
+    (dynamicContext, string) => {
+        // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
+        // TODO: handle no string passed (null will be passed instead)
+
+        const {formElement} = dynamicContext.currentContext || this;
+
+        // console.log('fnInstance dynamicContext: ', dynamicContext);
+        // console.log('fnInstance string: ', string);
+
+        const instance = formElement.querySelector(`xf-instance[id=${  string  }]`);
+
+        // const def = instance.getInstanceData();
+        if(instance) {
+            const def = instance.getDefaultContext();
+            // console.log('target instance root node: ', def);
+
+            return def;
+        }
+        return null;
+    }
+);
+
 // These modules can use full XQuery 3.1 + XQuery update facility 3.0
 registerXQueryModule(`
-module namespace xf="${XFORMS_NAMESPACE_URI}";
-
-declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
-	lower-case($str) = "true" or $str = "1"
-};
-
-declare %public function xf:false() as xs:boolean {
-	fn:false()
-};
-declare %public function xf:true() as xs:boolean {
-	fn:true()
-};
-declare %public function xf:count($arg as item()*) as xs:integer {
-	fn:count($arg)
-};
-
-declare %public function xf:string-length($arg as item()) as xs:integer{
-    fn:string-length($arg)
-};
-
-declare %public function xf:path() as xs:string{
-    fn:path()
-};
-
+    module namespace xf="${XFORMS_NAMESPACE_URI}";
+    
+    declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
+        lower-case($str) = "true" or $str = "1"
+    };
+    
+    declare %public function xf:false() as xs:boolean {
+        fn:false()
+    };
+    declare %public function xf:true() as xs:boolean {
+        fn:true()
+    };
+    declare %public function xf:count($arg as item()*) as xs:integer {
+        fn:count($arg)
+    };
+    
+    declare %public function xf:string-length($arg as item()) as xs:integer{
+        fn:string-length($arg)
+    };
+    
+    declare %public function xf:path() as xs:string{
+        fn:path()
+    };
 `);
 
 

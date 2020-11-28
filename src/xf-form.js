@@ -27,35 +27,7 @@ import './actions/xf-append.js';
 import './actions/xf-delete.js';
 import "./actions/xf-setvalue.js";
 
-
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
-
-registerCustomXPathFunction(
-	{ namespaceURI: Fore.XFORMS_NAMESPACE_URI, localName: 'instance' },
-	['xs:string?'],
-	'element()?',
-	(dynamicContext, string) => {
-		// Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
-		// TODO: handle no string passed (null will be passed instead)
-
-		const {formElement} = dynamicContext.currentContext || this;
-
-		// console.log('fnInstance dynamicContext: ', dynamicContext);
-		// console.log('fnInstance string: ', string);
-
-		const instance = formElement.querySelector(`xf-instance[id=${  string  }]`);
-
-		// const def = instance.getInstanceData();
-		if(instance) {
-			const def = instance.getDefaultContext();
-			// console.log('target instance root node: ', def);
-
-			return def;
-		}
-		return null;
-	}
-);
-
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
