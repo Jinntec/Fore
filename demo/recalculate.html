@@ -35,9 +35,28 @@
                 <c>C</c>
             </data>
         </xf-instance>
+
+        <!--
+        ### this syntax is as 'should-be' in plain XForms (but who cares?)
         <xf-bind  ref="a" readonly=".='A'" required="../b = 'B'"></xf-bind>
-        <xf-bind  ref="b" readonly="false()" required="../c = 'C'"></xf-bind>
-        <xf-bind ref="c" valid="../a = 'B'" relevant="../b='B'"></xf-bind>
+        -->
+
+
+        <!--
+        ### another spec-conform variant which uses the bind(#id) function but requires more typing
+        by forcing to setup a complete new bind element.
+        -->
+<!--        <xf-bind  ref="a" readonly=".='A'" required="bind('b') = 'B'"></xf-bind>-->
+
+
+<!--
+        <xf-bind  ref="a" readonly=".='A'" required="depends(../b)/text() = 'B'"></xf-bind>
+        <xf-bind ref="b" readonly="false()" required="depends(../c) = 'C'"></xf-bind>
+        <xf-bind ref="c" constraint="../a = 'B'" relevant="depends(../b) = 'B'"></xf-bind>
+-->
+        <xf-bind ref="a" readonly="string-length(depends(../b)) > 1" required="depends(../b) = 'B'"></xf-bind>
+        <xf-bind ref="b" required="depends(../c) = 'C'"></xf-bind>
+        <xf-bind ref="c" required=".=C" relevant="depends(../b) = 'B'"></xf-bind>
 
 
     </xf-model>

@@ -40,12 +40,12 @@ describe('initialize bind', () => {
         expect(mi.node).to.equal(mi.node);
 
 
-        expect(mi.isReadonly).to.exist;
-        expect(mi.isRequired).to.exist;
-        expect(mi.isRequired).to.equal(true);
+        expect(mi.readonly).to.exist;
+        expect(mi.required).to.exist;
+        expect(mi.required).to.equal(true);
 
-        expect(mi.isRelevant).to.exist;
-        expect(mi.isValid).to.exist;
+        expect(mi.relevant).to.exist;
+        expect(mi.constraint).to.exist;
         // expect(mi.modelItem.type).to.exist;
 
 
@@ -235,7 +235,7 @@ describe('initialize bind', () => {
 
         const model = document.getElementById('model1');
         expect(model.modelItems.length).to.equal(1);
-        expect(model.modelItems[0].isRequired).to.equal(true);
+        expect(model.modelItems[0].required).to.equal(true);
 
     });
 
@@ -265,7 +265,7 @@ describe('initialize bind', () => {
         const model = document.getElementById('model1');
         expect(model.modelItems.length).to.equal(1);
         console.log('++++++++++++++++++++++++++++ ', model.modelItems);
-        expect(model.modelItems[0].isRequired).to.equal(true);
+        expect(model.modelItems[0].required).to.equal(true);
 
     });
 

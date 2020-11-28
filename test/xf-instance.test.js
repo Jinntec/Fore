@@ -184,9 +184,11 @@ describe('initialize instance', () => {
         expect(instances[1].id).to.equal('second');
 
         const model = el.querySelector('xf-model');
+        await elementUpdated(model);
         const {modelItems} = model;
-        expect(modelItems[0].isRequired).to.be.false;
-        expect(modelItems[0].isRequired).to.equal(false);
+        // expect(modelItems[0].required).to.be.false;
+        console.log('>>>>>>>>>>>< modelitem ', modelItems[0])
+        expect(modelItems[0].required).to.equal(false);
 
     });
 

@@ -46,12 +46,13 @@ function createDFS(edges, leavesOnly, result, circular) {
             continue;
           }
           currentPath.push(node);
-          this.dispatchEvent(new CustomEvent('compute-exception', {
+          window.dispatchEvent(new CustomEvent('compute-exception', {
             composed: true,
             bubbles: true,
             detail: {"path": currentPath}
           }));
-
+          return;
+          // alert('‘circular path: ' + currentPath);
           // throw new DepGraphCycleError(currentPath);
         }
 
@@ -140,6 +141,7 @@ DepGraph.prototype = {
    */
   hasNode: function(node) {
     return this.nodes.hasOwnProperty(node);
+    // return this.nodes.indexOf(node);
   },
   /**
    * Get the data associated with a node name
@@ -214,6 +216,7 @@ DepGraph.prototype = {
     });
     return result;
   },
+  /**
   /**
    * Get an array containing the nodes that the specified node depends on (transitively).
    *

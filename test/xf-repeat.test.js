@@ -62,11 +62,11 @@ describe('initialize repeat', () => {
         // some modelItem checks
         expect(model.modelItems[0].node.nodeName).to.equal('task');
         expect(model.modelItems[0].value).to.equal('Pick up Milk');
-        expect(model.modelItems[0].isRequired).to.equal(true);
+        expect(model.modelItems[0].required).to.equal(true);
 
         expect(model.modelItems[1].node.nodeName).to.equal('task');
         expect(model.modelItems[1].value).to.equal('Make tutorial part 1');
-        expect(model.modelItems[1].isRequired).to.equal(true);
+        expect(model.modelItems[1].required).to.equal(true);
 
         expect(model.modelItems[2].node.nodeName).to.equal('complete'); //text node
         expect(model.modelItems[2].node.nodeType).to.equal(2); //attribute node

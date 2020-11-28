@@ -40,7 +40,7 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     firstUpdated(_changedProperties) {
-        console.log('AbstractControl firstUpdated ', this);
+        // console.log('AbstractControl firstUpdated ', this);
         this.display = this.style.display;
         // this.control = this.shadowRoot.querySelector('#control');
         // this.control = this.shadowRoot.getElementById('control');
@@ -96,9 +96,9 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     handleRequired() {
-        // console.log('mip required', this.modelItem.isRequired);
-        if (this.isRequired() !== this.modelItem.isRequired) {
-            if (this.modelItem.isRequired) {
+        // console.log('mip required', this.modelItem.required);
+        if (this.isRequired() !== this.modelItem.required) {
+            if (this.modelItem.required) {
                 // this.control.setAttribute('required','required');
                 this.shadowRoot.getElementById('control').setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
@@ -111,12 +111,12 @@ export default class XfAbstractControl extends BoundElement {
 
     handleReadonly(){
         // console.log('mip readonly', this.modelItem.isReadonly);
-        if (this.isReadonly() !== this.modelItem.isReadonly) {
-            if (this.modelItem.isReadonly) {
+        if (this.isReadonly() !== this.modelItem.readonly) {
+            if (this.modelItem.readonly) {
                 this.control.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
-            if(!this.modelItem.isReadonly){
+            if(!this.modelItem.readonly){
                 this.control.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
@@ -124,9 +124,9 @@ export default class XfAbstractControl extends BoundElement {
     }
 
     handleValid(){
-        // console.log('mip valid', this.modelItem.isRequired);
-        if (this.isValid() !== this.modelItem.isRequired) {
-            if (this.modelItem.isRequired) {
+        // console.log('mip valid', this.modelItem.required);
+        if (this.isValid() !== this.modelItem.required) {
+            if (this.modelItem.required) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
                 this.dispatchEvent(new CustomEvent('invalid', {}));
@@ -136,8 +136,8 @@ export default class XfAbstractControl extends BoundElement {
 
     handleRelevant(){
         // console.log('mip valid', this.modelItem.enabled);
-        if (this.isEnabled() !== this.modelItem.isRelevant) {
-            if (this.modelItem.isRelevant) {
+        if (this.isEnabled() !== this.modelItem.relevant) {
+            if (this.modelItem.relevant) {
                 this.dispatchEvent(new CustomEvent('enabled', {}));
                 this._fadeIn(this, this.display);
             } else {

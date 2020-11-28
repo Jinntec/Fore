@@ -178,26 +178,83 @@ export class XfBind extends ForeElement {
      * @param model
      */
     init(model){
+        this.model = model;
         console.log('init binding ', this);
         this.instanceId = this._getInstanceId();
 
         this.evalInContext();
         this._createModelItems();
 
+        this._buildBindGraph();
+
         // ### process child bindings
+        this._processChildren(model);
+    }
+
+    _buildBindGraph(){
+        this.nodeset.forEach(node => {
+
+            let path = fx.evaluateXPath('path()',node);
+            /*
+                if(!this.model.mainGraph.hasNode(path)){
+                    this.model.mainGraph.addNode(path,{node:node});
+                }
+            */
+
+
+            const calculateRefs = this._getReferencesForProperty(this.calculate,node);
+            this._addDependencies(calculateRefs,node,path,'calculate');
+
+            const readonlyRefs = this._getReferencesForProperty(this.readonly,node);
+            this._addDependencies(readonlyRefs,node,path,'readonly');
+
+            // const requiredRefs = this.requiredReferences;
+            const requiredRefs = this._getReferencesForProperty(this.required,node);
+            this._addDependencies(requiredRefs,node,path,'required');
+
+            const relevantRefs = this._getReferencesForProperty(this.relevant,node);
+            this._addDependencies(relevantRefs,node,path,'relevant');
+
+            const constraintRefs = this._getReferencesForProperty(this.constraint,node);
+            this._addDependencies(constraintRefs,node,path,'constraint');
+
+        });
+
+    }
+
+    _addNode(path, node){
+        if(!this.model.mainGraph.hasNode(path)){
+            this.model.mainGraph.addNode(path,{node:node});
+        }
+    }
+
+    _addDependencies(refs,node,path,property){
+        if(refs.length !== 0){
+            if(!this.model.mainGraph.hasNode(`${path}:${property}`)){
+                // this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
+                this.model.mainGraph.addNode(`${path}:${property}`,node);
+            }
+            refs.forEach(ref => {
+                const other = fx.evaluateXPath(ref,node);
+                const otherPath = fx.evaluateXPath('path()',other);
+
+                if(!this.model.mainGraph.hasNode(otherPath)){
+                    // this.model.mainGraph.addNode(otherPath,{node:other});
+                    this.model.mainGraph.addNode(otherPath,other);
+                }
+                this.model.mainGraph.addDependency(`${path}:${property}`,otherPath);
+            });
+        }else{
+            this.model.mainGraph.addNode(`${path}:${property}`,node);
+        }
+    }
+
+    _processChildren(model) {
         const childbinds = this.querySelectorAll(':scope > xf-bind');
-        Array.from(childbinds).forEach(bind =>{
+        Array.from(childbinds).forEach(bind => {
             // console.log('init child bind ', bind);
             bind.init(model);
         });
-
-		/**
-		 * @todo: AST manipulation for minimal updates / dependency graphs!
-		// Output the XQueryX format of this expression. https://www.w3.org/TR/xqueryx-31/
-		// this is an XML document, over which you can run XPath
-		const ast = fx.parseScript('self::p', {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
-		console.log(ast);
-		*/
     }
 
     render() {
@@ -223,7 +280,7 @@ export class XfBind extends ForeElement {
 		 * }
 		 */
 
-        console.log('namespaceResolver  prefix', prefix);
+        // console.log('namespaceResolver  prefix', prefix);
         const ns = {
             'xhtml' : 'http://www.w3.org/1999/xhtml'
             // ''    : Fore.XFORMS_NAMESPACE_URI
@@ -294,6 +351,7 @@ export class XfBind extends ForeElement {
         }
 
     }
+
     static lazyCreateModelitems(model,ref,nodeset){
         if(Array.isArray(nodeset)){
             Array.from(nodeset).forEach((n, index) => {
@@ -304,13 +362,9 @@ export class XfBind extends ForeElement {
         }
 
     }
+
     static lazyCreateModelItem(model,ref,node){
         console.log('lazyCreateModelItem ', node);
-        // console.log('_createModelItem ', this.nodeset.nodeType);
-        // console.log('_createModelItem model', this.model);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem node', node);
-        // console.log('_createModelItem nodeType', node.nodeType);
 
         let mItem = {};
         let targetNode = {};
@@ -322,12 +376,10 @@ export class XfBind extends ForeElement {
             targetNode = node;
         }
 
-        // const path = '';
-        // const path = fx.evaluateXPath('path()',node);
         const path = fx.evaluateXPath('path()',node);
         // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
 
-        // const mi = new ModelItem( path, ref,false,true,false,true,'xs:string',targetNode,null);
+        // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
         const mi = new ModelItem(path,
             ref,
             XfBind.READONLY_DEFAULT,
@@ -355,6 +407,14 @@ export class XfBind extends ForeElement {
      */
     _createModelItem(node,index){
         // console.log('_createModelItem node', node, index);
+
+/*
+        this.calculateReferences = this._getReferencesForProperty(this.calculate,node);
+        this.readOnlyReferences = this._getReferencesForProperty(this.readonly,node);
+        this.requiredReferences = this._getReferencesForProperty(this.required,node);
+        this.relevantReferences = this._getReferencesForProperty(this.relevant,node);
+        this.constraintReferences = this._getReferencesForProperty(this.constraint,node);
+*/
 
         /*
         if bind is the dot expression we use the modelitem of the parent
@@ -385,17 +445,14 @@ export class XfBind extends ForeElement {
             targetNode = node;
         }
 
-
-        // const isReadonly = this._initReadonly(targetNode);
-        // const isValid = this._initBooleanModelItemProperty('constraint', targetNode);
-        // const isReadonly = this._initBooleanModelItemProperty('readonly', targetNode);
-        // const isRequired = this._initBooleanModelItemProperty('required', targetNode);
-        // const isRelevant = this._initBooleanModelItemProperty('relevant', targetNode);
-
         const path = fx.evaluateXPath('path()',node);
-        const shortPath = this._shortenPath(path);
-        //constructiong default modelitem - will get evaluated during reaalculate()
-        const newItem = new ModelItem(shortPath,
+        // const shortPath = this._shortenPath(path);
+
+        // ### constructiong default modelitem - will get evaluated during reaalculate()
+        // ### constructiong default modelitem - will get evaluated during reaalculate()
+        // ### constructiong default modelitem - will get evaluated during reaalculate()
+        // const newItem = new ModelItem(shortPath,
+        const newItem = new ModelItem(path,
                                       this.ref,
                                       XfBind.READONLY_DEFAULT,
                                       XfBind.RELEVANT_DEFAULT,
@@ -408,24 +465,42 @@ export class XfBind extends ForeElement {
         this.getModel().registerModelItem(newItem);
     }
 
-    _initlPropertyReferences(property, node){
+    _getReferencesForProperty(propertyExpr,node){
+        if(propertyExpr){
+            // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
+            // console.log(`AST for ${propertyExpr}`, ast.innerHTML);p
 
+            const pieces = propertyExpr.split('depends');
+            const dependants = [];
+            pieces.forEach(step => {
+               // console.log('step ', step);
+               if(step.trim().startsWith('(')){
+                   const name = step.substring(1,step.indexOf(')'));
+                   dependants.push(name);
+               }
+            });
+            // console.log(`dependants of ${propertyExpr} `, dependants);
+            return dependants;
+        }
+        return [];
     }
+
 
     _initBooleanModelItemProperty(property, node){
         //evaluate expression to boolean
         const propertyExpr = this[property];
-        console.log('####### ', propertyExpr);
+        // console.log('####### ', propertyExpr);
         const result = evaluateXFormsXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
 
         //if expression not simply true() or false() detect nodes referenced by readonly expr
         if(propertyExpr !== 'true()' && propertyExpr !== 'false()'){
             const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
-            console.log(`AST for ${propertyExpr}`, ast.innerHTML);
+            // console.log(`AST for ${propertyExpr}`, ast.innerHTML);
 
         }
         return result;
     }
+
 
     _shortenPath(path){
         const steps = path.split('/');

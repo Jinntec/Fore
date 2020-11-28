@@ -72,9 +72,9 @@ class XfAppend extends XfAction {
                                            originModelItem.bind,
                                            path,
                                            originmodelItem.isReadonly,
-                                           originModelItem.isRelevant,
-                                           originModelItem.isRequired,
-                                           originModelItem.isValid,
+                                           originModelItem.relevant,
+                                           originModelItem.required,
+                                           originModelItem.required,
                                            newItem);
 */
 

@@ -45,7 +45,7 @@ export class XfOutput extends XfAbstractControl {
     */
 
     isRequired() {
-        console.log('Output isrequired');
+        console.log('Output required');
         return false;
     }
 

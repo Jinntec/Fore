@@ -90,6 +90,9 @@ export class XfForm extends LitElement {
      */
     firstUpdated(_changedProperties) {
         console.log('########## FORE: kick off processing... ##########');
+        window.addEventListener('compute-exception', e =>{
+            console.error("circular dependency: ", e);
+        });
         this.init();
     }
 

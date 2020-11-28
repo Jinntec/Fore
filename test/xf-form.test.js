@@ -132,10 +132,10 @@ describe('initialize form', () => {
 
         // modelitem is initialized to correct values
         const mi = greetingMap;
-        expect(mi.isReadonly).to.equal(false);
-        expect(mi.isRequired).to.equal(true);
-        expect(mi.isRelevant).to.equal(true);
-        expect(mi.isValid).to.equal(true);
+        expect(mi.readonly).to.equal(false);
+        expect(mi.required).to.equal(true);
+        expect(mi.relevant).to.equal(true);
+        expect(mi.constraint).to.equal(true);
         // expect(mi.type).to.equal('xs:string');
     });
 

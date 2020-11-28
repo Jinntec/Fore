@@ -33,6 +33,22 @@ registerCustomXPathFunction(
         return null;
     }
 );
+registerCustomXPathFunction(
+    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
+    ['node()*'],
+    'item()?',
+    (dynamicContext, nodes) => {
+        // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
+        // TODO: handle no string passed (null will be passed instead)
+
+        const {formElement} = dynamicContext.currentContext || this;
+
+        // console.log('fnInstance dynamicContext: ', dynamicContext);
+        // console.log('depends on : ', nodes[0]);
+
+        return nodes[0];
+    }
+);
 
 // These modules can use full XQuery 3.1 + XQuery update facility 3.0
 registerXQueryModule(`
@@ -124,7 +140,7 @@ export class Fore{
          * }
          */
 
-        console.log('namespaceResolver  prefix', prefix);
+        // console.log('namespaceResolver  prefix', prefix);
         const ns = {
             'xhtml' : 'http://www.w3.org/1999/xhtml'
             // ''    : Fore.XFORMS_NAMESPACE_URI

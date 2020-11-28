@@ -89,9 +89,9 @@ class XfInput extends XfAbstractControl{
         // console.log('------ this ', this);
         // console.log('------ nodeset ', this.nodeset);
         // console.log('------ modelItem ', this.getModelItem());
-        // console.log('------- required', this.getModelItem().modelItem.isRequired);
-        // this.required = this.getModelItem().modelItem.isRequired;
-        // this.valid = this.getModelItem().modelItem.isRequired;
+        // console.log('------- required', this.getModelItem().modelItem.required);
+        // this.required = this.getModelItem().modelItem.required;
+        // this.valid = this.getModelItem().modelItem.required;
         // this.value = this.getValue();
         // this.value = this.getModelItem().modelItem.value;
         // this.value = this.getValue();
