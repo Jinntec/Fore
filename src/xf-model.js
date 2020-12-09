@@ -130,86 +130,27 @@ export class XfModel extends LitElement {
             const modelItem = this.getModelItem(node);
             console.log('modelitem ', modelItem);
 
-            if(path.indexOf(':')){
+            if(modelItem && path.indexOf(':')){
                 const property = path.split(':')[1];
                 if(property){
-                    console.log('recalculating property ', property);
                     if(property === 'calculate'){
+                        const expr = modelItem.bind[property];
+                        const compute = Fore.evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
+                        modelItem.value = compute;
+                    }else if(property !== 'constraint' && property !== 'type') {
+                        console.log('recalculating property ', property);
 
-                    }else{
                         const expr = modelItem.bind[property];
                         console.log('recalc expr: ', expr);
                         const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
 
                         console.log(`${property} computed`, compute);
-                        console.log(`${property} computed`, modelItem[property]);
-
-                        this.modelItems.map(item => {
-                            const temp = Object.assign({}, item);
-                            if(temp.node === node){
-                                temp[property] = compute;
-                            }
-                            return temp;
-                        });
-                        // modelItem[property] = compute;
+                        modelItem[property] = compute;
                     }
                 }
             }
         })
 
-/*
-        this.modelItems.forEach(item => {
-            console.log('recalculate modelItem ', item);
-
-            const bind = item.bind;
-            if (bind) {
-                console.log('modelItem bind ', bind);
-
-                /!*
-                if there is a bind for this modelitem we'll evaluate all of its modelitem properties.
-                In case modelItems are lazy-created there won't be any bind element for them.
-                 *!/
-
-                //do calculate first as it may influence the others
-                const calculate = bind.calculate;
-                if (calculate) {
-                    console.log('calculate expr: ', calculate);
-                    const compute = Fore.evaluateXPath(calculate, item.node, this, Fore.namespaceResolver);
-                    item.value = compute; // immediately update the node value through setter
-                }
-
-                const {required} = bind;
-                if (required) {
-                    const compute = Fore.evaluateToBoolean(required, item.node, this, Fore.namespaceResolver);
-                    console.log('computed required ', compute);
-                    item.required = compute;
-                }
-
-                const {readonly} = bind;
-                if (readonly) {
-                    const compute = Fore.evaluateToBoolean(readonly, item.node, this, Fore.namespaceResolver);
-                    item.isReadonly = compute;
-                }
-
-                const {relevant} = bind;
-                if (relevant) {
-                    const compute = Fore.evaluateToBoolean(relevant, item.node, this, Fore.namespaceResolver);
-                    item.relevant = compute;
-                }
-
-                const {constraint} = bind;
-                if (constraint) {
-                    const compute = Fore.evaluateToBoolean(constraint, item.node, this, Fore.namespaceResolver);
-                    item.required = compute;
-                }
-
-                // const ro = evaluateXFormsXPathToBoolean(this.readonly, targetNode, this, this.namespaceResolver);
-
-                // item.value = compute;
-                // console.log('computed ', compute);
-            }
-        });
-*/
 
         /*
                 const binds = this.querySelectorAll('xf-bind[calculate]');

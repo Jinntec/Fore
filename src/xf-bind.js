@@ -183,9 +183,9 @@ export class XfBind extends ForeElement {
         this.instanceId = this._getInstanceId();
 
         this.evalInContext();
+        this._buildBindGraph();
         this._createModelItems();
 
-        this._buildBindGraph();
 
         // ### process child bindings
         this._processChildren(model);
@@ -203,20 +203,30 @@ export class XfBind extends ForeElement {
 
 
             const calculateRefs = this._getReferencesForProperty(this.calculate,node);
+            if(calculateRefs.length !== 0){
             this._addDependencies(calculateRefs,node,path,'calculate');
+            }
 
             const readonlyRefs = this._getReferencesForProperty(this.readonly,node);
+            if(readonlyRefs.length !== 0){
             this._addDependencies(readonlyRefs,node,path,'readonly');
+            }
 
             // const requiredRefs = this.requiredReferences;
             const requiredRefs = this._getReferencesForProperty(this.required,node);
+            if(requiredRefs.length !== 0){
             this._addDependencies(requiredRefs,node,path,'required');
+            }
 
             const relevantRefs = this._getReferencesForProperty(this.relevant,node);
+            if(relevantRefs.length !== 0 ){
             this._addDependencies(relevantRefs,node,path,'relevant');
+            }
 
             const constraintRefs = this._getReferencesForProperty(this.constraint,node);
+            if(constraintRefs.length !== 0) {
             this._addDependencies(constraintRefs,node,path,'constraint');
+            }
 
         });
 
