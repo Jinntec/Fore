@@ -191,10 +191,27 @@ export class XfBind extends ForeElement {
         this._processChildren(model);
     }
 
+    _getPath(node){
+        let path = fx.evaluateXPath('path()',node);
+        if(this.instanceId !== 'default'){
+            return '#' + this.instanceId + this._shortenPath(path);
+        }else {
+            return this._shortenPath(path);
+        }
+
+    }
+
     _buildBindGraph(){
         this.nodeset.forEach(node => {
 
-            let path = fx.evaluateXPath('path()',node);
+            // let path = fx.evaluateXPath('path()',node);
+            const path = this._getPath(node);
+
+
+            // console.log('inst id: ', this.instanceId);
+            // console.log('inst id: #', this.instanceId + path);
+            // console.log('short path: #', this._getPath(node));
+
             /*
                 if(!this.model.mainGraph.hasNode(path)){
                     this.model.mainGraph.addNode(path,{node:node});
@@ -214,9 +231,9 @@ export class XfBind extends ForeElement {
 
             // const requiredRefs = this.requiredReferences;
             const requiredRefs = this._getReferencesForProperty(this.required,node);
-            if(requiredRefs.length !== 0){
+            // if(requiredRefs.length !== 0){
             this._addDependencies(requiredRefs,node,path,'required');
-            }
+            // }
 
             const relevantRefs = this._getReferencesForProperty(this.relevant,node);
             if(relevantRefs.length !== 0 ){
@@ -455,7 +472,8 @@ export class XfBind extends ForeElement {
             targetNode = node;
         }
 
-        const path = fx.evaluateXPath('path()',node);
+        // const path = fx.evaluateXPath('path()',node);
+        const path = this._getPath(node);
         // const shortPath = this._shortenPath(path);
 
         // ### constructiong default modelitem - will get evaluated during reaalculate()
@@ -516,7 +534,12 @@ export class XfBind extends ForeElement {
         const steps = path.split('/');
         let result='';
         for(let i=2;i<steps.length;i++){
-            result += `/${steps[i]}`;
+            if(steps[i].indexOf('{}') !== 0){
+                const q = steps[i].split('}');
+                result += `/${q[1]}`;
+            }else{
+                result += `/${steps[i]}`;
+            }
         }
         return result;
     }
@@ -524,6 +547,13 @@ export class XfBind extends ForeElement {
 
     // todo: more elaborated implementation ;)
     _getInstanceId () {
+        if(this.ref.startsWith('instance(')){
+            this.instanceId = XPathUtil.getInstanceId(this.ref);
+            return this.instanceId;
+        }
+        if(this.instanceId){
+            return this.instanceId;
+        }
         return 'default';
     }
 

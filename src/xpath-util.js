@@ -16,4 +16,12 @@ export class XPathUtil {
         return ref === '.' || ref === './text()' || ref === 'text()' || ref === '';
     }
 
+    //todo: this will need more work to look upward for instance() expr.
+    static getInstanceId(ref){
+        if(ref.startsWith('instance(')){
+            let result = ref.substring(ref.indexOf('(') + 1);
+            return result.substring(1, result.indexOf(')') -1);
+        }
+    }
+
 }

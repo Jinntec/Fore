@@ -144,8 +144,13 @@ export class XfModel extends LitElement {
                         console.log('recalc expr: ', expr);
                         const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
 
-                        console.log(`${property} computed`, compute);
+                        // consolex.log(`${property} computed`, compute);
                         modelItem[property] = compute;
+                        console.log(`modelItem computed`, modelItem.required);
+                        // const o = {...modelItem};
+                        // o[property] = compute;
+                        // console.log('spread update ', o);
+
                     }
                 }
             }
@@ -190,12 +195,14 @@ export class XfModel extends LitElement {
                         constraintValid = compute;
                     }
 
+/*
                     const {type} = bind;
                     if (type) {
                         // todo: datatype check
                         const check = true;
                         modelItem.required = constraintValid && check;
                     }
+*/
 
                 }
             }
