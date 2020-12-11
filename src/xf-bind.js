@@ -170,6 +170,20 @@ export class XfBind extends ForeElement {
 		this.inited = false;
     }
 
+/*
+    connectedCallback(){
+        console.log('connectedCallback ', this);
+        this.id = this.getAttribute('id');
+        this.ref = this.getAttribute('ref');
+        this.readonly = this.getAttribute('readonly');
+        this.required = this.getAttribute('required');
+        this.relevant = this.getAttribute('relevant');
+        this.type = this.hasAttribute('type')?this.getAttribute('type'):'string';
+        this.calculate = this.getAttribute('calculate');
+
+    }
+*/
+
     /**
      * initializes the bind element by evaluating the binding expression.
      *
@@ -182,7 +196,7 @@ export class XfBind extends ForeElement {
         console.log('init binding ', this);
         this.instanceId = this._getInstanceId();
 
-        this.evalInContext();
+        this._evalInContext();
         this._buildBindGraph();
         this._createModelItems();
 
@@ -318,7 +332,7 @@ export class XfBind extends ForeElement {
     /**
      * overwrites
      */
-    evalInContext(){
+    _evalInContext(){
         const inscopeContext = this._inScopeContext();
 
         //reset nodeset
@@ -534,11 +548,12 @@ export class XfBind extends ForeElement {
         const steps = path.split('/');
         let result='';
         for(let i=2;i<steps.length;i++){
-            if(steps[i].indexOf('{}') !== 0){
-                const q = steps[i].split('}');
+            const step = steps[i];
+            if(step.indexOf('{}') !== -1){
+                const q = step.split('{}');
                 result += `/${q[1]}`;
             }else{
-                result += `/${steps[i]}`;
+                result += `/${step}`;
             }
         }
         return result;

@@ -35,6 +35,13 @@ class XfAppend extends XfAction {
         this.clear = 'false';
     }
 
+    connectedCallback(){
+        console.log('connectedCallback ', this);
+        this.ref = this.getAttribute('ref');
+        this.repeat = this.getAttribute('repeat');
+    }
+
+
     execute(){
         // super.execute();
         // get instance for binding expr

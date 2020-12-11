@@ -1,9 +1,8 @@
-import {LitElement, html} from 'lit-element';
-
 import "../xf-form.js";
 import "../xf-model.js";
 import {BoundElement} from "../BoundElement.js";
 
+import { foreElementMixin } from "../ForeElementMixin";
 
 /**
  * `xf-action`
@@ -12,7 +11,7 @@ import {BoundElement} from "../BoundElement.js";
  * @customElement
  * @demo demo/index.html
  */
-export class XfAction extends BoundElement{
+export class XfAction extends foreElementMixin(HTMLElement){
 
     static get properties() {
         return {

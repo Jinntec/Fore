@@ -1,6 +1,9 @@
+import {LitElement, html, css} from 'lit-element';
+
 import  '../xf-model.js';
 import {BoundElement} from "../BoundElement";
 import {Fore} from "../fore.js";
+import {foreElementMixin} from "../ForeElementMixin";
 
 /**
  * `xf-container` -
@@ -8,7 +11,8 @@ import {Fore} from "../fore.js";
  *
  * @customElement
  */
-export class XfContainer extends BoundElement {
+// export class XfContainer extends BoundElement {
+export class XfContainer extends foreElementMixin(LitElement) {
 
 /*
     static get properties() {

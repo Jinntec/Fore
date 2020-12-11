@@ -3,6 +3,7 @@ import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE 
 
 import '../src/xf-instance.js';
 import '../src/ui/xf-container.js';
+import '../src/xf-bind.js';
 import { ModelItem } from '../src/ModelItem.js';
 
 describe('initialize bind', () => {

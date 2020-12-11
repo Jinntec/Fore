@@ -21,6 +21,13 @@ export default class XfSetvalue extends XfAction {
 
     constructor(){
         super();
+        this.value = "";
+    }
+
+    connectedCallback(){
+        console.log('connectedCallback ', this);
+        this.ref = this.getAttribute('ref');
+        this.value = this.getAttribute('value');
     }
 
     execute() {
@@ -71,7 +78,7 @@ export default class XfSetvalue extends XfAction {
             this.needsRefresh = true;
             this.actionPerformed();
         }
-
+        // this.setAttribute('value', modelItem.value);
     }
 
 }

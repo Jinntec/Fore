@@ -1,6 +1,8 @@
+import {LitElement, html, css} from 'lit-element';
+
 import  '../xf-model.js';
-import {BoundElement} from "../BoundElement";
-import {css} from "lit-element";
+// import {BoundElement} from "../BoundElement";
+import {foreElementMixin} from "../ForeElementMixin";
 
 /**
  * `xf-abstract-control` -
@@ -10,7 +12,7 @@ import {css} from "lit-element";
  * @polymer
  * @appliesMixin BoundElementMixin
  */
-export default class XfAbstractControl extends BoundElement {
+export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
     static get properties() {
         return {
