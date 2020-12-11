@@ -54,7 +54,7 @@ export class XfModel extends LitElement {
     }
 
     _modelConstruct(e) {
-        // console.log('MODEL::model-construct received ', this.id);
+        console.log('MODEL::model-construct received ', this.id);
         const instances = this.querySelectorAll('xf-instance');
         if (instances.length > 0) {
             // console.group('init instances');
@@ -141,12 +141,14 @@ export class XfModel extends LitElement {
                         console.log('recalculating property ', property);
 
                         const expr = modelItem.bind[property];
-                        console.log('recalc expr: ', expr);
-                        const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
+                        if(expr){
+                            console.log('recalc expr: ', expr);
+                            const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
 
-                        // consolex.log(`${property} computed`, compute);
-                        modelItem[property] = compute;
-                        console.log(`modelItem computed`, modelItem.required);
+                            // consolex.log(`${property} computed`, compute);
+                            modelItem[property] = compute;
+                            console.log(`modelItem computed`, modelItem.required);
+                        }
                         // const o = {...modelItem};
                         // o[property] = compute;
                         // console.log('spread update ', o);
