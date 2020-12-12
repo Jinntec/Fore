@@ -2,7 +2,6 @@ import {LitElement, html, css} from 'lit-element';
 import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
-import {ForeElement} from "./ForeElement.js";
 import {Fore} from "./fore";
 import {foreElementMixin} from "./ForeElementMixin";
 
@@ -206,12 +205,14 @@ export class XfBind extends foreElementMixin(HTMLElement){
         this._processChildren(model);
     }
 
-    _getPath(node){
+    //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
+    static getPath(node){
         let path = fx.evaluateXPath('path()',node);
-        if(this.instanceId !== 'default'){
-            return '#' + this.instanceId + this._shortenPath(path);
+        const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
+        if(instanceId !== 'default'){
+            return '#' + instanceId + XfBind.shortenPath(path);
         }else {
-            return this._shortenPath(path);
+            return XfBind.shortenPath(path);
         }
 
     }
@@ -220,19 +221,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         this.nodeset.forEach(node => {
 
             // let path = fx.evaluateXPath('path()',node);
-            const path = this._getPath(node);
-
-
-            // console.log('inst id: ', this.instanceId);
-            // console.log('inst id: #', this.instanceId + path);
-            // console.log('short path: #', this._getPath(node));
-
-            /*
-                if(!this.model.mainGraph.hasNode(path)){
-                    this.model.mainGraph.addNode(path,{node:node});
-                }
-            */
-
+            const path = XfBind.getPath(node);
 
             const calculateRefs = this._getReferencesForProperty(this.calculate,node);
             if(calculateRefs.length !== 0){
@@ -424,7 +413,9 @@ export class XfBind extends foreElementMixin(HTMLElement){
             targetNode = node;
         }
 
-        const path = fx.evaluateXPath('path()',node);
+        // const path = fx.evaluateXPath('path()',node);
+        const path = XfBind.getPath(node);
+
         // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
 
         // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
@@ -494,8 +485,9 @@ export class XfBind extends foreElementMixin(HTMLElement){
         }
 
         // const path = fx.evaluateXPath('path()',node);
-        const path = this._getPath(node);
-        // const shortPath = this._shortenPath(path);
+        // const path = this.getPath(node);
+        const path = XfBind.getPath(node);
+        // const shortPath = this.shortenPath(path);
 
         // ### constructiong default modelitem - will get evaluated during reaalculate()
         // ### constructiong default modelitem - will get evaluated during reaalculate()
@@ -551,7 +543,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
     }
 
 
-    _shortenPath(path){
+    static shortenPath(path){
         const steps = path.split('/');
         let result='';
         for(let i=2;i<steps.length;i++){
@@ -570,7 +562,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
     // todo: more elaborated implementation ;)
     _getInstanceId () {
         const bindExpr = this.getBindingExpr();
-        console.log('_getInstanceId bindExpr ', bindExpr);
+        // console.log('_getInstanceId bindExpr ', bindExpr);
         if(bindExpr.startsWith('instance(')){
             this.instanceId = XPathUtil.getInstanceId(bindExpr);
             return this.instanceId;
