@@ -10,8 +10,6 @@ class XfForm {
 LitElement <|-- XfForm
 
 
-class ForeElement
-
 class ForeElementMixin{
     getModel()
     evalInContext()
@@ -46,19 +44,23 @@ package "model" #DDDDDD {
         type
     }
 
-    class XfBind
+    class XfBind{
+        createModelItem()
+        buildBindGraph()
+    }
     class XfSubmission
 
     HTMLElement <|-- XfInstance
-    ForeElement <|-- XfBind
+    HTMLElement <|-- XfBind
     HTMLElement <|-- XfModel
+
 
 }
 
-XfBind o-- ModelItem
+XfModel o-- ModelItem
 
 package "view" #DDDDDD{
-    class XfContainer{
+    abstract class XfContainer{
         refresh()
     }
     abstract class AbstractControl{
@@ -104,7 +106,6 @@ ForeElementMixin *.. XfContainer
 
 HTMLElement <|-- XfAction
 ForeElementMixin *.. XfAction
-LitElement <|-- ForeElement
 
 
 

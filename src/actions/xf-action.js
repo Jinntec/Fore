@@ -1,6 +1,5 @@
 import "../xf-form.js";
 import "../xf-model.js";
-import {BoundElement} from "../BoundElement.js";
 
 import { foreElementMixin } from "../ForeElementMixin";
 

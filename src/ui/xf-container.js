@@ -1,7 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
 import  '../xf-model.js';
-import {BoundElement} from "../BoundElement";
 import {Fore} from "../fore.js";
 import {foreElementMixin} from "../ForeElementMixin";
 

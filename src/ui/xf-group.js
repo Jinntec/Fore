@@ -1,5 +1,4 @@
 import {LitElement, html, css} from 'lit-element';
-import {BoundElement} from "../BoundElement";
 import {Fore} from "../fore";
 // import XfAbstractControl from "./xf-abstract-control";
 import {XfContainer} from './xf-container';

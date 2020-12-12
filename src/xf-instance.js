@@ -2,7 +2,6 @@
 
 import * as fx from 'fontoxpath';
 import {ModelItem} from "./modelitem";
-import {ForeElement} from "./ForeElement";
 
 export class XfInstance extends HTMLElement {
 
