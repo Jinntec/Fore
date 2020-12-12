@@ -127,6 +127,8 @@ describe('initialize repeat', () => {
 
         await elementUpdated(el);
 
+        let { detail } = await oneEvent(el, 'refresh-done');
+
         const repeat =  document.getElementById('todos');
 
         const repeatNodes = repeat.nodeset;
@@ -204,6 +206,7 @@ describe('initialize repeat', () => {
         );
 
         await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const repeat =  document.getElementById('todos');
 
@@ -271,6 +274,7 @@ describe('initialize repeat', () => {
         );
 
         await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const inputs = el.querySelectorAll('xf-repeatitem xf-input');
         await elementUpdated(inputs);

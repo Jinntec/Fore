@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 
 import  '../xf-model.js';
 import {Fore} from "../fore.js";
-import {foreElementMixin} from "../ForeElementMixin";
+import {foreElementMixin} from "../ForeElementMixin.js";
 
 /**
  * `xf-container` -

@@ -92,7 +92,7 @@ export class XfModel extends HTMLElement {
     registerModelItem(modelItem) {
         console.log('ModelItem registered ', modelItem);
         this.modelItems.push(modelItem);
-        console.log('all modelItems ', this.modelItems);
+        // console.log('all modelItems ', this.modelItems);
 
     }
 

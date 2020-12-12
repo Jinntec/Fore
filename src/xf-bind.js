@@ -174,7 +174,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
     connectedCallback(){
         console.log('connectedCallback ', this);
-        this.id = this.getAttribute('id');
+        // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
         this.ref = this.getAttribute('ref');
         this.readonly = this.getAttribute('readonly');
         this.required = this.getAttribute('required');

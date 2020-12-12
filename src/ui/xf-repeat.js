@@ -64,10 +64,13 @@ export class XfRepeat extends XfContainer {
 
     }
 
+/*
     firstUpdated(_changedProperties) {
+        super.firstUpdated(_changedProperties);
         this.init();
         console.log('firstupdated done');
     }
+*/
 
     init() {
         // ### there must be a single 'template' child
@@ -77,6 +80,7 @@ export class XfRepeat extends XfContainer {
 
         // this.updateComplete;
         this._evalNodeset();
+        console.log('##### repeat nodeset ', this.nodeset);
 
         // this.template = this.querySelector('template');
         console.log('### init template for repeat ', this.id , this.template);
@@ -102,6 +106,8 @@ export class XfRepeat extends XfContainer {
      */
     _evalNodeset(){
         const inscope = this._inScopeContext();
+        console.log('##### inscope ', inscope);
+        console.log('##### ref ', this.ref);
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
     }
 
@@ -109,6 +115,7 @@ export class XfRepeat extends XfContainer {
      * repeat has no own modelItems
      * @private
      */
+/*
     _refresh(){
         console.log('repeat refresh ');
         // await this.updateComplete;
@@ -124,10 +131,11 @@ export class XfRepeat extends XfContainer {
         Fore.refreshChildren(this);
         this.requestUpdate();
     }
+*/
 
     refresh() {
         console.group('xf-repeat.refresh');
-        if(!this.inited) return;
+        if(!this.inited) this.init();
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
