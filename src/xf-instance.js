@@ -1,10 +1,10 @@
-import {LitElement, html, css} from 'lit-element';
+// import {LitElement, html, css} from 'lit-element';
 
 import * as fx from 'fontoxpath';
 import {ModelItem} from "./modelitem";
 import {ForeElement} from "./ForeElement";
 
-export class XfInstance extends ForeElement {
+export class XfInstance extends HTMLElement {
 
     static get styles() {
         return css`
@@ -30,10 +30,17 @@ export class XfInstance extends ForeElement {
 
     constructor() {
         super();
-        this.id = 'default';
-        // this.instanceData = {};
         this.src = '';
         this.model = this.parentNode;
+    }
+
+    connectedCallback(){
+        if(this.hasAttribute('id')){
+            this.id = this.getAttribute('id');
+        }else{
+            this.id = 'default';
+        }
+        // this.id = this.getAttribute('id');
     }
 
     render() {
@@ -49,8 +56,56 @@ export class XfInstance extends ForeElement {
     }
 */
 
-    init(){
+    init (){
         // console.log('xf-instance init');
+
+        const loadedPromise = new Promise(((resolve,reject) => {
+            // setTimeout(() => resolve("done"), 2000);
+
+            if(this.src === '#querystring' ){
+                const query = new URLSearchParams(location.search);
+                console.log('query', query);
+
+                // let instanceData = document.createDocument();
+                let instanceData = document.implementation.createDocument(null,'data','xml');
+                console.log('new doc ', instanceData);
+
+                // const root = document.createElement('data');
+                // instanceData.appendChild(root);
+                for(const p of query){
+                    let n = document.createElement(p[0]);
+                    n.appendChild(document.createTextNode(p[1]));
+                    instanceData.documentElement.appendChild(n);
+                }
+
+                this.instanceData = instanceData;
+                this.instanceData.firstElementChild.setAttribute('id',this.id);
+
+                // this.instanceData.firstElementChild.setAttribute('id',this.id);
+                // console.log('created instance from queryString ', this.instanceData);
+                // console.log('created instance from queryString ', this.instanceData);
+
+
+                // const result = fx.evaluateXPathToFirstNode('param1', instanceData.childNodes[0], null, {});
+                // console.log(">>>>>result ", result)
+
+            }else if(this.childNodes.length !== 0){
+                // setTimeout(() => resolve("done"), 2000);
+                // var foo = this;
+                // setTimeout(function(){
+                //     foo._useInlineData();
+                //     resolve("done");
+                // },10000);
+
+                this._useInlineData();
+                resolve("done");
+            }
+        }));
+
+        return loadedPromise;
+
+
+/*
         if(this.src === '#querystring' ){
             const query = new URLSearchParams(location.search);
             console.log('query', query);
@@ -81,6 +136,7 @@ export class XfInstance extends ForeElement {
         }else if(this.childNodes.length !== 0){
             this._useInlineData();
         }
+*/
 
         // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
     }
@@ -90,9 +146,9 @@ export class XfInstance extends ForeElement {
         // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
         // const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
 
-        console.log('evalXPath ', xpath);
-        console.log('evalXPath default instance data', this.instanceData);
-        console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
+        // console.log('evalXPath ', xpath);
+        // console.log('evalXPath default instance data', this.instanceData);
+        // console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
 
         // const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
         const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});

@@ -13,7 +13,7 @@ export class XPathUtil {
     }
 
     static isSelfReference(ref) {
-        return ref === '.' || ref === './text()' || ref === 'text()' || ref === '';
+        return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
     }
 
     //todo: this will need more work to look upward for instance() expr.

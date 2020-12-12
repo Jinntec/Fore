@@ -4,6 +4,7 @@ import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
 import {ForeElement} from "./ForeElement.js";
 import {Fore} from "./fore";
+import {foreElementMixin} from "./ForeElementMixin";
 
 function evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
 	return fx.evaluateXPath(
@@ -66,7 +67,9 @@ function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespace
  * getting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by
  * BoundElements to track their state.
  */
-export class XfBind extends ForeElement {
+// export class XfBind extends HTMLElement {
+export class XfBind extends foreElementMixin(HTMLElement){
+
 
     static READONLY_DEFAULT = false;
 
@@ -156,21 +159,20 @@ export class XfBind extends ForeElement {
 
     constructor() {
         super();
-        this.id='';
-        this.ref = '';
-        this.readonly = 'false()';
-        this.required = 'false()';
-        this.relevant = 'true()';
-        this.constraint = 'true()';
-        this.type = 'xs:string';
-        this.calculate = '';
+        // this.id='';
+        // this.ref = '';
+        // this.readonly = 'false()';
+        // this.required = 'false()';
+        // this.relevant = 'true()';
+        // this.constraint = 'true()';
+        // this.type = 'xs:string';
+        // this.calculate = '';
         this.nodeset = [];
         this.model = {};
         this.contextNode = {};
 		this.inited = false;
     }
 
-/*
     connectedCallback(){
         console.log('connectedCallback ', this);
         this.id = this.getAttribute('id');
@@ -182,7 +184,6 @@ export class XfBind extends ForeElement {
         this.calculate = this.getAttribute('calculate');
 
     }
-*/
 
     /**
      * initializes the bind element by evaluating the binding expression.
@@ -338,7 +339,7 @@ export class XfBind extends ForeElement {
         //reset nodeset
         this.nodeset=[];
 
-        if(this.ref===''){
+        if(this.ref==='' || this.ref === null){
             this.nodeset = inscopeContext;
         }else if(Array.isArray(inscopeContext)){
 
@@ -347,11 +348,17 @@ export class XfBind extends ForeElement {
                 if(XPathUtil.isSelfReference(this.ref)){
                     this.nodeset = inscopeContext;
                 }else{
-                    // const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-					const localResult = evaluateXFormsXPathToNodes(this.ref, n, this, this.namespaceResolver);
-					localResult.forEach(item =>{
-                       this.nodeset.push(item);
-                    });
+                    // eslint-disable-next-line no-lonely-if
+                    if(this.ref){
+                        const localResult = fx.evaluateXPathToNodes (this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                        localResult.forEach(item =>{
+                            this.nodeset.push(item);
+                        });
+/*
+                        const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                        this.nodeset.push(localResult);
+*/
+                    }
                     // console.log('local result: ', localResult);
                     // this.nodeset.push(localResult);
                 }
@@ -495,7 +502,7 @@ export class XfBind extends ForeElement {
         // ### constructiong default modelitem - will get evaluated during reaalculate()
         // const newItem = new ModelItem(shortPath,
         const newItem = new ModelItem(path,
-                                      this.ref,
+                                      this.getBindingExpr(),
                                       XfBind.READONLY_DEFAULT,
                                       XfBind.RELEVANT_DEFAULT,
                                       XfBind.REQUIRED_DEFAULT,
@@ -562,8 +569,10 @@ export class XfBind extends ForeElement {
 
     // todo: more elaborated implementation ;)
     _getInstanceId () {
-        if(this.ref.startsWith('instance(')){
-            this.instanceId = XPathUtil.getInstanceId(this.ref);
+        const bindExpr = this.getBindingExpr();
+        console.log('_getInstanceId bindExpr ', bindExpr);
+        if(bindExpr.startsWith('instance(')){
+            this.instanceId = XPathUtil.getInstanceId(bindExpr);
             return this.instanceId;
         }
         if(this.instanceId){

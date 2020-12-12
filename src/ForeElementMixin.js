@@ -84,7 +84,15 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
     }
 
     getBindingExpr() {
-        return this.getAttribute('ref');
+        if(this.hasAttribute('ref')){
+            return this.getAttribute('ref');
+        }
+        // try to get closest parent bind
+        const parent = this.parentNode.closest('[ref]');
+        if (!parent) {
+            return 'instance()'; //the default instance
+        }
+        return parent.getAttribute('ref');
     }
 
     _getParentBindingElement(start){

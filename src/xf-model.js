@@ -7,7 +7,7 @@ import './xf-instance.js';
 import './xf-bind.js';
 import {XPathUtil} from "./xpath-util";
 
-export class XfModel extends LitElement {
+export class XfModel extends HTMLElement {
 
     static get styles() {
         return css`
@@ -42,7 +42,7 @@ export class XfModel extends LitElement {
 
     constructor() {
         super();
-        this.id = '';
+        // this.id = '';
         this.instances = [];
         this.modelItems = [];
         this.defaultContext = {};
@@ -53,30 +53,34 @@ export class XfModel extends LitElement {
         this.mainGraph = new DepGraph(false);
     }
 
+    connectedCallback(){
+        this.id = this.hasAttribute("id")? this.getAttribute('id'):'default';
+    }
+
     _modelConstruct(e) {
         console.log('MODEL::model-construct received ', this.id);
         const instances = this.querySelectorAll('xf-instance');
         if (instances.length > 0) {
-            // console.group('init instances');
+            console.group('init instances');
+            const promises = [];
             instances.forEach(instance => {
-                instance.init();
+                promises.push(instance.init())
             });
-            this.instances = Array.from(instances);
+
+            Promise.all(promises).then(result => {
+                this.instances = Array.from(instances);
+                this.updateModel();
+                // console.log('dispatching model-construct-done');
+                this.dispatchEvent(new CustomEvent('model-construct-done', {
+                    composed: true,
+                    bubbles: true,
+                    detail: {model: this}
+                }));
+
+            });
             console.groupEnd();
-            // console.log('model instances ', this.instances);
 
-            // this._initOutermostBindings();
-
-            this.updateModel();
-            // console.groupEnd();
-            // console.log('dispatching model-construct-done');
-            this.dispatchEvent(new CustomEvent('model-construct-done', {
-                composed: true,
-                bubbles: true,
-                detail: {model: this}
-            }));
         } else {
-            // this._initOutermostBindings();
             this.dispatchEvent(new CustomEvent('model-construct-done', {
                 composed: true,
                 bubbles: true,
@@ -88,6 +92,8 @@ export class XfModel extends LitElement {
     registerModelItem(modelItem) {
         console.log('ModelItem registered ', modelItem);
         this.modelItems.push(modelItem);
+        console.log('all modelItems ', this.modelItems);
+
     }
 
     /**
@@ -232,10 +238,12 @@ export class XfModel extends LitElement {
     */
 
 
+/*
     _handleModelConstructDone(e) {
         console.log('_handleModelConstructDone');
         this.refresh();
     }
+*/
 
 
     /**

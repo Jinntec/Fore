@@ -221,7 +221,8 @@ describe('scoped resolution tests', () => {
         await elementUpdated(el);
         const model = el.querySelector('xf-model');
 
-        await model.updateComplete;
+        let { detail } = await oneEvent(el, 'refresh-done');
+        console.log('model ', detail);
         expect(model.modelItems.length).to.equal(8);
 
         let out = el.querySelector('#output');

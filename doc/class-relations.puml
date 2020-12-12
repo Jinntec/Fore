@@ -1,12 +1,26 @@
 @startuml
+
+class HTMLElement{
+}
+class LitElement
+
 class XfForm {
     refresh()
 }
-class BoundElement{
-    ref
-    evalBinding()
-    getBindingExpr()
+LitElement <|-- XfForm
+
+
+class ForeElement
+
+class ForeElementMixin{
     getModel()
+    evalInContext()
+    getModelItem()
+    isNotBound()
+    isBound()
+    getBindingExpr()
+    _getParentBindingElement()
+    _inScopeContext()
 }
 package "model" #DDDDDD {
     class XfModel{
@@ -35,29 +49,32 @@ package "model" #DDDDDD {
     class XfBind
     class XfSubmission
 
+    HTMLElement <|-- XfInstance
+    ForeElement <|-- XfBind
+    HTMLElement <|-- XfModel
 
 }
 
 XfBind o-- ModelItem
 
 package "view" #DDDDDD{
-    class UIElement{
+    class XfContainer{
         refresh()
     }
     abstract class AbstractControl{
         getValue()
+        refresh()
     }
     class XfSwitch #lightgrey
     class XfSelect1 #lightgrey
     class XfSelect #lightgrey
-    UIElement <|-- AbstractControl
     AbstractControl <|-- XfInput
     AbstractControl <|-- XfOutput
     AbstractControl <|-- XfButton
-    UIElement <|-- XfRepeat
-    UIElement <|-- XfRepeatitem
-    UIElement <|-- XfGroup
-    UIElement <|-- XfSwitch
+    XfContainer <|-- XfRepeat
+    XfContainer <|-- XfRepeatitem
+    XfContainer <|-- XfGroup
+    XfContainer <|-- XfSwitch
     AbstractControl <|-- XfSelect
     AbstractControl <|-- XfSelect1
 }
@@ -79,12 +96,15 @@ package "controller" #DDDDDD{
 }
 
 
+LitElement <|-- XfContainer
+LitElement <|-- AbstractControl
+ForeElementMixin *.. AbstractControl
+ForeElementMixin *.. XfContainer
 
-BoundElement <|-- UIElement
-BoundElement <|-- XfAction
-BoundElement <|-- XfBind
-BoundElement <|-- XfSubmission
 
+HTMLElement <|-- XfAction
+ForeElementMixin *.. XfAction
+LitElement <|-- ForeElement
 
 
 

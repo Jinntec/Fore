@@ -121,12 +121,12 @@ export class XfForm extends LitElement {
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
      */
-    refresh () {
+    async refresh () {
 
         console.group('### refresh');
 
         const uiElements = this.querySelectorAll('*');
-        // await this.updateComplete;
+        await this.updateComplete;
         // this._refreshChildren();
         Fore.refreshChildren(this);
 
