@@ -30,9 +30,11 @@ describe('lazy initialize modelItem', () => {
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
 
-        await elementUpdated(model);
+        // await elementUpdated(model);
+        let { detail } = await oneEvent(el, 'refresh-done');
+        const model = el.querySelector('xf-model');
+        console.log('modelitems ', model.modelItems);
         expect(model.modelItems.length).to.equal(2);
 
         const mi1 = model.modelItems[0];
@@ -42,6 +44,9 @@ describe('lazy initialize modelItem', () => {
         expect(mi1.relevant).to.equal(true);
         expect(mi1.constraint).to.equal(true);
         expect(mi1.type).to.equal('xs:string');
+        expect(mi1.path).to.equal('/greeting[1]/@type');
+
+
         const mi2 = model.modelItems[1];
         expect(mi2.value).to.equal('Hello World!');
         expect(mi2.readonly).to.equal(false);
@@ -49,6 +54,8 @@ describe('lazy initialize modelItem', () => {
         expect(mi2.relevant).to.equal(true);
         expect(mi2.constraint).to.equal(true);
         expect(mi2.type).to.equal('xs:string');
+        expect(mi2.path).to.equal('/greeting[1]');
+
 
 
     });
