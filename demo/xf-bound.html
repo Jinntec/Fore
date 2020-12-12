@@ -26,10 +26,10 @@
                 <checked>false</checked>
                 <listitem></listitem>
             </data>
-            <xf-bind ref="item"></xf-bind>
-            <xf-bind ref="checked"></xf-bind>
-            <xf-bind ref="listitem"></xf-bind>
         </xf-instance>
+        <xf-bind ref="item" required="true()"></xf-bind>
+        <xf-bind ref="checked"></xf-bind>
+        <xf-bind ref="listitem"></xf-bind>
     </xf-model>
     <xf-group>
         <xf-bound ref="item" update-event="blur" value-prop="value">
@@ -37,28 +37,30 @@
             <input name="value" value="">
         </xf-bound>
 
-        <xf-bound ref="item" update-event="input">
+        <xf-bound ref="checked" update-event="input">
             <label slot="label">with incremental handler</label>
             <input name="value" value="">
         </xf-bound>
+        <!--
 
-        <xf-bound ref="checked" update-event="input" value-prop="checked">
-            <label for="check1" slot="label">native checkbox</label>
-            <input id="check1" type="checkbox">
-        </xf-bound>
+                <xf-bound ref="checked" update-event="input" value-prop="checked">
+                    <label for="check1" slot="label">native checkbox</label>
+                    <input id="check1" type="checkbox">
+                </xf-bound>
 
-        <xf-bound ref="checked" update-event="change" value-prop="checked">
-            <paper-checkbox>paper checkbox</paper-checkbox>
-        </xf-bound>
+                <xf-bound ref="checked" update-event="change" value-prop="checked">
+                    <paper-checkbox>paper checkbox</paper-checkbox>
+                </xf-bound>
 
-        <xf-bound ref="listitem" update-event="change">
-            <select>
-                <option value=""></option>
-                <option value="foo">foo</option>
-                <option value="bar">bar</option>
-            <select>
-        </xf-bound>
-        Selected list item :<xf-output ref="listitem"></xf-output>
+                <xf-bound ref="listitem" update-event="change">
+                    <select>
+                        <option value=""></option>
+                        <option value="foo">foo</option>
+                        <option value="bar">bar</option>
+                    <select>
+                </xf-bound>
+        -->
+<!--        Selected list item :<xf-output ref="item"></xf-output>-->
 
 
 
@@ -70,6 +72,10 @@
         <pb-select ref="item" update-event="iron-select">
 
         </pb-select>
+
+        -->
+        <script type="module" src="../src/app.js"></script>
+
     </xf-group>
 </xf-form>
 

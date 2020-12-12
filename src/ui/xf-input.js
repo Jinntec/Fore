@@ -72,7 +72,7 @@ class XfInput extends XfAbstractControl{
                                   .value="${this.value}"
                                   type="${this.type}"
                                   @input="${this._handleInput}">
-                         <xf-setvalue id="setvalue" ref="."></xf-setvalue>
+                         <xf-setvalue id="setvalue" ref="${this.ref}"></xf-setvalue>
                     </paper-input>
                     ` :''}
             
@@ -111,6 +111,13 @@ class XfInput extends XfAbstractControl{
         setval.setValue(this.modelItem, inputValue);
 
         console.log('instanceData ', this.getModel().instances[0].getInstanceData());
+
+    }
+
+    get control(){
+        return this;
+    }
+    set control(control){
 
     }
 

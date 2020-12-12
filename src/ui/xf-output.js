@@ -44,17 +44,20 @@ export class XfOutput extends XfAbstractControl {
         }
     */
 
-    isRequired() {
+    isRequired () {
         console.log('Output required');
         return false;
     }
 
-    isReadonly(){
+    isReadonly (){
         return true;
     }
 
     handleRequired(mi) {
 
+    }
+    handleReadonly() {
+        // super.handleReadonly();
     }
 
 

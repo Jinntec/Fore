@@ -44,6 +44,9 @@ export class XfForm extends LitElement {
                 color:var(--paper-grey-900);
                 background:var(--paper-blue-50);
             }
+            :host ::slotted(xf-model){
+                display:none;
+            }
         `;
     }
 

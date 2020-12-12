@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 
 import  '../xf-model.js';
 // import {BoundElement} from "../BoundElement";
-import {foreElementMixin} from "../ForeElementMixin";
+import {foreElementMixin} from "../ForeElementMixin.js";
 
 /**
  * `xf-abstract-control` -
@@ -63,9 +63,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         if(this.isNotBound()) return;
 
         this.evalInContext();
-        await this.updateComplete;
         if(this.isBound()){
-            this.control = this.shadowRoot.getElementById('control');
+            // this.control = this.querySelector('#control');
             this.modelItem = this.getModelItem();
             this.value = this.modelItem.value;
 
@@ -77,6 +76,15 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
             // this.requestUpdate();
             this.handleModelItemProperties();
         }
+        await this.updateComplete;
+
+    }
+
+    get control(){
+        return this;
+    }
+    set control(control){
+
     }
 
 /*
@@ -99,10 +107,12 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
     handleRequired() {
         // console.log('mip required', this.modelItem.required);
+        // const control = this.querySelector('#control');
         if (this.isRequired() !== this.modelItem.required) {
             if (this.modelItem.required) {
                 // this.control.setAttribute('required','required');
-                this.shadowRoot.getElementById('control').setAttribute('required','required');
+                // this.shadowRoot.getElementById('control').setAttribute('required','required');
+                this.control.setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
                 this.control.removeAttribute('required');
@@ -195,6 +205,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     }
 
     isValid(){
+        // const control = this.querySelector('#control');
         if(this.control.valid){
             return true;
         }
@@ -202,6 +213,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     }
 
     isReadonly(){
+        // const control = this.querySelector('#control');
         if(this.control.hasAttribute('readonly')){
             return true;
         }
