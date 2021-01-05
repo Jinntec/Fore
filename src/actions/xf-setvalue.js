@@ -84,7 +84,7 @@ export default class XfSetvalue extends XfAction {
             modelItem.value = newVal;
             modelItem.changed = true;
 
-            this.needsRebuild = true;
+            this.needsRebuild = false;
             this.needsRecalculate = true;
             this.needsRevalidate = true;
             this.needsRefresh = true;

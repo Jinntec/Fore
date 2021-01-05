@@ -224,7 +224,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
             const calculateRefs = this._getReferencesForProperty(this.calculate,node);
             if(calculateRefs.length !== 0){
-            this._addDependencies(calculateRefs,node,path,'calculate');
+                this._addDependencies(calculateRefs,node,path,'calculate');
                 this._addDependencies(calculateRefs,node,path,'calculate');
             }else if(this.calculate){
                 this.model.mainGraph.addNode(`${path}:calculate`,node);
@@ -278,7 +278,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
             }
             refs.forEach(ref => {
                 const other = fx.evaluateXPath(ref,node);
-                const otherPath = fx.evaluateXPath('path()',other);
+                const otherPath = XfBind.getPath(other);
 
                 if(!this.model.mainGraph.hasNode(otherPath)){
                     // this.model.mainGraph.addNode(otherPath,{node:other});
