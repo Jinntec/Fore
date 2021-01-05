@@ -16,6 +16,7 @@
 
         xf-input{
             display: block;
+            padding:10px 0;
         }
         xf-input[required]:after {
             content: "*";
@@ -46,7 +47,7 @@
         <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
         <xf-bind ref="b" constraint="string-length(.) = 1" alert="string must be exactly one character long"></xf-bind>
         <xf-bind ref="c" constraint="string-length(.) = 1">
-            <xf-alert><b>string must be exactly one character long</b></xf-alert>
+            <xf-alert><b>string must be exactly 1 character long</b></xf-alert>
         </xf-bind>
         <!--
                 <xf-bind ref="c" required=".=C" relevant="depends(../b) = 'B'"></xf-bind>
@@ -75,14 +76,15 @@
         </xf-output>
 -->
 
-        <xf-input label="A" ref="a">
+        <xf-input label="A-label" ref="a">
             <xf-alert>Constraint not valid</xf-alert>
             <xf-hint>must be one character long</xf-hint>
         </xf-input>
-        <xf-input label="B" ref="b"></xf-input>
-        <!--
-                <xf-input label="C" ref="c"></xf-input>
-        -->
+
+
+        <xf-input label="B-label" ref="b"></xf-input>
+
+        <xf-input label="C" ref="c"></xf-input>
 
 
     </xf-group>

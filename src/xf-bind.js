@@ -309,6 +309,10 @@ export class XfBind extends foreElementMixin(HTMLElement){
         if(this.hasAttribute('alert')){
             return this.getAttribute('alert');
         }
+        const alertChild = this.querySelector('xf-alert');
+        if(alertChild){
+            return alertChild.innerHTML;
+        }
     }
 
 /*
