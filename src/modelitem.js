@@ -41,6 +41,7 @@ export class ModelItem {
         this.node = node;
         this.bind = bind;
         this.changed = false;
+        this.alerts = [];
         // this.value = this._getValue();
     }
 
@@ -67,6 +68,14 @@ export class ModelItem {
             this.node.textContent = newVal;
         }
 
+    }
+
+    addAlert(alert){
+        this.alerts.push(alert);
+    }
+
+    cleanAlerts(){
+        this.alerts = [];
     }
 
 }

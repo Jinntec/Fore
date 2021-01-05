@@ -76,6 +76,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 this.dispatchEvent(new CustomEvent('value-changed', {}));
             }
             // this.requestUpdate();
+
+
             this.handleModelItemProperties();
         }
         await this.updateComplete;
@@ -145,10 +147,23 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
     handleValid(){
         // console.log('mip valid', this.modelItem.required);
-        if (this.isValid() !== this.modelItem.required) {
+
+
+        const alert = this.querySelector('xf-alert');
+        if(alert){
+            alert.style.display = "none";
+        }
+
+        if (this.isValid() !== this.modelItem.valid) {
             if (this.modelItem.valid) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
+                if(this.modelItem.alerts.length !== 0){
+                    const alert = this.querySelector('xf-alert');
+                    alert.style.display = "block";
+                    this.modelItem.cleanAlerts();
+                }
+
                 this.dispatchEvent(new CustomEvent('invalid', {}));
             }
         }

@@ -4,7 +4,7 @@ import fx from "fontoxpath";
 import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
 import './xf-instance.js';
-import './xf-bind.js';
+import {XfBind } from './xf-bind.js';
 import {XPathUtil} from "./xpath-util";
 
 export class XfModel extends HTMLElement {
@@ -54,8 +54,8 @@ export class XfModel extends HTMLElement {
         this.inited = false;
     }
 
-    connectedCallback(){
-        this.id = this.hasAttribute("id")? this.getAttribute('id'):'default';
+    connectedCallback() {
+        this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
     }
 
     _modelConstruct(e) {
@@ -126,11 +126,16 @@ export class XfModel extends HTMLElement {
         console.groupEnd();
     }
 
+    /**
+     * recalculation of all modelItems. Uses dependency graph to determine order of computation.
+     *
+     * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
+     */
     recalculate() {
         console.group('### recalculate');
 
         const v = this.mainGraph.overallOrder();
-        v.forEach(path =>{
+        v.forEach(path => {
             // console.log('recalculating path ', path);
 
             const node = this.mainGraph.getNodeData(path);
@@ -138,18 +143,18 @@ export class XfModel extends HTMLElement {
             const modelItem = this.getModelItem(node);
             console.log('modelitem ', modelItem);
 
-            if(modelItem && path.indexOf(':')){
+            if (modelItem && path.indexOf(':')) {
                 const property = path.split(':')[1];
-                if(property){
-                    if(property === 'calculate'){
+                if (property) {
+                    if (property === 'calculate') {
                         const expr = modelItem.bind[property];
                         const compute = Fore.evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
                         modelItem.value = compute;
-                    }else if(property !== 'constraint' && property !== 'type') {
+                    } else if (property !== 'constraint' && property !== 'type') {
                         console.log('recalculating property ', property);
 
                         const expr = modelItem.bind[property];
-                        if(expr){
+                        if (expr) {
                             console.log('recalc expr: ', expr);
                             const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
 
@@ -190,31 +195,24 @@ export class XfModel extends HTMLElement {
             if (bind) {
                 console.log('modelItem bind ', bind);
 
-                /*
-                if there is a bind for this modelitem we'll evaluate all of its modelitem properties.
 
-                In case modelItems are lazy-created there won't be any bind element for them.
-                 */
-                if (bind) {
 
-                    const {constraint} = bind;
-                    let constraintValid;
+                // todo: investigate why bind is an element when created in xf-bind.init() and an ...
+                // xf-bind object when created lazily.
+
+                if (typeof bind.hasAttribute === "function" && bind.hasAttribute('constraint')) {
+                    const constraint = bind.getAttribute('constraint');
                     if (constraint) {
                         const compute = Fore.evaluateToBoolean(constraint, modelItem.node, this, Fore.namespaceResolver);
-                        // item.required = compute;
-                        constraintValid = compute;
-                    }
+                        if (!compute) {
+                            modelItem.addAlert("foobar");
 
-/*
-                    const {type} = bind;
-                    if (type) {
-                        // todo: datatype check
-                        const check = true;
-                        modelItem.required = constraintValid && check;
+                        }
                     }
-*/
-
                 }
+
+
+
             }
 
         });
@@ -240,12 +238,12 @@ export class XfModel extends HTMLElement {
     */
 
 
-/*
-    _handleModelConstructDone(e) {
-        console.log('_handleModelConstructDone');
-        this.refresh();
-    }
-*/
+    /*
+        _handleModelConstructDone(e) {
+            console.log('_handleModelConstructDone');
+            this.refresh();
+        }
+    */
 
 
     /**
