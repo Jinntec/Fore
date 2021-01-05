@@ -55,6 +55,8 @@ export class XfContainer extends foreElementMixin(LitElement) {
             this.value = this.modelItem.value;
         }
 
+        // await this.updateComplete;
+
         // state change event do not fire during init phase (initial refresh)
         if(this._getForm().ready) {
             this.handleModelItemProperties();

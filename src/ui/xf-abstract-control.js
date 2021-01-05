@@ -66,6 +66,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         if(this.isBound()){
             // this.control = this.querySelector('#control');
             this.modelItem = this.getModelItem();
+            console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
+
             this.value = this.modelItem.value;
 
             // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
@@ -112,10 +114,14 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
             if (this.modelItem.required) {
                 // this.control.setAttribute('required','required');
                 // this.shadowRoot.getElementById('control').setAttribute('required','required');
-                this.control.setAttribute('required','required');
+                // this.control.setAttribute('required','required');
+                // this.required = true;
+                this.setAttribute('required','required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
-                this.control.removeAttribute('required');
+                // this.control.removeAttribute('required');
+                this.required = false;
+                this.removeAttribute('required');
                 this.dispatchEvent(new CustomEvent('optional', {}));
             }
         }
@@ -125,11 +131,13 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // console.log('mip readonly', this.modelItem.isReadonly);
         if (this.isReadonly() !== this.modelItem.readonly) {
             if (this.modelItem.readonly) {
-                this.control.setAttribute('readonly','readonly');
+                // this.control.setAttribute('readonly','readonly');
+                this.setAttribute('readonly','readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
             if(!this.modelItem.readonly){
-                this.control.removeAttribute('readonly');
+                // this.control.removeAttribute('readonly');
+                this.removeAttribute('readonly');
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
         }
@@ -138,7 +146,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     handleValid(){
         // console.log('mip valid', this.modelItem.required);
         if (this.isValid() !== this.modelItem.required) {
-            if (this.modelItem.required) {
+            if (this.modelItem.valid) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
                 this.dispatchEvent(new CustomEvent('invalid', {}));
@@ -196,7 +204,9 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // if(this.control.required){
         console.log('isRequired',this);
         // this.control = this.shadowRoot.querySelector('#control');
-        this.control = this.shadowRoot.getElementById('control');
+        if(!this.control){
+            this.control = this.shadowRoot.getElementById('control');
+        }
         if(!this.control) return false;
         if(this.control.hasAttribute('required')){
             return true;

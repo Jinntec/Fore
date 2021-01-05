@@ -40,6 +40,7 @@ export class ModelItem {
         this.type = type;
         this.node = node;
         this.bind = bind;
+        this.changed = false;
         // this.value = this._getValue();
     }
 

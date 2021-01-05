@@ -111,7 +111,7 @@
     </p>
 
     <div class="note">
-        Fore uses the XPath engine of eXist-db which currently supports XPath 3.0.
+        Fore uses the <a href="https://github.com/FontoXML/fontoxpath">fontoXPath</a> engine which currently supports XPath 3.1 and XQuery 3.1.
     </div>
 
     <h2>Further constraints</h2>
@@ -128,14 +128,14 @@
     <p>Let assume we have 'cash' or 'credit card' as payment methods. The bindings for 'number' and 'expiry' are only
     relevant in case the 'method' is 'cc' (for credit card).</p>
 
-    <div class="note"><b>Relevance</b> is an important feature of XForms and also available in Fore. By default
+    <div class="note"><b>Relevance</b> is an important feature derived from XForms. By default
     each data item of an instance is relevant. However when nodes become non-relevant they are excluded from
     recalculations and revalidations. Also by default non-relevant nodes are not submitted. In the user interface
     all controls that bind to non-relevant nodes are hidden from view.</div>
 
     <p>'number' and 'expiry' also use datatypes to further ensure that values are of the correct format for further processing</p>
 
-    <div class="note">Fore forms are strongly typed. As datatypes the whole set of XSD Simple Types are supported.</div>
+<!--    <div class="note">Fore forms are strongly typed. As datatypes the whole set of XSD Simple Types are supported.</div>-->
 
     <h2>Add some User Interface</h2>
 

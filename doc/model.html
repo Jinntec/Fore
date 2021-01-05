@@ -33,21 +33,7 @@
 <div class="topic">
     <h1>The Model</h1>
 
-    <p>The model describes the data, their loading and storing
-        and the constraints to be enforced during validation.</p>
-
-    <h2>Client and Server Models</h2>
-
-    <p>There's a model both on the client and the server. However they are not the same and not even carry
-    the same amount of information. To establish a clear distinction between the two i'll call the server-side model the
-    <a href="xf-model.html">host model</a> and the client-side model the <a href="ui-model.html">UI model</a>.</p>
-
-    <p>It is the host model that a form author will write to define the involved data, constraints and
-    submissions. The host model uses elements with a 'xf-' prefix. The UI model will be created by the backend
-    at runtime.</p>
-
-    <div class="hint">The host model will never be exposed to the client. When a new form session starts
-    the <code>xf-model</code> element is filtered out before returning the embedding HTML page.</div>
+    <p>The model describes the data, their constraints and submissions</p>
 
     <h2>xf-model Overview</h2>
 
@@ -62,11 +48,6 @@
             <td>Container element defining the data, constraints and submissions of a form</td>
             <td>
                 exactly one
-                <div class="note">
-                    In XForms a form can hold any number of model elements. However in practice more than one
-                    model have barely been needed during years of XForms usage. Extending this later is still possible but
-                    will be driven by necessity.
-                </div>
             </td>
         </tr>
         <tr>

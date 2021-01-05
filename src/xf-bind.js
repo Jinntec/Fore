@@ -416,6 +416,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
         let mItem = {};
         let targetNode = {};
+        if(node === null) return null;
         if(node.nodeType === node.TEXT_NODE){
             // const parent = node.parentNode;
             // console.log('PARENT ', parent);

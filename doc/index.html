@@ -34,8 +34,8 @@
             }
 
             .header{
-                padding: 20px;
-                background: var(--paper-blue-900);
+                /*padding: 20px;*/
+                /*background: var(--paper-blue-900);*/
                 color: ghostwhite;
 
             }
@@ -51,20 +51,23 @@
 
 
             .topics{
-                padding: 20px;
+                padding:0 20px;
+                overflow: auto;
+                height: 100%;
             }
 
 
             .group, a {
                 display: block;
-                color: var(--paper-blue-500);
+                /*color: var(--paper-blue-500);*/
+                color: #5f5f5f;
                 padding: 10px 0;
                 font-weight: 300;
                 text-decoration: none;
             }
 
             .group-label{
-                color:var(--paper-blue-900);
+                color:var(--pape r-blue-900);
             }
 
             .group a{
@@ -81,7 +84,9 @@
                 border: none;
             }
 
-
+            .logo{
+                width:100%;
+            }
         </style>
     </custom-style>
 </head>
@@ -89,7 +94,9 @@
 <app-drawer-layout fullbleed="fullbleed">
     <app-drawer class="drawer" slot="drawer">
         <div class="header">
-            <span class="title">Fore</span>
+<!--            <span class="title">Fore</span>-->
+            <span class="title"><img class="logo" src="../resources/images/light7.png"></span>
+<!--            <span class="title"><img class="logo" src="../resources/images/dark.svg"></span>-->
             <span class="subtitle">Model-driven Forms for the Web</span>
         </div>
         <div class="topics">

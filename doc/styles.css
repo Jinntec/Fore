@@ -5,18 +5,21 @@ body{
 }
 
 h1{
-    color:var(--paper-blue-900);
+    /*color:var(--paper-blue-900);*/
+    color:var(--paper-grey-900);
     font-weight: 600;
 }
 h2{
-    color:var(--paper-blue-700);
+    /*color:var(--paper-blue-700);*/
+    color:var(--paper-grey-700);
     font-weight: 500;
 }
 h3{
     font-weight: 400;
     /*font-style: italic;*/
     letter-spacing: 2px;
-    color:var(--paper-blue-600);
+    /*color:var(--paper-blue-600);*/
+    color:var(--paper-grey-600);
 
 }
 code{

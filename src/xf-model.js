@@ -51,6 +51,7 @@ export class XfModel extends HTMLElement {
         this.addEventListener('ready', this._ready);
 
         this.mainGraph = new DepGraph(false);
+        this.inited = false;
     }
 
     connectedCallback(){
@@ -70,6 +71,7 @@ export class XfModel extends HTMLElement {
             Promise.all(promises).then(result => {
                 this.instances = Array.from(instances);
                 this.updateModel();
+                this.inited = true;
                 // console.log('dispatching model-construct-done');
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,

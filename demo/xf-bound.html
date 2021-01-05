@@ -10,8 +10,14 @@
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
+        body{
+            font-size: 18px;
+        }
         xf-instance{
             display:none;
+        }
+        xf-bound{
+            display: block;
         }
     </style>
 </head>
@@ -27,38 +33,64 @@
                 <listitem></listitem>
             </data>
         </xf-instance>
-        <xf-bind ref="item" required="true()"></xf-bind>
-        <xf-bind ref="checked"></xf-bind>
+        <xf-bind ref="item" required="true()" readonly="true()"></xf-bind>
+        <xf-bind ref="checked" type="boolean"></xf-bind>
         <xf-bind ref="listitem"></xf-bind>
     </xf-model>
     <xf-group>
+
+        <h2>unwrapped foreign controls</h2>
+        <xf-input label="xf-input" ref="item"></xf-input>
+
+
+        <h2>wrapped native controls</h2>
+<!--        <input type="text" ref="item" value="${this.value}">-->
+
         <xf-bound ref="item" update-event="blur" value-prop="value">
-            <label slot="label">with onblur handler</label>
+            <label slot="label">native input with onblur handler</label>
             <input name="value" value="">
         </xf-bound>
 
-        <xf-bound ref="checked" update-event="input">
-            <label slot="label">with incremental handler</label>
+
+        <xf-bound ref="item" update-event="input">
+            <label slot="label">native input with incremental handler</label>
             <input name="value" value="">
         </xf-bound>
+
+        <xf-bound ref="checked" update-event="input" value-prop="value">
+            <label for="check1" slot="label">native checkbox</label>
+            <input id="check1" type="checkbox">
+        </xf-bound>
+
+
+        <xf-bound ref="listitem" update-event="change">
+            <label slot="label">native select</label>
+            <select>
+                <option value=""></option>
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+            <select>
+        </xf-bound>
+
+        <h2>wrapped paper components</h2>
+
+        <h3>with onblur firing</h3>
+        <xf-bound ref="item" update-event="change">
+            <paper-input label="the item in paper land"></paper-input>
+        </xf-bound>
+
+        <h3>with incremental firing</h3>
+        <xf-bound ref="item" update-event="keyup">
+            <paper-input label="the item in paper land"></paper-input>
+        </xf-bound>
+
         <!--
 
-                <xf-bound ref="checked" update-event="input" value-prop="checked">
-                    <label for="check1" slot="label">native checkbox</label>
-                    <input id="check1" type="checkbox">
-                </xf-bound>
 
                 <xf-bound ref="checked" update-event="change" value-prop="checked">
                     <paper-checkbox>paper checkbox</paper-checkbox>
                 </xf-bound>
 
-                <xf-bound ref="listitem" update-event="change">
-                    <select>
-                        <option value=""></option>
-                        <option value="foo">foo</option>
-                        <option value="bar">bar</option>
-                    <select>
-                </xf-bound>
         -->
 <!--        Selected list item :<xf-output ref="item"></xf-output>-->
 

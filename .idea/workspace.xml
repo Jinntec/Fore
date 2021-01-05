@@ -25,25 +25,27 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="shortened modelItem path;&#10;encoding instance id on path;&#10;fixed test;">
-      <change afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="xf-bound running again; still some work to do;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/class-relations.puml" beforeDir="false" afterPath="$PROJECT_DIR$/doc/class-relations.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/get-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/get-started.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/introduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/introduction.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/model.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/model.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/doc/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/writing-forms.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/writing-forms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/actions/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-setvalue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modelitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modelitem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-bound.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-group.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/lazy.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/lazy.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-bind.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bind.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/setvalue.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/setvalue.test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -290,77 +292,14 @@
       <workItem from="1607518146444" duration="6579000" />
       <workItem from="1607539168218" duration="963000" />
       <workItem from="1607601507171" duration="10000" />
-      <workItem from="1607616827630" duration="11333000" />
-    </task>
-    <task id="LOCAL-00020" summary="nailed json format">
-      <created>1551456977948</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1551456977948</updated>
-    </task>
-    <task id="LOCAL-00021" summary="fixed some errors">
-      <created>1551696469740</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1551696469740</updated>
-    </task>
-    <task id="LOCAL-00022" summary="updated and fixed some errors">
-      <created>1551950272661</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1551950272661</updated>
-    </task>
-    <task id="LOCAL-00023" summary="basic client-side parsing of states; started implementation of repeat">
-      <created>1551950545741</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1551950545741</updated>
-    </task>
-    <task id="LOCAL-00024" summary="made sure initial state is applied once all controls are up;&#10;initialisation of repeat for todo sample;">
-      <created>1551980989210</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1551980989210</updated>
-    </task>
-    <task id="LOCAL-00025" summary="added a comment">
-      <created>1551981247256</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1551981247256</updated>
-    </task>
-    <task id="LOCAL-00026" summary="local binding and updating of values works">
-      <created>1558022617218</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1558022617219</updated>
-    </task>
-    <task id="LOCAL-00027" summary="refactored xf-form; implemented basic setvalue action">
-      <created>1558088546376</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1558088546376</updated>
-    </task>
-    <task id="LOCAL-00028" summary="added non-incremental input to helloworld demo;&#10;cleanup and documentation of xf-form;&#10;basic impl of control properties">
-      <created>1558096272269</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1558096272269</updated>
-    </task>
-    <task id="LOCAL-00029" summary="new sample for select control;&#10;filtering controls from bound elements (ignoring actions which also have a 'bind');&#10;listening for select changes;">
-      <created>1558365507105</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1558365507105</updated>
+      <workItem from="1607616827630" duration="16891000" />
+      <workItem from="1607707259567" duration="33444000" />
+      <workItem from="1607954472670" duration="8557000" />
+      <workItem from="1608040728587" duration="2061000" />
+      <workItem from="1609152779380" duration="6911000" />
+      <workItem from="1609779657582" duration="37000" />
+      <workItem from="1609845800514" duration="318000" />
+      <workItem from="1609846220442" duration="1711000" />
     </task>
     <task id="LOCAL-00030" summary="extracted initialization code to xf-bound;&#10;fixed model-data processing;&#10;initialization now differenciates between native controls and web components;&#10;xf-output now extends xf-bound">
       <created>1558612100958</created>
@@ -635,7 +574,77 @@
       <option name="project" value="LOCAL" />
       <updated>1607539222454</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="actions now extends HTMLElement;&#10;AbstractFormControl and XfContainer use ForeElementMixin;&#10;new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out">
+      <created>1607701182084</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1607701182084</updated>
+    </task>
+    <task id="LOCAL-00070" summary="fix recalc when no expr exists">
+      <created>1607701292122</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1607701292122</updated>
+    </task>
+    <task id="LOCAL-00071" summary="improved getBindingExpr();&#10;XfBind now also extend HTMLElement!;&#10;fix to nodeset eval in xf-bind;&#10;xf-instance also vanilla web component;&#10;added loading promises for instances;&#10;xf-model turned into vanilla web component;&#10;found a way to listen for refresh-done before checking on props">
+      <created>1607787046094</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1607787046094</updated>
+    </task>
+    <task id="LOCAL-00072" summary="remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin;&#10;updated class diagram;">
+      <created>1607788825960</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1607788825960</updated>
+    </task>
+    <task id="LOCAL-00073" summary="fixed path for lazy created modelItems;&#10;xf-instance cleanup;">
+      <created>1607790725349</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1607790725349</updated>
+    </task>
+    <task id="LOCAL-00074" summary="&#10;xf-instance cleanup;">
+      <created>1607790739931</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1607790739931</updated>
+    </task>
+    <task id="LOCAL-00075" summary="test for modelitem path">
+      <created>1607790764922</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1607790764922</updated>
+    </task>
+    <task id="LOCAL-00076" summary="fixed/completed buildBindGraph to add property when it exists but has no dependencies">
+      <created>1607791475223</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1607791475223</updated>
+    </task>
+    <task id="LOCAL-00077" summary="fixed all tests - repeats running again :)">
+      <created>1607793316970</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1607793316970</updated>
+    </task>
+    <task id="LOCAL-00078" summary="xf-bound running again; still some work to do;">
+      <created>1607804717726</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1607804717726</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -682,16 +691,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="finally successfully using lit-element repeat directive to &#10;render repeat in lightDOM allowing full style access to form content.&#10;&#10;all 32 test passing" />
-    <MESSAGE value="prepare group collapse support" />
-    <MESSAGE value="template function handleModelItemProperties to be overwritten by e.g. group;" />
-    <MESSAGE value="shutting up" />
-    <MESSAGE value="factored out eval" />
-    <MESSAGE value="refresh with repeat fixed for single repeat" />
-    <MESSAGE value="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage" />
-    <MESSAGE value="back to flat refresh - repeat has no special magic" />
-    <MESSAGE value="fixed xf-input - control doesn't have to look after lifecycle&#10;as it uses the action for that." />
-    <MESSAGE value="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;" />
     <MESSAGE value="refactoring of lazy modelItem creation complete: functions moved to xf-bind;" />
     <MESSAGE value="all tests running but todo.html not showing its values" />
     <MESSAGE value="factored out evaluate* functions into Fore;&#10;started recalculate" />
@@ -707,7 +706,17 @@
     <MESSAGE value="soem recalculation refinements" />
     <MESSAGE value="shortened modelItem path;&#10;encoding instance id on path;&#10;fixed test;" />
     <MESSAGE value="instance id on path now;&#10;fixed test;&#10;shortened path" />
-    <option name="LAST_COMMIT_MESSAGE" value="instance id on path now;&#10;fixed test;&#10;shortened path" />
+    <MESSAGE value="actions now extends HTMLElement;&#10;AbstractFormControl and XfContainer use ForeElementMixin;&#10;new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out" />
+    <MESSAGE value="fix recalc when no expr exists" />
+    <MESSAGE value="improved getBindingExpr();&#10;XfBind now also extend HTMLElement!;&#10;fix to nodeset eval in xf-bind;&#10;xf-instance also vanilla web component;&#10;added loading promises for instances;&#10;xf-model turned into vanilla web component;&#10;found a way to listen for refresh-done before checking on props" />
+    <MESSAGE value="remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin;&#10;updated class diagram;" />
+    <MESSAGE value="fixed path for lazy created modelItems;&#10;xf-instance cleanup;" />
+    <MESSAGE value="&#10;xf-instance cleanup;" />
+    <MESSAGE value="test for modelitem path" />
+    <MESSAGE value="fixed/completed buildBindGraph to add property when it exists but has no dependencies" />
+    <MESSAGE value="fixed all tests - repeats running again :)" />
+    <MESSAGE value="xf-bound running again; still some work to do;" />
+    <option name="LAST_COMMIT_MESSAGE" value="xf-bound running again; still some work to do;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -719,63 +728,67 @@
       <screen x="-252" y="-1667" width="3008" height="1667" />
     </state>
     <state x="627" y="-968" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607518158702" />
-    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605964544889">
+    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1607788104382">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605964544889" />
-    <state x="-1911" y="39" key="CommitChangelistDialog2" timestamp="1603733219914">
-      <screen x="-3440" y="-153" width="3440" height="1417" />
+    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2" timestamp="1609845966060">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog" timestamp="1607696746243">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609845966060" />
+    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog" timestamp="1609157619120">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604309264914" />
     <state x="-1620" y="-53" width="1520" height="1217" maximized="true" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1604172300463" />
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607521072717" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607696746243" />
-    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1605881336545">
+    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1609157619120" />
+    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1607709285229">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1698" y="196" key="RollbackChangesDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604169209475" />
-    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605881336545" />
+    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607709285229" />
     <state x="-360" y="-1157" key="SettingsEditor" timestamp="1605886807774">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-2097" y="82" key="SettingsEditor/-2560.-176.2560.1417/0.23.1440.877@-2560.-176.2560.1417" timestamp="1601461547197" />
     <state x="-360" y="-1157" key="SettingsEditor/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605886807774" />
-    <state width="625" height="500" key="SwitcherDM" timestamp="1604146490429">
-      <screen x="-3440" y="-153" width="3440" height="1417" />
+    <state width="625" height="500" key="SwitcherDM" timestamp="1609846228917">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state width="625" height="500" key="SwitcherDM/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604146490429" />
+    <state width="625" height="500" key="SwitcherDM/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609846228917" />
     <state x="457" y="-790" key="VCS.ChangelistChooser" timestamp="1605886050913">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="457" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605886050913" />
-    <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2" timestamp="1607539224954">
-      <screen x="-252" y="-1667" width="3008" height="1667" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1607804719601">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1606845622880" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607804719601" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1605887991354">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605887991354" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1605975462480">
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607702693851">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604331294022" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605975462480" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1607621009353">
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702693851" />
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1607793214358">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604171970712" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607621009353" />
-    <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604145757344">
-      <screen x="-3440" y="-153" width="3440" height="1417" />
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607793214358" />
+    <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607702770956">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604145757344" />
+    <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702770956" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1607697484482">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -793,7 +806,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/ui/xf-repeatitem.js</url>
-          <line>42</line>
+          <line>41</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

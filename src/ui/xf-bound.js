@@ -23,9 +23,6 @@ class XfBound  extends XfAbstractControl {
     static get properties() {
         return {
             ...super.properties,
-            control:{
-                type:Object
-            },
             updateEvent:{
                 type: String,
                 attribute:'update-event'
@@ -98,22 +95,42 @@ class XfBound  extends XfAbstractControl {
     set control(control){
     }
 
-    refresh(){
+/*
+    updated(changedProperties){
+        console.log('updated ', changedProperties);
+        changedProperties.forEach((oldValue, propName) => {
+            console.log(`${propName} changed. oldValue: ${oldValue}`);
+        });
+    }
+*/
+
+/*
+    shouldUpdate(changedProperties){
+        // super.shouldUpdate(changedProperties);
+        console.log('shouldUpdate ', changedProperties);
+        return this.getModel().inited;
+    }
+*/
+
+     refresh(){
         // console.log('xf-bound refresh');
 
         console.log('valueProp ', this.valueProp);
 
         const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
         const control = defaultSlot.assignedElements()[0]; // there must be just
-        // console.log('########## slot default ', defaultSlot);
-        // console.log('########## slot default ', defaultSlot.assignedElements()[0]);
-
         this.control = control;
-        super.refresh();
 
-        this.control.setAttribute(this.valueProp, this.getModelItem().value);
+        // await this.updateComplete;
+        super.refresh();
+        control[this.valueProp] = this.modelItem.value;
+
     }
 
+    handleRequired() {
+        super.handleRequired();
+        // this.control
+    }
 
 }
 

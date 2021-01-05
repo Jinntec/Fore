@@ -71,6 +71,8 @@ class XfInput extends XfAbstractControl{
                                   label="${this.label}"
                                   .value="${this.value}"
                                   type="${this.type}"
+                                  ?required="${this.required}"
+                                  ?this.readonly="${this.readonly}"
                                   @input="${this._handleInput}">
                          <xf-setvalue id="setvalue" ref="${this.ref}"></xf-setvalue>
                     </paper-input>

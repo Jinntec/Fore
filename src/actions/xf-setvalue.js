@@ -33,7 +33,16 @@ export default class XfSetvalue extends XfAction {
     execute() {
         super.execute();
         // this.setValue(this.modelItem, this.value);
-        this.setValue(this.getModelItem(), this.value);
+
+        let value = this.value;
+        if(this.value !== null){
+            value = this.value
+        }else if(this.textContent !== "") {
+            value = this.textContent;
+        }else{
+            value = "";
+        }
+        this.setValue(this.getModelItem(), value);
 
 
         /*
@@ -67,15 +76,19 @@ export default class XfSetvalue extends XfAction {
     }
 
     setValue(modelItem, newVal){
-        console.log('setvalue  ', modelItem, newVal);
+        console.log('setvalue[1]  ', modelItem, newVal);
+
+        if(!modelItem) return;
 
         if(modelItem.value !== newVal){
             modelItem.value = newVal;
+            modelItem.changed = true;
 
             this.needsRebuild = true;
             this.needsRecalculate = true;
             this.needsRevalidate = true;
             this.needsRefresh = true;
+            console.log('setvalue[2] ', modelItem, newVal);
             this.actionPerformed();
         }
         // this.setAttribute('value', modelItem.value);

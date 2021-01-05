@@ -74,7 +74,7 @@
   "keywords": [
     "Fore"
   ],
-  "author": "joern turner",
+  "author": "Joern Turner",
   "license": "MIT",
   "eslintConfig": {
     "extends": [
