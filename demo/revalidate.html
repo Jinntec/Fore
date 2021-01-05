@@ -14,9 +14,11 @@
             background: #76ff03;
         }
 
+        xf-input{
+            display: block;
+        }
         xf-input[required]:after {
             content: "*";
-            display: inline;
             color: red;
         }
 
@@ -41,8 +43,11 @@
         </xf-instance>
 
 
-        <xf-bind ref="a" constraint="string-length(.) = 1" alert="string must be exactly one character long"></xf-bind>
-        <xf-bind ref="b" required="depends(../c) = 'C'"></xf-bind>
+        <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
+        <xf-bind ref="b" constraint="string-length(.) = 1" alert="string must be exactly one character long"></xf-bind>
+        <xf-bind ref="c" constraint="string-length(.) = 1">
+            <xf-alert><b>string must be exactly one character long</b></xf-alert>
+        </xf-bind>
         <!--
                 <xf-bind ref="c" required=".=C" relevant="depends(../b) = 'B'"></xf-bind>
         -->
@@ -54,28 +59,32 @@
 
         <h1 class="{class}">
             Revalidation</h1>
+
         <xf-output id="output" ref="a">
             <xf-label>a-label</xf-label>
             <xf-alert>Constraint not valid</xf-alert>
             <xf-hint>must be one character long</xf-hint>
         </xf-output>
+
+<!--
         <xf-output id="output" ref="b">
             <xf-label>b-label</xf-label>
         </xf-output>
         <xf-output id="output" ref="c">
             <xf-label>c-label</xf-label>
         </xf-output>
+-->
 
-        <xf-input label="A" ref="a"></xf-input>
+        <xf-input label="A" ref="a">
+            <xf-alert>Constraint not valid</xf-alert>
+            <xf-hint>must be one character long</xf-hint>
+        </xf-input>
         <xf-input label="B" ref="b"></xf-input>
+        <!--
+                <xf-input label="C" ref="c"></xf-input>
+        -->
 
 
-        <xf-button label="set A to B">
-            <xf-setvalue ref="a" value="B"></xf-setvalue>
-        </xf-button>
-        <xf-button label="set A to A">
-            <xf-setvalue ref="a" value="A"></xf-setvalue>
-        </xf-button>
     </xf-group>
 </xf-form>
 

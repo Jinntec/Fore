@@ -159,9 +159,20 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 this.dispatchEvent(new CustomEvent('valid', {}));
             } else {
                 if(this.modelItem.alerts.length !== 0){
+
                     const alert = this.querySelector('xf-alert');
-                    alert.style.display = "block";
-                    this.modelItem.cleanAlerts();
+                    if(alert){
+                        alert.style.display = "block";
+                    }else{
+                        const alerts = this.modelItem.alerts;
+                        console.log('alerts from bind: ', alerts);
+                        alerts.forEach(alert => {
+                           const newAlert = document.createElement('xf-alert');
+                           newAlert.innerHTML = alert;
+                           this.appendChild(newAlert);
+                            newAlert.style.display = 'block';
+                        });
+                    }
                 }
 
                 this.dispatchEvent(new CustomEvent('invalid', {}));

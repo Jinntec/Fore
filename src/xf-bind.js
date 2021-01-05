@@ -305,6 +305,12 @@ export class XfBind extends foreElementMixin(HTMLElement){
         `;
     }
 
+    getAlert(){
+        if(this.hasAttribute('alert')){
+            return this.getAttribute('alert');
+        }
+    }
+
 /*
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);

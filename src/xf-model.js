@@ -190,12 +190,11 @@ export class XfModel extends HTMLElement {
 
         this.modelItems.forEach(modelItem => {
             console.log('validating node ', modelItem.node);
+            modelItem.alerts=[];//reset alerts
 
             const bind = modelItem.bind;
             if (bind) {
                 console.log('modelItem bind ', bind);
-
-
 
                 // todo: investigate why bind is an element when created in xf-bind.init() and an ...
                 // xf-bind object when created lazily.
@@ -204,8 +203,12 @@ export class XfModel extends HTMLElement {
                     const constraint = bind.getAttribute('constraint');
                     if (constraint) {
                         const compute = Fore.evaluateToBoolean(constraint, modelItem.node, this, Fore.namespaceResolver);
+                        console.log('modelItem validity computed: ', compute);
+                        modelItem.constraint = compute;
                         if (!compute) {
-                            modelItem.addAlert("foobar");
+                            // todo: get alert from attribute or child element
+                            const alert = bind.getAlert();
+                            modelItem.addAlert(alert);
 
                         }
                     }
@@ -216,13 +219,15 @@ export class XfModel extends HTMLElement {
             }
 
         });
-
+        console.log('modelItems after revalidate: ', this.modelItems);
         console.groupEnd();
     }
 
     getModelItem(node) {
         return this.modelItems.find(m => m.node === node);
     }
+
+
 
     /*
         _initOutermostBindings(){

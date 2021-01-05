@@ -25,15 +25,12 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="additional xf-bound examples;&#10;some documentation changes;&#10;completed setvalue implementation to support textContent and empty value;&#10;introduced changed flag on modelitem;&#10;additional setvalue tests">
-      <change afterPath="$PROJECT_DIR$/demo/revalidate.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/xf-alert.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/xf-hint.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="first primitive version of alert works">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modelitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modelitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/revalidate.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/revalidate.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -288,14 +285,7 @@
       <workItem from="1609152779380" duration="6911000" />
       <workItem from="1609779657582" duration="37000" />
       <workItem from="1609845800514" duration="318000" />
-      <workItem from="1609846220442" duration="12452000" />
-    </task>
-    <task id="LOCAL-00032" summary="itemset working;&#10;refactored and extract BoundElementMixin and XfControl classes to inherit from;">
-      <created>1558695708835</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1558695708835</updated>
+      <workItem from="1609846220442" duration="15902000" />
     </task>
     <task id="LOCAL-00033" summary="extracted BoundElementMixin;&#10;basic repeat initialization">
       <created>1559044196451</created>
@@ -633,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609852628570</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="first primitive version of alert works">
+      <created>1609859700858</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1609859700858</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,7 +677,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="factored out evaluate* functions into Fore;&#10;started recalculate" />
     <MESSAGE value="merged changes from dom-repeat branch;" />
     <MESSAGE value="fix refresh in AbstractControl to only update in case of being bound." />
     <MESSAGE value="patched depGraph code to work with ES6;&#10;refactored property names in modelitem;&#10;just creating the modelItems now during rebuild but not evaluating them already. This is done in recalculate now.&#10;All tests running" />
@@ -705,7 +701,8 @@
     <MESSAGE value="xf-bound running again; still some work to do;" />
     <MESSAGE value="additional xf-bound examples;&#10;some documentation changes;&#10;completed setvalue implementation to support textContent and empty value;&#10;introduced changed flag on modelitem;&#10;additional setvalue tests" />
     <MESSAGE value="not rebuilding after setvalue any more;&#10;fixed path expr in bindGraph;" />
-    <option name="LAST_COMMIT_MESSAGE" value="not rebuilding after setvalue any more;&#10;fixed path expr in bindGraph;" />
+    <MESSAGE value="first primitive version of alert works" />
+    <option name="LAST_COMMIT_MESSAGE" value="first primitive version of alert works" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -721,11 +718,11 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2" timestamp="1609852628048">
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2" timestamp="1609859700315">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609852628048" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609859700315" />
     <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog" timestamp="1609157619120">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
@@ -753,12 +750,12 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="457" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605886050913" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1609852630050">
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1609859702681">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609852630050" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609859702681" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1605887991354">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>

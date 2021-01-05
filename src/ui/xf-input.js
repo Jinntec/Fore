@@ -60,6 +60,7 @@ class XfInput extends XfAbstractControl{
         this.label='';
         this.value='';
         this.required = false;
+        this.valid = true;
         // this.modelItem={};
     }
 
@@ -67,7 +68,9 @@ class XfInput extends XfAbstractControl{
     render() {
         return html`
             ${this.type === 'text' || this.type === 'date' ?
-                html`<paper-input id="control" 
+                html`
+                    <slot></slot>
+                    <paper-input id="control" 
                                   label="${this.label}"
                                   .value="${this.value}"
                                   type="${this.type}"
