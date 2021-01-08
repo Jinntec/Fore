@@ -1,4 +1,4 @@
-// import {LitElement, html, css} from 'lit-element';
+// import {html, css} from 'lit-element';
 
 import * as fx from 'fontoxpath';
 
@@ -22,6 +22,13 @@ export class XfInstance extends HTMLElement {
             },
             model:{
                 type:Object
+            },
+            /**
+             * the type of instance either 'xml' or 'json'. This is reserved for future
+             * use and setting 'json' has no effect yet.
+             */
+            type:{
+                type: String
             }
         };
     }
@@ -30,6 +37,7 @@ export class XfInstance extends HTMLElement {
         super();
         this.src = '';
         this.model = this.parentNode;
+        this.type= 'xml';
     }
 
     connectedCallback(){
@@ -38,12 +46,72 @@ export class XfInstance extends HTMLElement {
         }else{
             this.id = 'default';
         }
+        if(this.hasAttribute('type')){
+            this.type = this.getAttribute('type');
+        }
         // this.id = this.getAttribute('id');
     }
+
+/*
+    render() {
+        return html`
+            <slot></slot>
+        `;
+    }
+*/
 
     init (){
         // console.log('xf-instance init');
 
+        if(this.type === 'xml'){
+            this._initXMLInstance();
+        }else{
+            this._initJSONInstance();
+        }
+        // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
+    }
+
+    evalXPath(xpath){
+        // console.log('eval: ', xpath);
+        // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
+        // const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
+
+        // console.log('evalXPath ', xpath);
+        // console.log('evalXPath default instance data', this.instanceData);
+        // console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
+
+        // const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
+        const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
+        return result;
+    }
+
+
+/*
+    setValue(path, newValue){
+        const updateExpr = 'replace value of node ' + path + ' with "' + newValue + '"';
+        console.log('instance updateExpr: ', updateExpr);
+        fx.evaluateUpdatingExpression(updateExpr, this.instanceData)
+        .then(result => {
+            fx.executePendingUpdateList(result.pendingUpdateList);
+        });
+
+    }
+*/
+
+    getInstanceData(){
+        return this.instanceData;
+    }
+
+    getDefaultContext(){
+        // console.log('getDefaultContext ', this.instanceData.firstElementChild);
+        if(this.type === 'xml'){
+            return this.instanceData.firstElementChild;
+        }else{
+            return this.instanceData;
+        }
+    }
+
+    _initXMLInstance(){
         const loadedPromise = new Promise(((resolve,reject) => {
             // setTimeout(() => resolve("done"), 2000);
 
@@ -77,45 +145,11 @@ export class XfInstance extends HTMLElement {
                 resolve("done");
             }
         }));
-
         return loadedPromise;
-
-        // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
     }
 
-    evalXPath(xpath){
-        // console.log('eval: ', xpath);
-        // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        // const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
-
-        // console.log('evalXPath ', xpath);
-        // console.log('evalXPath default instance data', this.instanceData);
-        // console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
-
-        // const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
-        const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
-        return result;
-    }
-
-/*
-    setValue(path, newValue){
-        const updateExpr = 'replace value of node ' + path + ' with "' + newValue + '"';
-        console.log('instance updateExpr: ', updateExpr);
-        fx.evaluateUpdatingExpression(updateExpr, this.instanceData)
-        .then(result => {
-            fx.executePendingUpdateList(result.pendingUpdateList);
-        });
-
-    }
-*/
-
-    getInstanceData(){
-        return this.instanceData;
-    }
-
-    getDefaultContext(){
-        // console.log('getDefaultContext ', this.instanceData.firstElementChild);
-        return this.instanceData.firstElementChild;
+    _initJSONInstance(){
+        this.instanceData = JSON.parse(this.textContent);
     }
 
     _useInlineData(){
