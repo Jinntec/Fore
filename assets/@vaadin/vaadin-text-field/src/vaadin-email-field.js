@@ -64,7 +64,7 @@ class EmailFieldElement extends TextFieldElement {
   }
 
   static get version() {
-    return '2.8.1';
+    return '2.8.2';
   }
 
   static get template() {
@@ -93,7 +93,7 @@ class EmailFieldElement extends TextFieldElement {
   /** @protected */
   _createConstraintsObserver() {
     // NOTE: pattern needs to be set before constraints observer is initialized
-    this.pattern = this.pattern || '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';
+    this.pattern = this.pattern || '^([a-zA-Z0-9_\\.\\-+])+@[a-zA-Z0-9-.]+\\.[a-zA-Z0-9-]{2,}$';
 
     super._createConstraintsObserver();
   }

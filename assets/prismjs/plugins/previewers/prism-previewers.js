@@ -24,7 +24,7 @@
 					// Default value for angle
 					var angle = '180deg';
 
-					if (/^(?:-?\d*\.?\d+(?:deg|rad)|to\b|top|right|bottom|left)/.test(values[0])) {
+					if (/^(?:-?(?:\d+(?:\.\d+)?|\.\d+)(?:deg|rad)|to\b|top|right|bottom|left)/.test(values[0])) {
 						angle = values.shift();
 						if (angle.indexOf('to ') < 0) {
 							// Angle uses old keywords
@@ -214,7 +214,7 @@
 				});
 			},
 			tokens: {
-				'angle': /(?:\b|\B-|(?=\B\.))\d*\.?\d+(?:deg|g?rad|turn)\b/i
+				'angle': /(?:\b|\B-|(?=\B\.))(?:\d+(?:\.\d+)?|\.\d+)(?:deg|g?rad|turn)\b/i
 			},
 			languages: {
 				'css': true,
@@ -306,7 +306,7 @@
 						'ease-in-out': '.42,0,.58,1'
 					}[value] || value;
 
-					var p = value.match(/-?\d*\.?\d+/g);
+					var p = value.match(/-?(?:\d+(?:\.\d+)?|\.\d+)/g);
 
 					if (p.length === 4) {
 						p = p.map(function (p, i) {
@@ -331,7 +331,7 @@
 			},
 			tokens: {
 				'easing': {
-					pattern: /\bcubic-bezier\((?:-?\d*\.?\d+,\s*){3}-?\d*\.?\d+\)\B|\b(?:linear|ease(?:-in)?(?:-out)?)(?=\s|[;}]|$)/i,
+					pattern: /\bcubic-bezier\((?:-?(?:\d+(?:\.\d+)?|\.\d+),\s*){3}-?(?:\d+(?:\.\d+)?|\.\d+)\)\B|\b(?:linear|ease(?:-in)?(?:-out)?)(?=\s|[;}]|$)/i,
 					inside: {
 						'function': /[\w-]+(?=\()/,
 						'punctuation': /[(),]/
@@ -382,7 +382,7 @@
 				});
 			},
 			tokens: {
-				'time': /(?:\b|\B-|(?=\B\.))\d*\.?\d+m?s\b/i
+				'time': /(?:\b|\B-|(?=\B\.))(?:\d+(?:\.\d+)?|\.\d+)m?s\b/i
 			},
 			languages: {
 				'css': true,

@@ -17,4 +17,5 @@ import './actions/xf-delete.js';
 import '../src/actions/xf-setvalue.js';
 
 
+// import '@polymer/iron-ajax/iron-ajax';
 

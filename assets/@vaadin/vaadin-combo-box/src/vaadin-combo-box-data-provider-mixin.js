@@ -90,6 +90,17 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     this.clearCache();
     this.$.overlay.addEventListener('index-requested', e => {
       const index = e.detail.index;
+      const currentScrollerPos = e.detail.currentScrollerPos;
+      const allowedIndexRange = Math.floor(this.pageSize * 1.5);
+
+      // Ignores the indexes, which are being re-sent during scrolling reset,
+      // if the corresponding page is around the current scroller position.
+      // Otherwise, there might be a last pages duplicates, which cause the
+      // loading indicator hanging and blank items
+      if (this._shouldSkipIndex(index, allowedIndexRange, currentScrollerPos)) {
+        return;
+      }
+
       if (index !== undefined) {
         const page = this._getPageForIndex(index);
         if (this._shouldLoadPage(page)) {
@@ -125,6 +136,11 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
     if (opened && this._shouldLoadPage(0)) {
       this._loadPage(0);
     }
+  }
+
+  /** @private */
+  _shouldSkipIndex(index, allowedIndexRange, currentScrollerPos) {
+    return currentScrollerPos !== 0 && index >= currentScrollerPos - allowedIndexRange && index <= currentScrollerPos + allowedIndexRange;
   }
 
   /** @private */
@@ -183,8 +199,12 @@ export const ComboBoxDataProviderMixin = superClass => class DataProviderMixin e
           }
         }
       };
-      this._pendingRequests[page] = callback;
-      this.dataProvider(params, callback);
+
+      if (!this._pendingRequests[page]) {
+        // Don't request page if it's already being requested
+        this._pendingRequests[page] = callback;
+        this.dataProvider(params, callback);
+      }
     }
   }
 

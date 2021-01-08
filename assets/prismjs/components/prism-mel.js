@@ -17,7 +17,7 @@ Prism.languages.mel = {
 		greedy: true
 	},
 	'variable': /\$\w+/,
-	'number': /\b0x[\da-fA-F]+\b|\b\d+\.?\d*|\B\.\d+/,
+	'number': /\b0x[\da-fA-F]+\b|\b\d+(?:\.\d*)?|\B\.\d+/,
 	'flag': {
 		pattern: /-[^\d\W]\w*/,
 		alias: 'operator'

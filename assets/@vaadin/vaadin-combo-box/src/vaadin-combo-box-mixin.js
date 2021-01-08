@@ -887,11 +887,13 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
 
   /** @private */
   _itemsOrPathsChanged(e, itemValuePath, itemLabelPath) {
-    if (e.value === undefined) {
-      return;
-    }
     if (e.path === 'items' || e.path === 'items.splices') {
-      this.filteredItems = this.items ? this.items.slice(0) : this.items;
+      if (this.items) {
+        this.filteredItems = this.items.slice(0);
+      } else if (this.__previousItems) {
+        // Only clear filteredItems if the component had items previously but got cleared
+        this.filteredItems = null;
+      }
 
       const valueIndex = this._indexOfValue(this.value, this.items);
       this._focusedIndex = valueIndex;
@@ -901,13 +903,11 @@ export const ComboBoxMixin = subclass => class VaadinComboBoxMixinElement extend
         this.selectedItem = item;
       }
     }
+    this.__previousItems = e.value;
   }
 
   /** @private */
   _filteredItemsChanged(e, itemValuePath, itemLabelPath) {
-    if (e.value === undefined) {
-      return;
-    }
     if (e.path === 'filteredItems' || e.path === 'filteredItems.splices') {
       this._setOverlayItems(this.filteredItems);
 

@@ -2,7 +2,7 @@
 Prism.languages.autoit = {
 	"comment": [/;.*/, {
 		// The multi-line comments delimiters can actually be commented out with ";"
-		pattern: /(^\s*)#(?:comments-start|cs)[\s\S]*?^\s*#(?:comments-end|ce)/m,
+		pattern: /(^\s*)#(?:comments-start|cs)[\s\S]*?^[ \t]*#(?:comments-end|ce)/m,
 		lookbehind: true
 	}],
 	"url": {

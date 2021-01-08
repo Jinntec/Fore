@@ -10,7 +10,7 @@
   "repository": "vaadin/vaadin-combo-box",
   "homepage": "https://vaadin.com/components",
   "name": "@vaadin/vaadin-combo-box",
-  "version": "5.4.6",
+  "version": "5.4.7",
   "main": "vaadin-combo-box.js",
   "author": "Vaadin Ltd",
   "license": "Apache-2.0",

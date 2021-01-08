@@ -6,9 +6,13 @@
 			pattern: /(^|[^.])\b(?:abstract|actual|annotation|as|break|by|catch|class|companion|const|constructor|continue|crossinline|data|do|dynamic|else|enum|expect|external|final|finally|for|fun|get|if|import|in|infix|init|inline|inner|interface|internal|is|lateinit|noinline|null|object|open|operator|out|override|package|private|protected|public|reified|return|sealed|set|super|suspend|tailrec|this|throw|to|try|typealias|val|var|vararg|when|where|while)\b/,
 			lookbehind: true
 		},
-		'function': [/\w+(?=\s*\()/, {
-			pattern: /(\.)\w+(?=\s*\{)/,
-			lookbehind: true
+		'function': [{
+			pattern: /(?:`[^\r\n`]+`|\w+)(?=\s*\()/,
+			greedy: true
+		}, {
+			pattern: /(\.)(?:`[^\r\n`]+`|\w+)(?=\s*\{)/,
+			lookbehind: true,
+			greedy: true
 		}],
 		'number': /\b(?:0[xX][\da-fA-F]+(?:_[\da-fA-F]+)*|0[bB][01]+(?:_[01]+)*|\d+(?:_\d+)*(?:\.\d+(?:_\d+)*)?(?:[eE][+-]?\d+(?:_\d+)*)?[fFL]?)\b/,
 		'operator': /\+[+=]?|-[-=>]?|==?=?|!(?:!|==?)?|[\/*%<>]=?|[?:]:?|\.\.|&&|\|\||\b(?:and|inv|or|shl|shr|ushr|xor)\b/

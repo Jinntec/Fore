@@ -77,7 +77,7 @@
 			'interpolation': interpolation
 		}
 	}, {
-		pattern: /("|')(?:#\{[^}]+\}|\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+		pattern: /("|')(?:#\{[^}]+\}|#(?!\{)|\\(?:\r\n|[\s\S])|(?!\1)[^\\#\r\n])*\1/,
 		greedy: true,
 		inside: {
 			'interpolation': interpolation

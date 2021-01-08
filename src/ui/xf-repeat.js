@@ -1,6 +1,4 @@
 import {html,css} from "lit-element";
-import { unsafeHTML } from "lit-html/directives/unsafe-html";
-import {repeat} from 'lit-html/directives/repeat.js';
 import "./xf-repeatitem.js";
 import * as fx from "fontoxpath";
 import {XfContainer} from "./xf-container.js";

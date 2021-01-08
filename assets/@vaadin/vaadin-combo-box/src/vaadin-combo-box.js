@@ -225,7 +225,7 @@ class ComboBoxElement extends ElementMixin(ControlStateMixin(ThemableMixin(Combo
   }
 
   static get version() {
-    return '5.4.6';
+    return '5.4.7';
   }
 
   static get properties() {

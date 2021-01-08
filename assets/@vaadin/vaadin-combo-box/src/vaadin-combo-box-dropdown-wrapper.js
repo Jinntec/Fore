@@ -49,7 +49,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
         <div id="scroller" on-click="_stopPropagation">
           <iron-list id="selector" role="listbox" items="[[_getItems(opened, _items)]]" scroll-target="[[_scroller]]">
             <template>
-              <vaadin-combo-box-item on-click="_onItemClick" index="[[__requestItemByIndex(item, index)]]" item="[[item]]" label="[[getItemLabel(item, _itemLabelPath)]]" selected="[[_isItemSelected(item, _selectedItem, _itemIdPath)]]" renderer="[[renderer]]" role\$="[[_getAriaRole(index)]]" aria-selected\$="[[_getAriaSelected(_focusedIndex,index)]]" focused="[[_isItemFocused(_focusedIndex,index)]]" tabindex="-1" theme\$="[[theme]]">
+              <vaadin-combo-box-item on-click="_onItemClick" index="[[__requestItemByIndex(item, index, _resetScrolling)]]" item="[[item]]" label="[[getItemLabel(item, _itemLabelPath)]]" selected="[[_isItemSelected(item, _selectedItem, _itemIdPath)]]" renderer="[[renderer]]" role\$="[[_getAriaRole(index)]]" aria-selected\$="[[_getAriaSelected(_focusedIndex,index)]]" focused="[[_isItemFocused(_focusedIndex,index)]]" tabindex="-1" theme\$="[[theme]]">
               </vaadin-combo-box-item>
             </template>
           </iron-list>
@@ -103,21 +103,21 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
       theme: String,
 
       /**
-       * Used to recognize scroller reset after new items have been set
-       * to iron-list and to ignore unwanted pages load. If 'true', then
-       * skip loading of the pages until it becomes 'false'.
-       */
-      resetScrolling: {
-        type: Boolean,
-        value: false
-      },
-
-      /**
        * Used to recognize if the filter changed, so to skip the
        * scrolling restore. If true, then scroll to 0 position. Restore
        * the previous position otherwise.
        */
       filterChanged: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Used to recognize scroller reset after new items have been set
+       * to iron-list and to ignore unwanted pages load. If 'true', then
+       * skip loading of the pages until it becomes 'false'.
+       */
+      _resetScrolling: {
         type: Boolean,
         value: false
       },
@@ -187,7 +187,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
         const currentScrollerPosition = this._selector.firstVisibleIndex;
         if (currentScrollerPosition !== 0) {
           this._oldScrollerPosition = currentScrollerPosition;
-          this.resetScrolling = true;
+          this._resetScrolling = true;
         }
       }
       // Let the position to be restored in the future calls unless it's not
@@ -202,7 +202,7 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
     if (this._isNotEmpty(items) && this._selector && this._oldScrollerPosition !== 0) {
       // new items size might be less than old scrolling position
       this._scrollIntoView(Math.min(items.length - 1, this._oldScrollerPosition));
-      this.resetScrolling = false;
+      this._resetScrolling = false;
       // reset position to 0 again in order to properly handle the filter
       // cases (scroll to 0 after typing the filter)
       this._oldScrollerPosition = 0;
@@ -354,9 +354,9 @@ class ComboBoxDropdownWrapperElement extends class extends PolymerElement {} {
    *
    * @return {number}
    */
-  __requestItemByIndex(item, index) {
-    if (item instanceof ComboBoxPlaceholder && index !== undefined && !this.resetScrolling) {
-      this.dispatchEvent(new CustomEvent('index-requested', { detail: { index } }));
+  __requestItemByIndex(item, index, resetScrolling) {
+    if (item instanceof ComboBoxPlaceholder && index !== undefined && !resetScrolling) {
+      this.dispatchEvent(new CustomEvent('index-requested', { detail: { index: index, currentScrollerPos: this._oldScrollerPosition } }));
     }
 
     return index;
