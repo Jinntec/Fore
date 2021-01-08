@@ -5,8 +5,6 @@ import {ModelItem} from './modelitem.js';
 import {XPathUtil} from "./xpath-util";
 import {XfBind} from "./xf-bind";
 
-// import parseScript from './output/fontoxpath.js';
-
 
 // export class ForeElement extends LitElement {
 export const foreElementMixin = (superclass) => class ForeElementMixin extends superclass {

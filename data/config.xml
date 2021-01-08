@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <developer-mode>false</developer-mode>
-    <error-url description="URL to forward to when form document does not exist">form-not-found.html</error-url>
-</configuration>
