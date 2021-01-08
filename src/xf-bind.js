@@ -1,9 +1,9 @@
-import {LitElement, html, css} from 'lit-element';
+// import {LitElement, html, css} from 'lit-element';
 import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
-import {Fore} from "./fore";
-import {foreElementMixin} from "./ForeElementMixin";
+// import {Fore} from "./fore";
+import {foreElementMixin} from "./ForeElementMixin.js";
 
 function evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
 	return fx.evaluateXPath(

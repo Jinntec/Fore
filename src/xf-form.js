@@ -6,7 +6,7 @@ import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
 import '../assets/@polymer/iron-icons/iron-icons.js';
 import '../assets/@polymer/iron-icon/iron-icon.js';
 
-import {registerCustomXPathFunction} from 'fontoxpath';
+// import {registerCustomXPathFunction} from 'fontoxpath';
 import {Fore} from './fore.js';
 
 // model classes

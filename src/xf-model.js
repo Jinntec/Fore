@@ -1,11 +1,11 @@
 import {LitElement, css} from 'lit-element';
 
-import fx from "fontoxpath";
+// import fx from "fontoxpath";
 import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
 import './xf-instance.js';
-import {XfBind } from './xf-bind.js';
-import {XPathUtil} from "./xpath-util";
+// import {XfBind } from './xf-bind.js';
+// import {XPathUtil} from "./xpath-util";
 
 export class XfModel extends HTMLElement {
 
@@ -58,7 +58,7 @@ export class XfModel extends HTMLElement {
         this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
     }
 
-    _modelConstruct(e) {
+    _modelConstruct() {
         console.log('MODEL::model-construct received ', this.id);
         const instances = this.querySelectorAll('xf-instance');
         if (instances.length > 0) {

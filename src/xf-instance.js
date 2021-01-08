@@ -133,13 +133,13 @@ export class XfInstance extends LitElement {
                 console.log('query', query);
 
                 // let instanceData = document.createDocument();
-                let instanceData = document.implementation.createDocument(null,'data','xml');
+                const instanceData = document.implementation.createDocument(null,'data','xml');
                 console.log('new doc ', instanceData);
 
                 // const root = document.createElement('data');
                 // instanceData.appendChild(root);
                 for(const p of query){
-                    let n = document.createElement(p[0]);
+                    const n = document.createElement(p[0]);
                     n.appendChild(document.createTextNode(p[1]));
                     instanceData.documentElement.appendChild(n);
                 }
@@ -213,8 +213,7 @@ export class XfInstance extends LitElement {
     }
 
     _handleError(){
-        const ajax = this.shadowRoot.getElementById('loader');
-
+        const loader = this.shadowRoot.getElementById('loader');
         console.log('_handleResponse ', loader.lastError);
 
     }

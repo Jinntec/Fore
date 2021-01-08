@@ -1,9 +1,6 @@
-
 import * as fx from 'fontoxpath';
-import {ModelItem} from './modelitem.js';
-
-import {XPathUtil} from "./xpath-util";
-import {XfBind} from "./xf-bind";
+import {XPathUtil} from "./xpath-util.js";
+import {XfBind} from "./xf-bind.js";
 
 
 // export class ForeElement extends LitElement {

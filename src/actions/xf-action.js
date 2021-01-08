@@ -1,7 +1,7 @@
-import "../xf-form.js";
+// import "../xf-form.js";
 import "../xf-model.js";
 
-import { foreElementMixin } from "../ForeElementMixin";
+import { foreElementMixin } from "../ForeElementMixin.js";
 
 /**
  * `xf-action`
@@ -47,16 +47,20 @@ export class XfAction extends foreElementMixin(HTMLElement){
 
     actionPerformed(){
         if(this.needsRebuild){
+            // @ts-ignore
             this.getModel().rebuild();
         }
         if(this.needsRecalculate){
+            // @ts-ignore
             this.getModel().recalculate();
         }
         if(this.needsRevalidate){
+            // @ts-ignore
             this.getModel().revalidate();
         }
         if(this.needsRefresh){
             // this.closest('xf-form').refresh();
+            // @ts-ignore
             document.querySelector('xf-form').refresh();
         }
     }
