@@ -1,6 +1,6 @@
 {
   "name": "fore",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Fore XForms",
   "main": "src/xf-form.js",
   "directories": {
