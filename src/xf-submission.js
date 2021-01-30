@@ -1,0 +1,143 @@
+import {LitElement, html, css} from 'lit-element';
+import '../assets/@polymer/iron-ajax/iron-ajax.js';
+
+import * as fx from 'fontoxpath';
+import {foreElementMixin} from "./ForeElementMixin";
+
+export class XfSubmission extends foreElementMixin(LitElement){
+
+    static get styles() {
+        return css`
+            :host {
+                display: none;
+            }
+        `;
+    }
+
+    static get properties() {
+        return {
+            id:{
+                type: String
+            },
+            /**
+             * submission method - one of GET, POST, PUT, DELETE (HEAD?)
+             */
+            method:{
+                type:String
+            },
+            nonrelevant:{
+                type: String
+            },
+            /**
+             * what to do with the submission response. Either 'none' or 'instance' for now.
+             */
+            replace:{
+                type: String
+            },
+            targetref:{
+                type: String
+            },
+            /**
+             * the URL to submit to
+             */
+            url:{
+                type: String
+            },
+            validate:{
+                type: Boolean
+            }
+        };
+    }
+
+    constructor() {
+        super();
+        this.model = this.parentNode;
+        // ### setting defaults...
+        this.method = 'GET';
+        this.nonrelevant = 'remove';
+        this.url = '';
+        this.replace = 'none';
+        this.targetref = '';
+        this.type= 'xml';
+        this.validate = true;
+    }
+
+    render() {
+        return html`
+            ${this.url?
+            html`
+                <iron-ajax 
+                    id="submitter"
+                    content-type="text/xml"
+                    url="${this.url}"
+                    method="${this.method}"
+                    handle-as="xml"
+                    with-credentials
+                    @error="${this._handleError}"
+                    @response="${this._handleResponse}"
+                ></iron-ajax>
+            `:''}
+            <slot></slot>
+        `;
+    }
+
+    submit() {
+
+        //todo: call pre-hook once there is one ;)
+
+        // ### 1. update xpath context
+        this.evalInContext();
+
+        // ### 2. validate for submission
+        const model = this.getModel();
+        model.recalculate();
+        model.revalidate();
+
+        // ### [3. select relevant nodes]
+        // ### [4. set request headers]
+        // ### 5. resolve URL
+        // ### 6. get serialized data if necessary
+        console.log('data ', this.nodeset);
+        // ### 7. trigger the submit execution
+
+        const submitter = this.shadowRoot.getElementById('submitter');
+        console.log('submitter ', submitter);
+
+        const serializer = new XMLSerializer();
+        const data =  serializer.serializeToString(this.nodeset);
+        console.log('serialized data ', data);
+        submitter.body = data;
+        submitter.generateRequest();
+    }
+
+    _handleOnSubmit() {
+        //todo: implement submission pre-hook
+    }
+
+    _handleResponse(){
+        // ### check for 'replace' option
+        const submitter = this.shadowRoot.getElementById('submitter');
+        console.log('response ', submitter.lastResponse);
+
+
+        this.dispatchEvent(new CustomEvent('submit-done', {
+            composed: true,
+            bubbles: true,
+            detail: {}
+        }));
+
+
+    }
+
+    _handleError(){
+        this.dispatchEvent(new CustomEvent('submit-error', {
+            composed: true,
+            bubbles: true,
+            detail: {}
+        }));
+
+    }
+
+
+}
+customElements.define('xf-submission', XfSubmission);

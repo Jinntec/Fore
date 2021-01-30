@@ -3,6 +3,7 @@ import {LitElement, html, css} from 'lit-element';
 import  '../xf-model.js';
 // import {BoundElement} from "../BoundElement";
 import {foreElementMixin} from "../ForeElementMixin.js";
+import { ModelItem } from "../modelitem.js";
 
 /**
  * `xf-abstract-control` -
@@ -62,25 +63,27 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // if(this.repeated) return ;
         if(this.isNotBound()) return;
 
+        await this.updateComplete;
         this.evalInContext();
+
         if(this.isBound()){
             // this.control = this.querySelector('#control');
             this.modelItem = this.getModelItem();
-            console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
-            this.value = this.modelItem.value;
+            if(this.modelItem instanceof ModelItem){
+                console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
-            // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
-            // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
-            if(currentVal !== this.value){
-                this.dispatchEvent(new CustomEvent('value-changed', {}));
+                this.value = this.modelItem.value;
+
+                // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
+                // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
+                if(currentVal !== this.value){
+                    this.dispatchEvent(new CustomEvent('value-changed', {}));
+                }
+                // this.requestUpdate();
+                this.handleModelItemProperties();
             }
-            // this.requestUpdate();
-
-
-            this.handleModelItemProperties();
         }
-        await this.updateComplete;
 
     }
 

@@ -25,17 +25,25 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="cleanup step 1">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="cleanup step 2">
+      <change afterPath="$PROJECT_DIR$/demo/submission1.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/es-dev-server.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/actions/StringTpl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/actions/xf-message.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/actions/xf-send.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/xf-submission.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/script/fontoxpath/fontoxpath.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/script/fontoxpath/fontoxpath.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/script/fontoxpath/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/hello-fonto.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/hello-fonto.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/query-instance.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/query-instance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-instance.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
     </list>
+    <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,7 +119,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/actions" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -132,19 +140,19 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/actions" />
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/doc" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/elements/model" />
       <recent name="$PROJECT_DIR$/elements" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$/modules" />
     </key>
   </component>
   <component name="RunManager">
@@ -193,6 +201,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="" />
+      <changelist id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
       <created>1538846308968</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -296,13 +305,7 @@
       <workItem from="1609845800514" duration="318000" />
       <workItem from="1609846220442" duration="17049000" />
       <workItem from="1610101289925" duration="15734000" />
-    </task>
-    <task id="LOCAL-00040" summary=".gitignore">
-      <created>1600250281324</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1600250281324</updated>
+      <workItem from="1611939052437" duration="6525000" />
     </task>
     <task id="LOCAL-00041" summary="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs">
       <created>1600335942506</created>
@@ -640,7 +643,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610118044637</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="another attempt to get rid of .idea versioning">
+      <created>1611939168854</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1611939168855</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -687,7 +697,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="trying to get json instances to work" />
     <MESSAGE value="interim branch not working - just to keep" />
     <MESSAGE value="soem recalculation refinements" />
     <MESSAGE value="shortened modelItem path;&#10;encoding instance id on path;&#10;fixed test;" />
@@ -712,7 +721,8 @@
     <MESSAGE value="load instance with src attribute" />
     <MESSAGE value="fix .gitignore" />
     <MESSAGE value="cleanup step 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleanup step 1" />
+    <MESSAGE value="another attempt to get rid of .idea versioning" />
+    <option name="LAST_COMMIT_MESSAGE" value="another attempt to get rid of .idea versioning" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -728,19 +738,20 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2" timestamp="1610118044095">
+    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612011400138">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610118044095" />
-    <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog" timestamp="1610117134737">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612011400138" />
+    <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1611939246576" />
+    <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="-1620" y="-53" width="1520" height="1217" key="DiffContextDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604309264914" />
     <state x="-1620" y="-53" width="1520" height="1217" maximized="true" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1604172300463" />
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607521072717" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117134737" />
-    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1609157619120" />
+    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939023882" />
     <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1610117150935">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -749,32 +760,38 @@
     <state x="-360" y="-1157" key="SettingsEditor" timestamp="1605886807774">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="-2097" y="82" key="SettingsEditor/-2560.-176.2560.1417/0.23.1440.877@-2560.-176.2560.1417" timestamp="1601461547197" />
     <state x="-360" y="-1157" key="SettingsEditor/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1605886807774" />
     <state width="625" height="500" key="SwitcherDM" timestamp="1609846228917">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state width="625" height="500" key="SwitcherDM/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604146490429" />
     <state width="625" height="500" key="SwitcherDM/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1609846228917" />
-    <state x="456" y="-790" key="VCS.ChangelistChooser" timestamp="1610117205493">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="602" y="411" key="VCS.ChangelistChooser" timestamp="1611939203550">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="456" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117205493" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1610118046537">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="602" y="411" key="VCS.ChangelistChooser/0.25.1440.875@0.25.1440.875" timestamp="1611939203550" />
+    <state x="640" y="253" key="Vcs.Push.Dialog.v2" timestamp="1611939171421">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
     <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610118046537" />
+    <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610102787300" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607702693851">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="396" y="87" width="1003" height="752" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1611939788884">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604331294022" />
     <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702693851" />
+    <state x="396" y="87" width="1003" height="752" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
+    <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1611939788884">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
     <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1607793214358">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -785,17 +802,25 @@
     </state>
     <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604145757344" />
     <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702770956" />
+    <state x="100" y="125" width="1240" height="675" key="dock-window-1" timestamp="1611939788885">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="100" y="125" width="1240" height="675" key="dock-window-1/0.25.1440.875@0.25.1440.875" timestamp="1611939788885" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1610118083261">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604153006818" />
     <state x="1679" y="-1197" width="651" height="726" key="find.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539906479" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610118083261" />
-    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup" timestamp="1606578504593">
+    <state x="422" y="-375" key="run.anything.popup" timestamp="1612010510405">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
+    </state>
+    <state x="422" y="-375" key="run.anything.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612010510405" />
+    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup" timestamp="1612014608202">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1727" y="164" width="838" height="1032" key="search.everywhere.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603820012026" />
-    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1606578504593" />
+    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612014608202" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

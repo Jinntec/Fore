@@ -81,6 +81,7 @@ export class XfInstance extends LitElement {
         }else{
             this._initJSONInstance();
         }
+        return this;
         // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
     }
 
@@ -133,7 +134,8 @@ export class XfInstance extends LitElement {
                 console.log('query', query);
 
                 // let instanceData = document.createDocument();
-                const instanceData = document.implementation.createDocument(null,'data','xml');
+                // const instanceData = document.implementation.createDocument(null,'data',null);
+                const instanceData = new DOMParser().parseFromString('<data></data>','application/xml');
                 console.log('new doc ', instanceData);
 
                 // const root = document.createElement('data');
@@ -147,6 +149,7 @@ export class XfInstance extends LitElement {
                 this.instanceData = instanceData;
 
                 this.instanceData.firstElementChild.setAttribute('id',this.id);
+                resolve("done");
             } else if(this.src){
 
                 const loader = this.shadowRoot.getElementById('loader');

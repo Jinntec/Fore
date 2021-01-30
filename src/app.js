@@ -1,5 +1,5 @@
-import '../src/xf-form.js';
-import '../src/ui/xf-bound.js';
+import './xf-form.js';
+import './ui/xf-bound.js';
 import './xf-model.js';
 import './xf-instance.js';
 import './xf-bind.js';
@@ -14,8 +14,10 @@ import './ui/xf-input.js';
 import './actions/xf-action.js';
 import './actions/xf-append.js';
 import './actions/xf-delete.js';
-import '../src/actions/xf-setvalue.js';
+import './actions/xf-setvalue.js';
+import './actions/xf-send.js';
 
+import './actions/xf-message.js';
 
 // import '@polymer/iron-ajax/iron-ajax';
 

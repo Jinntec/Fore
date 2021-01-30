@@ -70,6 +70,11 @@ export class XfModel extends HTMLElement {
 
             Promise.all(promises).then(result => {
                 this.instances = Array.from(instances);
+                console.log('_modelConstruct this.instances ', this.instances);
+
+
+
+
                 this.updateModel();
                 this.inited = true;
                 // console.log('dispatching model-construct-done');

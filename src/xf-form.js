@@ -13,6 +13,7 @@ import {Fore} from './fore.js';
 import './xf-model.js';
 import './xf-instance.js';
 import './xf-bind.js';
+// import './xf-submission.js';
 
 // ui classes
 import './ui/xf-group.js';
@@ -23,11 +24,13 @@ import './ui/xf-hint.js';
 import './ui/xf-alert.js';
 
 // action classes
+/*
 import './actions/xf-action.js';
 import './deprecated/xf-message.js';
 import './actions/xf-append.js';
 import './actions/xf-delete.js';
 import "./actions/xf-setvalue.js";
+*/
 
 import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 

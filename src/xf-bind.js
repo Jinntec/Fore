@@ -55,6 +55,7 @@ function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespace
 	});
 }
 
+
 /**
  * XfBind declaratively attaches constraints to nodes in the data (instances).
  *
@@ -169,7 +170,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         this.nodeset = [];
         this.model = {};
         this.contextNode = {};
-		this.inited = false;
+        this.inited = false;
     }
 
     connectedCallback(){
@@ -254,7 +255,6 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
             const constraintRefs = this._getReferencesForProperty(this.constraint,node);
             if(constraintRefs.length !== 0) {
-            this._addDependencies(constraintRefs,node,path,'constraint');
                 this._addDependencies(constraintRefs,node,path,'constraint');
             }else if(this.constraint){
                 this.model.mainGraph.addNode(`${path}:constraint`,node);
@@ -315,28 +315,28 @@ export class XfBind extends foreElementMixin(HTMLElement){
         }
     }
 
-/*
-    firstUpdated(_changedProperties) {
-        super.firstUpdated(_changedProperties);
-    }
-*/
+    /*
+        firstUpdated(_changedProperties) {
+            super.firstUpdated(_changedProperties);
+        }
+    */
 
     namespaceResolver(prefix) {
-		// TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+        // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
 
-		/**
-		 * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-		 * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-		 *   // Return value
-		 *  }
-		 * }
-		 */
+        /**
+         * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
+         * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
+         *   // Return value
+         *  }
+         * }
+         */
 
-        // console.log('namespaceResolver  prefix', prefix);
+            // console.log('namespaceResolver  prefix', prefix);
         const ns = {
-            'xhtml' : 'http://www.w3.org/1999/xhtml'
-            // ''    : Fore.XFORMS_NAMESPACE_URI
-        };
+                'xhtml' : 'http://www.w3.org/1999/xhtml'
+                // ''    : Fore.XFORMS_NAMESPACE_URI
+            };
         return ns[prefix] || null;
     }
 
@@ -364,10 +364,10 @@ export class XfBind extends foreElementMixin(HTMLElement){
                         localResult.forEach(item =>{
                             this.nodeset.push(item);
                         });
-/*
-                        const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                        this.nodeset.push(localResult);
-*/
+                        /*
+                                                const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                                                this.nodeset.push(localResult);
+                        */
                     }
                     // console.log('local result: ', localResult);
                     // this.nodeset.push(localResult);
@@ -375,14 +375,13 @@ export class XfBind extends foreElementMixin(HTMLElement){
             });
 
         }else{
-			let formElement;
-			for (let anc = this; anc; anc = anc.parentNode) {
-				if (anc.localName === 'xf-form') {
-					formElement = anc;
-					break;
-				}
-			}
-
+            let formElement;
+            for (let anc = this; anc; anc = anc.parentNode) {
+                if (anc.localName === 'xf-form') {
+                    formElement = anc;
+                    break;
+                }
+            }
             this.nodeset = evaluateXFormsXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
         }
     }
@@ -391,11 +390,11 @@ export class XfBind extends foreElementMixin(HTMLElement){
     _createModelItems(){
         // console.log('#### ', thi+s.nodeset);
 
-/*
-        if(XPathUtil.isSelfReference(this.ref)){
-            return;
-        }
-*/
+        /*
+                if(XPathUtil.isSelfReference(this.ref)){
+                    return;
+                }
+        */
         if(Array.isArray(this.nodeset)){
             // todo - iterate and create
             // console.log('################################################ ', this.nodeset);
@@ -469,13 +468,13 @@ export class XfBind extends foreElementMixin(HTMLElement){
     _createModelItem(node,index){
         // console.log('_createModelItem node', node, index);
 
-/*
-        this.calculateReferences = this._getReferencesForProperty(this.calculate,node);
-        this.readOnlyReferences = this._getReferencesForProperty(this.readonly,node);
-        this.requiredReferences = this._getReferencesForProperty(this.required,node);
-        this.relevantReferences = this._getReferencesForProperty(this.relevant,node);
-        this.constraintReferences = this._getReferencesForProperty(this.constraint,node);
-*/
+        /*
+                this.calculateReferences = this._getReferencesForProperty(this.calculate,node);
+                this.readOnlyReferences = this._getReferencesForProperty(this.readonly,node);
+                this.requiredReferences = this._getReferencesForProperty(this.required,node);
+                this.relevantReferences = this._getReferencesForProperty(this.relevant,node);
+                this.constraintReferences = this._getReferencesForProperty(this.constraint,node);
+        */
 
         /*
         if bind is the dot expression we use the modelitem of the parent
@@ -516,14 +515,14 @@ export class XfBind extends foreElementMixin(HTMLElement){
         // ### constructiong default modelitem - will get evaluated during reaalculate()
         // const newItem = new ModelItem(shortPath,
         const newItem = new ModelItem(path,
-                                      this.getBindingExpr(),
-                                      XfBind.READONLY_DEFAULT,
-                                      XfBind.RELEVANT_DEFAULT,
-                                      XfBind.REQUIRED_DEFAULT,
-                                      XfBind.CONSTRAINT_DEFAULT,
-                                      this.type,
-                                      targetNode,
-                                      this);
+            this.getBindingExpr(),
+            XfBind.READONLY_DEFAULT,
+            XfBind.RELEVANT_DEFAULT,
+            XfBind.REQUIRED_DEFAULT,
+            XfBind.CONSTRAINT_DEFAULT,
+            this.type,
+            targetNode,
+            this);
 
         this.getModel().registerModelItem(newItem);
     }
@@ -536,11 +535,11 @@ export class XfBind extends foreElementMixin(HTMLElement){
             const pieces = propertyExpr.split('depends');
             const dependants = [];
             pieces.forEach(step => {
-               // console.log('step ', step);
-               if(step.trim().startsWith('(')){
-                   const name = step.substring(1,step.indexOf(')'));
-                   dependants.push(name);
-               }
+                // console.log('step ', step);
+                if(step.trim().startsWith('(')){
+                    const name = step.substring(1,step.indexOf(')'));
+                    dependants.push(name);
+                }
             });
             // console.log(`dependants of ${propertyExpr} `, dependants);
             return dependants;
@@ -596,5 +595,4 @@ export class XfBind extends foreElementMixin(HTMLElement){
     }
 
 }
-
 customElements.define('xf-bind', XfBind);

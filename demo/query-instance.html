@@ -9,7 +9,6 @@
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../src/xf-form.js';
-        import '../src/xf-json-instance.js';
     </script>
 
     <link rel="stylesheet" href="../resources/vars.css">
@@ -28,13 +27,13 @@
 <body unresolved="unresolved">
 
 
-    <xf-form xmlns:xf="test" xmlns:xf="test">
+    <xf-form>
         <xf-message event="refresh-done">refresh has been done </xf-message>
 
         <xf-model id="model1">
             <xf-instance src="#querystring"></xf-instance>
 
-            <xf-bind ref="param1" required="true()"></xf-bind>
+            <xf-bind ref="//param1" required="true()"></xf-bind>
             <xf-bind ref="param2"></xf-bind>
 
         </xf-model>
@@ -43,7 +42,7 @@
 
             <h1>create xf-instance from queryString</h1>
 
-            <xf-output ref="param1">
+            <xf-output ref="//param1">
                 <xf-label>Param1: </xf-label>
             </xf-output>
             <xf-output ref="param2">
