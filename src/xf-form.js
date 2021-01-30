@@ -74,6 +74,7 @@ export class XfForm extends LitElement {
         this.models = [];
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
+        this.addEventListener('error', this._displayError);
         this.ready = false;
     }
 
@@ -219,6 +220,12 @@ export class XfForm extends LitElement {
         const {level} = e.detail;
         const msg = e.detail.message;
         this._showMessage(level,msg);
+    }
+
+    _displayError(e){
+        const {error} = e.detail;
+        const msg = e.detail.message;
+        this._showMessage('modal',msg);
     }
 
     _showMessage(level, msg){

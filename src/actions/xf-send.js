@@ -38,6 +38,14 @@ export default class XfSend extends XfAction {
 
         //if not exists signal error
         const submission = this.getModel().querySelector(`#${this.submission}`);
+        if(submission === null){
+            this.dispatchEvent(new CustomEvent('error', {
+                composed: true,
+                bubbles: true,
+                detail: {message: `xf-submission element with id: '${  this.submission  }' not found`}
+            }));
+
+        }
         console.log('submission', submission);
         submission.submit();
 

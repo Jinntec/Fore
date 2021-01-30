@@ -71,7 +71,7 @@ export class XfSubmission extends foreElementMixin(LitElement){
                     content-type="text/xml"
                     url="${this.url}"
                     method="${this.method}"
-                    handle-as="xml"
+                    handle-as="text"
                     with-credentials
                     @error="${this._handleError}"
                     @response="${this._handleResponse}"
@@ -91,7 +91,10 @@ export class XfSubmission extends foreElementMixin(LitElement){
         // ### 2. validate for submission
         const model = this.getModel();
         model.recalculate();
-        model.revalidate();
+
+        if(this.validate){
+            model.revalidate();
+        }
 
         // ### [3. select relevant nodes]
         // ### [4. set request headers]
@@ -117,20 +120,24 @@ export class XfSubmission extends foreElementMixin(LitElement){
     _handleResponse(){
         // ### check for 'replace' option
         const submitter = this.shadowRoot.getElementById('submitter');
+        console.log('response ', submitter);
         console.log('response ', submitter.lastResponse);
+        console.log('response ', submitter.lastError);
 
         if( this.replace !== 'none') {
 
             // ### 1. try to get instance with matching id
             const targetInstance = this.model.getInstance(this.replace);
             if(targetInstance){
-                // const instanceData = new DOMParser().parseFromString(submitter.lastResponse,'application/xml');
-                targetInstance.instanceData = submitter.lastResponse;
+                const instanceData = new DOMParser().parseFromString(submitter.lastResponse,'text/xml');
+                targetInstance.instanceData = instanceData;
+                // targetInstance.instanceData = submitter.lastResponse;
                 console.log('replaced instance ', targetInstance.instanceData);
                 this.model.updateModel(); // force update
                 this.model.formElement.refresh();
             }
 
+            // todo: evaluate expression in curly braces as xpath to resolve to the targetNode to replace
 
         }
 
@@ -145,6 +152,7 @@ export class XfSubmission extends foreElementMixin(LitElement){
     }
 
     _handleError(){
+        console.log('ERRRORRRRR');
         this.dispatchEvent(new CustomEvent('submit-error', {
             composed: true,
             bubbles: true,

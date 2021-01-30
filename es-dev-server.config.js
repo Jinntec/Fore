@@ -17,6 +17,11 @@ module.exports = {
                     context.response.status = 200;
                     return {body:'<data><greeting>Hi from response</greeting></data>', type:'xml'};
                 }
+                if (context.originalUrl == '/submissionfails'){
+                    // console.log('>>>> context ', context);
+                    context.response.status = 200;
+                    return {body:'<data>', type:'xml'};
+                }
             }
         }
     ],

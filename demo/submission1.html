@@ -25,6 +25,10 @@
         xf-button{
             display: block;
         }
+
+        h2{
+            margin-top:100px;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -53,32 +57,67 @@
                         method="POST"
                         replace="default">
         </xf-submission>
+        <xf-submission  id="submission3"
+                        url="/submission2"
+                        method="POST"
+                        >
+        </xf-submission>
+
+        <xf-submission  id="submissionfails"
+                        url="/submissionfails"
+                        method="POST"
+                        replace="default">
+        </xf-submission>
 
         <xf-message event="ready">Hey it's ready</xf-message>
     </xf-model>
     <xf-group collapse="true">
 
+        <h1>Submission</h1>
 
-        <h1>
-            Greeting:
-            <xf-output id="output" ref="./greeting"></xf-output>
-        </h1>
+        <xf-output id="output" ref="./greeting">
+            <xf-label>Greeting: </xf-label>
+        </xf-output>
 
         <xf-input label="Greeting" ref="greeting"></xf-input>
 
+        <h2>Replace the instance with empty data</h2>
 
         <xf-button label="return empty data">
             <xf-send submission="submission"></xf-send>
         </xf-button>
+
+        <p>Replacing default instance with empty data also hides control as it's not bound any more.</p>
+
+        <h2>Replace the instance with empty data</h2>
+
         <xf-button label="return greeting from server">
             <xf-send submission="submission2"></xf-send>
         </xf-button>
 
-        <!--
-                                <xf-button label="submit">
-                                    <xf-submit></xf-submit>
-                                </xf-button>
-        -->
+        <p>Replacing the data with a greeting from the server.</p>
+
+        <h2>Ignore the reponse</h2>
+
+        <xf-button label="just send">
+            <xf-send submission="submission3"></xf-send>
+        </xf-button>
+
+        <p>Replacing the data with a greeting from the server.</p>
+
+        <h2>non-existing submission raises error</h2>
+
+        <xf-button label="does not exist">
+            <xf-send submission="notexistent"></xf-send>
+        </xf-button>
+
+        <h2>corrupt data (does not work yet as expected)</h2>
+
+        <xf-button label="does not work">
+            <xf-send submission="submissionfails"></xf-send>
+        </xf-button>
+
+        <p>Attempting to set corrupt data from the server.</p>
     </xf-group>
 </xf-form>
 
