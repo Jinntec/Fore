@@ -22,6 +22,9 @@
         [unresolved]{
             display:none;
         }
+        xf-button{
+            display: block;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -41,8 +44,14 @@
 
         <xf-submission  id="submission"
                         url="/submission1"
-                        method="POST">
+                        method="POST"
+                        replace="default">
             <xf-message event="submit-done">Data have been submitted</xf-message>
+        </xf-submission>
+        <xf-submission  id="submission2"
+                        url="/submission2"
+                        method="POST"
+                        replace="default">
         </xf-submission>
 
         <xf-message event="ready">Hey it's ready</xf-message>
@@ -58,8 +67,11 @@
         <xf-input label="Greeting" ref="greeting"></xf-input>
 
 
-        <xf-button label="submit">
+        <xf-button label="return empty data">
             <xf-send submission="submission"></xf-send>
+        </xf-button>
+        <xf-button label="return greeting from server">
+            <xf-send submission="submission2"></xf-send>
         </xf-button>
 
         <!--

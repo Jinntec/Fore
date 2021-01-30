@@ -68,6 +68,12 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
         if(this.isBound()){
             // this.control = this.querySelector('#control');
+
+            if(this.nodeset === null){
+                this.style.display = 'none';
+                return;
+            }
+
             this.modelItem = this.getModelItem();
 
             if(this.modelItem instanceof ModelItem){

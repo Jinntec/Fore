@@ -192,6 +192,40 @@ describe('initialize instance', () => {
 
     });
 
+/*
+	it('loads data from external file via src attr', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+
+                        <xf-instance src="instance1.xml"></xf-instance>
+
+                        <xf-bind ref="greeting"</xf-bind>
+                    </xf-model>
+                    
+                    
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+
+        const instances = el.querySelectorAll('xf-instance');
+        expect(instances[0].id).to.equal('default');
+
+        let { detail } = await oneEvent(el, 'refresh-done');
+
+        const model = el.querySelector('xf-model');
+        await elementUpdated(model);
+        const {modelItems} = model;
+        // expect(modelItems[0].required).to.be.false;
+        console.log('>>>>>>>>>>>< modelitem ', modelItems[0])
+        expect(modelItems[0].value).to.equal('hello from file');
+
+    });
+*/
+
     /*
         it('does NOT copy a "body" element from inline data', async () => {
             const el =  (

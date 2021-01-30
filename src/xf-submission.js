@@ -119,6 +119,21 @@ export class XfSubmission extends foreElementMixin(LitElement){
         const submitter = this.shadowRoot.getElementById('submitter');
         console.log('response ', submitter.lastResponse);
 
+        if( this.replace !== 'none') {
+
+            // ### 1. try to get instance with matching id
+            const targetInstance = this.model.getInstance(this.replace);
+            if(targetInstance){
+                // const instanceData = new DOMParser().parseFromString(submitter.lastResponse,'application/xml');
+                targetInstance.instanceData = submitter.lastResponse;
+                console.log('replaced instance ', targetInstance.instanceData);
+                this.model.updateModel(); // force update
+                this.model.formElement.refresh();
+            }
+
+
+        }
+
 
         this.dispatchEvent(new CustomEvent('submit-done', {
             composed: true,

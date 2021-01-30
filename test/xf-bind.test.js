@@ -270,6 +270,44 @@ describe('initialize bind', () => {
 
     });
 
+/*
+    it('hides non-relevant (unbound) controls', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <greeting>Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                    </xf-model>
+                    <xf-output id="output" ref="greet"></xf-output>
+
+                </xf-form>               
+            `)
+        );
+
+        await elementUpdated(el);
+
+        const model = document.getElementById('model1');
+        expect(model.modelItems.length).to.equal(0);
+
+        const out = document.getElementById('output');
+        await elementUpdated(out);
+
+        // console.log('++++++++++++++++++++++++++++output ', out);
+        expect('#output');
+        expect('#output').dom.to.have.text('');
+        // expect('#output').dom.not.to.be.displayed()
+
+
+        // expect(out).is(":visible"), true)
+        console.log('++++++++++++++++++++++++++++ ', model.modexlItems);
+
+    });
+*/
+
 
 
 

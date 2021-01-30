@@ -54,6 +54,10 @@ export class XfModel extends HTMLElement {
         this.inited = false;
     }
 
+    get formElement(){
+        return this.parentElement;
+    }
+
     connectedCallback() {
         this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
     }

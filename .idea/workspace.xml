@@ -25,23 +25,19 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="cleanup step 2">
-      <change afterPath="$PROJECT_DIR$/demo/submission1.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/es-dev-server.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/actions/StringTpl.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/actions/xf-message.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/actions/xf-send.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/xf-submission.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;">
+      <change afterPath="$PROJECT_DIR$/demo/unbound.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/instance1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/hello-fonto.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/hello-fonto.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/query-instance.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/query-instance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/submission1.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/submission1.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es-dev-server.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/es-dev-server.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-instance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-instance.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-submission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-submission.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-bind.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bind.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-instance.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-instance.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -119,7 +115,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/actions" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -141,9 +137,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/actions" />
-      <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/src/actions" />
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
@@ -305,14 +301,7 @@
       <workItem from="1609845800514" duration="318000" />
       <workItem from="1609846220442" duration="17049000" />
       <workItem from="1610101289925" duration="15734000" />
-      <workItem from="1611939052437" duration="6525000" />
-    </task>
-    <task id="LOCAL-00041" summary="fixed missing dependency prep;&#10;.gitignore&#10;first corrections of docs">
-      <created>1600335942506</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1600335942506</updated>
+      <workItem from="1611939052437" duration="12393000" />
     </task>
     <task id="LOCAL-00042" summary="additional tests;&#10;moved files">
       <created>1600345112594</created>
@@ -650,7 +639,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611939168855</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;">
+      <created>1612015216029</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1612015216029</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -697,7 +693,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="interim branch not working - just to keep" />
     <MESSAGE value="soem recalculation refinements" />
     <MESSAGE value="shortened modelItem path;&#10;encoding instance id on path;&#10;fixed test;" />
     <MESSAGE value="instance id on path now;&#10;fixed test;&#10;shortened path" />
@@ -722,7 +717,8 @@
     <MESSAGE value="fix .gitignore" />
     <MESSAGE value="cleanup step 1" />
     <MESSAGE value="another attempt to get rid of .idea versioning" />
-    <option name="LAST_COMMIT_MESSAGE" value="another attempt to get rid of .idea versioning" />
+    <MESSAGE value="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;" />
+    <option name="LAST_COMMIT_MESSAGE" value="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -738,11 +734,11 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612011400138">
+    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612016306838">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612011400138" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612016306838" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1611939246576" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
@@ -771,12 +767,12 @@
     </state>
     <state x="456" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117205493" />
     <state x="602" y="411" key="VCS.ChangelistChooser/0.25.1440.875@0.25.1440.875" timestamp="1611939203550" />
-    <state x="640" y="253" key="Vcs.Push.Dialog.v2" timestamp="1611939171421">
-      <screen x="0" y="25" width="1440" height="875" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1612015218205">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610118046537" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612015218205" />
     <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
       <screen x="-982" y="-1415" width="3440" height="1415" />
@@ -806,12 +802,12 @@
       <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="100" y="125" width="1240" height="675" key="dock-window-1/0.25.1440.875@0.25.1440.875" timestamp="1611939788885" />
-    <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1610118083261">
+    <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1612015593693">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604153006818" />
     <state x="1679" y="-1197" width="651" height="726" key="find.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539906479" />
-    <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610118083261" />
+    <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612015593693" />
     <state x="422" y="-375" key="run.anything.popup" timestamp="1612010510405">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
