@@ -60,5 +60,35 @@ describe('lazy initialize modelItem', () => {
 
     });
 
+    it('creates a model when there is none', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+
+        const model = el.querySelector('xf-model');
+        await elementUpdated(model);
+        expect(model).to.exist;
+
+    });
+
+    it('constructs an instance when there is none', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+
+        const inst = el.querySelector('xf-instance');
+        await elementUpdated(inst);
+        expect(inst).to.exist;
+
+    });
+
 
 });

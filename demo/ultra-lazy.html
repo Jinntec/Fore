@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>ultra-lazy authoring</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<xf-form url="wheretopost" method="post" src="whattoload">
+        <h1>ultra-lazy greeting</h1>
+
+        <p>
+            Ultra-lazy mode creates XML nodes for each 'ref' found in the document. This mode is activated
+            whenever there is no xf-model element specified.
+        </p>
+        <p>It serves simple use cases where just a bunch of params have to be collected without much bells
+        and whistles</p>
+
+        <!-- ### defaults to use a imput type="text" with blur handler -->
+</xf-form>
+
+<script type="module" src="../src/app.js"></script>
+
+</body>
+</html>

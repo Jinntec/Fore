@@ -114,7 +114,13 @@ export class XfForm extends LitElement {
         // console.log('eval func' , result);
 
         const models = this.querySelectorAll('xf-model');
-        this.models = models;
+        if(models.length === 0){
+            const generatedModel = document.createElement('xf-model');
+            this.appendChild(generatedModel);
+            this.models.push(generatedModel);
+        }else{
+            this.models = models;
+        }
         this._triggerModelConstruct();
     }
 

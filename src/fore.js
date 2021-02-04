@@ -75,6 +75,10 @@ registerXQueryModule(`
     declare %public function xf:path() as xs:string{
         fn:path()
     };
+    
+    declare %public function xf:current-date() as xs:date{
+        fn:current-date()
+    };
 `);
 
 

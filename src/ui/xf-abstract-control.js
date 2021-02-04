@@ -45,8 +45,40 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     firstUpdated(_changedProperties) {
         // console.log('AbstractControl firstUpdated ', this);
         this.display = this.style.display;
-        // this.control = this.shadowRoot.querySelector('#control');
-        // this.control = this.shadowRoot.getElementById('control');
+
+        // ### 1. first look for an element with id='control' in the shadowDOM
+        let control = this.shadowRoot.getElementById('control');
+        if(!control){
+
+            // ### 2. use element found in the default slot - will just grab the first element
+            const slots = this.shadowRoot.querySelectorAll('slot');
+            slots.forEach(slot => {
+                if (!slot.hasAttribute('name')) {
+
+                    control = slot.assignedElements({flatten: true})[0];
+                }
+            });
+
+            if(!control){
+                const input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                this.appendChild(input);
+                control=input;
+            }
+
+
+        }
+
+        control.addEventListener(this.updateEvent, (e) => {
+            console.log('eventlistener ', this.updateEvent);
+
+            const modelitem = this.getModelItem();
+            const setval = this.shadowRoot.getElementById('setvalue');
+            setval.setValue(modelitem, control[this.valueProp]);
+            // console.log('updated modelitem ', modelitem);
+        });
+
+        this.control = control;
     }
 
 
@@ -63,33 +95,37 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // if(this.repeated) return ;
         if(this.isNotBound()) return;
 
-        await this.updateComplete;
+        // await this.updateComplete;
         this.evalInContext();
 
-        if(this.isBound()){
+        if(this.isBound()) {
             // this.control = this.querySelector('#control');
 
-            if(this.nodeset === null){
+            if (this.nodeset === null) {
                 this.style.display = 'none';
                 return;
             }
 
             this.modelItem = this.getModelItem();
 
-            if(this.modelItem instanceof ModelItem){
+            if (this.modelItem instanceof ModelItem) {
                 console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
                 this.value = this.modelItem.value;
+                console.log('>>>>>>>> abstract refresh ', this.control);
+                this.control[this.valueProp] = this.value;
+
 
                 // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
                 // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
-                if(currentVal !== this.value){
+                if (currentVal !== this.value) {
                     this.dispatchEvent(new CustomEvent('value-changed', {}));
                 }
                 // this.requestUpdate();
                 this.handleModelItemProperties();
             }
         }
+        await this.updateComplete;
 
     }
 

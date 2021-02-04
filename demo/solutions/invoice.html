@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../../src/xf-form.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
+    <link href="css/print.css" type="text/css" rel="stylesheet" media="print"/>
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        .headergrid {
+            display: grid;
+            grid-template-columns: 65% auto;
+            margin-top: 60px;
+        }
+
+        .left textarea {
+            width: 100%;
+            height: 200px;
+        }
+
+        .right {
+            padding-left: 10px;
+        }
+
+        .logo {
+            width: 400px;
+            padding-bottom: 20px;
+        }
+
+        .company, .block {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size:2.5em;
+        }
+
+        .payment {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-wrap">
+    <xf-form>
+        <xf-model>
+            <!--                <xf-instance src="invoice.xml">-->
+            <xf-instance src="invoice.xml">
+                <data>
+                    <address>
+                        COMPANY
+                        STREET
+                        CITY
+                        COUNTRY
+                    </address>
+                    <date>foo</date>
+                </data>
+            </xf-instance>
+
+            <xf-bind ref="date" calculate="current-date()"></xf-bind>
+            <xf-bind ref="address" required="true()"></xf-bind>
+        </xf-model>
+
+
+        <!-- ### header ###  -->
+        <!-- ### header ###  -->
+        <!-- ### header ###  -->
+        <xf-group>
+            <div class="headergrid">
+                <div class="left">
+                    <img src="images/existsolutions.svg" class="logo">
+                    <xf-bound ref="address">
+                        <textarea name="" id="" cols="60" rows="8"></textarea>
+                    </xf-bound>
+                </div>
+                <div class="right">
+                    <div class="company">eXist Solutions GmbH</div>
+
+                    <div class="block">
+                        <div>Bonndorfer Straße 45</div>
+                        <div>79853 Lenzkirch</div>
+                        <div>Germany</div>
+                    </div>
+
+                    <div class="block">
+                        <div>Tel.: +49 (0) 7653 96 49 442</div>
+                        <div>Email: info@existsolutions.com</div>
+                        <div>EU VAT ID: DE273180763</div>
+                        <div>Tax No: 07006/53508</div>
+                        <div>DUNS: 341868194</div>
+                    </div>
+                </div>
+            </div>
+            <h1>Invoice</h1>
+
+            <table>
+                <tr>
+                    <td>Date</td>
+                    <td>
+<!--                        <xf-bound ref="date">
+                            <input name="value" value="">
+                        </xf-bound>-->
+                        <xf-input ref="date" type="date"></xf-input>
+
+                        <xf-bound ref="date" update-event="blur" value-prop="value">
+                            <label slot="label">Date</label>
+                            <input name="value" value="" type="date">
+                        </xf-bound>
+                        <input name="value" value="2021-01-01" type="date">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Invoice Number</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Order Number</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <textarea id="intro"></textarea>
+
+
+            <!--
+                        <xf-group ref="body">
+                            <h1>hold up one finger!:
+                                <xf-output ref="arm/hand/finger" id="output"></xf-output>
+                            </h1>
+                            <h2>left or right?
+                                <xf-output ref="arm/@side"></xf-output>
+                            </h2>
+                        </xf-group>
+            -->
+
+            <div class="vat-notice">
+                (Exempt supply for VAT purposes)<br>
+                Invoice Term: 10 Business Days
+            </div>
+            <br>
+
+            <div class="payment">
+                <div>Payment by check or electronic bank transfer.</div>
+                <div>Details for electronic transfers:</div>
+                <table>
+                    <tr>
+                        <td>Bank</td>
+                        <td>
+                            GLS Bank Gemeinschaftsbank eG<br>
+                            Christstrasse 9<br>
+                            44789 Bochum<br>
+                            Bochum<br>
+                            Germany
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort Code</td>
+                        <td>430 609 67</td>
+                    </tr>
+                    <tr>
+                        <td>BIC / SWIFT</td>
+                        <td>GENODEM1GLS</td>
+                    </tr>
+                    <tr>
+                        <td>Account Name</td>
+                        <td>eXist Solutions GmbH</td>
+                    </tr>
+                    <tr>
+                        <td>Account No / IBAN</td>
+                        <td>DE34430609676018685500</td>
+                    </tr>
+                </table>
+            </div>
+        </xf-group>
+    </xf-form>
+
+</div>
+
+<script type="module" src="../../src/app.js"></script>
+
+</body>
+</html>

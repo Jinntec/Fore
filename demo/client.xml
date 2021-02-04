@@ -1,0 +1,793 @@
+<client id="f198ae90-ab92-4eea-babd-e962bc9ea6e9">
+    <client-details active="true">
+        <display-name>Art-Decor</display-name>
+        <addresses>
+            <address type="">
+                <line1/>
+                <line2/>
+                <line3/>
+                <line4/>
+                <line5/>
+                <country-code/>
+            </address>
+        </addresses>
+        <web/>
+        <persons>
+            <person role="">
+                <salutation/>
+                <name/>
+                <surname/>
+                <mail type=""/>
+                <phone/>
+            </person>
+        </persons>
+        <tax-number/>
+        <vatnumber/>
+        <currency/>
+        <taxrate/>
+        <status/>
+        <notes>
+            <note date=""/>
+        </notes>
+        <custom-fields>
+            <custom-field scope="">
+                <name/>
+                <value/>
+            </custom-field>
+        </custom-fields>
+    </client-details>
+    <invoices/>
+    <subscriptions/>
+    <projects>
+        <project active="true" end="2020-12-01" start="2020-07-05" id="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0">
+            <name>art-decor</name>
+            <description/>
+            <budget currency="EUR" paid-minutes="0" rate-per-hour="150">14400</budget>
+            <urls>
+                <url/>
+            </urls>
+            <users>
+                <user fullname="" hourly-rate="0" login="" role=""/>
+                <user fullname="Juri" hourly-rate="56.25" login="juri" role="projectadmin"/>
+                <user fullname="Lars" hourly-rate="100" login="lars" role="projectadmin"/>
+                <user fullname="Wolfgang" hourly-rate="100" login="wolfgang" role="projectadmin"/>
+            </users>
+            <records>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="34c6a135-be54-42f1-8091-8e1e4f028eaa">
+                    <created>2020-07-15T17:49:50.25Z</created>
+                    <date>2020-07-15</date>
+                    <start/>
+                    <end/>
+                    <minutes>30</minutes>
+                    <user>lars</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>Initial setup</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="564af3db-8f30-408f-8e04-228f40c05beb">
+                    <created>2020-08-05T16:40:49.341Z</created>
+                    <date>2020-08-05</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>project setup</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="15fab456-1e39-475e-ac51-370cc09df495">
+                    <created>2020-08-24T18:47:23.819Z</created>
+                    <date>2020-08-21</date>
+                    <start/>
+                    <end/>
+                    <minutes>480</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>research: login with restxq + effort estimation bearer token authentication </note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="737b4c14-d6db-4e7a-8bdb-6a1b3ab7481e">
+                    <created>2020-08-26T14:27:42.775Z</created>
+                    <date>2020-08-25</date>
+                    <start/>
+                    <end/>
+                    <minutes>480</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>Bearer Token module (jwt)</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="83647b82-f9e6-4ac2-8ea1-9a560e9322f1">
+                    <created>2020-09-03T20:30:39.153Z</created>
+                    <date>2020-09-03</date>
+                    <start/>
+                    <end/>
+                    <minutes>15</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>Status email</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="da345e03-77a1-4250-b23b-68cbad564a9d">
+                    <created>2020-09-03T20:36:12.271Z</created>
+                    <date>2020-08-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>240</minutes>
+                    <user>juri</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>research refresh tokens and PKCE (openid, oauth2)</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="72f5382d-34b7-48fe-95ff-ce31f2d8f391">
+                    <created>2020-09-03T20:38:46.184Z</created>
+                    <date>2020-08-26</date>
+                    <start/>
+                    <end/>
+                    <minutes>240</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>finalize JWT prototype</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="6c8198b2-c36b-4eb0-90f1-c0b4ec3c3227">
+                    <created>2020-09-03T20:44:21.907Z</created>
+                    <date>2020-08-28</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>juri</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>research vue implementations for openid, oauth2</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="c0689061-7f26-450f-b6bc-458d3e5ac433">
+                    <created>2020-09-09T16:29:33.522Z</created>
+                    <date>2020-09-08</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>discuss access token implementation and next steps with customer and Joern</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="e82a210b-a28e-497e-a07f-ed51ac21df4f">
+                    <created>2020-09-18T12:23:45.666Z</created>
+                    <date>2020-09-18</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>initial telco</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="4b025621-f9ad-4cb1-b8eb-0ed5676f5f2c">
+                    <created>2020-09-25T11:34:47.356Z</created>
+                    <date>2020-09-22</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>joern</user>
+                    <action>DevOps-Operations</action>
+                    <url/>
+                    <note>repository cloning worked after problems - looking into codebase</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="e7989cc2-2acd-4f66-922e-90b5c55108ce">
+                    <created>2020-09-25T11:36:08.227Z</created>
+                    <date>2020-09-25</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>joern</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>telco, diskussion with Kai, preparing tickets, protocol</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="d61b73e8-8387-446b-ada0-b755232aaf24">
+                    <created>2020-09-28T13:17:05.341Z</created>
+                    <date>2020-09-28</date>
+                    <start/>
+                    <end/>
+                    <minutes>110</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>started documentation of exist-JWT; created ticket for testing</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="443b01ed-46e5-421a-94e6-617f37af274c">
+                    <created>2020-09-28T22:21:43.244Z</created>
+                    <date>2020-09-26</date>
+                    <start/>
+                    <end/>
+                    <minutes>360</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>release exist-jwt 1.0.0</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="7b6f56e3-11f6-4674-b632-da411e3212cd">
+                    <created>2020-09-28T22:22:13.975Z</created>
+                    <date>2020-09-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>240</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>integrate exist-jwt into art-decor-backend</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="d8dd0aae-9c8d-4bff-a098-a1f4a261126d">
+                    <created>2020-09-28T22:22:47.39Z</created>
+                    <date>2020-09-25</date>
+                    <start/>
+                    <end/>
+                    <minutes>360</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>jour fixe, create testsuite for exist-jwt</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="ac071106-802d-4c02-9410-28784d7171e1">
+                    <created>2020-09-28T22:26:32.111Z</created>
+                    <date>2020-09-22</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>DevOps-Operations</action>
+                    <url/>
+                    <note>set-up repository</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="eefe7f7a-8357-45c3-b78a-5194cbedb784">
+                    <created>2020-09-28T22:28:24.287Z</created>
+                    <date>2020-09-18</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="0f28447b-e88b-4ba0-a178-ecce62e221e7">
+                    <created>2020-09-28T23:00:49.809Z</created>
+                    <date>2020-09-11</date>
+                    <start/>
+                    <end/>
+                    <minutes>30</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>missed telco</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="1a302ce4-a736-4a5b-927b-04f830ef7f0f">
+                    <created>2020-09-29T18:11:17.798Z</created>
+                    <date>2020-09-29</date>
+                    <start/>
+                    <end/>
+                    <minutes>480</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>integrate JWT in art-decor-backend, create PR, document usage : AD30-11</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="4c040e14-041a-4c74-9599-76b80baa857f">
+                    <created>2020-10-01T14:35:36.16Z</created>
+                    <date>2020-10-01</date>
+                    <start/>
+                    <end/>
+                    <minutes>180</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>documentation: creating interaction diagram for exist-JWT</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="d76df348-f2b8-4ff5-9698-6a115d37fb7d">
+                    <created>2020-10-02T16:09:41.323Z</created>
+                    <date>2020-10-02</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>Telco + protocol + budget negotiations</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="b9af356a-cf6a-4cb5-a5df-b12201aa161f">
+                    <created>2020-10-05T13:20:58.405Z</created>
+                    <date>2020-10-05</date>
+                    <start/>
+                    <end/>
+                    <minutes>185</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>Übertrag aus letztem Monat - 8 Tage in Rechnung gestellt.</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="87a482b8-9de9-415a-8384-e35cc9c9b78b">
+                    <created>2020-10-14T12:21:02.087Z</created>
+                    <date>2020-10-02</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour-fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="2f47761d-cdd1-49f3-b0d7-2d8f7c7fb608">
+                    <created>2020-10-14T17:50:26.512Z</created>
+                    <date>2020-10-09</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="556c28cf-3a2e-4375-b418-cd56dd69b84c">
+                    <created>2020-10-27T16:26:40.716Z</created>
+                    <date>2020-10-23</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="e890d84c-612d-4533-8c38-18b02b64d981">
+                    <created>2020-10-27T16:29:47.984Z</created>
+                    <date>2020-10-16</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour fixe + project setup help</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="bd404186-22d6-4f8f-8dd0-04a8a4cda0ef">
+                    <created>2020-11-06T11:29:41.97Z</created>
+                    <date>2020-11-06</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>art-decor meetup - solved two issues during the meeting</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="bd136cca-7a75-407e-879f-488c03f9da0c">
+                    <created>2020-11-11T20:44:07.699Z</created>
+                    <date>2020-11-06</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour-fixe and customer support</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="854a6439-e2d2-415b-ba28-a378741072e7">
+                    <created>2020-11-12T17:33:39.501Z</created>
+                    <date>2020-11-13</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="22b765af-e427-4a48-95ab-2c505db067e0">
+                    <created>2020-11-13T17:48:13.821Z</created>
+                    <date>2020-11-13</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>Art-Decor developer meetup</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="ff739ff1-aa0b-4056-bab4-2cd6efb57af4">
+                    <created>2020-11-20T12:14:53.921Z</created>
+                    <date>2020-11-20</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>weekly telco</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="8cfc57ee-ca4c-4ddc-a539-5f5b911aaf03">
+                    <created>2020-11-21T13:35:34.855Z</created>
+                    <date>2020-11-20</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>attend jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="5234c14e-5106-488f-8d45-34f748bb5493">
+                    <created>2020-11-23T17:22:02.095Z</created>
+                    <date>2020-11-23</date>
+                    <start/>
+                    <end/>
+                    <minutes>75</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>telco about OAS issues</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="f6fad637-74d1-4462-b6a7-133bbbb6d478">
+                    <created>2020-11-24T17:10:00.241Z</created>
+                    <date>2020-11-24</date>
+                    <start/>
+                    <end/>
+                    <minutes>180</minutes>
+                    <user>wolfgang</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>Testsuite für oas-router</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="599d6637-d390-413b-830d-c3908ee5b4e2">
+                    <created>2020-11-24T17:15:45.092Z</created>
+                    <date>2020-11-24</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>debugging oas</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="9fd4d915-f865-48be-a3d1-b95286ec1a6b">
+                    <created>2020-11-27T17:26:28.715Z</created>
+                    <date>2020-11-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>developer meeting</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="c987f482-518b-434e-ba85-dadabe2d8483">
+                    <created>2020-11-27T17:26:43.232Z</created>
+                    <date>2020-11-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>joern</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>looking for ways to integrate OAS and JWT</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="8227c967-cb31-4d60-aa38-3a1cda5fa59f">
+                    <created>2020-11-27T17:27:16.928Z</created>
+                    <date>2020-11-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>joern</user>
+                    <action>Planning</action>
+                    <url/>
+                    <note>recherché openapi and jwt</note>
+                    <billable>false</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="cec58a81-8bc7-4537-a6e9-1197adf268d0">
+                    <created>2020-12-01T13:18:54.634Z</created>
+                    <date>2020-12-01</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OpenAPI: integration of JWT</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="c34f7cdf-b89c-46ad-8cf2-19aa70b82019">
+                    <created>2020-12-01T13:19:27.166Z</created>
+                    <date>2020-11-30</date>
+                    <start/>
+                    <end/>
+                    <minutes>180</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OpenAPI: integration of JWT - finding the route</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="b9531655-53bb-4001-8df1-346554fbe3b1">
+                    <created>2020-12-02T14:00:10.927Z</created>
+                    <date>2020-12-01</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>discuss oas-router changes for jwt-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="2806aa2a-cb75-4f30-a2a4-446573cb94f5">
+                    <created>2020-12-02T14:02:06.992Z</created>
+                    <date>2020-11-27</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour-fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="42a86262-37de-4c0f-953a-e74b333699e1">
+                    <created>2020-12-04T12:47:26.235Z</created>
+                    <date>2020-12-04</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>Developer Meeting</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="4f7891e1-1a07-4774-a4c6-9c8514fc678e">
+                    <created>2020-12-11T13:46:51.748Z</created>
+                    <date>2020-12-11</date>
+                    <start/>
+                    <end/>
+                    <minutes>90</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>telco with after-talk, meeting organsation</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="deeb9f6f-7c07-45e2-92b8-fad2e4b5d602">
+                    <created>2020-12-15T13:56:46.483Z</created>
+                    <date>2020-12-08</date>
+                    <start/>
+                    <end/>
+                    <minutes>120</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OAS-router JWT-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="5aadb331-255d-496a-b039-348e317f913b">
+                    <created>2020-12-15T13:57:46.033Z</created>
+                    <date>2020-12-09</date>
+                    <start/>
+                    <end/>
+                    <minutes>600</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OAS-router JWT-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="a02a4c54-2dcf-483f-8827-fbf2f9a13aa2">
+                    <created>2020-12-15T13:58:12.185Z</created>
+                    <date>2020-12-10</date>
+                    <start/>
+                    <end/>
+                    <minutes>540</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OAS-Router JWT-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="ed8f8b9f-a800-4aa4-a494-401a2c281e66">
+                    <created>2020-12-15T14:03:19.479Z</created>
+                    <date>2020-12-11</date>
+                    <start/>
+                    <end/>
+                    <minutes>75</minutes>
+                    <user>juri</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>jour fixe</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="bcaea78b-545a-43c6-b1ae-927ea49f3fcf">
+                    <created>2020-12-15T14:03:44.412Z</created>
+                    <date>2020-12-11</date>
+                    <start/>
+                    <end/>
+                    <minutes>240</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OAS-Router JWT-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="92f2026e-4ac9-430c-948e-7429025f6777">
+                    <created>2020-12-15T14:09:42.116Z</created>
+                    <date>2020-12-12</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>create PR to fix basic authentication in existdb</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="a0a76347-9ebd-4f29-aa73-c544b60e87c2">
+                    <created>2020-12-15T14:12:19.361Z</created>
+                    <date>2020-12-07</date>
+                    <start/>
+                    <end/>
+                    <minutes>240</minutes>
+                    <user>juri</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>OAS-router JWT-integration</note>
+                    <billable>true</billable>
+                    <billed date="2020-12-21+01:00">true</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="63b0dc8f-58f4-4b83-847d-86bd6ce314b8">
+                    <created>2020-12-21T10:41:19.24Z</created>
+                    <date>2020-12-21</date>
+                    <start/>
+                    <end/>
+                    <minutes>480</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>Übertrag nicht berechneter Stunden</note>
+                    <billable>true</billable>
+                    <billed date="">false</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="f797d489-e365-4206-844e-070d80d88ed2">
+                    <created>2020-12-21T10:41:51.793Z</created>
+                    <date>2020-12-18</date>
+                    <start/>
+                    <end/>
+                    <minutes>360</minutes>
+                    <user>joern</user>
+                    <action>Implementation</action>
+                    <url/>
+                    <note>Übertrag nicht berechneter Stunden</note>
+                    <billable>true</billable>
+                    <billed date="">false</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="ab01aaca-b77f-4fa1-80e2-4085a29da908">
+                    <created>2021-01-29T11:13:48.936Z</created>
+                    <date>2021-01-29</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>telco</note>
+                    <billable>true</billable>
+                    <billed date="">false</billed>
+                </record>
+                <record projectref="5e32b7e6-fe3f-4b55-8469-dd2ed4cde4b0" id="b6235d2d-5c2a-43e4-a12a-b8f4b2470778">
+                    <created>2021-01-29T11:14:08.928Z</created>
+                    <date>2021-01-22</date>
+                    <start/>
+                    <end/>
+                    <minutes>60</minutes>
+                    <user>joern</user>
+                    <action>Communication</action>
+                    <url/>
+                    <note>telco</note>
+                    <billable>true</billable>
+                    <billed date="">false</billed>
+                </record>
+            </records>
+            <custom-fields>
+                <custom-field scope="">
+                    <name/>
+                    <value/>
+                </custom-field>
+            </custom-fields>
+        </project>
+    </projects>
+</client>

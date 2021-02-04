@@ -37,7 +37,7 @@ class XfBound  extends XfAbstractControl {
     constructor(){
         super();
         this.control = {};
-        this.updateEvent='';
+        this.updateEvent='blur';
         this.valueProp='value'; //default
         this.inited = false;
     }
@@ -74,8 +74,8 @@ class XfBound  extends XfAbstractControl {
 
                 const control = slot.assignedElements({flatten: true})[0];
                 this.control = control;
-                control.addEventListener(this.updateEvent, (e) => {
-                    console.log('eventlistener ', this.updateEvent);
+                control.addEventListener(this.update, (e) => {
+                    console.log('eventlistener ', this.update);
 
                     const modelitem = this.getModelItem();
                     const setval = this.shadowRoot.getElementById('setvalue');
@@ -121,9 +121,24 @@ class XfBound  extends XfAbstractControl {
         const control = defaultSlot.assignedElements()[0]; // there must be just
         this.control = control;
 
+/*
+         this.evalInContext();
+
+         // let val = this.modelItem.value;
+
+         // todo: DIRTY DIRTY HACK TO MAKE DATE WORK - MUST BE SOLVED IN FUNCTION
+         let val = this.getModelItem().value;
+         if(val.endsWith('Z')){
+             val = val.substring(0, val.length-1)
+             console.log('###val ', val);
+         }
+         // control[this.valueProp] = this.modelItem.value;
+         control[this.valueProp] = val;
+*/
+
         // await this.updateComplete;
         super.refresh();
-        control[this.valueProp] = this.modelItem.value;
+        // control[this.valueProp] = this.modelItem.value;
 
     }
 

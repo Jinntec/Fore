@@ -4,9 +4,14 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Simple Calculate</title>
+    <title>xf-bound</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module">
+        import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -17,7 +22,14 @@
             display:none;
         }
         xf-bound{
-            display: block;
+            display: table-row;
+        }
+        label{
+            display: table-cell;
+            padding-right:10px;
+        }
+        section{
+            padding-bottom: 50px;
         }
     </style>
 </head>
@@ -29,7 +41,7 @@
         <xf-instance>
             <data>
                 <item>foobar</item>
-                <checked>false</checked>
+                <checked>true</checked>
                 <listitem></listitem>
             </data>
         </xf-instance>
@@ -39,50 +51,119 @@
     </xf-model>
     <xf-group>
 
-        <h2>unwrapped foreign controls</h2>
-        <xf-input label="xf-input" ref="item"></xf-input>
+        <h1>The xf-bound element</h1>
 
+        <p></p>
+
+
+        <section>
+            <h2>Unwrapped custom control</h2>
+            <demo-snippet>
+                <template>
+                    <xf-input label="xf-input" ref="item"></xf-input>
+                </template>
+            </demo-snippet>
+        </section>
 
         <h2>wrapped native controls</h2>
-<!--        <input type="text" ref="item" value="${this.value}">-->
 
-        <xf-bound ref="item" update-event="blur" value-prop="value">
-            <label slot="label">native input with onblur handler</label>
-            <input name="value" value="">
-        </xf-bound>
+        <section>
+            <h3>Shortest way to bind a control to a node in the data</h3>
+            <demo-snippet>
+                <template>
+
+                    <label>Defaults</label>
+                    <xf-bound ref="item"></xf-bound>
+                </template>
+            </demo-snippet>
+            <p>When nothing is specified or wrapped a native input will be created, listening for blur event to update
+                the bound node.</p>
+        </section>
+        <section>
+            <h3>Firing on 'input' event</h3>
+
+            <demo-snippet>
+                <template>
+                    <xf-bound ref="item" update-event="input">
+                        <label slot="label">native input with input event handler</label>
+                        <input name="value" value="">
+                    </xf-bound>
+                </template>
+            </demo-snippet>
+
+        </section>
+
+        <section>
+            <h3>Using slots</h3>
+            <demo-snippet>
+                <template>
+
+                    <xf-bound ref="item">
+                        <label slot="label">native input with onblur handler</label>
+                    </xf-bound>
+                </template>
+            </demo-snippet>
+            <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
+        </section>
 
 
-        <xf-bound ref="item" update-event="input">
-            <label slot="label">native input with incremental handler</label>
-            <input name="value" value="">
-        </xf-bound>
 
-        <xf-bound ref="checked" update-event="input" value-prop="value">
-            <label for="check1" slot="label">native checkbox</label>
-            <input id="check1" type="checkbox">
-        </xf-bound>
+                <section>
+                    <h3>Using a checkbox</h3>
+
+                    <demo-snippet>
+                        <template>
+                            <xf-bound ref="checked" update-event="input">
+                                <label for="check1" slot="label">native checkbox - not working</label>
+                                <input id="check1" type="checkbox">
+                            </xf-bound>
+                        </template>
+                    </demo-snippet>
+
+                </section>
+        <!--
+
+                <section>
+                    <h3>Native select</h3>
+                    <demo-snippet>
+                        <template>
+
+                            <xf-bound ref="listitem" update-event="change">
+                                <label slot="label">native select</label>
+                                <select>
+                                    <option value=""></option>
+                                    <option value="foo">foo</option>
+                                    <option value="bar">bar</option>
+                                    <select>
+                            </xf-bound>
+
+                            <xf-output ref="listitem">
+                                <label>Selected:</label>
+                            </xf-output>
+
+                        </template>
+                    </demo-snippet>
+                </section>
+        -->
 
 
-        <xf-bound ref="listitem" update-event="change">
-            <label slot="label">native select</label>
-            <select>
-                <option value=""></option>
-                <option value="foo">foo</option>
-                <option value="bar">bar</option>
-            <select>
-        </xf-bound>
+<!--        <h2>Wrapped paper components</h2>-->
+<!--
+        <demo-snippet>
+            <template>
 
-        <h2>wrapped paper components</h2>
+                <h3>with onblur firing</h3>
+                <xf-bound ref="item" update-event="change">
+                    <paper-input label="the item in paper land"></paper-input>
+                </xf-bound>
 
-        <h3>with onblur firing</h3>
-        <xf-bound ref="item" update-event="change">
-            <paper-input label="the item in paper land"></paper-input>
-        </xf-bound>
-
-        <h3>with incremental firing</h3>
-        <xf-bound ref="item" update-event="keyup">
-            <paper-input label="the item in paper land"></paper-input>
-        </xf-bound>
+                <h3>with incremental firing</h3>
+                <xf-bound ref="item" update-event="keyup">
+                    <paper-input label="the item in paper land"></paper-input>
+                </xf-bound>
+            </template>
+        </demo-snippet>
+-->
 
         <!--
 

@@ -25,13 +25,21 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="submission can replace instance data and update UI accordingly;&#10;fixed controls to be hidden if they are not bound;&#10;demos to demonstrate new features">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;">
+      <change afterPath="$PROJECT_DIR$/demo/client.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/solutions/invoice.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/solutions/invoice.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/ultra-lazy.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/index-old.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/submission1.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/submission1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/es-dev-server.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/es-dev-server.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-send.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-send.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/introduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/introduction.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-bound.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-submission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-submission.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/lazy.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/lazy.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -130,19 +138,19 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo/solutions" />
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/doc" />
+      <recent name="$PROJECT_DIR$/elements/model" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/doc" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/src/actions" />
       <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/src" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/doc" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/elements/model" />
-      <recent name="$PROJECT_DIR$/elements" />
     </key>
   </component>
   <component name="RunManager">
@@ -295,14 +303,11 @@
       <workItem from="1609845800514" duration="318000" />
       <workItem from="1609846220442" duration="17049000" />
       <workItem from="1610101289925" duration="15734000" />
-      <workItem from="1611939052437" duration="16488000" />
-    </task>
-    <task id="LOCAL-00043" summary="using model getter now everywhere;&#10;fixed refresh behavior in certain situations - now async;&#10;basic repeat working but still using shadowDOM;&#10;all except repeat tests running">
-      <created>1600521620145</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1600521620145</updated>
+      <workItem from="1611939052437" duration="20060000" />
+      <workItem from="1612183561758" duration="15576000" />
+      <workItem from="1612362943746" duration="7445000" />
+      <workItem from="1612431676107" duration="1398000" />
+      <workItem from="1612451286979" duration="4148000" />
     </task>
     <task id="LOCAL-00044" summary="finally successfully using lit-element repeat directive to &#10;render repeat in lightDOM allowing full style access to form content.&#10;&#10;all 32 test passing">
       <created>1600527528482</created>
@@ -640,7 +645,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612021555850</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;">
+      <created>1612025780326</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1612025780326</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -687,7 +699,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="shortened modelItem path;&#10;encoding instance id on path;&#10;fixed test;" />
     <MESSAGE value="instance id on path now;&#10;fixed test;&#10;shortened path" />
     <MESSAGE value="actions now extends HTMLElement;&#10;AbstractFormControl and XfContainer use ForeElementMixin;&#10;new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out" />
     <MESSAGE value="fix recalc when no expr exists" />
@@ -712,7 +723,8 @@
     <MESSAGE value="another attempt to get rid of .idea versioning" />
     <MESSAGE value="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;" />
     <MESSAGE value="submission can replace instance data and update UI accordingly;&#10;fixed controls to be hidden if they are not bound;&#10;demos to demonstrate new features" />
-    <option name="LAST_COMMIT_MESSAGE" value="submission can replace instance data and update UI accordingly;&#10;fixed controls to be hidden if they are not bound;&#10;demos to demonstrate new features" />
+    <MESSAGE value="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;" />
+    <option name="LAST_COMMIT_MESSAGE" value="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -728,12 +740,11 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612021555046">
+    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612455059614">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="-1911" y="39" key="CommitChangelistDialog2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603733219914" />
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612021555046" />
-    <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1611939246576" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612455059614" />
+    <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
@@ -742,11 +753,11 @@
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607521072717" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117134737" />
     <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939023882" />
-    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1610117150935">
+    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1612455056819">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1698" y="196" key="RollbackChangesDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604169209475" />
-    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117150935" />
+    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612455056819" />
     <state x="-360" y="-1157" key="SettingsEditor" timestamp="1605886807774">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -761,40 +772,41 @@
     </state>
     <state x="456" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117205493" />
     <state x="602" y="411" key="VCS.ChangelistChooser/0.25.1440.875@0.25.1440.875" timestamp="1611939203550" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1612021557985">
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1612025782416">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612021557985" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612025782416" />
     <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610102787300" />
-    <state x="396" y="87" width="1003" height="752" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1611939788884">
-      <screen x="0" y="25" width="1440" height="875" />
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1612268123972">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604331294022" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702693851" />
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612268123972" />
     <state x="396" y="87" width="1003" height="752" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
     <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1611939788884">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612023501051">
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612374526231">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604171970712" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612023501051" />
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612374526231" />
     <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607702770956">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1557" y="457" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604145757344" />
     <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702770956" />
-    <state x="100" y="125" width="1240" height="675" key="dock-window-1" timestamp="1611939788885">
-      <screen x="0" y="25" width="1440" height="875" />
+    <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1" timestamp="1612345764657">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
+    <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612345764657" />
     <state x="100" y="125" width="1240" height="675" key="dock-window-1/0.25.1440.875@0.25.1440.875" timestamp="1611939788885" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1612015593693">
       <screen x="-982" y="-1415" width="3440" height="1415" />
