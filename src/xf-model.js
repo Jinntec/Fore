@@ -87,6 +87,7 @@ export class XfModel extends HTMLElement {
             console.groupEnd();
 
         } else {
+            // ### if there's no instance one will created
             this.dispatchEvent(new CustomEvent('model-construct-done', {
                 composed: true,
                 bubbles: true,
@@ -263,6 +264,7 @@ export class XfModel extends HTMLElement {
         const result = this.instances[0].evalXPath(bindingExpr);
         return result;
     }
+
 
     createRenderRoot() {
         /**

@@ -121,7 +121,7 @@ export class XfForm extends LitElement {
         if(!this.model){
             const generatedModel = document.createElement('xf-model');
             this.appendChild(generatedModel);
-            this.models.push(generatedModel);
+            this.model=generatedModel;
         }
         this.model.modelConstruct();
     }
@@ -155,8 +155,48 @@ export class XfForm extends LitElement {
 
     _handleModelConstructDone(e){
         console.log('modelConstructDone received', e.detail.model.id);
+        if(this.model.instances.length === 0){
+            console.log('### lazy creation of instance');
+            const generated = new DOMParser().parseFromString('<data></data>','application/xml');
+            console.log('generated root element ', generated.firstElementChild);
+            const newData = this._generateInstance(this, generated.firstElementChild);
+            console.log('newnewnewe',newData);
+
+            const generatedInstance = document.createElement('xf-instance');
+            generatedInstance.appendChild(newData);
+            generatedInstance.init();
+            this.model.instances.push(generatedInstance);
+            // this.model.updateModel();
+        }
         this._initUI();
     }
+
+    /**
+     * @param {Element} start
+     * @param {Element} parent
+     */
+    _generateInstance(start, parent){
+
+        if(start.hasAttribute('ref')){
+            const ref = start.getAttribute('ref');
+            const generated = document.createElement(ref);
+            if(start.children.length === 0){
+                generated.textContent = start.textContent;
+            }
+            parent.appendChild(generated);
+            parent=generated;
+        }
+
+        if(start.hasChildNodes()){
+            const list = start.children;
+            for(let i=0; i < list.length; i++){
+                this._generateInstance(list[i],parent)
+            }
+        }
+        return parent;
+    }
+
+
 
      async _initUI(){
         console.log('### _initUI()');

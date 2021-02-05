@@ -1,6 +1,6 @@
 {
   "name": "fore",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fore XForms",
   "main": "src/xf-form.js",
   "directories": {
@@ -64,7 +64,6 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
     "fontoxpath": "rollup -c fontoxpath.rollup.config.js",
-    "parseExpr": "rollup -c parseexpr.rollup.config.js",
     "empathy": "./node_modules/@0xcda7a/empathy/bin/empathy install"
   },
   "repository": {

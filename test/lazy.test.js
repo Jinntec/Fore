@@ -76,13 +76,19 @@ describe('lazy initialize modelItem', () => {
         const el =  (
             await fixtureSync(html`
                 <xf-form>
+                    <xf-group ref="outer">
+                        <xf-output ref="inner1">inner1</xf-output>
+                        <xf-output ref="inner2">inner2</xf-output>
+                    </xf-group>
                 </xf-form>`)
         );
 
         await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const inst = el.querySelector('xf-instance');
-        await elementUpdated(inst);
+        console.log('++++++++++++ inst ', inst);
+        // await elementUpdated(inst);
         expect(inst).to.exist;
 
     });

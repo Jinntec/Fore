@@ -6,7 +6,10 @@
 
     <title>ultra-lazy authoring</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -29,10 +32,35 @@
         <p>It serves simple use cases where just a bunch of params have to be collected without much bells
         and whistles</p>
 
-        <!-- ### defaults to use a imput type="text" with blur handler -->
+        <xf-group ref="outer">
+            <xf-output ref="inner1">inner1</xf-output>
+            <xf-output ref="inner2">inner2</xf-output>
+        </xf-group>
+
+<!--
+        <demo-snippet>
+            <template id="debug">
+
+            </template>
+        </demo-snippet>
+-->
+    <textarea id="debug"></textarea>
+    <xf-message event="ready">its ready</xf-message>
 </xf-form>
 
 <script type="module" src="../src/app.js"></script>
+<script>
 
+    const form = document.querySelector('xf-form');
+    console.log('???????????? the form ', form);
+    form.addEventListener('refresh-done', function(e) {
+        console.log('wow - event from form outside');
+        const inst = form.model.getDefaultInstanceData();
+        console.log('default inst ', inst);
+        const tmpl = document.getElementById('debug');
+        console.log('debug ', tmpl);
+        tmpl.innerHTML = inst.firstElementChild;
+    });
+</script>
 </body>
 </html>

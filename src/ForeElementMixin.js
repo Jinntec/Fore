@@ -146,7 +146,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
 
         if(!existed){
             // if(existed === undefined){
-            console.log('does not exist ', this.nodeset);
+            // console.log('does not exist ', this.nodeset);
             // const mi = this.getModel().getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
             // this.getModel().registerModelItem(mi);
             // return mi;

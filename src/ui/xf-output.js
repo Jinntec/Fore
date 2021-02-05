@@ -22,7 +22,6 @@ export class XfOutput extends XfAbstractControl {
 
     render() {
         return html`
-            <slot></slot>
             <span id="control">${this.value}</span>
         `;
     }

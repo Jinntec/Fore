@@ -25,15 +25,17 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)">
-      <change afterPath="$PROJECT_DIR$/src/snippets.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;">
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/hello-fonto.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/hello-fonto.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/ultra-lazy.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/ultra-lazy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parseexpr.rollup.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-output.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-output.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/lazy.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/lazy.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-form.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-form.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -301,14 +303,7 @@
       <workItem from="1612183561758" duration="15576000" />
       <workItem from="1612362943746" duration="7445000" />
       <workItem from="1612431676107" duration="1398000" />
-      <workItem from="1612451286979" duration="23429000" />
-    </task>
-    <task id="LOCAL-00045" summary="prepare group collapse support">
-      <created>1600535235630</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1600535235630</updated>
+      <workItem from="1612451286979" duration="31954000" />
     </task>
     <task id="LOCAL-00046" summary="template function handleModelItemProperties to be overwritten by e.g. group;">
       <created>1600535627116</created>
@@ -646,7 +641,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612456187547</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;">
+      <created>1612537239520</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1612537239520</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -693,7 +695,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="actions now extends HTMLElement;&#10;AbstractFormControl and XfContainer use ForeElementMixin;&#10;new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out" />
     <MESSAGE value="fix recalc when no expr exists" />
     <MESSAGE value="improved getBindingExpr();&#10;XfBind now also extend HTMLElement!;&#10;fix to nodeset eval in xf-bind;&#10;xf-instance also vanilla web component;&#10;added loading promises for instances;&#10;xf-model turned into vanilla web component;&#10;found a way to listen for refresh-done before checking on props" />
     <MESSAGE value="remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin;&#10;updated class diagram;" />
@@ -718,7 +719,8 @@
     <MESSAGE value="submission can replace instance data and update UI accordingly;&#10;fixed controls to be hidden if they are not bound;&#10;demos to demonstrate new features" />
     <MESSAGE value="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;" />
     <MESSAGE value="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)" />
-    <option name="LAST_COMMIT_MESSAGE" value="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)" />
+    <MESSAGE value="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;" />
+    <option name="LAST_COMMIT_MESSAGE" value="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -730,14 +732,14 @@
       <screen x="-252" y="-1667" width="3008" height="1667" />
     </state>
     <state x="627" y="-968" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607518158702" />
-    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1607788104382">
+    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612537292469">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612460898955">
+    <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612537292469" />
+    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612537238919">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612460898955" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612537238919" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
@@ -812,11 +814,11 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="422" y="-375" key="run.anything.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612010510405" />
-    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup" timestamp="1612014608202">
+    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup" timestamp="1612544418812">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1727" y="164" width="838" height="1032" key="search.everywhere.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1603820012026" />
-    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612014608202" />
+    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612544418812" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
