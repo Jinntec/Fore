@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
+import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE, waitUntil } from '@open-wc/testing';
 
 import '../src/xf-form.js';
 import '../src/xf-model.js';
@@ -8,63 +8,41 @@ import '../src/xf-bind.js';
 
 describe('initialize form', () => {
 
-    it('receives model-construct', async () => {
+
+    it('model emits model-construct-done', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                    </xf-model>   
-                </xf-form>
+                <xf-model id="model1">
+                </xf-model>   
             `)
         );
 
-        await elementUpdated(el);
-        const model = el.querySelector('xf-model');
-        setTimeout(() => el._triggerModelConstruct());
+        setTimeout(() => el.modelConstruct());
 
-        let { detail } = await oneEvent(model, 'model-construct');
+        let { detail } = await oneEvent(el, 'model-construct-done');
         expect(detail.model.id).to.equal('model1');
 
     });
 
-    it('receives model-construct-done', async () => {
+    it('ready event is emitted after first complete render', async () => {
         const el =  (
             await fixtureSync(html`
                 <xf-form>
                     <xf-model id="model1">
-                    </xf-model>   
+                        <xf-instance>
+                            <data>
+                                <greeting type="message:">Hello World!</greeting>
+                            </data>
+                        </xf-instance>
+                    </xf-model>
                 </xf-form>
             `)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
 
-        setTimeout(() => el._triggerModelConstruct());
-
-        let { detail } = await oneEvent(model, 'model-construct-done');
-        expect(detail.model.id).to.equal('model1');
-
-    });
-
-    it('models receive ready event ', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                    </xf-model>   
-                </xf-form>
-            `)
-        );
-
-        await elementUpdated(el);
-        const model = el.querySelector('xf-model');
-        console.log('model Element', model);
-
-        setTimeout(() => el._triggerModelConstruct());
-
-        let { detail } = await oneEvent(model, 'ready');
-        expect(detail.model.id).to.equal('model1');
+        let { detail } = await oneEvent(el, 'ready');
+        expect(el.ready).to.be.true;
 
     });
 
@@ -93,8 +71,8 @@ describe('initialize form', () => {
         const model = el.querySelector('xf-model');
         // await model.updated();
         await elementUpdated(model);
-        expect(el.models.length).to.equal(1);
-        expect(el.models[0].id).to.equal('model1');
+        expect(model).to.exist;
+        expect(model.id).to.equal('model1');
         expect(model.instances.length).to.equal(2);
     });
 
@@ -123,9 +101,9 @@ describe('initialize form', () => {
         await elementUpdated(model);
 
         // there is one binding
-        expect(el.models[0].modelItems.length).to.equal(1);
+        expect(el.model.modelItems.length).to.equal(1);
 
-        const greetingMap = el.models[0].modelItems[0];
+        const greetingMap = el.model.modelItems[0];
 
         //binding refers to <greeting> node
         expect(greetingMap.node.nodeName).to.equal('greeting');

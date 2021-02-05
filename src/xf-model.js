@@ -47,9 +47,6 @@ export class XfModel extends HTMLElement {
         this.modelItems = [];
         this.defaultContext = {};
 
-        this.addEventListener('model-construct', this._modelConstruct);
-        this.addEventListener('ready', this._ready);
-
         this.mainGraph = new DepGraph(false);
         this.inited = false;
     }
@@ -62,8 +59,10 @@ export class XfModel extends HTMLElement {
         this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
     }
 
-    _modelConstruct() {
+    modelConstruct() {
         console.log('MODEL::model-construct received ', this.id);
+        this.dispatchEvent(new CustomEvent('model-construct', { detail: this}));
+
         const instances = this.querySelectorAll('xf-instance');
         if (instances.length > 0) {
             console.group('init instances');
@@ -75,10 +74,6 @@ export class XfModel extends HTMLElement {
             Promise.all(promises).then(result => {
                 this.instances = Array.from(instances);
                 console.log('_modelConstruct this.instances ', this.instances);
-
-
-
-
                 this.updateModel();
                 this.inited = true;
                 // console.log('dispatching model-construct-done');
@@ -98,13 +93,12 @@ export class XfModel extends HTMLElement {
                 detail: {model: this}
             }));
         }
+        this.inited = true;
     }
 
     registerModelItem(modelItem) {
         console.log('ModelItem registered ', modelItem);
         this.modelItems.push(modelItem);
-        // console.log('all modelItems ', this.modelItems);
-
     }
 
     /**
@@ -236,38 +230,11 @@ export class XfModel extends HTMLElement {
         return this.modelItems.find(m => m.node === node);
     }
 
-
-
-    /*
-        _initOutermostBindings(){
-            console.group('### initialize bindings');
-
-            this.modelItems = [];
-            const binds = this.querySelectorAll('xf-model > xf-bind');
-            binds.forEach(bind => {
-                bind.init(this);
-            });
-            console.groupEnd();
-        }
-    */
-
-
-    /*
-        _handleModelConstructDone(e) {
-            console.log('_handleModelConstructDone');
-            this.refresh();
-        }
-    */
-
-
     /**
      * get the default evaluation context for this model.
      * @returns {Element} the
      */
     getDefaultContext() {
-        // console.log('getDefaultContext instanceData ', this.instances[0].instanceData);
-        // console.log('getDefaultContext firstChild ', this.instances[0].instanceData.firstElementChild);
-        // return this.instances[0].instanceData.firstElementChild;
         return this.instances[0].getDefaultContext();
     }
 
@@ -293,17 +260,8 @@ export class XfModel extends HTMLElement {
     evalBinding(bindingExpr) {
         // console.log('MODEL.evalBinding ', bindingExpr);
         //default context of evaluation is always the default instance
-
-
         const result = this.instances[0].evalXPath(bindingExpr);
-
-
         return result;
-
-    }
-
-    _ready(e) {
-        console.log('model is ready');
     }
 
     createRenderRoot() {

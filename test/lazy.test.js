@@ -68,11 +68,8 @@ describe('lazy initialize modelItem', () => {
         );
 
         await elementUpdated(el);
-
         const model = el.querySelector('xf-model');
-        await elementUpdated(model);
         expect(model).to.exist;
-
     });
 
     it('constructs an instance when there is none', async () => {

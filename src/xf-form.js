@@ -36,6 +36,13 @@ import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
+ *
+ * xf-form is the outermost container for each form. A form can have exactly one model
+ * with arbitrary number of instances.
+ *
+ * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
+ *
+ * This element uses LitElement as it uses shadowDOM to tempate global message dialogs
  */
 export class XfForm extends LitElement {
 
@@ -57,6 +64,9 @@ export class XfForm extends LitElement {
 
     static get properties() {
         return {
+            model:{
+                type: Object
+            },
             /**
              * array of xf-model elements contained in this form
              */
@@ -71,6 +81,7 @@ export class XfForm extends LitElement {
 
     constructor() {
         super();
+        this.model = {};
         this.models = [];
         this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
@@ -106,60 +117,28 @@ export class XfForm extends LitElement {
     }
 
     init(){
-
-        console.log('registerCustomXPathFunction');
-
-
-        // const result = fx.evaluateXPathToNodes("Q{xf}instance('second')",this);
-        // console.log('eval func' , result);
-
-        const models = this.querySelectorAll('xf-model');
-        if(models.length === 0){
+        this.model = this.querySelector('xf-model');
+        if(!this.model){
             const generatedModel = document.createElement('xf-model');
             this.appendChild(generatedModel);
             this.models.push(generatedModel);
-        }else{
-            this.models = models;
         }
-        this._triggerModelConstruct();
+        this.model.modelConstruct();
     }
-
-    _triggerModelConstruct(){
-        console.group('### dispatching model-construct');
-        this.models.forEach(model =>  {
-            model.dispatchEvent(new CustomEvent('model-construct', { detail: {model}}));
-        });
-    }
-
 
     /**
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
      */
     async refresh () {
-
         console.group('### refresh');
-
         const uiElements = this.querySelectorAll('*');
         await this.updateComplete;
-        // this._refreshChildren();
         Fore.refreshChildren(this);
-
-        this.ready = true;
-
         console.log('### <<<<< dispatch refresh-done - end of update cycle >>>>>');
+        this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
         console.groupEnd();
-
-        this.dispatchEvent(new CustomEvent('refresh-done', {}));
     }
-
-/*
-    async _awaitRepeats(){
-        const r = this.querySelectorAll('xf-repeat');
-        await
-
-    }
-*/
 
     _refreshChildren(){
         const uiElements = this.querySelectorAll('*');
@@ -176,50 +155,15 @@ export class XfForm extends LitElement {
 
     _handleModelConstructDone(e){
         console.log('modelConstructDone received', e.detail.model.id);
-        // console.log('modelConstructDone', e.detail.model);
-        // console.log('modelConstructDone', e.detail.model.id);
-        // console.log('modelConstructDone', this.models);
-        // console.log('modelConstructDone', this.models.length);
-
-        // const models = this.querySelectorAll('xf-model');
-        if(this.models.length > 0 ){
-            // const cnt = this.models.length;
-            // const last = this.querySelectorAll('xf-model')[cnt-1];
-            const last = this.models[this.models.length-1];
-            // console.log('last ', last);
-
-            const targetModel = document.getElementById(e.detail.model.id);
-            // console.log('targetModel', targetModel);
-
-            if(targetModel === last){
-                this._initUI();
-            }
-        }else{
-            // there are no instances at model construction time
-            this._initUI();
-        }
-
+        this._initUI();
     }
 
-/*
-    async _getUpdateComplete() {
-    +
-        // await super._getUpdateComplete();
-        const op = this.querySelector('xf-output');
-        if(op) {
-            await op.updateComplete;
-        }
-    }
-*/
-
-    async _initUI(){
-        this.models.forEach(model => {
-            // notification event only - not used internally
-            model.dispatchEvent(new CustomEvent('ready', { detail: {model}}));
-        });
-
+     async _initUI(){
+        console.log('### _initUI()');
         await this.updateComplete;
         this.refresh();
+        this.ready = true;
+        this.dispatchEvent(new CustomEvent('ready', {}));
     }
 
     _displayMessage(e) {
@@ -273,8 +217,6 @@ export class XfForm extends LitElement {
         }
 
     }
-
-
 
 }
 customElements.define('xf-form', XfForm);

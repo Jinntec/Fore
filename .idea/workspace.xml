@@ -25,21 +25,15 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;">
-      <change afterPath="$PROJECT_DIR$/demo/client.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/solutions/invoice.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/solutions/invoice.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/ultra-lazy.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/index-old.html" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)">
+      <change afterPath="$PROJECT_DIR$/src/snippets.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/hello-fonto.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/hello-fonto.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/introduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/introduction.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-bound.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/lazy.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/lazy.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/xf-form.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-form.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -307,14 +301,7 @@
       <workItem from="1612183561758" duration="15576000" />
       <workItem from="1612362943746" duration="7445000" />
       <workItem from="1612431676107" duration="1398000" />
-      <workItem from="1612451286979" duration="4148000" />
-    </task>
-    <task id="LOCAL-00044" summary="finally successfully using lit-element repeat directive to &#10;render repeat in lightDOM allowing full style access to form content.&#10;&#10;all 32 test passing">
-      <created>1600527528482</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1600527528482</updated>
+      <workItem from="1612451286979" duration="23429000" />
     </task>
     <task id="LOCAL-00045" summary="prepare group collapse support">
       <created>1600535235630</created>
@@ -652,7 +639,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612025780326</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)">
+      <created>1612456187546</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1612456187547</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -699,7 +693,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="instance id on path now;&#10;fixed test;&#10;shortened path" />
     <MESSAGE value="actions now extends HTMLElement;&#10;AbstractFormControl and XfContainer use ForeElementMixin;&#10;new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out" />
     <MESSAGE value="fix recalc when no expr exists" />
     <MESSAGE value="improved getBindingExpr();&#10;XfBind now also extend HTMLElement!;&#10;fix to nodeset eval in xf-bind;&#10;xf-instance also vanilla web component;&#10;added loading promises for instances;&#10;xf-model turned into vanilla web component;&#10;found a way to listen for refresh-done before checking on props" />
@@ -724,7 +717,8 @@
     <MESSAGE value="xf-submission.js - basic implementation running first post request&#10;ported xf-message.js;&#10;fixed some app.js imports;" />
     <MESSAGE value="submission can replace instance data and update UI accordingly;&#10;fixed controls to be hidden if they are not bound;&#10;demos to demonstrate new features" />
     <MESSAGE value="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;" />
-    <option name="LAST_COMMIT_MESSAGE" value="conditional validation;&#10;handling response as text and parsing ourselves for control;&#10;general error handler in form;&#10;extended submission demo;" />
+    <MESSAGE value="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -740,10 +734,10 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607788104382" />
-    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612455059614">
+    <state x="547" y="-1223" width="1281" height="855" key="CommitChangelistDialog2" timestamp="1612460898955">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612455059614" />
+    <state x="547" y="-1223" width="1180" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612460898955" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
@@ -753,11 +747,11 @@
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607521072717" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117134737" />
     <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939023882" />
-    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1612455056819">
+    <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1612460896238">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1698" y="196" key="RollbackChangesDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604169209475" />
-    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612455056819" />
+    <state x="760" y="-1066" key="RollbackChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612460896238" />
     <state x="-360" y="-1157" key="SettingsEditor" timestamp="1605886807774">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -783,11 +777,11 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610102787300" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1612268123972">
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1612456795879">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-2494" y="-53" width="2394" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604331294022" />
-    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612268123972" />
+    <state x="-36" y="-1315" width="2394" height="1216" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612456795879" />
     <state x="396" y="87" width="1003" height="752" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
     <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1611939788884">
       <screen x="0" y="25" width="1440" height="875" />
@@ -808,12 +802,12 @@
     </state>
     <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612345764657" />
     <state x="100" y="125" width="1240" height="675" key="dock-window-1/0.25.1440.875@0.25.1440.875" timestamp="1611939788885" />
-    <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1612015593693">
+    <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1612531669403">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1232" y="247" width="744" height="616" key="find.popup/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604153006818" />
     <state x="1679" y="-1197" width="651" height="726" key="find.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539906479" />
-    <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612015593693" />
+    <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612531669403" />
     <state x="422" y="-375" key="run.anything.popup" timestamp="1612010510405">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
