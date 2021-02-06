@@ -72,6 +72,7 @@ describe('lazy initialize modelItem', () => {
         expect(model).to.exist;
     });
 
+/*
     it('constructs an instance when there is none', async () => {
         const el =  (
             await fixtureSync(html`
@@ -92,6 +93,7 @@ describe('lazy initialize modelItem', () => {
         expect(inst).to.exist;
 
     });
+*/
 
 
 });

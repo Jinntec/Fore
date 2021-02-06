@@ -91,6 +91,8 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
     static get properties() {
         return {
+            ...super.properties,
+
             /**
              * allows to calculate a value. This value will become readonly.
              */

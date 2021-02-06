@@ -78,6 +78,9 @@
             padding: 6px;
             margin: 4px;
         }
+        [repeat-index]{
+            border:white solid 2px;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -136,7 +139,7 @@
 -->
 
         <xf-button label="append">
-            <xf-append ref="task" repeat="todos"></xf-append>
+            <xf-append ref="task" repeat="todos" clear="true"></xf-append>
         </xf-button>
 
 <!--    </xf-group>-->

@@ -13,6 +13,9 @@ export default class XfSetvalue extends XfAction {
     static get properties() {
         return {
             ...super.properties,
+            ref:{
+                type: String
+            },
             value: {
                 type: String
             }
@@ -21,12 +24,17 @@ export default class XfSetvalue extends XfAction {
 
     constructor(){
         super();
+        this.ref="";
         this.value = "";
     }
 
     connectedCallback(){
         console.log('connectedCallback ', this);
-        this.ref = this.getAttribute('ref');
+        if(this.hasAttribute('ref')){
+            this.ref = this.getAttribute('ref');
+        }else{
+            throw new Error('xf-setvalue must specify a "ref" attribute');
+        }
         this.value = this.getAttribute('value');
     }
 
@@ -36,7 +44,7 @@ export default class XfSetvalue extends XfAction {
 
         let value = this.value;
         if(this.value !== null){
-            value = this.value
+            value = this.value;
         }else if(this.textContent !== "") {
             value = this.textContent;
         }else{

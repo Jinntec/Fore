@@ -1,7 +1,7 @@
 import {LitElement, html, css} from 'lit-element';
 import '../assets/@polymer/iron-ajax/iron-ajax.js';
 
-import * as fx from 'fontoxpath';
+// import * as fx from 'fontoxpath';
 import {foreElementMixin} from "./ForeElementMixin";
 
 export class XfSubmission extends foreElementMixin(LitElement){
@@ -16,6 +16,7 @@ export class XfSubmission extends foreElementMixin(LitElement){
 
     static get properties() {
         return {
+            ...super.properties,
             id:{
                 type: String
             },

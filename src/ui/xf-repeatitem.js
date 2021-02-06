@@ -35,6 +35,11 @@ export class XfRepeatitem extends XfContainer{
     constructor(){
         super();
         this.inited = false;
+        this.addEventListener('click', e =>{
+            console.log('clicked on index ', this.index);
+            this.parentNode.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {index:this.index}}));
+
+        })
     }
 
     init(){

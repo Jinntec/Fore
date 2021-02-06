@@ -15,6 +15,12 @@ export class XfAction extends foreElementMixin(HTMLElement){
     static get properties() {
         return {
             ...super.properties,
+            /**
+             * the event to listen for
+             */
+            event:{
+                type: String
+            },
             needsRebuild:{
                 type:Boolean
             },
@@ -26,6 +32,12 @@ export class XfAction extends foreElementMixin(HTMLElement){
             },
             needsRefresh:{
                 type:Boolean
+            },
+            /**
+             * the event target if not parentNode
+             */
+            target:{
+                type: String
             }
         };
     }
@@ -33,10 +45,24 @@ export class XfAction extends foreElementMixin(HTMLElement){
     // eslint-disable-next-line no-useless-constructor
     constructor(){
         super();
+
+        this.event = this.getAttribute('event');
+        this.target = this.getAttribute('target');
+
+        if (this.target) {
+            this.targetElement = document.getElementById(this.target);
+            this.targetElement.addEventListener(this.event, e => this.execute(e));
+        } else {
+            this.targetElement = this.parentNode;
+            this.targetElement.addEventListener(this.event, e => this.execute(e));
+            console.log('adding listener for ', this.event , ' to ', this);
+        }
+
         this.needsRebuild = false;
         this.needsRecalculate = false;
         this.needsRevalidate = false;
         this.needsRefresh = false;
+        this.style.display = 'none';
     }
 
     execute (){

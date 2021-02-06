@@ -17,6 +17,11 @@ export class XfAlert extends XfAbstractControl {
         `;
     }
 
+    constructor() {
+        super();
+        this.style.display = 'none';
+    }
+
     static get properties() {
         return {
             ...super.properties

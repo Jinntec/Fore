@@ -2,7 +2,7 @@
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
 import '../src/app.js';
-import fx from '../src/output/fontoxpath.js';
+import * as fx from 'fontoxpath';
 
 describe('setvalue tests', () => {
 

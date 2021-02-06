@@ -10,7 +10,9 @@
 
     <script type="module">
         import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+        import '../assets/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
+
 
 
     <link href="../resources/vars.css" rel="stylesheet">
@@ -31,12 +33,17 @@
         section{
             padding-bottom: 50px;
         }
+        xf-setvalue, xf-message{
+            display: none;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
 
 
 <xf-form>
+    <xf-setvalue ref="item" event="refresh-done">foo</xf-setvalue>
+    <xf-message event="ready">Hi</xf-message>
     <xf-model id="model1">
         <xf-instance>
             <data>

@@ -59,6 +59,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 }
             });
 
+            console.log('parent control ', this.parentNode);
+            // todo this block should be pushed down to xf-bound as its specific to it
             if(!control){
                 const input = document.createElement('input');
                 input.setAttribute('type', 'text');
@@ -69,6 +71,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
         }
 
+        // todo this block should be pushed down to xf-bound as its specific to it
         control.addEventListener(this.updateEvent, (e) => {
             console.log('eventlistener ', this.updateEvent);
 

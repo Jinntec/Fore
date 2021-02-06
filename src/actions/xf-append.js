@@ -39,6 +39,9 @@ class XfAppend extends XfAction {
         console.log('connectedCallback ', this);
         this.ref = this.getAttribute('ref');
         this.repeat = this.getAttribute('repeat');
+        if(this.hasAttribute('clear')){
+            this.clear = this.getAttribute('clear');
+        }
     }
 
 
@@ -60,55 +63,28 @@ class XfAppend extends XfAction {
         const last = inscope.lastElementChild;
         const originModelItem = this.getModel().getModelItem(last);
 
-
         console.log('last in nodeset',last);
         console.log('modelItem for last',originModelItem);
 
         //clone origin ModelItem
-        // const originClone = { ...originModelItem };
-        // console.log('cloned original ModelItem ', originClone);
 
         let newItem = last.cloneNode(true);
         inscope.appendChild(newItem);
 
-        // originClone.node = newItem;
-
-        // const path = fx.evaluateXPath('path()',newItem);
-/*
-        const newModelItem = new ModelItem(
-                                           originModelItem.bind,
-                                           path,
-                                           originmodelItem.isReadonly,
-                                           originModelItem.relevant,
-                                           originModelItem.required,
-                                           originModelItem.required,
-                                           newItem);
-*/
-
-
-        // this.getModel().registerModelItem(newModelItem);
         console.log('All modelItems in append - ', this.getModel().modelItems);
 
         // console.log('clear flag ', this.clear);
 
         if(this.clear === 'true'){
-        // if(this.clear){
             newItem.textContent = "";
             this._clear(newItem);
             console.log('newItem clear',newItem);
             newItem.innerText = '';
-
         }
 
-newItem.textContent="new";
+        // newItem.textContent="new";
 
         console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
-
-        //todo: create modelItems as appropriate for newly inserted entry
-        // const existed = this.getModel().getModelItem(this.nodeset);
-        // if(!existed) {
-        //     XfBind.lazyCreateModelitems(this.getModel(), this.ref, newItem);
-        // }
 
         this.needsRebuild=true;
         this.needsRecalculate=true;
@@ -116,7 +92,8 @@ newItem.textContent="new";
         this.needsRefresh=true;
         this.actionPerformed();
 
-
+        const repeat = document.getElementById(this.repeat);
+        repeat.setIndex(this.nodeset.length+1);
 
 
         //always call superClass at the end of processing.
@@ -125,6 +102,12 @@ newItem.textContent="new";
         // const s = new XMLSerializer();
         // console.log('modified xml instance ', s.serializeToString(this.model.getDefaultInstance().getInstanceData()));
 
+    }
+
+    dispatch(){
+        const repeat = document.getElementById(this.repeat);
+        console.log('dispatching index change ', this.nodeset.length+1);
+        repeat.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {index:this.nodeset.length+1}}));
     }
 
     /**

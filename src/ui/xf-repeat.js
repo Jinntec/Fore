@@ -26,6 +26,9 @@ export class XfRepeat extends XfContainer {
     static get properties() {
         return {
             ... super.properties,
+            index:{
+                type: Number
+            },
             ref: {
                 type: String
             },
@@ -56,13 +59,31 @@ export class XfRepeat extends XfContainer {
         this.repeatIndex = 1;
         this.nodeset = [];
         this.inited = false;
+        this.index = 1;
 
         // this.template = this.firstElementChild;
         // this.addEventListener('repeatitem-created', this._refreshItem)
 
     }
 
-/*
+    setIndex(index){
+        if(this.index !== index){
+            this.index=index;
+            console.log('new repeat index ', index);
+        }
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        // console.log('### XfControl connected ', this);
+        this.addEventListener('index-changed', e => {
+           this.index = e.detail.index;
+           const rItems = this.querySelectorAll('xf-repeatitem');
+           this._setIndex(rItems[this.index-1]);
+        });
+    }
+
+    /*
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);
         this.init();
@@ -94,6 +115,8 @@ export class XfRepeat extends XfContainer {
 
         this._initTemplate();
         this._initRepeatItems();
+
+        this.setAttribute('index',this.index);
 
         this.inited = true;
     }
@@ -304,6 +327,9 @@ export class XfRepeat extends XfContainer {
             repeatItem.appendChild(clone);
             this.itemTemplates.push(html`repeatItem`);
             this.appendChild(repeatItem);
+            if(repeatItem.index === 1){
+                this._setIndex(repeatItem);
+            }
         });
 
 
