@@ -25,26 +25,18 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;">
-      <change afterPath="$PROJECT_DIR$/demo/fun-with-actions.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/control.test.js" afterDir="false" />
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/fun-with-actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/fun-with-actions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/unbound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/unbound.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/demos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-delete.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-delete.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-setvalue.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-alert.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-alert.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-bind.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-submission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-submission.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/lazy.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/lazy.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/setvalue.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/setvalue.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-bound.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/xf-output.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-output.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/control.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/control.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/xf-bound.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bound.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
@@ -314,14 +306,8 @@
       <workItem from="1612362943746" duration="7445000" />
       <workItem from="1612431676107" duration="1398000" />
       <workItem from="1612451286979" duration="34380000" />
-      <workItem from="1612614453746" duration="19158000" />
-    </task>
-    <task id="LOCAL-00047" summary="shutting up">
-      <created>1600536667396</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1600536667396</updated>
+      <workItem from="1612614453746" duration="19933000" />
+      <workItem from="1612780570323" duration="10211000" />
     </task>
     <task id="LOCAL-00048" summary="factored out eval">
       <created>1600536897421</created>
@@ -659,7 +645,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612545894913</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;">
+      <created>1612635079509</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1612635079510</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,7 +709,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="improved getBindingExpr();&#10;XfBind now also extend HTMLElement!;&#10;fix to nodeset eval in xf-bind;&#10;xf-instance also vanilla web component;&#10;added loading promises for instances;&#10;xf-model turned into vanilla web component;&#10;found a way to listen for refresh-done before checking on props" />
     <MESSAGE value="remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin;&#10;updated class diagram;" />
     <MESSAGE value="fixed path for lazy created modelItems;&#10;xf-instance cleanup;" />
     <MESSAGE value="&#10;xf-instance cleanup;" />
@@ -741,7 +733,8 @@
     <MESSAGE value="improved detection of control in abstract-control;&#10;improved demos;&#10;new tests (one failing)" />
     <MESSAGE value="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;" />
     <MESSAGE value="generating instance from UI if there's none;" />
-    <option name="LAST_COMMIT_MESSAGE" value="generating instance from UI if there's none;" />
+    <MESSAGE value="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;" />
+    <option name="LAST_COMMIT_MESSAGE" value="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -757,10 +750,10 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612537292469" />
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2" timestamp="1612635013831">
+    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2" timestamp="1612794920923">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612635013831" />
+    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612794920923" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
@@ -789,12 +782,12 @@
     </state>
     <state x="456" y="-790" key="VCS.ChangelistChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117205493" />
     <state x="602" y="411" key="VCS.ChangelistChooser/0.25.1440.875@0.25.1440.875" timestamp="1611939203550" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1612025782416">
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1612635084356">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1797" y="217" key="Vcs.Push.Dialog.v2/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604158660285" />
     <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
-    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612025782416" />
+    <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612635084356" />
     <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
       <screen x="-982" y="-1415" width="3440" height="1415" />

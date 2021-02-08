@@ -119,18 +119,6 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             return this.modelItem;
         }
 
-        // if the nodeset is null after evaluation we have a binding error
-        /*
-                if(this.nodeset === null){
-                    this.dispatchEvent(new CustomEvent('binding-error', {
-                        composed: true, bubbles: true, detail: {
-                            "error-message": this.ref + ' does not point to anything.'
-                        }
-                    }));
-                    return null;
-                }
-        */
-
         const repeated = this.closest('xf-repeatitem');
         let existed;
         if(repeated){

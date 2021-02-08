@@ -6,8 +6,76 @@ import '../src/xf-model.js';
 import '../src/xf-instance.js';
 import '../src/xf-bind.js';
 import '../src/ui/xf-output.js';
+import '../src/ui/xf-bound.js';
 
 describe('xf-bound tests', () => {
+
+    it('is initialized', async () => {
+        const el =  (
+            await fixture(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <item>foobar</item>
+                                <checked>true</checked>
+                            </data>
+                            <xf-bind ref="item"></xf-bind>
+                            <xf-bind ref="checked"></xf-bind>
+                        </xf-instance>
+                    </xf-model>
+                    <xf-group>
+                        <xf-bound id="input1" ref="item" update-event="blur" value-prop="value">
+                            <label slot="label">with onblur handler</label>
+                            <input id="control" name="value" value="">
+                        </xf-bound>
+                
+                    </xf-group>
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const bound = el.querySelector('#input1');
+        expect(bound).to.exist;
+
+        const control = document.getElementById('control');
+        expect(bound.control).to.equal(control);
+
+    });
+
+    it('is creates a default input', async () => {
+        const el =  (
+            await fixture(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <item>foobar</item>
+                                <checked>true</checked>
+                            </data>
+                            <xf-bind ref="item"></xf-bind>
+                            <xf-bind ref="checked"></xf-bind>
+                        </xf-instance>
+                    </xf-model>
+                    <xf-group>
+                        <xf-bound id="input1" ref="item">
+                            <label slot="label">with onblur handler</label>
+                        </xf-bound>
+                
+                    </xf-group>
+                </xf-form>
+            `)
+        );
+
+        await elementUpdated(el);
+        const bound = el.querySelector('#input1');
+        expect(bound).to.exist;
+
+        const input = bound.control;
+        expect(input).to.exist;
+
+    });
 
     it('is initialized', async () => {
         const el =  (

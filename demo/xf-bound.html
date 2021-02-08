@@ -42,7 +42,7 @@
 
 
 <xf-form>
-    <xf-setvalue ref="item" event="refresh-done">foo</xf-setvalue>
+    <xf-setvalue ref="item" event="ready">foo</xf-setvalue>
     <xf-message event="ready">Hi</xf-message>
     <xf-model id="model1">
         <xf-instance>
@@ -86,6 +86,7 @@
             <p>When nothing is specified or wrapped a native input will be created, listening for blur event to update
                 the bound node.</p>
         </section>
+
         <section>
             <h3>Firing on 'input' event</h3>
 

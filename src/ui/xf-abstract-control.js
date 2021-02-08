@@ -27,71 +27,17 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         };
     }
 
-/*
-    render() {
-        return html`
-            <slot></slot>
-        `;
-    }
-*/
-
-
     constructor(){
         super();
         this.value = "";
-        this.control = {};
-    }
-
-    firstUpdated(_changedProperties) {
-        // console.log('AbstractControl firstUpdated ', this);
         this.display = this.style.display;
-
-        // ### 1. first look for an element with id='control' in the shadowDOM
-        let control = this.shadowRoot.getElementById('control');
-        if(!control){
-
-            // ### 2. use element found in the default slot - will just grab the first element
-            const slots = this.shadowRoot.querySelectorAll('slot');
-            slots.forEach(slot => {
-                if (!slot.hasAttribute('name')) {
-
-                    control = slot.assignedElements({flatten: true})[0];
-                }
-            });
-
-            console.log('parent control ', this.parentNode);
-            // todo this block should be pushed down to xf-bound as its specific to it
-            if(!control){
-                const input = document.createElement('input');
-                input.setAttribute('type', 'text');
-                this.appendChild(input);
-                control=input;
-            }
-
-
-        }
-
-        // todo this block should be pushed down to xf-bound as its specific to it
-        control.addEventListener(this.updateEvent, (e) => {
-            console.log('eventlistener ', this.updateEvent);
-
-            const modelitem = this.getModelItem();
-            const setval = this.shadowRoot.getElementById('setvalue');
-            setval.setValue(modelitem, control[this.valueProp]);
-            // console.log('updated modelitem ', modelitem);
-        });
-
-        this.control = control;
     }
-
-
 
     /**
      * (re)apply all state properties to this control.
      */
     async refresh() {
         console.log('### XfAbstractControl.refresh on : ', this);
-
 
         const currentVal = this.value;
 
@@ -135,16 +81,10 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     get control(){
         return this;
     }
+
     set control(control){
-
+        this.control = control;
     }
-
-/*
-    updated(){
-        super.updated();
-        this.handleModelItemProperties();
-    }
-*/
 
     handleModelItemProperties(){
         this.handleRequired();

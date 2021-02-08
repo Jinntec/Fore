@@ -1,6 +1,5 @@
-import {LitElement, html, css} from 'lit-element';
+import {css, html} from 'lit-element';
 import XfAbstractControl from "./xf-abstract-control.js";
-import {foreElementMixin} from "../ForeElementMixin.js";
 
 /**
  * `xf-bound`
@@ -36,7 +35,6 @@ class XfBound  extends XfAbstractControl {
 
     constructor(){
         super();
-        this.control = {};
         this.updateEvent='blur';
         this.valueProp='value'; //default
         this.inited = false;
@@ -61,28 +59,28 @@ class XfBound  extends XfAbstractControl {
     }
 
     firstUpdated(_changedProperties) {
-        console.log('firstUpdated ', _changedProperties);
+        // console.log('firstUpdated ', _changedProperties);
         super.firstUpdated(_changedProperties);
-        console.log('updateEvent', this.updateEvent);
-        this._init();
-    }
+        // console.log('updateEvent', this.updateEvent);
 
-    _init () {
-        const slots = this.shadowRoot.querySelectorAll('slot');
-        slots.forEach(slot => {
-            if (!slot.hasAttribute('name')) {
+        let controlObj;
+        if(!this.control){
+            const input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            this.appendChild(input);
+            // this.control = input;
+            this.controlObj = input;
 
-                const control = slot.assignedElements({flatten: true})[0];
-                this.control = control;
-                control.addEventListener(this.update, (e) => {
-                    console.log('eventlistener ', this.update);
+        }
 
-                    const modelitem = this.getModelItem();
-                    const setval = this.shadowRoot.getElementById('setvalue');
-                    setval.setValue(modelitem, control[this.valueProp]);
-                    // console.log('updated modelitem ', modelitem);
-                });
-            }
+        this.control.addEventListener(this.updateEvent, (e) => {
+            console.log('eventlistener ', this.updateEvent);
+
+            const modelitem = this.getModelItem();
+            const setval = this.shadowRoot.getElementById('setvalue');
+            // setval.setValue(modelitem, control[this.valueProp]);
+            setval.setValue(modelitem, this.control[this.valueProp]);
+            // console.log('updated modelitem ', modelitem);
         });
         this.inited = true;
     }
@@ -92,8 +90,12 @@ class XfBound  extends XfAbstractControl {
         return defaultSlot.assignedElements({flatten: true})[0];
     }
 
+/*
     set control(control){
+        this.control=control;
     }
+*/
+
 
 /*
     updated(changedProperties){
@@ -117,9 +119,11 @@ class XfBound  extends XfAbstractControl {
 
         console.log('valueProp ', this.valueProp);
 
+/*
         const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
         const control = defaultSlot.assignedElements()[0]; // there must be just
         this.control = control;
+*/
 
 /*
          this.evalInContext();

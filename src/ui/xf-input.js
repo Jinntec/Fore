@@ -61,7 +61,6 @@ class XfInput extends XfAbstractControl{
         this.value='';
         this.required = false;
         this.valid = true;
-        // this.modelItem={};
     }
 
 
@@ -77,32 +76,14 @@ class XfInput extends XfAbstractControl{
                                   ?required="${this.required}"
                                   ?this.readonly="${this.readonly}"
                                   @input="${this._handleInput}">
-                         <xf-setvalue id="setvalue" ref="${this.ref}"></xf-setvalue>
                     </paper-input>
+                    <xf-setvalue id="setvalue" ref="${this.ref}" value="${this.value}"></xf-setvalue>
                     ` :''}
             
             ${this.type === 'checkbox' ?
                 html`<paper-checkbox id="control" label="${this.label}" ?checked="${this.value === 'true'}"></paper-checkbox>` :''}
         `;
     }
-
-
-
-/*
-    refresh() {
-        super.refresh();
-        // console.log('------ this ', this);
-        // console.log('------ nodeset ', this.nodeset);
-        // console.log('------ modelItem ', this.getModelItem());
-        // console.log('------- required', this.getModelItem().modelItem.required);
-        // this.required = this.getModelItem().modelItem.required;
-        // this.valid = this.getModelItem().modelItem.required;
-        // this.value = this.getValue();
-        // this.value = this.getModelItem().modelItem.value;
-        // this.value = this.getValue();
-        this.requestUpdate();
-    }
-*/
 
     _handleInput(e) {
         // const mi = this.getmdelItem();
@@ -120,52 +101,8 @@ class XfInput extends XfAbstractControl{
     }
 
     get control(){
-        return this;
+        return this.shadowRoot.getElementById('control');
     }
-    set control(control){
-
-    }
-
-/*
-    /!**
-     * @override
-     * @private
-     *!/
-
-    attachListeners(){
-        super.attachListeners();
-
-        if (this.incremental) {
-            console.log('incremental handler');
-
-            this.$.input.addEventListener('keyup', function (e) {
-                console.log('keyup....... ', e);
-                if(this.modelItem.value !== e.target.value) {
-                    this.modelItem.value = e.target.value;
-                    this.dispatchValueChange();
-                }
-            }.bind(this));
-
-        } else {
-            this.$.input.addEventListener('blur', function (e) {
-                if(this.modelItem.value !== e.target.value) {
-                    this.modelItem.value = e.target.value;
-                    this.dispatchValueChange();
-                }
-            }.bind(this));
-
-        }
-    }
-*/
-
-    focus(){
-        this.$.input.focus();
-    }
-
-    _updateAlert() {
-
-    }
-
 
 }
 

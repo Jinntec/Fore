@@ -25,10 +25,10 @@ describe('control tests', () => {
                         </xf-bind>
                     </xf-model>
                     
-                    <input id="input1" label="A-label" ref="a">
+                    <xf-input id="input1" label="A-label" ref="a">
                         <xf-alert>Constraint not valid</xf-alert>
                         <xf-hint>must be one character long</xf-hint>
-                    </input>
+                    </xf-input>
 
                     <xf-input id="input2" label="B-label" ref="b">
                         <xf-alert id="alert1">Constraint not valid</xf-alert>
@@ -62,6 +62,86 @@ describe('control tests', () => {
 
 
     });
+
+    it('has a control child with value "Aa"', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <a>A</a>
+                            </data>
+                        </xf-instance>
+                
+                    </xf-model>
+                    
+                    <xf-input id="input1" label="A-label" ref="a">
+                    </xf-input>
+
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
+        const input = document.getElementById('input1');
+        expect(input.control).to.exist;
+        expect(input.control.value).to.equal('A');
+    });
+
+/*
+    it('listens for event', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <xf-form>
+                    <xf-model id="model1">
+                        <xf-instance>
+                            <data>
+                                <a>A</a>
+                            </data>
+                        </xf-instance>
+                
+                    </xf-model>
+                    
+                    <xf-input id="input1" label="A-label" ref="a">
+                    </xf-input>
+                    
+                    
+                </xf-form>`)
+        );
+
+        await elementUpdated(el);
+        // let { detail } = await oneEvent(el, 'refresh-done');
+
+
+        const input = document.getElementById('input1');
+        input.value='baz';
+        // let { detail } = await oneEvent(input, 'value-changed');
+        input.setValue('baz');
+        // const ctrl = input.shadowRoot.querySelector('#input');
+
+        // input.control.value = 'baz';
+        // console.log('input control', input.control);
+        // input.control.blur();
+
+        // const model = el.querySelector('xf-model');
+        // model.updateModel();
+        // el.refresh();
+
+
+
+
+        await oneEvent(el, 'refresh-done');
+
+        console.log('modelitem ', input.modelItem);
+        // let { detail1 } = await oneEvent(input, 'value-changed');
+
+        expect(input.modelItem.value).to.be.equal('baz');
+
+
+
+    });
+*/
 
 
 
