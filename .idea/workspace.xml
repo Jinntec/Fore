@@ -25,19 +25,14 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="refactored AbstractControl moving parts into xf-bound where they belong;&#10;additional tests;&#10;other minor fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/fun-with-actions.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/fun-with-actions.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/unbound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/unbound.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/xf-setvalue.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-setvalue.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-abstract-control.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/xf-bound.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-bound.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-input.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-output.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-output.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/xf-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/control.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/control.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/xf-bound.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/xf-bound.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -307,21 +302,7 @@
       <workItem from="1612431676107" duration="1398000" />
       <workItem from="1612451286979" duration="34380000" />
       <workItem from="1612614453746" duration="19933000" />
-      <workItem from="1612780570323" duration="10211000" />
-    </task>
-    <task id="LOCAL-00048" summary="factored out eval">
-      <created>1600536897421</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1600536897421</updated>
-    </task>
-    <task id="LOCAL-00049" summary="refresh with repeat fixed for single repeat">
-      <created>1600540582383</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1600540582383</updated>
+      <workItem from="1612780570323" duration="14634000" />
     </task>
     <task id="LOCAL-00050" summary="wait for last updateComplete on last repeat:&#10;fixed xf-input model usage">
       <created>1600542001046</created>
@@ -652,7 +633,21 @@
       <option name="project" value="LOCAL" />
       <updated>1612635079510</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="refactored AbstractControl moving parts into xf-bound where they belong;&#10;additional tests;&#10;other minor fixes">
+      <created>1612795370143</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1612795370144</updated>
+    </task>
+    <task id="LOCAL-00098" summary="fixed cyclic dependency;&#10;minor code style fixes and cleanups">
+      <created>1612801349202</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1612801349202</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -709,8 +704,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin;&#10;updated class diagram;" />
-    <MESSAGE value="fixed path for lazy created modelItems;&#10;xf-instance cleanup;" />
     <MESSAGE value="&#10;xf-instance cleanup;" />
     <MESSAGE value="test for modelitem path" />
     <MESSAGE value="fixed/completed buildBindGraph to add property when it exists but has no dependencies" />
@@ -734,7 +727,9 @@
     <MESSAGE value="xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code);&#10;adapted/fixed tests;" />
     <MESSAGE value="generating instance from UI if there's none;" />
     <MESSAGE value="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;" />
-    <option name="LAST_COMMIT_MESSAGE" value="additional demo;&#10;repeat index introduced again;&#10;fixed setvalue;&#10;various minor fixes;" />
+    <MESSAGE value="refactored AbstractControl moving parts into xf-bound where they belong;&#10;additional tests;&#10;other minor fixes" />
+    <MESSAGE value="fixed cyclic dependency;&#10;minor code style fixes and cleanups" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed cyclic dependency;&#10;minor code style fixes and cleanups" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1427" y="-829" key="#ESLint" timestamp="1605895991941">
@@ -750,10 +745,10 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612537292469" />
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2" timestamp="1612794920923">
+    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2" timestamp="1612801348660">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612794920923" />
+    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612801348660" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
     <state x="0" y="25" width="1520" height="1216" key="DiffContextDialog" timestamp="1611939023882">
       <screen x="0" y="25" width="1440" height="875" />
@@ -803,11 +798,11 @@
       <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="100" y="125" width="1240" height="675" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939788884" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612629625705">
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1612802747346">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-1768" y="103" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/-3440.-153.3440.1417/0.23.1440.877@-3440.-153.3440.1417" timestamp="1604171970712" />
-    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612629625705" />
+    <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612802747346" />
     <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607702770956">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>

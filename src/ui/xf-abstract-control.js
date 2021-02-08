@@ -58,11 +58,12 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
             this.modelItem = this.getModelItem();
 
             if (this.modelItem instanceof ModelItem) {
-                console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
+                // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
                 this.value = this.modelItem.value;
-                console.log('>>>>>>>> abstract refresh ', this.control);
-                this.control[this.valueProp] = this.value;
+                // console.log('>>>>>>>> abstract refresh ', this.control);
+                // this.control[this.valueProp] = this.value;
+                this._updateControlValue();
 
 
                 // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
@@ -76,6 +77,14 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         }
         await this.updateComplete;
 
+    }
+
+    _updateControlValue () {
+        if(this.valueProp === 'content'){
+            this.control.textContent = this.value;
+        } else {
+            this.control[this.valueProp] = this.value;
+        }
     }
 
     get control(){
@@ -216,7 +225,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
     isRequired(){
         // if(this.control.required){
-        console.log('isRequired',this);
+        // console.log('isRequired',this);
         // this.control = this.shadowRoot.querySelector('#control');
         if(!this.control){
             this.control = this.shadowRoot.getElementById('control');

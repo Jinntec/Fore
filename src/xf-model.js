@@ -97,7 +97,7 @@ export class XfModel extends HTMLElement {
 
 
     modelConstruct() {
-        console.log('MODEL::model-construct received ', this.id);
+        console.log('### <<<<< dispatching model-construct >>>>>');
         this.dispatchEvent(new CustomEvent('model-construct', { detail: this}));
 
         const instances = this.querySelectorAll('xf-instance');
@@ -113,7 +113,8 @@ export class XfModel extends HTMLElement {
                 console.log('_modelConstruct this.instances ', this.instances);
                 this.updateModel();
                 this.inited = true;
-                // console.log('dispatching model-construct-done');
+
+                console.log('### <<<<< dispatching model-construct-done >>>>>');
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,
                     bubbles: true,
@@ -182,7 +183,7 @@ export class XfModel extends HTMLElement {
             const node = this.mainGraph.getNodeData(path);
             // console.log('recalculating node ', node);
             const modelItem = this.getModelItem(node);
-            console.log('modelitem ', modelItem);
+            // console.log('modelitem ', modelItem);
 
             if (modelItem && path.indexOf(':')) {
                 const property = path.split(':')[1];
@@ -192,14 +193,14 @@ export class XfModel extends HTMLElement {
                         const compute = Fore.evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
                         modelItem.value = compute;
                     } else if (property !== 'constraint' && property !== 'type') {
-                        console.log('recalculating property ', property);
+                        // console.log('recalculating property ', property);
 
                         const expr = modelItem.bind[property];
                         if (expr) {
-                            console.log('recalc expr: ', expr);
+                            // console.log('recalc expr: ', expr);
                             const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
                             modelItem[property] = compute;
-                            console.log(`modelItem computed`, modelItem.required);
+                            // console.log(`modelItem computed`, modelItem.required);
                         }
                     }
                 }
@@ -213,12 +214,12 @@ export class XfModel extends HTMLElement {
         console.group('### revalidate');
 
         this.modelItems.forEach(modelItem => {
-            console.log('validating node ', modelItem.node);
+            // console.log('validating node ', modelItem.node);
             modelItem.alerts=[];//reset alerts
 
             const bind = modelItem.bind;
             if (bind) {
-                console.log('modelItem bind ', bind);
+                // console.log('modelItem bind ', bind);
 
                 // todo: investigate why bind is an element when created in xf-bind.init() and an ...
                 // xf-bind object when created lazily.

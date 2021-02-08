@@ -67,7 +67,6 @@ class XfBound  extends XfAbstractControl {
             const setval = this.shadowRoot.getElementById('setvalue');
             // setval.setValue(modelitem, control[this.valueProp]);
 
-            // todo: handle controls that have their value as content e.g. textarea
             setval.setValue(modelitem, this.control[this.valueProp]);
             // console.log('updated modelitem ', modelitem);
         });

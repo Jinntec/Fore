@@ -135,7 +135,7 @@ export class XfForm extends LitElement {
         const uiElements = this.querySelectorAll('*');
         await this.updateComplete;
         Fore.refreshChildren(this);
-        console.log('### <<<<< dispatch refresh-done - end of update cycle >>>>>');
+        console.log('### <<<<< dispatching refresh-done - end of update cycle >>>>>');
         this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
         console.groupEnd();
     }
@@ -154,7 +154,7 @@ export class XfForm extends LitElement {
     }
 
     _handleModelConstructDone(e){
-        console.log('modelConstructDone received', e.detail.model.id);
+        // console.log('modelConstructDone received', e.detail.model.id);
         if(this.model.instances.length === 0){
             console.log('### lazy creation of instance');
             const generated = new DOMParser().parseFromString('<data></data>','application/xml');
@@ -201,10 +201,13 @@ export class XfForm extends LitElement {
      async _initUI(){
         console.log('### _initUI()');
         await this.updateComplete;
-        this.refresh();
+        await this.refresh();
         this.ready = true;
-        this.dispatchEvent(new CustomEvent('ready', {}));
-    }
+        console.log('')
+         console.log('########## FORE: form fully initialized... ##########');
+         console.log('### <<<<< dispatching ready >>>>>');
+         this.dispatchEvent(new CustomEvent('ready', {}));
+     }
 
     _displayMessage(e) {
         const {level} = e.detail;

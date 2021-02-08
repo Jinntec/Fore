@@ -29,7 +29,7 @@ export default class XfSetvalue extends XfAction {
     }
 
     connectedCallback(){
-        console.log('connectedCallback ', this);
+        // console.log('connectedCallback ', this);
         if(this.hasAttribute('ref')){
             this.ref = this.getAttribute('ref');
         }else{

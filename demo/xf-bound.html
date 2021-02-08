@@ -25,10 +25,12 @@
         }
         xf-bound{
             display: table-row;
+
         }
         label{
             display: table-cell;
             padding-right:10px;
+            vertical-align: top;
         }
         section{
             padding-bottom: 50px;
@@ -42,8 +44,8 @@
 
 
 <xf-form>
-    <xf-setvalue ref="item" event="ready">foo</xf-setvalue>
-    <xf-message event="ready">Hi</xf-message>
+<!--    <xf-setvalue ref="item" event="ready">foo</xf-setvalue>-->
+    <xf-message event="refresh-done">Hi</xf-message>
     <xf-model id="model1">
         <xf-instance>
             <data>
@@ -59,9 +61,7 @@
     <xf-group>
 
         <h1>The xf-bound element</h1>
-
         <p></p>
-
 
         <section>
             <h2>Unwrapped custom control</h2>
@@ -115,6 +115,20 @@
         </section>
 
 
+
+                <section>
+                    <h3>Using a textarea</h3>
+
+                    <demo-snippet>
+                        <template>
+                            <xf-bound ref="item" update-event="input" value-prop="content">
+                                <label for="text1" slot="label">native textarea</label>
+                                <textarea id="text1" cols="40" rows="4"></textarea>
+                            </xf-bound>
+                        </template>
+                    </demo-snippet>
+
+                </section>
 
                 <section>
                     <h3>Using a checkbox</h3>
