@@ -51,7 +51,7 @@
             <data>
                 <item>foobar</item>
                 <checked>false</checked>
-                <listitem></listitem>
+                <listitem>foo</listitem>
             </data>
         </xf-instance>
         <xf-bind ref="item" required="true()" readonly="true()"></xf-bind>
@@ -62,8 +62,8 @@
 
         <h1>The xf-bound element</h1>
         <p></p>
-
 <!--
+
         <section>
             <h2>Unwrapped custom control</h2>
             <demo-snippet>
@@ -72,11 +72,9 @@
                 </template>
             </demo-snippet>
         </section>
--->
 
         <h2>wrapped native controls</h2>
 
-<!--
         <section>
             <h3>Shortest way to bind a control to a node in the data</h3>
             <demo-snippet>
@@ -89,9 +87,7 @@
             <p>When nothing is specified or wrapped a native input will be created, listening for blur event to update
                 the bound node.</p>
         </section>
--->
 
-<!--
         <section>
             <h3>Firing on 'input' event</h3>
 
@@ -105,9 +101,7 @@
             </demo-snippet>
 
         </section>
--->
 
-<!--
         <section>
             <h3>Using slots</h3>
             <demo-snippet>
@@ -120,82 +114,104 @@
             </demo-snippet>
             <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
         </section>
+
+
+
+        <section>
+            <h3>Using a textarea</h3>
+
+            <demo-snippet>
+                <template>
+                    <xf-bound ref="item" update-event="input" value-prop="content">
+                        <label for="text1" slot="label">native textarea</label>
+                        <textarea id="text1" cols="40" rows="4"></textarea>
+                    </xf-bound>
+                </template>
+            </demo-snippet>
+
+        </section>
+
+        <section>
+            <h3>Using a checkbox</h3>
+
+            <demo-snippet>
+                <template>
+                    <xf-bound ref="checked" update-event="input" value-prop="checked">
+                        <label for="check1" slot="label">native checkbox</label>
+                        <input id="check1" type="checkbox">
+                    </xf-bound>
+                    Value is: <xf-output ref="checked"></xf-output>
+                </template>
+            </demo-snippet>
+
+        </section>
+
+        <section>
+            <h3>Native select</h3>
+            <demo-snippet>
+                <template>
+
+                    <xf-bound ref="listitem" update-event="change">
+                        <label slot="label">native select</label>
+                        <select>
+                            <option value=""></option>
+                            <option value="foo">foo</option>
+                            <option value="bar">bar</option>
+                        <select>
+                    </xf-bound>
+
+                    Selected value is: <xf-output ref="listitem"></xf-output>
+
+                </template>
+            </demo-snippet>
+        </section>
 -->
 
+        <section>
+            <h3>Datalist</h3>
+            <demo-snippet>
+                <template>
+
+                    <xf-bound ref="listitem" update-event="input">
+                        <input list="ice-cream-flavors">
+                            <label slot="label">input with datalist</label>
+                        </input>
+                        <datalist id="ice-cream-flavors">
+                            <option value="Chocolate">
+                            <option value="Coconut">
+                            <option value="Mint">
+                            <option value="Strawberry">
+                            <option value="Vanilla">
+                        </datalist>
+                    </xf-bound>
+
+
+                    Selected value is: <xf-output ref="listitem"></xf-output>
+
+                </template>
+            </demo-snippet>
+        </section>
 
 
 <!--
-                <section>
-                    <h3>Using a textarea</h3>
+        <section>
+            <h3>Wrapped paper controls</h3>
 
-                    <demo-snippet>
-                        <template>
-                            <xf-bound ref="item" update-event="input" value-prop="content">
-                                <label for="text1" slot="label">native textarea</label>
-                                <textarea id="text1" cols="40" rows="4"></textarea>
-                            </xf-bound>
-                        </template>
-                    </demo-snippet>
+            <demo-snippet>
+                <template>
 
-                </section>
--->
+                    <h3>with onblur firing</h3>
+                    <xf-bound ref="item" update-event="change">
+                        <paper-input label="the item in paper land"></paper-input>
+                    </xf-bound>
 
-                <section>
-                    <h3>Using a checkbox</h3>
-
-                    <demo-snippet>
-                        <template>
-                            <xf-bound ref="checked" update-event="input" value-prop="checked">
-                                <label for="check1" slot="label">native checkbox</label>
-                                <input id="check1" type="checkbox">
-                            </xf-bound>
-                            Value is: <xf-output ref="checked"></xf-output>
-                        </template>
-                    </demo-snippet>
-
-                </section>
-        <!--
-
-                <section>
-                    <h3>Native select</h3>
-                    <demo-snippet>
-                        <template>
-
-                            <xf-bound ref="listitem" update-event="change">
-                                <label slot="label">native select</label>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="foo">foo</option>
-                                    <option value="bar">bar</option>
-                                    <select>
-                            </xf-bound>
-
-                            <xf-output ref="listitem">
-                                <label>Selected:</label>
-                            </xf-output>
-
-                        </template>
-                    </demo-snippet>
-                </section>
-        -->
-
-
-<!--        <h2>Wrapped paper components</h2>-->
-<!--
-        <demo-snippet>
-            <template>
-
-                <h3>with onblur firing</h3>
-                <xf-bound ref="item" update-event="change">
-                    <paper-input label="the item in paper land"></paper-input>
-                </xf-bound>
-
-                <h3>with incremental firing</h3>
-                <xf-bound ref="item" update-event="keyup">
-                    <paper-input label="the item in paper land"></paper-input>
-                </xf-bound>
-            </template>
-        </demo-snippet>
+                    <h3>with incremental firing</h3>
+                    <xf-bound ref="item" update-event="keyup">
+                        <paper-input label="the item in paper land"></paper-input>
+                    </xf-bound>
+                </template>
+            </demo-snippet>
+        </section>
 -->
 
         <!--
