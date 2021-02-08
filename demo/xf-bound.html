@@ -50,7 +50,7 @@
         <xf-instance>
             <data>
                 <item>foobar</item>
-                <checked>true</checked>
+                <checked>false</checked>
                 <listitem></listitem>
             </data>
         </xf-instance>
@@ -63,6 +63,7 @@
         <h1>The xf-bound element</h1>
         <p></p>
 
+<!--
         <section>
             <h2>Unwrapped custom control</h2>
             <demo-snippet>
@@ -71,9 +72,11 @@
                 </template>
             </demo-snippet>
         </section>
+-->
 
         <h2>wrapped native controls</h2>
 
+<!--
         <section>
             <h3>Shortest way to bind a control to a node in the data</h3>
             <demo-snippet>
@@ -86,7 +89,9 @@
             <p>When nothing is specified or wrapped a native input will be created, listening for blur event to update
                 the bound node.</p>
         </section>
+-->
 
+<!--
         <section>
             <h3>Firing on 'input' event</h3>
 
@@ -100,7 +105,9 @@
             </demo-snippet>
 
         </section>
+-->
 
+<!--
         <section>
             <h3>Using slots</h3>
             <demo-snippet>
@@ -113,9 +120,11 @@
             </demo-snippet>
             <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
         </section>
+-->
 
 
 
+<!--
                 <section>
                     <h3>Using a textarea</h3>
 
@@ -129,16 +138,18 @@
                     </demo-snippet>
 
                 </section>
+-->
 
                 <section>
                     <h3>Using a checkbox</h3>
 
                     <demo-snippet>
                         <template>
-                            <xf-bound ref="checked" update-event="input">
-                                <label for="check1" slot="label">native checkbox - not working</label>
+                            <xf-bound ref="checked" update-event="input" value-prop="checked">
+                                <label for="check1" slot="label">native checkbox</label>
                                 <input id="check1" type="checkbox">
                             </xf-bound>
+                            Value is: <xf-output ref="checked"></xf-output>
                         </template>
                     </demo-snippet>
 

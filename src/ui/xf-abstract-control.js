@@ -82,6 +82,12 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     _updateControlValue () {
         if(this.valueProp === 'content'){
             this.control.textContent = this.value;
+        } else if(this.valueProp === 'checked'){
+            if(this.value === true){
+                this.control.setAttribute('checked','true');
+            }else {
+                this.control.removeAttribute('checked');
+            }
         } else {
             this.control[this.valueProp] = this.value;
         }
