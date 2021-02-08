@@ -422,6 +422,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
     }
 
+/*
     static lazyCreateModelItem(model,ref,node){
         console.log('lazyCreateModelItem ', node);
 
@@ -457,6 +458,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         model.registerModelItem(mi);
         return mi;
     }
+*/
 
 
     /**

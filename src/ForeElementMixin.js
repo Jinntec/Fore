@@ -1,6 +1,7 @@
 import * as fx from 'fontoxpath';
 import {XPathUtil} from "./xpath-util.js";
-import {XfBind} from "./xf-bind.js";
+// import {XfBind} from "./xf-bind.js";
+import {XfModel} from "./xf-model.js";
 
 
 // export class ForeElement extends LitElement {
@@ -35,11 +36,10 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
     getModel(){
         if(this.hasAttribute('model')){
             const modelId = this.getAttribute('model');
-            return document.getElementById('modelId');
-        }else{
-            //defaults to first model in document order
-            return document.querySelector('xf-model');
+            return document.getElementById(modelId);
         }
+        // defaults to first model in document order
+        return document.querySelector('xf-model');
     }
 
 
@@ -85,14 +85,14 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         // try to get closest parent bind
         const parent = this.parentNode.closest('[ref]');
         if (!parent) {
-            return 'instance()'; //the default instance
+            return 'instance()'; // the default instance
         }
         return parent.getAttribute('ref');
     }
 
     _getParentBindingElement(start){
         if(start.parentNode.host){
-            const host = start.parentNode.host;
+            const {host} = start.parentNode;
             if(host.hasAttribute('ref')){
                 return host;
             }
@@ -140,7 +140,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             // return mi;
             // return this.getModel().getDefaultInstance().lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
             // return XfInstance.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
-            return XfBind.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+            return XfModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
         }
         return existed;
     }

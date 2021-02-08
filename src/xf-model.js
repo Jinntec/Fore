@@ -4,7 +4,8 @@ import {LitElement, css} from 'lit-element';
 import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
 import './xf-instance.js';
-// import {XfBind } from './xf-bind.js';
+import {ModelItem} from "./modelitem.js";
+import {XfBind } from './xf-bind.js';
 // import {XPathUtil} from "./xpath-util";
 
 export class XfModel extends HTMLElement {
@@ -59,6 +60,42 @@ export class XfModel extends HTMLElement {
         this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
     }
 
+    static lazyCreateModelItem(model,ref,node){
+        console.log('lazyCreateModelItem ', node);
+
+        let targetNode = {};
+        if(node === null) return null;
+        if(node.nodeType === node.TEXT_NODE){
+            // const parent = node.parentNode;
+            // console.log('PARENT ', parent);
+            targetNode = node.parentNode;
+        }else {
+            targetNode = node;
+        }
+
+        // const path = fx.evaluateXPath('path()',node);
+        const path = XfBind.getPath(node);
+
+        // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
+
+        // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
+        const mi = new ModelItem(path,
+            ref,
+            XfBind.READONLY_DEFAULT,
+            XfBind.RELEVANT_DEFAULT,
+            XfBind.REQUIRED_DEFAULT,
+            XfBind.CONSTRAINT_DEFAULT,
+            XfBind.TYPE_DEFAULT,
+            targetNode,
+            this);
+
+
+        // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+        model.registerModelItem(mi);
+        return mi;
+    }
+
+
     modelConstruct() {
         console.log('MODEL::model-construct received ', this.id);
         this.dispatchEvent(new CustomEvent('model-construct', { detail: this}));
@@ -71,7 +108,7 @@ export class XfModel extends HTMLElement {
                 promises.push(instance.init())
             });
 
-            Promise.all(promises).then(result => {
+            Promise.all(promises).then( result => {
                 this.instances = Array.from(instances);
                 console.log('_modelConstruct this.instances ', this.instances);
                 this.updateModel();
@@ -161,30 +198,13 @@ export class XfModel extends HTMLElement {
                         if (expr) {
                             console.log('recalc expr: ', expr);
                             const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
-
-                            // consolex.log(`${property} computed`, compute);
                             modelItem[property] = compute;
                             console.log(`modelItem computed`, modelItem.required);
                         }
-                        // const o = {...modelItem};
-                        // o[property] = compute;
-                        // console.log('spread update ', o);
-
                     }
                 }
             }
         })
-
-
-        /*
-                const binds = this.querySelectorAll('xf-bind[calculate]');
-                binds.forEach(bind => {
-                    const contextNode = bind.nodeset[0];
-                    const compute = fx.evaluateXPath(bind.required, contextNode, null, {});
-                    this.getModelItem(contextNode).value = compute;
-                    console.log('computed ', compute);
-                });
-        */
         console.log(`recalculate finished with modelItems ${this.modelItems.length} item(s)`, this.modelItems);
         console.groupEnd();
     }
@@ -217,11 +237,7 @@ export class XfModel extends HTMLElement {
                         }
                     }
                 }
-
-
-
             }
-
         });
         console.log('modelItems after revalidate: ', this.modelItems);
         console.groupEnd();
@@ -257,14 +273,12 @@ export class XfModel extends HTMLElement {
         return instArray.find(inst => inst.id === id);
     }
 
-
     evalBinding(bindingExpr) {
         // console.log('MODEL.evalBinding ', bindingExpr);
-        //default context of evaluation is always the default instance
+        // default context of evaluation is always the default instance
         const result = this.instances[0].evalXPath(bindingExpr);
         return result;
     }
-
 
     createRenderRoot() {
         /**
