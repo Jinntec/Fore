@@ -136,7 +136,8 @@ export class XfForm extends LitElement {
         await this.updateComplete;
         Fore.refreshChildren(this);
         console.log('### <<<<< dispatching refresh-done - end of update cycle >>>>>');
-        this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
+        // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
+        this.dispatchEvent(new CustomEvent('refresh-done'));
         console.groupEnd();
     }
 

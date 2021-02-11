@@ -44,7 +44,6 @@
 
 
 <xf-form>
-<!--    <xf-setvalue ref="item" event="ready">foo</xf-setvalue>-->
     <xf-message event="refresh-done">Hi</xf-message>
     <xf-model id="model1">
         <xf-instance>
@@ -173,8 +172,8 @@
                 <template>
 
                     <xf-bound ref="listitem" update-event="input">
+                        <label slot="label">input with datalist</label>
                         <input list="ice-cream-flavors">
-                            <label slot="label">input with datalist</label>
                         </input>
                         <datalist id="ice-cream-flavors">
                             <option value="Chocolate">

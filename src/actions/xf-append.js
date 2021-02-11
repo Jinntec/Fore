@@ -84,7 +84,10 @@ class XfAppend extends XfAction {
 
         // newItem.textContent="new";
 
-        console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
+        const instData = new XMLSerializer().serializeToString(this.getModel().getDefaultInstance().getInstanceData());
+        // console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
+        console.log('modified instance >>>');
+        console.log(instData);
 
         this.needsRebuild=true;
         this.needsRecalculate=true;
