@@ -102,7 +102,7 @@ export class XfRepeat extends XfContainer {
         console.log('##### repeat nodeset ', this.nodeset);
 
         // this.template = this.querySelector('template');
-        console.log('### init template for repeat ', this.id , this.template);
+        // console.log('### init template for repeat ', this.id , this.template);
         if (this.template === null) {
             // console.error('### no template found for this repeat:', this.id);
             //todo: catch this on form element
@@ -164,7 +164,6 @@ export class XfRepeat extends XfContainer {
         // super.refresh();
 
 
-        console.log('REPEAT.refresh nodeset ', this.nodeset);
         // this.requestUpdate();
         //create n repeat-items for nodeset
 

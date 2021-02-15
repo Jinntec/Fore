@@ -100,7 +100,7 @@ export class XfRepeatitem extends XfContainer{
         if(!this.inited){
             this.init();
         }
-        super.refresh();
+        // super.refresh();
         // await this.updateComplete;
 /*
         this.evalInContext();
