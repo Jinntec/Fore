@@ -44,7 +44,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // if(this.repeated) return ;
         if(this.isNotBound()) return;
 
-        // await this.updateComplete;
+        await this.updateComplete;
         this.evalInContext();
 
         if(this.isBound()) {
@@ -75,7 +75,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 this.handleModelItemProperties();
             }
         }
-        await this.updateComplete;
+        // await this.updateComplete;
 
     }
 

@@ -83,9 +83,10 @@ describe('control tests', () => {
         );
 
         await elementUpdated(el);
-        let { detail } = await oneEvent(el, 'refresh-done');
+        // let { detail } = await oneEvent(el, 'refresh-done');
         const input = document.getElementById('input1');
         expect(input.control).to.exist;
+        console.log('control value ', input.control);
         expect(input.control.value).to.equal('A');
     });
 

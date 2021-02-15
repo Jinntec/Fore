@@ -79,7 +79,8 @@
             margin: 4px;
         }
         [repeat-index]{
-            border:white solid 2px;
+            border:white solid 6px;
+            border-color:rgba(255,255,255,0.4);
         }
     </style>
 </head>
@@ -89,10 +90,17 @@
 
         <xf-instance>
             <data>
+                <task complete="false" due=""></task>
+            </data>
+        </xf-instance>
+<!--
+        <xf-instance>
+            <data>
                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
             </data>
         </xf-instance>
+-->
 
 
         <xf-bind ref="task">

@@ -1,5 +1,6 @@
 import {XfAction} from "./xf-action.js";
-import * as fx from "fontoxpath";
+// import * as fx from "fontoxpath";
+import {Fore} from "../fore.js";
 
 /**
  * `xf-delete`
@@ -43,10 +44,23 @@ class XfDelete extends XfAction {
             const rItem = this.parentNode.closest('xf-repeatitem');
             const idx = rItem.index;
 
-            const nodeToDelete = this.nodeset;
-            const p = nodeToDelete.parentNode;
-            p.removeChild(nodeToDelete);
-            // this.nodeset[idx]
+            const repeatElement = this.parentNode.closest('xf-repeat');
+
+            // todo: find a better solution for the empty repeat problem - this just empties the values of the last item.
+            // if(repeatElement.nodeset.length === 1 && idx === 1){
+            if(repeatElement.nodeset.length === 1){
+                // ### do not delete last entry but empty its values
+                const mItem = this.getModel().getModelItem(this.nodeset[0])
+                Fore.clear(mItem.node);
+            }else{
+                const nodeToDelete = this.nodeset[idx-1];
+                const p = nodeToDelete.parentNode;
+                p.removeChild(nodeToDelete);
+
+                //remove the repeatitem
+                rItem.parentNode.removeChild(rItem);
+            }
+
         }
 
 
@@ -64,7 +78,6 @@ class XfDelete extends XfAction {
         this.needsRevalidate=true;
         this.needsRefresh=true;
         this.actionPerformed();
-
     }
 
 }

@@ -114,10 +114,12 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         if(mi){
             this.modelItem = mi;
         }
+/*
         if(this.modelItem.node instanceof Node){
             // console.log('modelItem is already initialized ', this.modelItem);
             return this.modelItem;
         }
+*/
 
         const repeated = this.closest('xf-repeatitem');
         let existed;

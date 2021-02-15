@@ -66,6 +66,13 @@ export class XfRepeat extends XfContainer {
 
     }
 
+    render() {
+        return html`
+            <slot></slot>
+        `;
+    }
+
+
     setIndex(index){
         if(this.index !== index){
             this.index=index;
@@ -83,35 +90,14 @@ export class XfRepeat extends XfContainer {
         });
     }
 
-    /*
-    firstUpdated(_changedProperties) {
-        super.firstUpdated(_changedProperties);
-        this.init();
-        console.log('firstupdated done');
-    }
-*/
 
     init() {
         // ### there must be a single 'template' child
         console.log('##### repeat init');
         // if(!this.inited) this.init();
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
-
-        // this.updateComplete;
         this._evalNodeset();
         console.log('##### repeat nodeset ', this.nodeset);
-
-        // this.template = this.querySelector('template');
-        // console.log('### init template for repeat ', this.id , this.template);
-        if (this.template === null) {
-            // console.error('### no template found for this repeat:', this.id);
-            //todo: catch this on form element
-            this.dispatchEvent(new CustomEvent('no-template-error', {
-                composed: true,
-                bubbles: true,
-                detail: {"message": "no template found for repeat:" + this.id}
-            }));
-        }
 
         this._initTemplate();
         this._initRepeatItems();
@@ -157,6 +143,7 @@ export class XfRepeat extends XfContainer {
     refresh() {
         console.group('xf-repeat.refresh');
         if(!this.inited) this.init();
+
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
@@ -236,6 +223,12 @@ export class XfRepeat extends XfContainer {
 
     _initTemplate() {
         // ### there must be a single 'template' child
+
+        const defaultSlot = this.shadowRoot.querySelector('slot');
+        const template =  defaultSlot.assignedElements({flatten: true})[0];
+        console.log('>>>> template ', template);
+
+
         this.template = this.firstElementChild;
         console.log('### init template for repeat ', this.id , this.template);
         if (this.template === null) {
@@ -319,8 +312,10 @@ export class XfRepeat extends XfContainer {
             // console.log('initRepeatItem nodeset ',this.nodeset[index]);
             repeatItem.nodeset = this.nodeset[index];
             repeatItem.index = index +1; //1-based index
-            const content = this.template.content.cloneNode(true);
-            const clone = document.importNode(content, true);
+
+            const clone = this._clone();
+            // const content = this.template.content.cloneNode(true);
+            // const clone = document.importNode(content, true);
 
             // console.log('clone ', clone);
             repeatItem.appendChild(clone);
@@ -334,10 +329,17 @@ export class XfRepeat extends XfContainer {
 
     }
 
+    _clone() {
+        const content = this.template.content.cloneNode(true);
+        return document.importNode(content, true);
+    }
+
 
     _setIndex(repeatItem){
         this._removeIndexMarker();
-        repeatItem.setAttribute('repeat-index','');
+        if(repeatItem){
+            repeatItem.setAttribute('repeat-index','');
+        }
     }
 
     _removeIndexMarker() {
@@ -346,9 +348,11 @@ export class XfRepeat extends XfContainer {
         });
     }
 
+/*
     createRenderRoot() {
         return this;
     }
+*/
 }
 
 window.customElements.define('xf-repeat', XfRepeat);

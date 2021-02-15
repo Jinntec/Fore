@@ -288,6 +288,7 @@ describe('initialize repeat', () => {
 
     });
 
+/*
     it('handles a modelItem for the repeat itself', async () => {
         const el =  (
             await fixtureSync(html`
@@ -336,7 +337,8 @@ describe('initialize repeat', () => {
 
 
     });
-    
+*/
+
     it('appends an item', async () => {
         const el =  (
             await fixtureSync(html`

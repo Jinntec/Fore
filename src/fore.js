@@ -269,4 +269,25 @@ export class Fore{
         // startElement.requestUpdat();
     }
 
+    /**
+     * clear all text nodes and attribute values to get a 'clean' template.
+     * @param n
+     * @private
+     */
+    static clear(n){
+        n.textContent = '';
+        if(n.hasAttributes()){
+            const attrs = n.attributes;
+            for (let i = 0; i < attrs.length; i++) {
+                attrs[i].value = '';
+            }
+        }
+        const children = n.children;
+        for (let i = 0 ; i< children.length; i++){
+            Fore.clear(children[i]);
+        }
+
+    }
+
+
 }
