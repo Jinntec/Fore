@@ -100,9 +100,14 @@ class XfInput extends XfAbstractControl{
 
     }
 
-    get control(){
+    getControl(){
         return this.shadowRoot.getElementById('control');
     }
+
+    // updateControlValue(){
+    //     console.log('_updateControlValue xf-input');
+    //     this.shadowRoot.getElementById('control').value = this.value;
+    // }
 
 }
 

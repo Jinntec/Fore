@@ -7,8 +7,13 @@ export class XfOutput extends XfAbstractControl {
     static get styles() {
         return css`
             :host {
-                display: inline;
+                display: inline-block;
                 height:auto;
+                width:100%;
+            }
+            #control{
+                display:inline-block;
+                width:100%;
             }
         `;
     }

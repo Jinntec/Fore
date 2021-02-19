@@ -54,7 +54,6 @@ export class XfForm extends LitElement {
                 padding:var(--model-element-padding);
                 font-family:Roboto, sans-serif;
                 color:var(--paper-grey-900);
-                background:var(--paper-blue-50);
             }
             :host ::slotted(xf-model){
                 display:none;
@@ -130,10 +129,11 @@ export class XfForm extends LitElement {
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
      */
-    async refresh () {
+    // async refresh () {
+    refresh () {
         console.group('### refresh');
         const uiElements = this.querySelectorAll('*');
-        await this.updateComplete;
+        // await this.updateComplete;
         Fore.refreshChildren(this);
         console.log('### <<<<< dispatching refresh-done - end of update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));

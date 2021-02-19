@@ -66,7 +66,7 @@ export class XfRepeatitem extends XfContainer{
             } else if (child.children.length !== 0) {
                 const grantChildren = Array.from(child.children);
                 grantChildren.forEach(grantChild => {
-                    this.initializeChildren(grantChild);
+                    this._initializeChildren(grantChild);
                 });
             }
 
@@ -102,6 +102,7 @@ export class XfRepeatitem extends XfContainer{
         if(!this.inited){
             this.init();
         }
+        console.log('refresh repeatitem nodeset: ',this.nodeset);
         // super.refresh();
         Fore.refreshChildren(this);
         // super.refresh();

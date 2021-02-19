@@ -9,6 +9,10 @@
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../../src/xf-form.js';
+        import '../../src/ui/xf-repeat.js';
+        import '../../src/ui/xf-repeatitem.js';
+        import '../../src/ui/xf-bound.js';
+        import '../../src/ui/xf-input.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
 
@@ -16,6 +20,7 @@
     <link href="css/print.css" type="text/css" rel="stylesheet" media="print"/>
 
     <style>
+
         xf-model {
             display: none;
         }
@@ -26,6 +31,10 @@
             margin-top: 60px;
         }
 
+        .intro{
+            margin:20px 0;
+            width: 100%;
+        }
         .left textarea {
             width: 100%;
             height: 200px;
@@ -44,6 +53,9 @@
             margin-bottom: 20px;
         }
 
+        #description{
+            width: 100%;
+        }
         h1 {
             text-align: center;
             margin-bottom: 20px;
@@ -53,15 +65,53 @@
         .payment {
             font-size: 10px;
         }
+
+
+
+        xf-repeat{
+            margin-bottom: 20px;
+        }
+
+        .items{
+            width: 100%;
+            vertical-align: top;
+            margin-bottom: 20px;
+        }
+        .header{
+            background:orange;
+        }
+        .item-header, xf-repeatitem{
+            display:grid;
+            grid-template-columns: auto 100px 100px 100px;
+            grid-column-gap: 8px;
+            padding:10px;
+            position: relative;
+            align-items: stretch;
+
+        }
+        .item-header{
+            background: var(--paper-orange-500);
+        }
+        .add{
+            width: 16px;
+            height: 16px;
+            background: red;
+            position:absolute;
+            right:-16px;
+        }
+        .sum{
+            /*width: 100%;*/
+        }
     </style>
 </head>
 <body>
 
 <div id="page-wrap">
     <xf-form>
+<!--        <xf-setvalue event="ready" ref="date" value="current-date()"></xf-setvalue>-->
         <xf-model>
             <!--                <xf-instance src="invoice.xml">-->
-            <xf-instance src="invoice.xml">
+            <xf-instance>
                 <data>
                     <address>
                         COMPANY
@@ -70,11 +120,24 @@
                         COUNTRY
                     </address>
                     <date>foo</date>
+                    <item>
+                        <description>helo</description>
+                        <quantity>32</quantity>
+                        <price>100</price>
+                        <sum>10</sum>
+                    </item>
+                    <total></total>
                 </data>
             </xf-instance>
 
-            <xf-bind ref="date" calculate="current-date()"></xf-bind>
+            <xf-bind ref="date" required="true()"></xf-bind>
             <xf-bind ref="address" required="true()"></xf-bind>
+            <xf-bind ref="item">
+                <xf-bind ref="description"></xf-bind>
+                <xf-bind ref="quantity"></xf-bind>
+                <xf-bind ref="price"></xf-bind>
+                <xf-bind ref="sum"></xf-bind>
+            </xf-bind>
         </xf-model>
 
 
@@ -116,13 +179,12 @@
 <!--                        <xf-bound ref="date">
                             <input name="value" value="">
                         </xf-bound>-->
-                        <xf-input ref="date" type="date"></xf-input>
+<!--                        <xf-input ref="date" type="date"></xf-input>-->
 
-                        <xf-bound ref="date" update-event="blur" value-prop="value">
-                            <label slot="label">Date</label>
+                        <xf-bound ref="date">
                             <input name="value" value="" type="date">
                         </xf-bound>
-                        <input name="value" value="2021-01-01" type="date">
+<!--                        <input name="value" value="2021-01-01" type="date">-->
                     </td>
                 </tr>
                 <tr>
@@ -135,18 +197,90 @@
                 </tr>
             </table>
 
-            <textarea id="intro"></textarea>
+            <textarea class="intro" rows="3">Some unbound intro text .....</textarea>
+
+<!--
+            <xf-input ref="item/quantity">
+                <xf-label>lsjdlfjk</xf-label>
+            </xf-input>
+-->
+
+<!--
+            <xf-input ref="item/description">
+            </xf-input>
+            <xf-bound ref="item/description">
+            </xf-bound>
+-->
+
+
+
+
+            <div class="item-header">
+                <div>Description</div>
+                <div>Quantity</div>
+                <div>Price</div>
+                <div>Total</div>
+            </div>
+            <xf-repeat ref="item">
+                <template>
+                    <xf-bound ref="description" value-prop="content" update-event="input">
+                        <textarea id="description" rows="4"></textarea>
+                    </xf-bound>
+                    <xf-bound ref="quantity">
+                        <input type="number">
+                    </xf-bound>
+
+                    <xf-bound ref="price">
+                        <input type="number">
+                    </xf-bound>
+
+                    <xf-output class="sum" ref="sum"></xf-output>
+                    <span class="add">
+                        <xf-append ref="item" repeat="item"></xf-append>
+                    </span>
+                </template>
+            </xf-repeat>
+
+            <xf-output id="after" ref="item[1]/sum">
+                <label>sum>>> </label>
+            </xf-output>
+
+<!--            <xf-input ref="item[1]/sum"></xf-input>-->
 
 
             <!--
-                        <xf-group ref="body">
-                            <h1>hold up one finger!:
-                                <xf-output ref="arm/hand/finger" id="output"></xf-output>
-                            </h1>
-                            <h2>left or right?
-                                <xf-output ref="arm/@side"></xf-output>
-                            </h2>
-                        </xf-group>
+                        <table class="items">
+                            <tr class="header">
+                                <td>Description</td>
+                                <td>Quantity (Hours)</td>
+                                <td>Unit Price</td>
+                                <td>Sum</td>
+                            </tr>
+                            <xf-repeat ref="item">
+                                <template>
+                                    <tr>
+                                        <td>
+                                            <xf-bound ref="description" value-prop="content">
+                                                <textarea></textarea>
+                                            </xf-bound>
+                                        </td>
+                                        <td>
+                                            <xf-input ref="quantity">
+                                                <input type="number">
+                                            </xf-input>
+                                        </td>
+                                        <td>
+                                            <xf-bound ref="price">
+                                                <input type="number">
+                                            </xf-bound>
+                                        </td>
+                                        <td>
+                                            <xf-output ref="sum"></xf-output>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </xf-repeat>
+                        </table>
             -->
 
             <div class="vat-notice">

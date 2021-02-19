@@ -63,7 +63,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 this.value = this.modelItem.value;
                 // console.log('>>>>>>>> abstract refresh ', this.control);
                 // this.control[this.valueProp] = this.value;
-                this._updateControlValue();
+                await this.updateControlValue();
 
 
                 // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
@@ -79,7 +79,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
     }
 
-    _updateControlValue () {
+    async updateControlValue () {
         if(this.valueProp === 'content'){
             this.control.textContent = this.value;
         } else if(this.valueProp === 'checked'){
@@ -89,11 +89,20 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 this.control.removeAttribute('checked');
             }
         } else {
-            this.control[this.valueProp] = this.value;
+            let control = this.control;
+            if(!control){
+                control = this;
+            }
+            // control['value'] = this.value;
+            control.value = this.value;
         }
     }
 
     get control(){
+        return this.getControl();
+    }
+
+    getControl(){
         return this;
     }
 
@@ -244,8 +253,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     }
 
     isValid(){
-        // const control = this.querySelector('#control');
-        if(this.control.valid){
+        const control = this.getControl();
+        if(control.valid){
             return true;
         }
         return false;

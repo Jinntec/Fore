@@ -105,6 +105,7 @@ export class XfRepeat extends XfContainer {
         this.setAttribute('index',this.index);
 
         this.inited = true;
+        this.requestUpdate();
     }
 
     /**
@@ -149,7 +150,6 @@ export class XfRepeat extends XfContainer {
         console.log('repeat refresh nodeset ', this.nodeset);
 
         // super.refresh();
-
 
         // this.requestUpdate();
         //create n repeat-items for nodeset

@@ -15,6 +15,9 @@ class XfBound  extends XfAbstractControl {
         :host {
           display: inline-block;
         }
+        :host ::slotted(*){
+            width:100%;
+        }
         `;
     }
 

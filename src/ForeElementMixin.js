@@ -161,10 +161,12 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             return this.parentNode.host.nodeset[this.index -1];
         }
 */
-
         if(this.repeated){
-            return this.parentNode.nodeset;
+            const parentItem = this.parentNode.closest('xf-repeatitem');
+            return parentItem.nodeset;
         }
+
+/*
 
         let parentBind;
         if(this.parentNode.host){
@@ -174,6 +176,9 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         }
         // const parentBind = this.parentNode.closest('[ref]');
         // console.log('parentBind ', parentBind);
+*/
+
+        const parentBind = this.parentNode.closest('[ref]');
 
         if(parentBind !== null){
             resultNodeset = parentBind.nodeset;

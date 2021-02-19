@@ -46,7 +46,12 @@ export class XfAction extends foreElementMixin(HTMLElement){
     constructor(){
         super();
 
-        this.event = this.getAttribute('event');
+        if(this.hasAttribute('event')){
+            this.event = this.getAttribute('event');
+        }else{
+            this.event = 'activate';
+        }
+
         this.target = this.getAttribute('target');
 
         if (this.target) {
@@ -55,7 +60,7 @@ export class XfAction extends foreElementMixin(HTMLElement){
         } else {
             this.targetElement = this.parentNode;
             this.targetElement.addEventListener(this.event, e => this.execute(e));
-            console.log('adding listener for ', this.event , ' to ', this);
+            console.log('adding listener for ', this.event , ` to `, this);
         }
 
         this.needsRebuild = false;
