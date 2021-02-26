@@ -183,7 +183,8 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         if(parentBind !== null){
             resultNodeset = parentBind.nodeset;
         }else if(XPathUtil.isAbsolutePath(this.ref)){
-            resultNodeset = this.getModel().getInstance(this.instanceId).getDefaultContext();
+            const instanceId = XPathUtil.getInstanceId(this.ref);
+            resultNodeset = this.getModel().getInstance(instanceId).getDefaultContext();
         }else if(this.getModel().getDefaultInstance() !== null){
             resultNodeset = this.getModel().getDefaultInstance().getDefaultContext();
         }else{

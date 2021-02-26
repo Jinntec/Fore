@@ -218,7 +218,6 @@ describe('scoped resolution tests', () => {
                 </xf-form>`)
         );
 
-        await elementUpdated(el);
         const model = el.querySelector('xf-model');
 
         let { detail } = await oneEvent(el, 'refresh-done');
@@ -233,6 +232,7 @@ describe('scoped resolution tests', () => {
 
     });
 
+/*
     it('dispatches a bind exception for non-existing ref', async () => {
         const el =  (
             await fixtureSync(html`
@@ -251,7 +251,7 @@ describe('scoped resolution tests', () => {
         );
 
         await elementUpdated(el);
-/*
+/!*
         const model = el.querySelector('xf-model');
         expect(model.modelItems.length).to.equal(8);
 
@@ -260,9 +260,10 @@ describe('scoped resolution tests', () => {
 
         out = el.querySelector('#output3');
         expect(out.modelItem.value).to.equal('right');
-*/
+*!/
 
     });
+*/
 
 
 });

@@ -93,11 +93,15 @@
             background: var(--paper-orange-500);
         }
         .add{
-            width: 16px;
-            height: 16px;
-            background: red;
-            position:absolute;
-            right:-16px;
+            width: 22px;
+            height: 18px;
+            background: ghostwhite;
+            position: absolute;
+            right: -22px;
+            text-align: center;
+            border: 1px solid lightgrey;
+            display: inline-block;
+            cursor:pointer;
         }
         .sum{
             /*width: 100%;*/
@@ -136,7 +140,7 @@
                 <xf-bind ref="description"></xf-bind>
                 <xf-bind ref="quantity"></xf-bind>
                 <xf-bind ref="price"></xf-bind>
-                <xf-bind ref="sum"></xf-bind>
+                <xf-bind ref="sum" calculate="../quantity * ../price"></xf-bind>
             </xf-bind>
         </xf-model>
 
@@ -217,8 +221,8 @@
 
             <div class="item-header">
                 <div>Description</div>
-                <div>Quantity</div>
-                <div>Price</div>
+                <div>Quantity (hours)</div>
+                <div>Price (Euro)</div>
                 <div>Total</div>
             </div>
             <xf-repeat ref="item">
@@ -235,7 +239,7 @@
                     </xf-bound>
 
                     <xf-output class="sum" ref="sum"></xf-output>
-                    <span class="add">
+                    <span class="add">+
                         <xf-append ref="item" repeat="item"></xf-append>
                     </span>
                 </template>

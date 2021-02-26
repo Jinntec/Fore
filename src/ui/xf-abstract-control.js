@@ -1,7 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
 import  '../xf-model.js';
-// import {BoundElement} from "../BoundElement";
 import {foreElementMixin} from "../ForeElementMixin.js";
 import { ModelItem } from "../modelitem.js";
 
@@ -10,7 +9,6 @@ import { ModelItem } from "../modelitem.js";
  * is a general class for control elements.
  *
  * @customElement
- * @polymer
  * @appliesMixin BoundElementMixin
  */
 export default class XfAbstractControl extends foreElementMixin(LitElement) {
@@ -80,21 +78,20 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     }
 
     async updateControlValue () {
-        if(this.valueProp === 'content'){
-            this.control.textContent = this.value;
-        } else if(this.valueProp === 'checked'){
-            if(this.value === true){
-                this.control.setAttribute('checked','true');
+        // this.control[this.valueProp] = this.value;
+        if(this.valueProp === 'checked'){
+            if(this.value === 'true'){
+                this.control.checked = true;
             }else {
-                this.control.removeAttribute('checked');
+                this.control.checked = false;
             }
         } else {
             let control = this.control;
             if(!control){
                 control = this;
             }
-            // control['value'] = this.value;
-            control.value = this.value;
+            control['value'] = this.value;
+            // control.value = this.value;
         }
     }
 

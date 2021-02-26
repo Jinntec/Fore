@@ -54,7 +54,7 @@ describe('initialize repeat', () => {
             `)
         );
 
-        await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const model = document.getElementById('record');
         expect(model.modelItems.length).to.equal(6);
@@ -124,8 +124,6 @@ describe('initialize repeat', () => {
                 </xf-form>
             `)
         );
-
-        await elementUpdated(el);
 
         let { detail } = await oneEvent(el, 'refresh-done');
 
@@ -205,7 +203,6 @@ describe('initialize repeat', () => {
             `)
         );
 
-        await elementUpdated(el);
         let { detail } = await oneEvent(el, 'refresh-done');
 
         const repeat =  document.getElementById('todos');
@@ -273,7 +270,7 @@ describe('initialize repeat', () => {
             `)
         );
 
-        await elementUpdated(el);
+        // await elementUpdated(el);
         let { detail } = await oneEvent(el, 'refresh-done');
 
         const inputs = el.querySelectorAll('xf-repeatitem xf-input');

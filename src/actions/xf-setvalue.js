@@ -6,7 +6,6 @@ import "../xf-model.js";
  * `xf-setvalue`
  *
  * @customElement
- * @polymer
  */
 export default class XfSetvalue extends XfAction {
 

@@ -1,4 +1,4 @@
-import {LitElement, css} from 'lit-element';
+// import {LitElement, css} from 'lit-element';
 
 // import fx from "fontoxpath";
 import DepGraph from "./dep_graph.js";
@@ -10,37 +10,6 @@ import {XfBind } from './xf-bind.js';
 
 export class XfModel extends HTMLElement {
 
-    static get styles() {
-        return css`
-            :host {
-                display: none;
-            }
-        `;
-    }
-
-    static get properties() {
-        return {
-            id: {
-                type: String
-            },
-            instances: {
-                type: Array
-            },
-            /*
-                        defaultInstance: {
-                            type: Object
-                        },
-            */
-            defaultContext: {
-                type: Object
-            },
-            modelItems: {
-                type: Array
-            }
-
-        };
-    }
-
     constructor() {
         super();
         // this.id = '';
@@ -50,6 +19,7 @@ export class XfModel extends HTMLElement {
 
         this.mainGraph = new DepGraph(false);
         this.inited = false;
+        this.attachShadow({mode:'open'});
     }
 
     get formElement(){
@@ -57,7 +27,11 @@ export class XfModel extends HTMLElement {
     }
 
     connectedCallback() {
-        this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
+        console.log('connectedCallback ', this);
+        // this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
+        this.shadowRoot.innerHTML = `
+            <slot></slot>
+        `;
     }
 
     static lazyCreateModelItem(model,ref,node){
@@ -75,8 +49,6 @@ export class XfModel extends HTMLElement {
 
         // const path = fx.evaluateXPath('path()',node);
         const path = XfBind.getPath(node);
-
-        // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
 
         // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
         const mi = new ModelItem(path,
@@ -100,39 +72,40 @@ export class XfModel extends HTMLElement {
         console.log('### <<<<< dispatching model-construct >>>>>');
         this.dispatchEvent(new CustomEvent('model-construct', { detail: this}));
 
-        const instances = this.querySelectorAll('xf-instance');
-        if (instances.length > 0) {
-            console.group('init instances');
-            const promises = [];
-            instances.forEach(instance => {
-                promises.push(instance.init())
-            });
+            const instances = this.querySelectorAll('xf-instance');
+            if (instances.length > 0) {
+                console.group('init instances');
+                const promises = [];
+                instances.forEach(instance => {
+                    promises.push(instance.init())
+                });
 
-            Promise.all(promises).then( result => {
-                this.instances = Array.from(instances);
-                console.log('_modelConstruct this.instances ', this.instances);
-                this.updateModel();
-                this.inited = true;
+                Promise.all(promises).then( result => {
+                    this.instances = Array.from(instances);
+                    console.log('_modelConstruct this.instances ', this.instances);
+                    this.updateModel();
+                    this.inited = true;
 
-                console.log('### <<<<< dispatching model-construct-done >>>>>');
+                    console.log('### <<<<< dispatching model-construct-done >>>>>');
+                    this.dispatchEvent(new CustomEvent('model-construct-done', {
+                        composed: true,
+                        bubbles: true,
+                        detail: {model: this}
+                    }));
+
+                });
+                console.groupEnd();
+
+            } else {
+                // ### if there's no instance one will created
                 this.dispatchEvent(new CustomEvent('model-construct-done', {
                     composed: true,
                     bubbles: true,
                     detail: {model: this}
                 }));
+            }
+            this.inited = true;
 
-            });
-            console.groupEnd();
-
-        } else {
-            // ### if there's no instance one will created
-            this.dispatchEvent(new CustomEvent('model-construct-done', {
-                composed: true,
-                bubbles: true,
-                detail: {model: this}
-            }));
-        }
-        this.inited = true;
     }
 
     registerModelItem(modelItem) {
@@ -280,15 +253,6 @@ export class XfModel extends HTMLElement {
         const result = this.instances[0].evalXPath(bindingExpr);
         return result;
     }
-
-    createRenderRoot() {
-        /**
-         * Render template without shadow DOM. Note that shadow DOM features like
-         * encapsulated CSS and slots are unavailable.
-         */
-        return this;
-    }
-
 
 }
 

@@ -1,38 +1,14 @@
-import {LitElement, html, css} from 'lit-element';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icon/iron-icon.js';
 
-import '../assets/@polymer/paper-dialog/paper-dialog.js';
-import '../assets/@polymer/paper-button/paper-button.js';
-import '../assets/@polymer/paper-icon-button/paper-icon-button.js';
-import '../assets/@polymer/iron-icons/iron-icons.js';
-import '../assets/@polymer/iron-icon/iron-icon.js';
-
-// import {registerCustomXPathFunction} from 'fontoxpath';
 import {Fore} from './fore.js';
-
-// model classes
 import './xf-model.js';
 import './xf-instance.js';
-import './xf-bind.js';
-// import './xf-submission.js';
 
-// ui classes
-import './ui/xf-group.js';
-import './ui/xf-button.js';
-import './ui/xf-output.js';
-import './ui/xf-input.js';
-import './ui/xf-hint.js';
-import './ui/xf-alert.js';
-
-// action classes
-/*
-import './actions/xf-action.js';
-import './deprecated/xf-message.js';
-import './actions/xf-append.js';
-import './actions/xf-delete.js';
-import "./actions/xf-setvalue.js";
-*/
-
-import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
+import '@vaadin/vaadin-notification/vaadin-notification.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -44,10 +20,33 @@ import '../assets/@vaadin/vaadin-notification/vaadin-notification.js';
  *
  * This element uses LitElement as it uses shadowDOM to tempate global message dialogs
  */
-export class XfForm extends LitElement {
+export class XfForm extends HTMLElement {
 
-    static get styles() {
-        return css`
+
+    static get properties() {
+        return {
+            model:{
+                type: Object
+            },
+            ready:{
+                type:Boolean
+            }
+        };
+    }
+
+    constructor() {
+        super();
+        this.model = {};
+        this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        this.addEventListener('message', this._displayMessage);
+        this.addEventListener('error', this._displayError);
+        window.addEventListener('compute-exception', e =>{
+            console.error("circular dependency: ", e);
+        });
+
+        this.ready = false;
+
+        const style = `
             :host {
                 display: block;
                 height:auto;
@@ -59,78 +58,62 @@ export class XfForm extends LitElement {
                 display:none;
             }
         `;
-    }
 
-    static get properties() {
-        return {
-            model:{
-                type: Object
-            },
-            /**
-             * array of xf-model elements contained in this form
-             */
-            models:{
-                type: Array
-            },
-            ready:{
-                type:Boolean
-            }
-        };
-    }
-
-    constructor() {
-        super();
-        this.model = {};
-        this.models = [];
-        this.addEventListener('model-construct-done', this._handleModelConstructDone);
-        this.addEventListener('message', this._displayMessage);
-        this.addEventListener('error', this._displayError);
-        this.ready = false;
-    }
-
-    render() {
-        return html`
-            <slot></slot>
-
+        const html = `
+           <slot></slot>
            <paper-dialog id="modalMessage" modal="true">
                 <div id="messageContent"></div>
                 <div class="dialogActions">
                     <paper-button dialog-dismiss autofocus>Close</paper-button>
                 </div>
            </paper-dialog>
-
         `;
-    }
 
-    /**
-     * kick off from processing...
-     *
-     * @param _changedProperties
-     */
-    firstUpdated(_changedProperties) {
-        console.log('########## FORE: kick off processing... ##########');
-        window.addEventListener('compute-exception', e =>{
-            console.error("circular dependency: ", e);
+        this.attachShadow({mode:'open'});
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${html}
+        `;
+
+        const slot = this.shadowRoot.querySelector('slot');
+        slot.addEventListener('slotchange', (event) => {
+            const children = event.target.assignedElements();
+            console.log('children ', children);
+            let model = children.find(model => model.nodeName.toUpperCase() === 'XF-MODEL');
+            if(!model){
+                console.log('model ', model);
+                const generatedModel = document.createElement('xf-model');
+                this.appendChild(generatedModel);
+                model=generatedModel;
+            }
+            if(!model.inited){
+                console.log('########## FORE: kick off processing... ##########');
+                model.modelConstruct();
+            }
+            this.model = model;
         });
-        this.init();
+
     }
 
-    init(){
-        this.model = this.querySelector('xf-model');
-        if(!this.model){
-            const generatedModel = document.createElement('xf-model');
-            this.appendChild(generatedModel);
-            this.model=generatedModel;
-        }
-        this.model.modelConstruct();
+    connectedCallback() {
+        // super.connectedCallback();
+        console.log('connectedCallback ', this);
+        // console.log('########## FORE: kick off processing... ##########');
+        // window.addEventListener('compute-exception', e =>{
+        //     console.error("circular dependency: ", e);
+        // });
+        // this.init();
+
     }
 
     /**
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
      */
-    // async refresh () {
-    refresh () {
+    async refresh () {
+    // refresh () {
         console.group('### refresh');
         const uiElements = this.querySelectorAll('*');
         // await this.updateComplete;
@@ -156,20 +139,22 @@ export class XfForm extends LitElement {
 
     _handleModelConstructDone(e){
         // console.log('modelConstructDone received', e.detail.model.id);
-        if(this.model.instances.length === 0){
-            console.log('### lazy creation of instance');
-            const generated = new DOMParser().parseFromString('<data></data>','application/xml');
-            console.log('generated root element ', generated.firstElementChild);
-            const newData = this._generateInstance(this, generated.firstElementChild);
-            console.log('newnewnewe',newData);
-
-            const generatedInstance = document.createElement('xf-instance');
-            generatedInstance.appendChild(newData);
-            generatedInstance.init();
-            this.model.instances.push(generatedInstance);
-            // this.model.updateModel();
-        }
+        console.log('model ', this.model);
         this._initUI();
+    }
+
+    async _lazyCreateInstance(){
+        const model = this.querySelector('xf-model');
+        if(model.instances.length === 0){
+            console.log('### lazy creation of instance');
+            const generatedInstance = document.createElement('xf-instance');
+            model.appendChild(generatedInstance);
+
+            const generated = document.implementation.createDocument(null, "data");
+            const newData = this._generateInstance(this, generated.firstElementChild);
+            generatedInstance.instanceData = generated;
+            model.instances.push(generatedInstance);
+        }
     }
 
     /**
@@ -180,7 +165,8 @@ export class XfForm extends LitElement {
 
         if(start.hasAttribute('ref')){
             const ref = start.getAttribute('ref');
-            const generated = document.createElement(ref);
+            // const generated = document.createElement(ref);
+            const generated = parent.ownerDocument.createElement(ref);
             if(start.children.length === 0){
                 generated.textContent = start.textContent;
             }
@@ -201,10 +187,11 @@ export class XfForm extends LitElement {
 
      async _initUI(){
         console.log('### _initUI()');
-        await this.updateComplete;
-        await this.refresh();
-        this.ready = true;
-        console.log('')
+
+         await this._lazyCreateInstance();
+         await this.refresh();
+         this.ready = true;
+         console.log('')
          console.log('########## FORE: form fully initialized... ##########');
          console.log('### <<<<< dispatching ready >>>>>');
          this.dispatchEvent(new CustomEvent('ready', {}));

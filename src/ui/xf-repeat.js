@@ -10,7 +10,6 @@ import {Fore} from "../fore";
  * an xformish form for eXist-db
  *
  * @customElement
- * @polymer
  * @demo demo/index.html
  */
 export class XfRepeat extends XfContainer {

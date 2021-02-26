@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Selects</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: 18px;
+        }
+        xf-instance{
+            display:none;
+        }
+        xf-bound{
+            display: table-row;
+
+        }
+        label{
+            display: table-cell;
+            padding-right:10px;
+            vertical-align: top;
+        }
+        section{
+            padding-bottom: 50px;
+        }
+        xf-setvalue, xf-message{
+            display: none;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<xf-form>
+    <xf-message event="refresh-done">Hi</xf-message>
+    <xf-model id="model1">
+        <xf-instance>
+            <data>
+                <item>foobar</item>
+                <fruit>false</fruit>
+                <listitem>foo</listitem>
+            </data>
+        </xf-instance>
+
+        <xf-instance id="fruits">
+            <data>
+                <fruit value="apple">Apple</fruit>
+                <fruit value="orange">Orange</fruit>
+                <fruit value="strawberry">Strawberry</fruit>
+            </data>
+        </xf-instance>
+
+        <xf-bind ref="item" required="true()" readonly="true()"></xf-bind>
+        <xf-bind ref="fruit"></xf-bind>
+        <xf-bind ref="listitem"></xf-bind>
+    </xf-model>
+    <xf-group>
+
+        <h1>Select controls</h1>
+        <p></p>
+
+<!--
+        <section>
+            <h3>Native select</h3>
+            <demo-snippet>
+                <template>
+
+                    <xf-bound ref="listitem" update-event="change">
+                        <label slot="label">native select</label>
+                        <select>
+                            <option value=""></option>
+                            <option value="foo">foo</option>
+                            <option value="bar">bar</option>
+                        <select>
+                    </xf-bound>
+
+                    Selected value is: <xf-output ref="listitem"></xf-output>
+
+                </template>
+            </demo-snippet>
+        </section>
+-->
+
+        <section>
+            <h3>Native select creating options from instance</h3>
+            <demo-snippet>
+                <template>
+
+                    <xf-bound ref="fruit" update-event="change">
+                        <label slot="label">native select</label>
+                        <select ref="instance('fruits')//fruit">
+                            <template>
+                                <option></option>
+                            </template>
+                        <select>
+                    </xf-bound>
+
+                    Selected value is: <xf-output ref="listitem"></xf-output>
+
+                </template>
+            </demo-snippet>
+        </section>
+
+        <script type="module" src="../index.js"></script>
+
+    </xf-group>
+</xf-form>
+
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>

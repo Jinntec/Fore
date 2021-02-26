@@ -1,6 +1,6 @@
 import {html,css} from "lit-element";
-import '../../assets/@polymer/paper-input/paper-input.js';
-import '../../assets/@polymer/paper-checkbox/paper-checkbox.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
 import XfAbstractControl from "./xf-abstract-control.js";
 import "../actions/xf-setvalue.js";
 import "../xf-model.js";
@@ -10,7 +10,6 @@ import "../xf-model.js";
  * general class for bound elements
  *
  * @customElement
- * @polymer
  */
 class XfInput extends XfAbstractControl{
 

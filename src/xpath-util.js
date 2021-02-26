@@ -21,6 +21,8 @@ export class XPathUtil {
         if(ref.startsWith('instance(')){
             let result = ref.substring(ref.indexOf('(') + 1);
             return result.substring(1, result.indexOf(')') -1);
+        } else {
+            return 'default';
         }
     }
 

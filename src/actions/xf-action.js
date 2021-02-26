@@ -1,6 +1,3 @@
-// import "../xf-form.js";
-import "../xf-model.js";
-
 import { foreElementMixin } from "../ForeElementMixin.js";
 
 /**

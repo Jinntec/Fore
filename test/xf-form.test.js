@@ -39,8 +39,6 @@ describe('initialize form', () => {
             `)
         );
 
-        await elementUpdated(el);
-
         let { detail } = await oneEvent(el, 'ready');
         expect(el.ready).to.be.true;
 
@@ -121,11 +119,18 @@ describe('initialize form', () => {
         const el = (
             await fixtureSync(html`
                 <xf-form>
+                    <xf-model>
+                        <xf-instance>
+                            <data></data>
+                        </xf-instance>
+                    </xf-model>
                 </xf-form>
             `)
         );
         // await model.updated();
-        await elementUpdated(el);
+        // await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
+        console.log('el ',el);
         const dialog = el.shadowRoot.querySelector('paper-dialog');
         expect(dialog).to.exist;
         expect(dialog.id).to.be.equal('modalMessage');

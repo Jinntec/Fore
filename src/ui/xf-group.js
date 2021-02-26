@@ -11,7 +11,6 @@ import {XfContainer} from './xf-container';
  *
  *  * todo: implement
  * @customElement
- * @polymer
  */
 class XfGroup extends XfContainer{
 

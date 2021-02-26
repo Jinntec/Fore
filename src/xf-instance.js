@@ -1,75 +1,51 @@
-import {LitElement, html, css} from 'lit-element';
-import '../assets/@polymer/iron-ajax/iron-ajax.js';
+import '@polymer/iron-ajax/iron-ajax.js';
 
 import * as fx from 'fontoxpath';
 
-export class XfInstance extends LitElement {
-
-    static get styles() {
-        return css`
-            :host {
-                display: none;
-            }
-        `;
-    }
-
-    static get properties() {
-        return {
-            id:{
-                type: String
-            },
-            src:{
-                type: String
-            },
-            model:{
-                type:Object
-            },
-            /**
-             * the type of instance either 'xml' or 'json'. This is reserved for future
-             * use and setting 'json' has no effect yet.
-             */
-            type:{
-                type: String
-            }
-        };
-    }
+export class XfInstance extends HTMLElement {
 
     constructor() {
         super();
-        this.src = '';
-        this.id = 'default';
+
         this.model = this.parentNode;
         this.type= 'xml';
+
+        this.attachShadow({mode:'open'});
+
     }
 
-/*
     connectedCallback(){
+        console.log('connectedCallback ', this);
+        if(this.hasAttribute('src')){
+            this.src=this.getAttribute('src');
+        }
+        // this.src = '';
+
         if(this.hasAttribute('id')){
             this.id = this.getAttribute('id');
         }else{
             this.id = 'default';
         }
-        if(this.hasAttribute('type')){
-            this.type = this.getAttribute('type');
-        }
-        // this.id = this.getAttribute('id');
-    }
-*/
+        const style = `
+            :host {
+                display: none;
+            }
+        `;
 
-    render() {
-        return html`
-            ${this.src?
-            html`
-                <iron-ajax 
-                    id="loader"
-                    url="${this.src}"
-                    method="GET"
-                    handle-as="text"
-                    with-credentials
-                    @error="${this._handleError}"
-                ></iron-ajax>
-            `:''}
-            <slot></slot>
+        const html = `
+           <slot></slot>
+           <iron-ajax 
+                id="loader"
+                url="${this.src}"
+                method="GET"
+                handle-as="text"
+                with-credentials></iron-ajax>
+        `;
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${html}
         `;
     }
 
@@ -86,31 +62,10 @@ export class XfInstance extends LitElement {
     }
 
     evalXPath(xpath){
-        // console.log('eval: ', xpath);
-        // console.log('eval: ', fx.evaluateXPathToString(xpath, this.defaultinstance, null, {}));
-        // const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
-
-        // console.log('evalXPath ', xpath);
-        // console.log('evalXPath default instance data', this.instanceData);
-        // console.log('evalXPath default instance data first', this.instanceData.firstElementChild);
-
-        // const result = fx.evaluateXPathToFirstNode(xpath, this.instanceData.firstElementChild, null, {});
         const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
         return result;
     }
 
-
-/*
-    setValue(path, newValue){
-        const updateExpr = 'replace value of node ' + path + ' with "' + newValue + '"';
-        console.log('instance updateExpr: ', updateExpr);
-        fx.evaluateUpdatingExpression(updateExpr, this.instanceData)
-        .then(result => {
-            fx.executePendingUpdateList(result.pendingUpdateList);
-        });
-
-    }
-*/
 
     getInstanceData(){
         return this.instanceData;
@@ -131,24 +86,22 @@ export class XfInstance extends LitElement {
 
             if(this.src === '#querystring' ){
                 const query = new URLSearchParams(location.search);
-                console.log('query', query);
+                // console.log('query', query);
 
-                // let instanceData = document.createDocument();
-                // const instanceData = document.implementation.createDocument(null,'data',null);
-                const instanceData = new DOMParser().parseFromString('<data></data>','application/xml');
-                console.log('new doc ', instanceData);
-
-                // const root = document.createElement('data');
-                // instanceData.appendChild(root);
+                const doc = new DOMParser().parseFromString('<data></data>','application/xml');
+                const root = doc.firstElementChild;
                 for(const p of query){
-                    const n = document.createElement(p[0]);
-                    n.appendChild(document.createTextNode(p[1]));
-                    instanceData.documentElement.appendChild(n);
+                    const newNode = doc.createElement(p[0]);
+                    newNode.appendChild(doc.createTextNode(p[1]));
+                    root.appendChild(newNode);
                 }
 
-                this.instanceData = instanceData;
-
+                this.instanceData = doc;
                 this.instanceData.firstElementChild.setAttribute('id',this.id);
+
+                // const data = new XMLSerializer().serializeToString(this.instanceData);
+                // console.log('instance from querystring ' , data);
+
                 resolve("done");
             } else if(this.src){
 
@@ -197,8 +150,6 @@ export class XfInstance extends LitElement {
         this.instanceData = instanceData;
         // console.log('instanceData ', this.instanceData);
         // console.log('instanceData ', this.instanceData.firstElementChild);
-
-
         // this.shadowRoot.appendChild(this.instanceData.firstElementChild);
 
         console.log('xf-instance data: ', this.instanceData);

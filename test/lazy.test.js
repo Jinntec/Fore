@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/app.js';
+import '../index.js';
 
-describe('lazy initialize modelItem', () => {
+describe('lazy initialize', () => {
 
     it('creates modelItem during refresh', async () => {
         const el =  (
@@ -29,9 +29,7 @@ describe('lazy initialize modelItem', () => {
                 </xf-form>`)
         );
 
-        await elementUpdated(el);
 
-        // await elementUpdated(model);
         let { detail } = await oneEvent(el, 'refresh-done');
         const model = el.querySelector('xf-model');
         console.log('modelitems ', model.modelItems);
@@ -67,12 +65,13 @@ describe('lazy initialize modelItem', () => {
                 </xf-form>`)
         );
 
-        await elementUpdated(el);
+        // await elementUpdated(el);
         const model = el.querySelector('xf-model');
         expect(model).to.exist;
+        expect(model.instances).to.exist;
+        expect(model.instances.length).to.equal(1);
     });
 
-/*
     it('constructs an instance when there is none', async () => {
         const el =  (
             await fixtureSync(html`
@@ -84,16 +83,26 @@ describe('lazy initialize modelItem', () => {
                 </xf-form>`)
         );
 
-        await elementUpdated(el);
-        let { detail } = await oneEvent(el, 'refresh-done');
+        // let { detail } = await oneEvent(el, 'model-construct-done');
+        console.log('form  ', el);
 
+        const model = el.querySelector('xf-model');
+        console.log('model created ', model);
         const inst = el.querySelector('xf-instance');
         console.log('++++++++++++ inst ', inst);
         // await elementUpdated(inst);
         expect(inst).to.exist;
+        expect(inst.instanceData).to.exist;
+        const root = inst.instanceData.firstElementChild;
+        expect(root.nodeName).to.equal('data');
+        const outer = root.firstElementChild;
+        expect(outer.nodeName).to.equal('outer');
+        const inner = outer.firstElementChild;
+        expect(inner.nodeName).to.equal('inner1');
+        const inner2 = inner.nextSibling;
+        expect(inner2.nodeName).to.equal('inner2');
 
     });
-*/
 
 
 });

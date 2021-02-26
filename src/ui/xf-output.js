@@ -9,7 +9,6 @@ export class XfOutput extends XfAbstractControl {
             :host {
                 display: inline-block;
                 height:auto;
-                width:100%;
             }
             #control{
                 display:inline-block;

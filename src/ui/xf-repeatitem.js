@@ -1,4 +1,4 @@
-import {LitElement,html, css} from "lit-element";
+// import {LitElement,html, css} from "lit-element";
 import {Fore} from "../fore.js";
 import {XfContainer} from "./xf-container";
 
@@ -8,11 +8,11 @@ import {XfContainer} from "./xf-container";
  * an xformish form for eXist-db
  *
  * @customElement
- * @polymer
  * @demo demo/index.html
  */
 export class XfRepeatitem extends XfContainer{
 
+/*
     static get styles() {
         return css`
             :host {
@@ -20,6 +20,7 @@ export class XfRepeatitem extends XfContainer{
             }
         `;
     }
+*/
 
     static get properties() {
         return {

@@ -1,5 +1,5 @@
 import {LitElement, html, css} from 'lit-element';
-import '../../assets/@polymer/paper-button/paper-button.js';
+import '@polymer/paper-button/paper-button.js';
 import XfAbstractControl from "./xf-abstract-control.js";
 /**
  * `xf-button`

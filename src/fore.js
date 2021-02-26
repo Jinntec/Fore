@@ -1,6 +1,4 @@
 import {
-    evaluateUpdatingExpressionSync,
-    executePendingUpdateList,
     registerCustomXPathFunction,
     registerXQueryModule
 } from 'fontoxpath';
@@ -201,6 +199,7 @@ export class Fore{
                 currentContext: {formElement}
             });
     }
+
 	static get XFORMS_NAMESPACE_URI () {
 		return XFORMS_NAMESPACE_URI
 	}

@@ -17,7 +17,7 @@ describe('initialize instance', () => {
             `)
         );
 
-        await elementUpdated(el);
+        // await elementUpdated(el);
         expect(el.id).to.equal('default');
 
     });
@@ -35,7 +35,7 @@ describe('initialize instance', () => {
         );
 
         el.init();
-        await elementUpdated(el);
+        // await elementUpdated(el);
         expect(el.instanceData).to.exist;
         expect(el.instanceData.nodeType).to.equal(Node.DOCUMENT_NODE);
     });
@@ -53,7 +53,6 @@ describe('initialize instance', () => {
         );
 
         el.init();
-        await elementUpdated(el);
         const result = el.evalXPath('//foobar');
         expect(result).to.exist;
         expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
@@ -73,7 +72,6 @@ describe('initialize instance', () => {
         );
 
         el.init();
-        await elementUpdated(el);
         const context = el.getDefaultContext();
         expect(context).to.exist;
         expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
@@ -99,7 +97,6 @@ describe('initialize instance', () => {
         );
 
         el.init();
-        await elementUpdated(el);
         const doc = el.getInstanceData();
         expect(doc).to.exist;
 
@@ -142,7 +139,8 @@ describe('initialize instance', () => {
             `)
         );
 
-        await elementUpdated(el);
+        // await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const instances = el.querySelectorAll('xf-instance');
         expect(instances[0].id).to.equal('default');
@@ -177,14 +175,15 @@ describe('initialize instance', () => {
             `)
         );
 
-        await elementUpdated(el);
+        // await elementUpdated(el);
+        let { detail } = await oneEvent(el, 'refresh-done');
 
         const instances = el.querySelectorAll('xf-instance');
         expect(instances[0].id).to.equal('default');
         expect(instances[1].id).to.equal('second');
 
         const model = el.querySelector('xf-model');
-        await elementUpdated(model);
+        // await elementUpdated(model);
         const {modelItems} = model;
         // expect(modelItems[0].required).to.be.false;
         console.log('>>>>>>>>>>>< modelitem ', modelItems[0])
