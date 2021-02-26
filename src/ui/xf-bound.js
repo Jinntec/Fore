@@ -87,8 +87,8 @@ class XfBound extends XfAbstractControl {
         super.refresh();
         // await this.updateComplete;
         const {control} = this;
-        // ### if we find a ref on control we have a 'select' control of some kind
 
+        // ### if we find a ref on control we have a 'select' control of some kind
         if(this.control.hasAttribute('ref')){
             console.log('we have a list');
             console.log('list control ', this.control);

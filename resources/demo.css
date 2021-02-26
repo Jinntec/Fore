@@ -1,0 +1,11 @@
+body {
+    padding:20px;
+    font-family: 'Roboto', 'Noto', sans-serif;
+}
+
+#modalMessage{
+    background:orange;
+}
+#modalMessage .dialogActions{
+    text-align:center;
+}

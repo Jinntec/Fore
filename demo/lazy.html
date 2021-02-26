@@ -7,6 +7,10 @@
     <title>lazy modelItem creation during UI init</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -24,29 +28,34 @@
 </head>
 <body unresolved="unresolved">
 
+<demo-snippet>
+    <template>
 
-<xf-form>
-    <xf-message event="refresh-done">refresh has been done</xf-message>
+        <xf-form>
+            <xf-message level="modal" event="refresh-done">refresh has been done</xf-message>
 
-    <xf-model id="model1">
-        <xf-instance>
-            <data>
-                <greeting type="message:">Hello World!</greeting>
-            </data>
-        </xf-instance>
-    </xf-model>
-    <xf-group>
+            <xf-model id="model1">
+                <xf-instance>
+                    <data>
+                        <greeting type="message:">Hello World!</greeting>
+                    </data>
+                </xf-instance>
+            </xf-model>
+            <xf-group>
 
-        <h1 class="{class}">
-            lazy greeting
-        </h1>
-        <xf-output id="output" ref="greeting/@type"></xf-output>
-        <xf-output id="output" ref="greeting"></xf-output>
+                <h1 class="{class}">
+                    lazy greeting
+                </h1>
+                <xf-output id="output" ref="greeting/@type"></xf-output>
+                <xf-output id="output" ref="greeting"></xf-output>
 
-    </xf-group>
-</xf-form>
+            </xf-group>
+        </xf-form>
+    </template>
+</demo-snippet>
 
-<script type="module" src="../src/app.js"></script>
+
+<script type="module" src="../index.js"></script>
 
 </body>
 </html>

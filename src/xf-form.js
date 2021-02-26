@@ -57,6 +57,9 @@ export class XfForm extends HTMLElement {
             :host ::slotted(xf-model){
                 display:none;
             }
+            #modalMessage .dialogActions{
+                text-align:center;
+            }
         `;
 
         const html = `
