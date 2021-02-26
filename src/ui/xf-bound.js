@@ -1,6 +1,5 @@
 import {css, html} from 'lit-element';
 import XfAbstractControl from "./xf-abstract-control.js";
-// import * as fx from "fontoxpath";
 import {Fore} from "../fore.js";
 
 /**

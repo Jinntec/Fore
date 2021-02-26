@@ -106,6 +106,16 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
 
 export class Fore{
 
+    static READONLY_DEFAULT = false;
+
+    static REQUIRED_DEFAULT = false;
+
+    static RELEVANT_DEFAULT = true;
+
+    static CONSTRAINT_DEFAULT = true;
+
+    static TYPE_DEFAULT = 'xs:string';
+
 
     static get ACTION_ELEMENTS(){
         return [

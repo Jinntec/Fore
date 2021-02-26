@@ -208,6 +208,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         this._processChildren(model);
     }
 
+/*
     //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
     static getPath(node){
         let path = fx.evaluateXPath('path()',node);
@@ -219,11 +220,12 @@ export class XfBind extends foreElementMixin(HTMLElement){
         }
 
     }
+*/
 
     _buildBindGraph(){
         this.nodeset.forEach(node => {
 
-            const path = XfBind.getPath(node);
+            const path = XPathUtil.getPath(node);
 
             const calculateRefs = this._getReferencesForProperty(this.calculate,node);
             if(calculateRefs.length !== 0){
@@ -280,7 +282,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
             }
             refs.forEach(ref => {
                 const other = fx.evaluateXPath(ref,node);
-                const otherPath = XfBind.getPath(other);
+                const otherPath = XPathUtil.getPath(other);
 
                 if(!this.model.mainGraph.hasNode(otherPath)){
                     // this.model.mainGraph.addNode(otherPath,{node:other});
@@ -511,7 +513,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
 
         // const path = fx.evaluateXPath('path()',node);
         // const path = this.getPath(node);
-        const path = XfBind.getPath(node);
+        const path = XPathUtil.getPath(node);
         // const shortPath = this.shortenPath(path);
 
         // ### constructiong default modelitem - will get evaluated during reaalculate()

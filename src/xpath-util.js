@@ -1,3 +1,5 @@
+import * as fx from "fontoxpath";
+
 /**
  * Checks wether the specified path expression is an absolute path.
  *
@@ -25,5 +27,33 @@ export class XPathUtil {
             return 'default';
         }
     }
+
+    //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
+    static getPath(node){
+        let path = fx.evaluateXPath('path()',node);
+        const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
+        if(instanceId !== 'default'){
+            return '#' + instanceId + XPathUtil.shortenPath(path);
+        }else {
+            return XPathUtil.shortenPath(path);
+        }
+
+    }
+
+    static shortenPath(path){
+        const steps = path.split('/');
+        let result='';
+        for(let i=2;i<steps.length;i++){
+            const step = steps[i];
+            if(step.indexOf('{}') !== -1){
+                const q = step.split('{}');
+                result += `/${q[1]}`;
+            }else{
+                result += `/${step}`;
+            }
+        }
+        return result;
+    }
+
 
 }

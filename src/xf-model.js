@@ -1,12 +1,8 @@
-// import {LitElement, css} from 'lit-element';
-
-// import fx from "fontoxpath";
 import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
 import './xf-instance.js';
 import {ModelItem} from "./modelitem.js";
-import {XfBind } from './xf-bind.js';
-// import {XPathUtil} from "./xpath-util";
+import {XPathUtil} from './xpath-util.js';
 
 export class XfModel extends HTMLElement {
 
@@ -48,16 +44,16 @@ export class XfModel extends HTMLElement {
         }
 
         // const path = fx.evaluateXPath('path()',node);
-        const path = XfBind.getPath(node);
+        const path = XPathUtil.getPath(node);
 
         // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
         const mi = new ModelItem(path,
             ref,
-            XfBind.READONLY_DEFAULT,
-            XfBind.RELEVANT_DEFAULT,
-            XfBind.REQUIRED_DEFAULT,
-            XfBind.CONSTRAINT_DEFAULT,
-            XfBind.TYPE_DEFAULT,
+            Fore.READONLY_DEFAULT,
+            Fore.RELEVANT_DEFAULT,
+            Fore.REQUIRED_DEFAULT,
+            Fore.CONSTRAINT_DEFAULT,
+            Fore.TYPE_DEFAULT,
             targetNode,
             this);
 
