@@ -83,10 +83,8 @@ export class XfForm extends HTMLElement {
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', (event) => {
             const children = event.target.assignedElements();
-            console.log('children ', children);
             let model = children.find(model => model.nodeName.toUpperCase() === 'XF-MODEL');
             if(!model){
-                console.log('model ', model);
                 const generatedModel = document.createElement('xf-model');
                 this.appendChild(generatedModel);
                 model=generatedModel;
@@ -102,7 +100,7 @@ export class XfForm extends HTMLElement {
 
     connectedCallback() {
         // super.connectedCallback();
-        console.log('connectedCallback ', this);
+        // console.log('connectedCallback ', this);
         // console.log('########## FORE: kick off processing... ##########');
         // window.addEventListener('compute-exception', e =>{
         //     console.error("circular dependency: ", e);
@@ -121,10 +119,10 @@ export class XfForm extends HTMLElement {
         const uiElements = this.querySelectorAll('*');
         // await this.updateComplete;
         Fore.refreshChildren(this);
-        console.log('### <<<<< dispatching refresh-done - end of update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
-        this.dispatchEvent(new CustomEvent('refresh-done'));
         console.groupEnd();
+        console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
+        this.dispatchEvent(new CustomEvent('refresh-done'));
     }
 
     _refreshChildren(){
@@ -141,8 +139,6 @@ export class XfForm extends HTMLElement {
     }
 
     _handleModelConstructDone(e){
-        // console.log('modelConstructDone received', e.detail.model.id);
-        console.log('model ', this.model);
         this._initUI();
     }
 
@@ -194,9 +190,8 @@ export class XfForm extends HTMLElement {
          await this._lazyCreateInstance();
          await this.refresh();
          this.ready = true;
-         console.log('')
-         console.log('########## FORE: form fully initialized... ##########');
          console.log('### <<<<< dispatching ready >>>>>');
+         console.log('########## FORE: form fully initialized... ##########');
          this.dispatchEvent(new CustomEvent('ready', {}));
      }
 

@@ -12,8 +12,11 @@
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
 
+
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
+
+
     <style>
         .dynamic {
             background: #76ff03;
@@ -22,31 +25,36 @@
     </style>
 </head>
 <body unresolved="unresolved">
+    <div class="wrapper">
 
-<h1>Get started</h1>
+        <h1>Get started</h1>
+        <code>
+            <data>
+                <foo></foo>
+            </data>
+        </code>
 
-<p>
-    Ultra-lazy mode creates XML nodes for each 'ref' found in the document. This mode is activated
-    whenever there is no xf-model element specified.
-</p>
-<p>It serves simple use cases where just a bunch of params have to be collected without much bells
-    and whistles</p>
+            <p>
+                Ultra-lazy mode creates XML nodes for each 'ref' found in the document. This mode is activated
+                whenever there is no xf-model element specified.
+            </p>
 
-<demo-snippet>
-    <template>
+            <demo-snippet>
+                <template>
 
-        <xf-form>
+                    <xf-form>
+                        <xf-output ref="greeting">Hello Universe</xf-output>
+                    </xf-form>
 
-            <xf-group ref="outer">
-                <xf-output ref="inner1">inner1</xf-output>
-                <xf-output ref="inner2">inner2</xf-output>
-            </xf-group>
+                </template>
+            </demo-snippet>
 
-        </xf-form>
-    </template>
-</demo-snippet>
+<!--        <pre>-->
+<!--        </pre>-->
+
+    </div>
+
 
 <script type="module" src="../index.js"></script>
-
 </body>
 </html>

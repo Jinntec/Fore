@@ -1,6 +1,7 @@
 body {
     padding:20px;
     font-family: 'Roboto', 'Noto', sans-serif;
+    font-size: 1.2rem;
 }
 
 #modalMessage{
@@ -9,3 +10,9 @@ body {
 #modalMessage .dialogActions{
     text-align:center;
 }
+
+.wrapper{
+    max-width: 800px;
+    margin:0 auto;
+}
+

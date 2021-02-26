@@ -1,5 +1,4 @@
 import {LitElement, html, css} from 'lit-element';
-// import '../assets/@polymer/iron-ajax/iron-ajax.js';
 import '@polymer/iron-ajax/iron-ajax.js';
 
 // import * as fx from 'fontoxpath';

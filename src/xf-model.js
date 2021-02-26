@@ -23,15 +23,14 @@ export class XfModel extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log('connectedCallback ', this);
-        // this.id = this.hasAttribute("id") ? this.getAttribute('id') : 'default';
+        // console.log('connectedCallback ', this);
         this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
     }
 
     static lazyCreateModelItem(model,ref,node){
-        console.log('lazyCreateModelItem ', node);
+        // console.log('lazyCreateModelItem ', node);
 
         let targetNode = {};
         if(node === null) return null;

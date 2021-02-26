@@ -15,7 +15,7 @@ export class XfInstance extends HTMLElement {
     }
 
     connectedCallback(){
-        console.log('connectedCallback ', this);
+        // console.log('connectedCallback ', this);
         if(this.hasAttribute('src')){
             this.src=this.getAttribute('src');
         }
