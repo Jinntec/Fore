@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Refs</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>What are these <code>ref</code>s about?</h1>
+    <p>Seen that <code>ref</code> thingy before but what does it actually do?</p>
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-output ref="greeting">Hello Universe</xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Description</h2>
+    <p>A <code>ref</code> (short for 'reference') points to some location in your instance data and binds to it. Whenever
+        that bound node changes the UI will follow.</p>
+
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance>
+                        <data>
+                            <planet>
+                                <greeting>Hello Earth</greeting>
+                            </planet>
+                        </data>
+                    </xf-instance>
+                </xf-model>
+
+                <xf-output ref="planet/greeting"></xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+
+
+    <p>A <code>ref</code> is a path expression - it may have steps ...</p>
+
+    <p>The <code>data</code> step does not need to be mentioned - it's always implicit to save typing.</p>
+</div>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

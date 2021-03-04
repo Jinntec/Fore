@@ -34,12 +34,8 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
     }
 
     getModel(){
-        if(this.hasAttribute('model')){
-            const modelId = this.getAttribute('model');
-            return document.getElementById(modelId);
-        }
-        // defaults to first model in document order
-        return document.querySelector('xf-model');
+        const ownerForm = this.closest('xf-form');
+        return ownerForm.querySelector('xf-model');
     }
 
 

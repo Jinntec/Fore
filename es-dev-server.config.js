@@ -2,7 +2,7 @@ module.exports = {
     port: 8090,
     watch: true,
     nodeResolve: true,
-    appIndex: 'demo/index.html',
+    appIndex: './index.html',
     plugins: [
         {
             serve(context){

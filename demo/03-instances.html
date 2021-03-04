@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Instances</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Instances - a home for your precious data</h1>
+
+    <p>First of all - there can as many <code>xf-instance</code> elements as you need.</p>
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance>
+                        <data>
+                            <foobar></foobar>
+                        </data>
+                    </xf-instance>
+                    <xf-instance id="second">
+                        <data>
+                            <item>second</item>
+                        </data>
+                    </xf-instance>
+                </xf-model>
+            </xf-form>
+        </template>
+    </demo-snippet>
+    <h2>Description</h2>
+    <p>We got 2 instances that create 2 separate XML documents. The first in the document is always
+    the default. All following ones need to have an <code>id</code>.</p>
+</div>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

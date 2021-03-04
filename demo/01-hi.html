@@ -25,34 +25,76 @@
     </style>
 </head>
 <body unresolved="unresolved">
-    <div class="wrapper">
+<div class="wrapper">
 
-        <h1>Get started</h1>
-        <code>
-            <data>
-                <foo></foo>
-            </data>
-        </code>
+    <h1>Lazy Greeting</h1>
 
-            <p>
-                Ultra-lazy mode creates XML nodes for each 'ref' found in the document. This mode is activated
-                whenever there is no xf-model element specified.
-            </p>
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-output ref="greeting">Hello Universe</xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
 
-            <demo-snippet>
-                <template>
+    <h2>Description</h2>
+    <p>
+        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>xf-form</code> element. Besides
+        that we have a <code>xf-output</code> which - well -outputs a referenced data node.
+    </p>
+    <p>
+        Fore is MVC but where's the model? It gets auto-generated if you don't provide one.
+        For each Fore component with a <code>ref</code> a node in the instance data is created. The value of that
+        bound component is taken as the default value. The form will create a XML document for your data.
+    </p>
 
-                    <xf-form>
-                        <xf-output ref="greeting">Hello Universe</xf-output>
-                    </xf-form>
+    <p>If you haven't felt that lazy this morning you could have written the equivalent like so:</p>
 
-                </template>
-            </demo-snippet>
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance>
+                        <data>
+                            <greeting>Hello Universe</greeting>
+                        </data>
+                    </xf-instance>
+                </xf-model>
+                <xf-output ref="greeting">Hello Universe</xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
 
-<!--        <pre>-->
-<!--        </pre>-->
+    <p>The form holds a single <code>xf-model</code> which itself contains a <code>xf-instance</code> element. This
+    is where our actual data are living. A form can contain a single model but as many <code>xf-instance</code> elements
+    as you like.</p>
 
-    </div>
+    <h2>Nesting refs</h2>
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-group ref="planet">
+                    <xf-output ref="greeting">Hello Earth</xf-output>
+                </xf-group>
+            </xf-form>
+        </template>
+    </demo-snippet>
+
+    <p>Guess how the instance looks like now? Here it is </p>
+    <demo-snippet>
+        <template>
+            <xf-instance>
+                <data>
+                    <planet>
+                        <greeting>Hello Earth</greeting>
+                    </planet>
+                </data>
+            </xf-instance>
+        </template>
+    </demo-snippet>
+
+</div>
 
 
 <script type="module" src="../index.js"></script>
