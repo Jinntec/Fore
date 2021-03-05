@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Instance super powers</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Instance super powers</h1>
+
+    <p>Instances don't need to be inline...</p>
+
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance src="instance1.xml"></xf-instance>
+                </xf-model>
+                <xf-output ref="greeting"></xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+    <h3>Description</h3>
+    <p>This instance loads its data from a local file. However this can be any kind of URL.</p>
+
+    <h2>Using the queryString</h2>
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance src="#querystring"></xf-instance>
+                </xf-model>
+                <xf-output ref="param1"></xf-output>
+                <xf-output ref=param2></xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+    <h3>Description</h3>
+    <p>Notice that we've called this demo with 2 parameter on the querystring of the URL. When using the constant
+    <code>#querystring</code> as the <code>src</code> of an instance it will created a instance with one node for
+        each param on the querystring.
+    </p>
+</div>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

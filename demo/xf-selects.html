@@ -44,12 +44,11 @@
 
 
 <xf-form>
-    <xf-message event="refresh-done">Hi</xf-message>
     <xf-model id="model1">
         <xf-instance>
             <data>
                 <item>foobar</item>
-                <fruit>false</fruit>
+                <fruit>apple</fruit>
                 <listitem>foo</listitem>
             </data>
         </xf-instance>
@@ -98,16 +97,20 @@
             <demo-snippet>
                 <template>
 
+                    <!--
+                    todo: the ref from the select  could be moved up to @items on xf-bound - more explicit and no
+                    breaking of the contentmodel of the select.
+                    -->
                     <xf-bound ref="fruit" update-event="change">
                         <label slot="label">native select</label>
                         <select ref="instance('fruits')//fruit">
                             <template>
-                                <option value="{value}">{.}</option>
+                                <option value="{@value}">{.}</option>
                             </template>
                         <select>
                     </xf-bound>
 
-                    Selected value is: <xf-output ref="listitem"></xf-output>
+                    Selected value is: <xf-output ref="fruit"></xf-output>
 
                 </template>
             </demo-snippet>

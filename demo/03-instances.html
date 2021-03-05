@@ -42,16 +42,44 @@
                     </xf-instance>
                     <xf-instance id="second">
                         <data>
-                            <item>second</item>
+                            <item>second instance</item>
                         </data>
                     </xf-instance>
+                    .
+                    .
+                    .
                 </xf-model>
             </xf-form>
         </template>
     </demo-snippet>
-    <h2>Description</h2>
+    <h3>Description</h3>
     <p>We got 2 instances that create 2 separate XML documents. The first in the document is always
     the default. All following ones need to have an <code>id</code>.</p>
+
+    <h2>Addressing instances</h2>
+    <demo-snippet>
+        <template>
+            <xf-form>
+                <xf-model>
+                    <xf-instance>
+                        <data>
+                            <foobar>hi</foobar>
+                        </data>
+                    </xf-instance>
+                    <xf-instance id="second">
+                        <data>
+                            <item>second</item>
+                        </data>
+                    </xf-instance>
+                </xf-model>
+                <xf-output ref="foobar"></xf-output>
+                <xf-output ref="instance('second')//item"></xf-output>
+            </xf-form>
+        </template>
+    </demo-snippet>
+
+    <p>To refer to a node in a non-default instance you have to use the <code>instance()</code> function which takes
+    the <code>id</code> as parameter. This returns the root-node of that instance.</p>
 </div>
 
 

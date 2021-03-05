@@ -83,40 +83,105 @@ class XfBound extends XfAbstractControl {
         return  ctrl;
     }
 
-    refresh() {
+    refresh () {
         super.refresh();
         // await this.updateComplete;
         const {control} = this;
 
         // ### if we find a ref on control we have a 'select' control of some kind
+        // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
         if(this.control.hasAttribute('ref')){
-            console.log('we have a list');
-            console.log('list control ', this.control);
             const tmpl = control.querySelector('template');
-            console.log('select template contents', tmpl.content);
-            console.log('select template ', tmpl.content);
 
             // ### eval nodeset for list control
             const ref = control.getAttribute('ref');
-            console.log('ref of list control ', ref);
             const inscope = this._inScopeContext();
-            console.log('##### inscope ', inscope);
-            // const nodeset = fx.evaluateXPathToNodes(ref, inscope, null, {});
-
-            let formElement;
-            for (let anc = this; anc; anc = anc.parentNode) {
-                if (anc.localName === 'xf-form') {
-                    formElement = anc;
-                    break;
-                }
-            }
-
-
+            const formElement = this.closest('xf-form');
             const nodeset = Fore.evaluateToNodes (ref, inscope, formElement, Fore.namespaceResolver) ;
-            console.log('list nodeset ', nodeset);
+
+            // ### clear items
+            const children = this.control.children;
+            Array.from(children).forEach(child => {
+               if(child.nodeName.toLowerCase() !== 'template'){
+                   child.parentNode.removeChild(child);
+               }
+            });
+
+            // ### build the items
+            Array.from(nodeset).forEach(node => {
+                const content = tmpl.content.firstElementChild.cloneNode(true);
+                const newEntry = document.importNode(content, true);
+                // console.log('newEntry ', newEntry);
+                this.control.appendChild(newEntry);
+
+                // ### initialize new entry
+                // ### set value
+                const valueAttribute = this._getValueAttribute(newEntry);
+                const valueExpr = valueAttribute.value;
+                const cutted = valueExpr.substring(1, valueExpr.length -1);
+                const evaluated = Fore.evaluateXPath(cutted, node, formElement, Fore.namespaceResolver) ;
+                valueAttribute.value = evaluated;
+
+                // ### set label
+                const optionLabel = newEntry.textContent;
+                const labelExpr = optionLabel.substring(1, optionLabel.length-1);
+                console.log('label Expr ', labelExpr);
+
+                // todo : should use evaluateToString()
+                const label = Fore.evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver) ;
+                newEntry.textContent = label.textContent;
+
+            });
         }
 
     }
+
+    _getValueAttribute (element){
+        let result;
+        Array.from(element.attributes).forEach(attribute => {
+            const attrVal = attribute.value;
+            if(attrVal.indexOf('{') !== -1){
+                // console.log('avt found ', attribute);
+                result =  attribute;
+            }
+
+        });
+        return result;
+    }
+
+/*
+    getAVTs (element){
+        let n;
+        const arr = [];
+
+        const walker = document.createTreeWalker(element,
+            NodeFilter.SHOW_ALL,
+            {
+                acceptNode(node) {
+                    if(node.nodeType === Node.TEXT_NODE){
+                        return NodeFilter.FILTER_ACCEPT;
+                    }else if (node.nodeType === Node.ATTRIBUTE_NODE){
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                    return NodeFilter.FILTER_REJECT;
+                }
+            });
+        console.log('walker current ', walker.currentNode);
+/!*
+        while(walker.nextNode()){
+            arr.push(walker.currentNode);
+        }
+*!/
+/!*
+        n = walker.nextNode();
+        while( walker.nextNode() ){
+            arr.push(n)
+            n = walker.nextNode()
+        }
+*!/
+        return arr;
+    }
+*/
 
 }
 

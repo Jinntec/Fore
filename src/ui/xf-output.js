@@ -8,11 +8,12 @@ export class XfOutput extends XfAbstractControl {
         return css`
             :host {
                 display: inline-block;
-                height:auto;
             }
             #control{
                 display:inline-block;
-                width:100%;
+            }
+            [name='label']{
+                display:inline;
             }
         `;
     }
@@ -26,6 +27,7 @@ export class XfOutput extends XfAbstractControl {
 
     render() {
         return html`
+            <slot name="label"></slot>
             <span id="control">${this.value}</span>
         `;
     }

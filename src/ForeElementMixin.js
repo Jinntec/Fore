@@ -2,6 +2,7 @@ import * as fx from 'fontoxpath';
 import {XPathUtil} from "./xpath-util.js";
 // import {XfBind} from "./xf-bind.js";
 import {XfModel} from "./xf-model.js";
+import {Fore} from "./fore.js";
 
 
 // export class ForeElement extends LitElement {
@@ -34,6 +35,13 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
     }
 
     getModel(){
+        // console.log('getModel this ', this);
+        // console.log('getModel parentNode ', this.parentNode);
+        // console.log('getModel host ', this.parentNode.host);
+        if(this.parentNode.host){
+            const ownerForm = this.parentNode.host.closest('xf-form');
+            return ownerForm.querySelector('xf-model');
+        }
         const ownerForm = this.closest('xf-form');
         return ownerForm.querySelector('xf-model');
     }
@@ -61,6 +69,10 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
 
         }else{
             this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+
+            // todo: code below fails - why?
+            // const formElement = this.closest('xf-form');
+            // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
         }
         // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
