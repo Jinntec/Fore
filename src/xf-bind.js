@@ -198,10 +198,14 @@ export class XfBind extends foreElementMixin(HTMLElement){
         this.model = model;
         console.log('init binding ', this);
         this.instanceId = this._getInstanceId();
+        this.bindType = this.getModel().getInstance(this.instanceId).type;
+        console.log('binding type ', this.bindType);
 
-        this._evalInContext();
-        this._buildBindGraph();
-        this._createModelItems();
+        if(this.bindType === 'xml'){
+            this._evalInContext();
+            this._buildBindGraph();
+            this._createModelItems();
+        }
 
 
         // ### process child bindings
@@ -223,48 +227,50 @@ export class XfBind extends foreElementMixin(HTMLElement){
 */
 
     _buildBindGraph(){
-        this.nodeset.forEach(node => {
+        if(this.bindType === 'xml'){
+            this.nodeset.forEach(node => {
 
-            const path = XPathUtil.getPath(node);
+                const path = XPathUtil.getPath(node);
 
-            const calculateRefs = this._getReferencesForProperty(this.calculate,node);
-            if(calculateRefs.length !== 0){
-                this._addDependencies(calculateRefs,node,path,'calculate');
-                this._addDependencies(calculateRefs,node,path,'calculate');
-            }else if(this.calculate){
-                this.model.mainGraph.addNode(`${path}:calculate`,node);
-            }
+                const calculateRefs = this._getReferencesForProperty(this.calculate,node);
+                if(calculateRefs.length !== 0){
+                    this._addDependencies(calculateRefs,node,path,'calculate');
+                    this._addDependencies(calculateRefs,node,path,'calculate');
+                }else if(this.calculate){
+                    this.model.mainGraph.addNode(`${path}:calculate`,node);
+                }
 
-            const readonlyRefs = this._getReferencesForProperty(this.readonly,node);
-            if(readonlyRefs.length !== 0){
-                this._addDependencies(readonlyRefs,node,path,'readonly');
-            }else if(this.readonly){
-                this.model.mainGraph.addNode(`${path}:readonly`,node);
-            }
+                const readonlyRefs = this._getReferencesForProperty(this.readonly,node);
+                if(readonlyRefs.length !== 0){
+                    this._addDependencies(readonlyRefs,node,path,'readonly');
+                }else if(this.readonly){
+                    this.model.mainGraph.addNode(`${path}:readonly`,node);
+                }
 
-            // const requiredRefs = this.requiredReferences;
-            const requiredRefs = this._getReferencesForProperty(this.required,node);
-            if(requiredRefs.length !== 0){
-                this._addDependencies(requiredRefs,node,path,'required');
-            }else if (this.required){
-                this.model.mainGraph.addNode(`${path}:required`,node);
-            }
+                // const requiredRefs = this.requiredReferences;
+                const requiredRefs = this._getReferencesForProperty(this.required,node);
+                if(requiredRefs.length !== 0){
+                    this._addDependencies(requiredRefs,node,path,'required');
+                }else if (this.required){
+                    this.model.mainGraph.addNode(`${path}:required`,node);
+                }
 
-            const relevantRefs = this._getReferencesForProperty(this.relevant,node);
-            if(relevantRefs.length !== 0 ){
-                this._addDependencies(relevantRefs,node,path,'relevant');
-            }else if(this.relevant){
-                this.model.mainGraph.addNode(`${path}:relevant`,node);
-            }
+                const relevantRefs = this._getReferencesForProperty(this.relevant,node);
+                if(relevantRefs.length !== 0 ){
+                    this._addDependencies(relevantRefs,node,path,'relevant');
+                }else if(this.relevant){
+                    this.model.mainGraph.addNode(`${path}:relevant`,node);
+                }
 
-            const constraintRefs = this._getReferencesForProperty(this.constraint,node);
-            if(constraintRefs.length !== 0) {
-                this._addDependencies(constraintRefs,node,path,'constraint');
-            }else if(this.constraint){
-                this.model.mainGraph.addNode(`${path}:constraint`,node);
-            }
+                const constraintRefs = this._getReferencesForProperty(this.constraint,node);
+                if(constraintRefs.length !== 0) {
+                    this._addDependencies(constraintRefs,node,path,'constraint');
+                }else if(this.constraint){
+                    this.model.mainGraph.addNode(`${path}:constraint`,node);
+                }
 
-        });
+            });
+        }
 
     }
 
@@ -386,7 +392,12 @@ export class XfBind extends foreElementMixin(HTMLElement){
                     break;
                 }
             }
-            this.nodeset = evaluateXFormsXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
+            const inst = this.getModel().getInstance(this.instanceId);
+            if(inst.type === 'xml'){
+                this.nodeset = evaluateXFormsXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
+            } else {
+                this.nodeset = this.ref;
+            }
         }
     }
 

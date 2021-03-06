@@ -137,7 +137,7 @@ export class XfForm extends HTMLElement {
      * @private
      */
     _refreshTemplateExpressions () {
-        const search = ".//*/text()[contains(.,'{')] | .//*/@*[contains(.,'{')]";
+        const search = "./*[name(.) != 'xf-model']/text()[contains(.,'{')] | ./*[name(.) != 'xf-model']/@*[contains(.,'{')]";
         const tmplExpressions = fx.evaluateXPathToNodes(search,this,null,null);
         console.log('template expressions found ', tmplExpressions);
 

@@ -6,11 +6,15 @@
 
     <title>Hello JSON World</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module" src="../index.js"></script>
+
+<!--
     <script type="module">
         import '../src/xf-form.js';
         import '../src/actions/xf-setvalue.js';
     </script>
+-->
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -40,36 +44,26 @@
         </xf-instance>
         <xf-bind ref="prop" required="prop.length < 6" readonly="prop.length < 6"></xf-bind>
 
-
-
-
-        <xf-bind ref="prop"></xf-bind>
-
     </xf-model>
     <xf-group>
 
 
-        <h1 class="{class}">
+        <h1>
             Greeting:
             <xf-output id="output" ref="prop"></xf-output>
         </h1>
 
-        <xf-input label="Greeting" ref="prop">
+        <xf-input label="Greeting" ref="prop"></xf-input>
+
+
 <!--
-            <xf-message event="required">required should fire on input</xf-message>
-            <xf-message event="optional">optional should fire on input</xf-message>
-            <xf-message event="readwrite">readwrite should fire on input</xf-message>
-            <xf-message event="readonly">readonly should fire on input</xf-message>
--->
-        </xf-input>
-
-
         <xf-button label="say 'hello Universe'">
             <xf-setvalue ref="prop" value="Hello Universe"></xf-setvalue>
         </xf-button>
         <xf-button label="say 'hello'">
             <xf-setvalue ref="prop" value="Hello"></xf-setvalue>
         </xf-button>
+-->
 
     </xf-group>
 </xf-form>

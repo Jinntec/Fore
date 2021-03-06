@@ -8,7 +8,6 @@ export class XfInstance extends HTMLElement {
         super();
 
         this.model = this.parentNode;
-        this.type= 'xml';
 
         this.attachShadow({mode:'open'});
 
@@ -25,6 +24,12 @@ export class XfInstance extends HTMLElement {
             this.id = this.getAttribute('id');
         }else{
             this.id = 'default';
+        }
+
+        if(this.hasAttribute('type')){
+            this.type = this.getAttribute('type');
+        }else {
+            this.type = 'xml';
         }
         const style = `
             :host {
