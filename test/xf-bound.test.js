@@ -149,6 +149,47 @@ describe('xf-bound tests', () => {
 
     });
 
+    it('initialzes native select', async () => {
+        const el =  (
+            await fixture(html`
+                <xf-form>
+                    <xf-model>
+                        <xf-instance>
+                            <data>
+                                <listitem>foo</listitem>
+                            </data>
+                        </xf-instance>
+                    </xf-model>
+                    <xf-group>
+                        <xf-bound ref="listitem" update-event="change">
+                            <label slot="label">native select</label>
+                            <select>
+                                <option value=""></option>
+                                <option value="foo">foo</option>
+                                <option value="bar">bar</option>
+                            <select>
+                        </xf-bound>
+                    </xf-group>
+                </xf-form>
+            `)
+        );
+
+        // await elementUpdated(el);
+
+        const bound = el.querySelector('xf-bound');
+        expect(bound).to.exist;
+        expect(bound.valueProp).to.equal('value');
+        expect(bound[bound.valueProp]).to.equal('foo');
+
+        const select = el.querySelector('select');
+        expect(select).to.exist;
+        console.log('select value ', select.value);
+        expect(select.value).to.equal('foo');
+
+
+
+    });
+
 /*
     it('is initialized', async () => {
         const el =  (

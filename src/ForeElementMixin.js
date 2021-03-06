@@ -51,6 +51,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
      * evaluation of xf-bind and UiElements differ in details so that each class needs it's own implementation.
      */
     evalInContext(){
+        // todo: should be replaced with Fore.getInScopeContext
         const inscopeContext = this._inScopeContext();
 
         if(this.ref===''){

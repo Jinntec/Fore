@@ -14,7 +14,7 @@ import '../src/ui/xf-repeat.js';
 import {XfModel} from '../src/xf-model.js';
 
 
-describe('initialize repeat', () => {
+describe('repeat Tests', () => {
 
     it('has initialized modelItems', async () => {
         const el =  (

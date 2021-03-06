@@ -9,6 +9,8 @@ import './xf-model.js';
 import './xf-instance.js';
 
 import '@vaadin/vaadin-notification/vaadin-notification.js';
+import * as fx from 'fontoxpath';
+import {XPathUtil} from "./xpath-util";
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -98,31 +100,117 @@ export class XfForm extends HTMLElement {
 
     }
 
-    connectedCallback() {
-        // super.connectedCallback();
-        // console.log('connectedCallback ', this);
-        // console.log('########## FORE: kick off processing... ##########');
-        // window.addEventListener('compute-exception', e =>{
-        //     console.error("circular dependency: ", e);
-        // });
-        // this.init();
+    disconnectedCallback(){
 
     }
 
     /**
      * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
      * the bound modelItem to the bound element.
+     *
+     *
+     * AVT:
+     *
      */
     async refresh () {
     // refresh () {
         console.group('### refresh');
         const uiElements = this.querySelectorAll('*');
         // await this.updateComplete;
+
+        // ### refresh template expressions
+        this._refreshTemplateExpressions();
+
         Fore.refreshChildren(this);
         // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
         console.groupEnd();
         console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         this.dispatchEvent(new CustomEvent('refresh-done'));
+    }
+
+    /**
+     * entry point for processing of template expression enclosed in '{}' brackets.
+     *
+     * Expressions are found with an XPath search. For each node an entry is added to storedTemplateExpressions array.
+     *
+     *
+     * @private
+     */
+    _refreshTemplateExpressions () {
+        const search = ".//*/text()[contains(.,'{')] | .//*/@*[contains(.,'{')]";
+        const tmplExpressions = fx.evaluateXPathToNodes(search,this,null,null);
+        console.log('template expressions found ', tmplExpressions);
+
+        if(!this.storedTemplateExpressions){
+            this.storedTemplateExpressions=[];
+        }
+
+        const templateExpressions = [];
+        Array.from(tmplExpressions).forEach(node => {
+            // console.log('node ', node);
+
+            let parent;
+            if(node.nodeType === Node.ATTRIBUTE_NODE){
+                parent = node.ownerElement;
+            }else{
+                parent = node.parentNode;
+            }
+            // console.log('parent ', parent);
+            const expr = this._getTemplateExpression(node);
+            // console.log('expr ', expr);
+
+            // ### store template expression
+            this.storedTemplateExpressions.push({
+                'parent':parent,
+                'expr': expr,
+                'name': node.nodeName,
+                'node':node
+            });
+        });
+
+        this.storedTemplateExpressions.forEach(tmpl => {
+           this._processTemplateExpression(tmpl);
+        });
+
+        console.log('stored template expressions ', this.storedTemplateExpressions);
+    }
+
+    _processTemplateExpression (exprObj) {
+        console.log('processing template expression ', exprObj);
+
+        const {parent} = exprObj;
+        const {expr} = exprObj;
+        const {name} = exprObj;
+        const {node} = exprObj;
+        console.log('expr ', expr);
+        const matches = expr.match(/{\w+}/g);
+        matches.forEach(match => {
+            console.log('match ', match);
+            const naked = match.substring(1,match.length-1);
+            const inscope = Fore.getInScopeContext(node,naked);
+            const result = fx.evaluateXPathToString(naked, inscope, null, {namespaceResolver:  Fore.namespaceResolver});
+            // console.log('result of eval ', result);
+            const replaced = expr.replaceAll(match,result);
+            console.log('result of replacing ', replaced);
+
+            if(node.nodeType === Node.ATTRIBUTE_NODE){
+                parent.setAttribute(name,replaced);
+            }else if(node.nodeType === Node.TEXT_NODE){
+                node.textContent = replaced;
+            }
+
+
+        });
+    }
+
+    _getTemplateExpression(node){
+        if(node.nodeType === Node.ATTRIBUTE_NODE){
+            return node.value;
+        }else if(node.nodeType === Node.TEXT_NODE){
+            return node.textContent;
+        }else{
+            return null;
+        }
     }
 
     _refreshChildren(){
@@ -193,6 +281,10 @@ export class XfForm extends HTMLElement {
          console.log('### <<<<< dispatching ready >>>>>');
          console.log('########## FORE: form fully initialized... ##########');
          this.dispatchEvent(new CustomEvent('ready', {}));
+     }
+
+     getModel(){
+        return this.querySelector('xf-model');
      }
 
     _displayMessage(e) {

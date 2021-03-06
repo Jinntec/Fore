@@ -3,7 +3,7 @@ import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE 
 
 import '../src/xf-instance.js';
 
-describe('initialize instance', () => {
+describe('instance Tests', () => {
 
     it('has "default" as id', async () => {
         const el =  (
