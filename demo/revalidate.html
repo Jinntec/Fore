@@ -8,88 +8,81 @@
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
     <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
     <style>
         .dynamic {
             background: #76ff03;
         }
 
-        xf-input{
+        xf-input {
             display: block;
-            padding:10px 0;
+            padding: 10px 0;
         }
+
         xf-input[required]:after {
             content: "*";
             color: red;
         }
 
-        xf-output{
+        xf-output {
             margin-bottom: 20px;
         }
     </style>
 </head>
 <body unresolved="unresolved">
 
+<h1>Revalidation and Alerts</h1>
 
-<xf-form>
-<!--    <xf-message event="refresh-done">refresh has been done</xf-message>-->
+<demo-snippet>
+    <template>
 
-    <xf-model id="model1">
-        <xf-instance>
-            <data>
-                <a>A</a>
-                <b>B</b>
-                <c>C</c>
-            </data>
-        </xf-instance>
+        <xf-form>
 
-
-        <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
-        <xf-bind ref="b" constraint="string-length(.) = 1" alert="string must be exactly one character long"></xf-bind>
-        <xf-bind ref="c" constraint="string-length(.) = 1">
-            <xf-alert><b>string must be exactly 1 character long</b></xf-alert>
-        </xf-bind>
-        <!--
-                <xf-bind ref="c" required=".=C" relevant="depends(../b) = 'B'"></xf-bind>
-        -->
+            <xf-model id="model1">
+                <xf-instance>
+                    <data>
+                        <a>A</a>
+                        <b>B</b>
+                        <c>C</c>
+                    </data>
+                </xf-instance>
 
 
-    </xf-model>
-    <xf-group collapse="true">
+                <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
+                <xf-bind ref="b" constraint="string-length(.) = 1"
+                         alert="string must be exactly one character long"></xf-bind>
+                <xf-bind ref="c" constraint="string-length(.) = 1">
+                    <xf-alert><b>string must be exactly 1 character long</b></xf-alert>
+                </xf-bind>
+            </xf-model>
+            <xf-group collapse="true">
 
+                <xf-output id="output" ref="a">
+                    <xf-label>a-label</xf-label>
+                    <xf-alert>Constraint <b>not</b> valid</xf-alert>
+                    <xf-hint>must be one character long</xf-hint>
+                </xf-output>
 
-        <h1 class="{class}">
-            Revalidation</h1>
+                <xf-input label="A-label" ref="a">
+                    <xf-alert>Constraint not valid</xf-alert>
+                    <xf-hint>must be one character long</xf-hint>
+                </xf-input>
 
-        <xf-output id="output" ref="a">
-            <xf-label>a-label</xf-label>
-            <xf-alert>Constraint <b>not</b> valid</xf-alert>
-            <xf-hint>must be one character long</xf-hint>
-        </xf-output>
+                <xf-input label="B-label" ref="b"></xf-input>
 
-<!--
-        <xf-output id="output" ref="b">x
-            <xf-label>b-label</xf-label>
-        </xf-output>
-        <xf-output id="output" ref="c">
-            <xf-label>c-label</xf-label>
-        </xf-output>
--->
+                <xf-input label="C" ref="c"></xf-input>
 
-        <xf-input label="A-label" ref="a">
-            <xf-alert>Constraint not valid</xf-alert>
-            <xf-hint>must be one character long</xf-hint>
-        </xf-input>
-
-
-        <xf-input label="B-label" ref="b"></xf-input>
-
-        <xf-input label="C" ref="c"></xf-input>
-
-
-    </xf-group>
-</xf-form>
-
+            </xf-group>
+        </xf-form>
+    </template>
+</demo-snippet>
 <script type="module" src="../index.js"></script>
 
 </body>

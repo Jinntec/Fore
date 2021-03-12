@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Country selector</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-size: 18px;
+        }
+
+        xf-instance {
+            display: none;
+        }
+
+        xf-bound {
+            display: table-row;
+
+        }
+
+        label {
+            display: table-cell;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+
+        section {
+            padding-bottom: 50px;
+        }
+
+        xf-setvalue, xf-message {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+
+        xf-form {
+            max-width: 600px;
+        }
+
+        xf-output {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<h1>Selects</h1>
+<demo-snippet>
+    <template>
+
+        <xf-form>
+            <xf-model id="model1">
+                <xf-instance>
+                    <data>
+                        <selected></selected>
+                        <continent></continent>
+                    </data>
+                </xf-instance>
+
+                <xf-instance id="countries" src="countries.xml"></xf-instance>
+
+            </xf-model>
+            <xf-group>
+
+                <h2>one depends the other</h2>
+                <p></p>
+
+                <div class="grid">
+                    <div class="wrapit">
+                        <xf-bound ref="continent" update-event="change">
+                            <label slot="label">Continent</label>
+                            <select>
+                                <option value=""></option>
+                                <option value="asia">Asia</option>
+                                <option value="africa">Africa</option>
+                                <option value="antarctica">Antarctica</option>
+                                <option value="australasia">Australia</option>
+                                <option value="europe">Europe</option>
+                                <option value="north america">North America</option>
+                                <option value="central america">Central America</option>
+                                <option value="south america">South America</option>
+                            </select>
+                        </xf-bound>
+                        <br>
+                        Selected Continent:
+                        <xf-output ref="continent"></xf-output>
+                    </div>
+
+                    <div class="wrapit">
+
+                        <xf-bound ref="selected" update-event="change">
+                            <label slot="label">Country</label>
+                            <select ref="instance('countries')//country[@continent = instance('default')/continent]">
+                                <template>
+                                    <option value="{@code}">{.}</option>
+                                </template>
+                            </select>
+                        </xf-bound>
+                        <br>
+                        Country code is:
+                        <xf-output ref="selected"></xf-output>
+                    </div>
+                </div>
+
+
+            </xf-group>
+        </xf-form>
+    </template>
+</demo-snippet>
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>
