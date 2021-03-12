@@ -1,8 +1,9 @@
-# Fore
 
-'situated in front of something else' - Merriam Webster
+![logo](resources/images/light7.png)
 
-## An xformish forms framework in Web Components
+>'situated in front of something else' - Merriam Webster
+
+## An xf ormish forms framework in Web Components
 
 Fore is a model-driven forms framework that follows the ideas of the XForms
 Standard.
@@ -50,12 +51,8 @@ This approach will eventually change.
 starts the testserver with 'doc/index.html' as entry page. Under 'examples' on the left
 you find 
 
-## Ideas
+## Running test suite
 
-### make model editable in dev mode
-
-introduce a mode which allows to edit the model itself within 
-the page.
-
-- serialization?
-- the model as an instance?
+* start Chrome (important as it may hang if you start the watcher first)
+* `npm run test:watch'
+* goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite
