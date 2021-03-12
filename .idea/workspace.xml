@@ -26,18 +26,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="bound example with datalist">
+      <change afterPath="$PROJECT_DIR$/resources/images/light-200.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/xf-bound.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/xf-bound.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/xf-append.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/xf-append.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/xf-repeatitem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/xf-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/xf-form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/light7.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/light7.png" afterDir="false" />
     </list>
-    <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,45 +79,12 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/.idea/workspace.xml">
-      <ranges>
-        <range start1="27" end1="28" start2="27" end2="28" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="30" end1="30" start2="30" end2="37" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="31" end1="32" start2="38" end2="38" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="79" end1="79" start2="85" end2="115" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="299" end1="307" start2="335" end2="337" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="644" end1="645" start2="674" end2="682" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="701" end1="702" start2="738" end2="738" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="726" end1="727" start2="762" end2="764" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="732" end1="733" start2="769" end2="769" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="742" end1="744" start2="778" end2="780" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="745" end1="746" start2="781" end2="783" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="747" end1="749" start2="784" end2="786" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="750" end1="753" start2="787" end2="788" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="758" end1="759" start2="793" end2="793" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="767" end1="768" start2="801" end2="801" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="769" end1="771" start2="802" end2="804" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="772" end1="772" start2="805" end2="806" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="777" end1="778" start2="811" end2="811" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="785" end1="787" start2="818" end2="820" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="788" end1="789" start2="821" end2="822" changelist="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" />
-        <range start1="798" end1="799" start2="831" end2="831" changelist="02e4216a-e333-408e-9402-4a0422816d15" />
-        <range start1="803" end1="804" start2="835" end2="835" changelist="02e4216a-e333-408e-9402-4a0422816d15" />
-        <range start1="810" end1="812" start2="841" end2="843" changelist="02e4216a-e333-408e-9402-4a0422816d15" />
-        <range start1="813" end1="815" start2="844" end2="845" changelist="02e4216a-e333-408e-9402-4a0422816d15" />
-      </ranges>
-    </file>
-  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
       </MavenGeneralSettings>
     </option>
-  </component>
-  <component name="PackageJsonUpdateNotifier">
-    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
@@ -337,6 +297,7 @@
       <workItem from="1612614453746" duration="19933000" />
       <workItem from="1612780570323" duration="17951000" />
       <workItem from="1613053441210" duration="5600000" />
+      <workItem from="1615564392393" duration="955000" />
     </task>
     <task id="LOCAL-00053" summary="created xf-container class to handle differences in refresh;&#10;fixed static Fore.refreshChildren function;&#10;form refresh uses static Fore function now;&#10;fixes some linting issues;&#10;wip refactoring lazyCreation of modelItems;">
       <created>1604152543603</created>
