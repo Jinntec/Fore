@@ -1,5 +1,5 @@
 
-![logo](resources/images/light7.png)
+![logo](resources/images/light-200.png)
 
 >'situated in front of something else' - Merriam Webster
 
