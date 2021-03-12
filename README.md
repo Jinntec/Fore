@@ -19,6 +19,12 @@ feature additions or bugfixes will always go into 'dev'.
 
 The master branch is only used for releases. 
 
+## Installation
+
+> you need to have node installed on your machine (using 15.1.0)
+
+* clone this repo to your machine
+* run `npm i` to install dependencies
 
 ## Dependencies
 
@@ -34,6 +40,7 @@ To check if installation was correct run `npm run test`. Tests should run green.
 
 ## Preparing assets
 
+
 To allow browser-compatible module loading there is a npm script called 'empathy'. This must
 be called whenever new node modules are introduced into the project.
 
@@ -42,14 +49,14 @@ be called whenever new node modules are introduced into the project.
 This will create a directory 'assets' with all dependencies converted to use local pathes instead
 of node_module pathes.
 
-This approach will eventually change.
+> This approach will eventually change.
 
 ## Running
 
 `npm run start`
 
-starts the testserver with 'doc/index.html' as entry page. Under 'examples' on the left
-you find 
+starts the testserver with 'doc/index.html' as entry page. This will send you to 'doc/demos.html' as an
+entry point. This list out running examples to learn and copy from.
 
 ## Running test suite
 
