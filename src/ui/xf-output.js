@@ -34,9 +34,11 @@ export class XfOutput extends XfAbstractControl {
 
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);
+/*
         if(this.querySelector('xf-label')){
             this.style.display = 'block';
         }
+*/
     }
 
     /*

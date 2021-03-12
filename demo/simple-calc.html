@@ -7,6 +7,13 @@
     <title>Simple Calculate</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -25,32 +32,42 @@
 <body unresolved="unresolved">
 
 
-<xf-form>
+<div class="wrapper">
 
-    <xf-model id="model1">
-        <xf-instance>
-            <data>
-                <value>foobar</value>
-                <computed>Hello World!</computed>
-            </data>
-        </xf-instance>
-        <xf-bind id="computed" ref="computed" calculate="string-length(../value)"></xf-bind>
+    <h1>Computations</h1>
 
-    </xf-model>
-    <xf-group>
+    <p>Any node may receive a computation through the <code>calculate</code> property.</p>
+    <demo-snippet>
+        <template>
+
+            <xf-form>
+
+                <xf-model id="model1">
+                    <xf-instance>
+                        <data>
+                            <value>foobar</value>
+                            <computed>Hello World!</computed>
+                        </data>
+                    </xf-instance>
+                    <xf-bind id="computed" ref="computed" calculate="string-length(../value)"></xf-bind>
+
+                </xf-model>
+                <xf-group>
 
 
-        <h1>Compute string-length</h1>
-        <xf-input ref="value">
-            <xf-label>the string</xf-label>
-        </xf-input>
-        <h2>
-            String length is:<xf-output id="output" ref="computed"></xf-output>
-        </h2>
+                    <xf-input ref="value" label="some string">
+                    </xf-input>
+                    <h2>
+                        String length is:
+                        <xf-output id="output" ref="computed"></xf-output>
+                    </h2>
 
 
-    </xf-group>
-</xf-form>
+                </xf-group>
+            </xf-form>
+        </template>
+    </demo-snippet>
+</div>
 
 <script type="module" src="../index.js"></script>
 

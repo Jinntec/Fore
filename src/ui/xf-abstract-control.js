@@ -123,16 +123,20 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // const control = this.querySelector('#control');
         if (this.isRequired() !== this.modelItem.required) {
             if (this.modelItem.required) {
-                // this.control.setAttribute('required','required');
+                this.control.setAttribute('required','required');
                 // this.shadowRoot.getElementById('control').setAttribute('required','required');
                 // this.control.setAttribute('required','required');
                 // this.required = true;
-                this.setAttribute('required','required');
+                // this.setAttribute('required','required');
+
+                this.classList.toggle('required');
                 this.dispatchEvent(new CustomEvent('required', {}));
             } else {
-                // this.control.removeAttribute('required');
+                this.control.removeAttribute('required');
                 this.required = false;
-                this.removeAttribute('required');
+                // this.removeAttribute('required');
+                this.classList.toggle('required');
+
                 this.dispatchEvent(new CustomEvent('optional', {}));
             }
         }
@@ -142,13 +146,16 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // console.log('mip readonly', this.modelItem.isReadonly);
         if (this.isReadonly() !== this.modelItem.readonly) {
             if (this.modelItem.readonly) {
-                // this.control.setAttribute('readonly','readonly');
-                this.setAttribute('readonly','readonly');
+                this.control.setAttribute('readonly','readonly');
+                // this.setAttribute('readonly','readonly');
+                this.classList.toggle('readonly');
                 this.dispatchEvent(new CustomEvent('readonly', {}));
             }
             if(!this.modelItem.readonly){
-                // this.control.removeAttribute('readonly');
-                this.removeAttribute('readonly');
+                this.control.removeAttribute('readonly');
+                // this.removeAttribute('readonly');
+                this.classList.toggle('readonly');
+
                 this.dispatchEvent(new CustomEvent('readwrite', {}));
             }
         }
@@ -193,10 +200,10 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // console.log('mip valid', this.modelItem.enabled);
         if (this.isEnabled() !== this.modelItem.relevant) {
             if (this.modelItem.relevant) {
-                this.dispatchEvent(new CustomEvent('enabled', {}));
+                this.dispatchEvent(new CustomEvent('relevant', {}));
                 this._fadeIn(this, this.display);
             } else {
-                this.dispatchEvent(new CustomEvent('disabled', {}));
+                this.dispatchEvent(new CustomEvent('nonrelevant', {}));
                 this._fadeOut(this);
             }
         }
@@ -266,7 +273,8 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
     }
 
     isEnabled(){
-        if(this.style.display === 'none' || this.classList.contains('non-relevant')){
+        // if(this.style.display === 'none' || this.classList.contains('non-relevant')){
+        if(this.style.display === 'none'){
             return false;
         }
         return true;

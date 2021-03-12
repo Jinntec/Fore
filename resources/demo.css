@@ -23,11 +23,12 @@ h2{
 #modalMessage .dialogActions{
     text-align:center;
 }
+.note{
+    background: var(--paper-amber-300);
+    padding:10px;
+}
 p{
     line-height: 2;
-}
-[unresolved]{
-    display: none;
 }
 .wrapper{
     max-width: 800px;
@@ -41,7 +42,7 @@ p{
     transform: rotate(325deg) translateY(-50%) translateX(-50%);
     top:0;
     font-size:1024px;
-    z-index: 1;
+    z-index: 0;
     opacity: 0.06;
     color:var(--paper-orange-900);
 

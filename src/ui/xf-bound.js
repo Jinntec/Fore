@@ -18,6 +18,12 @@ class XfBound extends XfAbstractControl {
         :host {
           display: inline-block;
         }
+        :host([required]) span::after {
+            content:'*';
+            color:var(--paper-red-500);
+            padding-left:5px;
+        }
+
         `;
     }
 
@@ -148,40 +154,6 @@ class XfBound extends XfAbstractControl {
         });
         return result;
     }
-
-/*
-    getAVTs (element){
-        let n;
-        const arr = [];
-
-        const walker = document.createTreeWalker(element,
-            NodeFilter.SHOW_ALL,
-            {
-                acceptNode(node) {
-                    if(node.nodeType === Node.TEXT_NODE){
-                        return NodeFilter.FILTER_ACCEPT;
-                    }else if (node.nodeType === Node.ATTRIBUTE_NODE){
-                        return NodeFilter.FILTER_ACCEPT;
-                    }
-                    return NodeFilter.FILTER_REJECT;
-                }
-            });
-        console.log('walker current ', walker.currentNode);
-/!*
-        while(walker.nextNode()){
-            arr.push(walker.currentNode);
-        }
-*!/
-/!*
-        n = walker.nextNode();
-        while( walker.nextNode() ){
-            arr.push(n)
-            n = walker.nextNode()
-        }
-*!/
-        return arr;
-    }
-*/
 
 }
 

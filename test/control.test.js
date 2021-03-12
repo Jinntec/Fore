@@ -63,11 +63,11 @@ describe('control tests', () => {
 
     });
 
-    it('has a control child with value "Aa"', async () => {
+    it('has a control child with value "A"', async () => {
         const el =  (
             await fixtureSync(html`
                 <xf-form>
-                    <xf-model id="model1">
+                    <xf-model id="model1">  
                         <xf-instance>
                             <data>
                                 <a>A</a>

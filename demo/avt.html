@@ -14,34 +14,38 @@
 
 
     <link href="../resources/vars.css" rel="stylesheet">
-<!--    <link href="../resources/demo.css" rel="stylesheet">-->
+    <link href="../resources/demo.css" rel="stylesheet">
 
-    <style>
-        .static {
-            font-size: 20px;
-            padding: 10px;
-        }
-
-        .Hello {
-            background: lime;
-        }
-
-        .Universe {
-            border: 6px solid red;
-            font-style: italic;
-        }
-    </style>
 
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
 
-    <h1>Greeting with Template Expressions</h1>
+    <h1>Template Expressions</h1>
 
-<!--
+    <p>A Template Expression is a binding expression enclosed within curly brackets.</p>
+
+    <p>Whenever the bound node changes the Template Expression will update and be substituted by its value. This
+    is especially useful for manipulating CSS from data.</p>
+
     <demo-snippet>
         <template>
--->
+            <style>
+                .static {
+                    font-size: 20px;
+                    padding: 10px;
+                }
+                .Hello {
+                    background: lime;
+                }
+                .Uni{
+                    background: yellow;
+                }
+                .Universe {
+                    border: 6px solid red;
+                    font-style: italic;
+                }
+            </style>
 
             <xf-form>
                 <xf-model>
@@ -52,16 +56,14 @@
                     </xf-instance>
                 </xf-model>
 
-                <div class="static {greeting}">Greeting {greeting} another {greeting}</div>
+<!--                <div class="static {greeting}">Greeting {greeting} another {greeting}</div>-->
+                <div class="static {greeting}">Greeting: {greeting}</div>
                 <xf-input ref="greeting" label="greeting"></xf-input>
 
 
             </xf-form>
-<!--
         </template>
     </demo-snippet>
--->
-
 
 </div>
 

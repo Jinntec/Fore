@@ -1,10 +1,15 @@
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
 
 export default {
-    input: 'node_modules/fontoxpath/dist/fontoxpath.js',
+    input: 'index.js',
     output: {
         dir: 'output',
-        format: 'cjs'
+        format: 'esm'
     },
-    plugins: [commonjs()]
+    plugins: [
+        babel(),
+        resolve()
+    ]
 };
