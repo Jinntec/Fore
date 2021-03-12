@@ -3,7 +3,7 @@
 
 >'situated in front of something else' - Merriam Webster
 
-## An xf ormish forms framework in Web Components
+## An xformish forms framework in Web Components
 
 Fore is a model-driven forms framework that follows the ideas of the XForms
 Standard.
