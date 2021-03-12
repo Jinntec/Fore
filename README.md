@@ -5,8 +5,30 @@
 
 ## An xformish forms framework in Web Components
 
-Fore is a model-driven forms framework that follows the ideas of the XForms
-Standard.
+Fore is a model-driven forms framework that follows the ideas of the XForms 2.0
+Standard but translates those into the world of HTML5 Web Components.
+
+Fore uses XML as it's main data model but is intended to allow JSON alternatively or at the same time.
+
+Through the wonderful [fontoXPath library](https://github.com/FontoXML/fontoxpath) Fore is able to process XML in the client with XPath 3.1 and 
+XQuery 3.1 support.
+
+Being as close as possible to the web platform standards available in browsers natively Fore combines well with any other 
+JS framework or component library.
+
+## Features
+
+* MVC architecture 
+* state engine
+* dependency tracking
+* descriptive actions
+* lifecycle with detailed state events
+* generic UI control to bind any kind of component 
+* multiple XML (or JSON) data instances
+* repeats
+* template expressions
+* powerful XPath/XQuery 3.1 support in the browser
+
 
 ## Warning
 
