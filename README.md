@@ -1,8 +1,9 @@
-# Fore
 
-'situated in front of something else' - Merriam Webster
+![logo](resources/images/light7.png)
 
-## An xformish forms framework in Web Components
+>'situated in front of something else' - Merriam Webster
+
+## An xf ormish forms framework in Web Components
 
 Fore is a model-driven forms framework that follows the ideas of the XForms
 Standard.
@@ -18,6 +19,12 @@ feature additions or bugfixes will always go into 'dev'.
 
 The master branch is only used for releases. 
 
+## Installation
+
+> you need to have node installed on your machine (using 15.1.0)
+
+* clone this repo to your machine
+* run `npm i` to install dependencies
 
 ## Dependencies
 
@@ -33,6 +40,7 @@ To check if installation was correct run `npm run test`. Tests should run green.
 
 ## Preparing assets
 
+
 To allow browser-compatible module loading there is a npm script called 'empathy'. This must
 be called whenever new node modules are introduced into the project.
 
@@ -41,21 +49,17 @@ be called whenever new node modules are introduced into the project.
 This will create a directory 'assets' with all dependencies converted to use local pathes instead
 of node_module pathes.
 
-This approach will eventually change.
+> This approach will eventually change.
 
 ## Running
 
 `npm run start`
 
-starts the testserver with 'doc/index.html' as entry page. Under 'examples' on the left
-you find 
+starts the testserver with 'doc/index.html' as entry page. This will send you to 'doc/demos.html' as an
+entry point. This list out running examples to learn and copy from.
 
-## Ideas
+## Running test suite
 
-### make model editable in dev mode
-
-introduce a mode which allows to edit the model itself within 
-the page.
-
-- serialization?
-- the model as an instance?
+* start Chrome (important as it may hang if you start the watcher first)
+* `npm run test:watch'
+* goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite
