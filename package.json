@@ -1,5 +1,5 @@
 {
-  "name": "fore",
+  "name": "@jinntec/fore",
   "version": "0.10.0",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
@@ -17,6 +17,7 @@
   "files": [
     "index.js",
     "resources/fore.css",
+    "resources/vars.css",
     "src/**/*"
   ],
   "dependencies": {
@@ -64,7 +65,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "test": "karma start --coverage",
+    "test": "karma start",
     "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore",
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
