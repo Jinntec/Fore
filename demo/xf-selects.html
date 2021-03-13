@@ -25,7 +25,7 @@
         xf-instance{
             display:none;
         }
-        xf-bound{
+        xf-control{
             display: table-row;
 
         }
@@ -77,14 +77,14 @@
             <demo-snippet>
                 <template>
 
-                    <xf-bound ref="listitem" update-event="change">
+                    <xf-control ref="listitem" update-event="change">
                         <label slot="label">native select</label>
                         <select>
                             <option value=""></option>
                             <option value="foo">foo</option>
                             <option value="bar">bar</option>
                         <select>
-                    </xf-bound>
+                    </xf-control>
 
                     Selected value is: <xf-output ref="listitem"></xf-output>
 
@@ -98,17 +98,17 @@
                 <template>
 
                     <!--
-                    todo: the ref from the select  could be moved up to @items on xf-bound - more explicit and no
+                    todo: the ref from the select  could be moved up to @items on xf-control - more explicit and no
                     breaking of the contentmodel of the select.
                     -->
-                    <xf-bound ref="fruit" update-event="change">
+                    <xf-control ref="fruit" update-event="change">
                         <label slot="label">native select</label>
                         <select ref="instance('fruits')//fruit">
                             <template>
                                 <option value="{@value}">{.}</option>
                             </template>
                         <select>
-                    </xf-bound>
+                    </xf-control>
 
                     Selected value is: <xf-output ref="fruit"></xf-output>
 

@@ -31,7 +31,7 @@
         .buttons {
             display: block;
         }
-        xf-bound{
+        xf-control{
             margin:20px 0;
         }
         .diagram{
@@ -66,7 +66,7 @@
                 ></xf-bind>
             </xf-model>
             <xf-group>
-                <xf-bound ref="item">
+                <xf-control ref="item">
                     <label slot="label">ItemLabel</label>
                     <span slot="hint">a hint for this item</span>
                     <xf-alert slot="alert">This went wrong</xf-alert>
@@ -81,7 +81,7 @@
                     <xf-message event="nonrelevant">nonrelevant event fired</xf-message>
 -->
 
-                </xf-bound>
+                </xf-control>
 
                 <div class="buttons">
                     <xf-button label="set required">

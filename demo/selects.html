@@ -24,7 +24,7 @@
             display: none;
         }
 
-        xf-bound {
+        xf-control {
             display: table-row;
 
         }
@@ -83,7 +83,7 @@
 
                 <div class="grid">
                     <div class="wrapit">
-                        <xf-bound ref="continent" update-event="change">
+                        <xf-control ref="continent" update-event="change">
                             <label slot="label">Continent</label>
                             <select>
                                 <option value=""></option>
@@ -96,7 +96,7 @@
                                 <option value="central america">Central America</option>
                                 <option value="south america">South America</option>
                             </select>
-                        </xf-bound>
+                        </xf-control>
                         <br>
                         Selected Continent:
                         <xf-output ref="continent"></xf-output>
@@ -104,14 +104,14 @@
 
                     <div class="wrapit">
 
-                        <xf-bound ref="selected" update-event="change">
+                        <xf-control ref="selected" update-event="change">
                             <label slot="label">Country</label>
                             <select ref="instance('countries')//country[@continent = instance('default')/continent]">
                                 <template>
                                     <option value="{@code}">{.}</option>
                                 </template>
                             </select>
-                        </xf-bound>
+                        </xf-control>
                         <br>
                         Country code is:
                         <xf-output ref="selected"></xf-output>

@@ -11,7 +11,7 @@
         import '../../src/xf-form.js';
         import '../../src/ui/xf-repeat.js';
         import '../../src/ui/xf-repeatitem.js';
-        import '../../src/ui/xf-bound.js';
+        import '../../src/ui/xf-control.js';
         import '../../src/ui/xf-input.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
@@ -152,9 +152,9 @@
             <div class="headergrid">
                 <div class="left">
                     <img src="images/existsolutions.svg" class="logo">
-                    <xf-bound ref="address">
+                    <xf-control ref="address">
                         <textarea name="" id="" cols="60" rows="8"></textarea>
-                    </xf-bound>
+                    </xf-control>
                 </div>
                 <div class="right">
                     <div class="company">eXist Solutions GmbH</div>
@@ -180,14 +180,14 @@
                 <tr>
                     <td>Date</td>
                     <td>
-<!--                        <xf-bound ref="date">
+<!--                        <xf-control ref="date">
                             <input name="value" value="">
-                        </xf-bound>-->
+                        </xf-control>-->
 <!--                        <xf-input ref="date" type="date"></xf-input>-->
 
-                        <xf-bound ref="date">
+                        <xf-control ref="date">
                             <input name="value" value="" type="date">
-                        </xf-bound>
+                        </xf-control>
 <!--                        <input name="value" value="2021-01-01" type="date">-->
                     </td>
                 </tr>
@@ -212,8 +212,8 @@
 <!--
             <xf-input ref="item/description">
             </xf-input>
-            <xf-bound ref="item/description">
-            </xf-bound>
+            <xf-control ref="item/description">
+            </xf-control>
 -->
 
 
@@ -227,16 +227,16 @@
             </div>
             <xf-repeat ref="item">
                 <template>
-                    <xf-bound ref="description" value-prop="content" update-event="input">
+                    <xf-control ref="description" value-prop="content" update-event="input">
                         <textarea id="description" rows="4"></textarea>
-                    </xf-bound>
-                    <xf-bound ref="quantity">
+                    </xf-control>
+                    <xf-control ref="quantity">
                         <input type="number">
-                    </xf-bound>
+                    </xf-control>
 
-                    <xf-bound ref="price">
+                    <xf-control ref="price">
                         <input type="number">
-                    </xf-bound>
+                    </xf-control>
 
                     <xf-output class="sum" ref="sum"></xf-output>
                     <span class="add">+
@@ -264,9 +264,9 @@
                                 <template>
                                     <tr>
                                         <td>
-                                            <xf-bound ref="description" value-prop="content">
+                                            <xf-control ref="description" value-prop="content">
                                                 <textarea></textarea>
-                                            </xf-bound>
+                                            </xf-control>
                                         </td>
                                         <td>
                                             <xf-input ref="quantity">
@@ -274,9 +274,9 @@
                                             </xf-input>
                                         </td>
                                         <td>
-                                            <xf-bound ref="price">
+                                            <xf-control ref="price">
                                                 <input type="number">
-                                            </xf-bound>
+                                            </xf-control>
                                         </td>
                                         <td>
                                             <xf-output ref="sum"></xf-output>

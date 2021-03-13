@@ -7,7 +7,7 @@ import './src/xf-submission.js';
 
 // ui classes
 import './src/ui/xf-alert.js';
-import './src/ui/xf-bound.js';
+import './src/ui/xf-control.js';
 import './src/ui/xf-button.js';
 import './src/ui/xf-container.js';
 import './src/ui/xf-group.js';

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>xf-control</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        body {
+            font-size: 18px;
+        }
+
+        xf-instance {
+            display: none;
+        }
+
+        xf-control {
+            display: table-row;
+
+        }
+
+        label {
+            display: table-cell;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+
+        section {
+            padding-bottom: 50px;
+        }
+
+        xf-setvalue, xf-message {
+            display: none;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+        <xf-form>
+            <xf-message event="refresh-done">Hi</xf-message>
+            <xf-model id="model1">
+                <xf-instance>
+                    <data>
+                        <item>foobar</item>
+                        <checked>true</checked>
+                        <listitem>foo</listitem>
+                    </data>
+                </xf-instance>
+                <xf-bind ref="item" required="true()"></xf-bind>
+                <xf-bind ref="checked" type="boolean"></xf-bind>
+                <xf-bind ref="listitem"></xf-bind>
+            </xf-model>
+            <xf-group>
+
+                <h1>The xf-control element</h1>
+                <p></p>
+
+                <section>
+                    <h2>Unwrapped custom control</h2>
+                    <demo-snippet>
+                        <template>
+                            <xf-input label="xf-input" ref="item"></xf-input>
+                        </template>
+                    </demo-snippet>
+                </section>
+
+                <h2>wrapped native controls</h2>
+
+                <section>
+                    <h3>Shortest way to bind a control to a node in the data</h3>
+                    <demo-snippet>
+                        <template>
+
+                            <label>Defaults</label>
+                            <xf-control ref="item"></xf-control>
+                        </template>
+                    </demo-snippet>
+                    <p>When nothing is specified or wrapped a native input will be created, listening for blur event to
+                        update
+                        the bound node.</p>
+                </section>
+
+                <section>
+                    <h3>Firing on 'input' event</h3>
+
+                    <demo-snippet>
+                        <template>
+                            <xf-control ref="item" update-event="input">
+                                <label slot="label">native input with input event handler</label>
+                                <input name="value" value="">
+                            </xf-control>
+                        </template>
+                    </demo-snippet>
+
+                </section>
+
+                <section>
+                    <h3>Using slots</h3>
+                    <demo-snippet>
+                        <template>
+
+                            <xf-control ref="item">
+                                <label slot="label">native input with onblur handler</label>
+                            </xf-control>
+                        </template>
+                    </demo-snippet>
+                    <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
+                </section>
+
+
+                <section>
+                    <h3>Using a textarea</h3>
+
+                    <demo-snippet>
+                        <template>
+                            <xf-control ref="item" update-event="input">
+                                <label for="text1" slot="label">native textarea</label>
+                                <textarea id="text1" cols="40" rows="4"></textarea>
+                            </xf-control>
+                            <xf-output ref="item"></xf-output>
+                        </template>
+                    </demo-snippet>
+
+                </section>
+
+                <section>
+                    <h3>Using a checkbox</h3>
+
+                    <demo-snippet>
+                        <template>
+                            <xf-control ref="checked" update-event="input" value-prop="checked">
+                                <label for="check1" slot="label">native checkbox</label>
+                                <input id="check1" type="checkbox">
+                            </xf-control>
+                            Value is:
+                            <xf-output ref="checked"></xf-output>
+                        </template>
+                    </demo-snippet>
+
+                </section>
+
+                <section>
+                    <h3>Native select</h3>
+                    <demo-snippet>
+                        <template>
+
+                            <xf-control ref="listitem" update-event="change">
+                                <label slot="label">native select</label>
+                                <select>
+                                    <option value=""></option>
+                                    <option value="foo">foo</option>
+                                    <option value="bar">bar</option>
+                                    <select>
+                            </xf-control>
+
+                            Selected value is:
+                            <xf-output ref="listitem"></xf-output>
+
+                        </template>
+                    </demo-snippet>
+                </section>
+
+                <section>
+                    <h3>Datalist</h3>
+                    <demo-snippet>
+                        <template>
+
+                            <xf-control ref="listitem" update-event="input">
+                                <label slot="label">input with datalist</label>
+                                <input list="ice-cream-flavors">
+                                </input>
+                                <datalist id="ice-cream-flavors">
+                                    <option value="Chocolate">
+                                    <option value="Coconut">
+                                    <option value="Mint">
+                                    <option value="Strawberry">
+                                    <option value="Vanilla">
+                                </datalist>
+                            </xf-control>
+
+
+                            Selected value is:
+                            <xf-output ref="listitem"></xf-output>
+
+                        </template>
+                    </demo-snippet>
+                </section>
+
+
+                <section>
+                    <h3>Wrapped paper controls</h3>
+
+                    <demo-snippet>
+                        <template>
+
+                            <h3>with onblur firing</h3>
+                            <xf-control ref="item" update-event="change">
+                                <paper-input label="the item in paper land"></paper-input>
+                            </xf-control>
+
+                            <h3>with incremental firing</h3>
+                            <xf-control ref="item" update-event="keyup">
+                                <paper-input label="the item in paper land"></paper-input>
+                            </xf-control>
+
+                            <xf-control ref="checked" update-event="change" value-prop="checked">
+                                <paper-checkbox>paper checkbox</paper-checkbox>
+                            </xf-control>
+                        </template>
+                    </demo-snippet>
+                </section>
+
+                <!--        Selected list item :<xf-output ref="item"></xf-output>-->
+
+
+                <!--
+                        <label for="check2">second</label>
+                        <input id="check2" name="value2" type="checkbox">
+
+                <pb-select ref="item" update-event="iron-select">
+
+                </pb-select>
+
+                -->
+                <script type="module" src="../index.js"></script>
+
+            </xf-group>
+        </xf-form>
+
+
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>

@@ -256,7 +256,7 @@ export class Fore{
     static get UI_ELEMENTS(){
         return [
             'XF-ALERT',
-            'XF-BOUND',
+            'XF-CONTROL',
             'XF-BUTTON',
             'XF-CONTROL',
             'XF-DIALOG',

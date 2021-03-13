@@ -6,9 +6,9 @@ import '../src/xf-model.js';
 import '../src/xf-instance.js';
 import '../src/xf-bind.js';
 import '../src/ui/xf-output.js';
-import '../src/ui/xf-bound.js';
+import '../src/ui/xf-control.js';
 
-describe('xf-bound tests', () => {
+describe('xf-control tests', () => {
 
     it('is initialized', async () => {
         const el =  (
@@ -25,10 +25,10 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound id="input1" ref="item" update-event="blur" value-prop="value">
+                        <xf-control id="input1" ref="item" update-event="blur" value-prop="value">
                             <label slot="label">with onblur handler</label>
                             <input id="control" name="value" value="">
-                        </xf-bound>
+                        </xf-control>
                 
                     </xf-group>
                 </xf-form>
@@ -59,9 +59,9 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound id="input1" ref="item">
+                        <xf-control id="input1" ref="item">
                             <label slot="label">with onblur handler</label>
-                        </xf-bound>
+                        </xf-control>
                 
                     </xf-group>
                 </xf-form>
@@ -92,10 +92,10 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound id="input1" ref="item" update-event="blur" value-prop="value">
+                        <xf-control id="input1" ref="item" update-event="blur" value-prop="value">
                             <label slot="label">with onblur handler</label>
                             <input name="value" value="">
-                        </xf-bound>
+                        </xf-control>
                 
                     </xf-group>
                 </xf-form>
@@ -123,10 +123,10 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound id="input1" ref="item" update-event="blur" value-prop="value">
+                        <xf-control id="input1" ref="item" update-event="blur" value-prop="value">
                             <label slot="label">with onblur handler</label>
                             <input id="input1" name="value" value="">
-                        </xf-bound>
+                        </xf-control>
                 
                     </xf-group>
                     <xf-setvalue event="refresh-done" ref="item"">foo</xf-setvalue>
@@ -161,14 +161,14 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound ref="listitem" update-event="change">
+                        <xf-control ref="listitem" update-event="change">
                             <label slot="label">native select</label>
                             <select>
                                 <option value=""></option>
                                 <option value="foo">foo</option>
                                 <option value="bar">bar</option>
                             <select>
-                        </xf-bound>
+                        </xf-control>
                     </xf-group>
                 </xf-form>
             `)
@@ -176,7 +176,7 @@ describe('xf-bound tests', () => {
 
         // await elementUpdated(el);
 
-        const bound = el.querySelector('xf-bound');
+        const bound = el.querySelector('xf-control');
         expect(bound).to.exist;
         expect(bound.valueProp).to.equal('value');
         expect(bound[bound.valueProp]).to.equal('foo');
@@ -206,20 +206,20 @@ describe('xf-bound tests', () => {
                         </xf-instance>
                     </xf-model>
                     <xf-group>
-                        <xf-bound id="input1" ref="item" update-event="blur" value-prop="value">
+                        <xf-control id="input1" ref="item" update-event="blur" value-prop="value">
                             <label slot="label">with onblur handler</label>
                             <input name="value" value="">
-                        </xf-bound>
+                        </xf-control>
 
-                        <xf-bound id="input2" ref="item" update-event="input">
+                        <xf-control id="input2" ref="item" update-event="input">
                             <label slot="label">with incremental handler</label>
                             <input name="value" value="">
-                        </xf-bound>
+                        </xf-control>
 
-                        <xf-bound id="input3" ref="checked" update-event="input" value-prop="checked">
+                        <xf-control id="input3" ref="checked" update-event="input" value-prop="checked">
                             <label slot="label">with incremental handler</label>
                             <input name="value" type="checkbox">
-                        </xf-bound>
+                        </xf-control>
                     </xf-group>
                 </xf-form>
             `)
