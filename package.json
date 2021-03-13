@@ -3,6 +3,9 @@
   "version": "0.10.0",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://gitlab.existsolutions.com/eXistdbElements/exform"
