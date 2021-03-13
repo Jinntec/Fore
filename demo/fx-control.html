@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>xf-control</title>
+    <title>fx-control</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link rel="stylesheet" href="../resources/fore.css">
@@ -22,11 +22,11 @@
             font-size: 18px;
         }
 
-        xf-instance {
+        fx-instance {
             display: none;
         }
 
-        xf-control {
+        fx-control {
             display: table-row;
 
         }
@@ -41,7 +41,7 @@
             padding-bottom: 50px;
         }
 
-        xf-setvalue, xf-message {
+        fx-setvalue, fx-message {
             display: none;
         }
     </style>
@@ -49,30 +49,30 @@
 <body unresolved="unresolved">
 
 
-        <xf-form>
-            <xf-message event="refresh-done">Hi</xf-message>
-            <xf-model id="model1">
-                <xf-instance>
+        <fx-form>
+            <fx-message event="refresh-done">Hi</fx-message>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <item>foobar</item>
                         <checked>true</checked>
                         <listitem>foo</listitem>
                     </data>
-                </xf-instance>
-                <xf-bind ref="item" required="true()"></xf-bind>
-                <xf-bind ref="checked" type="boolean"></xf-bind>
-                <xf-bind ref="listitem"></xf-bind>
-            </xf-model>
-            <xf-group>
+                </fx-instance>
+                <fx-bind ref="item" required="true()"></fx-bind>
+                <fx-bind ref="checked" type="boolean"></fx-bind>
+                <fx-bind ref="listitem"></fx-bind>
+            </fx-model>
+            <fx-group>
 
-                <h1>The xf-control element</h1>
+                <h1>The fx-control element</h1>
                 <p></p>
 
                 <section>
                     <h2>Unwrapped custom control</h2>
                     <demo-snippet>
                         <template>
-                            <xf-input label="xf-input" ref="item"></xf-input>
+                            <fx-input label="fx-input" ref="item"></fx-input>
                         </template>
                     </demo-snippet>
                 </section>
@@ -85,7 +85,7 @@
                         <template>
 
                             <label>Defaults</label>
-                            <xf-control ref="item"></xf-control>
+                            <fx-control ref="item"></fx-control>
                         </template>
                     </demo-snippet>
                     <p>When nothing is specified or wrapped a native input will be created, listening for blur event to
@@ -98,10 +98,10 @@
 
                     <demo-snippet>
                         <template>
-                            <xf-control ref="item" update-event="input">
+                            <fx-control ref="item" update-event="input">
                                 <label slot="label">native input with input event handler</label>
                                 <input name="value" value="">
-                            </xf-control>
+                            </fx-control>
                         </template>
                     </demo-snippet>
 
@@ -112,9 +112,9 @@
                     <demo-snippet>
                         <template>
 
-                            <xf-control ref="item">
+                            <fx-control ref="item">
                                 <label slot="label">native input with onblur handler</label>
-                            </xf-control>
+                            </fx-control>
                         </template>
                     </demo-snippet>
                     <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
@@ -126,11 +126,11 @@
 
                     <demo-snippet>
                         <template>
-                            <xf-control ref="item" update-event="input">
+                            <fx-control ref="item" update-event="input">
                                 <label for="text1" slot="label">native textarea</label>
                                 <textarea id="text1" cols="40" rows="4"></textarea>
-                            </xf-control>
-                            <xf-output ref="item"></xf-output>
+                            </fx-control>
+                            <fx-output ref="item"></fx-output>
                         </template>
                     </demo-snippet>
 
@@ -141,12 +141,12 @@
 
                     <demo-snippet>
                         <template>
-                            <xf-control ref="checked" update-event="input" value-prop="checked">
+                            <fx-control ref="checked" update-event="input" value-prop="checked">
                                 <label for="check1" slot="label">native checkbox</label>
                                 <input id="check1" type="checkbox">
-                            </xf-control>
+                            </fx-control>
                             Value is:
-                            <xf-output ref="checked"></xf-output>
+                            <fx-output ref="checked"></fx-output>
                         </template>
                     </demo-snippet>
 
@@ -157,17 +157,17 @@
                     <demo-snippet>
                         <template>
 
-                            <xf-control ref="listitem" update-event="change">
+                            <fx-control ref="listitem" update-event="change">
                                 <label slot="label">native select</label>
                                 <select>
                                     <option value=""></option>
                                     <option value="foo">foo</option>
                                     <option value="bar">bar</option>
                                     <select>
-                            </xf-control>
+                            </fx-control>
 
                             Selected value is:
-                            <xf-output ref="listitem"></xf-output>
+                            <fx-output ref="listitem"></fx-output>
 
                         </template>
                     </demo-snippet>
@@ -178,7 +178,7 @@
                     <demo-snippet>
                         <template>
 
-                            <xf-control ref="listitem" update-event="input">
+                            <fx-control ref="listitem" update-event="input">
                                 <label slot="label">input with datalist</label>
                                 <input list="ice-cream-flavors">
                                 </input>
@@ -189,11 +189,11 @@
                                     <option value="Strawberry">
                                     <option value="Vanilla">
                                 </datalist>
-                            </xf-control>
+                            </fx-control>
 
 
                             Selected value is:
-                            <xf-output ref="listitem"></xf-output>
+                            <fx-output ref="listitem"></fx-output>
 
                         </template>
                     </demo-snippet>
@@ -207,23 +207,23 @@
                         <template>
 
                             <h3>with onblur firing</h3>
-                            <xf-control ref="item" update-event="change">
+                            <fx-control ref="item" update-event="change">
                                 <paper-input label="the item in paper land"></paper-input>
-                            </xf-control>
+                            </fx-control>
 
                             <h3>with incremental firing</h3>
-                            <xf-control ref="item" update-event="keyup">
+                            <fx-control ref="item" update-event="keyup">
                                 <paper-input label="the item in paper land"></paper-input>
-                            </xf-control>
+                            </fx-control>
 
-                            <xf-control ref="checked" update-event="change" value-prop="checked">
+                            <fx-control ref="checked" update-event="change" value-prop="checked">
                                 <paper-checkbox>paper checkbox</paper-checkbox>
-                            </xf-control>
+                            </fx-control>
                         </template>
                     </demo-snippet>
                 </section>
 
-                <!--        Selected list item :<xf-output ref="item"></xf-output>-->
+                <!--        Selected list item :<fx-output ref="item"></fx-output>-->
 
 
                 <!--
@@ -237,8 +237,8 @@
                 -->
                 <script type="module" src="../index.js"></script>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
 
 
 <script type="module" src="../index.js"></script>

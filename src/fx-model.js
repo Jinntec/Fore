@@ -1,10 +1,10 @@
 import DepGraph from "./dep_graph.js";
 import {Fore} from './fore.js';
-import './xf-instance.js';
+import './fx-instance.js';
 import {ModelItem} from "./modelitem.js";
 import {XPathUtil} from './xpath-util.js';
 
-export class XfModel extends HTMLElement {
+export class FxModel extends HTMLElement {
 
     constructor() {
         super();
@@ -45,7 +45,7 @@ export class XfModel extends HTMLElement {
         // const path = fx.evaluateXPath('path()',node);
         const path = XPathUtil.getPath(node);
 
-        // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
+        // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
         const mi = new ModelItem(path,
             ref,
             Fore.READONLY_DEFAULT,
@@ -67,7 +67,7 @@ export class XfModel extends HTMLElement {
         console.log('### <<<<< dispatching model-construct >>>>>');
         this.dispatchEvent(new CustomEvent('model-construct', { detail: this}));
 
-            const instances = this.querySelectorAll('xf-instance');
+            const instances = this.querySelectorAll('fx-instance');
             if (instances.length > 0) {
                 console.group('init instances');
                 const promises = [];
@@ -122,8 +122,8 @@ export class XfModel extends HTMLElement {
 
         this.modelItems = [];
 
-        // trigger recursive initialization of the xf-bind elements
-        const binds = this.querySelectorAll('xf-model > xf-bind');
+        // trigger recursive initialization of the fx-bind elements
+        const binds = this.querySelectorAll('fx-model > fx-bind');
         binds.forEach(bind => {
             bind.init(this);
         });
@@ -189,8 +189,8 @@ export class XfModel extends HTMLElement {
             if (bind) {
                 // console.log('modelItem bind ', bind);
 
-                // todo: investigate why bind is an element when created in xf-bind.init() and an ...
-                // xf-bind object when created lazily.
+                // todo: investigate why bind is an element when created in fx-bind.init() and an ...
+                // fx-bind object when created lazily.
 
                 if (typeof bind.hasAttribute === "function" && bind.hasAttribute('constraint')) {
                     const constraint = bind.getAttribute('constraint');
@@ -251,4 +251,4 @@ export class XfModel extends HTMLElement {
 
 }
 
-customElements.define('xf-model', XfModel);
+customElements.define('fx-model', FxModel);

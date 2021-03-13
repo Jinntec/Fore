@@ -4,7 +4,7 @@ import '@polymer/iron-ajax/iron-ajax.js';
 // import * as fx from 'fontoxpath';
 import {foreElementMixin} from "./ForeElementMixin";
 
-export class XfSubmission extends foreElementMixin(LitElement){
+export class FxSubmission extends foreElementMixin(LitElement){
 
     static get styles() {
         return css`
@@ -164,4 +164,4 @@ export class XfSubmission extends foreElementMixin(LitElement){
 
 
 }
-customElements.define('xf-submission', XfSubmission);
+customElements.define('fx-submission', FxSubmission);

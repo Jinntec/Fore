@@ -2,7 +2,7 @@ import {LitElement, html, css} from 'lit-element';
 import {parseTpl} from './StringTpl.js';
 
 /**
- * `xf-message`
+ * `fx-message`
  * general class for bound elements
  *
  * todo: implementation and demo
@@ -10,7 +10,7 @@ import {parseTpl} from './StringTpl.js';
  * @customElement
  * @polymer
  */
-class XfMessage extends LitElement {
+class FxMessage extends LitElement {
 
     static get template() {
         return html`
@@ -51,7 +51,7 @@ class XfMessage extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('### xf-message connected ', this);
+        console.log('### fx-message connected ', this);
 
         if (this.eventTarget) {
             this.targetElement = document.getElementById(this.eventTarget);
@@ -69,8 +69,8 @@ class XfMessage extends LitElement {
     }
 
     execute(e) {
-        console.log('xf-message.execute ', e.detail);
-        console.log('xf-message.execute textContent: ', this.textContent);
+        console.log('fx-message.execute ', e.detail);
+        console.log('fx-message.execute textContent: ', this.textContent);
 
         const details = e.detail;
         let tmpl = this.textContent;
@@ -78,7 +78,7 @@ class XfMessage extends LitElement {
         const result = parseTpl(this.textContent, details);
         console.log('result: ', result);
 
-        // this.closest('xf-form').message(e.detail, result, this.level);
+        // this.closest('fx-form').message(e.detail, result, this.level);
 
         this.dispatchEvent(new CustomEvent('message', {
             composed: true, bubbles: true,
@@ -89,4 +89,4 @@ class XfMessage extends LitElement {
 
 }
 
-window.customElements.define('xf-message', XfMessage);
+window.customElements.define('fx-message', FxMessage);

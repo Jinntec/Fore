@@ -8,15 +8,15 @@
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
-        import '../src/xf-form.js';
-        import '../src/xf-model.js';
-        import '../src/xf-bind.js';
-        import '../src/xf-instance.js';
-        import '../src/ui/xf-repeat.js';
-        import '../src/actions/xf-delete.js';
-        import '../src/actions/xf-append.js';
-        import '../src/ui/xf-input.js';
-        import '../src/ui/xf-button.js';
+        import '../src/fx-form.js';
+        import '../src/fx-model.js';
+        import '../src/fx-bind.js';
+        import '../src/fx-instance.js';
+        import '../src/ui/fx-repeat.js';
+        import '../src/actions/fx-delete.js';
+        import '../src/actions/fx-append.js';
+        import '../src/ui/fx-input.js';
+        import '../src/ui/fx-button.js';
     </script>
 
 
@@ -36,7 +36,7 @@
     <link href="../resources/vars.css" rel="stylesheet">
 
     <style>
-        .header, xf-repeat-item {
+        .header, fx-repeat-item {
             display: grid;
             grid-template-columns: 200px 120px 50px 20px;
             grid-column-gap: 10px;
@@ -54,25 +54,25 @@
             background: red;
         }
 
-        xf-repeatitem {
+        fx-repeatitem {
             display: block;
         }
         [unresolved]{
             display:none;
         }
 
-        xf-repeat{
+        fx-repeat{
             padding: 20px;
             background: steelblue;
             display: block;
             height: auto;
         }
-        xf-repeatitem{
+        fx-repeatitem{
             border:thin solid white;
             background: lightsteelblue;
             margin:4px 0;
         }
-        xf-input{
+        fx-input{
             background:white;
             border-radius: 5px;
             padding: 6px;
@@ -85,72 +85,72 @@
     </style>
 </head>
 <body unresolved="unresolved">
-<xf-form>
-    <xf-model id="record">
+<fx-form>
+    <fx-model id="record">
 
 <!--
-        <xf-instance>
+        <fx-instance>
             <data>
                 <task complete="false" due=""></task>
             </data>
-        </xf-instance>
+        </fx-instance>
 -->
-        <xf-instance>
+        <fx-instance>
             <data>
                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
             </data>
-        </xf-instance>
+        </fx-instance>
 
 
-        <xf-bind ref="task">
-            <xf-bind ref="./text()" required="true()"></xf-bind>
-            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-            <xf-bind ref="@due" type="xs:date"></xf-bind>
-        </xf-bind>
+        <fx-bind ref="task">
+            <fx-bind ref="./text()" required="true()"></fx-bind>
+            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+            <fx-bind ref="@due" type="xs:date"></fx-bind>
+        </fx-bind>
 
-    </xf-model>
-<!--    <xf-group>-->
+    </fx-model>
+<!--    <fx-group>-->
 
         <h1>todos</h1>
 
         <!--
-                <xf-button label="add">
-                    <xf-append repeat="r-todos"></xf-append>
-                </xf-button>
+                <fx-button label="add">
+                    <fx-append repeat="r-todos"></fx-append>
+                </fx-button>
                 <br/><br/>
                         -->
 
 
-        <xf-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
+        <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
             <template>
-                <xf-input id="task" label="Task" ref="." type="text"></xf-input>
-                <xf-input label="Due" ref="@due" type="date"></xf-input>
-                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>
-                <xf-button label="delete">
-                    <xf-delete ref="."></xf-delete>
-                </xf-button>
+                <fx-input id="task" label="Task" ref="." type="text"></fx-input>
+                <fx-input label="Due" ref="@due" type="date"></fx-input>
+                <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
+                <fx-button label="delete">
+                    <fx-delete ref="."></fx-delete>
+                </fx-button>
             </template>
-        </xf-repeat>
+        </fx-repeat>
 
 <!--
-        <xf-repeat focus-on-create="task" id="todos2" id="r-todos" ref="task">
+        <fx-repeat focus-on-create="task" id="todos2" id="r-todos" ref="task">
             <template>
-                <xf-input id="task" label="Task" ref="." type="text"></xf-input>
-                <xf-input label="Due" ref="@due" type="date"></xf-input>
-                <xf-input Label="Status" ref="@complete" type="checkbox"></xf-input>
-                <xf-button label="delete">
-                    <xf-delete ref="."></xf-delete>
-                </xf-button>
+                <fx-input id="task" label="Task" ref="." type="text"></fx-input>
+                <fx-input label="Due" ref="@due" type="date"></fx-input>
+                <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
+                <fx-button label="delete">
+                    <fx-delete ref="."></fx-delete>
+                </fx-button>
             </template>
-        </xf-repeat>
+        </fx-repeat>
 -->
 
-        <xf-button label="append">
-            <xf-append ref="task" repeat="todos" clear="true"></xf-append>
-        </xf-button>
+        <fx-button label="append">
+            <fx-append ref="task" repeat="todos" clear="true"></fx-append>
+        </fx-button>
 
-<!--    </xf-group>-->
-</xf-form>
+<!--    </fx-group>-->
+</fx-form>
 </body>
 </html>

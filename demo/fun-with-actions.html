@@ -23,20 +23,20 @@
 <h2>setting a value on ready event</h2>
 <demo-snippet>
     <template>
-        <xf-form>
-            <xf-setvalue event="ready" ref="item">Hello</xf-setvalue>
-            <xf-model id="record">
-                <xf-instance>
+        <fx-form>
+            <fx-setvalue event="ready" ref="item">Hello</fx-setvalue>
+            <fx-model id="record">
+                <fx-instance>
                     <data>
                         <item>foo</item>
                     </data>
-                </xf-instance>
-                <xf-bind ref="item"></xf-bind>
-            </xf-model>
-            <xf-group>
-                <xf-control ref="item"></xf-control>
-            </xf-group>
-        </xf-form>
+                </fx-instance>
+                <fx-bind ref="item"></fx-bind>
+            </fx-model>
+            <fx-group>
+                <fx-control ref="item"></fx-control>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/app.js';
+import '../index.js';
 import * as fx from 'fontoxpath';
 
 describe('setvalue tests', () => {
@@ -9,26 +9,26 @@ describe('setvalue tests', () => {
     it('creates modelItem during refresh', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
+                        </fx-instance>
+                    </fx-model>
                     
-                    <xf-group>
-                        <xf-output id="output" ref="greeting"></xf-output>
-                        <xf-button id="btn" label="say 'hello Universe'">
-                            <xf-setvalue ref="greeting" value="Hello Universe"></xf-setvalue>
-                        </xf-button>
-                    </xf-group>
-                </xf-form>`)
+                    <fx-group>
+                        <fx-output id="output" ref="greeting"></fx-output>
+                        <fx-button id="btn" label="say 'hello Universe'">
+                            <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
+                        </fx-button>
+                    </fx-group>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
 
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
@@ -48,26 +48,26 @@ describe('setvalue tests', () => {
     it('ignores setvalue actions with do not bind to a existing node', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
+                        </fx-instance>
+                    </fx-model>
                     
-                    <xf-group>
-                        <xf-output id="output" ref="greeting"></xf-output>
-                        <xf-button id="btn" label="say 'hello Universe'">
-                            <xf-setvalue ref="foo" value="Hello Universe"></xf-setvalue>
-                        </xf-button>
-                    </xf-group>
-                </xf-form>`)
+                    <fx-group>
+                        <fx-output id="output" ref="greeting"></fx-output>
+                        <fx-button id="btn" label="say 'hello Universe'">
+                            <fx-setvalue ref="foo" value="Hello Universe"></fx-setvalue>
+                        </fx-button>
+                    </fx-group>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
 
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
@@ -87,26 +87,26 @@ describe('setvalue tests', () => {
     it('ignores uses element content if oresent', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
+                        </fx-instance>
+                    </fx-model>
                     
-                    <xf-group>
-                        <xf-output id="output" ref="greeting"></xf-output>
-                        <xf-button id="btn" label="say 'hello Universe'">
-                            <xf-setvalue ref="greeting">Hello Universe</xf-setvalue>
-                        </xf-button>
-                    </xf-group>
-                </xf-form>`)
+                    <fx-group>
+                        <fx-output id="output" ref="greeting"></fx-output>
+                        <fx-button id="btn" label="say 'hello Universe'">
+                            <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
+                        </fx-button>
+                    </fx-group>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
 
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
@@ -126,26 +126,26 @@ describe('setvalue tests', () => {
     it('defaults to empty string if neither value nor textContent are present', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
+                        </fx-instance>
+                    </fx-model>
                     
-                    <xf-group>
-                        <xf-output id="output" ref="greeting"></xf-output>
-                        <xf-button id="btn" label="say 'hello Universe'">
-                            <xf-setvalue ref="greeting"></xf-setvalue>
-                        </xf-button>
-                    </xf-group>
-                </xf-form>`)
+                    <fx-group>
+                        <fx-output id="output" ref="greeting"></fx-output>
+                        <fx-button id="btn" label="say 'hello Universe'">
+                            <fx-setvalue ref="greeting"></fx-setvalue>
+                        </fx-button>
+                    </fx-group>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
 
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);

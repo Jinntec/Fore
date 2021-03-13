@@ -1,5 +1,5 @@
 @startuml
-class XfForm {
+class FxForm {
     init()
     refresh()
 }
@@ -34,21 +34,21 @@ ForeElement <|-- BoundElement
 
 
 package "model" #DDDDDD {
-    class XfModel{
+    class FxModel{
         bindingMap[]
         rebuild()
         recalculate()
         revalidate()
         registerBinding()
     }
-    ForeElement <-- XfModel
-    class XfInstance{
+    ForeElement <-- FxModel
+    class FxInstance{
         getInstanceData()
         getDefaultContext()
     }
-    ForeElement <-- XfInstance
-    class XfBind
-    class XfSubmission
+    ForeElement <-- FxInstance
+    class FxBind
+    class FxSubmission
 }
 
 
@@ -64,19 +64,19 @@ package "view" #DDDDDD{
     class XfSelect1 #lightgrey
     class XfSelect #lightgrey
     BoundElement <|-- AbstractControl
-    AbstractControl <|-- XfInput
-    AbstractControl <|-- XfOutput
-    AbstractControl <|-- XfButton
-    BoundElement <|-- XfRepeat
-    BoundElement <|-- XfRepeatitem
-    BoundElement <|-- XfGroup
+    AbstractControl <|-- FxInput
+    AbstractControl <|-- FxOutput
+    AbstractControl <|-- FxButton
+    BoundElement <|-- FxRepeat
+    BoundElement <|-- FxRepeatitem
+    BoundElement <|-- FxGroup
     BoundElement <|-- XfSwitch
     AbstractControl <|-- XfSelect
     AbstractControl <|-- XfSelect1
 }
 
 package "controller" #DDDDDD{
-    class XfAction{
+    class FxAction{
         needsRebuild
         needsRecalculate
         needsRevalidate
@@ -84,18 +84,18 @@ package "controller" #DDDDDD{
         execute()
         actionPerformed()
     }
-    XfAction <|-- XfDelete
-    XfAction <|-- XfAppend
-    XfAction <|-- XfInsert
-    XfAction <|-- XfSetvalue
+    FxAction <|-- FxDelete
+    FxAction <|-- FxAppend
+    FxAction <|-- XfInsert
+    FxAction <|-- FxSetvalue
 
 }
 
 
 
-BoundElement <|-- XfAction
-ForeElement <|-- XfBind
-BoundElement <|-- XfSubmission
+BoundElement <|-- FxAction
+ForeElement <|-- FxBind
+BoundElement <|-- FxSubmission
 
 
 

@@ -1,15 +1,15 @@
-import {XfAction} from './xf-action.js';
+import {FxAction} from './fx-action.js';
 
-import "../xf-model.js";
-import "../xf-submission.js";
+import "../fx-model.js";
+import "../fx-submission.js";
 
 /**
- * `xf-send` - finds and activates a `xf-submission` element.
+ * `fx-send` - finds and activates a `fx-submission` element.
  *
  *
  * @customElement
  */
-export default class XfSend extends XfAction {
+export default class FxSend extends FxAction {
 
     static get properties() {
         return {
@@ -42,7 +42,7 @@ export default class XfSend extends XfAction {
             this.dispatchEvent(new CustomEvent('error', {
                 composed: true,
                 bubbles: true,
-                detail: {message: `xf-submission element with id: '${  this.submission  }' not found`}
+                detail: {message: `fx-submission element with id: '${  this.submission  }' not found`}
             }));
 
         }
@@ -50,7 +50,7 @@ export default class XfSend extends XfAction {
         submission.submit();
 
 
-        //if not of type xf-submission signal error
+        //if not of type fx-submission signal error
 
 
     }
@@ -58,4 +58,4 @@ export default class XfSend extends XfAction {
 
 }
 
-window.customElements.define('xf-send', XfSend);
+window.customElements.define('fx-send', FxSend);

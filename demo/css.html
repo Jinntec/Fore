@@ -18,7 +18,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -35,26 +35,26 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-model>
-                <xf-instance>
+        <fx-form>
+            <fx-model>
+                <fx-instance>
                     <data>
                         <class></class>
                         <rotate>0</rotate>
                     </data>
-                </xf-instance>
-            </xf-model>
-            <xf-group>
+                </fx-instance>
+            </fx-model>
+            <fx-group>
 
                 <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
                     lazy greeting
                 </h1>
-                <xf-control ref="rotate" update-event="change">
+                <fx-control ref="rotate" update-event="change">
                     <input type="range" step="10" min="0" max="360"/>
-                </xf-control>
+                </fx-control>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 

@@ -1,15 +1,15 @@
-import {XfAction} from "./xf-action.js";
+import {FxAction} from "./fx-action.js";
 // import * as fx from "fontoxpath";
 import {Fore} from "../fore.js";
 
 /**
- * `xf-delete`
+ * `fx-delete`
  * general class for bound elements
  *
  * @customElement
  * @demo demo/todo.html
  */
-class XfDelete extends XfAction {
+class FxDelete extends FxAction {
 
     static get properties() {
         return {
@@ -28,7 +28,7 @@ class XfDelete extends XfAction {
 
     execute() {
         super.execute();
-        console.log('##### xf-delete executing...');
+        console.log('##### fx-delete executing...');
 
         this.ref = this.getAttribute('ref');
         // const inscope = this._inScopeContext();
@@ -41,10 +41,10 @@ class XfDelete extends XfAction {
         if(this.repeat === ''){
 
             // find the index to delete
-            const rItem = this.parentNode.closest('xf-repeatitem');
+            const rItem = this.parentNode.closest('fx-repeatitem');
             const idx = rItem.index;
 
-            const repeatElement = this.parentNode.closest('xf-repeat');
+            const repeatElement = this.parentNode.closest('fx-repeat');
 
             // todo: find a better solution for the empty repeat problem - this just empties the values of the last item.
             // if(repeatElement.nodeset.length === 1 && idx === 1){
@@ -82,4 +82,4 @@ class XfDelete extends XfAction {
 
 }
 
-window.customElements.define('xf-delete', XfDelete);
+window.customElements.define('fx-delete', FxDelete);

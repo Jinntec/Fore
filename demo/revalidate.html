@@ -21,17 +21,17 @@
             background: #76ff03;
         }
 
-        xf-input {
+        fx-input {
             display: block;
             padding: 10px 0;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             color: red;
         }
 
-        xf-output {
+        fx-output {
             margin-bottom: 20px;
         }
     </style>
@@ -43,44 +43,44 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
+        <fx-form>
 
-            <xf-model id="model1">
-                <xf-instance>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <a>A</a>
                         <b>B</b>
                         <c>C</c>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
 
-                <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
-                <xf-bind ref="b" constraint="string-length(.) = 1"
-                         alert="string must be exactly one character long"></xf-bind>
-                <xf-bind ref="c" constraint="string-length(.) = 1">
-                    <xf-alert><b>string must be exactly 1 character long</b></xf-alert>
-                </xf-bind>
-            </xf-model>
-            <xf-group collapse="true">
+                <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
+                <fx-bind ref="b" constraint="string-length(.) = 1"
+                         alert="string must be exactly one character long"></fx-bind>
+                <fx-bind ref="c" constraint="string-length(.) = 1">
+                    <fx-alert><b>string must be exactly 1 character long</b></fx-alert>
+                </fx-bind>
+            </fx-model>
+            <fx-group collapse="true">
 
-                <xf-output id="output" ref="a">
-                    <xf-label>a-label</xf-label>
-                    <xf-alert>Constraint <b>not</b> valid</xf-alert>
-                    <xf-hint>must be one character long</xf-hint>
-                </xf-output>
+                <fx-output id="output" ref="a">
+                    <fx-label>a-label</fx-label>
+                    <fx-alert>Constraint <b>not</b> valid</fx-alert>
+                    <fx-hint>must be one character long</fx-hint>
+                </fx-output>
 
-                <xf-input label="A-label" ref="a">
-                    <xf-alert>Constraint not valid</xf-alert>
-                    <xf-hint>must be one character long</xf-hint>
-                </xf-input>
+                <fx-input label="A-label" ref="a">
+                    <fx-alert>Constraint not valid</fx-alert>
+                    <fx-hint>must be one character long</fx-hint>
+                </fx-input>
 
-                <xf-input label="B-label" ref="b"></xf-input>
+                <fx-input label="B-label" ref="b"></fx-input>
 
-                <xf-input label="C" ref="c"></xf-input>
+                <fx-input label="C" ref="c"></fx-input>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

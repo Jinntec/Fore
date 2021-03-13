@@ -1,27 +1,27 @@
 // core + models classes
-import './src/xf-bind.js';
-import './src/xf-form.js';
-import './src/xf-instance.js';
-import './src/xf-model.js';
-import './src/xf-submission.js';
+import './src/fx-bind.js';
+import './src/fx-form.js';
+import './src/fx-instance.js';
+import './src/fx-model.js';
+import './src/fx-submission.js';
 
 // ui classes
-import './src/ui/xf-alert.js';
-import './src/ui/xf-control.js';
-import './src/ui/xf-button.js';
-import './src/ui/xf-container.js';
-import './src/ui/xf-group.js';
-import './src/ui/xf-hint.js';
-import './src/ui/xf-input.js';
-import './src/ui/xf-items.js';
-import './src/ui/xf-output.js';
-import './src/ui/xf-repeat.js';
+import './src/ui/fx-alert.js';
+import './src/ui/fx-control.js';
+import './src/ui/fx-button.js';
+import './src/ui/fx-container.js';
+import './src/ui/fx-group.js';
+import './src/ui/fx-hint.js';
+import './src/ui/fx-input.js';
+import './src/ui/fx-items.js';
+import './src/ui/fx-output.js';
+import './src/ui/fx-repeat.js';
 
 // action classes
-import './src/actions/xf-append.js';
-import './src/actions/xf-delete.js';
-import './src/actions/xf-message.js';
-import './src/actions/xf-setvalue.js';
-import './src/actions/xf-send.js';
+import './src/actions/fx-append.js';
+import './src/actions/fx-delete.js';
+import './src/actions/fx-message.js';
+import './src/actions/fx-setvalue.js';
+import './src/actions/fx-send.js';
 
 

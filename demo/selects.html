@@ -20,11 +20,11 @@
             font-size: 18px;
         }
 
-        xf-instance {
+        fx-instance {
             display: none;
         }
 
-        xf-control {
+        fx-control {
             display: table-row;
 
         }
@@ -39,7 +39,7 @@
             padding-bottom: 50px;
         }
 
-        xf-setvalue, xf-message {
+        fx-setvalue, fx-message {
             display: none;
         }
 
@@ -48,11 +48,11 @@
             grid-template-columns: 50% 50%;
         }
 
-        xf-form {
+        fx-form {
             max-width: 600px;
         }
 
-        xf-output {
+        fx-output {
             font-weight: bold;
         }
     </style>
@@ -64,26 +64,26 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-model id="model1">
-                <xf-instance>
+        <fx-form>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <selected></selected>
                         <continent></continent>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
-                <xf-instance id="countries" src="countries.xml"></xf-instance>
+                <fx-instance id="countries" src="countries.xml"></fx-instance>
 
-            </xf-model>
-            <xf-group>
+            </fx-model>
+            <fx-group>
 
                 <h2>one depends the other</h2>
                 <p></p>
 
                 <div class="grid">
                     <div class="wrapit">
-                        <xf-control ref="continent" update-event="change">
+                        <fx-control ref="continent" update-event="change">
                             <label slot="label">Continent</label>
                             <select>
                                 <option value=""></option>
@@ -96,31 +96,31 @@
                                 <option value="central america">Central America</option>
                                 <option value="south america">South America</option>
                             </select>
-                        </xf-control>
+                        </fx-control>
                         <br>
                         Selected Continent:
-                        <xf-output ref="continent"></xf-output>
+                        <fx-output ref="continent"></fx-output>
                     </div>
 
                     <div class="wrapit">
 
-                        <xf-control ref="selected" update-event="change">
+                        <fx-control ref="selected" update-event="change">
                             <label slot="label">Country</label>
                             <select ref="instance('countries')//country[@continent = instance('default')/continent]">
                                 <template>
                                     <option value="{@code}">{.}</option>
                                 </template>
                             </select>
-                        </xf-control>
+                        </fx-control>
                         <br>
                         Country code is:
-                        <xf-output ref="selected"></xf-output>
+                        <fx-output ref="selected"></fx-output>
                     </div>
                 </div>
 
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

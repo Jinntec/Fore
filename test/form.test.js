@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE, waitUntil } from '@open-wc/testing';
 
-import '../src/xf-form.js';
-import '../src/xf-model.js';
-import '../src/xf-instance.js';
-import '../src/xf-bind.js';
+import '../src/fx-form.js';
+import '../src/fx-model.js';
+import '../src/fx-instance.js';
+import '../src/fx-bind.js';
 
 describe('initialize form', () => {
 
@@ -12,8 +12,8 @@ describe('initialize form', () => {
     it('model emits model-construct-done', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-model id="model1">
-                </xf-model>   
+                <fx-model id="model1">
+                </fx-model>   
             `)
         );
 
@@ -27,15 +27,15 @@ describe('initialize form', () => {
     it('ready event is emitted after first complete render', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting type="message:">Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
-                </xf-form>
+                        </fx-instance>
+                    </fx-model>
+                </fx-form>
             `)
         );
 
@@ -49,24 +49,24 @@ describe('initialize form', () => {
     it('initialized model', async () => {
         const el = (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-instance id="second">
+                        </fx-instance>
+                        <fx-instance id="second">
                             <data>
                                 <outro>GoodBye</outro>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
-                    </xf-model>
-                </xf-form>
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
+                    </fx-model>
+                </fx-form>
             `)
         );
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         // await model.updated();
         await elementUpdated(model);
         expect(model).to.exist;
@@ -77,24 +77,24 @@ describe('initialize form', () => {
     it('created modelItem', async () => {
         const el = (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-instance id="second">
+                        </fx-instance>
+                        <fx-instance id="second">
                             <data>
                                 <greeting>GoodBye</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
-                    </xf-model>
-                </xf-form>
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
+                    </fx-model>
+                </fx-form>
             `)
         );
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         // await model.updated();
         await elementUpdated(model);
 
@@ -118,13 +118,13 @@ describe('initialize form', () => {
     it('has paper-dialog', async () => {
         const el = (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model>
-                        <xf-instance>
+                <fx-form>
+                    <fx-model>
+                        <fx-instance>
                             <data></data>
-                        </xf-instance>
-                    </xf-model>
-                </xf-form>
+                        </fx-instance>
+                    </fx-model>
+                </fx-form>
             `)
         );
         // await model.updated();

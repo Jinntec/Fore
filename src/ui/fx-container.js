@@ -1,17 +1,17 @@
 import {LitElement, html, css} from 'lit-element';
 
-import  '../xf-model.js';
+import  '../fx-model.js';
 import {Fore} from "../fore.js";
 import {foreElementMixin} from "../ForeElementMixin.js";
 
 /**
- * `xf-container` -
+ * `fx-container` -
  * is a general class for container elements.
  *
  * @customElement
  */
-// export class XfContainer extends BoundElement {
-export class XfContainer extends foreElementMixin(LitElement) {
+// export class FxContainer extends BoundElement {
+export class FxContainer extends foreElementMixin(LitElement) {
 
 /*
     static get properties() {
@@ -47,7 +47,7 @@ export class XfContainer extends foreElementMixin(LitElement) {
      * (re)apply all state properties to this control.
      */
     refresh() {
-        console.log('### XfContainer.refresh on : ', this);
+        console.log('### FxContainer.refresh on : ', this);
 
         if(this.isBound()){
             this.evalInContext();
@@ -122,4 +122,4 @@ export class XfContainer extends foreElementMixin(LitElement) {
 
 }
 
-window.customElements.define('xf-container', XfContainer);
+window.customElements.define('fx-container', FxContainer);

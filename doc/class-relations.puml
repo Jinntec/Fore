@@ -4,10 +4,10 @@ class HTMLElement{
 }
 class LitElement
 
-class XfForm {
+class FxForm {
     refresh()
 }
-LitElement <|-- XfForm
+LitElement <|-- FxForm
 
 
 class ForeElementMixin{
@@ -21,14 +21,14 @@ class ForeElementMixin{
     _inScopeContext()
 }
 package "model" #DDDDDD {
-    class XfModel{
+    class FxModel{
         bindingMap[]
         rebuild()
         recalculate()
         revalidate()
         registerBinding()
     }
-    class XfInstance{
+    class FxInstance{
         getInstanceData()
         getDefaultContext()
     }
@@ -44,23 +44,23 @@ package "model" #DDDDDD {
         type
     }
 
-    class XfBind{
+    class FxBind{
         createModelItem()
         buildBindGraph()
     }
-    class XfSubmission
+    class FxSubmission
 
-    HTMLElement <|-- XfInstance
-    HTMLElement <|-- XfBind
-    HTMLElement <|-- XfModel
+    HTMLElement <|-- FxInstance
+    HTMLElement <|-- FxBind
+    HTMLElement <|-- FxModel
 
 
 }
 
-XfModel o-- ModelItem
+FxModel o-- ModelItem
 
 package "view" #DDDDDD{
-    abstract class XfContainer{
+    abstract class FxContainer{
         refresh()
     }
     abstract class AbstractControl{
@@ -70,19 +70,19 @@ package "view" #DDDDDD{
     class XfSwitch #lightgrey
     class XfSelect1 #lightgrey
     class XfSelect #lightgrey
-    AbstractControl <|-- XfInput
-    AbstractControl <|-- XfOutput
-    AbstractControl <|-- XfButton
-    XfContainer <|-- XfRepeat
-    XfContainer <|-- XfRepeatitem
-    XfContainer <|-- XfGroup
-    XfContainer <|-- XfSwitch
+    AbstractControl <|-- FxInput
+    AbstractControl <|-- FxOutput
+    AbstractControl <|-- FxButton
+    FxContainer <|-- FxRepeat
+    FxContainer <|-- FxRepeatitem
+    FxContainer <|-- FxGroup
+    FxContainer <|-- XfSwitch
     AbstractControl <|-- XfSelect
     AbstractControl <|-- XfSelect1
 }
 
 package "controller" #DDDDDD{
-    class XfAction{
+    class FxAction{
         needsRebuild
         needsRecalculate
         needsRevalidate
@@ -90,22 +90,22 @@ package "controller" #DDDDDD{
         execute()
         actionPerformed()
     }
-    XfAction <|-- XfDelete
-    XfAction <|-- XfAppend
-    XfAction <|-- XfInsert
-    XfAction <|-- XfSetvalue
+    FxAction <|-- FxDelete
+    FxAction <|-- FxAppend
+    FxAction <|-- XfInsert
+    FxAction <|-- FxSetvalue
 
 }
 
 
-LitElement <|-- XfContainer
+LitElement <|-- FxContainer
 LitElement <|-- AbstractControl
 ForeElementMixin *.. AbstractControl
-ForeElementMixin *.. XfContainer
+ForeElementMixin *.. FxContainer
 
 
-HTMLElement <|-- XfAction
-ForeElementMixin *.. XfAction
+HTMLElement <|-- FxAction
+ForeElementMixin *.. FxAction
 
 
 

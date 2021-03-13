@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/app.js';
+import '../index.js';
 
 describe('scoped resolution tests', () => {
 
     it('inscopeContext for child bind is equal to its parent', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -18,16 +18,16 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="parent" ref="arm">
-                            <xf-bind id="child" ref="@side"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind id="parent" ref="arm">
+                            <fx-bind id="child" ref="@side"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model.modelItems.length).to.equal(2);
 
         const parent = el.querySelector('#parent');
@@ -41,9 +41,9 @@ describe('scoped resolution tests', () => {
     it('inscopeContext for second child bind is equal to its parent', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -51,17 +51,17 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="parent" ref="arm">
-                            <xf-bind id="child1" ref="@side"></xf-bind>
-                            <xf-bind id="child2" ref="hand"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind id="parent" ref="arm">
+                            <fx-bind id="child1" ref="@side"></fx-bind>
+                            <fx-bind id="child2" ref="hand"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model.modelItems.length).to.equal(3);
 
         const parent = el.querySelector('#parent');
@@ -73,9 +73,9 @@ describe('scoped resolution tests', () => {
     it('inscopeContext for subchild bind is equal to its parent', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -83,19 +83,19 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="parent" ref="arm">
-                            <xf-bind id="child1" ref="@side"></xf-bind>
-                            <xf-bind id="child2" ref="hand">
-                                <xf-bind id="subchild" ref="finger"></xf-bind>
-                            </xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind id="parent" ref="arm">
+                            <fx-bind id="child1" ref="@side"></fx-bind>
+                            <fx-bind id="child2" ref="hand">
+                                <fx-bind id="subchild" ref="finger"></fx-bind>
+                            </fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model.modelItems.length).to.equal(4);
 
         const child = el.querySelector('#child2');
@@ -108,9 +108,9 @@ describe('scoped resolution tests', () => {
     it('has 2 arms as nodeset', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -123,19 +123,19 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="parent" ref="arm">
-                            <xf-bind id="child1" ref="@side"></xf-bind>
-                            <xf-bind id="child2" ref="hand">
-                                <xf-bind id="subchild" ref="finger"></xf-bind>
-                            </xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind id="parent" ref="arm">
+                            <fx-bind id="child1" ref="@side"></fx-bind>
+                            <fx-bind id="child2" ref="hand">
+                                <fx-bind id="subchild" ref="finger"></fx-bind>
+                            </fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         // expect(model.modelItems.length).to.equal(8);
 
         const parent = el.querySelector('#parent');
@@ -145,9 +145,9 @@ describe('scoped resolution tests', () => {
     it('has a 3 finger nodeset for the left arm', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -162,19 +162,19 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="parent" ref="arm">
-                            <xf-bind id="child1" ref="@side"></xf-bind>
-                            <xf-bind id="child2" ref="hand">
-                                <xf-bind id="subchild" ref="finger"></xf-bind>
-                            </xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind id="parent" ref="arm">
+                            <fx-bind id="child1" ref="@side"></fx-bind>
+                            <fx-bind id="child2" ref="hand">
+                                <fx-bind id="subchild" ref="finger"></fx-bind>
+                            </fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model.modelItems.length).to.equal(10);
 
         const parent = el.querySelector('#parent');
@@ -184,9 +184,9 @@ describe('scoped resolution tests', () => {
     it('correctly binds form controls', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <arm side="left">
                                     <hand>
@@ -199,26 +199,26 @@ describe('scoped resolution tests', () => {
                                     </hand>
                                 </arm>
                             </data>
-                        </xf-instance>
-                        <xf-bind ref="arm">
-                            <xf-bind ref="hand">
-                                <xf-bind ref="finger">middle</xf-bind>
-                            </xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                    <xf-group ref="arm">
+                        </fx-instance>
+                        <fx-bind ref="arm">
+                            <fx-bind ref="hand">
+                                <fx-bind ref="finger">middle</fx-bind>
+                            </fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                    <fx-group ref="arm">
                         <h1>hold up one finger!:
-                            <xf-output ref=".[1]/hand/finger" id="output"></xf-output>
+                            <fx-output ref=".[1]/hand/finger" id="output"></fx-output>
                         </h1>
                         <h2>left or right?
-                            <xf-output id="output2" ref="@side"></xf-output>
-                            <xf-output id="output3" ref="/data/arm[2]/@side"></xf-output>
+                            <fx-output id="output2" ref="@side"></fx-output>
+                            <fx-output id="output3" ref="/data/arm[2]/@side"></fx-output>
                         </h2>
-                    </xf-group>
-                </xf-form>`)
+                    </fx-group>
+                </fx-form>`)
         );
 
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
 
         let { detail } = await oneEvent(el, 'refresh-done');
         console.log('model ', detail);
@@ -236,23 +236,23 @@ describe('scoped resolution tests', () => {
     it('dispatches a bind exception for non-existing ref', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="record">
+                        <fx-instance>
                             <data>
                                 <foo></foo>
                             </data>
-                        </xf-instance>
-                        <xf-bind ref="bar"></xf-bind>
-                    </xf-model>
-                    <xf-group ref="bar">
-                    </xf-group>
-                </xf-form>`)
+                        </fx-instance>
+                        <fx-bind ref="bar"></fx-bind>
+                    </fx-model>
+                    <fx-group ref="bar">
+                    </fx-group>
+                </fx-form>`)
         );
 
         await elementUpdated(el);
 /!*
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model.modelItems.length).to.equal(8);
 
         let out = el.querySelector('#output');

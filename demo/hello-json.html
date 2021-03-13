@@ -11,8 +11,8 @@
 
 <!--
     <script type="module">
-        import '../src/xf-form.js';
-        import '../src/actions/xf-setvalue.js';
+        import '../src/fx-form.js';
+        import '../src/actions/fx-setvalue.js';
     </script>
 -->
 
@@ -22,7 +22,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -33,39 +33,39 @@
 <body unresolved="unresolved">
 
 
-<xf-form>
-    <xf-message event="refresh-done">refresh has been done</xf-message>
+<fx-form>
+    <fx-message event="refresh-done">refresh has been done</fx-message>
 
-    <xf-model id="model1">
-        <xf-instance type="json">
+    <fx-model id="model1">
+        <fx-instance type="json">
             {
                 "prop":"value"
             }
-        </xf-instance>
-        <xf-bind ref="prop" required="prop.length < 6" readonly="prop.length < 6"></xf-bind>
+        </fx-instance>
+        <fx-bind ref="prop" required="prop.length < 6" readonly="prop.length < 6"></fx-bind>
 
-    </xf-model>
-    <xf-group>
+    </fx-model>
+    <fx-group>
 
 
         <h1>
             Greeting:
-            <xf-output id="output" ref="prop"></xf-output>
+            <fx-output id="output" ref="prop"></fx-output>
         </h1>
 
-        <xf-input label="Greeting" ref="prop"></xf-input>
+        <fx-input label="Greeting" ref="prop"></fx-input>
 
 
 <!--
-        <xf-button label="say 'hello Universe'">
-            <xf-setvalue ref="prop" value="Hello Universe"></xf-setvalue>
-        </xf-button>
-        <xf-button label="say 'hello'">
-            <xf-setvalue ref="prop" value="Hello"></xf-setvalue>
-        </xf-button>
+        <fx-button label="say 'hello Universe'">
+            <fx-setvalue ref="prop" value="Hello Universe"></fx-setvalue>
+        </fx-button>
+        <fx-button label="say 'hello'">
+            <fx-setvalue ref="prop" value="Hello"></fx-setvalue>
+        </fx-button>
 -->
 
-    </xf-group>
-</xf-form>
+    </fx-group>
+</fx-form>
 </body>
 </html>

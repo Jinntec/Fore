@@ -22,10 +22,10 @@
         body{
             font-size: 18px;
         }
-        xf-instance{
+        fx-instance{
             display:none;
         }
-        xf-control{
+        fx-control{
             display: table-row;
 
         }
@@ -37,7 +37,7 @@
         section{
             padding-bottom: 50px;
         }
-        xf-setvalue, xf-message{
+        fx-setvalue, fx-message{
             display: none;
         }
     </style>
@@ -45,29 +45,29 @@
 <body unresolved="unresolved">
 
 
-<xf-form>
-    <xf-model id="model1">
-        <xf-instance>
+<fx-form>
+    <fx-model id="model1">
+        <fx-instance>
             <data>
                 <item>foobar</item>
                 <fruit>apple</fruit>
                 <listitem>foo</listitem>
             </data>
-        </xf-instance>
+        </fx-instance>
 
-        <xf-instance id="fruits">
+        <fx-instance id="fruits">
             <data>
                 <fruit value="apple">Apple</fruit>
                 <fruit value="orange">Orange</fruit>
                 <fruit value="strawberry">Strawberry</fruit>
             </data>
-        </xf-instance>
+        </fx-instance>
 
-        <xf-bind ref="item" required="true()" readonly="true()"></xf-bind>
-        <xf-bind ref="fruit"></xf-bind>
-        <xf-bind ref="listitem"></xf-bind>
-    </xf-model>
-    <xf-group>
+        <fx-bind ref="item" required="true()" readonly="true()"></fx-bind>
+        <fx-bind ref="fruit"></fx-bind>
+        <fx-bind ref="listitem"></fx-bind>
+    </fx-model>
+    <fx-group>
 
         <h1>Select controls</h1>
         <p></p>
@@ -77,16 +77,16 @@
             <demo-snippet>
                 <template>
 
-                    <xf-control ref="listitem" update-event="change">
+                    <fx-control ref="listitem" update-event="change">
                         <label slot="label">native select</label>
                         <select>
                             <option value=""></option>
                             <option value="foo">foo</option>
                             <option value="bar">bar</option>
                         <select>
-                    </xf-control>
+                    </fx-control>
 
-                    Selected value is: <xf-output ref="listitem"></xf-output>
+                    Selected value is: <fx-output ref="listitem"></fx-output>
 
                 </template>
             </demo-snippet>
@@ -98,19 +98,19 @@
                 <template>
 
                     <!--
-                    todo: the ref from the select  could be moved up to @items on xf-control - more explicit and no
+                    todo: the ref from the select  could be moved up to @items on fx-control - more explicit and no
                     breaking of the contentmodel of the select.
                     -->
-                    <xf-control ref="fruit" update-event="change">
+                    <fx-control ref="fruit" update-event="change">
                         <label slot="label">native select</label>
                         <select ref="instance('fruits')//fruit">
                             <template>
                                 <option value="{@value}">{.}</option>
                             </template>
                         <select>
-                    </xf-control>
+                    </fx-control>
 
-                    Selected value is: <xf-output ref="fruit"></xf-output>
+                    Selected value is: <fx-output ref="fruit"></fx-output>
 
                 </template>
             </demo-snippet>
@@ -118,8 +118,8 @@
 
         <script type="module" src="../index.js"></script>
 
-    </xf-group>
-</xf-form>
+    </fx-group>
+</fx-form>
 
 <script type="module" src="../index.js"></script>
 

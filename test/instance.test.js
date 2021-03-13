@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/xf-instance.js';
+import '../src/fx-instance.js';
 
 describe('instance Tests', () => {
 
     it('has "default" as id', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
+                <fx-instance>
                     <data>
                         <foobar></foobar>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
             `)
         );
@@ -25,11 +25,11 @@ describe('instance Tests', () => {
     it('init creates instanceData', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
+                <fx-instance>
                     <data>
                         <foobar></foobar>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
             `)
         );
@@ -43,11 +43,11 @@ describe('instance Tests', () => {
     it('evaluates xpath in its default context', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
+                <fx-instance>
                     <data>
                         <foobar></foobar>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
             `)
         );
@@ -62,11 +62,11 @@ describe('instance Tests', () => {
     it('provides default evaluation context', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
+                <fx-instance>
                     <data>
                         <foobar></foobar>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
             `)
         );
@@ -81,7 +81,7 @@ describe('instance Tests', () => {
     it('does NOT copy a "body" element from inline data', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-instance>
+                <fx-instance>
                     <data>
                         <body>
                             <arm side="left">
@@ -91,7 +91,7 @@ describe('instance Tests', () => {
                             </arm>
                         </body>
                     </data>
-                </xf-instance>
+                </fx-instance>
 
             `)
         );
@@ -119,70 +119,74 @@ describe('instance Tests', () => {
     it('resolves instances with the instance() function', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
+                <fx-form>
+                    <fx-model id="model1">
 
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <foobar></foobar>
                             </data>
-                        </xf-instance>
-                        <xf-instance id="second">
+                        </fx-instance>
+                        <fx-instance id="second">
                             <data>
                                 <item>second</item>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
 
-                        <xf-bind ref="instance('second')/item"></xf-bind>
-                    </xf-model>
-                </xf-form>
+                        <fx-bind ref="instance('second')/item"></fx-bind>
+                    </fx-model>
+                    <fx-output ref="instance('second')//item"></fx-output>
+                </fx-form>
             `)
         );
 
         // await elementUpdated(el);
         let { detail } = await oneEvent(el, 'refresh-done');
 
-        const instances = el.querySelectorAll('xf-instance');
+        const instances = el.querySelectorAll('fx-instance');
         expect(instances[0].id).to.equal('default');
         expect(instances[1].id).to.equal('second');
 
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         const {modelItems} = model;
         expect(modelItems[0].value).to.equal('second');
+
+        const out = el.querySelector('fx-output');
+        expect(out.value).to.equal('second');
 
     });
 
 	it('Allows calling the boolean-from-string function', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
+                <fx-form>
+                    <fx-model id="model1">
 
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <foobar></foobar>
                             </data>
-                        </xf-instance>
-                        <xf-instance id="second">
+                        </fx-instance>
+                        <fx-instance id="second">
                             <data>
                                 <item>Maybe</item>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
 
-                        <xf-bind ref="instance('second')/item" required="boolean-from-string('maybe!~')"></xf-bind>
-                    </xf-model>
-                </xf-form>
+                        <fx-bind ref="instance('second')/item" required="boolean-from-string('maybe!~')"></fx-bind>
+                    </fx-model>
+                </fx-form>
             `)
         );
 
         // await elementUpdated(el);
         let { detail } = await oneEvent(el, 'refresh-done');
 
-        const instances = el.querySelectorAll('xf-instance');
+        const instances = el.querySelectorAll('fx-instance');
         expect(instances[0].id).to.equal('default');
         expect(instances[1].id).to.equal('second');
 
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         // await elementUpdated(model);
         const {modelItems} = model;
         // expect(modelItems[0].required).to.be.false;
@@ -195,27 +199,27 @@ describe('instance Tests', () => {
 	it('loads data from external file via src attr', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
+                <fx-form>
+                    <fx-model id="model1">
 
-                        <xf-instance src="instance1.xml"></xf-instance>
+                        <fx-instance src="instance1.xml"></fx-instance>
 
-                        <xf-bind ref="greeting"</xf-bind>
-                    </xf-model>
+                        <fx-bind ref="greeting"</fx-bind>
+                    </fx-model>
                     
                     
-                </xf-form>
+                </fx-form>
             `)
         );
 
         await elementUpdated(el);
 
-        const instances = el.querySelectorAll('xf-instance');
+        const instances = el.querySelectorAll('fx-instance');
         expect(instances[0].id).to.equal('default');
 
         let { detail } = await oneEvent(el, 'refresh-done');
 
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         await elementUpdated(model);
         const {modelItems} = model;
         // expect(modelItems[0].required).to.be.false;
@@ -229,7 +233,7 @@ describe('instance Tests', () => {
         it('does NOT copy a "body" element from inline data', async () => {
             const el =  (
                 await fixtureSync(html`
-                    <xf-instance>
+                    <fx-instance>
                         <data>
                             <body>
                                 <arm side="left">
@@ -239,7 +243,7 @@ describe('instance Tests', () => {
                                 </arm>
                             </body>
                         </data>
-                    </xf-instance>
+                    </fx-instance>
 
                 `)
             );

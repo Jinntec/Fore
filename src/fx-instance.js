@@ -2,7 +2,7 @@ import '@polymer/iron-ajax/iron-ajax.js';
 
 import * as fx from 'fontoxpath';
 
-export class XfInstance extends HTMLElement {
+export class FxInstance extends HTMLElement {
 
     constructor() {
         super();
@@ -35,10 +35,12 @@ export class XfInstance extends HTMLElement {
             :host {
                 display: none;
             }
+            ::slotted(*){
+                display:none;
+            }
         `;
 
         const html = `
-           <slot></slot>
            <iron-ajax 
                 id="loader"
                 url="${this.src}"
@@ -55,7 +57,7 @@ export class XfInstance extends HTMLElement {
     }
 
     async init (){
-        // console.log('xf-instance init');
+        // console.log('fx-instance init');
         // if(this.src) return;
         if(this.type === 'xml'){
             await this._initXMLInstance();
@@ -114,7 +116,7 @@ export class XfInstance extends HTMLElement {
                 loader.addEventListener('response',() => {
                     const instanceData = new DOMParser().parseFromString(loader.lastResponse,'application/xml');
                     this.instanceData = instanceData;
-                    console.log('xf-instance data: ', this.instanceData);
+                    console.log('fx-instance data: ', this.instanceData);
                     this.dispatchEvent(new CustomEvent('instance-loaded', {}));
                     resolve("done");
                 });
@@ -151,15 +153,15 @@ export class XfInstance extends HTMLElement {
         // console.log('created instanceData ', new XMLSerializer().serializeToString(instanceData));
         // console.log('namespace ', instanceData.firstElementChild.namespaceURI);
 
-        console.log('xf-instance init id:', this.id);
+        console.log('fx-instance init id:', this.id);
         this.instanceData = instanceData;
         // console.log('instanceData ', this.instanceData);
         // console.log('instanceData ', this.instanceData.firstElementChild);
         // this.shadowRoot.appendChild(this.instanceData.firstElementChild);
 
-        console.log('xf-instance data: ', this.instanceData);
+        console.log('fx-instance data: ', this.instanceData);
         this.instanceData.firstElementChild.setAttribute('id',this.id);
-        // console.log('xf-instance data ', this.instanceData);
+        // console.log('fx-instance data ', this.instanceData);
     }
 
     _handleResponse(){
@@ -179,4 +181,4 @@ export class XfInstance extends HTMLElement {
 
 
 }
-customElements.define('xf-instance', XfInstance);
+customElements.define('fx-instance', FxInstance);

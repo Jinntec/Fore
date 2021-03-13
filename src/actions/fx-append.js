@@ -1,19 +1,19 @@
-import { XfAction } from "./xf-action.js";
-// import '../xf-model.js';
-// import '../xf-instance.js';
+import { FxAction } from "./fx-action.js";
+// import '../fx-model.js';
+// import '../fx-instance.js';
 import * as fx from 'fontoxpath';
-import {XfInstance} from "../xf-instance";
-import {XfBind} from "../xf-bind";
+import {FxInstance} from "../fx-instance";
+import {FxBind} from "../fx-bind";
 
 /**
- * `xf-append`
- * appends an entry to a `xf-repeat`.
+ * `fx-append`
+ * appends an entry to a `fx-repeat`.
  *
  * Setting the optional `clear` attribute to 'false' will append an entry that is a copy of the last repeat item.
  *
  * @customElement
  */
-class XfAppend extends XfAction {
+class FxAppend extends FxAction {
 
     static get properties() {
         return {
@@ -147,4 +147,4 @@ class XfAppend extends XfAction {
 
 }
 
-window.customElements.define('xf-append', XfAppend);
+window.customElements.define('fx-append', FxAppend);

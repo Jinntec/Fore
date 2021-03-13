@@ -1,41 +1,41 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/app.js';
+import '../index.js';
 
 describe('control tests', () => {
 
     it('shows control alert defined on control', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <a>Aa</a>
                                 <b>B</b>
                                 <c>C</c>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
                 
-                        <xf-bind ref="a" constraint="string-length(.) = 1"></xf-bind>
-                        <xf-bind ref="b" constraint="string-length(.) = 1" alert="string must be exactly one character long"></xf-bind>
-                        <xf-bind ref="c" constraint="string-length(.) = 1">
-                            <xf-alert><b>string must be exactly 1 character long</b></xf-alert>
-                        </xf-bind>
-                    </xf-model>
+                        <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
+                        <fx-bind ref="b" constraint="string-length(.) = 1" alert="string must be exactly one character long"></fx-bind>
+                        <fx-bind ref="c" constraint="string-length(.) = 1">
+                            <fx-alert><b>string must be exactly 1 character long</b></fx-alert>
+                        </fx-bind>
+                    </fx-model>
                     
-                    <xf-input id="input1" label="A-label" ref="a">
-                        <xf-alert>Constraint not valid</xf-alert>
-                        <xf-hint>must be one character long</xf-hint>
-                    </xf-input>
+                    <fx-input id="input1" label="A-label" ref="a">
+                        <fx-alert>Constraint not valid</fx-alert>
+                        <fx-hint>must be one character long</fx-hint>
+                    </fx-input>
 
-                    <xf-input id="input2" label="B-label" ref="b">
-                        <xf-alert id="alert1">Constraint not valid</xf-alert>
-                        <xf-hint>must be one character long</xf-hint>
-                    </xf-input>
+                    <fx-input id="input2" label="B-label" ref="b">
+                        <fx-alert id="alert1">Constraint not valid</fx-alert>
+                        <fx-hint>must be one character long</fx-hint>
+                    </fx-input>
 
-                </xf-form>`)
+                </fx-form>`)
         );
 
         await elementUpdated(el);
@@ -66,20 +66,20 @@ describe('control tests', () => {
     it('has a control child with value "A"', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">  
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">  
+                        <fx-instance>
                             <data>
                                 <a>A</a>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
                 
-                    </xf-model>
+                    </fx-model>
                     
-                    <xf-input id="input1" label="A-label" ref="a">
-                    </xf-input>
+                    <fx-input id="input1" label="A-label" ref="a">
+                    </fx-input>
 
-                </xf-form>`)
+                </fx-form>`)
         );
 
         await elementUpdated(el);
@@ -94,21 +94,21 @@ describe('control tests', () => {
     it('listens for event', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <a>A</a>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
                 
-                    </xf-model>
+                    </fx-model>
                     
-                    <xf-input id="input1" label="A-label" ref="a">
-                    </xf-input>
+                    <fx-input id="input1" label="A-label" ref="a">
+                    </fx-input>
                     
                     
-                </xf-form>`)
+                </fx-form>`)
         );
 
         await elementUpdated(el);
@@ -125,7 +125,7 @@ describe('control tests', () => {
         // console.log('input control', input.control);
         // input.control.blur();
 
-        // const model = el.querySelector('xf-model');
+        // const model = el.querySelector('fx-model');
         // model.updateModel();
         // el.refresh();
 

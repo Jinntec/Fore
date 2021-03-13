@@ -1,14 +1,14 @@
 import {LitElement, html, css} from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
-import XfAbstractControl from "./xf-abstract-control.js";
+import XfAbstractControl from "./fx-abstract-control.js";
 /**
- * `xf-button`
+ * `fx-button`
  * a button triggering Fore actions
  *
  * @customElement
  * @demo demo/index.html
  */
-class XfButton extends XfAbstractControl {
+class FxButton extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -42,7 +42,7 @@ class XfButton extends XfAbstractControl {
     performActions() {
         console.log('performActions ', this.children);
 
-        const repeatedItem = this.closest('xf-repeatitem');
+        const repeatedItem = this.closest('fx-repeatitem');
         if(repeatedItem){
             console.log('repeated click');
             repeatedItem.click();
@@ -74,7 +74,7 @@ class XfButton extends XfAbstractControl {
 
     refresh(){
         // super.refresh();
-        // console.log('xf-button refresh');
+        // console.log('fx-button refresh');
 
         const elements = this.querySelectorAll(':scope > *');
         elements.forEach(element => {
@@ -96,4 +96,4 @@ class XfButton extends XfAbstractControl {
 
 }
 
-window.customElements.define('xf-button', XfButton);
+window.customElements.define('fx-button', FxButton);

@@ -1,16 +1,16 @@
 // import {LitElement,html, css} from "lit-element";
 import {Fore} from "../fore.js";
-import {XfContainer} from "./xf-container";
+import {FxContainer} from "./fx-container";
 
 
 /**
- * `xf-repeat`
+ * `fx-repeat`
  * an xformish form for eXist-db
  *
  * @customElement
  * @demo demo/index.html
  */
-export class XfRepeatitem extends XfContainer{
+export class FxRepeatitem extends FxContainer{
 
 /*
     static get styles() {
@@ -75,9 +75,9 @@ export class XfRepeatitem extends XfContainer{
     }
 
     firstUpdated(_changedProperties) {
-        // console.log('### xf-repeatitem firstUpdated index ', this.index);
-        // console.log('### xf-repeatitem firstUpdated nodeset ', this.nodeset);
-        // console.log('### xf-repeatitem firstUpdated model ', this.model);
+        // console.log('### fx-repeatitem firstUpdated index ', this.index);
+        // console.log('### fx-repeatitem firstUpdated nodeset ', this.nodeset);
+        // console.log('### fx-repeatitem firstUpdated model ', this.model);
         this.dispatchEvent(new CustomEvent('repeatitem-created', {
             composed: true,
             bubbles: true,
@@ -122,8 +122,8 @@ export class XfRepeatitem extends XfContainer{
         children.forEach(element => {
 
             //todo: later - check for AVTs
-            // if(!element.nodeName.toLowerCase().startsWith('xf-')) return;
-            // if(element.nodeName.toLowerCase() === 'xf-repeat') return;
+            // if(!element.nodeName.toLowerCase().startsWith('fx-')) return;
+            // if(element.nodeName.toLowerCase() === 'fx-repeat') return;
 
             if (typeof element.refresh === 'function') {
                 // console.log('refresh bound element ', bound);
@@ -148,4 +148,4 @@ export class XfRepeatitem extends XfContainer{
 
 }
 
-window.customElements.define('xf-repeatitem', XfRepeatitem);
+window.customElements.define('fx-repeatitem', FxRepeatitem);

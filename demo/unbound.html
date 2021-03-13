@@ -21,7 +21,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -34,24 +34,24 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-message event="refresh-done">refresh has been done</xf-message>
+        <fx-form>
+            <fx-message event="refresh-done">refresh has been done</fx-message>
 
-            <xf-model id="model1">
-                <xf-instance>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <greeting type="message:">Hello World!</greeting>
                     </data>
-                </xf-instance>
-            </xf-model>
-            <xf-group>
+                </fx-instance>
+            </fx-model>
+            <fx-group>
 
                 <h1>Unbound control is not showing</h1>
-                <xf-input id="output" ref="greeting"></xf-input>
-                <xf-input ref="greet"></xf-input>
+                <fx-input id="output" ref="greeting"></fx-input>
+                <fx-input ref="greet"></fx-input>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 

@@ -1,10 +1,9 @@
 [unresolved]{
     display: none;
 }
-/*
-[required]:after{
-    content:'*';
-    color:red;
+
+fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
+    display:none;
 }
-*/
+
 

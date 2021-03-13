@@ -1,13 +1,13 @@
-import {XfAction} from './xf-action.js';
+import {FxAction} from './fx-action.js';
 
-import "../xf-model.js";
+import "../fx-model.js";
 
 /**
- * `xf-setvalue`
+ * `fx-setvalue`
  *
  * @customElement
  */
-export default class XfSetvalue extends XfAction {
+export default class FxSetvalue extends FxAction {
 
     static get properties() {
         return {
@@ -32,7 +32,7 @@ export default class XfSetvalue extends XfAction {
         if(this.hasAttribute('ref')){
             this.ref = this.getAttribute('ref');
         }else{
-            throw new Error('xf-setvalue must specify a "ref" attribute');
+            throw new Error('fx-setvalue must specify a "ref" attribute');
         }
         this.value = this.getAttribute('value');
     }
@@ -53,10 +53,10 @@ export default class XfSetvalue extends XfAction {
 
 
         /*
-                const repeated = this.closest('xf-repeat-item');
+                const repeated = this.closest('fx-repeat-item');
 
                 const path = this.ownerForm.resolveBinding(this);
-                console.log('### xf-setvalue path ', path);
+                console.log('### fx-setvalue path ', path);
 
 
                 if(repeated){
@@ -103,4 +103,4 @@ export default class XfSetvalue extends XfAction {
 
 }
 
-window.customElements.define('xf-setvalue', XfSetvalue);
+window.customElements.define('fx-setvalue', FxSetvalue);

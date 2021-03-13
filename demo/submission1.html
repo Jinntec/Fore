@@ -21,7 +21,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -31,7 +31,7 @@
             display: none;
         }
 
-        xf-button {
+        fx-button {
             display: block;
         }
 
@@ -45,94 +45,94 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
+        <fx-form>
 
-            <xf-model>
-                <xf-instance>
+            <fx-model>
+                <fx-instance>
                     <data>
                         <greeting>Hello World!</greeting>
                         <prop></prop>
                         <class>dynamic</class>
                     </data>
-                </xf-instance>
-                <xf-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
-                         readonly="string-length(.) < 6"></xf-bind>
+                </fx-instance>
+                <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
+                         readonly="string-length(.) < 6"></fx-bind>
 
-                <xf-submission id="submission"
+                <fx-submission id="submission"
                                url="/submission1"
                                method="POST"
                                replace="default">
-                    <xf-message event="submit-done">Data have been submitted</xf-message>
-                </xf-submission>
-                <xf-submission id="submission2"
+                    <fx-message event="submit-done">Data have been submitted</fx-message>
+                </fx-submission>
+                <fx-submission id="submission2"
                                url="/submission2"
                                method="POST"
                                replace="default">
-                </xf-submission>
-                <xf-submission id="submission3"
+                </fx-submission>
+                <fx-submission id="submission3"
                                url="/submission2"
                                method="POST">
-                </xf-submission>
+                </fx-submission>
 
-                <xf-submission id="submissionfails"
+                <fx-submission id="submissionfails"
                                url="/submissionfails"
                                method="POST"
                                replace="default">
-                </xf-submission>
+                </fx-submission>
 
-                <xf-message event="ready">Hey it's ready</xf-message>
-            </xf-model>
-            <xf-group collapse="true">
+                <fx-message event="ready">Hey it's ready</fx-message>
+            </fx-model>
+            <fx-group collapse="true">
 
                 <h1>Submission</h1>
 
-                <xf-output id="output" ref="./greeting">
-                    <xf-label>Greeting:</xf-label>
-                </xf-output>
+                <fx-output id="output" ref="./greeting">
+                    <fx-label>Greeting:</fx-label>
+                </fx-output>
 
-                <xf-input label="Greeting" ref="greeting"></xf-input>
+                <fx-input label="Greeting" ref="greeting"></fx-input>
 
                 <h2>Replace the instance with empty data</h2>
 
-                <xf-button label="return empty data">
-                    <xf-send submission="submission"></xf-send>
-                </xf-button>
+                <fx-button label="return empty data">
+                    <fx-send submission="submission"></fx-send>
+                </fx-button>
 
                 <p>Replacing default instance with empty data also hides control as it's not bound any more.</p>
 
                 <h2>Replace the instance with data from server</h2>
 
-                <xf-button label="return greeting from server">
-                    <xf-send submission="submission2"></xf-send>
-                </xf-button>
+                <fx-button label="return greeting from server">
+                    <fx-send submission="submission2"></fx-send>
+                </fx-button>
 
                 <p>Replacing the data with a greeting from the server.</p>
 
                 <h2>Ignore the reponse</h2>
 
-                <xf-button label="just send">
-                    <xf-send submission="submission3"></xf-send>
-                </xf-button>
+                <fx-button label="just send">
+                    <fx-send submission="submission3"></fx-send>
+                </fx-button>
 
                 <p>Replacing the data with a greeting from the server.</p>
 
                 <h2>non-existing submission raises error</h2>
 
-                <xf-button label="does not exist">
-                    <xf-send submission="notexistent"></xf-send>
-                </xf-button>
+                <fx-button label="does not exist">
+                    <fx-send submission="notexistent"></fx-send>
+                </fx-button>
 
 <!--
                 <h2>corrupt data (does not work yet as expected)</h2>
 
-                <xf-button label="does not work">
-                    <xf-send submission="submissionfails"></xf-send>
-                </xf-button>
+                <fx-button label="does not work">
+                    <fx-send submission="submissionfails"></fx-send>
+                </fx-button>
 
                 <p>Attempting to set corrupt data from the server.</p>
 -->
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

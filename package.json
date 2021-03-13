@@ -5,7 +5,7 @@
   "module": "./index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jinntec/Fore"
+    "url": "https://gitlab.existsolutions.com/eXistdbElements/exform"
   },
   "directories": {
     "doc": "doc",
@@ -16,6 +16,7 @@
   },
   "files": [
     "index.js",
+    "resources/fore.css",
     "src/**/*"
   ],
   "dependencies": {
@@ -80,10 +81,6 @@
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
     "fontoxpath": "rollup -c fontoxpath.rollup.config.js",
     "empathy": "./node_modules/@0xcda7a/empathy/bin/empathy install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.existsolutions.com/eXistdbElements/exform"
   },
   "keywords": [
     "Fore",

@@ -1,18 +1,18 @@
 import {html,css} from "lit-element";
-import "./xf-repeatitem.js";
+import "./fx-repeatitem.js";
 import * as fx from "fontoxpath";
-import {XfContainer} from "./xf-container.js";
+import {FxContainer} from "./fx-container.js";
 
 import {Fore} from "../fore";
 
 /**
- * `xf-repeat`
+ * `fx-repeat`
  * an xformish form for eXist-db
  *
  * @customElement
  * @demo demo/index.html
  */
-export class XfRepeat extends XfContainer {
+export class FxRepeat extends FxContainer {
 
     static get styles() {
         return css`
@@ -84,7 +84,7 @@ export class XfRepeat extends XfContainer {
         // console.log('### XfControl connected ', this);
         this.addEventListener('index-changed', e => {
            this.index = e.detail.index;
-           const rItems = this.querySelectorAll('xf-repeatitem');
+           const rItems = this.querySelectorAll('fx-repeatitem');
            this._setIndex(rItems[this.index-1]);
         });
     }
@@ -131,7 +131,7 @@ export class XfRepeat extends XfContainer {
         console.log('repeat refresh nodeset ', this.nodeset);
 
 
-        const rItems = this.querySelectorAll('xf-repeatitem');
+        const rItems = this.querySelectorAll('fx-repeatitem');
 
 
         // this._initRepeatItems();
@@ -141,7 +141,7 @@ export class XfRepeat extends XfContainer {
 */
 
     refresh() {
-        console.group('xf-repeat.refresh');
+        console.group('fx-repeat.refresh');
         if(!this.inited) this.init();
 
         const inscope = this._inScopeContext();
@@ -156,7 +156,7 @@ export class XfRepeat extends XfContainer {
         //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
 
 
-        let repeatItems = this.querySelectorAll('xf-repeatitem');
+        let repeatItems = this.querySelectorAll('fx-repeatitem');
         const repeatItemCount = repeatItems.length;
 
         let nodeCount = 1;
@@ -209,7 +209,7 @@ export class XfRepeat extends XfContainer {
 
         /*
                 if(repeatItems){
-                    repeatItems = this.querySelectorAll('xf-repeatitem');
+                    repeatItems = this.querySelectorAll('fx-repeatitem');
                     repeatItems.forEach(bound => {
                         bound.refresh();
                     });
@@ -244,7 +244,7 @@ export class XfRepeat extends XfContainer {
 
 /* 
     refresh() {
-        console.group('xf-repeat.refresh');
+        console.group('fx-repeat.refresh');
         if(!this.inited) this.init();
         // this.nodeset = this.evalBinding();
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, this.model.getDefaultInstance().getDefaultContext(), null, {});
@@ -268,7 +268,7 @@ export class XfRepeat extends XfContainer {
 /*
     _refreshChildren(repeatItems){
         if(repeatItems){
-            repeatItems = this.querySelectorAll('xf-repeatitem');
+            repeatItems = this.querySelectorAll('fx-repeatitem');
             repeatItems.forEach(bound => {
                 bound.refresh();
             });
@@ -288,7 +288,7 @@ export class XfRepeat extends XfContainer {
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
         console.log('repeat nodeset ', this.nodeset);
 
-        // const repeatItems = this.querySelectorAll('xf-repeatitem');
+        // const repeatItems = this.querySelectorAll('fx-repeatitem');
         // Array.from(repeatItems).forEach(item => item.init(this.getModel()));
         //setting index to first
 
@@ -306,7 +306,7 @@ export class XfRepeat extends XfContainer {
             // console.log('initRepeatItem index ', index);
             // const repeatItem = new XfRepeatitem(); //no idea why this is not working
 
-            const repeatItem = document.createElement('xf-repeatitem');
+            const repeatItem = document.createElement('fx-repeatitem');
 
             // console.log('initRepeatItem nodeset ',this.nodeset[index]);
             repeatItem.nodeset = this.nodeset[index];
@@ -354,4 +354,4 @@ export class XfRepeat extends XfContainer {
 */
 }
 
-window.customElements.define('xf-repeat', XfRepeat);
+window.customElements.define('fx-repeat', FxRepeat);

@@ -1,17 +1,17 @@
 import {html,css} from "lit-element";
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import XfAbstractControl from "./xf-abstract-control.js";
-import "../actions/xf-setvalue.js";
-import "../xf-model.js";
+import XfAbstractControl from "./fx-abstract-control.js";
+import "../actions/fx-setvalue.js";
+import "../fx-model.js";
 
 /**
- * `xf-input`
+ * `fx-input`
  * general class for bound elements
  *
  * @customElement
  */
-class XfInput extends XfAbstractControl{
+class FxInput extends XfAbstractControl{
 
 
     static get styles() {
@@ -76,7 +76,7 @@ class XfInput extends XfAbstractControl{
                                   ?this.readonly="${this.readonly}"
                                   @input="${this._handleInput}">
                     </paper-input>
-                    <xf-setvalue id="setvalue" ref="${this.ref}" value="${this.value}"></xf-setvalue>
+                    <fx-setvalue id="setvalue" ref="${this.ref}" value="${this.value}"></fx-setvalue>
                     ` :''}
             
             ${this.type === 'checkbox' ?
@@ -104,10 +104,10 @@ class XfInput extends XfAbstractControl{
     }
 
     // updateControlValue(){
-    //     console.log('_updateControlValue xf-input');
+    //     console.log('_updateControlValue fx-input');
     //     this.shadowRoot.getElementById('control').value = this.value;
     // }
 
 }
 
-window.customElements.define('xf-input', XfInput);
+window.customElements.define('fx-input', FxInput);

@@ -8,30 +8,30 @@ describe('lazy initialize', () => {
     it('creates modelItem during refresh', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-message event="refresh-done">refresh has been done</xf-message>
+                <fx-form>
+                    <fx-message event="refresh-done">refresh has been done</fx-message>
                 
-                    <xf-model id="model1">
-                        <xf-instance>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting type="message:">Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
+                        </fx-instance>
+                    </fx-model>
                     
-                    <xf-group>
+                    <fx-group>
                         <h1 class="{class}">
                             lazy greeting
                         </h1>
-                        <xf-output id="output" ref="greeting/@type"></xf-output>
-                        <xf-output id="output" ref="greeting"></xf-output>
-                    </xf-group>
-                </xf-form>`)
+                        <fx-output id="output" ref="greeting/@type"></fx-output>
+                        <fx-output id="output" ref="greeting"></fx-output>
+                    </fx-group>
+                </fx-form>`)
         );
 
 
         let { detail } = await oneEvent(el, 'refresh-done');
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         console.log('modelitems ', model.modelItems);
         expect(model.modelItems.length).to.equal(2);
 
@@ -61,12 +61,12 @@ describe('lazy initialize', () => {
     it('creates a model when there is none', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                </xf-form>`)
+                <fx-form>
+                </fx-form>`)
         );
 
         // await elementUpdated(el);
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         expect(model).to.exist;
         expect(model.instances).to.exist;
         expect(model.instances.length).to.equal(1);
@@ -75,20 +75,20 @@ describe('lazy initialize', () => {
     it('constructs an instance when there is none', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-group ref="outer">
-                        <xf-output ref="inner1">inner1</xf-output>
-                        <xf-output ref="inner2">inner2</xf-output>
-                    </xf-group>
-                </xf-form>`)
+                <fx-form>
+                    <fx-group ref="outer">
+                        <fx-output ref="inner1">inner1</fx-output>
+                        <fx-output ref="inner2">inner2</fx-output>
+                    </fx-group>
+                </fx-form>`)
         );
 
         // let { detail } = await oneEvent(el, 'model-construct-done');
         console.log('form  ', el);
 
-        const model = el.querySelector('xf-model');
+        const model = el.querySelector('fx-model');
         console.log('model created ', model);
-        const inst = el.querySelector('xf-instance');
+        const inst = el.querySelector('fx-instance');
         console.log('++++++++++++ inst ', inst);
         // await elementUpdated(inst);
         expect(inst).to.exist;

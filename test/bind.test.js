@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
-import '../src/xf-instance.js';
-import '../src/ui/xf-container.js';
-import '../src/xf-bind.js';
+import '../src/fx-instance.js';
+import '../src/ui/fx-container.js';
+import '../src/fx-bind.js';
 import { ModelItem } from '../src/ModelItem.js';
 
 describe('bind Tests', () => {
@@ -11,16 +11,16 @@ describe('bind Tests', () => {
     it('is initialized', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1"></xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -56,18 +56,18 @@ describe('bind Tests', () => {
     it('works with nested attribute', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting type="message">Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-                            <xf-bind id="b-type" ref="@type"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+                            <fx-bind id="b-type" ref="@type"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -91,20 +91,20 @@ describe('bind Tests', () => {
     it('works with nested element', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>
                                     <message>Hello World!</message>
                                 </greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting">
-                            <xf-bind id="b-message" ref="message"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting">
+                            <fx-bind id="b-message" ref="message"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -125,18 +125,18 @@ describe('bind Tests', () => {
     it('works with nested dot reference', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="greeting" ref="greeting">
-                            <xf-bind ref="."></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="greeting" ref="greeting">
+                            <fx-bind ref="."></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -152,26 +152,26 @@ describe('bind Tests', () => {
     it('works for repeated element', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind id="task" ref="task">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind id="task" ref="task">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
+                    </fx-model>
             
-                </xf-form>
+                </fx-form>
             `)
         );
 
@@ -215,18 +215,18 @@ describe('bind Tests', () => {
     it('combines facets for dot reference', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="greeting" ref="greeting">
-                            <xf-bind ref="." required="true()"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="greeting" ref="greeting">
+                            <fx-bind ref="." required="true()"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -244,18 +244,18 @@ describe('bind Tests', () => {
     it('uses closest binding expr', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="greeting" ref="greeting">
-                            <xf-bind required="true()"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="greeting" ref="greeting">
+                            <fx-bind required="true()"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                </fx-form>               
             `)
         );
 
@@ -274,17 +274,17 @@ describe('bind Tests', () => {
     it('hides non-relevant (unbound) controls', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                    </xf-model>
-                    <xf-output id="output" ref="greet"></xf-output>
+                        </fx-instance>
+                    </fx-model>
+                    <fx-output id="output" ref="greet"></fx-output>
 
-                </xf-form>               
+                </fx-form>               
             `)
         );
 
@@ -311,21 +311,21 @@ describe('bind Tests', () => {
     it('nested binding are working', async () => {
         const el =  (
             await fixture(html`
-                 <xf-form>
-                    <xf-model id="model1">
-                        <xf-instance>
+                 <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance>
                             <data>
                                 <greeting type="message">Hello World!</greeting>
                             </data>
-                        </xf-instance>
-                        <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-                            <xf-bind id="b-type" ref="@type"></xf-bind>
-                        </xf-bind>
-                    </xf-model>
-                    <xf-group>
-                        <xf-output id="output1" ref="greeting"> </xf-output> : <xf-output id="output2" ref="greeting/@type"></xf-output>
-                    </xf-group>
-                </xf-form>               
+                        </fx-instance>
+                        <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+                            <fx-bind id="b-type" ref="@type"></fx-bind>
+                        </fx-bind>
+                    </fx-model>
+                    <fx-group>
+                        <fx-output id="output1" ref="greeting"> </fx-output> : <fx-output id="output2" ref="greeting/@type"></fx-output>
+                    </fx-group>
+                </fx-form>               
             `)
         );
 
@@ -349,7 +349,7 @@ describe('bind Tests', () => {
 
         //check the controls
         const out1 = document.getElementById('output1');
-        expect(out1.nodeName).to.equal('XF-OUTPUT');
+        expect(out1.nodeName).to.equal('FX-OUTPUT');
         expect(out1.modelItem).to.exist;
         console.log('modelItem ', out1.getModelItem());
 
@@ -362,7 +362,7 @@ describe('bind Tests', () => {
         expect(out1.value).to.equal('Hello World!');
 
         const out2 = document.getElementById('output2');
-        expect(out2.nodeName).to.equal('XF-OUTPUT');
+        expect(out2.nodeName).to.equal('FX-OUTPUT');
         expect(out2.nodeset).to.exist;
         console.log('++++++++++++ nodeset ',out2.nodeset);
         console.log('++++++++++++ nodeset ',out2.nodeset.parentNode);

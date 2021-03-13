@@ -20,17 +20,17 @@
             background: #76ff03;
         }
 
-        xf-control{
+        fx-control{
             display: block;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
         }
 
-         xf-label{
+         fx-label{
             display: inline;
         }
         .display{
@@ -44,7 +44,7 @@
             padding-left: 4px;
         }
 */
-        xf-output{
+        fx-output{
             display:block;
         }
         .required [slot=label]:after {
@@ -61,48 +61,48 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <!--    <xf-message event="refresh-done">refresh has been done</xf-message>-->
+        <fx-form>
+            <!--    <fx-message event="refresh-done">refresh has been done</fx-message>-->
 
-            <xf-model id="model1">
-                <xf-instance>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <a>A</a>
                         <b>B</b>
                         <c>C</c>
                     </data>
-                </xf-instance>
-                <xf-bind ref="a" readonly="string-length(depends(../b)) > 1" required="depends(../b) = 'B'"></xf-bind>
-                <xf-bind ref="b" required="depends(../c) = 'C'"></xf-bind>
-                <xf-bind ref="c" relevant="depends(../b) = 'B'"></xf-bind>
-            </xf-model>
-            <xf-group collapse="true">
+                </fx-instance>
+                <fx-bind ref="a" readonly="string-length(depends(../b)) > 1" required="depends(../b) = 'B'"></fx-bind>
+                <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
+                <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
+            </fx-model>
+            <fx-group collapse="true">
                 <h1>
                     Recalculation
                 </h1>
 
                 <div class="display">
-                    <xf-output id="output" ref="a">
+                    <fx-output id="output" ref="a">
                         <label slot="label">a:</label>
-                    </xf-output>
-                    <xf-output id="output" ref="b">
-                        <xf-label slot="label">b:</xf-label>
-                    </xf-output>
-                    <xf-output id="output" ref="c">
-                        <xf-label>c:</xf-label>
-                    </xf-output>
+                    </fx-output>
+                    <fx-output id="output" ref="b">
+                        <fx-label slot="label">b:</fx-label>
+                    </fx-output>
+                    <fx-output id="output" ref="c">
+                        <fx-label>c:</fx-label>
+                    </fx-output>
                 </div>
 
-                <xf-control ref="a" update-event="input">
+                <fx-control ref="a" update-event="input">
                     <label slot="label">A</label>
-                </xf-control>
-                <xf-control ref="b" update-event="input">
+                </fx-control>
+                <fx-control ref="b" update-event="input">
                     <label slot="label">B</label>
-                </xf-control>
+                </fx-control>
 
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

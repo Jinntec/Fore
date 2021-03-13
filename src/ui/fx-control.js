@@ -1,9 +1,9 @@
 import {css, html} from 'lit-element';
-import XfAbstractControl from "./xf-abstract-control.js";
+import XfAbstractControl from "./fx-abstract-control.js";
 import {Fore} from "../fore.js";
 
 /**
- * `xf-control`
+ * `fx-control`
  * a generic wrapper for controls
  *
  *
@@ -11,7 +11,7 @@ import {Fore} from "../fore.js";
  * @customElement
  * @demo demo/index.html
  */
-class XfControl extends XfAbstractControl {
+class FxControl extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -54,7 +54,7 @@ class XfControl extends XfAbstractControl {
            <slot name="label"></slot>
            <slot></slot>    
            <slot name="hint"></slot>    
-           <xf-setvalue id="setvalue" ref="${this.ref}"></xf-setvalue>
+           <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
         `;
     }
 
@@ -102,7 +102,7 @@ class XfControl extends XfAbstractControl {
             // ### eval nodeset for list control
             const ref = control.getAttribute('ref');
             const inscope = this._inScopeContext();
-            const formElement = this.closest('xf-form');
+            const formElement = this.closest('fx-form');
             const nodeset = Fore.evaluateToNodes (ref, inscope, formElement, Fore.namespaceResolver) ;
 
             // ### clear items
@@ -157,4 +157,4 @@ class XfControl extends XfAbstractControl {
 
 }
 
-window.customElements.define('xf-control', XfControl);
+window.customElements.define('fx-control', FxControl);

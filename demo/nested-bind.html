@@ -12,21 +12,21 @@
 </head>
 <body unresolved="unresolved">
 
-    <xf-form>
-        <xf-model id="model1">
-            <xf-instance>
+    <fx-form>
+        <fx-model id="model1">
+            <fx-instance>
                 <data>
                     <greeting type="message">Hello World!</greeting>
                 </data>
-            </xf-instance>
-            <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-                <xf-bind id="b-type" ref="@type"></xf-bind>
-            </xf-bind>
-        </xf-model>
-        <xf-group>
-            <xf-output ref="greeting"> </xf-output> : <xf-output ref="greeting/@type"></xf-output>
-        </xf-group>
-    </xf-form>
+            </fx-instance>
+            <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+                <fx-bind id="b-type" ref="@type"></fx-bind>
+            </fx-bind>
+        </fx-model>
+        <fx-group>
+            <fx-output ref="greeting"> </fx-output> : <fx-output ref="greeting/@type"></fx-output>
+        </fx-group>
+    </fx-form>
     <script type="module" src="../index.js"></script>
 
 </body>

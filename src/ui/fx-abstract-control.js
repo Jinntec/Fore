@@ -1,17 +1,17 @@
 import {LitElement, html, css} from 'lit-element';
 
-import  '../xf-model.js';
+import  '../fx-model.js';
 import {foreElementMixin} from "../ForeElementMixin.js";
 import { ModelItem } from "../modelitem.js";
 
 /**
- * `xf-abstract-control` -
+ * `fx-abstract-control` -
  * is a general class for control elements.
  *
  * @customElement
  * @appliesMixin BoundElementMixin
  */
-export default class XfAbstractControl extends foreElementMixin(LitElement) {
+export default class FxAbstractControl extends foreElementMixin(LitElement) {
 
     static get properties() {
         return {
@@ -35,7 +35,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
      * (re)apply all state properties to this control.
      */
     async refresh() {
-        console.log('### XfAbstractControl.refresh on : ', this);
+        console.log('### FxAbstractControl.refresh on : ', this);
 
         const currentVal = this.value;
 
@@ -64,7 +64,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
                 await this.updateControlValue();
 
 
-                // if(!this.closest('xf-form').ready) return; // state change event do not fire during init phase (initial refresh)
+                // if(!this.closest('fx-form').ready) return; // state change event do not fire during init phase (initial refresh)
                 // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
                 if (currentVal !== this.value) {
                     this.dispatchEvent(new CustomEvent('value-changed', {}));
@@ -165,7 +165,7 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
         // console.log('mip valid', this.modelItem.required);
 
 
-        const alert = this.querySelector('xf-alert');
+        const alert = this.querySelector('fx-alert');
         if(alert){
             alert.style.display = "none";
         }
@@ -176,14 +176,14 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
             } else {
                 if(this.modelItem.alerts.length !== 0){
 
-                    const alert = this.querySelector('xf-alert');
+                    const alert = this.querySelector('fx-alert');
                     if(alert){
                         alert.style.display = "block";
                     }else{
                         const alerts = this.modelItem.alerts;
                         console.log('alerts from bind: ', alerts);
                         alerts.forEach(alert => {
-                           const newAlert = document.createElement('xf-alert');
+                           const newAlert = document.createElement('fx-alert');
                            newAlert.innerHTML = alert;
                            this.appendChild(newAlert);
                             newAlert.style.display = 'block';
@@ -307,4 +307,4 @@ export default class XfAbstractControl extends foreElementMixin(LitElement) {
 
 }
 
-window.customElements.define('xf-abstract-control', XfAbstractControl);
+window.customElements.define('fx-abstract-control', FxAbstractControl);

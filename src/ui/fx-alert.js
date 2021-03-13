@@ -1,8 +1,8 @@
 import { html, css} from 'lit-element';
 
-import XfAbstractControl from './xf-abstract-control.js';
+import XfAbstractControl from './fx-abstract-control.js';
 
-export class XfAlert extends XfAbstractControl {
+export class FxAlert extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -52,4 +52,4 @@ export class XfAlert extends XfAbstractControl {
 
 
 }
-customElements.define('xf-alert', XfAlert);
+customElements.define('fx-alert', FxAlert);

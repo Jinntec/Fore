@@ -1,13 +1,13 @@
 import { foreElementMixin } from "../ForeElementMixin.js";
 
 /**
- * `xf-action`
+ * `fx-action`
  * a button triggering Fore actions
  *
  * @customElement
  * @demo demo/index.html
  */
-export class XfAction extends foreElementMixin(HTMLElement){
+export class FxAction extends foreElementMixin(HTMLElement){
 
     static get properties() {
         return {
@@ -87,9 +87,9 @@ export class XfAction extends foreElementMixin(HTMLElement){
             this.getModel().revalidate();
         }
         if(this.needsRefresh){
-            // this.closest('xf-form').refresh();
+            // this.closest('fx-form').refresh();
             // @ts-ignore
-            document.querySelector('xf-form').refresh();
+            document.querySelector('fx-form').refresh();
         }
     }
 
@@ -99,4 +99,4 @@ export class XfAction extends foreElementMixin(HTMLElement){
     }
 }
 
-window.customElements.define('xf-action', XfAction);
+window.customElements.define('fx-action', FxAction);

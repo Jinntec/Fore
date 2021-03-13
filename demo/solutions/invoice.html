@@ -8,11 +8,11 @@
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
-        import '../../src/xf-form.js';
-        import '../../src/ui/xf-repeat.js';
-        import '../../src/ui/xf-repeatitem.js';
-        import '../../src/ui/xf-control.js';
-        import '../../src/ui/xf-input.js';
+        import '../../src/fx-form.js';
+        import '../../src/ui/fx-repeat.js';
+        import '../../src/ui/fx-repeatitem.js';
+        import '../../src/ui/fx-control.js';
+        import '../../src/ui/fx-input.js';
         import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
     </script>
 
@@ -21,7 +21,7 @@
 
     <style>
 
-        xf-model {
+        fx-model {
             display: none;
         }
 
@@ -68,7 +68,7 @@
 
 
 
-        xf-repeat{
+        fx-repeat{
             margin-bottom: 20px;
         }
 
@@ -80,7 +80,7 @@
         .header{
             background:orange;
         }
-        .item-header, xf-repeatitem{
+        .item-header, fx-repeatitem{
             display:grid;
             grid-template-columns: auto 100px 100px 100px;
             grid-column-gap: 8px;
@@ -111,11 +111,11 @@
 <body>
 
 <div id="page-wrap">
-    <xf-form>
-<!--        <xf-setvalue event="ready" ref="date" value="current-date()"></xf-setvalue>-->
-        <xf-model>
-            <!--                <xf-instance src="invoice.xml">-->
-            <xf-instance>
+    <fx-form>
+<!--        <fx-setvalue event="ready" ref="date" value="current-date()"></fx-setvalue>-->
+        <fx-model>
+            <!--                <fx-instance src="invoice.xml">-->
+            <fx-instance>
                 <data>
                     <address>
                         COMPANY
@@ -132,29 +132,29 @@
                     </item>
                     <total></total>
                 </data>
-            </xf-instance>
+            </fx-instance>
 
-            <xf-bind ref="date" required="true()"></xf-bind>
-            <xf-bind ref="address" required="true()"></xf-bind>
-            <xf-bind ref="item">
-                <xf-bind ref="description"></xf-bind>
-                <xf-bind ref="quantity"></xf-bind>
-                <xf-bind ref="price"></xf-bind>
-                <xf-bind ref="sum" calculate="../quantity * ../price"></xf-bind>
-            </xf-bind>
-        </xf-model>
+            <fx-bind ref="date" required="true()"></fx-bind>
+            <fx-bind ref="address" required="true()"></fx-bind>
+            <fx-bind ref="item">
+                <fx-bind ref="description"></fx-bind>
+                <fx-bind ref="quantity"></fx-bind>
+                <fx-bind ref="price"></fx-bind>
+                <fx-bind ref="sum" calculate="../quantity * ../price"></fx-bind>
+            </fx-bind>
+        </fx-model>
 
 
         <!-- ### header ###  -->
         <!-- ### header ###  -->
         <!-- ### header ###  -->
-        <xf-group>
+        <fx-group>
             <div class="headergrid">
                 <div class="left">
                     <img src="images/existsolutions.svg" class="logo">
-                    <xf-control ref="address">
+                    <fx-control ref="address">
                         <textarea name="" id="" cols="60" rows="8"></textarea>
-                    </xf-control>
+                    </fx-control>
                 </div>
                 <div class="right">
                     <div class="company">eXist Solutions GmbH</div>
@@ -180,14 +180,14 @@
                 <tr>
                     <td>Date</td>
                     <td>
-<!--                        <xf-control ref="date">
+<!--                        <fx-control ref="date">
                             <input name="value" value="">
-                        </xf-control>-->
-<!--                        <xf-input ref="date" type="date"></xf-input>-->
+                        </fx-control>-->
+<!--                        <fx-input ref="date" type="date"></fx-input>-->
 
-                        <xf-control ref="date">
+                        <fx-control ref="date">
                             <input name="value" value="" type="date">
-                        </xf-control>
+                        </fx-control>
 <!--                        <input name="value" value="2021-01-01" type="date">-->
                     </td>
                 </tr>
@@ -204,16 +204,16 @@
             <textarea class="intro" rows="3">Some unbound intro text .....</textarea>
 
 <!--
-            <xf-input ref="item/quantity">
-                <xf-label>lsjdlfjk</xf-label>
-            </xf-input>
+            <fx-input ref="item/quantity">
+                <fx-label>lsjdlfjk</fx-label>
+            </fx-input>
 -->
 
 <!--
-            <xf-input ref="item/description">
-            </xf-input>
-            <xf-control ref="item/description">
-            </xf-control>
+            <fx-input ref="item/description">
+            </fx-input>
+            <fx-control ref="item/description">
+            </fx-control>
 -->
 
 
@@ -225,31 +225,31 @@
                 <div>Price (Euro)</div>
                 <div>Total</div>
             </div>
-            <xf-repeat ref="item">
+            <fx-repeat ref="item">
                 <template>
-                    <xf-control ref="description" value-prop="content" update-event="input">
+                    <fx-control ref="description" value-prop="content" update-event="input">
                         <textarea id="description" rows="4"></textarea>
-                    </xf-control>
-                    <xf-control ref="quantity">
+                    </fx-control>
+                    <fx-control ref="quantity">
                         <input type="number">
-                    </xf-control>
+                    </fx-control>
 
-                    <xf-control ref="price">
+                    <fx-control ref="price">
                         <input type="number">
-                    </xf-control>
+                    </fx-control>
 
-                    <xf-output class="sum" ref="sum"></xf-output>
+                    <fx-output class="sum" ref="sum"></fx-output>
                     <span class="add">+
-                        <xf-append ref="item" repeat="item"></xf-append>
+                        <fx-append ref="item" repeat="item"></fx-append>
                     </span>
                 </template>
-            </xf-repeat>
+            </fx-repeat>
 
-            <xf-output id="after" ref="item[1]/sum">
+            <fx-output id="after" ref="item[1]/sum">
                 <label>sum>>> </label>
-            </xf-output>
+            </fx-output>
 
-<!--            <xf-input ref="item[1]/sum"></xf-input>-->
+<!--            <fx-input ref="item[1]/sum"></fx-input>-->
 
 
             <!--
@@ -260,30 +260,30 @@
                                 <td>Unit Price</td>
                                 <td>Sum</td>
                             </tr>
-                            <xf-repeat ref="item">
+                            <fx-repeat ref="item">
                                 <template>
                                     <tr>
                                         <td>
-                                            <xf-control ref="description" value-prop="content">
+                                            <fx-control ref="description" value-prop="content">
                                                 <textarea></textarea>
-                                            </xf-control>
+                                            </fx-control>
                                         </td>
                                         <td>
-                                            <xf-input ref="quantity">
+                                            <fx-input ref="quantity">
                                                 <input type="number">
-                                            </xf-input>
+                                            </fx-input>
                                         </td>
                                         <td>
-                                            <xf-control ref="price">
+                                            <fx-control ref="price">
                                                 <input type="number">
-                                            </xf-control>
+                                            </fx-control>
                                         </td>
                                         <td>
-                                            <xf-output ref="sum"></xf-output>
+                                            <fx-output ref="sum"></fx-output>
                                         </td>
                                     </tr>
                                 </template>
-                            </xf-repeat>
+                            </fx-repeat>
                         </table>
             -->
 
@@ -325,8 +325,8 @@
                     </tr>
                 </table>
             </div>
-        </xf-group>
-    </xf-form>
+        </fx-group>
+    </fx-form>
 
 </div>
 

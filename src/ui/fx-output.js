@@ -1,8 +1,8 @@
 import { html, css} from 'lit-element';
 
-import XfAbstractControl from './xf-abstract-control.js';
+import XfAbstractControl from './fx-abstract-control.js';
 
-export class XfOutput extends XfAbstractControl {
+export class FxOutput extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -35,7 +35,7 @@ export class XfOutput extends XfAbstractControl {
     firstUpdated(_changedProperties) {
         super.firstUpdated(_changedProperties);
 /*
-        if(this.querySelector('xf-label')){
+        if(this.querySelector('fx-label')){
             this.style.display = 'block';
         }
 */
@@ -70,4 +70,4 @@ export class XfOutput extends XfAbstractControl {
 
 
 }
-customElements.define('xf-output', XfOutput);
+customElements.define('fx-output', FxOutput);

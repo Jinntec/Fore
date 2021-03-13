@@ -1,8 +1,8 @@
 import { html, css} from 'lit-element';
 
-import XfAbstractControl from './xf-abstract-control.js';
+import XfAbstractControl from './fx-abstract-control.js';
 
-export class XfHint extends XfAbstractControl {
+export class FxHint extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -46,4 +46,4 @@ export class XfHint extends XfAbstractControl {
 
 
 }
-customElements.define('xf-hint', XfHint);
+customElements.define('fx-hint', FxHint);

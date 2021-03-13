@@ -20,7 +20,7 @@ registerCustomXPathFunction(
         // console.log('fnInstance dynamicContext: ', dynamicContext);
         // console.log('fnInstance string: ', string);
 
-        const instance = formElement.querySelector(`xf-instance[id=${  string  }]`);
+        const instance = formElement.querySelector(`fx-instance[id=${  string  }]`);
 
         // const def = instance.getInstanceData();
         if(instance) {
@@ -120,25 +120,25 @@ export class Fore{
 
     static get ACTION_ELEMENTS(){
         return [
-            'XF-DELETE',
-            'XF-DISPATCH',
-            'XF-INSERT',
-            'XF-LOAD',
-            'XF-MESSAGE',
-            'XF-REBUILD',
-            'XF-RECALCULATE',
-            'XF-REFRESH',
-            'XF-RENEW',
-            'XF-REPLACE',
-            'XF-RESET',
-            'XF-RETAIN',
-            'XF-RETURN',
-            'XF-REVALIDATE',
-            'XF-SEND',
-            'XF-SETFOCUS',
-            'XF-SETINDEX',
-            'XF-SETVALUE',
-            'XF-TOGGLE',
+            'FX-DELETE',
+            'FX-DISPATCH',
+            'FX-INSERT',
+            'FX-LOAD',
+            'FX-MESSAGE',
+            'FX-REBUILD',
+            'FX-RECALCULATE',
+            'FX-REFRESH',
+            'FX-RENEW',
+            'FX-REPLACE',
+            'FX-RESET',
+            'FX-RETAIN',
+            'FX-RETURN',
+            'FX-REVALIDATE',
+            'FX-SEND',
+            'FX-SETFOCUS',
+            'FX-SETINDEX',
+            'FX-SETVALUE',
+            'FX-TOGGLE',
         ];
     }
 
@@ -170,13 +170,13 @@ export class Fore{
             parent = node.parentNode;
         }
 
-        const repeatItem = parent.closest('xf-repeatitem');
+        const repeatItem = parent.closest('fx-repeatitem');
         if(repeatItem){
             return repeatItem.nodeset;
         }
         const parentBind = parent.closest('[ref]');
 
-        const ownerForm = parent.closest('xf-form');
+        const ownerForm = parent.closest('fx-form');
         const model = ownerForm.getModel();
 
         if(parentBind !== null){
@@ -200,6 +200,22 @@ export class Fore{
             null,
             {},
             'xs:anyType',
+            {
+                namespaceResolver,
+                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                moduleImports: {
+                    xf: 'http://www.w3.org/2002/xforms'
+                },
+                currentContext: {formElement}
+            });
+    }
+
+    static evaluateToFirst (xpath, contextNode, formElement, namespaceResolver) {
+        return fx.evaluateXPathToFirstNode(
+            xpath,
+            contextNode,
+            null,
+            {},
             {
                 namespaceResolver,
                 defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
@@ -255,29 +271,29 @@ export class Fore{
 
     static get UI_ELEMENTS(){
         return [
-            'XF-ALERT',
-            'XF-CONTROL',
-            'XF-BUTTON',
-            'XF-CONTROL',
-            'XF-DIALOG',
-            'XF-FILENAME',
-            'XF-MEDIATYPE',
-            'XF-GROUP',
-            'XF-HINT',
-            'XF-INPUT',
-            'XF-ITEMSET',
-            'XF-LABEL',
-            'XF-OUTPUT',
-            'XF-RANGE',
-            'XF-REPEAT',
-            'XF-REPEATITEM',
-            'XF-SWITCH',
-            'XF-SECRET',
-            'XF-SELECT',
-            'XF-SUBMIT',
-            'XF-TEXTAREA',
-            'XF-TRIGGER',
-            'XF-UPLOAD'
+            'FX-ALERT',
+            'FX-CONTROL',
+            'FX-BUTTON',
+            'FX-CONTROL',
+            'FX-DIALOG',
+            'FX-FILENAME',
+            'FX-MEDIATYPE',
+            'FX-GROUP',
+            'FX-HINT',
+            'FX-INPUT',
+            'FX-ITEMSET',
+            'FX-LABEL',
+            'FX-OUTPUT',
+            'FX-RANGE',
+            'FX-REPEAT',
+            'FX-REPEATITEM',
+            'FX-SWITCH',
+            'FX-SECRET',
+            'FX-SELECT',
+            'FX-SUBMIT',
+            'FX-TEXTAREA',
+            'FX-TRIGGER',
+            'FX-UPLOAD'
         ];
     }
 
@@ -301,7 +317,7 @@ export class Fore{
                 if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
                     element.refresh();
                 }else{
-                    if(element.nodeName !== 'XF-MODEL'){
+                    if(element.nodeName !== 'fx-MODEL'){
                         Fore.refreshChildren(element);
                     }
                 }

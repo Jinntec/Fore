@@ -1,8 +1,7 @@
 import * as fx from 'fontoxpath';
 import {XPathUtil} from "./xpath-util.js";
-// import {XfBind} from "./xf-bind.js";
-import {XfModel} from "./xf-model.js";
-import {Fore} from "./fore.js";
+import {FxModel} from "./fx-model.js";
+import {Fore} from './fore.js';
 
 
 // export class ForeElement extends LitElement {
@@ -39,16 +38,16 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         // console.log('getModel parentNode ', this.parentNode);
         // console.log('getModel host ', this.parentNode.host);
         if(this.parentNode.host){
-            const ownerForm = this.parentNode.host.closest('xf-form');
-            return ownerForm.querySelector('xf-model');
+            const ownerForm = this.parentNode.host.closest('fx-form');
+            return ownerForm.querySelector('fx-model');
         }
-        const ownerForm = this.closest('xf-form');
-        return ownerForm.querySelector('xf-model');
+        const ownerForm = this.closest('fx-form');
+        return ownerForm.querySelector('fx-model');
     }
 
 
     /**
-     * evaluation of xf-bind and UiElements differ in details so that each class needs it's own implementation.
+     * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
      */
     evalInContext(){
         // todo: should be replaced with Fore.getInScopeContext
@@ -69,10 +68,11 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             });
 
         }else{
-            this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+            // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
 
             // todo: code below fails - why?
-            // const formElement = this.closest('xf-form');
+            const formElement = this.closest('fx-form');
+            this.nodeset = Fore.evaluateToFirst(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
             // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
         }
         // console.log('UiElement evaluated to nodeset: ', this.nodeset);
@@ -130,10 +130,10 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         }
 */
 
-        const repeated = this.closest('xf-repeatitem');
+        const repeated = this.closest('fx-repeatitem');
         let existed;
         if(repeated){
-            const index = this.closest('xf-repeatitem').index;
+            const index = this.closest('fx-repeatitem').index;
             if(Array.isArray(this.nodeset)){
                 existed = this.getModel().getModelItem(this.nodeset[index-1]);
             }else {
@@ -144,14 +144,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         }
 
         if(!existed){
-            // if(existed === undefined){
-            // console.log('does not exist ', this.nodeset);
-            // const mi = this.getModel().getDefaultInstance().lazyCreateModelItem(this.ref,this.nodeset);
-            // this.getModel().registerModelItem(mi);
-            // return mi;
-            // return this.getModel().getDefaultInstance().lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
-            // return XfInstance.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
-            return XfModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+            return FxModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
         }
         return existed;
     }
@@ -164,14 +157,14 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         // console.log('this ', this.parentNode);
 
 /*
-        if(this.nodeName.toUpperCase() === 'XF-REPEATITEM'){
+        if(this.nodeName.toUpperCase() === 'fx-REPEATITEM'){
             const index = this.index;
             console.log('>>>>>>>>>>< index ', index);
             return this.parentNode.host.nodeset[this.index -1];
         }
 */
         if(this.repeated){
-            const parentItem = this.parentNode.closest('xf-repeatitem');
+            const parentItem = this.parentNode.closest('fx-repeatitem');
             return parentItem.nodeset;
         }
 

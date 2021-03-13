@@ -2,16 +2,16 @@
 import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
 
 /*
-import '../src/xf-instance.js';
+import '../src/fx-instance.js';
 import '../src/modelitem.js';
-import '../src/xf-model.js';
-import '../src/xf-bind.js';
-import '../src/xf-button.js';
-import '../src/xf-repeat.js';
-import '../src/xf-repeatitem.js';
+import '../src/fx-model.js';
+import '../src/fx-bind.js';
+import '../src/fx-button.js';
+import '../src/fx-repeat.js';
+import '../src/fx-repeatitem.js';
 */
-import '../src/ui/xf-repeat.js';
-import {XfModel} from '../src/xf-model.js';
+import '../src/ui/fx-repeat.js';
+import {FxModel} from '../src/fx-model.js';
 
 
 describe('repeat Tests', () => {
@@ -19,38 +19,38 @@ describe('repeat Tests', () => {
     it('has initialized modelItems', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task">
-                            <xf-bind ref="." required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task">
+                            <fx-bind ref="." required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
-                    <xf-group>
+                    </fx-model>
+                    <fx-group>
                         <h1>todos</h1>
                            
-                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                             <template>
-                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                             </template>
-                        </xf-repeat>
+                        </fx-repeat>
                            
-                        <xf-button label="append">
-                            <xf-append repeat="todos" ref="task"></xf-append>
-                        </xf-button>
-                    </xf-group>
-                </xf-form>
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>
+                    </fx-group>
+                </fx-form>
             `)
         );
 
@@ -90,38 +90,38 @@ describe('repeat Tests', () => {
     it('has initialized repeat with 2 repeat items', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
+                    </fx-model>
             
                     <h1>todos</h1>
                        
-                    <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                    <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                         <template>
-                            <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                            <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                         </template>
-                    </xf-repeat>
+                    </fx-repeat>
                        
-                    <xf-button label="append">
-                        <xf-append repeat="todos" ref="task"></xf-append>
-                    </xf-button>
+                    <fx-button label="append">
+                        <fx-append repeat="todos" ref="task"></fx-append>
+                    </fx-button>
             
-                </xf-form>
+                </fx-form>
             `)
         );
 
@@ -134,12 +134,12 @@ describe('repeat Tests', () => {
 
         expect(repeatNodes.length).to.equal(2);
 
-        const items = repeat.querySelectorAll('xf-repeatitem');
-        // const items = document.querySelectorAll('xf-repeatitem');
+        const items = repeat.querySelectorAll('fx-repeatitem');
+        // const items = document.querySelectorAll('fx-repeatitem');
         // console.log('items', items);
         expect(items.length).to.equal(2);
 
-        expect(repeat.getModel() instanceof XfModel).to.be.true;
+        expect(repeat.getModel() instanceof FxModel).to.be.true;
 
         let m = repeat.getModel().getModelItem(repeatNodes[0]);
         console.log('repeatnode 1 ', m);
@@ -148,7 +148,7 @@ describe('repeat Tests', () => {
         expect(m.value).to.equal('Pick up Milk');
 
         //check if control has correct value
-        const inputs = el.querySelectorAll('xf-input');
+        const inputs = el.querySelectorAll('fx-input');
 
         expect(inputs.length).to.equal(2);
 
@@ -168,38 +168,38 @@ describe('repeat Tests', () => {
     it('has initialized repeat with 2 repeat items within a outer group', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
-                    <xf-group>
+                    </fx-model>
+                    <fx-group>
                         <h1>todos</h1>
                            
-                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                             <template>
-                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                             </template>
-                        </xf-repeat>
+                        </fx-repeat>
                            
-                        <xf-button label="append">
-                            <xf-append repeat="todos" ref="task"></xf-append>
-                        </xf-button>            
-                    </xf-group>
-                </xf-form>
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
             `)
         );
 
@@ -212,7 +212,7 @@ describe('repeat Tests', () => {
 
         expect(repeatNodes.length).to.equal(2);
 
-        const items = document.querySelectorAll('xf-repeatitem');
+        const items = document.querySelectorAll('fx-repeatitem');
         console.log('items', items);
         expect(items.length).to.equal(2);
 
@@ -235,45 +235,45 @@ describe('repeat Tests', () => {
     it('has initialized repeat with 2 repeat items and proper UI state', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
-                    <xf-group>
+                    </fx-model>
+                    <fx-group>
                         <h1>todos</h1>
                            
-                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                             <template>
-                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                             </template>
-                        </xf-repeat>
+                        </fx-repeat>
                            
-                        <xf-button label="append">
-                            <xf-append repeat="todos" ref="task"></xf-append>
-                        </xf-button>            
-                    </xf-group>
-                </xf-form>
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
             `)
         );
 
         // await elementUpdated(el);
         let { detail } = await oneEvent(el, 'refresh-done');
 
-        const inputs = el.querySelectorAll('xf-repeatitem xf-input');
+        const inputs = el.querySelectorAll('fx-repeatitem fx-input');
         await elementUpdated(inputs);
 
         expect(inputs.length).to.equal(2);
@@ -289,44 +289,44 @@ describe('repeat Tests', () => {
     it('handles a modelItem for the repeat itself', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task" readonly="count(../task) < 3">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task" readonly="count(../task) < 3">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
-                    <xf-group>
+                    </fx-model>
+                    <fx-group>
                         <h1>todos</h1>
                            
-                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                             <template>
-                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                             </template>
-                        </xf-repeat>
+                        </fx-repeat>
                            
-                        <xf-button label="append">
-                            <xf-append repeat="todos" ref="task"></xf-append>
-                        </xf-button>            
-                    </xf-group>
-                </xf-form>
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
             `)
         );
 
         await elementUpdated(el);
 
-        const repeat = el.querySelector('xf-repeat');
+        const repeat = el.querySelector('fx-repeat');
         await elementUpdated(repeat);
 
 
@@ -339,54 +339,54 @@ describe('repeat Tests', () => {
     it('appends an item', async () => {
         const el =  (
             await fixtureSync(html`
-                <xf-form>
-                    <xf-model id="record">
+                <fx-form>
+                    <fx-model id="record">
             
-                        <xf-instance>
+                        <fx-instance>
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
                             </data>
-                        </xf-instance>
+                        </fx-instance>
             
             
-                        <xf-bind ref="task" readonly="count(../task) < 3">
-                            <xf-bind ref="./text()" required="true()"></xf-bind>
-                            <xf-bind ref="@complete" type="xs:boolean"></xf-bind>
-                            <xf-bind ref="@due" type="xs:date"></xf-bind>
-                        </xf-bind>
+                        <fx-bind ref="task" readonly="count(../task) < 3">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
             
-                    </xf-model>
-                    <xf-group>
+                    </fx-model>
+                    <fx-group>
                         <h1>todos</h1>
                            
-                        <xf-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
                             <template>
-                                <xf-input label="Task" ref="." id="task" type="text"></xf-input>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
                             </template>
-                        </xf-repeat>
+                        </fx-repeat>
                            
-                        <xf-button label="append">
-                            <xf-append repeat="todos" ref="task"></xf-append>
-                        </xf-button>            
-                    </xf-group>
-                </xf-form>
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
             `)
         );
 
         await elementUpdated(el);
 
-        const button = el.querySelector('xf-button');
+        const button = el.querySelector('fx-button');
         await elementUpdated(button);
 
         button.performActions();
 
-        const repeat = el.querySelector('xf-repeat');
+        const repeat = el.querySelector('fx-repeat');
         await elementUpdated(repeat);
 
         expect(repeat).to.exist;
-        const rItems = repeat.querySelectorAll('xf-repeatitem');
-        console.log('xf-repeat ', repeat);
+        const rItems = repeat.querySelectorAll('fx-repeatitem');
+        console.log('fx-repeat ', repeat);
         expect(rItems.length).to.equal(3);
 
 

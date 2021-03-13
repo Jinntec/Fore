@@ -13,6 +13,7 @@
     </script>
 
 
+    <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -29,29 +30,31 @@
 
     <h1>Instances - a home for your precious data</h1>
 
-    <p>First of all - there can as many <code>xf-instance</code> elements as you need.</p>
+    <p>First of all - there can as many <code>fx-instance</code> elements as you need.</p>
 
+<!--
     <demo-snippet>
         <template>
-            <xf-form>
-                <xf-model>
-                    <xf-instance>
+            <fx-form>
+                <fx-model>
+                    <fx-instance>
                         <data>
                             <foobar></foobar>
                         </data>
-                    </xf-instance>
-                    <xf-instance id="second">
+                    </fx-instance>
+                    <fx-instance id="second">
                         <data>
                             <item>second instance</item>
                         </data>
-                    </xf-instance>
+                    </fx-instance>
                     .
                     .
                     .
-                </xf-model>
-            </xf-form>
+                </fx-model>
+            </fx-form>
         </template>
     </demo-snippet>
+-->
     <h3>Description</h3>
     <p>We got 2 instances that create 2 separate XML documents. The first in the document is always
     the default. All following ones need to have an <code>id</code>.</p>
@@ -63,22 +66,22 @@
     <h2>Addressing instances</h2>
     <demo-snippet>
         <template>
-            <xf-form>
-                <xf-model>
-                    <xf-instance>
+            <fx-form>
+                <fx-model>
+                    <fx-instance>
                         <data>
                             <foobar>hi</foobar>
                         </data>
-                    </xf-instance>
-                    <xf-instance id="second">
+                    </fx-instance>
+                    <fx-instance id="second">
                         <data>
                             <item>second</item>
                         </data>
-                    </xf-instance>
-                </xf-model>
-                <xf-output ref="foobar"></xf-output>
-                <xf-output ref="instance('second')//item"></xf-output>
-            </xf-form>
+                    </fx-instance>
+                </fx-model>
+                <fx-output ref="foobar"></fx-output>
+                <fx-output ref="instance('second')//item"></fx-output>
+            </fx-form>
         </template>
     </demo-snippet>
 

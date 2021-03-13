@@ -18,7 +18,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -31,26 +31,26 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-message level="modal" event="refresh-done">refresh has been done</xf-message>
+        <fx-form>
+            <fx-message level="modal" event="refresh-done">refresh has been done</fx-message>
 
-            <xf-model id="model1">
-                <xf-instance>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <greeting type="message:">Hello World!</greeting>
                     </data>
-                </xf-instance>
-            </xf-model>
-            <xf-group>
+                </fx-instance>
+            </fx-model>
+            <fx-group>
 
                 <h1 class="{class}">
                     lazy greeting
                 </h1>
-                <xf-output id="output" ref="greeting/@type"></xf-output>
-                <xf-output id="output" ref="greeting"></xf-output>
+                <fx-output id="output" ref="greeting/@type"></fx-output>
+                <fx-output id="output" ref="greeting"></fx-output>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 

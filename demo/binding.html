@@ -31,11 +31,13 @@
         .buttons {
             display: block;
         }
-        xf-control{
+        fx-control{
             margin:20px 0;
         }
         .diagram{
-            width: 600px;
+            width: 80%;
+            margin:30px auto;
+
         }
     </style>
 </head>
@@ -47,9 +49,9 @@
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-model>
-                <xf-instance>
+        <fx-form>
+            <fx-model>
+                <fx-instance>
                     <data>
                         <item>Hello</item>
                         <required>true</required>
@@ -57,66 +59,66 @@
                         <constraint>true</constraint>
                         <relevant>true</relevant>
                     </data>
-                </xf-instance>
-                <xf-bind ref="item"
+                </fx-instance>
+                <fx-bind ref="item"
                          required="boolean-from-string(depends(../required))"
                          readonly="boolean-from-string(depends(../readonly))"
                          constraint="boolean-from-string(depends(../constraint))"
                          relevant="boolean-from-string(depends(../relevant))"
-                ></xf-bind>
-            </xf-model>
-            <xf-group>
-                <xf-control ref="item">
+                ></fx-bind>
+            </fx-model>
+            <fx-group>
+                <fx-control ref="item">
                     <label slot="label">ItemLabel</label>
                     <span slot="hint">a hint for this item</span>
-                    <xf-alert slot="alert">This went wrong</xf-alert>
+                    <fx-alert slot="alert">This went wrong</fx-alert>
 <!--
-                    <xf-message event="required">required event fired</xf-message>
-                    <xf-message event="optional">optional event fired</xf-message>
-                    <xf-message event="valid">valid event fired</xf-message>
-                    <xf-message event="invalid">invalid event fired</xf-message>
-                    <xf-message event="readwrite">readwrite event fired</xf-message>
-                    <xf-message event="readonly">readonly event fired</xf-message>
-                    <xf-message event="relevant">relevant event fired</xf-message>
-                    <xf-message event="nonrelevant">nonrelevant event fired</xf-message>
+                    <fx-message event="required">required event fired</fx-message>
+                    <fx-message event="optional">optional event fired</fx-message>
+                    <fx-message event="valid">valid event fired</fx-message>
+                    <fx-message event="invalid">invalid event fired</fx-message>
+                    <fx-message event="readwrite">readwrite event fired</fx-message>
+                    <fx-message event="readonly">readonly event fired</fx-message>
+                    <fx-message event="relevant">relevant event fired</fx-message>
+                    <fx-message event="nonrelevant">nonrelevant event fired</fx-message>
 -->
 
-                </xf-control>
+                </fx-control>
 
                 <div class="buttons">
-                    <xf-button label="set required">
-                        <xf-setvalue ref="required" value="true"></xf-setvalue>
-                    </xf-button>
-                    <xf-button label="set optional">
-                        <xf-setvalue ref="required" value="false"></xf-setvalue>
-                    </xf-button>
+                    <fx-button label="set required">
+                        <fx-setvalue ref="required" value="true"></fx-setvalue>
+                    </fx-button>
+                    <fx-button label="set optional">
+                        <fx-setvalue ref="required" value="false"></fx-setvalue>
+                    </fx-button>
                 </div>
                 <div class="buttons">
-                    <xf-button label="set readonly">
-                        <xf-setvalue ref="readonly" value="true"></xf-setvalue>
-                    </xf-button>
-                    <xf-button label="set readwrite">
-                        <xf-setvalue ref="readonly" value="false"></xf-setvalue>
-                    </xf-button>
+                    <fx-button label="set readonly">
+                        <fx-setvalue ref="readonly" value="true"></fx-setvalue>
+                    </fx-button>
+                    <fx-button label="set readwrite">
+                        <fx-setvalue ref="readonly" value="false"></fx-setvalue>
+                    </fx-button>
                 </div>
                 <div class="buttons">
-                    <xf-button label="set valid">
-                        <xf-setvalue ref="constraint" value="true"></xf-setvalue>
-                    </xf-button>
-                    <xf-button label="set invalid">
-                        <xf-setvalue ref="constraint" value="false"></xf-setvalue>
-                    </xf-button>
+                    <fx-button label="set valid">
+                        <fx-setvalue ref="constraint" value="true"></fx-setvalue>
+                    </fx-button>
+                    <fx-button label="set invalid">
+                        <fx-setvalue ref="constraint" value="false"></fx-setvalue>
+                    </fx-button>
                 </div>
                 <div class="buttons">
-                    <xf-button label="set relevant">
-                        <xf-setvalue ref="relevant" value="true"></xf-setvalue>
-                    </xf-button>
-                    <xf-button label="set non-relevant">
-                        <xf-setvalue ref="relevant" value="false"></xf-setvalue>
-                    </xf-button>
+                    <fx-button label="set relevant">
+                        <fx-setvalue ref="relevant" value="true"></fx-setvalue>
+                    </fx-button>
+                    <fx-button label="set non-relevant">
+                        <fx-setvalue ref="relevant" value="false"></fx-setvalue>
+                    </fx-button>
                 </div>
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

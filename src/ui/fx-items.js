@@ -1,11 +1,11 @@
 import { html, css} from 'lit-element';
 
-import XfAbstractControl from './xf-abstract-control.js';
+import XfAbstractControl from './fx-abstract-control.js';
 
 /**
  * todo
  */
-export class XfItems extends XfAbstractControl {
+export class FxItems extends XfAbstractControl {
 
     static get styles() {
         return css`
@@ -49,4 +49,4 @@ export class XfItems extends XfAbstractControl {
 
 
 }
-customElements.define('xf-items', XfItems);
+customElements.define('fx-items', FxItems);

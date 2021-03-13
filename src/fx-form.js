@@ -5,22 +5,22 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
 import * as fx from 'fontoxpath';
 import {Fore} from './fore.js';
-import './xf-model.js';
-import './xf-instance.js';
+import './fx-model.js';
+import './fx-instance.js';
 
 import '@vaadin/vaadin-notification/vaadin-notification.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
  *
- * xf-form is the outermost container for each form. A form can have exactly one model
+ * fx-form is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
  *
  * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
  *
  * This element uses LitElement as it uses shadowDOM to tempate global message dialogs
  */
-export class XfForm extends HTMLElement {
+export class FxForm extends HTMLElement {
 
 
     static get properties() {
@@ -54,7 +54,7 @@ export class XfForm extends HTMLElement {
                 font-family:Roboto, sans-serif;
                 color:var(--paper-grey-900);
             }
-            :host ::slotted(xf-model){
+            :host ::slotted(fx-model){
                 display:none;
             }
             #modalMessage .dialogActions{
@@ -83,9 +83,9 @@ export class XfForm extends HTMLElement {
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', (event) => {
             const children = event.target.assignedElements();
-            let model = children.find(model => model.nodeName.toUpperCase() === 'XF-MODEL');
+            let model = children.find(model => model.nodeName.toUpperCase() === 'FX-MODEL');
             if(!model){
-                const generatedModel = document.createElement('xf-model');
+                const generatedModel = document.createElement('FX-model');
                 this.appendChild(generatedModel);
                 model=generatedModel;
             }
@@ -135,7 +135,7 @@ export class XfForm extends HTMLElement {
      * @private
      */
     _refreshTemplateExpressions () {
-        const search = ".//*[name(.) != 'xf-model']/text()[contains(.,'{')] | .//*[name(.) != 'xf-model']/@*[contains(.,'{')]";
+        const search = ".//*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//*[name(.) != 'fx-model']/@*[contains(.,'{')]";
         const tmplExpressions = fx.evaluateXPathToNodes(search,this,null,null);
         console.log('template expressions found ', tmplExpressions);
 
@@ -229,10 +229,10 @@ export class XfForm extends HTMLElement {
     }
 
     async _lazyCreateInstance(){
-        const model = this.querySelector('xf-model');
+        const model = this.querySelector('fx-model');
         if(model.instances.length === 0){
             console.log('### lazy creation of instance');
-            const generatedInstance = document.createElement('xf-instance');
+            const generatedInstance = document.createElement('fx-instance');
             model.appendChild(generatedInstance);
 
             const generated = document.implementation.createDocument(null, "data");
@@ -282,7 +282,7 @@ export class XfForm extends HTMLElement {
      }
 
      getModel(){
-        return this.querySelector('xf-model');
+        return this.querySelector('fx-model');
      }
 
     _displayMessage(e) {
@@ -338,4 +338,4 @@ export class XfForm extends HTMLElement {
     }
 
 }
-customElements.define('xf-form', XfForm);
+customElements.define('fx-form', FxForm);

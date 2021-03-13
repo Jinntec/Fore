@@ -24,20 +24,20 @@
 <body unresolved="unresolved">
 
 
-<xf-form url="wheretopost" method="post" src="whattoload">
+<fx-form url="wheretopost" method="post" src="whattoload">
         <h1>ultra-lazy greeting</h1>
 
         <p>
             Ultra-lazy mode creates XML nodes for each 'ref' found in the document. This mode is activated
-            whenever there is no xf-model element specified.
+            whenever there is no fx-model element specified.
         </p>
         <p>It serves simple use cases where just a bunch of params have to be collected without much bells
         and whistles</p>
 
-        <xf-group ref="outer">
-            <xf-output ref="inner1">inner1</xf-output>
-            <xf-output ref="inner2">inner2</xf-output>
-        </xf-group>
+        <fx-group ref="outer">
+            <fx-output ref="inner1">inner1</fx-output>
+            <fx-output ref="inner2">inner2</fx-output>
+        </fx-group>
 
 <!--
         <demo-snippet>
@@ -46,13 +46,13 @@
             </template>
         </demo-snippet>
 -->
-    <xf-message event="ready">its ready</xf-message>
-</xf-form>
+    <fx-message event="ready">its ready</fx-message>
+</fx-form>
 <textarea id="debug" rows="20" cols="80"></textarea>
 
 <script type="module" src="../index.js"></script>
 <script>
-    const form = document.querySelector('xf-form');
+    const form = document.querySelector('fx-form');
     form.addEventListener('refresh-done', function(e) {
         const inst = form.model.getDefaultInstanceData();
         const ser = new XMLSerializer();

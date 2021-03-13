@@ -3,7 +3,7 @@
 /**
  * Class for holding ModelItem facets.
  *
- * A ModelItem annotates nodes that are referred by a xf-bind element with facets for calculation and validation.
+ * A ModelItem annotates nodes that are referred by a fx-bind element with facets for calculation and validation.
  *
  * Each bound node in an instance has exactly one ModelItem associated with it.
  */
@@ -19,7 +19,7 @@ export class ModelItem {
      * @param {*} required - boolean boolean to signal valid/invalid state
      * @param {*} type - string expression to set a datatype
      * @param {*} node - the node the 'ref' expression is referring to
-     * @param {*} bind - the xf-bind element having created this modelItem
+     * @param {*} bind - the fx-bind element having created this modelItem
      */
     constructor(
                 path,

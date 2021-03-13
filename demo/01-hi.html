@@ -13,6 +13,7 @@
     </script>
 
 
+    <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -21,7 +22,11 @@
         .dynamic {
             background: #76ff03;
         }
-
+/*
+        fx-model{
+            display: none;
+        }
+*/
     </style>
 </head>
 <body unresolved="unresolved">
@@ -31,16 +36,16 @@
 
     <demo-snippet>
         <template>
-            <xf-form>
-                <xf-output ref="greeting">Hello Universe</xf-output>
-            </xf-form>
+            <fx-form>
+                <fx-output ref="greeting">Hello Universe</fx-output>
+            </fx-form>
         </template>
     </demo-snippet>
 
     <h2>Description</h2>
     <p>
-        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>xf-form</code> element. Besides
-        that we have a <code>xf-output</code> which - well -outputs a referenced data node.
+        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-form</code> element. Besides
+        that we have a <code>fx-output</code> which - well -outputs a referenced data node.
     </p>
     <p>
         Fore is MVC but where's the model? It gets auto-generated if you don't provide one.
@@ -52,45 +57,45 @@
 
     <demo-snippet>
         <template>
-            <xf-form>
-                <xf-model>
-                    <xf-instance>
+            <fx-form>
+                <fx-model>
+                    <fx-instance>
                         <data>
                             <greeting>Hello Universe</greeting>
                         </data>
-                    </xf-instance>
-                </xf-model>
-                <xf-output ref="greeting">Hello Universe</xf-output>
-            </xf-form>
+                    </fx-instance>
+                </fx-model>
+                <fx-output ref="greeting">Hello Universe</fx-output>
+            </fx-form>
         </template>
     </demo-snippet>
 
-    <p>The form holds a single <code>xf-model</code> which itself contains a <code>xf-instance</code> element. This
-    is where our actual data are living. A form can contain a single model but as many <code>xf-instance</code> elements
+    <p>The form holds a single <code>fx-model</code> which itself contains a <code>fx-instance</code> element. This
+    is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
     as you like.</p>
 
     <h2>Nesting refs</h2>
 
     <demo-snippet>
         <template>
-            <xf-form>
-                <xf-group ref="planet">
-                    <xf-output ref="greeting">Hello Earth</xf-output>
-                </xf-group>
-            </xf-form>
+            <fx-form>
+                <fx-group ref="planet">
+                    <fx-output ref="greeting">Hello Earth</fx-output>
+                </fx-group>
+            </fx-form>
         </template>
     </demo-snippet>
 
     <p>Guess how the instance looks like now? Here it is </p>
     <demo-snippet>
         <template>
-            <xf-instance>
+            <fx-instance>
                 <data>
                     <planet>
                         <greeting>Hello Earth</greeting>
                     </planet>
                 </data>
-            </xf-instance>
+            </fx-instance>
         </template>
     </demo-snippet>
 

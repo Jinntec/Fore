@@ -31,7 +31,7 @@
         .buttons {
             display: block;
         }
-        xf-control{
+        fx-control{
             margin:20px 0;
         }
     </style>
@@ -40,29 +40,29 @@
 
 <h1>They nest</h1>
 
-<p><code>xf-bind</code> elements can be nested to avoid typing.</p>
+<p><code>fx-bind</code> elements can be nested to avoid typing.</p>
 
     <p class="note">A <code>ref</code> expression
 is always relative to it's parent binding or if there's none to the root-node of the default instance. This is true
-    for <code>xf-bind</code> but also within the UI elements of the form.</p>
+    for <code>fx-bind</code> but also within the UI elements of the form.</p>
 <demo-snippet>
     <template>
 
-        <xf-form>
-            <xf-model id="model1">
-                <xf-instance>
+        <fx-form>
+            <fx-model id="model1">
+                <fx-instance>
                     <data>
                         <greeting type="message">Hello World!</greeting>
                     </data>
-                </xf-instance>
-                <xf-bind id="b-greeting" ref="greeting" required="1 = 1">
-                    <xf-bind id="b-type" ref="@type"></xf-bind>
-                </xf-bind>
-            </xf-model>
-            <xf-group ref="greeting">
-                <xf-output ref="./@type"></xf-output>: <xf-output ref="."> </xf-output>
-            </xf-group>
-        </xf-form>
+                </fx-instance>
+                <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+                    <fx-bind id="b-type" ref="@type"></fx-bind>
+                </fx-bind>
+            </fx-model>
+            <fx-group ref="greeting">
+                <fx-output ref="./@type"></fx-output>: <fx-output ref="."> </fx-output>
+            </fx-group>
+        </fx-form>
     </template>
 </demo-snippet>
 <script type="module" src="../index.js"></script>

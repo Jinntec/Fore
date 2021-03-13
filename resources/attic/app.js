@@ -1,26 +1,26 @@
-import './xf-form.js';
-import './xf-model.js';
-import './xf-instance.js';
-import './xf-bind.js';
+import './fx-form.js';
+import './fx-model.js';
+import './fx-instance.js';
+import './fx-bind.js';
 
 //ui classes
-import './ui/xf-control.js';
-import './ui/xf-group.js';
-import './ui/xf-button.js';
-import './ui/xf-output.js';
-import './ui/xf-input.js';
-import './ui/xf-alert.js';
-import './ui/xf-hint.js';
-import './ui/xf-control.js';
+import './ui/fx-control.js';
+import './ui/fx-group.js';
+import './ui/fx-button.js';
+import './ui/fx-output.js';
+import './ui/fx-input.js';
+import './ui/fx-alert.js';
+import './ui/fx-hint.js';
+import './ui/fx-control.js';
 
 //action classes
-import './actions/xf-action.js';
-import './actions/xf-append.js';
-import './actions/xf-delete.js';
-import './actions/xf-setvalue.js';
-import './actions/xf-send.js';
+import './actions/fx-action.js';
+import './actions/fx-append.js';
+import './actions/fx-delete.js';
+import './actions/fx-setvalue.js';
+import './actions/fx-send.js';
 
-import './actions/xf-message.js';
+import './actions/fx-message.js';
 
 // import '@polymer/iron-ajax/iron-ajax';
 

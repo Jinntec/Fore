@@ -14,7 +14,7 @@
             background: #76ff03;
         }
 
-        xf-input[required]:after {
+        fx-input[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -24,25 +24,25 @@
 </head>
 <body unresolved="unresolved">
 
-        <xf-form>
+        <fx-form>
 
-            <xf-model>
-                <xf-instance src="instance1.xml"></xf-instance>
+            <fx-model>
+                <fx-instance src="instance1.xml"></fx-instance>
 
-                <xf-bind ref="greeting"></xf-bind>
+                <fx-bind ref="greeting"></fx-bind>
 
-            </xf-model>
-            <xf-group>
+            </fx-model>
+            <fx-group>
 
 
                 <h1>
-                    Greeting: <xf-output ref="./greeting"></xf-output>
+                    Greeting: <fx-output ref="./greeting"></fx-output>
                 </h1>
 
-                <xf-input ref="greeting" label="Greeting"></xf-input>
+                <fx-input ref="greeting" label="Greeting"></fx-input>
 
-            </xf-group>
-        </xf-form>
+            </fx-group>
+        </fx-form>
     <script type="module" src="../index.js"></script>
 </body>
 </html>

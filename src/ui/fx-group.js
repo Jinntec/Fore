@@ -1,18 +1,18 @@
 import {LitElement, html, css} from 'lit-element';
 import {Fore} from "../fore";
-// import XfAbstractControl from "./xf-abstract-control";
-import {XfContainer} from './xf-container';
+// import XfAbstractControl from "./fx-abstract-control";
+import {FxContainer} from './fx-container';
 
 
 /**
- * `xf-group`
- * a container allowing to switch between xf-case elements
+ * `fx-group`
+ * a container allowing to switch between fx-case elements
  *
  *
  *  * todo: implement
  * @customElement
  */
-class XfGroup extends XfContainer{
+class FxGroup extends FxContainer{
 
 
     static get properties() {
@@ -95,4 +95,4 @@ class XfGroup extends XfContainer{
 
 }
 
-window.customElements.define('xf-group', XfGroup);
+window.customElements.define('fx-group', FxGroup);

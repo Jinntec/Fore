@@ -57,18 +57,18 @@ function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespace
 
 
 /**
- * XfBind declaratively attaches constraints to nodes in the data (instances).
+ * FxBind declaratively attaches constraints to nodes in the data (instances).
  *
  * It's major task is to create ModelItem Objects for each Node in the data their ref is pointing to.
  *
  * References and constraint attributes use XPath statements to point to the nodes they are attributing.
  *
- * Note: why is xf-bind not extending BoundElement? Though xf-bind has a 'ref' attr it is not bound in the sense of
+ * Note: why is fx-bind not extending BoundElement? Though fx-bind has a 'ref' attr it is not bound in the sense of
  * getting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by
  * BoundElements to track their state.
  */
-// export class XfBind extends HTMLElement {
-export class XfBind extends foreElementMixin(HTMLElement){
+// export class FxBind extends HTMLElement {
+export class FxBind extends foreElementMixin(HTMLElement){
 
 
     static READONLY_DEFAULT = false;
@@ -218,9 +218,9 @@ export class XfBind extends foreElementMixin(HTMLElement){
         let path = fx.evaluateXPath('path()',node);
         const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
         if(instanceId !== 'default'){
-            return '#' + instanceId + XfBind.shortenPath(path);
+            return '#' + instanceId + FxBind.shortenPath(path);
         }else {
-            return XfBind.shortenPath(path);
+            return FxBind.shortenPath(path);
         }
 
     }
@@ -302,7 +302,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
     }
 
     _processChildren(model) {
-        const childbinds = this.querySelectorAll(':scope > xf-bind');
+        const childbinds = this.querySelectorAll(':scope > fx-bind');
         Array.from(childbinds).forEach(bind => {
             // console.log('init child bind ', bind);
             bind.init(model);
@@ -319,7 +319,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         if(this.hasAttribute('alert')){
             return this.getAttribute('alert');
         }
-        const alertChild = this.querySelector('xf-alert');
+        const alertChild = this.querySelector('fx-alert');
         if(alertChild){
             return alertChild.innerHTML;
         }
@@ -387,7 +387,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
         }else{
             let formElement;
             for (let anc = this; anc; anc = anc.parentNode) {
-                if (anc.localName === 'xf-form') {
+                if (anc.localName === 'fx-form') {
                     formElement = anc;
                     break;
                 }
@@ -427,10 +427,10 @@ export class XfBind extends foreElementMixin(HTMLElement){
     static lazyCreateModelitems(model,ref,nodeset){
         if(Array.isArray(nodeset)){
             Array.from(nodeset).forEach((n, index) => {
-                XfBind.lazyCreateModelItem(model, ref,n);
+                FxBind.lazyCreateModelItem(model, ref,n);
             });
         }else{
-            XfBind.lazyCreateModelItem(model, ref,nodeset);
+            FxBind.lazyCreateModelItem(model, ref,nodeset);
         }
 
     }
@@ -451,18 +451,18 @@ export class XfBind extends foreElementMixin(HTMLElement){
         }
 
         // const path = fx.evaluateXPath('path()',node);
-        const path = XfBind.getPath(node);
+        const path = FxBind.getPath(node);
 
         // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
 
-        // ### intializing ModelItem with default values (as there is no <xf-bind> matching for given ref)
+        // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
         const mi = new ModelItem(path,
             ref,
-            XfBind.READONLY_DEFAULT,
-            XfBind.RELEVANT_DEFAULT,
-            XfBind.REQUIRED_DEFAULT,
-            XfBind.CONSTRAINT_DEFAULT,
-            XfBind.TYPE_DEFAULT,
+            FxBind.READONLY_DEFAULT,
+            FxBind.RELEVANT_DEFAULT,
+            FxBind.REQUIRED_DEFAULT,
+            FxBind.CONSTRAINT_DEFAULT,
+            FxBind.TYPE_DEFAULT,
             targetNode,
             this);
 
@@ -498,7 +498,7 @@ export class XfBind extends foreElementMixin(HTMLElement){
          */
         if(XPathUtil.isSelfReference(this.ref)){
 
-            const parentBoundElement = this.parentElement.closest('xf-bind[ref]');
+            const parentBoundElement = this.parentElement.closest('fx-bind[ref]');
             console.log('parent bound element ', parentBoundElement);
 
             if(parentBoundElement){
@@ -533,10 +533,10 @@ export class XfBind extends foreElementMixin(HTMLElement){
         // const newItem = new ModelItem(shortPath,
         const newItem = new ModelItem(path,
             this.getBindingExpr(),
-            XfBind.READONLY_DEFAULT,
-            XfBind.RELEVANT_DEFAULT,
-            XfBind.REQUIRED_DEFAULT,
-            XfBind.CONSTRAINT_DEFAULT,
+            FxBind.READONLY_DEFAULT,
+            FxBind.RELEVANT_DEFAULT,
+            FxBind.REQUIRED_DEFAULT,
+            FxBind.CONSTRAINT_DEFAULT,
             this.type,
             targetNode,
             this);
@@ -612,4 +612,4 @@ export class XfBind extends foreElementMixin(HTMLElement){
     }
 
 }
-customElements.define('xf-bind', XfBind);
+customElements.define('fx-bind', FxBind);

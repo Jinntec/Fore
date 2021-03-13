@@ -9,8 +9,8 @@
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 <!--
     <script type="module">
-        import '../src/xf-form.js';
-        import '../src/actions/xf-message.js';
+        import '../src/fx-form.js';
+        import '../src/actions/fx-message.js';
     </script>
 -->
 
@@ -27,24 +27,24 @@
 <body unresolved="unresolved">
 
 
-    <xf-form>
+    <fx-form>
 
-        <xf-model id="model1">
-            <xf-instance src="#querystring"></xf-instance>
-        </xf-model>
-        <xf-group>
+        <fx-model id="model1">
+            <fx-instance src="#querystring"></fx-instance>
+        </fx-model>
+        <fx-group>
 
-            <h1>create xf-instance from queryString</h1>
+            <h1>create fx-instance from queryString</h1>
             <div>
                 <label>Param1: </label>
-                <xf-output ref="param1"></xf-output>
+                <fx-output ref="param1"></fx-output>
             </div>
             <div>
                 <label>Param2: </label>
-                <xf-output ref="param2"></xf-output>
+                <fx-output ref="param2"></fx-output>
             </div>
-        </xf-group>
-    </xf-form>
+        </fx-group>
+    </fx-form>
     <script type="module" src="../index.js"></script>
 
 </body>
