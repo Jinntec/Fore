@@ -3,14 +3,12 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
-
+import * as fx from 'fontoxpath';
 import {Fore} from './fore.js';
 import './xf-model.js';
 import './xf-instance.js';
 
 import '@vaadin/vaadin-notification/vaadin-notification.js';
-import * as fx from 'fontoxpath';
-import {XPathUtil} from "./xpath-util";
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
