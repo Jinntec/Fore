@@ -98,5 +98,6 @@
       "eslint-config-prettier"
     ]
   },
-  "prettier": "@open-wc/prettier-config"
+  "prettier": "@open-wc/prettier-config",
+  "main": "index.js"
 }
