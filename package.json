@@ -21,7 +21,8 @@
     "index.js",
     "resources/fore.css",
     "resources/vars.css",
-    "src/**/*"
+    "src/**/*",
+    "dist/index.js"
   ],
   "dependencies": {
     "@polymer/iron-ajax": "^3.0.1",
@@ -46,7 +47,7 @@
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@open-wc/building-rollup": "^0.21.1",
     "@open-wc/eslint-config": "^2.0.0",
     "@open-wc/prettier-config": "^0.1.10",
@@ -84,7 +85,6 @@
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
-    "fontoxpath": "rollup -c fontoxpath.rollup.config.js",
     "empathy": "./node_modules/@0xcda7a/empathy/bin/empathy install"
   },
   "keywords": [

@@ -1,6 +1,7 @@
 node_modules/
 build/
 assets/
+/dist/
 .*
 !.gitignore
 /.idea/
