@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
@@ -46,7 +46,8 @@
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",
-    "@open-wc/building-rollup": "^0.21.0",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@open-wc/building-rollup": "^0.21.1",
     "@open-wc/eslint-config": "^2.0.0",
     "@open-wc/prettier-config": "^0.1.10",
     "@open-wc/testing": "^2.0.0",
@@ -55,14 +56,14 @@
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^6.1.0",
     "@skypack/package-check": "^0.2.2",
-    "deepmerge": "^3.2.0",
-    "es-dev-server": "^1.40.0",
+    "deepmerge": "^3.3.0",
+    "es-dev-server": "^1.57.8",
     "eslint": "^6.1.0",
     "husky": "^1.0.0",
     "lint-staged": "^8.0.0",
     "lit-html": "^1.1.2",
     "mocha": "^7.0.1",
-    "rimraf": "^2.6.3",
+    "rimraf": "^2.7.1",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.4.0",
     "typescript": "^3.7.5"
