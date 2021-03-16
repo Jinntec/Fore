@@ -4,3 +4,4 @@ assets/
 .*
 !.gitignore
 /.idea/
+.DS_Store
