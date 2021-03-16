@@ -4,5 +4,6 @@ assets/
 /dist/
 .*
 !.gitignore
+!.github
 /.idea/
 .DS_Store
