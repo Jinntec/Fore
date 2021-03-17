@@ -7,6 +7,22 @@ import {XPathUtil} from "./xpath-util";
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
+/**
+ * Implementation of the functionNameResolver passed to FontoXPath to
+ * redirect function resolving for unprefixed functions to either the fn or the xf namespace
+ */
+function functionNameResolver ({_prefix, localName}, _arity) {
+	switch (localName) {
+		// TODO: put the full XForms library functions set here
+		case 'instance':
+		case 'depends':
+		case 'boolean-from-string':
+			return {namespaceURI: 'http://www.w3.org/2002/xforms', localName};
+		default:
+			return {namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName};
+	}
+}
+
 registerCustomXPathFunction(
     { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
     ['xs:string?'],
@@ -32,6 +48,7 @@ registerCustomXPathFunction(
         return null;
     }
 );
+
 registerCustomXPathFunction(
     { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
     ['node()*'],
@@ -49,38 +66,14 @@ registerCustomXPathFunction(
     }
 );
 
-// These modules can use full XQuery 3.1 + XQuery update facility 3.0
+// Implement the XForms standard functions here.
 registerXQueryModule(`
     module namespace xf="${XFORMS_NAMESPACE_URI}";
-    
+
     declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
         lower-case($str) = "true" or $str = "1"
     };
-    
-    declare %public function xf:false() as xs:boolean {
-        fn:false()
-    };
-    declare %public function xf:true() as xs:boolean {
-        fn:true()
-    };
-    declare %public function xf:count($arg as item()*) as xs:integer {
-        fn:count($arg)
-    };
-    
-    declare %public function xf:string-length($arg as item()) as xs:integer{
-        fn:string-length($arg)
-    };
-    
-    declare %public function xf:path() as xs:string{
-        fn:path()
-    };
-    
-    declare %public function xf:current-date() as xs:date{
-        fn:current-date()
-    };
 `);
-
-
 
 // How to run XQUF:
 /**
@@ -201,12 +194,12 @@ export class Fore{
             {},
             'xs:anyType',
             {
-                namespaceResolver,
-                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                currentContext: {formElement},
                 moduleImports: {
                     xf: 'http://www.w3.org/2002/xforms'
                 },
-                currentContext: {formElement}
+                functionNameResolver,
+                namespaceResolver,
             });
     }
 
@@ -233,12 +226,12 @@ export class Fore{
             null,
             {},
             {
-                namespaceResolver,
-                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                currentContext: {formElement},
+                functionNameResolver,
                 moduleImports: {
                     xf: 'http://www.w3.org/2002/xforms'
                 },
-                currentContext: {formElement}
+                namespaceResolver,
             });
     }
 
@@ -250,17 +243,17 @@ export class Fore{
             null,
             {},
             {
-                namespaceResolver,
-                defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
+                currentContext: {formElement},
+                functionNameResolver,
                 moduleImports: {
                     xf: 'http://www.w3.org/2002/xforms'
                 },
-                currentContext: {formElement}
+                namespaceResolver,
             });
     }
 
 	static get XFORMS_NAMESPACE_URI () {
-		return XFORMS_NAMESPACE_URI
+		return XFORMS_NAMESPACE_URI;
 	}
 
     static isActionElement(elementName){

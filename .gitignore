@@ -1,7 +1,9 @@
 node_modules/
 build/
 assets/
+/dist/
 .*
 !.gitignore
+!.github
 /.idea/
 .DS_Store

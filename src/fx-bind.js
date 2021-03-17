@@ -2,59 +2,8 @@
 import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
-// import {Fore} from "./fore";
+import {Fore} from "./fore";
 import {foreElementMixin} from "./ForeElementMixin.js";
-
-function evaluateXPath (xpath, contextNode, formElement, namespaceResolver) {
-	return fx.evaluateXPath(
-		xpath,
-		contextNode,
-		null,
-		{},
-		fx.ANY_TYPE,
-        {
-		namespaceResolver,
-		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
-		moduleImports: {
-			xf: 'http://www.w3.org/2002/xforms'
-		},
-		currentContext: {formElement}
-	});
-}
-
-function evaluateXFormsXPathToNodes (xpath, contextNode, formElement, namespaceResolver) {
-	return fx.evaluateXPathToNodes(
-		xpath,
-		contextNode,
-		null,
-		{},
-		{
-		namespaceResolver,
-		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
-		moduleImports: {
-			xf: 'http://www.w3.org/2002/xforms'
-		},
-		currentContext: {formElement}
-	});
-}
-
-
-function evaluateXFormsXPathToBoolean(xpath, contextNode, formElement, namespaceResolver) {
-	return fx.evaluateXPathToBoolean(
-		xpath,
-		contextNode,
-		null,
-		{},
-		{
-		namespaceResolver,
-		defaultFunctionNamespaceURI: 'http://www.w3.org/2002/xforms',
-		moduleImports: {
-			xf: 'http://www.w3.org/2002/xforms'
-		},
-		currentContext: {formElement}
-	});
-}
-
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -394,7 +343,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
             }
             const inst = this.getModel().getInstance(this.instanceId);
             if(inst.type === 'xml'){
-                this.nodeset = evaluateXFormsXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
+                this.nodeset = Fore.evaluateToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
             } else {
                 this.nodeset = this.ref;
             }
@@ -569,7 +518,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
         //evaluate expression to boolean
         const propertyExpr = this[property];
         // console.log('####### ', propertyExpr);
-        const result = evaluateXFormsXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
+        const result = Fore.evaluateToBoolean(propertyExpr, node, this, this.namespaceResolver);
 
         //if expression not simply true() or false() detect nodes referenced by readonly expr
         if(propertyExpr !== 'true()' && propertyExpr !== 'false()'){
