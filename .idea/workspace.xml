@@ -20,12 +20,14 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/master" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/dev" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="removed assets from repo">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
@@ -97,6 +99,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="XHTML File" />
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -122,19 +125,19 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/attic" />
-      <recent name="$PROJECT_DIR$/demo/solutions" />
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/src/ui" />
-      <recent name="$PROJECT_DIR$/doc" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/doc" />
       <recent name="$PROJECT_DIR$/src/actions" />
       <recent name="$PROJECT_DIR$/src/ui" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/attic" />
+      <recent name="$PROJECT_DIR$/demo/solutions" />
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/src/ui" />
+      <recent name="$PROJECT_DIR$/doc" />
     </key>
   </component>
   <component name="RunManager">
@@ -296,6 +299,8 @@
       <workItem from="1612780570323" duration="17951000" />
       <workItem from="1613053441210" duration="5600000" />
       <workItem from="1615564392393" duration="6057000" />
+      <workItem from="1616019189024" duration="3722000" />
+      <workItem from="1616242289159" duration="1653000" />
     </task>
     <task id="LOCAL-00054" summary="refactoring of lazy modelItem creation complete: functions moved to xf-bind;">
       <created>1604154332631</created>
@@ -667,7 +672,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="origin/dev" />
                       </list>
                     </value>
                   </entry>
@@ -725,10 +730,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="new icon size" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="627" y="-968" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1607518158702">
-      <screen x="-252" y="-1667" width="3008" height="1667" />
-    </state>
-    <state x="627" y="-968" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607518158702" />
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612537292469">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -739,12 +740,36 @@
     <state x="435" y="-1441" key="CommitChangelistDialog2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1613054733509" />
     <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615640873104" />
     <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
-    <state x="730" y="-1518" width="1520" height="1216" key="DiffContextDialog" timestamp="1613054083340">
-      <screen x="-252" y="-1667" width="3008" height="1667" />
+    <state x="730" y="-1518" width="1520" height="1216" maximized="true" key="DiffContextDialog" timestamp="1616020073831">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1613054083340" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117134737" />
-    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1611939023882" />
+    <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1616020073831" />
+    <state width="1398" height="220" key="GridCell.Tab.0.bottom" timestamp="1616243325648">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state width="1398" height="220" key="GridCell.Tab.0.bottom/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325648" />
+    <state width="1398" height="220" key="GridCell.Tab.0.bottom/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
+    <state width="1398" height="220" key="GridCell.Tab.0.center" timestamp="1616243325647">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state width="1398" height="220" key="GridCell.Tab.0.center/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325647" />
+    <state width="1398" height="220" key="GridCell.Tab.0.center/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
+    <state width="1398" height="220" key="GridCell.Tab.0.left" timestamp="1616243325646">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state width="1398" height="220" key="GridCell.Tab.0.left/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325646" />
+    <state width="1398" height="220" key="GridCell.Tab.0.left/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
+    <state width="1398" height="220" key="GridCell.Tab.0.right" timestamp="1616243325648">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state width="1398" height="220" key="GridCell.Tab.0.right/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325648" />
+    <state width="1398" height="220" key="GridCell.Tab.0.right/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
+    <state x="144" y="98" key="MergeDialog" timestamp="1616242523174">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="144" y="98" key="MergeDialog/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616242523174" />
     <state x="760" y="-1066" key="RollbackChangesDialog" timestamp="1615640528775">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -762,7 +787,6 @@
     <state x="661" y="-1046" key="Vcs.Push.Dialog.v2" timestamp="1615568435204">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="1185" y="-1232" key="Vcs.Push.Dialog.v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539224954" />
     <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615568435204" />
     <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
@@ -783,10 +807,12 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612804865306" />
-    <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607702770956">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1616242297542">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702770956" />
+    <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616242297542" />
+    <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875@0.25.1440.875" timestamp="1616019199440" />
     <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1" timestamp="1612345764657">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -795,8 +821,11 @@
     <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1615639530153">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
-    <state x="1679" y="-1197" width="651" height="726" key="find.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1607539906479" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615639530153" />
+    <state x="468" y="179" key="git4idea.branch.GitSmartOperationDialog" timestamp="1616243952698">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="468" y="179" key="git4idea.branch.GitSmartOperationDialog/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243952698" />
     <state x="-162" y="-815" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1615639475429">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
@@ -825,91 +854,5 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>exform</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>
