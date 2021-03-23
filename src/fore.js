@@ -144,8 +144,8 @@ class DependencyNotifyingDomFacade {
 	 * @param  bucket - The bucket that matches the attribute that will be used.
 	 */
 	getChildNodes(node, bucket) {
-		const matchingNodes = node.getChildNodes().filter(childNode => getBucketsForNode(node).includes(bucket));
-		matchingNodes.forEach(node => this._onNodeTouched(node));
+		const matchingNodes = node.childNodes.filter(childNode => getBucketsForNode(childNode).includes(bucket));
+		matchingNodes.forEach(matchingNode => this._onNodeTouched(matchingNode));
 		return matchingNodes;
 	}
 
