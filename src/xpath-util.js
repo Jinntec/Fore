@@ -32,8 +32,8 @@ export class XPathUtil {
     static getPath(node){
         let path = fx.evaluateXPath('path()',node);
         const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
-        if(instanceId !== 'default'){
-            return '#' + instanceId + XPathUtil.shortenPath(path);
+        if(instanceId !== null && instanceId !== 'default'){
+            return `#${instanceId}${XPathUtil.shortenPath(path)}`;
         }else {
             return XPathUtil.shortenPath(path);
         }
