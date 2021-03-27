@@ -11,6 +11,7 @@ import {Fore} from "../fore.js";
  */
 class FxDelete extends FxAction {
 
+/*
     static get properties() {
         return {
             ...super.properties,
@@ -19,59 +20,66 @@ class FxDelete extends FxAction {
             }
         };
     }
+*/
 
     constructor() {
         super();
-        this.repeat = '';
+        this.repeatId = '';
     }
 
 
+    /**
+     * deletes a
+     */
     execute() {
         super.execute();
         console.log('##### fx-delete executing...');
 
-        this.ref = this.getAttribute('ref');
+        // this.ref = this.getAttribute('ref');
         // const inscope = this._inScopeContext();
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
 
 
         console.log('delete nodeset ', this.nodeset);
 
-        // ### if there's no repeat we are inside of a repeat template
-        if(this.repeat === ''){
+        // ### if there's no repeat the delete action is inside of a repeat template
+        if(this.repeatId === ''){
 
             // find the index to delete
             const rItem = this.parentNode.closest('fx-repeatitem');
-            const idx = rItem.index;
+            const idx = Array.from(rItem.parentNode.children).indexOf(rItem)  +1;
+            // console.log('>>> idx to delete ', idx);
 
-            const repeatElement = this.parentNode.closest('fx-repeat');
+            // ### get the model now as it'll be hard once we've deleted ourselves ;)
+            this.model = this.getModel();
+            const repeat = this.parentNode.closest('fx-repeat');
 
             // todo: find a better solution for the empty repeat problem - this just empties the values of the last item.
-            // if(repeatElement.nodeset.length === 1 && idx === 1){
-            if(repeatElement.nodeset.length === 1){
+            if(repeat.nodeset.length === 1){
                 // ### do not delete last entry but empty its values
                 const mItem = this.getModel().getModelItem(this.nodeset[0])
                 Fore.clear(mItem.node);
+                repeat.setIndex(1);
             }else{
+                // ### update the nodeset
                 const nodeToDelete = this.nodeset[idx-1];
                 const p = nodeToDelete.parentNode;
                 p.removeChild(nodeToDelete);
 
-                //remove the repeatitem
+                // ### remove the repeatitem
                 rItem.parentNode.removeChild(rItem);
+
+                // ### update the index (set 'repeat-index' attribute on repeatitem
+                const {repeatSize} = repeat;
+                if(idx === 1 || repeatSize === 1){
+                    repeat.setIndex(1);
+                }else if (idx > repeatSize){
+                    repeat.setIndex(repeatSize);
+                }else {
+                    repeat.setIndex(idx);
+                }
             }
-
         }
-
-
-/*
-        const parent = this.nodeset.parentNode;
-        console.log('delete parent ', parent);
-
-        parent.removeChild(this.nodeset);
-        console.log('parent after removal', parent);
-*/
-
 
         this.needsRebuild=true;
         this.needsRecalculate=true;

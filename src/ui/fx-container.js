@@ -8,7 +8,7 @@ import {foreElementMixin} from "../ForeElementMixin.js";
  * `fx-container` -
  * is a general class for container elements.
  *
- * @customElement
+ * todo: remove LitElement dependency
  */
 // export class FxContainer extends BoundElement {
 export class FxContainer extends foreElementMixin(LitElement) {

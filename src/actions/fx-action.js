@@ -9,12 +9,13 @@ import { foreElementMixin } from "../ForeElementMixin.js";
  */
 export class FxAction extends foreElementMixin(HTMLElement){
 
+/*
     static get properties() {
         return {
             ...super.properties,
-            /**
+            /!**
              * the event to listen for
-             */
+             *!/
             event:{
                 type: String
             },
@@ -30,14 +31,15 @@ export class FxAction extends foreElementMixin(HTMLElement){
             needsRefresh:{
                 type:Boolean
             },
-            /**
+            /!**
              * the event target if not parentNode
-             */
+             *!/
             target:{
                 type: String
             }
         };
     }
+*/
 
     // eslint-disable-next-line no-useless-constructor
     constructor(){
@@ -57,13 +59,16 @@ export class FxAction extends foreElementMixin(HTMLElement){
         } else {
             this.targetElement = this.parentNode;
             this.targetElement.addEventListener(this.event, e => this.execute(e));
-            console.log('adding listener for ', this.event , ` to `, this);
+            // console.log('adding listener for ', this.event , ` to `, this);
         }
 
         this.needsRebuild = false;
         this.needsRecalculate = false;
         this.needsRevalidate = false;
         this.needsRefresh = false;
+    }
+
+    connectedCallback(){
         this.style.display = 'none';
     }
 
@@ -74,22 +79,18 @@ export class FxAction extends foreElementMixin(HTMLElement){
     }
 
     actionPerformed(){
+        const model = this.getModel();
         if(this.needsRebuild){
-            // @ts-ignore
-            this.getModel().rebuild();
+            model.rebuild();
         }
         if(this.needsRecalculate){
-            // @ts-ignore
-            this.getModel().recalculate();
+            model.recalculate();
         }
         if(this.needsRevalidate){
-            // @ts-ignore
-            this.getModel().revalidate();
+            model.revalidate();
         }
         if(this.needsRefresh){
-            // this.closest('fx-form').refresh();
-            // @ts-ignore
-            document.querySelector('fx-form').refresh();
+            model.parentNode.refresh();
         }
     }
 

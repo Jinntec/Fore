@@ -8,8 +8,8 @@ import { ModelItem } from "../modelitem.js";
  * `fx-abstract-control` -
  * is a general class for control elements.
  *
- * @customElement
- * @appliesMixin BoundElementMixin
+ *
+ * todo: remove LitElement dependency
  */
 export default class FxAbstractControl extends foreElementMixin(LitElement) {
 

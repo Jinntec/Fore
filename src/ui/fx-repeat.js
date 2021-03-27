@@ -59,10 +59,19 @@ export class FxRepeat extends FxContainer {
         this.nodeset = [];
         this.inited = false;
         this.index = 1;
+        this.repeatSize = 0;
 
         // this.template = this.firstElementChild;
         // this.addEventListener('repeatitem-created', this._refreshItem)
 
+    }
+
+    get repeatSize(){
+        return this.querySelectorAll('fx-repeatitem').length;
+    }
+
+    set repeatSize(size){
+        this.size = size;
     }
 
     render() {
@@ -73,10 +82,10 @@ export class FxRepeat extends FxContainer {
 
 
     setIndex(index){
-        if(this.index !== index){
-            this.index=index;
-            console.log('new repeat index ', index);
-        }
+        // console.log('new repeat index ', index);
+        this.index=index;
+        const rItems = this.querySelectorAll('fx-repeatitem');
+        this._setIndex(rItems[this.index-1]);
     }
 
     connectedCallback() {

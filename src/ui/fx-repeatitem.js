@@ -24,9 +24,6 @@ export class FxRepeatitem extends FxContainer{
 
     static get properties() {
         return {
-            index:{
-                type:Number
-            },
             inited:{
                 type:Boolean
             }
@@ -41,7 +38,6 @@ export class FxRepeatitem extends FxContainer{
             if(this.parentNode){
                 this.parentNode.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {index:this.index}}));
             }
-
         })
     }
 
@@ -104,39 +100,8 @@ export class FxRepeatitem extends FxContainer{
             this.init();
         }
         console.log('refresh repeatitem nodeset: ',this.nodeset);
-        // super.refresh();
         Fore.refreshChildren(this);
-        // super.refresh();
-        // await this.updateComplete;
-/*
-        this.evalInContext();
-        this.modelItem = this.getModelItem();
-
-        Fore.refreshChildren(children);
-*/
-        // this.requestUpdate();
     }
-
-/*
-    updateChildren(children){
-        children.forEach(element => {
-
-            //todo: later - check for AVTs
-            // if(!element.nodeName.toLowerCase().startsWith('fx-')) return;
-            // if(element.nodeName.toLowerCase() === 'fx-repeat') return;
-
-            if (typeof element.refresh === 'function') {
-                // console.log('refresh bound element ', bound);
-                // console.log('# refresh element ', element);
-                element.refresh();
-            }
-
-        });
-
-    }
-*/
-
-
 
     createRenderRoot() {
         /**

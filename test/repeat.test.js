@@ -389,10 +389,121 @@ describe('repeat Tests', () => {
         console.log('fx-repeat ', repeat);
         expect(rItems.length).to.equal(3);
 
+        // appended item should have repeatindex set
+        expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
 
-        // expect(repeat.getModelItem()).to.equal(null);
+    });
 
+    it('deletes an item', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <fx-form>
+                    <fx-model id="record">
+            
+                        <fx-instance>
+                            <data>
+                                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            </data>
+                        </fx-instance>
+            
+            
+                        <fx-bind ref="task" readonly="count(../task) < 3">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
+            
+                    </fx-model>
+                    <fx-group>
+                        <h1>todos</h1>
+                           
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                            <template>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
+                                <fx-button label="delete">
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-button>
+                            </template>
+                        </fx-repeat>
+                           
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
+            `)
+        );
 
+        let { detail } = await oneEvent(el, 'refresh-done');
+
+        // hits the first button which is the delete button here
+        const button = el.querySelector('fx-button');
+        button.performActions();
+
+        const repeat = el.querySelector('fx-repeat');
+        expect(repeat).to.exist;
+
+        const rItems = repeat.querySelectorAll('fx-repeatitem');
+        expect(rItems.length).to.equal(1);
+        expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
+    });
+
+    it('deletes an item and sets index', async () => {
+        const el =  (
+            await fixtureSync(html`
+                <fx-form>
+                    <fx-model id="record">
+            
+                        <fx-instance>
+                            <data>
+                                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                                <task complete="false" due="2019-01-05">third task</task>
+                                <task complete="false" due="2019-01-06">fourth task</task>
+                            </data>
+                        </fx-instance>
+            
+            
+                        <fx-bind ref="task" readonly="count(../task) < 3">
+                            <fx-bind ref="./text()" required="true()"></fx-bind>
+                            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                            <fx-bind ref="@due" type="xs:date"></fx-bind>
+                        </fx-bind>
+            
+                    </fx-model>
+                    <fx-group>
+                        <h1>todos</h1>
+                           
+                        <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                            <template>
+                                <fx-input label="Task" ref="." id="task" type="text"></fx-input>
+                                <fx-button label="delete">
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-button>
+                            </template>
+                        </fx-repeat>
+                           
+                        <fx-button label="append">
+                            <fx-append repeat="todos" ref="task"></fx-append>
+                        </fx-button>            
+                    </fx-group>
+                </fx-form>
+            `)
+        );
+
+        let { detail } = await oneEvent(el, 'refresh-done');
+
+        // hits the first button which is the delete button here
+        const buttons = el.querySelectorAll('fx-button');
+        buttons[2].performActions();
+
+        const repeat = el.querySelector('fx-repeat');
+        expect(repeat).to.exist;
+
+        const rItems = repeat.querySelectorAll('fx-repeatitem');
+        expect(rItems.length).to.equal(3);
+        expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
     });
 
 

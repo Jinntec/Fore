@@ -25,10 +25,18 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="removed assets from repo">
+    <list default="true" id="2c33f0d5-ebbc-4586-bb68-69b53b4adc15" name="Default" comment="completed embedded delete action;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/todo.html" beforeDir="false" afterPath="$PROJECT_DIR$/demo/todo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ForeElementMixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ForeElementMixin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/fx-action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/fx-action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/fx-delete.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/fx-delete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fx-bind.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/fx-bind.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fx-abstract-control.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/fx-abstract-control.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fx-container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/fx-container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fx-repeat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/fx-repeat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/fx-repeatitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/fx-repeatitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/repeat.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/repeat.test.js" afterDir="false" />
     </list>
     <list id="02e4216a-e333-408e-9402-4a0422816d15" name="ignore" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +82,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="before-cleanup" />
+        <entry key="$PROJECT_DIR$" value="feat-switch" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -122,22 +130,22 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
-    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../elements/fore/package.json" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../tmp/xpath-util.js" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/demo" />
-      <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/doc" />
-      <recent name="$PROJECT_DIR$/src/actions" />
-      <recent name="$PROJECT_DIR$/src/ui" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources/attic" />
       <recent name="$PROJECT_DIR$/demo/solutions" />
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/doc" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/doc" />
+      <recent name="$PROJECT_DIR$/src/actions" />
+      <recent name="$PROJECT_DIR$/src/ui" />
     </key>
   </component>
   <component name="RunManager">
@@ -301,34 +309,11 @@
       <workItem from="1615564392393" duration="6057000" />
       <workItem from="1616019189024" duration="3722000" />
       <workItem from="1616242289159" duration="1653000" />
-    </task>
-    <task id="LOCAL-00054" summary="refactoring of lazy modelItem creation complete: functions moved to xf-bind;">
-      <created>1604154332631</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1604154332631</updated>
-    </task>
-    <task id="LOCAL-00055" summary="all tests running but todo.html not showing its values">
-      <created>1604158658395</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1604158658395</updated>
-    </task>
-    <task id="LOCAL-00056" summary="factored out evaluate* functions into Fore;&#10;started recalculate">
-      <created>1605886284486</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1605886284487</updated>
-    </task>
-    <task id="LOCAL-00057" summary="merged changes from dom-repeat branch;">
-      <created>1605887685080</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1605887685080</updated>
+      <workItem from="1616407550614" duration="21000" />
+      <workItem from="1616505968614" duration="1829000" />
+      <workItem from="1616670099544" duration="5708000" />
+      <workItem from="1616772241721" duration="5225000" />
+      <workItem from="1616850470240" duration="14482000" />
     </task>
     <task id="LOCAL-00058" summary="fix refresh in AbstractControl to only update in case of being bound.">
       <created>1605888301842</created>
@@ -645,7 +630,35 @@
       <option name="project" value="LOCAL" />
       <updated>1615568433190</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="small fix in xpath-util.js">
+      <created>1616671902757</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1616671902758</updated>
+    </task>
+    <task id="LOCAL-00104" summary="webcomponentsjs should not be a dependency">
+      <created>1616672697054</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1616672697054</updated>
+    </task>
+    <task id="LOCAL-00105" summary="removed some unused dependencies and moved some others to devdependencies">
+      <created>1616673272519</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1616673272519</updated>
+    </task>
+    <task id="LOCAL-00106" summary="added second build with bundles all dependencies into one">
+      <created>1616855383506</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1616855383507</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -702,10 +715,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="xf-bound running again; still some work to do;" />
-    <MESSAGE value="additional xf-bound examples;&#10;some documentation changes;&#10;completed setvalue implementation to support textContent and empty value;&#10;introduced changed flag on modelitem;&#10;additional setvalue tests" />
-    <MESSAGE value="not rebuilding after setvalue any more;&#10;fixed path expr in bindGraph;" />
-    <MESSAGE value="first primitive version of alert works" />
     <MESSAGE value="model alerts;" />
     <MESSAGE value="works with xf-alert child of xf-bind for styled content" />
     <MESSAGE value="example refinement" />
@@ -727,44 +736,48 @@
     <MESSAGE value="fixed bound checkbox" />
     <MESSAGE value="bound example with datalist" />
     <MESSAGE value="new icon size" />
-    <option name="LAST_COMMIT_MESSAGE" value="new icon size" />
+    <MESSAGE value="small fix in xpath-util.js" />
+    <MESSAGE value="webcomponentsjs should not be a dependency" />
+    <MESSAGE value="removed some unused dependencies and moved some others to devdependencies" />
+    <MESSAGE value="added second build with bundles all dependencies into one" />
+    <option name="LAST_COMMIT_MESSAGE" value="added second build with bundles all dependencies into one" />
   </component>
   <component name="WindowStateProjectService">
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612537292469">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="777" y="-957" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612537292469" />
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2" timestamp="1615640873104">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
-    </state>
-    <state x="435" y="-1441" key="CommitChangelistDialog2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1613054733509" />
-    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615640873104" />
-    <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1612033086225" />
-    <state x="730" y="-1518" width="1520" height="1216" maximized="true" key="DiffContextDialog" timestamp="1616020073831">
+    <state x="0" y="25" width="1366" height="1363" key="CommitChangelistDialog2" timestamp="1616875922481">
       <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="435" y="-1441" width="1366" height="1363" key="CommitChangelistDialog2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1616673271785" />
+    <state x="-196" y="-1223" width="1923" height="1091" key="CommitChangelistDialog2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615640873104" />
+    <state x="0" y="25" width="1281" height="855" key="CommitChangelistDialog2/0.25.1440.875@0.25.1440.875" timestamp="1616875922481" />
+    <state x="730" y="-1518" width="1520" height="1216" maximized="true" key="DiffContextDialog" timestamp="1616247729499">
+      <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="730" y="-1518" width="1330" height="1433" key="DiffContextDialog/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1613054083340" />
     <state x="838" y="-1315" width="1520" height="1216" key="DiffContextDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610117134737" />
     <state x="0" y="25" width="637" height="752" maximized="true" key="DiffContextDialog/0.25.1440.875@0.25.1440.875" timestamp="1616020073831" />
-    <state width="1398" height="220" key="GridCell.Tab.0.bottom" timestamp="1616243325648">
+    <state width="1398" height="220" key="GridCell.Tab.0.bottom" timestamp="1616247729399">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="220" key="GridCell.Tab.0.bottom/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325648" />
+    <state width="1398" height="220" key="GridCell.Tab.0.bottom/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616247729399" />
     <state width="1398" height="220" key="GridCell.Tab.0.bottom/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
-    <state width="1398" height="220" key="GridCell.Tab.0.center" timestamp="1616243325647">
+    <state width="1398" height="220" key="GridCell.Tab.0.center" timestamp="1616247729398">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="220" key="GridCell.Tab.0.center/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325647" />
+    <state width="1398" height="220" key="GridCell.Tab.0.center/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616247729398" />
     <state width="1398" height="220" key="GridCell.Tab.0.center/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
-    <state width="1398" height="220" key="GridCell.Tab.0.left" timestamp="1616243325646">
+    <state width="1398" height="220" key="GridCell.Tab.0.left" timestamp="1616247729398">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="220" key="GridCell.Tab.0.left/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325646" />
+    <state width="1398" height="220" key="GridCell.Tab.0.left/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616247729398" />
     <state width="1398" height="220" key="GridCell.Tab.0.left/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
-    <state width="1398" height="220" key="GridCell.Tab.0.right" timestamp="1616243325648">
+    <state width="1398" height="220" key="GridCell.Tab.0.right" timestamp="1616247729399">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state width="1398" height="220" key="GridCell.Tab.0.right/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616243325648" />
+    <state width="1398" height="220" key="GridCell.Tab.0.right/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616247729399" />
     <state width="1398" height="220" key="GridCell.Tab.0.right/0.25.1440.875@0.25.1440.875" timestamp="1616023095364" />
     <state x="144" y="98" key="MergeDialog" timestamp="1616242523174">
       <screen x="0" y="25" width="1440" height="875" />
@@ -789,10 +802,11 @@
     </state>
     <state x="661" y="-1046" key="Vcs.Push.Dialog.v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615568435204" />
     <state x="640" y="253" key="Vcs.Push.Dialog.v2/0.25.1440.875@0.25.1440.875" timestamp="1611939171421" />
-    <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1610102787300">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="416" y="95" width="731" height="847" key="VcsDiffUtil.ChangesDialog" timestamp="1616246838702">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
     <state x="403" y="-970" width="731" height="847" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1610102787300" />
+    <state x="416" y="95" key="VcsDiffUtil.ChangesDialog/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616246838702" />
     <state x="575" y="-1549" width="2094" height="1433" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1613058252945">
       <screen x="-252" y="-1667" width="3008" height="1667" />
     </state>
@@ -807,10 +821,10 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="690" y="-1159" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612804865306" />
-    <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1616242297542">
-      <screen x="0" y="25" width="1440" height="875" />
+    <state x="1394" y="-949" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1616671544420">
+      <screen x="-252" y="-1667" width="3008" height="1667" />
     </state>
-    <state x="901" y="-806" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1607702770956" />
+    <state x="1394" y="-949" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1616671544420" />
     <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875/-982.-1415.3440.1415@0.25.1440.875" timestamp="1616242297542" />
     <state x="788" y="402" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1440.875@0.25.1440.875" timestamp="1616019199440" />
     <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1" timestamp="1612345764657">
@@ -818,9 +832,10 @@
     </state>
     <state x="1002" y="-1415" width="1387" height="1368" key="dock-window-1/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612345764657" />
     <state x="100" y="125" width="1240" height="675" key="dock-window-1/0.25.1440.875@0.25.1440.875" timestamp="1611939788885" />
-    <state x="1226" y="-1016" width="744" height="616" key="find.popup" timestamp="1615639530153">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="1050" y="-1215" width="651" height="726" key="find.popup" timestamp="1616774457318">
+      <screen x="-252" y="-1667" width="3008" height="1667" />
     </state>
+    <state x="1050" y="-1215" width="651" height="726" key="find.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1616774457318" />
     <state x="1226" y="-1016" width="744" height="616" key="find.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615639530153" />
     <state x="468" y="179" key="git4idea.branch.GitSmartOperationDialog" timestamp="1616243952698">
       <screen x="0" y="25" width="1440" height="875" />
@@ -830,14 +845,20 @@
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="-162" y="-815" key="git4idea.remote.GitConfigureRemotesDialog/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615639475429" />
+    <state width="600" height="428" key="javadoc.popup" timestamp="1616871071117">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state width="600" height="428" key="javadoc.popup/0.25.1440.875@0.25.1440.875" timestamp="1616871071117" />
     <state x="422" y="-375" key="run.anything.popup" timestamp="1612010510405">
       <screen x="-982" y="-1415" width="3440" height="1415" />
     </state>
     <state x="422" y="-375" key="run.anything.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1612010510405" />
-    <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup" timestamp="1615640649096">
-      <screen x="-982" y="-1415" width="3440" height="1415" />
+    <state x="717" y="221" width="670" height="638" key="search.everywhere.popup" timestamp="1616857535986">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
+    <state x="1246" y="-1294" width="733" height="1215" key="search.everywhere.popup/0.25.1440.875/-252.-1667.3008.1667@-252.-1667.3008.1667" timestamp="1616773246014" />
     <state x="731" y="-1098" width="838" height="1031" key="search.everywhere.popup/0.25.1440.875/-982.-1415.3440.1415@-982.-1415.3440.1415" timestamp="1615640649096" />
+    <state x="717" y="221" width="670" height="638" key="search.everywhere.popup/0.25.1440.875@0.25.1440.875" timestamp="1616857535986" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

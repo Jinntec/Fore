@@ -35,16 +35,31 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
 
     getModel(){
         // console.log('getModel this ', this);
-        // console.log('getModel parentNode ', this.parentNode);
-        // console.log('getModel host ', this.parentNode.host);
-        if(this.parentNode.host){
-            const ownerForm = this.parentNode.host.closest('fx-form');
-            return ownerForm.querySelector('fx-model');
+        if(this.model){
+            return this.model;
         }
-        const ownerForm = this.closest('fx-form');
+        // const ownerForm = this.closest('fx-form');
+        const ownerForm = this.getOwnerForm(this);
         return ownerForm.querySelector('fx-model');
     }
 
+    getOwnerForm(element){
+        let currentElement = element;
+        while(currentElement && currentElement.parentNode) {
+            // console.log('current ', currentElement);
+
+            if(currentElement.nodeName .toUpperCase() === "FX-FORM"){
+                return currentElement;
+            }
+
+            if(currentElement.parentNode instanceof DocumentFragment) {
+                currentElement = currentElement.parentNode.host;
+            } else {
+                currentElement = currentElement.parentNode;
+            }
+        }
+        return currentElement;
+    }
 
     /**
      * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.

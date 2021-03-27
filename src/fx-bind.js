@@ -30,6 +30,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
 
     static TYPE_DEFAULT = 'xs:string';
 
+/*
     static get styles() {
         return css`
             :host {
@@ -37,76 +38,80 @@ export class FxBind extends foreElementMixin(HTMLElement){
             }
         `;
     }
+*/
 
+
+/*
     static get properties() {
         return {
             ...super.properties,
 
-            /**
+            /!**
              * allows to calculate a value. This value will become readonly.
-             */
+             *!/
             calculate: {
                 type: String
             },
             contextNode:{
                 type:Object
             },
-            /**
+            /!**
              * arbitrary XPath resolving to xs:boolean - defaults to 'true()'
-             */
+             *!/
             constraint: {
                 type: String
             },
-            /**
+            /!**
              * id of this bind
-             */
+             *!/
             id:{
                 type:String
             },
-            /**
+            /!**
              * the nodeset the bind is referring to by it's binding expression (ref attribute)
-             */
+             *!/
             nodeset: {
                 type: Array
             },
-            /**
+            /!**
              * the owning model of this bind
-             */
+             *!/
             model:{
                 type:Object
             },
-            /**
+            /!**
              * XPath statement resolving to xs:boolean to switch between readonly and readwrite mode - defaults to 'false()'
-             */
+             *!/
             readonly: {
                 type: String
             },
-            /**
+            /!**
              * the XPath binding expression of this bind
-             */
+             *!/
             ref: {
                 type: String
             },
-            /**
+            /!**
              * XPath statement resolving to xs:boolean to switch between relevant and non-relevant mode - defaults to 'true()'
-             */
+             *!/
             relevant: {
                 type: String
             },
-            /**
+            /!**
              * XPath statement resolving to xs:boolean to switch between required and optional - defaults to 'false'.
-             */
+             *!/
             required: {
                 type: String
             },
-            /**
+            /!**
              * XPath statement
-             */
+             *!/
             type: {
                 type: String
             }
         };
     }
+*/
 
     constructor() {
         super();
@@ -258,11 +263,13 @@ export class FxBind extends foreElementMixin(HTMLElement){
         });
     }
 
+/*
     render() {
         return html`
              <slot></slot>
         `;
     }
+*/
 
     getAlert(){
         if(this.hasAttribute('alert')){
@@ -272,6 +279,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
         if(alertChild){
             return alertChild.innerHTML;
         }
+        return null;
     }
 
     /*
