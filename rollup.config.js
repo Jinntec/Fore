@@ -5,7 +5,7 @@ import minifyHTML from 'rollup-plugin-minify-html-literals';
 
 const { dependencies } = require('./package.json');
 
-export default {
+export default [{
     input: './index.js',
     output: [
         {
@@ -33,4 +33,28 @@ export default {
         minifyHTML(),
         terser(),
     ],
-};
+},
+{
+    input: './index.js',
+    output: [
+        {
+            file: 'dist/fore-all.js',
+            format: 'es',
+            sourcemap: true,
+        },
+    ],
+    plugins: [
+        resolve(),
+        babel({
+            babelrc: false,
+            exclude: 'node_modules/**',
+            plugins: [
+                // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
+                // TODO: reconsider whether that is a good idea.
+                [require('@babel/plugin-proposal-class-properties'), { loose: true }]
+            ],
+        }),
+        minifyHTML(),
+        terser(),
+    ],
+}];
