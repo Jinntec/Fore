@@ -32,6 +32,7 @@
     "@polymer/paper-input": "^3.2.1",
     "@vaadin/vaadin-notification": "^1.4.0",
     "dependency-graph": "^0.9.0",
+    "events": "^3.3.0",
     "fontoxpath": "^3.17.0",
     "lit-element": "^2.3.1"
   },
@@ -86,7 +87,9 @@
     "Web Components",
     "XML",
     "XPath",
-    "XQuery"
+    "XQuery",
+    "form",
+    "xforms"
   ],
   "author": "Joern Turner",
   "license": "MIT",

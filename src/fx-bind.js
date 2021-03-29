@@ -130,7 +130,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 
     connectedCallback(){
-        console.log('connectedCallback ', this);
+        // console.log('connectedCallback ', this);
         // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
         this.ref = this.getAttribute('ref');
         this.readonly = this.getAttribute('readonly');
@@ -153,7 +153,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
         console.log('init binding ', this);
         this.instanceId = this._getInstanceId();
         this.bindType = this.getModel().getInstance(this.instanceId).type;
-        console.log('binding type ', this.bindType);
+        // console.log('binding type ', this.bindType);
 
         if(this.bindType === 'xml'){
             this._evalInContext();

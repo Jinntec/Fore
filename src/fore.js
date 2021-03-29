@@ -301,23 +301,29 @@ export class Fore{
 
 
 
-    static refreshChildren(startElement){
-        const children = startElement.children;
-        if(children){
-            Array.from(children).forEach(element => {
+    // static async refreshChildren(startElement){
+    static async refreshChildren(startElement){
 
-                // todo: later - check for AVTs
-                if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-                    element.refresh();
-                }else{
-                    if(element.nodeName !== 'fx-MODEL'){
-                        Fore.refreshChildren(element);
+        const refreshed = new Promise(((resolve,reject) => {
+            const children = startElement.children;
+            if(children){
+                Array.from(children).forEach(element => {
+
+                    // todo: later - check for AVTs
+                    if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+                        element.refresh();
+                    }else{
+                        if(element.nodeName !== 'fx-MODEL'){
+                            Fore.refreshChildren(element);
+                        }
                     }
-                }
 
-            });
-        }
-        // startElement.requestUpdat();
+                });
+            }
+            resolve('done');
+        }));
+
+        return refreshed;
     }
 
     /**

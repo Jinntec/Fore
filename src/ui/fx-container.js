@@ -11,6 +11,7 @@ import {foreElementMixin} from "../ForeElementMixin.js";
  * todo: remove LitElement dependency
  */
 // export class FxContainer extends BoundElement {
+// export class FxContainer extends foreElementMixin(LitElement) {
 export class FxContainer extends foreElementMixin(LitElement) {
 
 /*

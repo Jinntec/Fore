@@ -85,3 +85,17 @@ entry point. This lists out running examples to learn and copy from.
 * start Chrome (important as it may hang if you start the watcher first)
 * `npm run test:watch`
 * goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite
+
+## Building a package
+
+```npm run build``` creates two bundles in 'dist' directory.
+
+* fore.js - contains just the core classes without dependencies and is suitable for creating your own app-specific bundle
+* fore-all.js contains everything in one bundle (incl. dependencies) and is the easiest way to use it in your own project with a single module import
+
+Include the repective bundle in your webpage with a module import:
+```
+<script type="module">
+    import 'fore-all.js';
+</script>
+```

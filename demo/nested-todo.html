@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../src/fx-form.js';
+        import '../src/fx-model.js';
+        import '../src/fx-bind.js';
+        import '../src/fx-instance.js';
+        import '../src/ui/fx-repeat.js';
+        import '../src/actions/fx-delete.js';
+        import '../src/actions/fx-append.js';
+        import '../src/ui/fx-input.js';
+        import '../src/ui/fx-button.js';
+    </script>
+
+
+    <!--
+        <script>
+            function append() {
+                document.getElementById('r-todos').append();
+            }
+            function remove(elem){
+                const repeatItem = elem.closest('.repeat-item');
+                repeatItem.parentNode.removeChild(repeatItem);
+            }
+
+        </script>
+    -->
+
+    <link href="../resources/vars.css" rel="stylesheet">
+
+    <style>
+        .header, fx-repeat-item {
+            display: grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+
+        [required] {
+            background: lightyellow;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        .highlight {
+            background: red;
+        }
+
+        fx-repeatitem {
+            display: block;
+        }
+        [unresolved]{
+            display:none;
+        }
+
+        fx-repeat{
+            padding: 20px;
+            background: steelblue;
+            display: block;
+            height: auto;
+        }
+        fx-repeatitem{
+            border:thin solid white;
+            background: lightsteelblue;
+            margin:4px 0;
+        }
+        fx-input{
+            background:white;
+            border-radius: 5px;
+            padding: 6px;
+            margin: 4px;
+        }
+        [repeat-index]{
+            /*border:white solid 6px;*/
+            filter: brightness(105%) drop-shadow(0px 0px 10px lightsteelblue) saturate(120%);
+            margin: 8px 0;
+    </style>
+</head>
+<body unresolved="unresolved">
+<fx-form>
+    <fx-model id="record">
+
+<!--
+        <fx-instance>
+            <data>
+                <task complete="false" due=""></task>
+            </data>
+        </fx-instance>
+-->
+        <fx-instance>
+            <data>
+                <task text="Pick up Milk">
+                    <task text="go to store"></task>
+                    <task text="find milk"></task>
+                    <task text="pay milk"></task>
+                    <task text="take it home"></task>
+                </task>
+                <task complete="true" due="2019-01-04" text="Make tutorial part 1">
+                    <task text="take it home"></task>
+                </task>
+            </data>
+        </fx-instance>
+
+
+        <fx-bind ref="task">
+            <fx-bind ref="@text"></fx-bind>
+
+            <fx-bind ref="task">
+                <fx-bind ref="@text"></fx-bind>
+            </fx-bind>
+        </fx-bind>
+
+    </fx-model>
+<!--    <fx-group>-->
+
+        <h1>todos</h1>
+
+        <!--
+                <fx-button label="add">
+                    <fx-append repeat="r-todos"></fx-append>
+                </fx-button>
+                <br/><br/>
+                        -->
+
+
+        <fx-repeat focus-on-create="task" id="r-todos" ref="task">
+            <template>
+                <h2>Task</h2>
+                <fx-input id="task" label="Task" ref="@text" type="text"></fx-input>
+                <fx-button label="delete">
+                    <fx-delete ref="."></fx-delete>
+                </fx-button>
+
+                <fx-repeat id="r-subtask" ref="task">
+                    <template>
+                        <h3>Subtask</h3>
+                        <fx-input id="task" label="Task" ref="@text" type="text"></fx-input>
+                        <fx-button label="delete">
+                            <fx-delete ref="."></fx-delete>
+                        </fx-button>
+                    </template>
+                </fx-repeat>
+
+                <fx-button label="append">
+                    <fx-append ref="task" repeat="r-subtask" clear="true"></fx-append>
+                </fx-button>
+
+
+            </template>
+        </fx-repeat>
+
+<!--
+        <fx-repeat focus-on-create="task" id="todos2" id="r-todos" ref="task">
+            <template>
+                <fx-input id="task" label="Task" ref="." type="text"></fx-input>
+                <fx-input label="Due" ref="@due" type="date"></fx-input>
+                <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
+                <fx-button label="delete">
+                    <fx-delete ref="."></fx-delete>
+                </fx-button>
+            </template>
+        </fx-repeat>
+-->
+
+        <fx-button label="append">
+            <fx-append ref="task" repeat="r-todos"></fx-append>
+        </fx-button>
+
+<!--    </fx-group>-->
+</fx-form>
+</body>
+</html>

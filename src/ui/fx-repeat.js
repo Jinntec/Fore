@@ -1,9 +1,11 @@
-import {html,css} from "lit-element";
+// import {html, css, LitElement} from "lit-element";
 import "./fx-repeatitem.js";
 import * as fx from "fontoxpath";
+
 import {FxContainer} from "./fx-container.js";
 
 import {Fore} from "../fore";
+import {foreElementMixin} from "../ForeElementMixin";
 
 /**
  * `fx-repeat`
@@ -12,7 +14,7 @@ import {Fore} from "../fore";
  * @customElement
  * @demo demo/index.html
  */
-export class FxRepeat extends FxContainer {
+export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     static get styles() {
         return css`
@@ -49,9 +51,9 @@ export class FxRepeat extends FxContainer {
         };
     }
 
-    constructor(){
+    constructor() {
         super();
-        this.ref='';
+        this.ref = '';
         this.dataTemplate = [];
         this.focusOnCreate = '';
         this.initDone = false;
@@ -60,6 +62,8 @@ export class FxRepeat extends FxContainer {
         this.inited = false;
         this.index = 1;
         this.repeatSize = 0;
+
+        this.attachShadow({mode:'open'});
 
         // this.template = this.firstElementChild;
         // this.addEventListener('repeatitem-created', this._refreshItem)
@@ -89,23 +93,65 @@ export class FxRepeat extends FxContainer {
     }
 
     connectedCallback() {
-        super.connectedCallback();
-        // console.log('### XfControl connected ', this);
+        this.ref=this.getAttribute('ref');
+
+
+        console.log('### fx-repeat connected ', this.id);
+        // super.connectedCallback();
         this.addEventListener('index-changed', e => {
            this.index = e.detail.index;
            const rItems = this.querySelectorAll('fx-repeatitem');
            this._setIndex(rItems[this.index-1]);
         });
+
+        const style = `
+            :host {
+                display: none;
+            }
+            ::slotted(*){
+                display:none;
+            }
+        `;
+
+        const html = `
+          <slot></slot>
+        `;
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${html}
+        `;
+
+
+        /*
+                console.log('owerform of repeat ', this.getOwnerForm(this));
+                this.addEventListener('model-construct-done', () => {
+                    this.init();
+                });
+        */
+
+
+    }
+
+    firstUpdated(){
+        console.log('firstupdated ', this);
+        const slot = this.shadowRoot.querySelector('slot');
+        slot.addEventListener('slotchange', (event) => {
+            console.log('slotchange on repeat ', this.id);
+            // Fore.refreshChildren(this);
+        });
+
     }
 
 
     init() {
         // ### there must be a single 'template' child
-        console.log('##### repeat init');
+        console.log('##### repeat init ',this.id);
         // if(!this.inited) this.init();
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
         this._evalNodeset();
-        console.log('##### repeat nodeset ', this.nodeset);
+        console.log('##### ',this.id, this.nodeset);
 
         this._initTemplate();
         this._initRepeatItems();
@@ -113,7 +159,7 @@ export class FxRepeat extends FxContainer {
         this.setAttribute('index',this.index);
 
         this.inited = true;
-        this.requestUpdate();
+        // this.requestUpdate();
     }
 
     /**
@@ -122,8 +168,8 @@ export class FxRepeat extends FxContainer {
      */
     _evalNodeset(){
         const inscope = this._inScopeContext();
-        console.log('##### inscope ', inscope);
-        console.log('##### ref ', this.ref);
+        // console.log('##### inscope ', inscope);
+        // console.log('##### ref ', this.ref);
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
     }
 
@@ -149,23 +195,25 @@ export class FxRepeat extends FxContainer {
     }
 */
 
-    refresh() {
-        console.group('fx-repeat.refresh');
+    async refresh() {
+        console.group('fx-repeat.refresh on', this.id);
+
+
+        this.addEventListener('slotchange',(e) =>{
+            console.log('slotChanged in refresh awaited ',e);
+
+            
+        });
+
+
         if(!this.inited) this.init();
 
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
         console.log('repeat refresh nodeset ', this.nodeset);
 
-        // super.refresh();
-
-        // this.requestUpdate();
-        //create n repeat-items for nodeset
-
-        //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
-
-
-        let repeatItems = this.querySelectorAll('fx-repeatitem');
+        let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+        // let repeatItems = this.shadowRoot.children;
         const repeatItemCount = repeatItems.length;
 
         let nodeCount = 1;
@@ -175,7 +223,7 @@ export class FxRepeat extends FxContainer {
 
         // const contextSize = this.nodeset.length;
         const contextSize = nodeCount;
-        let modified = [];
+        const modified = [];
         if (contextSize < repeatItemCount){
 
             for(let position = repeatItemCount; position > contextSize; position--){
@@ -194,6 +242,10 @@ export class FxRepeat extends FxContainer {
                 //add new repeatitem
                 const lastRepeatItem = repeatItems[repeatItemCount-1];
                 const newItem = lastRepeatItem.cloneNode(true);
+
+                // const tmpl = this.shadowRoot.querySelector('template');
+                // const newItem = tmpl.content.cloneNode(true);
+
                 newItem.nodeset = this.nodeset[position-1];
                 newItem.index = position;
                 this.appendChild(newItem);
@@ -209,36 +261,34 @@ export class FxRepeat extends FxContainer {
                 mod.refresh();
             })
         }
+*/
 
-        if(contextSize == repeatItemCount){
+        if(!this.inited){
             Fore.refreshChildren(this);
         }
-*/
-        Fore.refreshChildren(this);
 
-        /*
-                if(repeatItems){
-                    repeatItems = this.querySelectorAll('fx-repeatitem');
-                    repeatItems.forEach(bound => {
-                        bound.refresh();
-                    });
-                }
-        */
-
+        if(contextSize === repeatItemCount){
+            Fore.refreshChildren(this);
+        }
+        // Fore.refreshChildren(this);
         console.groupEnd();
     }
 
 
     _initTemplate() {
         // ### there must be a single 'template' child
+        // if(this.inited) return ;
+        // if(this.template) return this.template;
+
+
+        const shadowTemplate = this.shadowRoot.querySelector('template');
+        console.log('shadowtempl ', shadowTemplate);
 
         const defaultSlot = this.shadowRoot.querySelector('slot');
         const template =  defaultSlot.assignedElements({flatten: true})[0];
-        console.log('>>>> template ', template);
-
-
         this.template = this.firstElementChild;
         console.log('### init template for repeat ', this.id , this.template);
+
         if (this.template === null) {
             // console.error('### no template found for this repeat:', this.id);
             //todo: catch this on form element
@@ -248,6 +298,8 @@ export class FxRepeat extends FxContainer {
                 detail: {"message": "no template found for repeat:" + this.id}
             }));
         }
+
+        this.shadowRoot.appendChild(this.template)
     }
 
 
@@ -295,13 +347,13 @@ export class FxRepeat extends FxContainer {
         const model = this.getModel();
 
         // this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
-        console.log('repeat nodeset ', this.nodeset);
+        // console.log('repeat nodeset ', this.nodeset);
 
         // const repeatItems = this.querySelectorAll('fx-repeatitem');
         // Array.from(repeatItems).forEach(item => item.init(this.getModel()));
         //setting index to first
 
-        this.itemTemplates = [];
+        // this.itemTemplates = [];
 
         this.textContent = '';
 
@@ -327,7 +379,7 @@ export class FxRepeat extends FxContainer {
 
             // console.log('clone ', clone);
             repeatItem.appendChild(clone);
-            this.itemTemplates.push(html`repeatItem`);
+            // this.itemTemplates.push(html`repeatItem`);
             this.appendChild(repeatItem);
             if(repeatItem.index === 1){
                 this._setIndex(repeatItem);
@@ -338,6 +390,8 @@ export class FxRepeat extends FxContainer {
     }
 
     _clone() {
+        // const content = this.template.content.cloneNode(true);
+        this.template = this.shadowRoot.querySelector('template');
         const content = this.template.content.cloneNode(true);
         return document.importNode(content, true);
     }

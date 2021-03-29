@@ -234,8 +234,8 @@ export class FxModel extends HTMLElement {
     }
 
     getInstance(id) {
-        console.log('getInstance ', id);
-        console.log('instances ', this.instances);
+        // console.log('getInstance ', id);
+        // console.log('instances ', this.instances);
         // console.log('instances array ',Array.from(this.instances));
 
         const instArray = Array.from(this.instances);
