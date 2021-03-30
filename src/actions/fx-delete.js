@@ -62,7 +62,12 @@ class FxDelete extends FxAction {
                 repeat.setIndex(1);
             }else{
                 // ### update the nodeset
-                const nodeToDelete = this.nodeset[idx-1];
+                let nodeToDelete;
+                if(Array.isArray(this.nodeset)){
+                    nodeToDelete = this.nodeset[idx-1];
+                }else{
+                    nodeToDelete = this.nodeset;
+                }
                 const p = nodeToDelete.parentNode;
                 p.removeChild(nodeToDelete);
 

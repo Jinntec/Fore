@@ -178,9 +178,15 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             return this.parentNode.host.nodeset[this.index -1];
         }
 */
+/*
         if(this.repeated){
             const parentItem = this.parentNode.closest('fx-repeatitem');
             return parentItem.nodeset;
+        }
+*/
+        const repeatItem = this.parentNode.closest('fx-repeatitem');
+        if(repeatItem){
+            return repeatItem.nodeset;
         }
 
 /*

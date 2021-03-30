@@ -55,7 +55,7 @@ export class FxRepeatitem extends FxContainer{
 
     init(){
         // console.log('repeatitem init model ', this.nodeset);
-        this._initializeChildren(this);
+        // this._initializeChildren(this);
         this.inited = true;
     }
 
@@ -65,6 +65,7 @@ export class FxRepeatitem extends FxContainer{
         return this.getModelItem()[this.index];
     }
 
+/*
     _initializeChildren(node) {
         const children = Array.from(node.children);
         // console.log('_initializeChildren ', children);
@@ -81,6 +82,7 @@ export class FxRepeatitem extends FxContainer{
 
         });
     }
+*/
 
     firstUpdated(_changedProperties) {
         // console.log('### fx-repeatitem firstUpdated index ', this.index);
