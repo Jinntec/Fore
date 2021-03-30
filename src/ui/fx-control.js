@@ -59,7 +59,7 @@ class FxControl extends XfAbstractControl {
     }
 
     firstUpdated(_changedProperties) {
-        // console.log('firstUpdated ', _changedProperties);
+        console.log('firstUpdated ', _changedProperties);
         super.firstUpdated(_changedProperties);
         // console.log('updateEvent', this.updateEvent);
 
@@ -89,9 +89,9 @@ class FxControl extends XfAbstractControl {
         return  ctrl;
     }
 
-    refresh () {
+    async refresh () {
         super.refresh();
-        // await this.updateComplete;
+        await this.updateComplete;
         const {control} = this;
 
         // ### if we find a ref on control we have a 'select' control of some kind

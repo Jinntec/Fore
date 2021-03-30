@@ -89,7 +89,8 @@
     "XPath",
     "XQuery",
     "form",
-    "xforms"
+    "xforms",
+    "html form"
   ],
   "author": "Joern Turner",
   "license": "MIT",

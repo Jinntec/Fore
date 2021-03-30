@@ -15,6 +15,9 @@ class FxButton extends XfAbstractControl {
         :host {
           display: inline-block;
         }
+        paper-button{
+            height:inherit;
+        }
         `;
     }
 

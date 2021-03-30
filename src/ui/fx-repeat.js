@@ -240,8 +240,14 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
             for(let position = repeatItemCount +1; position <= contextSize; position++){
                 //add new repeatitem
-                const lastRepeatItem = repeatItems[repeatItemCount-1];
-                const newItem = lastRepeatItem.cloneNode(true);
+
+                // const lastRepeatItem = repeatItems[repeatItemCount-1];
+                // const newItem = lastRepeatItem.cloneNode(true);
+
+
+                const newItem = document.createElement('fx-repeatitem');
+                const clonedTemplate = this._clone();
+                newItem.appendChild(clonedTemplate);
 
                 // const tmpl = this.shadowRoot.querySelector('template');
                 // const newItem = tmpl.content.cloneNode(true);
@@ -255,13 +261,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
 
         }
-/*
         if(modified.length > 0){
             modified.forEach(mod => {
                 mod.refresh();
             })
         }
-*/
 
         if(!this.inited){
             Fore.refreshChildren(this);

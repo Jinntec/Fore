@@ -61,26 +61,30 @@ class FxAppend extends FxAction {
         // const parentNodeset = this.nodeset[0].parentNode;
         // const last = this.nodeset[this.nodeset.length -1];
         const last = inscope.lastElementChild;
-        const originModelItem = this.getModel().getModelItem(last);
+        // const originModelItem = this.getModel().getModelItem(last);
 
-        console.log('last in nodeset',last);
-        console.log('modelItem for last',originModelItem);
+        let newItem;
+/*
+        if(last){
+            console.log('last in nodeset',last);
+            newItem = last.cloneNode(true);
+            inscope.appendChild(newItem);
+        }else{
+*/
+            newItem = this._dataFromTemplate(inscope);
+        // }
+        console.log('################ newItem ',newItem)
 
-        //clone origin ModelItem
+        // console.log('All modelItems in append - ', this.getModel().modelItems);
 
-        let newItem = last.cloneNode(true);
-        inscope.appendChild(newItem);
-
-        console.log('All modelItems in append - ', this.getModel().modelItems);
-
-        // console.log('clear flag ', this.clear);
-
+        console.log('clear flag ', this.clear);
         if(this.clear === 'true'){
             newItem.textContent = "";
             this._clear(newItem);
             console.log('newItem clear',newItem);
             newItem.innerText = '';
         }
+        inscope.appendChild(newItem);
 
         // newItem.textContent="new";
 
@@ -105,6 +109,34 @@ class FxAppend extends FxAction {
         // const s = new XMLSerializer();
         // console.log('modified xml instance ', s.serializeToString(this.model.getDefaultInstance().getInstanceData()));
 
+    }
+
+    _dataFromTemplate(inscope){
+        const parentForm = this.getOwnerForm(this);
+        const repeat = parentForm.querySelector(`#${this.repeat}`)
+        console.log('_dataFromTemplate repeat', repeat);
+        console.log('_dataFromTemplate repeat ref', repeat.ref);
+
+
+        const templ = repeat.shadowRoot.querySelector('template');
+        console.log('_dataFromTemplate ', templ);
+        console.log('_dataFromTemplate content', templ.content);
+
+        // iterate template for refs
+        // todo: will fail for pathes with predicates - need to be filtered before
+        // const rootNode = document.createElement(repeat.ref);
+
+
+
+        // const rootNode = document.createElement(repeat.ref);
+        const rootNode = inscope.ownerDocument.createElement(repeat.ref);
+
+
+
+        // const data = this._dataFromRefs(rootNode, templ.content)
+        const data = this._generateInstance(templ.content,rootNode);
+        console.log('_dataFromTemplate DATA', data);
+        return data;
     }
 
     dispatch(){
@@ -133,6 +165,34 @@ class FxAppend extends FxAction {
             node = node.nextSibling;
         }
 
+    }
+
+    _generateInstance(start, parent){
+
+        if(start.nodeType === 1 && start.hasAttribute('ref')){
+            const ref = start.getAttribute('ref');
+
+            let generated;
+            if(ref === '.'){
+                // node.appendChild(document.createElement(repeatRef));
+            }else if(ref.startsWith('@')){
+                parent.setAttribute(ref.substring(1),'');
+            }else{
+                generated = document.createElement(ref);
+                parent.appendChild(generated);
+                if(start.children.length === 0){
+                    generated.textContent = start.textContent;
+                }
+            }
+        }
+
+        if(start.hasChildNodes()){
+            const list = start.children;
+            for(let i=0; i < list.length; i++){
+                this._generateInstance(list[i],parent)
+            }
+        }
+        return parent;
     }
 
 

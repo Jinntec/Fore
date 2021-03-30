@@ -1,7 +1,8 @@
 // import {LitElement,html, css} from "lit-element";
 import {Fore} from "../fore.js";
-import {FxContainer} from "./fx-container";
-import {html} from "lit-element";
+// import {FxContainer} from "./fx-container";
+// import {html} from "lit-element";
+import {foreElementMixin} from "../ForeElementMixin";
 
 
 /**
@@ -11,7 +12,7 @@ import {html} from "lit-element";
  * @customElement
  * @demo demo/index.html
  */
-export class FxRepeatitem extends FxContainer{
+export class FxRepeatitem extends foreElementMixin(HTMLElement) {
 
 /*
     static get styles() {
@@ -40,11 +41,22 @@ export class FxRepeatitem extends FxContainer{
                 this.parentNode.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {index:this.index}}));
             }
         })
+
+        this.attachShadow({mode:'open'});
+
     }
 
     connectedCallback(){
-        super.connectedCallback();
+        // super.connectedCallback();
         // console.log('repeatItem connected ', this);
+        const html = `
+           <slot></slot>
+        `;
+
+        this.shadowRoot.innerHTML = `
+            ${html}
+        `;
+
     }
 
     render() {
@@ -84,6 +96,7 @@ export class FxRepeatitem extends FxContainer{
     }
 */
 
+/*
     firstUpdated(_changedProperties) {
         // console.log('### fx-repeatitem firstUpdated index ', this.index);
         // console.log('### fx-repeatitem firstUpdated nodeset ', this.nodeset);
@@ -95,24 +108,16 @@ export class FxRepeatitem extends FxContainer{
         }));
         // this.init();
     }
-
-    updated(_changedProperties) {
-        super.updated(_changedProperties);
-
-/*
-        this.dispatchEvent(new CustomEvent('repeatitem-created', {
-            composed: true,
-            bubbles: true,
-            detail: {item: this}
-        }));
 */
-    }
+
 
     refresh(){
         // console.log('refresh repeatitem: ',this.nodeset);
+/*
         if(!this.inited){
             this.init();
         }
+*/
         // console.log('refresh repeatitem nodeset: ',this.nodeset);
         Fore.refreshChildren(this);
     }
