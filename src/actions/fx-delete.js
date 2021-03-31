@@ -54,7 +54,6 @@ class FxDelete extends FxAction {
             this.model = this.getModel();
             const repeat = this.parentNode.closest('fx-repeat');
 
-            // todo: find a better solution for the empty repeat problem - this just empties the values of the last item.
             // ### update the nodeset
             let nodeToDelete;
             if (Array.isArray(this.nodeset)) {

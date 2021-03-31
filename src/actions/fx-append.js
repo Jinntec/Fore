@@ -7,9 +7,10 @@ import {FxBind} from "../fx-bind";
 
 /**
  * `fx-append`
- * appends an entry to a `fx-repeat`.
  *
- * Setting the optional `clear` attribute to 'false' will append an entry that is a copy of the last repeat item.
+ *
+ *
+ *
  *
  * @customElement
  */
@@ -32,58 +33,35 @@ class FxAppend extends FxAction {
     constructor(){
         super();
         this.repeat = "";
-        this.clear = 'false';
     }
 
     connectedCallback(){
         console.log('connectedCallback ', this);
         this.ref = this.getAttribute('ref');
         this.repeat = this.getAttribute('repeat');
-        if(this.hasAttribute('clear')){
-            this.clear = this.getAttribute('clear');
-        }
     }
 
-
+    /**
+     * appends a instance of the repeat template to the existing ones.
+     *
+     * The data structure to insert into the instance data is determined by the 'ref' attributes
+     * found in the template of the repeat. This is similar to lazy instance creation.
+     *
+     * Note: This is a significant difference to XForms which takes the instance nodes as template to insert but
+     * has the problem of empty nodesets not being able to insert an entry without using a separate instance
+     * holding the template.
+     *
+     * As a consequence the item that are appended are not propagated with values but empty. However usually
+     * that's what the user wants and not the other way round (duplicating the last data items). If the XForms
+     * behavior should be needed for some reason later on, it can be added easier by a providing an 'duplicate' action.
+     *
+     */
     execute(){
-        // super.execute();
-        // get instance for binding expr
-        // const instanceId = this.getInstanceId();
-        // const inst = this.model.getInstance(instanceId);
-        // console.log('target instance',inst);
-        // console.log('append parent nodeset',this.nodeset[0].parentNode);
-
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
-        console.log('append nodeset',this.nodeset);
-
-
-        // const parentNodeset = this.nodeset[0].parentNode;
-        // const last = this.nodeset[this.nodeset.length -1];
-        const last = inscope.lastElementChild;
-        // const originModelItem = this.getModel().getModelItem(last);
-
-        let newItem;
-/*
-        if(last){
-            console.log('last in nodeset',last);
-            newItem = last.cloneNode(true);
-            inscope.appendChild(newItem);
-        }else{
-*/
-            newItem = this._dataFromTemplate(inscope);
-        // }
+        const newItem = this._dataFromTemplate(inscope);
         console.log('################ newItem ',newItem)
 
-        // console.log('All modelItems in append - ', this.getModel().modelItems);
-
-        console.log('clear flag ', this.clear);
-        if(this.clear === 'true'){
-            newItem.textContent = "";
-            this._clear(newItem);
-            console.log('newItem clear',newItem);
-            newItem.innerText = '';
-        }
         inscope.appendChild(newItem);
 
         // newItem.textContent="new";
@@ -101,26 +79,18 @@ class FxAppend extends FxAction {
 
         const repeat = document.getElementById(this.repeat);
         repeat.setIndex(this.nodeset.length+1);
-
-
-        //always call superClass at the end of processing.
-        // super.execute();
-
-        // const s = new XMLSerializer();
-        // console.log('modified xml instance ', s.serializeToString(this.model.getDefaultInstance().getInstanceData()));
-
     }
 
     _dataFromTemplate(inscope){
         const parentForm = this.getOwnerForm(this);
         const repeat = parentForm.querySelector(`#${this.repeat}`)
-        console.log('_dataFromTemplate repeat', repeat);
-        console.log('_dataFromTemplate repeat ref', repeat.ref);
+        // console.log('_dataFromTemplate repeat', repeat);
+        // console.log('_dataFromTemplate repeat ref', repeat.ref);
 
 
         const templ = repeat.shadowRoot.querySelector('template');
-        console.log('_dataFromTemplate ', templ);
-        console.log('_dataFromTemplate content', templ.content);
+        // console.log('_dataFromTemplate ', templ);
+        // console.log('_dataFromTemplate content', templ.content);
 
         // iterate template for refs
         // todo: will fail for pathes with predicates - need to be filtered before
@@ -135,7 +105,7 @@ class FxAppend extends FxAction {
 
         // const data = this._dataFromRefs(rootNode, templ.content)
         const data = this._generateInstance(templ.content,rootNode);
-        console.log('_dataFromTemplate DATA', data);
+        // console.log('_dataFromTemplate DATA', data);
         return data;
     }
 
@@ -204,6 +174,18 @@ class FxAppend extends FxAction {
         }
     }
 
+    _fadeIn(el, display){
+        el.style.opacity = 0;
+        el.style.display = display || "block";
+
+        (function fade() {
+            var val = parseFloat(el.style.opacity);
+            if (!((val += .1) > 1)) {
+                el.style.opacity = val;
+                requestAnimationFrame(fade);
+            }
+        })();
+    };
 
 }
 

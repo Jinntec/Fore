@@ -71,24 +71,33 @@
             display: block;
             height: auto;
         }
+        fx-repeat input{
+            font-size: 22px;
+            background: ghostwhite;
+            border-bottom: #0f9d58;
+            padding: 4px;
+        }
         fx-repeat fx-repeat{
             padding:4px 0;
             margin:8px 0;
             background: lightsteelblue;
         }
+
+        fx-repeat fx-repeat input{
+            font-size:14px;
+        }
+
         fx-repeatitem{
             border:thin solid white;
             background: lightsteelblue;
             margin:4px 0;
         }
+
         fx-input{
             background:white;
             border-radius: 5px;
             padding: 6px;
             margin: 4px;
-        }
-        input{
-            font-size:18px;
         }
         fx-button{
             height: 24px;
@@ -103,13 +112,6 @@
 <fx-form>
     <fx-model id="record">
 
-<!--
-        <fx-instance>
-            <data>
-                <task complete="false" due=""></task>
-            </data>
-        </fx-instance>
--->
         <fx-instance>
             <data>
                 <task text="Pick up Milk">
@@ -134,26 +136,10 @@
         </fx-bind>
 
     </fx-model>
-<!--    <fx-group>-->
-
         <h1>todos</h1>
-
-        <!--
-                <fx-button label="add">
-                    <fx-append repeat="r-todos"></fx-append>
-                </fx-button>
-                <br/><br/>
-                        -->
-
-
         <fx-repeat focus-on-create="task" id="r-todos" ref="task">
             <template>
-<!--                <fx-input id="task" label="Task" ref="@text" type="text"></fx-input>-->
                 <fx-control label="task" ref="@text"></fx-control>
-                <fx-button label="delete">
-                    <fx-delete ref="."></fx-delete>
-                </fx-button>
-
                 <fx-repeat id="r-subtask" ref="task">
                     <template>
                         <fx-control id="task" label="Task" ref="@text" type="text"></fx-control>
@@ -164,31 +150,17 @@
                 </fx-repeat>
 
                 <fx-button label="add subtask">
-                    <fx-append ref="task" repeat="r-subtask" clear="true"></fx-append>
+                    <fx-append ref="task" repeat="r-subtask"></fx-append>
                 </fx-button>
-
-
-            </template>
-        </fx-repeat>
-
-<!--
-        <fx-repeat focus-on-create="task" id="todos2" id="r-todos" ref="task">
-            <template>
-                <fx-input id="task" label="Task" ref="." type="text"></fx-input>
-                <fx-input label="Due" ref="@due" type="date"></fx-input>
-                <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
                 <fx-button label="delete">
                     <fx-delete ref="."></fx-delete>
                 </fx-button>
             </template>
         </fx-repeat>
--->
 
         <fx-button label="add maintask">
             <fx-append ref="task" repeat="r-todos"></fx-append>
         </fx-button>
-
-<!--    </fx-group>-->
 </fx-form>
 <script type="module" src="../index.js"></script>
 

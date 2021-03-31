@@ -1,18 +1,21 @@
-// import {html, css, LitElement} from "lit-element";
 import "./fx-repeatitem.js";
 import * as fx from "fontoxpath";
-
-import {FxContainer} from "./fx-container.js";
 
 import {Fore} from "../fore";
 import {foreElementMixin} from "../ForeElementMixin";
 
 /**
  * `fx-repeat`
- * an xformish form for eXist-db
+ *
+ * Repeats its template for each node in its' bound nodeset.
+ *
+ * Template is a standard HTML `<template>` element. Once instanciated the template
+ * is moved to the shadowDOM of the repeat for safe re-use.
+ *
+ *
  *
  * @customElement
- * @demo demo/index.html
+ * @demo demo/todo.html
  */
 export class FxRepeat extends foreElementMixin(HTMLElement) {
 
@@ -62,46 +65,31 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.inited = false;
         this.index = 1;
         this.repeatSize = 0;
-
         this.attachShadow({mode:'open'});
-
-        // this.template = this.firstElementChild;
-        // this.addEventListener('repeatitem-created', this._refreshItem)
-
     }
 
     get repeatSize(){
-        return this.querySelectorAll('fx-repeatitem').length;
+        return this.querySelectorAll(':scope > fx-repeatitem').length;
     }
 
     set repeatSize(size){
         this.size = size;
     }
 
-    render() {
-        return html`
-            <slot></slot>
-        `;
-    }
-
-
     setIndex(index){
         // console.log('new repeat index ', index);
         this.index=index;
-        const rItems = this.querySelectorAll('fx-repeatitem');
+        const rItems = this.querySelectorAll(':scope > fx-repeatitem');
         this._setIndex(rItems[this.index-1]);
     }
 
     connectedCallback() {
         this.ref=this.getAttribute('ref');
-
-
-        console.log('### fx-repeat connected ', this.id);
-        // super.connectedCallback();
+        // console.log('### fx-repeat connected ', this.id);
         this.addEventListener('index-changed', e => {
-           this.index = e.detail.index;
-           const rItems = this.querySelectorAll('fx-repeatitem');
-           this._setIndex(rItems[this.index-1]);
+           const {item} = e.detail;
+           const idx =  Array.from(this.children).indexOf(item);
+           this._setIndex(this.children[idx]);
         });
 
         const style = `
@@ -111,8 +99,15 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             ::slotted(*){
                 display:none;
             }
+            .fade-out-bottom {
+                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            }
+            .fade-out-bottom {
+                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            }
         `;
-
         const html = `
           <slot></slot>
         `;
@@ -122,28 +117,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             </style>
             ${html}
         `;
-
-
-        /*
-                console.log('owerform of repeat ', this.getOwnerForm(this));
-                this.addEventListener('model-construct-done', () => {
-                    this.init();
-                });
-        */
-
-
     }
-
-    firstUpdated(){
-        console.log('firstupdated ', this);
-        const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', (event) => {
-            console.log('slotchange on repeat ', this.id);
-            // Fore.refreshChildren(this);
-        });
-
-    }
-
 
     init() {
         // ### there must be a single 'template' child
@@ -151,15 +125,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         // if(!this.inited) this.init();
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
         this._evalNodeset();
-        console.log('##### ',this.id, this.nodeset);
+        // console.log('##### ',this.id, this.nodeset);
 
         this._initTemplate();
         this._initRepeatItems();
 
         this.setAttribute('index',this.index);
-
         this.inited = true;
-        // this.requestUpdate();
     }
 
     /**
@@ -173,47 +145,16 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
     }
 
-    /**
-     * repeat has no own modelItems
-     * @private
-     */
-/*
-    _refresh(){
-        console.log('repeat refresh ');
-        // await this.updateComplete;
-        const inscope = this._inScopeContext();
-        this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
-        console.log('repeat refresh nodeset ', this.nodeset);
-
-
-        const rItems = this.querySelectorAll('fx-repeatitem');
-
-
-        // this._initRepeatItems();
-        Fore.refreshChildren(this);
-        this.requestUpdate();
-    }
-*/
-
     async refresh() {
         console.group('fx-repeat.refresh on', this.id);
-
-
-        this.addEventListener('slotchange',(e) =>{
-            console.log('slotChanged in refresh awaited ',e);
-
-            
-        });
-
 
         if(!this.inited) this.init();
 
         const inscope = this._inScopeContext();
         this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
-        console.log('repeat refresh nodeset ', this.nodeset);
+        // console.log('repeat refresh nodeset ', this.nodeset);
 
         let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
-        // let repeatItems = this.shadowRoot.children;
         const repeatItemCount = repeatItems.length;
 
         let nodeCount = 1;
@@ -229,7 +170,9 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             for(let position = repeatItemCount; position > contextSize; position--){
                 //remove repeatitem
                 const itemToRemove = repeatItems[position -1];
-                itemToRemove.parentNode.removeChild(itemToRemove);
+                this._fadeOut(itemToRemove)
+                // setTimeout(itemToRemove.parentNode.removeChild(itemToRemove),1000);
+                // itemToRemove.parentNode.removeChild(itemToRemove);
                 // modified.push(itemToRemove);
             }
 
@@ -247,8 +190,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
                 const newItem = document.createElement('fx-repeatitem');
                 const clonedTemplate = this._clone();
-                newItem.appendChild(clonedTemplate);
 
+                newItem.style.display='none';
+                newItem.appendChild(clonedTemplate);
+                this._fadeIn(newItem,'block');
                 // const tmpl = this.shadowRoot.querySelector('template');
                 // const newItem = tmpl.content.cloneNode(true);
 
@@ -266,25 +211,46 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
                 mod.refresh();
             })
         }
-
         if(!this.inited){
             Fore.refreshChildren(this);
         }
-
         if(contextSize === repeatItemCount){
             Fore.refreshChildren(this);
         }
-        // Fore.refreshChildren(this);
         console.groupEnd();
     }
 
+    _fadeIn(el, display){
+        el.style.opacity = 0;
+        el.style.display = display || "block";
+
+        (function fade() {
+            var val = parseFloat(el.style.opacity);
+            if (!((val += .1) > 1)) {
+                el.style.opacity = val;
+                requestAnimationFrame(fade);
+            }
+        })();
+    };
+
+    _fadeOut(el){
+        el.classList.add('fade-out-bottom');
+/*
+        el.style.opacity = 1;
+
+        (function fade() {
+            if ((el.style.opacity -= .01) < 0) {
+                el.style.display = "none";
+            } else {
+                requestAnimationFrame(fade);
+            }
+        })();
+*/
+
+    };
+
 
     _initTemplate() {
-        // ### there must be a single 'template' child
-        // if(this.inited) return ;
-        // if(this.template) return this.template;
-
-
         const shadowTemplate = this.shadowRoot.querySelector('template');
         console.log('shadowtempl ', shadowTemplate);
 
@@ -306,91 +272,23 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.shadowRoot.appendChild(this.template)
     }
 
-
-/* 
-    refresh() {
-        console.group('fx-repeat.refresh');
-        if(!this.inited) this.init();
-        // this.nodeset = this.evalBinding();
-        // this.nodeset = fx.evaluateXPathToNodes(this.ref, this.model.getDefaultInstance().getDefaultContext(), null, {});
-        // this._evalNodeset();
-
-
-        console.log('REPEAT.refresh nodeset ', this.nodeset);
-        // this.requestUpdate();
-        //create n repeat-items for nodeset
-
-        //todo: obviously buggy - just works initially but then for each refresh will create new items - to be fixed
-
-
-        // this._refreshChildren(repeatItems);
-
-        this.requestUpdate();
-        console.groupEnd();
-    }
-
- */
-/*
-    _refreshChildren(repeatItems){
-        if(repeatItems){
-            repeatItems = this.querySelectorAll('fx-repeatitem');
-            repeatItems.forEach(bound => {
-                bound.refresh();
-            });
-        }
-    }
-*/
-
-    _refreshItem(e){
-        if(!this.inited) return;
-        e.detail.item.refresh();
-    }
-
-
     _initRepeatItems() {
-        const model = this.getModel();
-
-        // this.nodeset = fx.evaluateXPathToNodes(this.ref, model.getDefaultInstance().getDefaultContext(), null, {});
-        // console.log('repeat nodeset ', this.nodeset);
-
-        // const repeatItems = this.querySelectorAll('fx-repeatitem');
-        // Array.from(repeatItems).forEach(item => item.init(this.getModel()));
-        //setting index to first
-
-        // this.itemTemplates = [];
-
+        // const model = this.getModel();
         this.textContent = '';
-
-        // console.log('repeat ref ', this.ref);
-        // console.log('repeat modelItems ', this.model.modelItems);
-        // const modelItems = this.model.modelItems.filter(m => m.ref === this.ref);
-        // console.log('repeat modelItems ', modelItems);
-
         this.nodeset.forEach((item, index) => {
 
-            // console.log('initRepeatItem index ', index);
-            // const repeatItem = new XfRepeatitem(); //no idea why this is not working
-
             const repeatItem = document.createElement('fx-repeatitem');
-
-            // console.log('initRepeatItem nodeset ',this.nodeset[index]);
             repeatItem.nodeset = this.nodeset[index];
             repeatItem.index = index +1; //1-based index
 
             const clone = this._clone();
-            // const content = this.template.content.cloneNode(true);
-            // const clone = document.importNode(content, true);
-
-            // console.log('clone ', clone);
             repeatItem.appendChild(clone);
-            // this.itemTemplates.push(html`repeatItem`);
             this.appendChild(repeatItem);
+
             if(repeatItem.index === 1){
                 this._setIndex(repeatItem);
             }
         });
-
-
     }
 
     _clone() {
@@ -399,7 +297,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         const content = this.template.content.cloneNode(true);
         return document.importNode(content, true);
     }
-
 
     _setIndex(repeatItem){
         this._removeIndexMarker();
@@ -414,11 +311,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         });
     }
 
-/*
-    createRenderRoot() {
-        return this;
-    }
-*/
 }
 
 window.customElements.define('fx-repeat', FxRepeat);

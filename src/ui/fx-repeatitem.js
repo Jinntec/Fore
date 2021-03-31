@@ -1,7 +1,4 @@
-// import {LitElement,html, css} from "lit-element";
 import {Fore} from "../fore.js";
-// import {FxContainer} from "./fx-container";
-// import {html} from "lit-element";
 import {foreElementMixin} from "../ForeElementMixin";
 
 
@@ -35,15 +32,16 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     constructor(){
         super();
         this.inited = false;
-        this.addEventListener('click', e =>{
-            console.log('clicked on index ', this.index);
-            if(this.parentNode){
-                this.parentNode.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {index:this.index}}));
-            }
-        })
-
+        this.addEventListener('click', this._dispatchIndexChange)
         this.attachShadow({mode:'open'});
 
+    }
+
+    _dispatchIndexChange(){
+        console.log('_dispatchIndexChange on index ', this.index);
+        if(this.parentNode){
+            this.parentNode.dispatchEvent(new CustomEvent('index-changed', {composed: true, bubbles: true, detail: {item:this}}));
+        }
     }
 
     connectedCallback(){
@@ -57,6 +55,11 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
             ${html}
         `;
 
+    }
+
+    disconnectedCallback(){
+        console.log('disconnectedCallback ', this);
+        this.removeEventListener('click', this._dispatchIndexChange());
     }
 
     render() {
