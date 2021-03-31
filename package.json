@@ -22,7 +22,8 @@
     "resources/fore.css",
     "resources/vars.css",
     "src/**/*",
-    "dist/index.js"
+    "dist/fore.js",
+    "dist/fore-all.js"
   ],
   "dependencies": {
     "@polymer/iron-ajax": "^3.0.1",
