@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
