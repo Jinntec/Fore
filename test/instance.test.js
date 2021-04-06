@@ -1,201 +1,186 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixture, fixtureSync, expect, elementUpdated, defineCE } from '@open-wc/testing';
+import {
+  html,
+  oneEvent,
+  fixture,
+  fixtureSync,
+  expect,
+  elementUpdated,
+  defineCE,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 
 describe('instance Tests', () => {
+  it('has "default" as id', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <foobar></foobar>
+        </data>
+      </fx-instance>
+    `);
 
-    it('has "default" as id', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-instance>
-                    <data>
-                        <foobar></foobar>
-                    </data>
-                </fx-instance>
+    // await elementUpdated(el);
+    expect(el.id).to.equal('default');
+  });
 
-            `)
-        );
+  it('init creates instanceData', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <foobar></foobar>
+        </data>
+      </fx-instance>
+    `);
 
-        // await elementUpdated(el);
-        expect(el.id).to.equal('default');
+    el.init();
+    // await elementUpdated(el);
+    expect(el.instanceData).to.exist;
+    expect(el.instanceData.nodeType).to.equal(Node.DOCUMENT_NODE);
+  });
 
-    });
+  it('evaluates xpath in its default context', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <foobar></foobar>
+        </data>
+      </fx-instance>
+    `);
 
-    it('init creates instanceData', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-instance>
-                    <data>
-                        <foobar></foobar>
-                    </data>
-                </fx-instance>
+    el.init();
+    const result = el.evalXPath('//foobar');
+    expect(result).to.exist;
+    expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
+    expect(result.nodeName).to.equal('foobar');
+  });
 
-            `)
-        );
+  it('provides default evaluation context', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <foobar></foobar>
+        </data>
+      </fx-instance>
+    `);
 
-        el.init();
-        // await elementUpdated(el);
-        expect(el.instanceData).to.exist;
-        expect(el.instanceData.nodeType).to.equal(Node.DOCUMENT_NODE);
-    });
+    el.init();
+    const context = el.getDefaultContext();
+    expect(context).to.exist;
+    expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
+    expect(context.nodeName).to.equal('data');
+  });
 
-    it('evaluates xpath in its default context', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-instance>
-                    <data>
-                        <foobar></foobar>
-                    </data>
-                </fx-instance>
+  it('does NOT copy a "body" element from inline data', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <body>
+            <arm side="left">
+              <hand>
+                <finger index="3">middle</finger>
+              </hand>
+            </arm>
+          </body>
+        </data>
+      </fx-instance>
+    `);
 
-            `)
-        );
+    el.init();
+    const doc = el.getInstanceData();
+    expect(doc).to.exist;
 
-        el.init();
-        const result = el.evalXPath('//foobar');
-        expect(result).to.exist;
-        expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
-        expect(result.nodeName).to.equal('foobar');
-    });
+    const root = doc.documentElement;
+    expect(root.nodeName).to.equal('data');
+    console.log('root children ', root.children);
 
-    it('provides default evaluation context', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-instance>
-                    <data>
-                        <foobar></foobar>
-                    </data>
-                </fx-instance>
+    let n = root.firstElementChild;
+    expect(n.nodeName).to.equal('arm');
 
-            `)
-        );
+    n = n.firstElementChild;
+    expect(n.nodeName).to.equal('hand');
 
-        el.init();
-        const context = el.getDefaultContext();
-        expect(context).to.exist;
-        expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
-        expect(context.nodeName).to.equal('data');
-    });
+    n = n.firstElementChild;
+    expect(n.nodeName).to.equal('finger');
+    expect(n.textContent).to.equal('middle');
+  });
 
-    it('does NOT copy a "body" element from inline data', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-instance>
-                    <data>
-                        <body>
-                            <arm side="left">
-                                <hand>
-                                    <finger index="3">middle</finger>
-                                </hand>
-                            </arm>
-                        </body>
-                    </data>
-                </fx-instance>
+  it('resolves instances with the instance() function', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <foobar></foobar>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <item>second</item>
+            </data>
+          </fx-instance>
 
-            `)
-        );
+          <fx-bind ref="instance('second')/item"></fx-bind>
+        </fx-model>
+        <fx-output ref="instance('second')//item"></fx-output>
+      </fx-form>
+    `);
 
-        el.init();
-        const doc = el.getInstanceData();
-        expect(doc).to.exist;
+    // await elementUpdated(el);
+    const { detail } = await oneEvent(el, 'refresh-done');
 
-        const root = doc.documentElement;
-        expect(root.nodeName).to.equal('data');
-        console.log('root children ', root.children );
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[1].id).to.equal('second');
 
-        let n = root.firstElementChild;
-        expect(n.nodeName).to.equal('arm');
+    const model = el.querySelector('fx-model');
+    const { modelItems } = model;
+    expect(modelItems[0].value).to.equal('second');
 
-        n = n.firstElementChild;
-        expect(n.nodeName).to.equal('hand');
+    const out = el.querySelector('fx-output');
+    expect(out.value).to.equal('second');
+  });
 
-        n = n.firstElementChild;
-        expect(n.nodeName).to.equal('finger');
-        expect(n.textContent).to.equal('middle');
+  it('Allows calling the boolean-from-string function', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <foobar></foobar>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <item>Maybe</item>
+            </data>
+          </fx-instance>
 
-    });
+          <fx-bind
+            ref="instance('second')/item"
+            required="boolean-from-string('maybe!~')"
+          ></fx-bind>
+        </fx-model>
+      </fx-form>
+    `);
 
-    it('resolves instances with the instance() function', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-form>
-                    <fx-model id="model1">
+    // await elementUpdated(el);
+    const { detail } = await oneEvent(el, 'refresh-done');
 
-                        <fx-instance>
-                            <data>
-                                <foobar></foobar>
-                            </data>
-                        </fx-instance>
-                        <fx-instance id="second">
-                            <data>
-                                <item>second</item>
-                            </data>
-                        </fx-instance>
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[1].id).to.equal('second');
 
-                        <fx-bind ref="instance('second')/item"></fx-bind>
-                    </fx-model>
-                    <fx-output ref="instance('second')//item"></fx-output>
-                </fx-form>
-            `)
-        );
+    const model = el.querySelector('fx-model');
+    // await elementUpdated(model);
+    const { modelItems } = model;
+    // expect(modelItems[0].required).to.be.false;
+    console.log('>>>>>>>>>>>< modelitem ', modelItems[0]);
+    expect(modelItems[0].required).to.equal(false);
+  });
 
-        // await elementUpdated(el);
-        let { detail } = await oneEvent(el, 'refresh-done');
-
-        const instances = el.querySelectorAll('fx-instance');
-        expect(instances[0].id).to.equal('default');
-        expect(instances[1].id).to.equal('second');
-
-        const model = el.querySelector('fx-model');
-        const {modelItems} = model;
-        expect(modelItems[0].value).to.equal('second');
-
-        const out = el.querySelector('fx-output');
-        expect(out.value).to.equal('second');
-
-    });
-
-	it('Allows calling the boolean-from-string function', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-form>
-                    <fx-model id="model1">
-
-                        <fx-instance>
-                            <data>
-                                <foobar></foobar>
-                            </data>
-                        </fx-instance>
-                        <fx-instance id="second">
-                            <data>
-                                <item>Maybe</item>
-                            </data>
-                        </fx-instance>
-
-                        <fx-bind ref="instance('second')/item" required="boolean-from-string('maybe!~')"></fx-bind>
-                    </fx-model>
-                </fx-form>
-            `)
-        );
-
-        // await elementUpdated(el);
-        let { detail } = await oneEvent(el, 'refresh-done');
-
-        const instances = el.querySelectorAll('fx-instance');
-        expect(instances[0].id).to.equal('default');
-        expect(instances[1].id).to.equal('second');
-
-        const model = el.querySelector('fx-model');
-        // await elementUpdated(model);
-        const {modelItems} = model;
-        // expect(modelItems[0].required).to.be.false;
-        console.log('>>>>>>>>>>>< modelitem ', modelItems[0])
-        expect(modelItems[0].required).to.equal(false);
-
-    });
-
-/*
+  /*
 	it('loads data from external file via src attr', async () => {
         const el =  (
             await fixtureSync(html`
@@ -229,7 +214,7 @@ describe('instance Tests', () => {
     });
 */
 
-    /*
+  /*
         it('does NOT copy a "body" element from inline data', async () => {
             const el =  (
                 await fixtureSync(html`
@@ -271,6 +256,4 @@ describe('instance Tests', () => {
             expect(root.textContent).to.equal('middle');
         });
     */
-
-
 });

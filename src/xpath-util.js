@@ -1,4 +1,4 @@
-import * as fx from "fontoxpath";
+import * as fx from 'fontoxpath';
 
 /**
  * Checks wether the specified path expression is an absolute path.
@@ -9,51 +9,45 @@ import * as fx from "fontoxpath";
  */
 
 export class XPathUtil {
+  static isAbsolutePath(path) {
+    return path != null && (path.startsWith('/') || path.startsWith('instance('));
+  }
 
-    static isAbsolutePath(path) {
-        return path != null && (path.startsWith("/") || path.startsWith('instance('));
+  static isSelfReference(ref) {
+    return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
+  }
+
+  // todo: this will need more work to look upward for instance() expr.
+  static getInstanceId(ref) {
+    if (ref.startsWith('instance(')) {
+      const result = ref.substring(ref.indexOf('(') + 1);
+      return result.substring(1, result.indexOf(')') - 1);
     }
+    return 'default';
+  }
 
-    static isSelfReference(ref) {
-        return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
+  // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
+  static getPath(node) {
+    const path = fx.evaluateXPath('path()', node);
+    const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
+    if (instanceId !== null && instanceId !== 'default') {
+      return `#${instanceId}${XPathUtil.shortenPath(path)}`;
     }
+    return XPathUtil.shortenPath(path);
+  }
 
-    //todo: this will need more work to look upward for instance() expr.
-    static getInstanceId(ref){
-        if(ref.startsWith('instance(')){
-            let result = ref.substring(ref.indexOf('(') + 1);
-            return result.substring(1, result.indexOf(')') -1);
-        } else {
-            return 'default';
-        }
+  static shortenPath(path) {
+    const steps = path.split('/');
+    let result = '';
+    for (let i = 2; i < steps.length; i++) {
+      const step = steps[i];
+      if (step.indexOf('{}') !== -1) {
+        const q = step.split('{}');
+        result += `/${q[1]}`;
+      } else {
+        result += `/${step}`;
+      }
     }
-
-    //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
-    static getPath(node){
-        let path = fx.evaluateXPath('path()',node);
-        const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
-        if(instanceId !== null && instanceId !== 'default'){
-            return `#${instanceId}${XPathUtil.shortenPath(path)}`;
-        }else {
-            return XPathUtil.shortenPath(path);
-        }
-
-    }
-
-    static shortenPath(path){
-        const steps = path.split('/');
-        let result='';
-        for(let i=2;i<steps.length;i++){
-            const step = steps[i];
-            if(step.indexOf('{}') !== -1){
-                const q = step.split('{}');
-                result += `/${q[1]}`;
-            }else{
-                result += `/${step}`;
-            }
-        }
-        return result;
-    }
-
-
+    return result;
+  }
 }

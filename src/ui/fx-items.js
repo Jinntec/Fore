@@ -1,4 +1,4 @@
-import { html, css} from 'lit-element';
+import { html, css } from 'lit-element';
 
 import XfAbstractControl from './fx-abstract-control.js';
 
@@ -6,47 +6,42 @@ import XfAbstractControl from './fx-abstract-control.js';
  * todo
  */
 export class FxItems extends XfAbstractControl {
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        height: auto;
+        font-size: 0.8em;
+        font-weight: 400;
+        font-style: italic;
+      }
+    `;
+  }
 
-    static get styles() {
-        return css`
-            :host {
-                display: block;
-                height:auto;
-                font-size:0.8em;
-                font-weight:400;
-                font-style:italic;
-            }
-        `;
-    }
+  static get properties() {
+    return {
+      ...super.properties,
+    };
+  }
 
-    static get properties() {
-        return {
-            ...super.properties
-        };
-    }
+  render() {
+    return html`
+      <slot></slot>
+    `;
+  }
 
+  isRequired() {
+    return false;
+  }
 
-    render() {
-        return html`
-            <slot></slot>
-        `;
-    }
+  isReadonly() {
+    return true;
+  }
 
-    isRequired () {
-        return false;
-    }
+  handleRequired(mi) {}
 
-    isReadonly (){
-        return true;
-    }
-
-    handleRequired(mi) {
-    }
-
-    handleReadonly() {
-        // super.handleReadonly();
-    }
-
-
+  handleReadonly() {
+    // super.handleReadonly();
+  }
 }
 customElements.define('fx-items', FxItems);

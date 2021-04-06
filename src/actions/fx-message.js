@@ -1,5 +1,5 @@
-import {LitElement, html, css} from 'lit-element';
-import {parseTpl} from './StringTpl.js';
+import { LitElement, html, css } from 'lit-element';
+import { parseTpl } from './StringTpl.js';
 
 /**
  * `fx-message`
@@ -11,82 +11,82 @@ import {parseTpl} from './StringTpl.js';
  * @polymer
  */
 class FxMessage extends LitElement {
-
-    static get template() {
-        return html`
-          <style>
-            :host {
-              display: none;
-            }
-          </style>
-        `;
-    }
-
-    static get properties() {
-        return {
-            bind: {
-                type: String
-            },
-            repeat: {
-                type: String
-            },
-            event: {
-                type: String
-            },
-            level: {
-                type: String,
-                value: 'ephemeral'
-            },
-            id: {
-                type: String
-            },
-            eventTarget: {
-                type: String
-            },
-            targetElement:{
-                type: Object
-            }
-        };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        console.log('### fx-message connected ', this);
-
-        if (this.eventTarget) {
-            this.targetElement = document.getElementById(this.eventTarget);
-            this.targetElement.addEventListener(this.event, e => this.execute(e));
-        } else {
-            this.targetElement = this.parentNode;
-            this.targetElement.addEventListener(this.event, e => this.execute(e));
+  static get template() {
+    return html`
+      <style>
+        :host {
+          display: none;
         }
-        // this.id = "foobar";
+      </style>
+    `;
+  }
+
+  static get properties() {
+    return {
+      bind: {
+        type: String,
+      },
+      repeat: {
+        type: String,
+      },
+      event: {
+        type: String,
+      },
+      level: {
+        type: String,
+        value: 'ephemeral',
+      },
+      id: {
+        type: String,
+      },
+      eventTarget: {
+        type: String,
+      },
+      targetElement: {
+        type: Object,
+      },
+    };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    console.log('### fx-message connected ', this);
+
+    if (this.eventTarget) {
+      this.targetElement = document.getElementById(this.eventTarget);
+      this.targetElement.addEventListener(this.event, e => this.execute(e));
+    } else {
+      this.targetElement = this.parentNode;
+      this.targetElement.addEventListener(this.event, e => this.execute(e));
     }
+    // this.id = "foobar";
+  }
 
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        this.targetElement.removeEventListener(this.event, e => this.execute(e));
-    }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.targetElement.removeEventListener(this.event, e => this.execute(e));
+  }
 
-    execute(e) {
-        console.log('fx-message.execute ', e.detail);
-        console.log('fx-message.execute textContent: ', this.textContent);
+  execute(e) {
+    console.log('fx-message.execute ', e.detail);
+    console.log('fx-message.execute textContent: ', this.textContent);
 
-        const details = e.detail;
-        let tmpl = this.textContent;
+    const details = e.detail;
+    const tmpl = this.textContent;
 
-        const result = parseTpl(this.textContent, details);
-        console.log('result: ', result);
+    const result = parseTpl(this.textContent, details);
+    console.log('result: ', result);
 
-        // this.closest('fx-form').message(e.detail, result, this.level);
+    // this.closest('fx-form').message(e.detail, result, this.level);
 
-        this.dispatchEvent(new CustomEvent('message', {
-            composed: true, bubbles: true,
-            detail: {'level': this.level, 'message': result}
-        }));
-
-    }
-
+    this.dispatchEvent(
+      new CustomEvent('message', {
+        composed: true,
+        bubbles: true,
+        detail: { level: this.level, message: result },
+      }),
+    );
+  }
 }
 
 window.customElements.define('fx-message', FxMessage);

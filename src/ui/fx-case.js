@@ -1,6 +1,5 @@
-import {Fore} from "../fore";
-import {foreElementMixin} from "../ForeElementMixin";
-
+import { Fore } from '../fore';
+import { foreElementMixin } from '../ForeElementMixin';
 
 /**
  * `fx-case`
@@ -9,43 +8,38 @@ import {foreElementMixin} from "../ForeElementMixin";
  *  * todo: implement
  * @customElement
  */
-class FxCase extends HTMLElement{
+class FxCase extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-
-    constructor(){
-        super();
-        this.attachShadow({mode:'open'});
+  connectedCallback() {
+    if (this.hasAttribute('label')) {
+      this.label = this.getAttribute('label');
+    }
+    if (this.hasAttribute('name')) {
+      this.name = this.getAttribute('name');
+    }
+    if (this.hasAttribute('selected')) {
+      this.selected = this.getAttribute('selected');
     }
 
-    connectedCallback(){
-        if(this.hasAttribute('label')){
-            this.label=this.getAttribute('label');
-        }
-        if(this.hasAttribute('name')){
-            this.name=this.getAttribute('name');
-        }
-        if(this.hasAttribute('selected')){
-            this.selected=this.getAttribute('selected');
-        }
-
-        const style = `
+    const style = `
             :host {
                 display: block;
             }
         `;
-        const html = `
+    const html = `
            <slot></slot>
         `;
-        this.shadowRoot.innerHTML = `
+    this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${html}
         `;
-
-    }
-
-
+  }
 }
 
 window.customElements.define('fx-case', FxCase);

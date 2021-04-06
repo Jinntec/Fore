@@ -1,8 +1,7 @@
-import {LitElement, html, css} from 'lit-element';
-import {Fore} from "../fore";
+import { LitElement, html, css } from 'lit-element';
+import { Fore } from '../fore';
 // import XfAbstractControl from "./fx-abstract-control";
-import {FxContainer} from './fx-container';
-
+import { FxContainer } from './fx-container';
 
 /**
  * `fx-group`
@@ -12,19 +11,17 @@ import {FxContainer} from './fx-container';
  *  * todo: implement
  * @customElement
  */
-class FxGroup extends FxContainer{
-
-
-    static get properties() {
-        return{
-            ... super.properties,
-            collapse:{
-                type:Boolean,
-                reflect:true
-            }
-        }
-    }
-        /*
+class FxGroup extends FxContainer {
+  static get properties() {
+    return {
+      ...super.properties,
+      collapse: {
+        type: Boolean,
+        reflect: true,
+      },
+    };
+  }
+  /*
             init(model){
                 super.init(model);
                 console.log(this, this.modelItem);
@@ -33,46 +30,45 @@ class FxGroup extends FxContainer{
             }
         */
 
-    constructor(){
-        super();
-        this.collapse = false;
-    }
+  constructor() {
+    super();
+    this.collapse = false;
+  }
 
-    render() {
-        return html`
-            <div>
-                <slot></slot>
-            </div>
-        `;
-    }
+  render() {
+    return html`
+      <div>
+        <slot></slot>
+      </div>
+    `;
+  }
 
-    /**
-     * overwrites Abstract Control.
-     *
-     * Groups only reacts to 'relevant' property.
-     */
-    handleModelItemProperties(){
-        this.handleRelevant();
-    }
+  /**
+   * overwrites Abstract Control.
+   *
+   * Groups only reacts to 'relevant' property.
+   */
+  handleModelItemProperties() {
+    this.handleRelevant();
+  }
 
-    initializeChildren(node){
-        const children = Array.from(node.children);
-        console.log('_initializeChildren ', children);
+  initializeChildren(node) {
+    const children = Array.from(node.children);
+    console.log('_initializeChildren ', children);
 
-        children.forEach(child => {
-            console.log('child ', child);
+    children.forEach(child => {
+      console.log('child ', child);
 
-            if(Fore.isUiElement(child.nodeName)){
-                child.init(this.model);
-            }else if(child.children.length !== 0){
-                const grantChildren = Array.from(child.children);
-                grantChildren.forEach(grantChild =>{
-                    this.initializeChildren(grantChild);
-                });
-            }
-
+      if (Fore.isUiElement(child.nodeName)) {
+        child.init(this.model);
+      } else if (child.children.length !== 0) {
+        const grantChildren = Array.from(child.children);
+        grantChildren.forEach(grantChild => {
+          this.initializeChildren(grantChild);
         });
-        /*
+      }
+    });
+    /*
                 if(Fore.isUiElement(node.nodeName)){
                     const childElements = children.filter( action => Fore.isUiElement(action.nodeName));
                     console.log('children ', childElements);
@@ -88,11 +84,8 @@ class FxGroup extends FxContainer{
                 }
         */
 
-
-        console.groupEnd();
-    }
-
-
+    console.groupEnd();
+  }
 }
 
 window.customElements.define('fx-group', FxGroup);
