@@ -2,6 +2,7 @@ import * as fx from 'fontoxpath';
 import {XPathUtil} from "./xpath-util.js";
 import {FxModel} from "./fx-model.js";
 import {Fore} from './fore.js';
+import { evaluateXPathToFirstNode } from './xpath-evaluation';
 
 
 // export class ForeElement extends LitElement {
@@ -76,7 +77,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
                 if(XPathUtil.isSelfReference(this.ref)){
                     this.nodeset = inscopeContext;
                 }else{
-                    const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
+                    const localResult = evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
                     // console.log('local result: ', localResult);
                     this.nodeset.push(localResult);
                 }
@@ -87,7 +88,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
 
             // todo: code below fails - why?
             const formElement = this.closest('fx-form');
-            this.nodeset = Fore.evaluateToFirst(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
+            this.nodeset = evaluateXPathToFirstNode(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
             // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
         }
         // console.log('UiElement evaluated to nodeset: ', this.nodeset);
@@ -123,9 +124,9 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         }else if(start.parentNode){
             if(start.parentNode.hasAttribute('ref')){
                 return this.parentNode;
-            }else{
-                this._getParentBindingElement(this.parentNode)
             }
+                this._getParentBindingElement(this.parentNode)
+
         }
         return null;
     }
@@ -148,7 +149,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         const repeated = this.closest('fx-repeatitem');
         let existed;
         if(repeated){
-            const index = this.closest('fx-repeatitem').index;
+            const {index} = this.closest('fx-repeatitem');
             if(Array.isArray(this.nodeset)){
                 existed = this.getModel().getModelItem(this.nodeset[index-1]);
             }else {
@@ -221,4 +222,3 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
 
 
 }
-

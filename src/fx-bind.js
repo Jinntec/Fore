@@ -2,8 +2,8 @@
 import * as fx from 'fontoxpath';
 import {ModelItem} from './modelitem.js';
 import {XPathUtil} from './xpath-util.js';
-import {Fore} from "./fore";
 import {foreElementMixin} from "./ForeElementMixin.js";
+import {evaluateXPathToBoolean, evaluateXPathToNodes} from './xpath-evaluation.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -230,7 +230,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
 
     _addNode(path, node){
         if(!this.model.mainGraph.hasNode(path)){
-            this.model.mainGraph.addNode(path,{node:node});
+            this.model.mainGraph.addNode(path,{node});
         }
     }
 
@@ -241,6 +241,9 @@ export class FxBind extends foreElementMixin(HTMLElement){
                 this.model.mainGraph.addNode(`${path}:${property}`,node);
             }
             refs.forEach(ref => {
+				// Note:
+				// This here runs XPath without setting a namespace resolve. Is this correct?
+
                 const other = fx.evaluateXPath(ref,node);
                 const otherPath = XPathUtil.getPath(other);
 
@@ -313,7 +316,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
     _evalInContext(){
         const inscopeContext = this._inScopeContext();
 
-        //reset nodeset
+        // reset nodeset
         this.nodeset=[];
 
         if(this.ref==='' || this.ref === null){
@@ -351,7 +354,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
             }
             const inst = this.getModel().getInstance(this.instanceId);
             if(inst.type === 'xml'){
-                this.nodeset = Fore.evaluateToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
+                this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
             } else {
                 this.nodeset = this.ref;
             }
@@ -459,8 +462,8 @@ export class FxBind extends foreElementMixin(HTMLElement){
             console.log('parent bound element ', parentBoundElement);
 
             if(parentBoundElement){
-                //todo: Could be fancier by combining them
-                parentBoundElement.required = this.required; //overwrite parent property!
+                // todo: Could be fancier by combining them
+                parentBoundElement.required = this.required; // overwrite parent property!
             }else{
                 console.error('no parent bound element');
             }
@@ -523,14 +526,14 @@ export class FxBind extends foreElementMixin(HTMLElement){
 
 
     _initBooleanModelItemProperty(property, node){
-        //evaluate expression to boolean
+        // evaluate expression to boolean
         const propertyExpr = this[property];
         // console.log('####### ', propertyExpr);
-        const result = Fore.evaluateToBoolean(propertyExpr, node, this, this.namespaceResolver);
+        const result = evaluateXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
 
-        //if expression not simply true() or false() detect nodes referenced by readonly expr
+        // if expression not simply true() or false() detect nodes referenced by readonly expr
         if(propertyExpr !== 'true()' && propertyExpr !== 'false()'){
-            const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
+            const ast = fx.parseScript(propertyExpr, {}, new window.DOMParser().parseFromString('<nothing/>', 'text/xml'));
             // console.log(`AST for ${propertyExpr}`, ast.innerHTML);
 
         }

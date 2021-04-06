@@ -1,6 +1,7 @@
 import {css, html} from 'lit-element';
 import XfAbstractControl from "./fx-abstract-control.js";
 import {Fore} from "../fore.js";
+import {evaluateXPathToNodes} from '../xpath-evaluation.js';
 
 /**
  * `fx-control`
@@ -52,8 +53,8 @@ class FxControl extends XfAbstractControl {
         return html`
            <slot name="alert"></slot>
            <slot name="label"></slot>
-           <slot></slot>    
-           <slot name="hint"></slot>    
+           <slot></slot>
+           <slot name="hint"></slot>
            <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
         `;
     }
@@ -103,10 +104,10 @@ class FxControl extends XfAbstractControl {
             const ref = control.getAttribute('ref');
             const inscope = this._inScopeContext();
             const formElement = this.closest('fx-form');
-            const nodeset = Fore.evaluateToNodes (ref, inscope, formElement, Fore.namespaceResolver) ;
+            const nodeset = evaluateXPathToNodes (ref, inscope, formElement, Fore.namespaceResolver) ;
 
             // ### clear items
-            const children = this.control.children;
+            const {children} = this.control;
             Array.from(children).forEach(child => {
                if(child.nodeName.toLowerCase() !== 'template'){
                    child.parentNode.removeChild(child);
