@@ -23,4 +23,3 @@ import './actions/fx-send.js';
 import './actions/fx-message.js';
 
 // import '@polymer/iron-ajax/iron-ajax';
-

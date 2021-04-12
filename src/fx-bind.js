@@ -1,9 +1,9 @@
 // import {LitElement, html, css} from 'lit-element';
 import * as fx from 'fontoxpath';
-import {ModelItem} from './modelitem.js';
-import {XPathUtil} from './xpath-util.js';
-import {foreElementMixin} from "./ForeElementMixin.js";
-import {evaluateXPathToBoolean, evaluateXPathToNodes} from './xpath-evaluation.js';
+import { ModelItem } from './modelitem.js';
+import { XPathUtil } from './xpath-util.js';
+import { foreElementMixin } from './ForeElementMixin.js';
+import { evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -17,20 +17,18 @@ import {evaluateXPathToBoolean, evaluateXPathToNodes} from './xpath-evaluation.j
  * BoundElements to track their state.
  */
 // export class FxBind extends HTMLElement {
-export class FxBind extends foreElementMixin(HTMLElement){
+export class FxBind extends foreElementMixin(HTMLElement) {
+  static READONLY_DEFAULT = false;
 
+  static REQUIRED_DEFAULT = false;
 
-    static READONLY_DEFAULT = false;
+  static RELEVANT_DEFAULT = true;
 
-    static REQUIRED_DEFAULT = false;
+  static CONSTRAINT_DEFAULT = true;
 
-    static RELEVANT_DEFAULT = true;
+  static TYPE_DEFAULT = 'xs:string';
 
-    static CONSTRAINT_DEFAULT = true;
-
-    static TYPE_DEFAULT = 'xs:string';
-
-/*
+  /*
     static get styles() {
         return css`
             :host {
@@ -40,8 +38,7 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 */
 
-
-/*
+  /*
     static get properties() {
         return {
             ...super.properties,
@@ -113,60 +110,58 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 */
 
-    constructor() {
-        super();
-        // this.id='';
-        // this.ref = '';
-        // this.readonly = 'false()';
-        // this.required = 'false()';
-        // this.relevant = 'true()';
-        // this.constraint = 'true()';
-        // this.type = 'xs:string';
-        // this.calculate = '';
-        this.nodeset = [];
-        this.model = {};
-        this.contextNode = {};
-        this.inited = false;
+  constructor() {
+    super();
+    // this.id='';
+    // this.ref = '';
+    // this.readonly = 'false()';
+    // this.required = 'false()';
+    // this.relevant = 'true()';
+    // this.constraint = 'true()';
+    // this.type = 'xs:string';
+    // this.calculate = '';
+    this.nodeset = [];
+    this.model = {};
+    this.contextNode = {};
+    this.inited = false;
+  }
+
+  connectedCallback() {
+    // console.log('connectedCallback ', this);
+    // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
+    this.ref = this.getAttribute('ref');
+    this.readonly = this.getAttribute('readonly');
+    this.required = this.getAttribute('required');
+    this.relevant = this.getAttribute('relevant');
+    this.type = this.hasAttribute('type') ? this.getAttribute('type') : 'string';
+    this.calculate = this.getAttribute('calculate');
+  }
+
+  /**
+   * initializes the bind element by evaluating the binding expression.
+   *
+   * For each node referred to by the binding expr a ModelItem object is created.
+   *
+   * @param model
+   */
+  init(model) {
+    this.model = model;
+    console.log('init binding ', this);
+    this.instanceId = this._getInstanceId();
+    this.bindType = this.getModel().getInstance(this.instanceId).type;
+    // console.log('binding type ', this.bindType);
+
+    if (this.bindType === 'xml') {
+      this._evalInContext();
+      this._buildBindGraph();
+      this._createModelItems();
     }
 
-    connectedCallback(){
-        // console.log('connectedCallback ', this);
-        // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
-        this.ref = this.getAttribute('ref');
-        this.readonly = this.getAttribute('readonly');
-        this.required = this.getAttribute('required');
-        this.relevant = this.getAttribute('relevant');
-        this.type = this.hasAttribute('type')?this.getAttribute('type'):'string';
-        this.calculate = this.getAttribute('calculate');
+    // ### process child bindings
+    this._processChildren(model);
+  }
 
-    }
-
-    /**
-     * initializes the bind element by evaluating the binding expression.
-     *
-     * For each node referred to by the binding expr a ModelItem object is created.
-     *
-     * @param model
-     */
-    init(model){
-        this.model = model;
-        console.log('init binding ', this);
-        this.instanceId = this._getInstanceId();
-        this.bindType = this.getModel().getInstance(this.instanceId).type;
-        // console.log('binding type ', this.bindType);
-
-        if(this.bindType === 'xml'){
-            this._evalInContext();
-            this._buildBindGraph();
-            this._createModelItems();
-        }
-
-
-        // ### process child bindings
-        this._processChildren(model);
-    }
-
-/*
+  /*
     //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
     static getPath(node){
         let path = fx.evaluateXPath('path()',node);
@@ -180,93 +175,90 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 */
 
-    _buildBindGraph(){
-        if(this.bindType === 'xml'){
-            this.nodeset.forEach(node => {
+  _buildBindGraph() {
+    if (this.bindType === 'xml') {
+      this.nodeset.forEach(node => {
+        const path = XPathUtil.getPath(node);
 
-                const path = XPathUtil.getPath(node);
-
-                const calculateRefs = this._getReferencesForProperty(this.calculate,node);
-                if(calculateRefs.length !== 0){
-                    this._addDependencies(calculateRefs,node,path,'calculate');
-                    this._addDependencies(calculateRefs,node,path,'calculate');
-                }else if(this.calculate){
-                    this.model.mainGraph.addNode(`${path}:calculate`,node);
-                }
-
-                const readonlyRefs = this._getReferencesForProperty(this.readonly,node);
-                if(readonlyRefs.length !== 0){
-                    this._addDependencies(readonlyRefs,node,path,'readonly');
-                }else if(this.readonly){
-                    this.model.mainGraph.addNode(`${path}:readonly`,node);
-                }
-
-                // const requiredRefs = this.requiredReferences;
-                const requiredRefs = this._getReferencesForProperty(this.required,node);
-                if(requiredRefs.length !== 0){
-                    this._addDependencies(requiredRefs,node,path,'required');
-                }else if (this.required){
-                    this.model.mainGraph.addNode(`${path}:required`,node);
-                }
-
-                const relevantRefs = this._getReferencesForProperty(this.relevant,node);
-                if(relevantRefs.length !== 0 ){
-                    this._addDependencies(relevantRefs,node,path,'relevant');
-                }else if(this.relevant){
-                    this.model.mainGraph.addNode(`${path}:relevant`,node);
-                }
-
-                const constraintRefs = this._getReferencesForProperty(this.constraint,node);
-                if(constraintRefs.length !== 0) {
-                    this._addDependencies(constraintRefs,node,path,'constraint');
-                }else if(this.constraint){
-                    this.model.mainGraph.addNode(`${path}:constraint`,node);
-                }
-
-            });
+        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
+        if (calculateRefs.length !== 0) {
+          this._addDependencies(calculateRefs, node, path, 'calculate');
+          this._addDependencies(calculateRefs, node, path, 'calculate');
+        } else if (this.calculate) {
+          this.model.mainGraph.addNode(`${path}:calculate`, node);
         }
 
-    }
-
-    _addNode(path, node){
-        if(!this.model.mainGraph.hasNode(path)){
-            this.model.mainGraph.addNode(path,{node});
+        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+        if (readonlyRefs.length !== 0) {
+          this._addDependencies(readonlyRefs, node, path, 'readonly');
+        } else if (this.readonly) {
+          this.model.mainGraph.addNode(`${path}:readonly`, node);
         }
-    }
 
-    _addDependencies(refs,node,path,property){
-        if(refs.length !== 0){
-            if(!this.model.mainGraph.hasNode(`${path}:${property}`)){
-                // this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
-                this.model.mainGraph.addNode(`${path}:${property}`,node);
-            }
-            refs.forEach(ref => {
-				// Note:
-				// This here runs XPath without setting a namespace resolve. Is this correct?
-
-                const other = fx.evaluateXPath(ref,node);
-                const otherPath = XPathUtil.getPath(other);
-
-                if(!this.model.mainGraph.hasNode(otherPath)){
-                    // this.model.mainGraph.addNode(otherPath,{node:other});
-                    this.model.mainGraph.addNode(otherPath,other);
-                }
-                this.model.mainGraph.addDependency(`${path}:${property}`,otherPath);
-            });
-        }else{
-            this.model.mainGraph.addNode(`${path}:${property}`,node);
+        // const requiredRefs = this.requiredReferences;
+        const requiredRefs = this._getReferencesForProperty(this.required, node);
+        if (requiredRefs.length !== 0) {
+          this._addDependencies(requiredRefs, node, path, 'required');
+        } else if (this.required) {
+          this.model.mainGraph.addNode(`${path}:required`, node);
         }
-    }
 
-    _processChildren(model) {
-        const childbinds = this.querySelectorAll(':scope > fx-bind');
-        Array.from(childbinds).forEach(bind => {
-            // console.log('init child bind ', bind);
-            bind.init(model);
-        });
-    }
+        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
+        if (relevantRefs.length !== 0) {
+          this._addDependencies(relevantRefs, node, path, 'relevant');
+        } else if (this.relevant) {
+          this.model.mainGraph.addNode(`${path}:relevant`, node);
+        }
 
-/*
+        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
+        if (constraintRefs.length !== 0) {
+          this._addDependencies(constraintRefs, node, path, 'constraint');
+        } else if (this.constraint) {
+          this.model.mainGraph.addNode(`${path}:constraint`, node);
+        }
+      });
+    }
+  }
+
+  _addNode(path, node) {
+    if (!this.model.mainGraph.hasNode(path)) {
+      this.model.mainGraph.addNode(path, { node });
+    }
+  }
+
+  _addDependencies(refs, node, path, property) {
+    if (refs.length !== 0) {
+      if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
+        // this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
+        this.model.mainGraph.addNode(`${path}:${property}`, node);
+      }
+      refs.forEach(ref => {
+        // Note:
+        // This here runs XPath without setting a namespace resolve. Is this correct?
+
+        const other = fx.evaluateXPath(ref, node);
+        const otherPath = XPathUtil.getPath(other);
+
+        if (!this.model.mainGraph.hasNode(otherPath)) {
+          // this.model.mainGraph.addNode(otherPath,{node:other});
+          this.model.mainGraph.addNode(otherPath, other);
+        }
+        this.model.mainGraph.addDependency(`${path}:${property}`, otherPath);
+      });
+    } else {
+      this.model.mainGraph.addNode(`${path}:${property}`, node);
+    }
+  }
+
+  _processChildren(model) {
+    const childbinds = this.querySelectorAll(':scope > fx-bind');
+    Array.from(childbinds).forEach(bind => {
+      // console.log('init child bind ', bind);
+      bind.init(model);
+    });
+  }
+
+  /*
     render() {
         return html`
              <slot></slot>
@@ -274,128 +266,128 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 */
 
-    getAlert(){
-        if(this.hasAttribute('alert')){
-            return this.getAttribute('alert');
-        }
-        const alertChild = this.querySelector('fx-alert');
-        if(alertChild){
-            return alertChild.innerHTML;
-        }
-        return null;
+  getAlert() {
+    if (this.hasAttribute('alert')) {
+      return this.getAttribute('alert');
     }
+    const alertChild = this.querySelector('fx-alert');
+    if (alertChild) {
+      return alertChild.innerHTML;
+    }
+    return null;
+  }
 
-    /*
+  /*
         firstUpdated(_changedProperties) {
             super.firstUpdated(_changedProperties);
         }
     */
 
-    namespaceResolver(prefix) {
-        // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
-
-        /**
-         * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-         * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-         *   // Return value
-         *  }
-         * }
-         */
-
-            // console.log('namespaceResolver  prefix', prefix);
-        const ns = {
-                'xhtml' : 'http://www.w3.org/1999/xhtml'
-                // ''    : Fore.XFORMS_NAMESPACE_URI
-            };
-        return ns[prefix] || null;
-    }
+  namespaceResolver(prefix) {
+    // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
 
     /**
-     * overwrites
+     * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
+     * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
+     *   // Return value
+     *  }
+     * }
      */
-    _evalInContext(){
-        const inscopeContext = this._inScopeContext();
 
-        // reset nodeset
-        this.nodeset=[];
+    // console.log('namespaceResolver  prefix', prefix);
+    const ns = {
+      xhtml: 'http://www.w3.org/1999/xhtml',
+      // ''    : Fore.XFORMS_NAMESPACE_URI
+    };
+    return ns[prefix] || null;
+  }
 
-        if(this.ref==='' || this.ref === null){
-            this.nodeset = inscopeContext;
-        }else if(Array.isArray(inscopeContext)){
+  /**
+   * overwrites
+   */
+  _evalInContext() {
+    const inscopeContext = this._inScopeContext();
 
-            inscopeContext.forEach((n,index) => {
+    // reset nodeset
+    this.nodeset = [];
 
-                if(XPathUtil.isSelfReference(this.ref)){
-                    this.nodeset = inscopeContext;
-                }else{
-                    // eslint-disable-next-line no-lonely-if
-                    if(this.ref){
-                        const localResult = fx.evaluateXPathToNodes (this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
-                        localResult.forEach(item =>{
-                            this.nodeset.push(item);
-                        });
-                        /*
+    if (this.ref === '' || this.ref === null) {
+      this.nodeset = inscopeContext;
+    } else if (Array.isArray(inscopeContext)) {
+      inscopeContext.forEach((n, index) => {
+        if (XPathUtil.isSelfReference(this.ref)) {
+          this.nodeset = inscopeContext;
+        } else {
+          // eslint-disable-next-line no-lonely-if
+          if (this.ref) {
+            const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {
+              namespaceResolver: this.namespaceResolver,
+            });
+            localResult.forEach(item => {
+              this.nodeset.push(item);
+            });
+            /*
                                                 const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
                                                 this.nodeset.push(localResult);
                         */
-                    }
-                    // console.log('local result: ', localResult);
-                    // this.nodeset.push(localResult);
-                }
-            });
-
-        }else{
-            let formElement;
-            for (let anc = this; anc; anc = anc.parentNode) {
-                if (anc.localName === 'fx-form') {
-                    formElement = anc;
-                    break;
-                }
-            }
-            const inst = this.getModel().getInstance(this.instanceId);
-            if(inst.type === 'xml'){
-                this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, formElement, this.namespaceResolver)
-            } else {
-                this.nodeset = this.ref;
-            }
+          }
+          // console.log('local result: ', localResult);
+          // this.nodeset.push(localResult);
         }
+      });
+    } else {
+      let formElement;
+      for (let anc = this; anc; anc = anc.parentNode) {
+        if (anc.localName === 'fx-form') {
+          formElement = anc;
+          break;
+        }
+      }
+      const inst = this.getModel().getInstance(this.instanceId);
+      if (inst.type === 'xml') {
+        this.nodeset = evaluateXPathToNodes(
+          this.ref,
+          inscopeContext,
+          formElement,
+          this.namespaceResolver,
+        );
+      } else {
+        this.nodeset = this.ref;
+      }
     }
+  }
 
+  _createModelItems() {
+    // console.log('#### ', thi+s.nodeset);
 
-    _createModelItems(){
-        // console.log('#### ', thi+s.nodeset);
-
-        /*
+    /*
                 if(XPathUtil.isSelfReference(this.ref)){
                     return;
                 }
         */
-        if(Array.isArray(this.nodeset)){
-            // todo - iterate and create
-            // console.log('################################################ ', this.nodeset);
-            Array.from(this.nodeset).forEach((n, index) => {
-                // console.log('node ',n);
-                this._createModelItem(n,index);
-
-            });
-        }else{
-            this._createModelItem(this.nodeset);
-        }
-
+    if (Array.isArray(this.nodeset)) {
+      // todo - iterate and create
+      // console.log('################################################ ', this.nodeset);
+      Array.from(this.nodeset).forEach((n, index) => {
+        // console.log('node ',n);
+        this._createModelItem(n, index);
+      });
+    } else {
+      this._createModelItem(this.nodeset);
     }
+  }
 
-    static lazyCreateModelitems(model,ref,nodeset){
-        if(Array.isArray(nodeset)){
-            Array.from(nodeset).forEach((n, index) => {
-                FxBind.lazyCreateModelItem(model, ref,n);
-            });
-        }else{
-            FxBind.lazyCreateModelItem(model, ref,nodeset);
-        }
-
+  static lazyCreateModelitems(model, ref, nodeset) {
+    if (Array.isArray(nodeset)) {
+      Array.from(nodeset).forEach((n, index) => {
+        FxBind.lazyCreateModelItem(model, ref, n);
+      });
+    } else {
+      FxBind.lazyCreateModelItem(model, ref, nodeset);
     }
+  }
 
-/*
+  /*
     static lazyCreateModelItem(model,ref,node){
         console.log('lazyCreateModelItem ', node);
 
@@ -433,19 +425,18 @@ export class FxBind extends foreElementMixin(HTMLElement){
     }
 */
 
+  /**
+   * creates a ModelItem for given instance node.
+   *
+   * Please note that for textnode no ModelItem is created but instead the one of its parent is used which either
+   * must exist and be initialized already when we hit the textnode.
+   * @param node
+   * @private
+   */
+  _createModelItem(node, index) {
+    // console.log('_createModelItem node', node, index);
 
-    /**
-     * creates a ModelItem for given instance node.
-     *
-     * Please note that for textnode no ModelItem is created but instead the one of its parent is used which either
-     * must exist and be initialized already when we hit the textnode.
-     * @param node
-     * @private
-     */
-    _createModelItem(node,index){
-        // console.log('_createModelItem node', node, index);
-
-        /*
+    /*
                 this.calculateReferences = this._getReferencesForProperty(this.calculate,node);
                 this.readOnlyReferences = this._getReferencesForProperty(this.readonly,node);
                 this.requiredReferences = this._getReferencesForProperty(this.required,node);
@@ -453,123 +444,123 @@ export class FxBind extends foreElementMixin(HTMLElement){
                 this.constraintReferences = this._getReferencesForProperty(this.constraint,node);
         */
 
-        /*
+    /*
         if bind is the dot expression we use the modelitem of the parent
          */
-        if(XPathUtil.isSelfReference(this.ref)){
+    if (XPathUtil.isSelfReference(this.ref)) {
+      const parentBoundElement = this.parentElement.closest('fx-bind[ref]');
+      console.log('parent bound element ', parentBoundElement);
 
-            const parentBoundElement = this.parentElement.closest('fx-bind[ref]');
-            console.log('parent bound element ', parentBoundElement);
+      if (parentBoundElement) {
+        // todo: Could be fancier by combining them
+        parentBoundElement.required = this.required; // overwrite parent property!
+      } else {
+        console.error('no parent bound element');
+      }
 
-            if(parentBoundElement){
-                // todo: Could be fancier by combining them
-                parentBoundElement.required = this.required; // overwrite parent property!
-            }else{
-                console.error('no parent bound element');
-            }
-
-            return;
-        }
-
-        // let value = null;
-        const mItem = {};
-        let targetNode = {};
-        if(node.nodeType === node.TEXT_NODE){
-            // const parent = node.parentNode;
-            // console.log('PARENT ', parent);
-            targetNode = node.parentNode;
-        }else {
-            targetNode = node;
-        }
-
-        // const path = fx.evaluateXPath('path()',node);
-        // const path = this.getPath(node);
-        const path = XPathUtil.getPath(node);
-        // const shortPath = this.shortenPath(path);
-
-        // ### constructiong default modelitem - will get evaluated during reaalculate()
-        // ### constructiong default modelitem - will get evaluated during reaalculate()
-        // ### constructiong default modelitem - will get evaluated during reaalculate()
-        // const newItem = new ModelItem(shortPath,
-        const newItem = new ModelItem(path,
-            this.getBindingExpr(),
-            FxBind.READONLY_DEFAULT,
-            FxBind.RELEVANT_DEFAULT,
-            FxBind.REQUIRED_DEFAULT,
-            FxBind.CONSTRAINT_DEFAULT,
-            this.type,
-            targetNode,
-            this);
-
-        this.getModel().registerModelItem(newItem);
+      return;
     }
 
-    _getReferencesForProperty(propertyExpr,node){
-        if(propertyExpr){
-            // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
-            // console.log(`AST for ${propertyExpr}`, ast.innerHTML);p
-
-            const pieces = propertyExpr.split('depends');
-            const dependants = [];
-            pieces.forEach(step => {
-                // console.log('step ', step);
-                if(step.trim().startsWith('(')){
-                    const name = step.substring(1,step.indexOf(')'));
-                    dependants.push(name);
-                }
-            });
-            // console.log(`dependants of ${propertyExpr} `, dependants);
-            return dependants;
-        }
-        return [];
+    // let value = null;
+    const mItem = {};
+    let targetNode = {};
+    if (node.nodeType === node.TEXT_NODE) {
+      // const parent = node.parentNode;
+      // console.log('PARENT ', parent);
+      targetNode = node.parentNode;
+    } else {
+      targetNode = node;
     }
 
+    // const path = fx.evaluateXPath('path()',node);
+    // const path = this.getPath(node);
+    const path = XPathUtil.getPath(node);
+    // const shortPath = this.shortenPath(path);
 
-    _initBooleanModelItemProperty(property, node){
-        // evaluate expression to boolean
-        const propertyExpr = this[property];
-        // console.log('####### ', propertyExpr);
-        const result = evaluateXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
+    // ### constructiong default modelitem - will get evaluated during reaalculate()
+    // ### constructiong default modelitem - will get evaluated during reaalculate()
+    // ### constructiong default modelitem - will get evaluated during reaalculate()
+    // const newItem = new ModelItem(shortPath,
+    const newItem = new ModelItem(
+      path,
+      this.getBindingExpr(),
+      FxBind.READONLY_DEFAULT,
+      FxBind.RELEVANT_DEFAULT,
+      FxBind.REQUIRED_DEFAULT,
+      FxBind.CONSTRAINT_DEFAULT,
+      this.type,
+      targetNode,
+      this,
+    );
 
-        // if expression not simply true() or false() detect nodes referenced by readonly expr
-        if(propertyExpr !== 'true()' && propertyExpr !== 'false()'){
-            const ast = fx.parseScript(propertyExpr, {}, new window.DOMParser().parseFromString('<nothing/>', 'text/xml'));
-            // console.log(`AST for ${propertyExpr}`, ast.innerHTML);
+    this.getModel().registerModelItem(newItem);
+  }
 
+  _getReferencesForProperty(propertyExpr, node) {
+    if (propertyExpr) {
+      // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
+      // console.log(`AST for ${propertyExpr}`, ast.innerHTML);p
+
+      const pieces = propertyExpr.split('depends');
+      const dependants = [];
+      pieces.forEach(step => {
+        // console.log('step ', step);
+        if (step.trim().startsWith('(')) {
+          const name = step.substring(1, step.indexOf(')'));
+          dependants.push(name);
         }
-        return result;
+      });
+      // console.log(`dependants of ${propertyExpr} `, dependants);
+      return dependants;
     }
+    return [];
+  }
 
+  _initBooleanModelItemProperty(property, node) {
+    // evaluate expression to boolean
+    const propertyExpr = this[property];
+    // console.log('####### ', propertyExpr);
+    const result = evaluateXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
 
-    static shortenPath(path){
-        const steps = path.split('/');
-        let result='';
-        for(let i=2;i<steps.length;i++){
-            const step = steps[i];
-            if(step.indexOf('{}') !== -1){
-                const q = step.split('{}');
-                result += `/${q[1]}`;
-            }else{
-                result += `/${step}`;
-            }
-        }
-        return result;
+    // if expression not simply true() or false() detect nodes referenced by readonly expr
+    if (propertyExpr !== 'true()' && propertyExpr !== 'false()') {
+      const ast = fx.parseScript(
+        propertyExpr,
+        {},
+        new window.DOMParser().parseFromString('<nothing/>', 'text/xml'),
+      );
+      // console.log(`AST for ${propertyExpr}`, ast.innerHTML);
     }
+    return result;
+  }
 
-
-    // todo: more elaborated implementation ;)
-    _getInstanceId () {
-        const bindExpr = this.getBindingExpr();
-        // console.log('_getInstanceId bindExpr ', bindExpr);
-        if(bindExpr.startsWith('instance(')){
-            this.instanceId = XPathUtil.getInstanceId(bindExpr);
-            return this.instanceId;
-        }
-        if(this.instanceId){
-            return this.instanceId;
-        }
-        return 'default';
+  static shortenPath(path) {
+    const steps = path.split('/');
+    let result = '';
+    for (let i = 2; i < steps.length; i++) {
+      const step = steps[i];
+      if (step.indexOf('{}') !== -1) {
+        const q = step.split('{}');
+        result += `/${q[1]}`;
+      } else {
+        result += `/${step}`;
+      }
     }
+    return result;
+  }
 
+  // todo: more elaborated implementation ;)
+  _getInstanceId() {
+    const bindExpr = this.getBindingExpr();
+    // console.log('_getInstanceId bindExpr ', bindExpr);
+    if (bindExpr.startsWith('instance(')) {
+      this.instanceId = XPathUtil.getInstanceId(bindExpr);
+      return this.instanceId;
+    }
+    if (this.instanceId) {
+      return this.instanceId;
+    }
+    return 'default';
+  }
 }
 customElements.define('fx-bind', FxBind);

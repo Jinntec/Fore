@@ -1,4 +1,4 @@
-import { foreElementMixin } from "../ForeElementMixin.js";
+import { foreElementMixin } from '../ForeElementMixin.js';
 
 /**
  * `fx-action`
@@ -7,9 +7,8 @@ import { foreElementMixin } from "../ForeElementMixin.js";
  * @customElement
  * @demo demo/index.html
  */
-export class FxAction extends foreElementMixin(HTMLElement){
-
-/*
+export class FxAction extends foreElementMixin(HTMLElement) {
+  /*
     static get properties() {
         return {
             ...super.properties,
@@ -41,63 +40,64 @@ export class FxAction extends foreElementMixin(HTMLElement){
     }
 */
 
-    // eslint-disable-next-line no-useless-constructor
-    constructor(){
-        super();
+  // eslint-disable-next-line no-useless-constructor
+  constructor() {
+    super();
 
-        if(this.hasAttribute('event')){
-            this.event = this.getAttribute('event');
-        }else{
-            this.event = 'activate';
-        }
-
-        this.target = this.getAttribute('target');
-
-        if (this.target) {
-            this.targetElement = document.getElementById(this.target);
-            this.targetElement.addEventListener(this.event, e => this.execute(e));
-        } else {
-            this.targetElement = this.parentNode;
-            this.targetElement.addEventListener(this.event, e => this.execute(e));
-            // console.log('adding listener for ', this.event , ` to `, this);
-        }
-
-        this.needsRebuild = false;
-        this.needsRecalculate = false;
-        this.needsRevalidate = false;
-        this.needsRefresh = false;
+    if (this.hasAttribute('event')) {
+      this.event = this.getAttribute('event');
+    } else {
+      this.event = 'activate';
     }
 
-    connectedCallback(){
-        this.style.display = 'none';
+    this.target = this.getAttribute('target');
+
+    if (this.target) {
+      this.targetElement = document.getElementById(this.target);
+      this.targetElement.addEventListener(this.event, e => this.execute(e));
+    } else {
+      this.targetElement = this.parentNode;
+      this.targetElement.addEventListener(this.event, e => this.execute(e));
+      // console.log('adding listener for ', this.event , ` to `, this);
     }
 
-    execute (){
-        if(this.isBound()){
-            this.evalInContext();
-        }
-    }
+    this.needsRebuild = false;
+    this.needsRecalculate = false;
+    this.needsRevalidate = false;
+    this.needsRefresh = false;
+  }
 
-    actionPerformed(){
-        const model = this.getModel();
-        if(this.needsRebuild){
-            model.rebuild();
-        }
-        if(this.needsRecalculate){
-            model.recalculate();
-        }
-        if(this.needsRevalidate){
-            model.revalidate();
-        }
-        if(this.needsRefresh){
-            model.parentNode.refresh();
-        }
-    }
+  connectedCallback() {
+    this.style.display = 'none';
+  }
 
-
-    dispatchActionPerformed(){
-        this.dispatchEvent(new CustomEvent('action-performed', {composed: true, bubbles: true, detail: {}}));
+  execute() {
+    if (this.isBound()) {
+      this.evalInContext();
     }
+  }
+
+  actionPerformed() {
+    const model = this.getModel();
+    if (this.needsRebuild) {
+      model.rebuild();
+    }
+    if (this.needsRecalculate) {
+      model.recalculate();
+    }
+    if (this.needsRevalidate) {
+      model.revalidate();
+    }
+    if (this.needsRefresh) {
+      model.parentNode.refresh();
+    }
+  }
+
+  dispatchActionPerformed() {
+    this.dispatchEvent(
+      new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
+    );
+  }
 }
 
 window.customElements.define('fx-action', FxAction);

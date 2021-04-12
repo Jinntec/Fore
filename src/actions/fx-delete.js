@@ -1,6 +1,6 @@
-import {FxAction} from "./fx-action.js";
+import { FxAction } from './fx-action.js';
 // import * as fx from "fontoxpath";
-import {Fore} from "../fore.js";
+import { Fore } from '../fore.js';
 
 /**
  * `fx-delete`
@@ -10,8 +10,7 @@ import {Fore} from "../fore.js";
  * @demo demo/todo.html
  */
 class FxDelete extends FxAction {
-
-    /*
+  /*
         static get properties() {
             return {
                 ...super.properties,
@@ -22,69 +21,65 @@ class FxDelete extends FxAction {
         }
     */
 
-    constructor() {
-        super();
-        this.repeatId = '';
+  constructor() {
+    super();
+    this.repeatId = '';
+  }
+
+  /**
+   * deletes a
+   */
+  execute() {
+    super.execute();
+    console.log('##### fx-delete executing...');
+
+    // this.ref = this.getAttribute('ref');
+    // const inscope = this._inScopeContext();
+    // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+
+    console.log('delete nodeset ', this.nodeset);
+
+    // ### if there's no repeat the delete action is inside of a repeat template
+    if (this.repeatId === '') {
+      // find the index to delete
+      const rItem = this.parentNode.closest('fx-repeatitem');
+      const idx = Array.from(rItem.parentNode.children).indexOf(rItem) + 1;
+      // console.log('>>> idx to delete ', idx);
+
+      // ### get the model now as it'll be hard once we've deleted ourselves ;)
+      this.model = this.getModel();
+      const repeat = this.parentNode.closest('fx-repeat');
+
+      // ### update the nodeset
+      let nodeToDelete;
+      if (Array.isArray(this.nodeset)) {
+        nodeToDelete = this.nodeset[idx - 1];
+      } else {
+        nodeToDelete = this.nodeset;
+      }
+      const p = nodeToDelete.parentNode;
+      p.removeChild(nodeToDelete);
+
+      // ### remove the repeatitem
+      rItem.parentNode.removeChild(rItem);
+
+      // ### update the index (set 'repeat-index' attribute on repeatitem
+      const { repeatSize } = repeat;
+      if (idx === 1 || repeatSize === 1) {
+        repeat.setIndex(1);
+      } else if (idx > repeatSize) {
+        repeat.setIndex(repeatSize);
+      } else {
+        repeat.setIndex(idx);
+      }
     }
 
-
-    /**
-     * deletes a
-     */
-    execute() {
-        super.execute();
-        console.log('##### fx-delete executing...');
-
-        // this.ref = this.getAttribute('ref');
-        // const inscope = this._inScopeContext();
-        // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
-
-
-        console.log('delete nodeset ', this.nodeset);
-
-        // ### if there's no repeat the delete action is inside of a repeat template
-        if (this.repeatId === '') {
-
-            // find the index to delete
-            const rItem = this.parentNode.closest('fx-repeatitem');
-            const idx = Array.from(rItem.parentNode.children).indexOf(rItem) + 1;
-            // console.log('>>> idx to delete ', idx);
-
-            // ### get the model now as it'll be hard once we've deleted ourselves ;)
-            this.model = this.getModel();
-            const repeat = this.parentNode.closest('fx-repeat');
-
-            // ### update the nodeset
-            let nodeToDelete;
-            if (Array.isArray(this.nodeset)) {
-                nodeToDelete = this.nodeset[idx - 1];
-            } else {
-                nodeToDelete = this.nodeset;
-            }
-            const p = nodeToDelete.parentNode;
-            p.removeChild(nodeToDelete);
-
-            // ### remove the repeatitem
-            rItem.parentNode.removeChild(rItem);
-
-            // ### update the index (set 'repeat-index' attribute on repeatitem
-            const {repeatSize} = repeat;
-            if (idx === 1 || repeatSize === 1) {
-                repeat.setIndex(1);
-            } else if (idx > repeatSize) {
-                repeat.setIndex(repeatSize);
-            } else {
-                repeat.setIndex(idx);
-            }
-        }
-
-        this.needsRebuild = true;
-        this.needsRecalculate = true;
-        this.needsRevalidate = true;
-        this.needsRefresh = true;
-        this.actionPerformed();
-    }
-
+    this.needsRebuild = true;
+    this.needsRecalculate = true;
+    this.needsRevalidate = true;
+    this.needsRefresh = true;
+    this.actionPerformed();
+  }
 }
 
 window.customElements.define('fx-delete', FxDelete);

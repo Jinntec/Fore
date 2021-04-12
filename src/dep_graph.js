@@ -46,11 +46,13 @@ function createDFS(edges, leavesOnly, result, circular) {
             continue;
           }
           currentPath.push(node);
-          window.dispatchEvent(new CustomEvent('compute-exception', {
-            composed: true,
-            bubbles: true,
-            detail: {"path": currentPath}
-          }));
+          window.dispatchEvent(
+            new CustomEvent('compute-exception', {
+              composed: true,
+              bubbles: true,
+              detail: { path: currentPath },
+            }),
+          );
           return;
           // alert('‘circular path: ' + currentPath);
           // throw new DepGraphCycleError(currentPath);
@@ -94,7 +96,7 @@ export default function DepGraph(opts) {
   this.outgoingEdges = {}; // Node -> [Dependency Node]
   this.incomingEdges = {}; // Node -> [Dependant Node]
   this.circular = opts && !!opts.circular; // Allows circular deps
-};
+}
 
 DepGraph.prototype = {
   /**
@@ -150,7 +152,7 @@ DepGraph.prototype = {
     if (this.hasNode(node)) {
       return this.nodes[node];
     } else {
-      throw new Error("Node does not exist: " + node);
+      throw new Error('Node does not exist: ' + node);
     }
   },
   /**
@@ -160,7 +162,7 @@ DepGraph.prototype = {
     if (this.hasNode(node)) {
       this.nodes[node] = data;
     } else {
-      throw new Error("Node does not exist: " + node);
+      throw new Error('Node does not exist: ' + node);
     }
   },
   /**
@@ -169,10 +171,10 @@ DepGraph.prototype = {
    */
   addDependency: function(from, to) {
     if (!this.hasNode(from)) {
-      throw new Error("Node does not exist: " + from);
+      throw new Error('Node does not exist: ' + from);
     }
     if (!this.hasNode(to)) {
-      throw new Error("Node does not exist: " + to);
+      throw new Error('Node does not exist: ' + to);
     }
     if (this.outgoingEdges[from].indexOf(to) === -1) {
       this.outgoingEdges[from].push(to);
@@ -228,12 +230,7 @@ DepGraph.prototype = {
   dependenciesOf: function(node, leavesOnly) {
     if (this.hasNode(node)) {
       var result = [];
-      var DFS = createDFS(
-        this.outgoingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
       DFS(node);
       var idx = result.indexOf(node);
       if (idx >= 0) {
@@ -241,7 +238,7 @@ DepGraph.prototype = {
       }
       return result;
     } else {
-      throw new Error("Node does not exist: " + node);
+      throw new Error('Node does not exist: ' + node);
     }
   },
   /**
@@ -254,12 +251,7 @@ DepGraph.prototype = {
   dependantsOf: function(node, leavesOnly) {
     if (this.hasNode(node)) {
       var result = [];
-      var DFS = createDFS(
-        this.incomingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.incomingEdges, leavesOnly, result, this.circular);
       DFS(node);
       var idx = result.indexOf(node);
       if (idx >= 0) {
@@ -267,7 +259,7 @@ DepGraph.prototype = {
       }
       return result;
     } else {
-      throw new Error("Node does not exist: " + node);
+      throw new Error('Node does not exist: ' + node);
     }
   },
   /**
@@ -293,12 +285,7 @@ DepGraph.prototype = {
         });
       }
 
-      var DFS = createDFS(
-        this.outgoingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
       // Find all potential starting points (nodes with nothing depending on them) an
       // run a DFS starting at these points to get the order
       keys
@@ -324,5 +311,5 @@ DepGraph.prototype = {
 
       return result;
     }
-  }
+  },
 };
