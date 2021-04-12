@@ -49,17 +49,21 @@ export class FxOutput extends XfAbstractControl {
         }
     */
 
-  isRequired() {
+  // eslint-disable-next-line class-methods-use-this
+  isRequired () {
     console.log('Output required');
     return false;
   }
 
-  isReadonly() {
+  // eslint-disable-next-line class-methods-use-this
+  isReadonly () {
     return true;
   }
 
-  handleRequired(mi) {}
+  // eslint-disable-next-line class-methods-use-this
+  handleRequired() {}
 
+  // eslint-disable-next-line class-methods-use-this
   handleReadonly() {
     // super.handleReadonly();
   }

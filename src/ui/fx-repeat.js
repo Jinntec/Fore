@@ -245,7 +245,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);
-      //todo: catch this on form element
+      // todo: catch this on form element
       this.dispatchEvent(
         new CustomEvent('no-template-error', {
           composed: true,
@@ -264,7 +264,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.nodeset.forEach((item, index) => {
       const repeatItem = document.createElement('fx-repeatitem');
       repeatItem.nodeset = this.nodeset[index];
-      repeatItem.index = index + 1; //1-based index
+      repeatItem.index = index + 1; // 1-based index
 
       const clone = this._clone();
       repeatItem.appendChild(clone);

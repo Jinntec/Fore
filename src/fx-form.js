@@ -81,17 +81,17 @@ export class FxForm extends HTMLElement {
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
       const children = event.target.assignedElements();
-      let model = children.find(model => model.nodeName.toUpperCase() === 'FX-MODEL');
-      if (!model) {
+      let modelElement = children.find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
+      if (!modelElement) {
         const generatedModel = document.createElement('FX-model');
         this.appendChild(generatedModel);
-        model = generatedModel;
+        modelElement = generatedModel;
       }
-      if (!model.inited) {
+      if (!modelElement.inited) {
         console.log('########## FORE: kick off processing... ##########');
-        model.modelConstruct();
+        modelElement.modelConstruct();
       }
-      this.model = model;
+      this.model = modelElement;
     });
   }
 
@@ -108,7 +108,6 @@ export class FxForm extends HTMLElement {
   async refresh() {
     // refresh () {
     console.group('### refresh');
-    const uiElements = this.querySelectorAll('*');
     // await this.updateComplete;
 
     // ### refresh template expressions
@@ -155,8 +154,8 @@ export class FxForm extends HTMLElement {
 
       // ### store template expression
       this.storedTemplateExpressions.push({
-        parent: parent,
-        expr: expr,
+        parent,
+        expr,
         name: node.nodeName,
         node: node,
       });
@@ -217,7 +216,7 @@ export class FxForm extends HTMLElement {
     });
   }
 
-  _handleModelConstructDone(e) {
+  _handleModelConstructDone() {
     this._initUI();
   }
 
@@ -282,7 +281,7 @@ export class FxForm extends HTMLElement {
   }
 
   _displayError(e) {
-    const { error } = e.detail;
+    // const { error } = e.detail;
     const msg = e.detail.message;
     this._showMessage('modal', msg);
   }

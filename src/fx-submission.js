@@ -83,7 +83,7 @@ export class FxSubmission extends foreElementMixin(LitElement) {
   }
 
   submit() {
-    //todo: call pre-hook once there is one ;)
+    // todo: call pre-hook once there is one ;)
 
     // ### 1. update xpath context
     this.evalInContext();
@@ -114,7 +114,7 @@ export class FxSubmission extends foreElementMixin(LitElement) {
   }
 
   _handleOnSubmit() {
-    //todo: implement submission pre-hook
+    // todo: implement submission pre-hook
   }
 
   _handleResponse() {
