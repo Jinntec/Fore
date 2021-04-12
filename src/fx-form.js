@@ -1,14 +1,14 @@
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icon/iron-icon.js';
-import * as fx from 'fontoxpath';
-import {Fore} from './fore.js';
-import './fx-model.js';
-import './fx-instance.js';
-
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@vaadin/vaadin-notification/vaadin-notification.js';
+import *  as  fx from 'fontoxpath';
+import getInScopeContext from './getInScopeContext.js';
+import { Fore } from './fore.js';
+import './fx-instance.js';
+import './fx-model.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -185,7 +185,7 @@ export class FxForm extends HTMLElement {
         matches.forEach(match => {
             console.log('match ', match);
             const naked = match.substring(1,match.length-1);
-            const inscope = Fore.getInScopeContext(node,naked);
+            const inscope = getInScopeContext(node,naked);
             const result = fx.evaluateXPathToString(naked, inscope, null, {namespaceResolver:  Fore.namespaceResolver});
             // console.log('result of eval ', result);
             const replaced = expr.replaceAll(match,result);
@@ -204,11 +204,11 @@ export class FxForm extends HTMLElement {
     _getTemplateExpression(node){
         if(node.nodeType === Node.ATTRIBUTE_NODE){
             return node.value;
-        }else if(node.nodeType === Node.TEXT_NODE){
+        }if(node.nodeType === Node.TEXT_NODE){
             return node.textContent;
-        }else{
-            return null;
         }
+            return null;
+
     }
 
     _refreshChildren(){

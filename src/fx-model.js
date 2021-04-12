@@ -1,8 +1,9 @@
 import DepGraph from "./dep_graph.js";
-import {Fore} from './fore.js';
+import { Fore } from './fore.js';
 import './fx-instance.js';
-import {ModelItem} from "./modelitem.js";
-import {XPathUtil} from './xpath-util.js';
+import { ModelItem } from "./modelitem.js";
+import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation';
+import { XPathUtil } from './xpath-util.js';
 
 export class FxModel extends HTMLElement {
 
@@ -158,7 +159,7 @@ export class FxModel extends HTMLElement {
                 if (property) {
                     if (property === 'calculate') {
                         const expr = modelItem.bind[property];
-                        const compute = Fore.evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
+                        const compute = evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
                         modelItem.value = compute;
                     } else if (property !== 'constraint' && property !== 'type') {
                         // console.log('recalculating property ', property);
@@ -166,7 +167,7 @@ export class FxModel extends HTMLElement {
                         const expr = modelItem.bind[property];
                         if (expr) {
                             // console.log('recalc expr: ', expr);
-                            const compute = Fore.evaluateToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
+                            const compute = evaluateXPathToBoolean(expr, modelItem.node, this, Fore.namespaceResolver);
                             modelItem[property] = compute;
                             // console.log(`modelItem computed`, modelItem.required);
                         }
@@ -183,9 +184,9 @@ export class FxModel extends HTMLElement {
 
         this.modelItems.forEach(modelItem => {
             // console.log('validating node ', modelItem.node);
-            modelItem.alerts=[];//reset alerts
+            modelItem.alerts=[];// reset alerts
 
-            const bind = modelItem.bind;
+            const {bind} = modelItem;
             if (bind) {
                 // console.log('modelItem bind ', bind);
 
@@ -195,7 +196,7 @@ export class FxModel extends HTMLElement {
                 if (typeof bind.hasAttribute === "function" && bind.hasAttribute('constraint')) {
                     const constraint = bind.getAttribute('constraint');
                     if (constraint) {
-                        const compute = Fore.evaluateToBoolean(constraint, modelItem.node, this, Fore.namespaceResolver);
+                        const compute = evaluateXPathToBoolean(constraint, modelItem.node, this, Fore.namespaceResolver);
                         console.log('modelItem validity computed: ', compute);
                         modelItem.constraint = compute;
                         if (!compute) {

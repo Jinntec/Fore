@@ -41,7 +41,7 @@ export class FxInstance extends HTMLElement {
         `;
 
         const html = `
-           <iron-ajax 
+           <iron-ajax
                 id="loader"
                 url="${this.src}"
                 method="GET"
@@ -82,9 +82,9 @@ export class FxInstance extends HTMLElement {
         // console.log('getDefaultContext ', this.instanceData.firstElementChild);
         if(this.type === 'xml'){
             return this.instanceData.firstElementChild;
-        }else{
-            return this.instanceData;
         }
+            return this.instanceData;
+
     }
 
     _initXMLInstance(){

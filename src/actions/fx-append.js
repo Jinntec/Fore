@@ -15,7 +15,6 @@ import {FxBind} from "../fx-bind";
  * @customElement
  */
 class FxAppend extends FxAction {
-
     static get properties() {
         return {
             ref: {
