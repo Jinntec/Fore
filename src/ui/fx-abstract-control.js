@@ -87,7 +87,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
       if (!control) {
         control = this;
       }
-      control['value'] = this.value;
+      control.value = this.value;
       // control.value = this.value;
     }
   }
@@ -115,6 +115,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     return this.getModel().parentNode;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     // const control = this.querySelector('#control');
@@ -158,6 +159,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     }
   }
 
+  // todo - there's a bug still in here somewhere - see binding.html and click set invalid button - will never trigger
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
 
@@ -166,8 +168,9 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
       alert.style.display = 'none';
     }
 
-    if (this.isValid() !== this.modelItem.valid) {
-      if (this.modelItem.valid) {
+    // if (this.isValid() !== this.modelItem.valid) {
+    if (this.isValid() !== this.modelItem.constraint) {
+      if (this.modelItem.constraint) {
         this.dispatchEvent(new CustomEvent('valid', {}));
       } else {
         if (this.modelItem.alerts.length !== 0) {

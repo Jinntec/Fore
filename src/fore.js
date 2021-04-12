@@ -59,8 +59,6 @@ export class Fore {
   }
 
   static isActionElement(elementName) {
-    const found = Fore.ACTION_ELEMENTS.includes(elementName);
-    // console.log('isActionElement ', found);
     return Fore.ACTION_ELEMENTS.includes(elementName);
   }
 
@@ -102,7 +100,7 @@ export class Fore {
 
   // static async refreshChildren(startElement){
   static async refreshChildren(startElement) {
-    const refreshed = new Promise((resolve, reject) => {
+    const refreshed = new Promise((resolve) => {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
@@ -129,12 +127,12 @@ export class Fore {
     n.textContent = '';
     if (n.hasAttributes()) {
       const attrs = n.attributes;
-      for (let i = 0; i < attrs.length; i++) {
+      for (let i = 0; i < attrs.length; i+= 1) {
         attrs[i].value = '';
       }
     }
     const { children } = n;
-    for (let i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i+= 1) {
       Fore.clear(children[i]);
     }
   }

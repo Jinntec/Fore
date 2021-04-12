@@ -537,7 +537,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   static shortenPath(path) {
     const steps = path.split('/');
     let result = '';
-    for (let i = 2; i < steps.length; i++) {
+    for (let i = 2; i < steps.length; i+= 1) {
       const step = steps[i];
       if (step.indexOf('{}') !== -1) {
         const q = step.split('{}');

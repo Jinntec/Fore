@@ -88,6 +88,7 @@ export class FxInstance extends HTMLElement {
       // setTimeout(() => resolve("done"), 2000);
 
       if (this.src === '#querystring') {
+        // eslint-disable-next-line no-restricted-globals
         const query = new URLSearchParams(location.search);
         // console.log('query', query);
 

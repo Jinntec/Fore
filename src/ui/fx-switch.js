@@ -59,8 +59,10 @@ class FxSwitch extends foreElementMixin(HTMLElement) {
     const cases = this.querySelectorAll('fx-case');
     Array.from(cases).forEach(c => {
       if (caseElement === c) {
+        // eslint-disable-next-line no-param-reassign
         c.style.display = 'block';
       } else {
+        // eslint-disable-next-line no-param-reassign
         c.style.display = 'none';
       }
     });

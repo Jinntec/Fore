@@ -22,6 +22,7 @@ module.exports = {
           context.response.status = 200;
           return { body: '<data>', type: 'xml' };
         }
+        return null;
       },
     },
   ],

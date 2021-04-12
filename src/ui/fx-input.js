@@ -89,7 +89,7 @@ class FxInput extends XfAbstractControl {
     `;
   }
 
-  _handleInput(e) {
+  _handleInput() {
     // const mi = this.getmdelItem();
     console.log('_handleInput ', this.modelItem);
     // console.log('modelItem ', mi);

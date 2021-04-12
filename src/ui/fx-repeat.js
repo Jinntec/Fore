@@ -158,7 +158,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const contextSize = nodeCount;
     const modified = [];
     if (contextSize < repeatItemCount) {
-      for (let position = repeatItemCount; position > contextSize; position--) {
+      for (let position = repeatItemCount; position > contextSize; position -= 1) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         this._fadeOut(itemToRemove);
@@ -171,7 +171,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
 
     if (contextSize > repeatItemCount) {
-      for (let position = repeatItemCount + 1; position <= contextSize; position++) {
+      for (let position = repeatItemCount + 1; position <= contextSize; position+= 1) {
         // add new repeatitem
 
         // const lastRepeatItem = repeatItems[repeatItemCount-1];
@@ -206,13 +206,18 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     console.groupEnd();
   }
 
-  _fadeIn(el, display) {
+  // eslint-disable-next-line class-methods-use-this
+  _fadeIn (el, display) {
+    // eslint-disable-next-line no-param-reassign
     el.style.opacity = 0;
+    // eslint-disable-next-line no-param-reassign
     el.style.display = display || 'block';
 
     (function fade() {
       let val = parseFloat(el.style.opacity);
-      if (!((val += 0.1) > 1)) {
+      val += 0.1;
+      if (!(val > 1)) {
+        // eslint-disable-next-line no-param-reassign
         el.style.opacity = val;
         requestAnimationFrame(fade);
       }

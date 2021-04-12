@@ -31,14 +31,16 @@ export class FxHint extends XfAbstractControl {
     return false;
   }
 
-  isReadonly() {
+  isReadonly () {
     return true;
   }
 
-  handleRequired(mi) {}
+/*
+  handleRequired () {}
 
-  handleReadonly() {
+  handleReadonly () {
     // super.handleReadonly();
   }
+*/
 }
 customElements.define('fx-hint', FxHint);

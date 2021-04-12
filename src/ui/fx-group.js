@@ -1,7 +1,7 @@
-import { LitElement, html, css } from 'lit-element';
-import { Fore } from '../fore';
+import { html } from 'lit-element';
+import { Fore } from '../fore.js';
 // import XfAbstractControl from "./fx-abstract-control";
-import { FxContainer } from './fx-container';
+import { FxContainer } from './fx-container.js';
 
 /**
  * `fx-group`

@@ -70,7 +70,7 @@ class FxControl extends XfAbstractControl {
       control = input;
     }
 
-    control.addEventListener(this.updateEvent, e => {
+    control.addEventListener(this.updateEvent, () => {
       console.log('eventlistener ', this.updateEvent);
 
       const modelitem = this.getModelItem();
@@ -139,6 +139,7 @@ class FxControl extends XfAbstractControl {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _getValueAttribute(element) {
     let result;
     Array.from(element.attributes).forEach(attribute => {

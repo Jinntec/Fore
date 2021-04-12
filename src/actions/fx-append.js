@@ -123,7 +123,7 @@ class FxAppend extends FxAction {
   _clear(n) {
     let node = n.firstChild;
     const attrs = n.attributes;
-    for (let i = 0; i < attrs.length; i++) {
+    for (let i = 0; i < attrs.length; i += 1) {
       // n.setAttribute(attrs[i].name,'');
       attrs[i].value = '';
     }
@@ -156,7 +156,7 @@ class FxAppend extends FxAction {
 
     if (start.hasChildNodes()) {
       const list = start.children;
-      for (let i = 0; i < list.length; i++) {
+      for (let i = 0; i < list.length; i+= 1) {
         this._generateInstance(list[i], parent);
       }
     }
@@ -170,18 +170,25 @@ class FxAppend extends FxAction {
     return 'default';
   }
 
-  _fadeIn(el, display) {
+/*
+  _fadeIn (el, display) {
+    // eslint-disable-next-line no-param-reassign
     el.style.opacity = 0;
+    // eslint-disable-next-line no-param-reassign
     el.style.display = display || 'block';
 
     (function fade() {
-      var val = parseFloat(el.style.opacity);
-      if (!((val += 0.1) > 1)) {
+      // let val = parseFloat(el.style.opacity);
+      let val = parseFloat(el.style.opacity);
+      val += 0.1;
+      if (!(val > 1)) {
+        // eslint-disable-next-line no-param-reassign
         el.style.opacity = val;
         requestAnimationFrame(fade);
       }
     })();
   }
+*/
 }
 
 window.customElements.define('fx-append', FxAppend);

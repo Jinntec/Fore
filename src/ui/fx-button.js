@@ -49,7 +49,7 @@ class FxButton extends XfAbstractControl {
       console.log('repeated click');
       repeatedItem.click();
     }
-    for (let i = 0; i < this.children.length; i++) {
+    for (let i = 0; i < this.children.length; i += 1) {
       // console.log('child ', this.children[i]);
       const child = this.children[i];
 
@@ -73,7 +73,7 @@ class FxButton extends XfAbstractControl {
     return true;
   }
 
-  refresh() {
+  refresh () {
     // super.refresh();
     // console.log('fx-button refresh');
 
@@ -85,7 +85,7 @@ class FxButton extends XfAbstractControl {
     });
   }
 
-  handleRequired() {}
+  handleRequired () {}
 }
 
 window.customElements.define('fx-button', FxButton);

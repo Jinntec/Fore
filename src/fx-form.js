@@ -78,6 +78,9 @@ export class FxForm extends HTMLElement {
             ${html}
         `;
 
+  }
+
+  connectedCallback(){
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
       const children = event.target.assignedElements();
@@ -93,6 +96,7 @@ export class FxForm extends HTMLElement {
       }
       this.model = modelElement;
     });
+
   }
 
   disconnectedCallback() {}
@@ -138,7 +142,6 @@ export class FxForm extends HTMLElement {
       this.storedTemplateExpressions = [];
     }
 
-    const templateExpressions = [];
     Array.from(tmplExpressions).forEach(node => {
       // console.log('node ', node);
 
@@ -157,7 +160,7 @@ export class FxForm extends HTMLElement {
         parent,
         expr,
         name: node.nodeName,
-        node: node,
+        node,
       });
     });
 
@@ -168,7 +171,8 @@ export class FxForm extends HTMLElement {
     console.log('stored template expressions ', this.storedTemplateExpressions);
   }
 
-  _processTemplateExpression(exprObj) {
+  // eslint-disable-next-line class-methods-use-this
+  _processTemplateExpression (exprObj) {
     console.log('processing template expression ', exprObj);
 
     const { parent } = exprObj;
@@ -196,7 +200,8 @@ export class FxForm extends HTMLElement {
     });
   }
 
-  _getTemplateExpression(node) {
+  // eslint-disable-next-line class-methods-use-this
+  _getTemplateExpression (node) {
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
       return node.value;
     }
@@ -228,7 +233,8 @@ export class FxForm extends HTMLElement {
       model.appendChild(generatedInstance);
 
       const generated = document.implementation.createDocument(null, 'data');
-      const newData = this._generateInstance(this, generated.firstElementChild);
+      // const newData = this._generateInstance(this, generated.firstElementChild);
+      this._generateInstance(this, generated.firstElementChild);
       generatedInstance.instanceData = generated;
       model.instances.push(generatedInstance);
     }
@@ -252,7 +258,7 @@ export class FxForm extends HTMLElement {
 
     if (start.hasChildNodes()) {
       const list = start.children;
-      for (let i = 0; i < list.length; i++) {
+      for (let i = 0; i < list.length; i+= 1) {
         this._generateInstance(list[i], parent);
       }
     }
