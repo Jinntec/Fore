@@ -1,6 +1,4 @@
 import { FxAction } from './fx-action.js';
-// import * as fx from "fontoxpath";
-import { Fore } from '../fore.js';
 
 /**
  * `fx-delete`
@@ -10,16 +8,6 @@ import { Fore } from '../fore.js';
  * @demo demo/todo.html
  */
 class FxDelete extends FxAction {
-  /*
-        static get properties() {
-            return {
-                ...super.properties,
-                repeat:{
-                    type: String
-                }
-            };
-        }
-    */
 
   constructor() {
     super();

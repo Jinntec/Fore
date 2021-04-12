@@ -38,21 +38,21 @@ class FxSwitch extends foreElementMixin(HTMLElement) {
 
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      console.log('fx-switch slotchange ', event.target.assignedElements());
+      // console.log('fx-switch slotchange ', event.target.assignedElements());
       const cases = event.target.assignedElements();
-      console.log('fx-switch slotchange ', cases[0]);
+      // console.log('fx-switch slotchange ', cases[0]);
       cases[0].style.display = 'block';
     });
   }
 
   refresh() {
-    console.log('refresh on switch ');
+    // console.log('refresh on switch ');
     if (this.ref) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
       this.value = this.modelItem.value;
     }
-    console.log('value ', this.value);
+    // console.log('value ', this.value);
   }
 
   toggle(caseElement) {

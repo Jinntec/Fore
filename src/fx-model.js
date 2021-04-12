@@ -2,7 +2,7 @@ import DepGraph from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation';
+import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
 export class FxModel extends HTMLElement {
@@ -75,7 +75,7 @@ export class FxModel extends HTMLElement {
         promises.push(instance.init());
       });
 
-      Promise.all(promises).then(result => {
+      Promise.all(promises).then(() => {
         this.instances = Array.from(instances);
         console.log('_modelConstruct this.instances ', this.instances);
         this.updateModel();

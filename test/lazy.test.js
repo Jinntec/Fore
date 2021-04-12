@@ -2,11 +2,8 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
-  elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -35,7 +32,7 @@ describe('lazy initialize', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(2);
@@ -81,7 +78,7 @@ describe('lazy initialize', () => {
       </fx-form>
     `);
 
-    // let { detail } = await oneEvent(el, 'model-construct-done');
+    // await oneEvent(el, 'model-construct-done');
     console.log('form  ', el);
 
     const model = el.querySelector('fx-model');

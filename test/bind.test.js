@@ -1,18 +1,15 @@
 /* eslint-disable no-unused-expressions */
 import {
   html,
-  oneEvent,
   fixture,
   fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
 import '../src/fx-bind.js';
-import { ModelItem } from '../src/ModelItem.js';
 
 describe('bind Tests', () => {
   it('is initialized', async () => {
@@ -316,18 +313,18 @@ describe('bind Tests', () => {
     const model = document.getElementById('model1');
     expect(model.modelItems.length).to.equal(2);
 
-    //check the modelitems
+    // check the modelitems
     const mi = model.modelItems[0];
     expect(mi.node).to.exist;
     expect(mi.node.textContent).to.equal('Hello World!');
 
     const mi2 = model.modelItems[1];
     expect(mi2.node).to.exist;
-    expect(mi2.node.nodeType).to.equal(2); //attribute
-    expect(mi2.node.nodeName).to.equal('type'); //attribute
+    expect(mi2.node.nodeType).to.equal(2); // attribute
+    expect(mi2.node.nodeName).to.equal('type'); // attribute
     expect(mi2.node.textContent).to.equal('message');
 
-    //check the controls
+    // check the controls
     const out1 = document.getElementById('output1');
     expect(out1.nodeName).to.equal('FX-OUTPUT');
     expect(out1.modelItem).to.exist;

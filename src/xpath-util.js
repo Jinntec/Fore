@@ -17,25 +17,23 @@ export class XPathUtil {
     return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
   }
 
-  //todo: this will need more work to look upward for instance() expr.
+  // todo: this will need more work to look upward for instance() expr.
   static getInstanceId(ref) {
     if (ref.startsWith('instance(')) {
-      let result = ref.substring(ref.indexOf('(') + 1);
+      const result = ref.substring(ref.indexOf('(') + 1);
       return result.substring(1, result.indexOf(')') - 1);
-    } else {
-      return 'default';
     }
+    return 'default';
   }
 
-  //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
+  // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {
-    let path = fx.evaluateXPath('path()', node);
+    const path = fx.evaluateXPath('path()', node);
     const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
     if (instanceId !== null && instanceId !== 'default') {
       return `#${instanceId}${XPathUtil.shortenPath(path)}`;
-    } else {
-      return XPathUtil.shortenPath(path);
     }
+    return XPathUtil.shortenPath(path);
   }
 
   static shortenPath(path) {

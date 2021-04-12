@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement } from 'lit-element';
 
 import '../fx-model.js';
 import { Fore } from '../fore.js';
@@ -13,26 +13,13 @@ import { foreElementMixin } from '../ForeElementMixin.js';
 // export class FxContainer extends BoundElement {
 // export class FxContainer extends foreElementMixin(LitElement) {
 export class FxContainer extends foreElementMixin(LitElement) {
-  /*
-    static get properties() {
-        return {
-            ...super.properties,
-        };
-    }
 
-*/
-  /*
-    render() {
-        return html`
-            <slot></slot>
-        `;
-    }
-*/
-
-  constructor() {
+/*
+  constructor () {
     super();
   }
 
+*/
   /*
     firstUpdated(_changedProperties) {
         // console.log('firstUpdated ', this);

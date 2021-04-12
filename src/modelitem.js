@@ -42,9 +42,8 @@ export class ModelItem {
   get value() {
     if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
       return this.node.nodeValue;
-    } else {
-      return this.node.textContent;
     }
+    return this.node.textContent;
   }
 
   set value(newVal) {

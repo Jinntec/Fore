@@ -1,5 +1,4 @@
-import { Fore } from '../fore';
-import { foreElementMixin } from '../ForeElementMixin';
+// import { foreElementMixin } from '../ForeElementMixin';
 
 /**
  * `fx-case`

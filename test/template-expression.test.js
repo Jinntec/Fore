@@ -2,11 +2,8 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
-  elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -28,7 +25,7 @@ describe('template expressions', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
     expect(el.storedTemplateExpressions).to.exist;
     expect(el.storedTemplateExpressions.length).to.equal(2);
     expect(el.storedTemplateExpressions[0].expr).to.equal('static {greeting}');

@@ -99,7 +99,20 @@
     "extends": [
       "@open-wc/eslint-config",
       "eslint-config-prettier"
-    ]
+    ],
+    "ignorePatterns": ["demo/old/**","resources/**","doc/**/*"],
+    "rules": {
+      "no-console": "off",
+      "import/no-extraneous-dependencies": [
+        "off",
+        {
+          "devDependencies": [
+            "demo/**/*.html",
+            "doc/**/*.html"
+          ]
+        }
+      ]
+    }
   },
   "prettier": "@open-wc/prettier-config",
   "main": "index.js"

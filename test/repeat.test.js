@@ -2,11 +2,9 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 /*
@@ -55,7 +53,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const model = document.getElementById('record');
     expect(model.modelItems.length).to.equal(6);
@@ -69,20 +67,20 @@ describe('repeat Tests', () => {
     expect(model.modelItems[1].value).to.equal('Make tutorial part 1');
     expect(model.modelItems[1].required).to.equal(true);
 
-    expect(model.modelItems[2].node.nodeName).to.equal('complete'); //text node
-    expect(model.modelItems[2].node.nodeType).to.equal(2); //attribute node
+    expect(model.modelItems[2].node.nodeName).to.equal('complete'); // text node
+    expect(model.modelItems[2].node.nodeType).to.equal(2); // attribute node
     expect(model.modelItems[2].value).to.equal('false');
 
-    expect(model.modelItems[3].node.nodeName).to.equal('complete'); //text node
-    expect(model.modelItems[3].node.nodeType).to.equal(2); //attribute node
+    expect(model.modelItems[3].node.nodeName).to.equal('complete'); // text node
+    expect(model.modelItems[3].node.nodeType).to.equal(2); // attribute node
     expect(model.modelItems[3].value).to.equal('true');
 
-    expect(model.modelItems[4].node.nodeName).to.equal('due'); //text node
-    expect(model.modelItems[4].node.nodeType).to.equal(2); //attribute node
+    expect(model.modelItems[4].node.nodeName).to.equal('due'); // text node
+    expect(model.modelItems[4].node.nodeType).to.equal(2); // attribute node
     expect(model.modelItems[4].value).to.equal('2019-02-04');
 
-    expect(model.modelItems[5].node.nodeName).to.equal('due'); //text node
-    expect(model.modelItems[5].node.nodeType).to.equal(2); //attribute node
+    expect(model.modelItems[5].node.nodeName).to.equal('due'); // text node
+    expect(model.modelItems[5].node.nodeType).to.equal(2); // attribute node
     expect(model.modelItems[5].value).to.equal('2019-01-04');
   });
 
@@ -118,7 +116,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const repeat = document.getElementById('todos');
 
@@ -140,7 +138,7 @@ describe('repeat Tests', () => {
 
     expect(m.value).to.equal('Pick up Milk');
 
-    //check if control has correct value
+    // check if control has correct value
     const inputs = el.querySelectorAll('fx-input');
 
     expect(inputs.length).to.equal(2);
@@ -185,7 +183,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const repeat = document.getElementById('todos');
 
@@ -244,7 +242,7 @@ describe('repeat Tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const inputs = el.querySelectorAll('fx-repeatitem fx-input');
     await elementUpdated(inputs);
@@ -319,7 +317,7 @@ describe('repeat Tests', () => {
             </data>
           </fx-instance>
 
-          <fx-bind ref="task" readonly="count(../task) < 3">
+          <fx-bind ref="task" readonly="count(../task) lt 3">
             <fx-bind ref="./text()" required="true()"></fx-bind>
             <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
             <fx-bind ref="@due" type="xs:date"></fx-bind>
@@ -371,7 +369,7 @@ describe('repeat Tests', () => {
             </data>
           </fx-instance>
 
-          <fx-bind ref="task" readonly="count(../task) < 3">
+          <fx-bind ref="task" readonly="count(../task) lt 3">
             <fx-bind ref="./text()" required="true()"></fx-bind>
             <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
             <fx-bind ref="@due" type="xs:date"></fx-bind>
@@ -396,7 +394,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-button');
@@ -423,7 +421,7 @@ describe('repeat Tests', () => {
             </data>
           </fx-instance>
 
-          <fx-bind ref="task" readonly="count(../task) < 3">
+          <fx-bind ref="task" readonly="count(../task) lt 3">
             <fx-bind ref="./text()" required="true()"></fx-bind>
             <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
             <fx-bind ref="@due" type="xs:date"></fx-bind>
@@ -448,7 +446,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
     const buttons = el.querySelectorAll('fx-button');
@@ -499,7 +497,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#append');
@@ -562,7 +560,7 @@ describe('repeat Tests', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#outerappend');

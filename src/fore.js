@@ -1,6 +1,3 @@
-import * as fx from 'fontoxpath';
-import { XPathUtil } from './xpath-util';
-
 export class Fore {
   static READONLY_DEFAULT = false;
 
@@ -11,6 +8,7 @@ export class Fore {
   static CONSTRAINT_DEFAULT = true;
 
   static TYPE_DEFAULT = 'xs:string';
+
 
   static get ACTION_ELEMENTS() {
     return [
@@ -56,7 +54,8 @@ export class Fore {
   }
 
   static get XFORMS_NAMESPACE_URI() {
-    return XFORMS_NAMESPACE_URI;
+    // todo: should be centralized somewhere as constant. Exists in several? places
+    return 'http://www.w3.org/2002/xforms';
   }
 
   static isActionElement(elementName) {

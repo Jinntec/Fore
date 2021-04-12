@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import {
   html,
-  oneEvent,
-  fixture,
   fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -54,7 +51,6 @@ describe('control tests', () => {
     /*
         WOW - crazy - using an id of 'input' somehow makes SVG from the controls - weird
          */
-    const input = document.getElementById('input1');
     const alert1 = document.getElementById('alert1');
     console.log('alert1 ', alert1);
     expect(alert1).to.exist;

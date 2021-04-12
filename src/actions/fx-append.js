@@ -1,9 +1,5 @@
-import { FxAction } from './fx-action.js';
-// import '../fx-model.js';
-// import '../fx-instance.js';
 import * as fx from 'fontoxpath';
-import { FxInstance } from '../fx-instance';
-import { FxBind } from '../fx-bind';
+import { FxAction } from './fx-action.js';
 
 /**
  * `fx-append`
@@ -170,9 +166,8 @@ class FxAppend extends FxAction {
   getInstanceId() {
     if (this.ref.startsWith('instance(')) {
       return 'not implemented';
-    } else {
-      return 'default';
     }
+    return 'default';
   }
 
   _fadeIn(el, display) {

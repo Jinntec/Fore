@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import {
   html,
-  oneEvent,
   fixture,
-  fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../src/fx-form.js';

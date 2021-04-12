@@ -314,7 +314,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach((n, index) => {
+      inscopeContext.forEach((n) => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {

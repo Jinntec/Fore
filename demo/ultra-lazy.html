@@ -53,15 +53,15 @@
 <script type="module" src="../index.js"></script>
 <script>
     const form = document.querySelector('fx-form');
-    form.addEventListener('refresh-done', function(e) {
-        const inst = form.model.getDefaultInstanceData();
-        const ser = new XMLSerializer();
-        const serialized = ser.serializeToString(inst);
-        console.log('default inst ', ser.serializeToString(inst));
-        const tmpl = document.getElementById('debug');
-        console.log('debug ', tmpl);
-        tmpl.innerHTML = serialized;
-    });
+    form.addEventListener('refresh-done', () => {
+    const inst = form.model.getDefaultInstanceData();
+    const ser = new XMLSerializer();
+    const serialized = ser.serializeToString(inst);
+    console.log('default inst ', ser.serializeToString(inst));
+    const tmpl = document.getElementById('debug');
+    console.log('debug ', tmpl);
+    tmpl.innerHTML = serialized;
+});
 </script>
 </body>
 </html>

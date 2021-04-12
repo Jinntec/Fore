@@ -35,7 +35,7 @@ export default class FxSend extends FxAction {
     console.log('submitting ', this.submission);
     console.log('submitting model', this.getModel());
 
-    //if not exists signal error
+    // if not exists signal error
     const submission = this.getModel().querySelector(`#${this.submission}`);
     if (submission === null) {
       this.dispatchEvent(
@@ -49,7 +49,7 @@ export default class FxSend extends FxAction {
     console.log('submission', submission);
     submission.submit();
 
-    //if not of type fx-submission signal error
+    // if not of type fx-submission signal error
   }
 }
 

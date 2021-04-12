@@ -1,5 +1,5 @@
 import { Fore } from '../fore.js';
-import { foreElementMixin } from '../ForeElementMixin';
+import { foreElementMixin } from '../ForeElementMixin.js';
 
 /**
  * `fx-repeat`
@@ -9,15 +9,6 @@ import { foreElementMixin } from '../ForeElementMixin';
  * @demo demo/index.html
  */
 export class FxRepeatitem extends foreElementMixin(HTMLElement) {
-  /*
-    static get styles() {
-        return css`
-            :host {
-              display: block;
-            }
-        `;
-    }
-*/
 
   static get properties() {
     return {
@@ -35,7 +26,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 
   _dispatchIndexChange() {
-    console.log('_dispatchIndexChange on index ', this.index);
+    // console.log('_dispatchIndexChange on index ', this.index);
     if (this.parentNode) {
       this.parentNode.dispatchEvent(
         new CustomEvent('index-changed', { composed: true, bubbles: true, detail: { item: this } }),
@@ -44,8 +35,6 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
-    // super.connectedCallback();
-    // console.log('repeatItem connected ', this);
     const html = `
            <slot></slot>
         `;
@@ -56,14 +45,8 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 
   disconnectedCallback() {
-    console.log('disconnectedCallback ', this);
+    // console.log('disconnectedCallback ', this);
     this.removeEventListener('click', this._dispatchIndexChange());
-  }
-
-  render() {
-    return html`
-      <slot></slot>
-    `;
   }
 
   init() {

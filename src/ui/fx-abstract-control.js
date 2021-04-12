@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement } from 'lit-element';
 
 import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
@@ -83,7 +83,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
         this.control.checked = false;
       }
     } else {
-      let control = this.control;
+      let {control} = this;
       if (!control) {
         control = this;
       }

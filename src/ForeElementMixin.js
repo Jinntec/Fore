@@ -1,8 +1,7 @@
-import * as fx from 'fontoxpath';
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
 import { Fore } from './fore.js';
-import { evaluateXPathToFirstNode } from './xpath-evaluation';
+import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 // export class ForeElement extends LitElement {
 export const foreElementMixin = superclass =>
@@ -70,7 +69,7 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
-        inscopeContext.forEach((n, index) => {
+        inscopeContext.forEach((n) => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {

@@ -2,11 +2,9 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -39,7 +37,6 @@ describe('scoped resolution tests', () => {
     const parent = el.querySelector('#parent');
     const child = el.querySelector('#child');
 
-    const c = child._inScopeContext();
     expect(child._inScopeContext()).to.equal(parent.nodeset);
   });
 
@@ -70,7 +67,6 @@ describe('scoped resolution tests', () => {
 
     const parent = el.querySelector('#parent');
     const child = el.querySelector('#child2');
-    const c = child._inScopeContext();
     expect(child._inScopeContext()).to.equal(parent.nodeset);
   });
 
@@ -137,8 +133,6 @@ describe('scoped resolution tests', () => {
     `);
 
     await elementUpdated(el);
-    const model = el.querySelector('fx-model');
-    // expect(model.modelItems.length).to.equal(8);
 
     const parent = el.querySelector('#parent');
     expect(parent.nodeset.length).to.equal(2);
@@ -222,8 +216,7 @@ describe('scoped resolution tests', () => {
 
     const model = el.querySelector('fx-model');
 
-    let { detail } = await oneEvent(el, 'refresh-done');
-    console.log('model ', detail);
+    await oneEvent(el, 'refresh-done');
     expect(model.modelItems.length).to.equal(8);
 
     let out = el.querySelector('#output');

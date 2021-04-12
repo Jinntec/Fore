@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { html, css } from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
 import XfAbstractControl from './fx-abstract-control.js';
 /**

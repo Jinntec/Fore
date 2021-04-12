@@ -1,4 +1,4 @@
-import { XPathUtil } from './xpath-util';
+import { XPathUtil } from './xpath-util.js';
 
 export default function getInScopeContext(node, ref) {
   let resultNodeset;

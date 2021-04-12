@@ -2,11 +2,8 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
-  elementUpdated,
-  defineCE,
 } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
@@ -128,7 +125,7 @@ describe('instance Tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const instances = el.querySelectorAll('fx-instance');
     expect(instances[0].id).to.equal('default');
@@ -166,7 +163,7 @@ describe('instance Tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
     const instances = el.querySelectorAll('fx-instance');
     expect(instances[0].id).to.equal('default');
@@ -202,7 +199,7 @@ describe('instance Tests', () => {
         const instances = el.querySelectorAll('fx-instance');
         expect(instances[0].id).to.equal('default');
 
-        let { detail } = await oneEvent(el, 'refresh-done');
+        await oneEvent(el, 'refresh-done');
 
         const model = el.querySelector('fx-model');
         await elementUpdated(model);

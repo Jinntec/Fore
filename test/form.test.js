@@ -2,12 +2,9 @@
 import {
   html,
   oneEvent,
-  fixture,
   fixtureSync,
   expect,
   elementUpdated,
-  defineCE,
-  waitUntil,
 } from '@open-wc/testing';
 
 import '../src/fx-form.js';
@@ -23,7 +20,7 @@ describe('initialize form', () => {
 
     setTimeout(() => el.modelConstruct());
 
-    let { detail } = await oneEvent(el, 'model-construct-done');
+    const {detail} = await oneEvent(el, 'model-construct-done');
     expect(detail.model.id).to.equal('model1');
   });
 
@@ -40,7 +37,7 @@ describe('initialize form', () => {
       </fx-form>
     `);
 
-    let { detail } = await oneEvent(el, 'ready');
+    await oneEvent(el, 'ready');
     expect(el.ready).to.be.true;
   });
 
@@ -97,7 +94,7 @@ describe('initialize form', () => {
 
     const greetingMap = el.model.modelItems[0];
 
-    //binding refers to <greeting> node
+    // binding refers to <greeting> node
     expect(greetingMap.node.nodeName).to.equal('greeting');
 
     // modelitem is initialized to correct values
@@ -121,7 +118,7 @@ describe('initialize form', () => {
     `);
     // await model.updated();
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
     console.log('el ', el);
     const dialog = el.shadowRoot.querySelector('paper-dialog');
     expect(dialog).to.exist;

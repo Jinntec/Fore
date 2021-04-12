@@ -1,8 +1,8 @@
 import './fx-repeatitem.js';
 import * as fx from 'fontoxpath';
 
-import { Fore } from '../fore';
-import { foreElementMixin } from '../ForeElementMixin';
+import { Fore } from '../fore.js';
+import { foreElementMixin } from '../ForeElementMixin.js';
 
 /**
  * `fx-repeat`
@@ -18,13 +18,6 @@ import { foreElementMixin } from '../ForeElementMixin';
  * @demo demo/todo.html
  */
 export class FxRepeat extends foreElementMixin(HTMLElement) {
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
-    `;
-  }
 
   static get properties() {
     return {
@@ -120,7 +113,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
   init() {
     // ### there must be a single 'template' child
-    console.log('##### repeat init ', this.id);
+    // console.log('##### repeat init ', this.id);
     // if(!this.inited) this.init();
     // does not use this.evalInContext as it is expecting a nodeset instead of single node
     this._evalNodeset();
@@ -153,7 +146,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
     // console.log('repeat refresh nodeset ', this.nodeset);
 
-    let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     const repeatItemCount = repeatItems.length;
 
     let nodeCount = 1;
@@ -166,7 +159,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const modified = [];
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position--) {
-        //remove repeatitem
+        // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         this._fadeOut(itemToRemove);
         // setTimeout(itemToRemove.parentNode.removeChild(itemToRemove),1000);
@@ -174,12 +167,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         // modified.push(itemToRemove);
       }
 
-      //todo: update index
+      // todo: update index
     }
 
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position++) {
-        //add new repeatitem
+        // add new repeatitem
 
         // const lastRepeatItem = repeatItems[repeatItemCount-1];
         // const newItem = lastRepeatItem.cloneNode(true);
@@ -218,7 +211,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     el.style.display = display || 'block';
 
     (function fade() {
-      var val = parseFloat(el.style.opacity);
+      let val = parseFloat(el.style.opacity);
       if (!((val += 0.1) > 1)) {
         el.style.opacity = val;
         requestAnimationFrame(fade);
