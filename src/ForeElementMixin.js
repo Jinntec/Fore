@@ -44,8 +44,8 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
         return ownerForm.querySelector('fx-model');
     }
 
-    getOwnerForm(element){
-        let currentElement = element;
+    getOwnerForm(){
+        let currentElement = this;
         while(currentElement && currentElement.parentNode) {
             // console.log('current ', currentElement);
 
@@ -125,7 +125,7 @@ export const foreElementMixin = (superclass) => class ForeElementMixin extends s
             if(start.parentNode.hasAttribute('ref')){
                 return this.parentNode;
             }
-                this._getParentBindingElement(this.parentNode)
+            this._getParentBindingElement(this.parentNode)
 
         }
         return null;
