@@ -29,6 +29,5 @@ export class FxItems extends XfAbstractControl {
       <slot></slot>
     `;
   }
-
 }
 customElements.define('fx-items', FxItems);

@@ -1,11 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html,
-  oneEvent,
-  fixtureSync,
-  expect,
-  elementUpdated,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
 import '../src/fx-form.js';
 import '../src/fx-model.js';
@@ -20,7 +14,7 @@ describe('initialize form', () => {
 
     setTimeout(() => el.modelConstruct());
 
-    const {detail} = await oneEvent(el, 'model-construct-done');
+    const { detail } = await oneEvent(el, 'model-construct-done');
     expect(detail.model.id).to.equal('model1');
   });
 

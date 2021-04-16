@@ -3,7 +3,6 @@ import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 
-
 // eslint-disable-next-line no-unused-vars
 const { dependencies } = require('./package.json');
 
@@ -20,8 +19,7 @@ export default [
     external: moduleName =>
       // All absolute imports should be regarded as external. Examples are 'fontoxpath',
       // 'lit-element' or '@polymer/*'
-       !/^(\.\/|\.\.\/)/.test(moduleName)
-    ,
+      !/^(\.\/|\.\.\/)/.test(moduleName),
     plugins: [
       resolve(),
       babel({

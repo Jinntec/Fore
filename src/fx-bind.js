@@ -229,7 +229,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _addDependencies(refs, node, path, property) {
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
-        this.model.mainGraph.addNode(`${path}:${property}`,{node});
+        this.model.mainGraph.addNode(`${path}:${property}`, { node });
         // this.model.mainGraph.addNode(`${path}:${property}`, node);
       }
       refs.forEach(ref => {
@@ -314,7 +314,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach((n) => {
+      inscopeContext.forEach(n => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {
@@ -526,7 +526,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   static shortenPath(path) {
     const steps = path.split('/');
     let result = '';
-    for (let i = 2; i < steps.length; i+= 1) {
+    for (let i = 2; i < steps.length; i += 1) {
       const step = steps[i];
       if (step.indexOf('{}') !== -1) {
         const q = step.split('{}');

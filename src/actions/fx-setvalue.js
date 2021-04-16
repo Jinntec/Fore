@@ -40,7 +40,7 @@ export default class FxSetvalue extends FxAction {
     super.execute();
     // this.setValue(this.modelItem, this.value);
 
-    let {value} = this;
+    let { value } = this;
     if (this.value !== null) {
       value = this.value;
     } else if (this.textContent !== '') {

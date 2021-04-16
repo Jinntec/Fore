@@ -41,8 +41,7 @@ registerCustomXPathFunction(
   'item()?',
   (dynamicContext, nodes) =>
     // console.log('depends on : ', nodes[0]);
-     nodes[0]
-  ,
+    nodes[0],
 );
 
 // Implement the XForms standard functions here.

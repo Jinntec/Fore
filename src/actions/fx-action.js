@@ -8,7 +8,6 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  * @demo demo/index.html
  */
 export class FxAction extends foreElementMixin(HTMLElement) {
-
   // eslint-disable-next-line no-useless-constructor
   constructor() {
     super();
@@ -37,7 +36,6 @@ export class FxAction extends foreElementMixin(HTMLElement) {
       this.targetElement.addEventListener(this.event, e => this.execute(e));
       // console.log('adding listener for ', this.event , ` to `, this);
     }
-
   }
 
   execute() {

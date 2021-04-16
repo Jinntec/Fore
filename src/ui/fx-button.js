@@ -73,7 +73,7 @@ class FxButton extends XfAbstractControl {
     return true;
   }
 
-  refresh () {
+  refresh() {
     // super.refresh();
     // console.log('fx-button refresh');
 
@@ -84,7 +84,6 @@ class FxButton extends XfAbstractControl {
       }
     });
   }
-
 }
 
 window.customElements.define('fx-button', FxButton);

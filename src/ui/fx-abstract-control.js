@@ -85,7 +85,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
         this.control.checked = false;
       }
     } else {
-      let {control} = this;
+      let { control } = this;
       if (!control) {
         control = this;
       }
@@ -182,7 +182,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
           if (alert) {
             alert.style.display = 'block';
           } else {
-            const {alerts} = this.modelItem;
+            const { alerts } = this.modelItem;
             console.log('alerts from bind: ', alerts);
             alerts.forEach(modelAlert => {
               const newAlert = document.createElement('fx-alert');

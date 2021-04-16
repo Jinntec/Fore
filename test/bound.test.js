@@ -1,10 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html,
-  fixture,
-  expect,
-  elementUpdated,
-} from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated } from '@open-wc/testing';
 
 import '../src/fx-form.js';
 import '../src/fx-model.js';

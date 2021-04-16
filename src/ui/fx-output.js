@@ -49,15 +49,15 @@ export class FxOutput extends XfAbstractControl {
         }
     */
 
-/*
+  /*
   isRequired () {
     console.log('Output required');
     return false;
   }
 */
 
-  isReadonly () {
-    this.readonly = true
+  isReadonly() {
+    this.readonly = true;
     return this.readonly;
   }
 }

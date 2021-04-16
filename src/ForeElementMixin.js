@@ -69,7 +69,7 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
-        inscopeContext.forEach((n) => {
+        inscopeContext.forEach(n => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {

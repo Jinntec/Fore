@@ -32,6 +32,5 @@ export class FxAlert extends XfAbstractControl {
       <slot></slot>
     `;
   }
-
 }
 customElements.define('fx-alert', FxAlert);

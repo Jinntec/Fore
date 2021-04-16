@@ -113,9 +113,11 @@ export class FxSubmission extends foreElementMixin(LitElement) {
     submitter.generateRequest();
   }
 
+  /*
   _handleOnSubmit() {
     // todo: implement submission pre-hook
   }
+*/
 
   _handleResponse() {
     // ### check for 'replace' option

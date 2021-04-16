@@ -27,7 +27,7 @@ export class FxHint extends XfAbstractControl {
     `;
   }
 
-/*
+  /*
   isRequired() {
     return false;
   }
@@ -37,7 +37,7 @@ export class FxHint extends XfAbstractControl {
   }
 */
 
-/*
+  /*
   handleRequired () {}
 
   handleReadonly () {

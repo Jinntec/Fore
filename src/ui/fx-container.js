@@ -13,8 +13,7 @@ import { foreElementMixin } from '../ForeElementMixin.js';
 // export class FxContainer extends BoundElement {
 // export class FxContainer extends foreElementMixin(LitElement) {
 export class FxContainer extends foreElementMixin(LitElement) {
-
-/*
+  /*
   constructor () {
     super();
   }

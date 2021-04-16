@@ -9,7 +9,6 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  * @demo demo/index.html
  */
 export class FxRepeatitem extends foreElementMixin(HTMLElement) {
-
   static get properties() {
     return {
       inited: {

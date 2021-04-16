@@ -156,7 +156,7 @@ class FxAppend extends FxAction {
 
     if (start.hasChildNodes()) {
       const list = start.children;
-      for (let i = 0; i < list.length; i+= 1) {
+      for (let i = 0; i < list.length; i += 1) {
         this._generateInstance(list[i], parent);
       }
     }
@@ -170,7 +170,7 @@ class FxAppend extends FxAction {
     return 'default';
   }
 
-/*
+  /*
   _fadeIn (el, display) {
     // eslint-disable-next-line no-param-reassign
     el.style.opacity = 0;

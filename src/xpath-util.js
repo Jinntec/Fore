@@ -39,7 +39,7 @@ export class XPathUtil {
   static shortenPath(path) {
     const steps = path.split('/');
     let result = '';
-    for (let i = 2; i < steps.length; i+= 1) {
+    for (let i = 2; i < steps.length; i += 1) {
       const step = steps[i];
       if (step.indexOf('{}') !== -1) {
         const q = step.split('{}');

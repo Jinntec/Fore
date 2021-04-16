@@ -18,7 +18,6 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  * @demo demo/todo.html
  */
 export class FxRepeat extends foreElementMixin(HTMLElement) {
-
   static get properties() {
     return {
       ...super.properties,
@@ -171,7 +170,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
 
     if (contextSize > repeatItemCount) {
-      for (let position = repeatItemCount + 1; position <= contextSize; position+= 1) {
+      for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
         // const lastRepeatItem = repeatItems[repeatItemCount-1];
@@ -207,7 +206,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _fadeIn (el, display) {
+  _fadeIn(el, display) {
     // eslint-disable-next-line no-param-reassign
     el.style.opacity = 0;
     // eslint-disable-next-line no-param-reassign
@@ -225,7 +224,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _fadeOut (el) {
+  _fadeOut(el) {
     el.classList.add('fade-out-bottom');
     /*
         el.style.opacity = 1;

@@ -9,7 +9,6 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
-
   static get ACTION_ELEMENTS() {
     return [
       'FX-DELETE',
@@ -100,7 +99,7 @@ export class Fore {
 
   // static async refreshChildren(startElement){
   static async refreshChildren(startElement) {
-    const refreshed = new Promise((resolve) => {
+    const refreshed = new Promise(resolve => {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
@@ -123,7 +122,7 @@ export class Fore {
    * @param n
    * @private
    */
-/*
+  /*
   static clear(n) {
     n.textContent = '';
     if (n.hasAttributes()) {

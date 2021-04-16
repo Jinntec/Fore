@@ -8,7 +8,6 @@ import { FxAction } from './fx-action.js';
  * @demo demo/todo.html
  */
 class FxDelete extends FxAction {
-
   constructor() {
     super();
     this.repeatId = '';

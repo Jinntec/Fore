@@ -77,14 +77,15 @@ export class FxForm extends HTMLElement {
             </style>
             ${html}
         `;
-
   }
 
-  connectedCallback(){
+  connectedCallback() {
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
       const children = event.target.assignedElements();
-      let modelElement = children.find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
+      let modelElement = children.find(
+        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+      );
       if (!modelElement) {
         const generatedModel = document.createElement('FX-model');
         this.appendChild(generatedModel);
@@ -96,7 +97,6 @@ export class FxForm extends HTMLElement {
       }
       this.model = modelElement;
     });
-
   }
 
   disconnectedCallback() {}
@@ -172,7 +172,7 @@ export class FxForm extends HTMLElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _processTemplateExpression (exprObj) {
+  _processTemplateExpression(exprObj) {
     console.log('processing template expression ', exprObj);
 
     const { parent } = exprObj;
@@ -201,7 +201,7 @@ export class FxForm extends HTMLElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _getTemplateExpression (node) {
+  _getTemplateExpression(node) {
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
       return node.value;
     }
@@ -258,7 +258,7 @@ export class FxForm extends HTMLElement {
 
     if (start.hasChildNodes()) {
       const list = start.children;
-      for (let i = 0; i < list.length; i+= 1) {
+      for (let i = 0; i < list.length; i += 1) {
         this._generateInstance(list[i], parent);
       }
     }
@@ -305,7 +305,7 @@ export class FxForm extends HTMLElement {
       const notification = document.createElement('vaadin-notification');
       notification.duration = 0;
       notification.setAttribute('theme', 'error');
-      notification.renderer = (root) => {
+      notification.renderer = root => {
         // console.log('root ', root);
 
         root.textContent = msg;
@@ -322,7 +322,7 @@ export class FxForm extends HTMLElement {
       notification.open();
     } else {
       const notification = document.createElement('vaadin-notification');
-      notification.renderer = (root) => {
+      notification.renderer = root => {
         root.textContent = msg;
       };
       this.appendChild(notification);
