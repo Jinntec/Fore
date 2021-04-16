@@ -59,7 +59,7 @@ Import it in your HTML page like so:
 
 ## Developing
 
-If you intend to extend Fore ...
+If you intend to hack it yourself ...
 
 > you need to have node installed on your machine (using 15.1.0)
 
@@ -76,9 +76,15 @@ entry point. This lists out running examples to learn and copy from.
 
 ## Running test suite
 
-* start Chrome (important as it may hang if you start the watcher first)
-* `npm run test:watch`
-* goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite
+`npm run test:watch`
+ 
+Open your browser and goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite. Will
+continously rerun the test suite while you're changing code.
+
+Alternatively you can run the test suite from the commandline once:
+```
+npm run test
+```
 
 ## Building a package
 
