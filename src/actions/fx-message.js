@@ -49,7 +49,7 @@ class FxMessage extends LitElement {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    // super.connectedCallback();
     console.log('### fx-message connected ', this);
 
     if (this.eventTarget) {
@@ -63,7 +63,7 @@ class FxMessage extends LitElement {
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
+    // super.disconnectedCallback();
     this.targetElement.removeEventListener(this.event, e => this.execute(e));
   }
 
@@ -72,8 +72,6 @@ class FxMessage extends LitElement {
     console.log('fx-message.execute textContent: ', this.textContent);
 
     const details = e.detail;
-    let tmpl = this.textContent;
-
     const result = parseTpl(this.textContent, details);
     console.log('result: ', result);
 

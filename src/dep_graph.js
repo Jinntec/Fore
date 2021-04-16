@@ -9,6 +9,35 @@
  */
 
 /**
+ * Cycle error, including the path of the cycle.
+ */
+// const DepGraphCycleError = (exports.DepGraphCycleError = function (cyclePath) {
+
+/*
+export function DepGraphCycleError(cyclePath) {
+  const message = "Dependency Cycle Found: " + cyclePath.join(" -> ");
+  const instance = new Error(message);
+  instance.cyclePath = cyclePath;
+  Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(instance, DepGraphCycleError);
+  }
+  return instance;
+};
+
+DepGraphCycleError.prototype = Object.create(Error.prototype, {
+  constructor: {
+    value: Error,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  }
+});
+Object.setPrototypeOf(DepGraphCycleError, Error);
+*/
+
+
+/**
  * Helper for creating a Topological Sort using Depth-First-Search on a set of edges.
  *
  * Detects cycles and throws an Error if one is detected (unless the "circular"
@@ -50,12 +79,16 @@ function createDFS(edges, leavesOnly, result, circular) {
             new CustomEvent('compute-exception', {
               composed: true,
               bubbles: true,
-              detail: { path: currentPath },
+              detail: {
+                path: currentPath,
+                message:'cyclic graph'
+              },
             }),
           );
-          return;
-          // alert('‘circular path: ' + currentPath);
+          // return;
+          // console.log('‘circular path: ' + currentPath);
           // throw new DepGraphCycleError(currentPath);
+          // throw new Error(currentPath);
         }
 
         inCurrentPath[node] = true;
@@ -91,12 +124,15 @@ var DepGraph = (exports.DepGraph = function DepGraph(opts) {
   this.circular = opts && !!opts.circular; // Allows circular deps
 });
 */
-export default function DepGraph(opts) {
+
+export function DepGraph(opts) {
   this.nodes = {}; // Node -> Node/Data (treated like a Set)
   this.outgoingEdges = {}; // Node -> [Dependency Node]
   this.incomingEdges = {}; // Node -> [Dependant Node]
   this.circular = opts && !!opts.circular; // Allows circular deps
-}
+};
+
+
 
 DepGraph.prototype = {
   /**
@@ -152,7 +188,7 @@ DepGraph.prototype = {
     if (this.hasNode(node)) {
       return this.nodes[node];
     }
-    throw new Error(`Node does not exist: ${  node}`);
+    throw new Error(`Node does not exist: ${node}`);
   },
   /**
    * Set the associated data for a given node name. If the node does not exist, this method will throw an error
@@ -160,8 +196,9 @@ DepGraph.prototype = {
   setNodeData(node, data) {
     if (this.hasNode(node)) {
       this.nodes[node] = data;
+    } else {
+      throw new Error("Node does not exist: " + node);
     }
-    throw new Error(`Node does not exist: ${  node}`);
   },
   /**
    * Add a dependency between two nodes. If either of the nodes does not exist,
@@ -169,10 +206,10 @@ DepGraph.prototype = {
    */
   addDependency(from, to) {
     if (!this.hasNode(from)) {
-      throw new Error(`Node does not exist: ${  from}`);
+      throw new Error(`Node does not exist: ${from}`);
     }
     if (!this.hasNode(to)) {
-      throw new Error(`Node does not exist: ${  to}`);
+      throw new Error(`Node does not exist: ${to}`);
     }
     if (this.outgoingEdges[from].indexOf(to) === -1) {
       this.outgoingEdges[from].push(to);
@@ -217,6 +254,29 @@ DepGraph.prototype = {
     return result;
   },
   /**
+   * Get an array containing the direct dependencies of the specified node.
+   *
+   * Throws an Error if the specified node does not exist.
+   */
+  directDependenciesOf(node) {
+    if (this.hasNode(node)) {
+      return this.outgoingEdges[node].slice(0);
+    } else {
+      throw new Error("Node does not exist: " + node);
+    }
+  },
+  /**
+   * Get an array containing the nodes that directly depend on the specified node.
+   *
+   * Throws an Error if the specified node does not exist.
+   */
+  directDependantsOf (node) {
+    if (this.hasNode(node)) {
+      return this.incomingEdges[node].slice(0);
+    } else {
+      throw new Error("Node does not exist: " + node);
+    }
+  },
   /**
    * Get an array containing the nodes that the specified node depends on (transitively).
    *
@@ -311,3 +371,8 @@ DepGraph.prototype = {
     }
   },
 };
+
+// Create some aliases
+DepGraph.prototype.directDependentsOf = DepGraph.prototype.directDependantsOf;
+DepGraph.prototype.dependentsOf = DepGraph.prototype.dependantsOf;
+

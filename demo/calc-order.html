@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Simple Calculate</title>
+
+    <script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        fx-input[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<div class="wrapper">
+
+    <h1>Computations</h1>
+
+    <p>Any node may receive a computation through the <code>calculate</code> property.</p>
+    <demo-snippet>
+        <template>
+
+            <fx-form>
+
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <m1>3</m1>
+                            <m2>0</m2>
+                            <add>0</add>
+                            <result></result>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="add" calculate="depends(../m2) + 5"></fx-bind>
+                    <fx-bind ref="m2" calculate="depends(../m1) * 2"></fx-bind>
+                    <!--
+                                        <fx-bind ref="result" calculate="depends(add)"></fx-bind>
+                    -->
+
+                </fx-model>
+                <fx-group>
+
+
+                    <fx-input ref="value" label="some string">
+                    </fx-input>
+                    <h2>
+                        Computed value (should be 11):
+                        <fx-output id="output" ref="add"></fx-output>
+                    </h2>
+
+
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
+
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>

@@ -229,8 +229,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _addDependencies(refs, node, path, property) {
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
-        // this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
-        this.model.mainGraph.addNode(`${path}:${property}`, node);
+        this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
+        // this.model.mainGraph.addNode(`${path}:${property}`, node);
       }
       refs.forEach(ref => {
         // Note:

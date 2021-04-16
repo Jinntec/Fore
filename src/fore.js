@@ -123,6 +123,7 @@ export class Fore {
    * @param n
    * @private
    */
+/*
   static clear(n) {
     n.textContent = '';
     if (n.hasAttributes()) {
@@ -136,4 +137,5 @@ export class Fore {
       Fore.clear(children[i]);
     }
   }
+*/
 }

@@ -40,7 +40,7 @@ export default class FxSetvalue extends FxAction {
     super.execute();
     // this.setValue(this.modelItem, this.value);
 
-    let value = this.value;
+    let {value} = this;
     if (this.value !== null) {
       value = this.value;
     } else if (this.textContent !== '') {
@@ -83,17 +83,18 @@ export default class FxSetvalue extends FxAction {
   setValue(modelItem, newVal) {
     console.log('setvalue[1]  ', modelItem, newVal);
 
-    if (!modelItem) return;
+    const item = modelItem;
+    if (!item) return;
 
-    if (modelItem.value !== newVal) {
-      modelItem.value = newVal;
-      modelItem.changed = true;
+    if (item.value !== newVal) {
+      item.value = newVal;
+      item.changed = true;
 
       this.needsRebuild = false;
       this.needsRecalculate = true;
       this.needsRevalidate = true;
       this.needsRefresh = true;
-      console.log('setvalue[2] ', modelItem, newVal);
+      console.log('setvalue[2] ', item, newVal);
       this.actionPerformed();
     }
     // this.setAttribute('value', modelItem.value);

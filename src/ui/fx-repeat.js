@@ -224,7 +224,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     })();
   }
 
-  _fadeOut(el) {
+  // eslint-disable-next-line class-methods-use-this
+  _fadeOut (el) {
     el.classList.add('fade-out-bottom');
     /*
         el.style.opacity = 1;

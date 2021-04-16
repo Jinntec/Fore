@@ -28,6 +28,8 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     super();
     this.value = '';
     this.display = this.style.display;
+    this.required = false;
+    this.readonly = false;
   }
 
   /**
@@ -171,8 +173,10 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     // if (this.isValid() !== this.modelItem.valid) {
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
+        this.classList.remove('invalid');
         this.dispatchEvent(new CustomEvent('valid', {}));
       } else {
+        this.classList.add('invalid');
         if (this.modelItem.alerts.length !== 0) {
           const alert = this.querySelector('fx-alert');
           if (alert) {
@@ -252,10 +256,11 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
 
   isValid() {
     const control = this.getControl();
-    if (control.valid) {
-      return true;
+    // if (control.valid) {
+    if (control.classList.contains('invalid')) {
+      return false;
     }
-    return false;
+    return true;
   }
 
   isReadonly() {
