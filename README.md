@@ -43,35 +43,29 @@ The master branch is only used for releases.
 
 ## Installation
 
+Run
+
+```npm install @jintec/fore```
+
+in your project to install it.
+
+Import it in your HTML page like so:
+
+```
+<script type="module">
+    import 'node_modules/@jinntec/fore/dist/fore-all.js';
+</script>
+```
+
+## Developing
+
+If you intend to extend Fore ...
+
 > you need to have node installed on your machine (using 15.1.0)
 
 * clone this repo to your machine
 * run `npm i` to install dependencies
 
-## Dependencies
-
-* see package.json
-
-must be build with `npm run build` - outputs fontoxpath in 'output' dir. 
-
-ATTENTION: due to my humble knowledge with rollup you still have to change the last line of fontoxpath.js
-to `export default fontoxpath;` to make it work.
-
-To check if installation was correct run `npm run test`. Tests should run green.
-
-
-## Preparing assets
-
-
-To allow browser-compatible module loading there is a npm script called 'empathy'. This must
-be called whenever new node modules are introduced into the project.
-
-`npm run empathy`
-
-This will create a directory 'assets' with all dependencies converted to use local pathes instead
-of node_module pathes.
-
-> This approach will eventually change.
 
 ## Running
 
@@ -90,8 +84,9 @@ entry point. This lists out running examples to learn and copy from.
 
 ```npm run build``` creates two bundles in 'dist' directory.
 
-* fore.js - contains just the core classes without dependencies and is suitable for creating your own app-specific bundle
-* fore-all.js contains everything in one bundle (incl. dependencies) and is the easiest way to use it in your own project with a single module import
+* fore.js - contains just the Fore classes without dependencies and is suitable for creating your own app-specific bundle
+* fore-all.js contains everything in one bundle (incl. dependencies) and is the easiest way to use it in your own project with a single module import. 
+The package is still huge but is expected to shrink massively.
 
 Include the repective bundle in your webpage with a module import:
 ```
