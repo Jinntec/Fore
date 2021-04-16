@@ -85,7 +85,6 @@ class FxButton extends XfAbstractControl {
     });
   }
 
-  handleRequired () {}
 }
 
 window.customElements.define('fx-button', FxButton);

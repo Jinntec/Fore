@@ -111,6 +111,14 @@
             "doc/**/*.html"
           ]
         }
+      ],
+      "no-param-reassign": [
+        "off",
+        {
+          "dependencies":[
+            "src/fx-model.js"
+          ]
+        }
       ]
     }
   },

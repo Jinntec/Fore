@@ -3,11 +3,11 @@
 import {
     expect
 } from '@open-wc/testing';
+import {DepGraph} from "../src/dep_graph.js";
 // import DepGraph from '../src/dep_graph.js';
-import {DepGraph, DepGraphCycleError} from '../src/dep_graph.js';
 
 describe("DepGraph", () => {
-    it("should be able to add/remove nodes", function () {
+    it("should be able to add/remove nodes", () => {
         const graph = new DepGraph();
 
         graph.addNode("Foo");
@@ -22,7 +22,7 @@ describe("DepGraph", () => {
         expect(graph.hasNode("Bar")).to.equal(false);
     });
 
-    it("should calculate its size", function () {
+    it("should calculate its size", () => {
         const graph = new DepGraph();
 
         // expect(graph.size()).toBe(0);
@@ -39,7 +39,7 @@ describe("DepGraph", () => {
         expect(graph.size()).to.equal(1)
     });
 
-    it("should treat the node data parameter as optional and use the node name as data if node data was not given", function () {
+    it("should treat the node data parameter as optional and use the node name as data if node data was not given", () => {
         const graph = new DepGraph();
 
         graph.addNode("Foo");
@@ -48,7 +48,7 @@ describe("DepGraph", () => {
         expect(graph.getNodeData("Foo")).to.equal("Foo");
     });
 
-    it("should be able to associate a node name with data on node add", function () {
+    it("should be able to associate a node name with data on node add", () => {
         const graph = new DepGraph();
 
         graph.addNode("Foo", "data");
@@ -57,7 +57,7 @@ describe("DepGraph", () => {
         expect(graph.getNodeData("Foo")).to.equal("data");
     });
 
-    it("should be able to add undefined as node data", function () {
+    it("should be able to add undefined as node data", () => {
         const graph = new DepGraph();
 
         graph.addNode("Foo", undefined);
@@ -66,7 +66,7 @@ describe("DepGraph", () => {
         expect(graph.getNodeData("Foo")).to.be.undefined;
     });
 
-    it("should return true when using hasNode with a node which has falsy data", function () {
+    it("should return true when using hasNode with a node which has falsy data", () => {
         const graph = new DepGraph();
 
         const falsyData = ["", 0, null, undefined, false];
@@ -84,7 +84,7 @@ describe("DepGraph", () => {
         });
     });
 
-    it("should be able to set data after a node was added", function () {
+    it("should be able to set data after a node was added", () => {
         const graph = new DepGraph();
 
         graph.addNode("Foo", "data");
@@ -94,25 +94,25 @@ describe("DepGraph", () => {
         expect(graph.getNodeData("Foo")).to.equal("data2");
     });
 
-    it("should throw an error if we try to set data for a non-existing node", function () {
+    it("should throw an error if we try to set data for a non-existing node", () => {
         const graph = new DepGraph();
 
-        expect(function () {
+        expect(() => {
             graph.setNodeData("Foo", "data");
         }).to.throw("Node does not exist: Foo");
         // }).toThrow(new Error("Node does not exist: Foo"));
     });
 
-    it("should throw an error if the node does not exists and we try to get data", function () {
+    it("should throw an error if the node does not exists and we try to get data", () => {
         const graph = new DepGraph();
 
-        expect(function () {
+        expect(() => {
             graph.getNodeData("Foo");
         }).to.throw("Node does not exist: Foo");
         // }).toThrow(new Error("Node does not exist: Foo"));
     });
 
-    it("should do nothing if creating a node that already exists", function () {
+    it("should do nothing if creating a node that already exists", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -126,7 +126,7 @@ describe("DepGraph", () => {
         expect(graph.dependenciesOf("a")).to.eql(["b"]);
     });
 
-    it("should do nothing if removing a node that does not exist", function () {
+    it("should do nothing if removing a node that does not exist", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -142,7 +142,7 @@ describe("DepGraph", () => {
         expect(graph.hasNode("Foo")).to.equal(false);
     });
 
-    it("should be able to add dependencies between nodes", function () {
+    it("should be able to add dependencies between nodes", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -172,18 +172,18 @@ describe("DepGraph", () => {
     });
 */
 
-    it("should throw an error if a node does not exist and a dependency is added", function () {
+    it("should throw an error if a node does not exist and a dependency is added", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
 
-        expect(function () {
+        expect(() => {
             graph.addDependency("a", "b");
         }).to.throw("Node does not exist: b");
         // }).toThrow(new Error("Node does not exist: b"));
     });
 
-    it("should detect cycles", function () {
+    it("should detect cycles", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -202,7 +202,7 @@ describe("DepGraph", () => {
         // expect.throws(() => graph.dependenciesOf("b"), new DepGraphCycleError(["b", "c", "a", "b"]));
     });
 
-    it("should allow cycles when configured", function () {
+    it("should allow cycles when configured", () => {
         const graph = new DepGraph({ circular: true });
 
         graph.addNode("a");
@@ -224,7 +224,7 @@ describe("DepGraph", () => {
     it(
         "should include all nodes in overall order even from " +
         "cycles in disconnected subgraphs when circular is true",
-        function () {
+        () => {
             const graph = new DepGraph({ circular: true });
 
             graph.addNode("2a");
@@ -258,7 +258,7 @@ describe("DepGraph", () => {
         }
     );
 
-    it("should detect cycles in overall order", function () {
+    it("should detect cycles in overall order", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -283,7 +283,7 @@ describe("DepGraph", () => {
 
     });
 
-    it("should detect cycles in overall order when all nodes have dependants (incoming edges)", function () {
+    it("should detect cycles in overall order when all nodes have dependants (incoming edges)", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -307,7 +307,7 @@ describe("DepGraph", () => {
     it(
         "should detect cycles in overall order when there are several " +
         "disconnected subgraphs (with one that does not have a cycle",
-        function () {
+        () => {
             const graph = new DepGraph();
 
             graph.addNode("a_1");
@@ -335,7 +335,7 @@ describe("DepGraph", () => {
         }
     );
 
-    it("should retrieve dependencies and dependants in the correct order", function () {
+    it("should retrieve dependencies and dependants in the correct order", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -365,7 +365,7 @@ describe("DepGraph", () => {
         expect(graph.dependentsOf("d")).to.eql(["a"]);
     });
 
-    it("should be able to retrieve direct dependencies/dependants", function () {
+    it("should be able to retrieve direct dependencies/dependants", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -395,7 +395,7 @@ describe("DepGraph", () => {
         expect(graph.directDependentsOf("d")).to.eql(["a"]);
     });
 
-    it("should be able to resolve the overall order of things", function () {
+    it("should be able to resolve the overall order of things", () => {
         const graph = new DepGraph();
 
         graph.addNode("b");
@@ -413,7 +413,7 @@ describe("DepGraph", () => {
         expect(graph.overallOrder()).to.eql(["d", "c", "b", "a", "e"]);
     });
 
-    it('should be able to only retrieve the "leaves" in the overall order', function () {
+    it('should be able to only retrieve the "leaves" in the overall order', () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -431,7 +431,7 @@ describe("DepGraph", () => {
         expect(graph.overallOrder(true)).to.eql(["d", "e"]);
     });
 
-    it("should be able to give the overall order for a graph with several disconnected subgraphs", function () {
+    it("should be able to give the overall order for a graph with several disconnected subgraphs", () => {
         const graph = new DepGraph();
 
         graph.addNode("a_1");
@@ -447,13 +447,13 @@ describe("DepGraph", () => {
         expect(graph.overallOrder()).to.eql(["a_2", "a_1", "b_3", "b_2", "b_1"]);
     });
 
-    it("should give an empty overall order for an empty graph", function () {
+    it("should give an empty overall order for an empty graph", () => {
         const graph = new DepGraph();
 
         expect(graph.overallOrder()).to.eql([]);
     });
 
-    it("should still work after nodes are removed", function () {
+    it("should still work after nodes are removed", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -469,7 +469,7 @@ describe("DepGraph", () => {
         expect(graph.dependenciesOf("a")).to.eql(["b"]);
     });
 
-    it("should clone an empty graph", function () {
+    it("should clone an empty graph", () => {
         const graph = new DepGraph();
         expect(graph.size()).to.equal(0);
         const cloned = graph.clone();
@@ -478,7 +478,7 @@ describe("DepGraph", () => {
         expect(graph === cloned).to.equal(false);
     });
 
-    it("should clone a non-empty graph", function () {
+    it("should clone a non-empty graph", () => {
         const graph = new DepGraph();
 
         graph.addNode("a");
@@ -507,7 +507,7 @@ describe("DepGraph", () => {
         expect(cloned.dependenciesOf("a")).to.eql(["c", "b"]);
     });
 
-    it("should only be a shallow clone", function () {
+    it("should only be a shallow clone", () => {
         const graph = new DepGraph();
 
         const data = { a: 42 };
@@ -526,11 +526,11 @@ describe("DepGraph", () => {
     });
 });
 
-describe("DepGraph Performance", function () {
-    it("should not exceed max call stack with a very deep graph", function () {
+describe("DepGraph Performance", () => {
+    it("should not exceed max call stack with a very deep graph", () => {
         const g = new DepGraph();
         const expected = [];
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < 100000; i += 1) {
             const istr = i.toString();
             g.addNode(istr);
             expected.push(istr);
@@ -542,18 +542,16 @@ describe("DepGraph Performance", function () {
         expect(order).to.eql(expected);
     });
 
-    it("should run an a reasonable amount of time for a very large graph", function () {
-        const randInt = function (min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
+    it("should run an a reasonable amount of time for a very large graph", () => {
+        const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
         const g = new DepGraph();
         const nodes = [];
         // Create a graph with 100000 nodes in it with 10 random connections to
         // lower numbered nodes
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < 100000; i += 1) {
             nodes.push(i.toString());
             g.addNode(i.toString());
-            for (let j = 0; j < 10; j++) {
+            for (let j = 0; j < 10; j += 1) {
                 const dep = randInt(0, i);
                 if (i !== dep) {
                     g.addDependency(i.toString(), dep.toString());
@@ -567,23 +565,3 @@ describe("DepGraph Performance", function () {
     });
 });
 
-describe("DepGraphCycleError", function () {
-    // const DepGraphCycleError = DepGraph.DepGraphCycleError;
-
-    it("should have a message", function () {
-        const err = new DepGraphCycleError(["a", "b", "c", "a"]);
-        expect(err.message).to.equal("Dependency Cycle Found: a -> b -> c -> a");
-    });
-
-    it("should be an instanceof DepGraphCycleError", function () {
-        const err = new DepGraphCycleError(["a", "b", "c", "a"]);
-        expect(err instanceof DepGraphCycleError).to.equal(true);
-        expect(err instanceof Error).to.equal(true);
-    });
-
-    it("should have a cyclePath", function () {
-        const cyclePath = ["a", "b", "c", "a"];
-        const err = new DepGraphCycleError(cyclePath);
-        expect(err.cyclePath).to.eql(cyclePath);
-    });
-});

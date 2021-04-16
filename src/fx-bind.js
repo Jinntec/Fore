@@ -180,7 +180,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this.nodeset.forEach(node => {
         const path = XPathUtil.getPath(node);
 
-        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
+        const calculateRefs = this._getReferencesForProperty(this.calculate);
         if (calculateRefs.length !== 0) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
           this._addDependencies(calculateRefs, node, path, 'calculate');
@@ -188,7 +188,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this.model.mainGraph.addNode(`${path}:calculate`, node);
         }
 
-        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+        const readonlyRefs = this._getReferencesForProperty(this.readonly);
         if (readonlyRefs.length !== 0) {
           this._addDependencies(readonlyRefs, node, path, 'readonly');
         } else if (this.readonly) {
@@ -196,21 +196,21 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
 
         // const requiredRefs = this.requiredReferences;
-        const requiredRefs = this._getReferencesForProperty(this.required, node);
+        const requiredRefs = this._getReferencesForProperty(this.required);
         if (requiredRefs.length !== 0) {
           this._addDependencies(requiredRefs, node, path, 'required');
         } else if (this.required) {
           this.model.mainGraph.addNode(`${path}:required`, node);
         }
 
-        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
+        const relevantRefs = this._getReferencesForProperty(this.relevant);
         if (relevantRefs.length !== 0) {
           this._addDependencies(relevantRefs, node, path, 'relevant');
         } else if (this.relevant) {
           this.model.mainGraph.addNode(`${path}:relevant`, node);
         }
 
-        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
+        const constraintRefs = this._getReferencesForProperty(this.constraint);
         if (constraintRefs.length !== 0) {
           this._addDependencies(constraintRefs, node, path, 'constraint');
         } else if (this.constraint) {
@@ -229,7 +229,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _addDependencies(refs, node, path, property) {
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
-        this.model.mainGraph.addNode(`${path}:${property}`,{node:node});
+        this.model.mainGraph.addNode(`${path}:${property}`,{node});
         // this.model.mainGraph.addNode(`${path}:${property}`, node);
       }
       refs.forEach(ref => {
@@ -462,7 +462,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
 
     // let value = null;
-    const mItem = {};
     let targetNode = {};
     if (node.nodeType === node.TEXT_NODE) {
       // const parent = node.parentNode;
@@ -496,7 +495,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     this.getModel().registerModelItem(newItem);
   }
 
-  _getReferencesForProperty(propertyExpr, node) {
+  _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
       // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
       // console.log(`AST for ${propertyExpr}`, ast.innerHTML);p
@@ -521,16 +520,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     const propertyExpr = this[property];
     // console.log('####### ', propertyExpr);
     const result = evaluateXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
-
-    // if expression not simply true() or false() detect nodes referenced by readonly expr
-    if (propertyExpr !== 'true()' && propertyExpr !== 'false()') {
-      const ast = fx.parseScript(
-        propertyExpr,
-        {},
-        new window.DOMParser().parseFromString('<nothing/>', 'text/xml'),
-      );
-      // console.log(`AST for ${propertyExpr}`, ast.innerHTML);
-    }
     return result;
   }
 

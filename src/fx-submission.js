@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit-element';
 import '@polymer/iron-ajax/iron-ajax.js';
 
 // import * as fx from 'fontoxpath';
-import { foreElementMixin } from './ForeElementMixin';
+import { foreElementMixin } from './ForeElementMixin.js';
 
 export class FxSubmission extends foreElementMixin(LitElement) {
   static get styles() {

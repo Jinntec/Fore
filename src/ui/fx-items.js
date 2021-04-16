@@ -30,18 +30,5 @@ export class FxItems extends XfAbstractControl {
     `;
   }
 
-  isRequired () {
-    return false;
-  }
-
-  isReadonly () {
-    return true;
-  }
-
-  handleRequired () {}
-
-  handleReadonly() {
-    // super.handleReadonly();
-  }
 }
 customElements.define('fx-items', FxItems);

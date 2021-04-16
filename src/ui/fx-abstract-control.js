@@ -178,15 +178,15 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
       } else {
         this.classList.add('invalid');
         if (this.modelItem.alerts.length !== 0) {
-          const alert = this.querySelector('fx-alert');
+          // const alert = this.querySelector('fx-alert');
           if (alert) {
             alert.style.display = 'block';
           } else {
-            const alerts = this.modelItem.alerts;
+            const {alerts} = this.modelItem;
             console.log('alerts from bind: ', alerts);
-            alerts.forEach(alert => {
+            alerts.forEach(modelAlert => {
               const newAlert = document.createElement('fx-alert');
-              newAlert.innerHTML = alert;
+              newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
               newAlert.style.display = 'block';
             });
@@ -238,7 +238,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     }
 */
 
-  getControlValue() {}
+  // getControlValue() {}
 
   isRequired() {
     // if(this.control.required){
@@ -279,6 +279,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     return true;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _fadeOut(el) {
     el.style.opacity = 1;
 
@@ -291,12 +292,13 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     })();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _fadeIn(el, display) {
     el.style.opacity = 0;
     el.style.display = display || 'block';
 
     (function fade() {
-      var val = parseFloat(el.style.opacity);
+      let val = parseFloat(el.style.opacity);
       if (!((val += 0.1) > 1)) {
         el.style.opacity = val;
         requestAnimationFrame(fade);

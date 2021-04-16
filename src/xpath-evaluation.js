@@ -39,17 +39,10 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
   ['node()*'],
   'item()?',
-  (dynamicContext, nodes) => {
-    // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
-    // TODO: handle no string passed (null will be passed instead)
-
-    // const { formElement } = dynamicContext.currentContext;
-
-    // console.log('fnInstance dynamicContext: ', dynamicContext);
+  (dynamicContext, nodes) =>
     // console.log('depends on : ', nodes[0]);
-
-    return nodes[0];
-  },
+     nodes[0]
+  ,
 );
 
 // Implement the XForms standard functions here.

@@ -305,14 +305,14 @@ export class FxForm extends HTMLElement {
       const notification = document.createElement('vaadin-notification');
       notification.duration = 0;
       notification.setAttribute('theme', 'error');
-      notification.renderer = function(root) {
+      notification.renderer = (root) => {
         // console.log('root ', root);
 
         root.textContent = msg;
 
         const closeIcon = window.document.createElement('paper-icon-button');
         closeIcon.setAttribute('icon', 'close');
-        closeIcon.addEventListener('click', e => {
+        closeIcon.addEventListener('click', () => {
           // console.log(e);
           notification.close();
         });
@@ -322,7 +322,7 @@ export class FxForm extends HTMLElement {
       notification.open();
     } else {
       const notification = document.createElement('vaadin-notification');
-      notification.renderer = function(root) {
+      notification.renderer = (root) => {
         root.textContent = msg;
       };
       this.appendChild(notification);

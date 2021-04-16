@@ -244,8 +244,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const shadowTemplate = this.shadowRoot.querySelector('template');
     console.log('shadowtempl ', shadowTemplate);
 
-    const defaultSlot = this.shadowRoot.querySelector('slot');
-    const template = defaultSlot.assignedElements({ flatten: true })[0];
+    // const defaultSlot = this.shadowRoot.querySelector('slot');
+    // todo: this is still weak - should handle that better maybe by an explicit slot?
     this.template = this.firstElementChild;
     console.log('### init template for repeat ', this.id, this.template);
 
@@ -256,7 +256,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         new CustomEvent('no-template-error', {
           composed: true,
           bubbles: true,
-          detail: { message: 'no template found for repeat:' + this.id },
+          detail: { message: `no template found for repeat:${this.id}` },
         }),
       );
     }

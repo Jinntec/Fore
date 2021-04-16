@@ -33,18 +33,5 @@ export class FxAlert extends XfAbstractControl {
     `;
   }
 
-  isRequired() {
-    return false;
-  }
-
-  isReadonly() {
-    return true;
-  }
-
-  handleRequired(mi) {}
-
-  handleReadonly() {
-    // super.handleReadonly();
-  }
 }
 customElements.define('fx-alert', FxAlert);
