@@ -51,7 +51,7 @@ class FxControl extends XfAbstractControl {
     return html`
       <slot name="alert"></slot>
       <slot name="label"></slot>
-      <slot></slot>
+      <slot name="control"></slot>
       <slot name="hint"></slot>
       <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
     `;
@@ -62,13 +62,36 @@ class FxControl extends XfAbstractControl {
     super.firstUpdated(_changedProperties);
     // console.log('updateEvent', this.updateEvent);
 
+    let control = {};
+    const controlSlot = this.querySelector('[slot="control"]');
+    if (controlSlot !== null) {
+      /*
+      const ctrl = controlSlot.assignedElements({ flatten: true })[0];
+      if(ctrl){
+        control = ctrl;
+      }
+*/
+      control = controlSlot;
+    } else {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'text');
+      input.setAttribute('slot', 'control');
+      this.appendChild(input);
+      control = input;
+    }
+
+    /*
     let { control } = this;
     if (!control) {
       const input = document.createElement('input');
       input.setAttribute('type', 'text');
+      input.setAttribute('slot','control');
       this.appendChild(input);
+      this.control = input;
+
       control = input;
     }
+*/
 
     control.addEventListener(this.updateEvent, () => {
       console.log('eventlistener ', this.updateEvent);
@@ -78,15 +101,26 @@ class FxControl extends XfAbstractControl {
       setval.setValue(modelitem, control[this.valueProp]);
       // console.log('updated modelitem ', modelitem);
     });
-
+    this.control = control;
     this.inited = true;
   }
 
+  /*
   get control() {
-    const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
-    const ctrl = defaultSlot.assignedElements({ flatten: true })[0];
+    // const defaultSlot = this.shadowRoot.querySelector('slot:not([name])');
+    const controlSlot = this.shadowRoot.querySelector('slot[name=control]');
+    // const ctrl = defaultSlot.assignedElements({ flatten: true })[0];
+    if (controlSlot === null) return null;
+    const ctrl = controlSlot.assignedElements({ flatten: true })[0];
     return ctrl;
   }
+*/
+
+  /*
+  set control(ctrl){
+    this.control = ctrl;
+  }
+*/
 
   async refresh() {
     super.refresh();

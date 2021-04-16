@@ -133,7 +133,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     this.readonly = this.getAttribute('readonly');
     this.required = this.getAttribute('required');
     this.relevant = this.getAttribute('relevant');
-    this.type = this.hasAttribute('type') ? this.getAttribute('type') : 'string';
+    this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
     this.calculate = this.getAttribute('calculate');
   }
 
@@ -180,7 +180,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this.nodeset.forEach(node => {
         const path = XPathUtil.getPath(node);
 
-        const calculateRefs = this._getReferencesForProperty(this.calculate);
+        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
         if (calculateRefs.length !== 0) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
           this._addDependencies(calculateRefs, node, path, 'calculate');
@@ -188,7 +188,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this.model.mainGraph.addNode(`${path}:calculate`, node);
         }
 
-        const readonlyRefs = this._getReferencesForProperty(this.readonly);
+        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
         if (readonlyRefs.length !== 0) {
           this._addDependencies(readonlyRefs, node, path, 'readonly');
         } else if (this.readonly) {
@@ -196,21 +196,21 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
 
         // const requiredRefs = this.requiredReferences;
-        const requiredRefs = this._getReferencesForProperty(this.required);
+        const requiredRefs = this._getReferencesForProperty(this.required, node);
         if (requiredRefs.length !== 0) {
           this._addDependencies(requiredRefs, node, path, 'required');
         } else if (this.required) {
           this.model.mainGraph.addNode(`${path}:required`, node);
         }
 
-        const relevantRefs = this._getReferencesForProperty(this.relevant);
+        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
         if (relevantRefs.length !== 0) {
           this._addDependencies(relevantRefs, node, path, 'relevant');
         } else if (this.relevant) {
           this.model.mainGraph.addNode(`${path}:relevant`, node);
         }
 
-        const constraintRefs = this._getReferencesForProperty(this.constraint);
+        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
         if (constraintRefs.length !== 0) {
           this._addDependencies(constraintRefs, node, path, 'constraint');
         } else if (this.constraint) {
@@ -229,8 +229,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _addDependencies(refs, node, path, property) {
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
-        this.model.mainGraph.addNode(`${path}:${property}`, { node });
-        // this.model.mainGraph.addNode(`${path}:${property}`, node);
+        // this.model.mainGraph.addNode(`${path}:${property}`, { node });
+        this.model.mainGraph.addNode(`${path}:${property}`, node);
       }
       refs.forEach(ref => {
         // Note:
@@ -314,7 +314,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach(n => {
+      inscopeContext.forEach((n) => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {
@@ -368,9 +368,10 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (Array.isArray(this.nodeset)) {
       // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
-      Array.from(this.nodeset).forEach((n, index) => {
+      // Array.from(this.nodeset).forEach((n, index) => {
         // console.log('node ',n);
-        this._createModelItem(n, index);
+        // this._createModelItem(n, index);
+        this._createModelItem(n);
       });
     } else {
       this._createModelItem(this.nodeset);
@@ -379,7 +380,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   static lazyCreateModelitems(model, ref, nodeset) {
     if (Array.isArray(nodeset)) {
-      Array.from(nodeset).forEach((n, index) => {
+      Array.from(nodeset).forEach((n) => {
         FxBind.lazyCreateModelItem(model, ref, n);
       });
     } else {
@@ -433,7 +434,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * @param node
    * @private
    */
-  _createModelItem(node, index) {
+  // _createModelItem(node, index) {
+  _createModelItem(node) {
     // console.log('_createModelItem node', node, index);
 
     /*
@@ -462,6 +464,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
 
     // let value = null;
+    // const mItem = {};
     let targetNode = {};
     if (node.nodeType === node.TEXT_NODE) {
       // const parent = node.parentNode;
@@ -495,6 +498,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     this.getModel().registerModelItem(newItem);
   }
 
+  // _getReferencesForProperty(propertyExpr, node) {
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
       // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
@@ -526,7 +530,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   static shortenPath(path) {
     const steps = path.split('/');
     let result = '';
-    for (let i = 2; i < steps.length; i += 1) {
+    for (let i = 2; i < steps.length; i+= 1) {
       const step = steps[i];
       if (step.indexOf('{}') !== -1) {
         const q = step.split('{}');

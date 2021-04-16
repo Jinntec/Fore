@@ -129,7 +129,7 @@ var DepGraph = (exports.DepGraph = function DepGraph(opts) {
 });
 */
 
-export function DepGraph(opts) {
+export   function DepGraph(opts) {
   this.nodes = {}; // Node -> Node/Data (treated like a Set)
   this.outgoingEdges = {}; // Node -> [Dependency Node]
   this.incomingEdges = {}; // Node -> [Dependant Node]
@@ -181,6 +181,8 @@ DepGraph.prototype = {
    * Check if a node exists in the graph
    */
   hasNode(node) {
+    // return this.nodes.hasOwnProperty(node);
+
     return Object.prototype.hasOwnProperty.call(this.nodes, node);
   },
   /**

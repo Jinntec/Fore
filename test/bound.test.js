@@ -25,13 +25,15 @@ describe('fx-control tests', () => {
         <fx-group>
           <fx-control id="input1" ref="item" update-event="blur" value-prop="value">
             <label slot="label">with onblur handler</label>
-            <input id="control" name="value" value="" />
+            <input id="control" slot="control" name="value" value="" />
           </fx-control>
         </fx-group>
       </fx-form>
     `);
 
     await elementUpdated(el);
+    // await oneEvent(el, 'refresh-done');
+
     const bound = el.querySelector('#input1');
     expect(bound).to.exist;
 
@@ -143,7 +145,7 @@ describe('fx-control tests', () => {
                     <fx-group>
                         <fx-control ref="listitem" update-event="change">
                             <label slot="label">native select</label>
-                            <select>
+                            <select slot="control">
                                 <option value=""></option>
                                 <option value="foo">foo</option>
                                 <option value="bar">bar</option>

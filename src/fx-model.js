@@ -1,4 +1,4 @@
-import { DepGraph } from './dep_graph.js';
+import { DepGraph }  from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
@@ -98,7 +98,7 @@ export class FxModel extends HTMLElement {
           composed: true,
           bubbles: true,
           detail: { model: this },
-        }),
+        })
       );
     }
     this.inited = true;

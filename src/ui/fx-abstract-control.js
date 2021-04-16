@@ -94,6 +94,7 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
     }
   }
 
+  /*
   get control() {
     return this.getControl();
   }
@@ -101,10 +102,13 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
   getControl() {
     return this;
   }
+*/
 
+  /*
   set control(control) {
     this.control = control;
   }
+*/
 
   handleModelItemProperties() {
     this.handleRequired();
@@ -255,7 +259,8 @@ export default class FxAbstractControl extends foreElementMixin(LitElement) {
   }
 
   isValid() {
-    const control = this.getControl();
+    // const control = this.getControl();
+    const {control} = this;
     // if (control.valid) {
     if (control.classList.contains('invalid')) {
       return false;
