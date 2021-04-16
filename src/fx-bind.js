@@ -369,6 +369,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
+      Array.from(this.nodeset).forEach((n) => {
         // console.log('node ',n);
         // this._createModelItem(n, index);
         this._createModelItem(n);
