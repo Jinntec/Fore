@@ -1,64 +1,65 @@
-import { html, css } from 'lit-element';
+import {html, css} from 'lit-element';
 
-import XfAbstractControl from './fx-abstract-control.js';
+import XfAbstractControl from './abstract-control.js';
 
 export class FxOutput extends XfAbstractControl {
-  static get styles() {
-    return css`
-      :host {
-        display: inline-block;
-      }
-      #control {
-        display: inline-block;
-      }
-      [name='label'] {
-        display: inline;
-      }
-    `;
-  }
 
-  static get properties() {
-    return {
-      ...super.properties,
-    };
-  }
+    static get properties() {
+        return {
+            ...super.properties,
+        };
+    }
 
-  render() {
-    return html`
-      <slot name="label"></slot>
-      <span id="control">${this.value}</span>
-    `;
-  }
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
 
-  firstUpdated(_changedProperties) {
-    super.firstUpdated(_changedProperties);
-    /*
-        if(this.querySelector('fx-label')){
-            this.style.display = 'block';
-        }
-*/
-  }
+    }
 
-  /*
-        getControlValue() {
-            // super.getControlValue();
-            console.log('output control value ', this.value);
-            // console.log('output control value ', this.getValue());
-            return this.shadowRoot.querySelector('#control');
-            // return this.value;
-        }
-    */
+    connectedCallback() {
+        console.log('connectedCallback output', this.shadowRoot);
 
-  /*
-  isRequired () {
-    console.log('Output required');
-    return false;
-  }
-*/
+        const style = `
+          :host {
+            display: inline-block;
+          }
+          #widget {
+            display: inline-block;
+          }
+          [name='label'] {
+            display: inline;
+          }
+        `;
 
-  isReadonly() {
-    this.readonly = true;
-    return this.readonly;
-  }
+        const outputHtml = `
+            <slot name="label"></slot>
+            <span id="widget">${this.value}</span>
+        `;
+
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${outputHtml}
+        `
+        // this.widget = this.shadowRoot.querySelector('#widget');
+        this.widget = this.getWidget();
+        console.log('widget ', this.widget);
+
+    }
+
+    getWidget() {
+        return this.shadowRoot.querySelector('#widget');
+    }
+
+    async updateWidgetValue() {
+        this.widget.innerHTML = this.value;
+    }
+
+    isReadonly() {
+        this.readonly = true;
+        return this.readonly;
+    }
 }
+
 customElements.define('fx-output', FxOutput);

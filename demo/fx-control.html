@@ -68,6 +68,7 @@
                 <h1>The fx-control element</h1>
                 <p></p>
 
+<!--
                 <section>
                     <h2>Unwrapped custom control</h2>
                     <demo-snippet>
@@ -76,11 +77,13 @@
                         </template>
                     </demo-snippet>
                 </section>
+-->
 
                 <h2>wrapped native controls</h2>
 
                 <section>
                     <h3>Shortest way to bind a control to a node in the data</h3>
+<!--
                     <demo-snippet>
                         <template>
 
@@ -88,140 +91,143 @@
                             <fx-control ref="item"></fx-control>
                         </template>
                     </demo-snippet>
+-->
                     <p>When nothing is specified or wrapped a native input will be created, listening for blur event to
                         update
                         the bound node.</p>
                 </section>
 
-                <section>
-                    <h3>Firing on 'input' event</h3>
+                                <section>
+                                    <h3>Firing on 'input' event</h3>
 
-                    <demo-snippet>
-                        <template>
-                            <fx-control ref="item" update-event="input">
-                                <label slot="label">native input with input event handler</label>
-                                <input name="value" value="">
-                            </fx-control>
-                        </template>
-                    </demo-snippet>
+                                    <demo-snippet>
+                                        <template>
+                                            <fx-control ref="item" update-event="input">
+                                                <label slot="label">native input with input event handler</label>
+                                                <input name="value" value="">
+                                            </fx-control>
+                                        </template>
+                                    </demo-snippet>
 
-                </section>
+                                </section>
+                <!--
 
-                <section>
-                    <h3>Using slots</h3>
-                    <demo-snippet>
-                        <template>
+                                <section>
+                                    <h3>Using slots</h3>
+                                    <demo-snippet>
+                                        <template>
 
-                            <fx-control ref="item">
-                                <label slot="label">native input with onblur handler</label>
-                            </fx-control>
-                        </template>
-                    </demo-snippet>
-                    <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
-                </section>
-
-
-                <section>
-                    <h3>Using a textarea</h3>
-
-                    <demo-snippet>
-                        <template>
-                            <fx-control ref="item" update-event="input">
-                                <label for="text1" slot="label">native textarea</label>
-                                <textarea id="text1" cols="40" rows="4"></textarea>
-                            </fx-control>
-                            <fx-output ref="item"></fx-output>
-                        </template>
-                    </demo-snippet>
-
-                </section>
-
-                <section>
-                    <h3>Using a checkbox</h3>
-
-                    <demo-snippet>
-                        <template>
-                            <fx-control ref="checked" update-event="input" value-prop="checked">
-                                <label for="check1" slot="label">native checkbox</label>
-                                <input id="check1" type="checkbox">
-                            </fx-control>
-                            Value is:
-                            <fx-output ref="checked"></fx-output>
-                        </template>
-                    </demo-snippet>
-
-                </section>
-
-                <section>
-                    <h3>Native select</h3>
-                    <demo-snippet>
-                        <template>
-
-                            <fx-control ref="listitem" update-event="change">
-                                <label slot="label">native select</label>
-                                <select>
-                                    <option value=""></option>
-                                    <option value="foo">foo</option>
-                                    <option value="bar">bar</option>
-                                    <select>
-                            </fx-control>
-
-                            Selected value is:
-                            <fx-output ref="listitem"></fx-output>
-
-                        </template>
-                    </demo-snippet>
-                </section>
-
-                <section>
-                    <h3>Datalist</h3>
-                    <demo-snippet>
-                        <template>
-
-                            <fx-control ref="listitem" update-event="input">
-                                <label slot="label">input with datalist</label>
-                                <input list="ice-cream-flavors">
-                                </input>
-                                <datalist id="ice-cream-flavors">
-                                    <option value="Chocolate">
-                                    <option value="Coconut">
-                                    <option value="Mint">
-                                    <option value="Strawberry">
-                                    <option value="Vanilla">
-                                </datalist>
-                            </fx-control>
+                                            <fx-control ref="item">
+                                                <label slot="label">native input with onblur handler</label>
+                                            </fx-control>
+                                        </template>
+                                    </demo-snippet>
+                                    <p>Besides 'label' there are slots for 'alert' and 'hint'</p>
+                                </section>
 
 
-                            Selected value is:
-                            <fx-output ref="listitem"></fx-output>
+                                <section>
+                                    <h3>Using a textarea</h3>
 
-                        </template>
-                    </demo-snippet>
-                </section>
+                                    <demo-snippet>
+                                        <template>
+                                            <fx-control ref="item" update-event="input">
+                                                <label for="text1" slot="label">native textarea</label>
+                                                <textarea id="text1" cols="40" rows="4"></textarea>
+                                            </fx-control>
+                                            <fx-output ref="item"></fx-output>
+                                        </template>
+                                    </demo-snippet>
+
+                                </section>
+
+                                <section>
+                                    <h3>Using a checkbox</h3>
+
+                                    <demo-snippet>
+                                        <template>
+                                            <fx-control ref="checked" update-event="input" value-prop="checked">
+                                                <label for="check1" slot="label">native checkbox</label>
+                                                <input id="check1" type="checkbox">
+                                            </fx-control>
+                                            Value is:
+                                            <fx-output ref="checked"></fx-output>
+                                        </template>
+                                    </demo-snippet>
+
+                                </section>
+
+                                <section>
+                                    <h3>Native select</h3>
+                                    <demo-snippet>
+                                        <template>
+
+                                            <fx-control ref="listitem" update-event="change">
+                                                <label slot="label">native select</label>
+                                                <select>
+                                                    <option value=""></option>
+                                                    <option value="foo">foo</option>
+                                                    <option value="bar">bar</option>
+                                                    <select>
+                                            </fx-control>
+
+                                            Selected value is:
+                                            <fx-output ref="listitem"></fx-output>
+
+                                        </template>
+                                    </demo-snippet>
+                                </section>
+
+                                <section>
+                                    <h3>Datalist</h3>
+                                    <demo-snippet>
+                                        <template>
+
+                                            <fx-control ref="listitem" update-event="input">
+                                                <label slot="label">input with datalist</label>
+                                                <input list="ice-cream-flavors">
+                                                </input>
+                                                <datalist id="ice-cream-flavors">
+                                                    <option value="Chocolate">
+                                                    <option value="Coconut">
+                                                    <option value="Mint">
+                                                    <option value="Strawberry">
+                                                    <option value="Vanilla">
+                                                </datalist>
+                                            </fx-control>
 
 
-                <section>
-                    <h3>Wrapped paper controls</h3>
+                                            Selected value is:
+                                            <fx-output ref="listitem"></fx-output>
 
-                    <demo-snippet>
-                        <template>
+                                        </template>
+                                    </demo-snippet>
+                                </section>
 
-                            <h3>with onblur firing</h3>
-                            <fx-control ref="item" update-event="change">
-                                <paper-input label="the item in paper land"></paper-input>
-                            </fx-control>
+                -->
 
-                            <h3>with incremental firing</h3>
-                            <fx-control ref="item" update-event="keyup">
-                                <paper-input label="the item in paper land"></paper-input>
-                            </fx-control>
+                                <section>
+                                    <h3>Wrapped paper controls</h3>
 
-                            <fx-control ref="checked" update-event="change" value-prop="checked">
-                                <paper-checkbox>paper checkbox</paper-checkbox>
-                            </fx-control>
-                        </template>
-                    </demo-snippet>
-                </section>
+                                    <demo-snippet>
+                                        <template>
+
+                                            <h3>with onblur firing</h3>
+                                            <fx-control ref="item" update-event="change">
+                                                <paper-input  class="fxWidget" label="the item in paper land"></paper-input>
+                                            </fx-control>
+
+                                            <h3>with incremental firing</h3>
+                                            <fx-control ref="item" update-event="keyup">
+                                                <paper-input class="fxWidget" label="the item in paper land"></paper-input>
+                                            </fx-control>
+
+                                            <fx-control ref="checked" update-event="change" value-prop="checked">
+                                                <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
+                                            </fx-control>
+                                        </template>
+                                    </demo-snippet>
+                                </section>
 
                 <!--        Selected list item :<fx-output ref="item"></fx-output>-->
 

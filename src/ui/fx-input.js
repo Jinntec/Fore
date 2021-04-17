@@ -1,7 +1,7 @@
-import { html, css } from 'lit-element';
+import {html, css} from 'lit-element';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import XfAbstractControl from './fx-abstract-control.js';
+import XfAbstractControl from './abstract-control.js';
 import '../actions/fx-setvalue.js';
 import '../fx-model.js';
 
@@ -12,8 +12,8 @@ import '../fx-model.js';
  * @customElement
  */
 class FxInput extends XfAbstractControl {
-  static get styles() {
-    return css`
+    static get styles() {
+        return css`
       :host {
         display: inline-block;
       }
@@ -27,45 +27,45 @@ class FxInput extends XfAbstractControl {
         color: ;
       }
     `;
-  }
+    }
 
-  static get properties() {
-    return {
-      ...super.properties,
-      type: {
-        type: String,
-      },
-      label: {
-        type: String,
-      },
-      value: {
-        type: String,
-        attribute: 'value',
-        reflect: true,
-      },
-      required: {
-        type: Boolean,
-        reflect: true,
-      },
-    };
-  }
+    static get properties() {
+        return {
+            ...super.properties,
+            type: {
+                type: String,
+            },
+            label: {
+                type: String,
+            },
+            value: {
+                type: String,
+                attribute: 'value',
+                reflect: true,
+            },
+            required: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
 
-  constructor() {
-    super();
-    this.type = 'text';
-    this.label = '';
-    this.value = '';
-    this.required = false;
-    this.valid = true;
-  }
+    constructor() {
+        super();
+        this.type = 'text';
+        this.label = '';
+        this.value = '';
+        this.required = false;
+        this.valid = true;
+    }
 
-  render() {
-    return html`
+    render() {
+        return html`
       ${this.type === 'text' || this.type === 'date'
-        ? html`
+            ? html`
             <slot></slot>
             <paper-input
-              id="control"
+              id="widget"
               label="${this.label}"
               .value="${this.value}"
               type="${this.type}"
@@ -76,41 +76,44 @@ class FxInput extends XfAbstractControl {
             </paper-input>
             <fx-setvalue id="setvalue" ref="${this.ref}" value="${this.value}"></fx-setvalue>
           `
-        : ''}
+            : ''}
       ${this.type === 'checkbox'
-        ? html`
+            ? html`
             <paper-checkbox
               id="control"
               label="${this.label}"
               ?checked="${this.value === 'true'}"
             ></paper-checkbox>
           `
-        : ''}
+            : ''}
     `;
-  }
+    }
 
-  _handleInput() {
-    // const mi = this.getmdelItem();
-    console.log('_handleInput ', this.modelItem);
-    // console.log('modelItem ', mi);
+    async updateWidgetValue() {
+    }
 
-    const inputValue = this.shadowRoot.querySelector('#control').value;
+    _handleInput() {
+        // const mi = this.getmdelItem();
+        console.log('_handleInput ', this.modelItem);
+        // console.log('modelItem ', mi);
 
-    const setval = this.shadowRoot.querySelector('#setvalue');
-    setval.model = this.getModel();
-    setval.setValue(this.modelItem, inputValue);
+        const inputValue = this.shadowRoot.querySelector('#control').value;
 
-    console.log('instanceData ', this.getModel().instances[0].getInstanceData());
-  }
+        const setval = this.shadowRoot.querySelector('#setvalue');
+        setval.model = this.getModel();
+        setval.setValue(this.modelItem, inputValue);
 
-  getControl() {
-    return this.shadowRoot.getElementById('control');
-  }
+        console.log('instanceData ', this.getModel().instances[0].getInstanceData());
+    }
 
-  // updateControlValue(){
-  //     console.log('_updateControlValue fx-input');
-  //     this.shadowRoot.getElementById('control').value = this.value;
-  // }
+    getControl() {
+        return this.shadowRoot.getElementById('control');
+    }
+
+    // updateWidgetValue(){
+    //     console.log('_updateControlValue fx-input');
+    //     this.shadowRoot.getElementById('control').value = this.value;
+    // }
 }
 
 window.customElements.define('fx-input', FxInput);

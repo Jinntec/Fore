@@ -1,6 +1,6 @@
 import { html, css } from 'lit-element';
 
-import XfAbstractControl from './fx-abstract-control.js';
+import XfAbstractControl from './abstract-control.js';
 
 export class FxAlert extends XfAbstractControl {
   static get styles() {

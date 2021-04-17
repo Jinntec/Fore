@@ -35,7 +35,7 @@ describe('fx-control tests', () => {
     const bound = el.querySelector('#input1');
     expect(bound).to.exist;
 
-    const input = bound.control;
+    const input = bound.widget;
     expect(input).to.exist;
 
     expect(bound.modelItem.value).to.equal('foobar');
@@ -62,8 +62,8 @@ describe('fx-control tests', () => {
         </fx-model>
         <fx-group>
           <fx-control id="input1" ref="item" update-event="blur" value-prop="value">
-            <label slot="label">with onblur handler</label>
-            <input id="control" slot="control" name="value" value="" />
+            <label>with onblur handler</label>
+            <input class="fxWidget" name="value" value="" />
           </fx-control>
         </fx-group>
       </fx-form>
@@ -75,8 +75,8 @@ describe('fx-control tests', () => {
     const bound = el.querySelector('#input1');
     expect(bound).to.exist;
 
-    const control = document.getElementById('control');
-    expect(bound.control).to.equal(control);
+    const control = document.querySelector('.fxWidget');
+    expect(bound.widget).to.equal(control);
   });
 
 
@@ -155,7 +155,7 @@ describe('fx-control tests', () => {
                     <fx-group>
                         <fx-control ref="listitem" update-event="change">
                             <label slot="label">native select</label>
-                            <select slot="control">
+                            <select class="fxWidget">
                                 <option value=""></option>
                                 <option value="foo">foo</option>
                                 <option value="bar">bar</option>

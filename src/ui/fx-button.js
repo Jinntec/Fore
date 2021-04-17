@@ -1,6 +1,6 @@
 import { html, css } from 'lit-element';
 import '@polymer/paper-button/paper-button.js';
-import XfAbstractControl from './fx-abstract-control.js';
+import XfAbstractControl from './abstract-control.js';
 /**
  * `fx-button`
  * a button triggering Fore actions

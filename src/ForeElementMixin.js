@@ -27,7 +27,7 @@ export const foreElementMixin = superclass =>
       super();
       this.model = null;
       this.modelItem = {};
-      this.ref = '';
+      this.ref = this.hasAttribute('ref')?this.getAttribute('ref'):'';
       this.repeated = false;
     }
 

@@ -224,7 +224,7 @@ describe('repeat Tests', () => {
 
           <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
             <template>
-              <fx-input label="Task" ref="." id="task" type="text"></fx-input>
+              <fx-control label="Task" ref="." id="task" type="text"></fx-control>
             </template>
           </fx-repeat>
 
@@ -238,14 +238,14 @@ describe('repeat Tests', () => {
     // await elementUpdated(el);
     await oneEvent(el, 'refresh-done');
 
-    const inputs = el.querySelectorAll('fx-repeatitem fx-input');
+    const inputs = el.querySelectorAll('fx-repeatitem fx-control');
     await elementUpdated(inputs);
 
     expect(inputs.length).to.equal(2);
     console.log('inputs ', inputs);
-    expect(inputs[0].getAttribute('value')).to.equal('Pick up Milk');
+    // expect(inputs[0].getAttribute('value')).to.equal('Pick up Milk');
     expect(inputs[0].value).to.equal('Pick up Milk');
-    expect(inputs[1].getAttribute('value')).to.equal('Make tutorial part 1');
+    // expect(inputs[1].getAttribute('value')).to.equal('Make tutorial part 1');
     expect(inputs[1].value).to.equal('Make tutorial part 1');
   });
 
