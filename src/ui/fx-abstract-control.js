@@ -11,7 +11,7 @@ import { ModelItem } from '../modelitem.js';
  *
  * todo: remove LitElement dependency
  */
-export default class FxAbstractControl extends foreElementMixin(LitElement) {
+export default class FxAbstractControl extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,

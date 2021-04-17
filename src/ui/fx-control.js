@@ -49,11 +49,8 @@ class FxControl extends XfAbstractControl {
 
   render() {
     return html`
-      <slot name="alert"></slot>
-      <slot name="label"></slot>
-      <slot name="control"></slot>
-      <slot name="hint"></slot>
-      <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
+        <slot></slot>
+        <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
     `;
   }
 
