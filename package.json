@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
@@ -100,7 +100,11 @@
       "@open-wc/eslint-config",
       "eslint-config-prettier"
     ],
-    "ignorePatterns": ["demo/old/**","resources/**","doc/**/*"],
+    "ignorePatterns": [
+      "demo/old/**",
+      "resources/**",
+      "doc/**/*"
+    ],
     "rules": {
       "no-console": "off",
       "import/no-extraneous-dependencies": [
@@ -115,7 +119,7 @@
       "no-param-reassign": [
         "off",
         {
-          "dependencies":[
+          "dependencies": [
             "src/fx-model.js"
           ]
         }
