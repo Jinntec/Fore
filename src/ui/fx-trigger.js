@@ -59,7 +59,7 @@ export class FxTrigger extends XfAbstractControl {
     `;
     }
 
-    performActions() {
+    performActions(e) {
         console.log('performActions ', this.children);
         const repeatedItem = this.closest('fx-repeatitem');
         if (repeatedItem) {
@@ -71,7 +71,7 @@ export class FxTrigger extends XfAbstractControl {
             const child = this.children[i];
 
             if (typeof child.execute === 'function') {
-                child.execute();
+                child.execute(e);
             }
         }
 

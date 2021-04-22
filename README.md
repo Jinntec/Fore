@@ -19,15 +19,49 @@ JS framework or component library.
 ## Features
 
 * MVC architecture 
-* state engine
-* dependency tracking
-* descriptive actions
+* state engine with dependency tracking
+* fully descriptive
 * lifecycle with detailed state events
-* generic UI control to bind any kind of component 
 * multiple XML (or JSON) data instances
-* repeats
-* template expressions
+* group, repeat + switch container components
+* generic UI control to bind any kind of component 
+* bound template expressions
 * powerful XPath/XQuery 3.1 support in the browser
+
+## Framework-agnostic
+
+Fore focuses on providing a stable processing engine for model-driven
+forms. Major premise for a longer-term solution is to stick closely to the features
+of the browser platform and avoid specific frameworks for the implementation.
+
+That said it's obvious that Fore does not provide a set of controls
+by itself but allows you to use whatever uber-fancy components you have
+found elsewhere. May it be some material-design date-picker or 
+that nice jquery(sic!) timeline nobody has done better yet. 
+
+That comes to the price of slightly more markup up-front (working on it already)
+but allows big flexibility and makes it compatible with any framework
+that plays by the rules of the platform.
+
+To use whatever component in Fore you wrap it up in the generic
+`fx-control` element.
+
+```
+<fx-control ref="boundnode">
+    <paper-input class="widget" label="my input" name="foo">
+</fx-control>
+```
+
+The additional attributes `update-event` and `value-prop` allow to 
+customize the wiring of the widget you use. 
+
+```
+<fx-control ref="checked" update-event="change" value-prop="checked">
+    <paper-checkbox class="widget">paper checkbox</paper-checkbox>
+</fx-control>
+```
+
+More examples are found in the demos (see running)
 
 
 ## Warning
@@ -67,9 +101,12 @@ If you intend to hack it yourself ...
 * run `npm i` to install dependencies
 
 
-## Running
+## Running demos and docs
 
-`npm run start`
+1. checkout this repo or download the sources
+1. change to the rootfolder
+1. run `npm i` to install dependencies
+1. run `npm run start`
 
 starts the testserver with 'doc/index.html' as entry page. This will send you to 'doc/demos.html' as an
 entry point. This lists out running examples to learn and copy from.

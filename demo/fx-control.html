@@ -7,12 +7,15 @@
     <title>fx-control</title>
 
     <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="stylesheet" href="../resources/demo.css">
     <link rel="stylesheet" href="../resources/fore.css">
-    <link href="../resources/demo.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
 
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '@polymer/paper-input/paper-input.js';
+        import '@polymer/paper-checkbox/paper-checkbox.js';
     </script>
 
 
@@ -32,7 +35,8 @@
         }
 
         label {
-            display: table-cell;
+            /*display: table-cell;*/
+            display: block;
             padding-right: 10px;
             vertical-align: top;
         }
@@ -47,10 +51,9 @@
     </style>
 </head>
 <body unresolved="unresolved">
-
+    <div class="wrapper">
 
         <fx-form>
-            <fx-message event="refresh-done">Hi</fx-message>
             <fx-model id="model1">
                 <fx-instance>
                     <data>
@@ -68,18 +71,11 @@
             <fx-group>
 
                 <h1>The fx-control element</h1>
-                <p></p>
 
-<!--
-                <section>
-                    <h2>Unwrapped custom control</h2>
-                    <demo-snippet>
-                        <template>
-                            <fx-input label="fx-input" ref="item"></fx-input>
-                        </template>
-                    </demo-snippet>
-                </section>
--->
+
+                <p><code>fx-control</code> is a generic control.</p>
+                <p>Its purpose is to bind a 'widget' to the model of the form. The widget is that part of the control
+                that the user actually interacts with.</p>
 
                 <h2>wrapped native controls</h2>
 
@@ -87,28 +83,32 @@
                     <h3>Shortest way to bind a control to a node in the data</h3>
                     <demo-snippet>
                         <template>
-                            <label>Defaults</label>
-                            <fx-control ref="item"></fx-control>
+                            <fx-control ref="item">
+                                <label>Defaults</label>
+                            </fx-control>
                         </template>
                     </demo-snippet>
-                    <p>When nothing is specified or wrapped a native input will be created, listening for blur event to
+                    <p>By default a native <code>input</code> will be created as widget, listening for <code>blur</code> event to
                         update
                         the bound node.</p>
                 </section>
 
-                                <section>
-                                    <h3>Firing on 'input' event</h3>
+                <section>
+                    <h3>Customizing the event - firing on 'input' event</h3>
 
-                                    <demo-snippet>
-                                        <template>
-                                            <fx-control ref="item" update-event="input">
-                                                <label slot="label">native input with input event handler</label>
-                                                <input name="value" value="">
-                                            </fx-control>
-                                        </template>
-                                    </demo-snippet>
+                    <demo-snippet>
+                        <template>
+                            <fx-control ref="item" update-event="input">
+                                <label slot="label">native input with input event handler</label>
+                                <fx-message event="value-changed">Hi {.}</fx-message>
+                            </fx-control>
+                        </template>
+                    </demo-snippet>
 
-                                </section>
+                    <p>Use <code>update-event</code> attribute to change the event to listen for.</p>
+                    <p>In this case each keystroke will update the model (fire an <code>input</code> event). The <code>fx-message</code> action
+                    listens for a <code>value-changed</code> event it will receive during refresh after the model has changed.</p>
+                </section>
                 <!--
 
                                 <section>
@@ -213,21 +213,21 @@
 
                                             <h3>with onblur firing</h3>
                                             <fx-control ref="item" update-event="change">
-                                                <paper-input  class="fxWidget" label="the item in paper land"></paper-input>
+                                                <paper-input  class="widget" label="the item in paper land"></paper-input>
                                             </fx-control>
 
                                             <h3>Using template expression to bind label to control</h3>
                                             <fx-control ref="item" update-event="change">
-                                                <paper-input  class="fxWidget" label="{../label}"></paper-input>
+                                                <paper-input  class="widget" label="{../label}"></paper-input>
                                             </fx-control>
 
                                             <h3>with incremental firing</h3>
                                             <fx-control ref="item" update-event="keyup">
-                                                <paper-input class="fxWidget" label="the item in paper land"></paper-input>
+                                                <paper-input class="widget" label="the item in paper land"></paper-input>
                                             </fx-control>
 
                                             <fx-control ref="checked" update-event="change" value-prop="checked">
-                                                <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
+                                                <paper-checkbox  class="widget">paper checkbox</paper-checkbox>
                                             </fx-control>
 
                                         </template>
@@ -267,7 +267,7 @@
             </template>
         </fx-control-factory>
 -->
-
+    </div>
 <script type="module" src="../index.js"></script>
 
 </body>

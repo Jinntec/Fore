@@ -10,6 +10,7 @@
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '@polymer/paper-button/paper-button.js';
     </script>
 
 
@@ -33,6 +34,9 @@
             height: 400px;
             background: lightblue;
             padding: 10px;
+        }
+        fx-trigger{
+            display: inline-block;
         }
 
         [unresolved] {
@@ -66,17 +70,20 @@
 
 
 
-            <fx-button label="toggle page 1" raised="raised">
+            <fx-trigger label="toggle page 1">
+                <paper-button>toggle page 1</paper-button>
                 <fx-toggle case="one"></fx-toggle>
-            </fx-button>
+            </fx-trigger>
 
-            <fx-button label="toggle page 2" raised="raised">
+            <fx-trigger label="toggle page 2" raised="raised">
+                <paper-button>toggle page 2</paper-button>
                 <fx-toggle case="two"></fx-toggle>
-            </fx-button>
+            </fx-trigger>
 
-            <fx-button label="toggle page 3" raised="raised">
+            <fx-trigger label="toggle page 3" raised="raised">
+                <paper-button>toggle page 3</paper-button>
                 <fx-toggle case="three"></fx-toggle>
-            </fx-button>
+            </fx-trigger>
 
             <fx-switch ref="page">
                 <fx-case id="one" name="page1">
