@@ -27,7 +27,7 @@ export const foreElementMixin = superclass =>
       super();
       this.model = null;
       this.modelItem = {};
-      this.ref = '';
+      this.ref = this.hasAttribute('ref')?this.getAttribute('ref'):'';
       this.repeated = false;
     }
 
@@ -37,7 +37,8 @@ export const foreElementMixin = superclass =>
         return this.model;
       }
       // const ownerForm = this.closest('fx-form');
-      const ownerForm = this.getOwnerForm(this);
+      // const ownerForm = this.getOwnerForm(this);
+      const ownerForm = this.getOwnerForm();
       return ownerForm.querySelector('fx-model');
     }
 

@@ -18,9 +18,9 @@ describe('setvalue tests', () => {
 
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
-          <fx-button id="btn" label="say 'hello Universe'">
+          <fx-trigger id="btn" label="say 'hello Universe'">
             <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);
@@ -55,9 +55,9 @@ describe('setvalue tests', () => {
 
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
-          <fx-button id="btn" label="say 'hello Universe'">
+          <fx-trigger id="btn" label="say 'hello Universe'">
             <fx-setvalue ref="foo" value="Hello Universe"></fx-setvalue>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);
@@ -92,9 +92,9 @@ describe('setvalue tests', () => {
 
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
-          <fx-button id="btn" label="say 'hello Universe'">
+          <fx-trigger id="btn" label="say 'hello Universe'">
             <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);
@@ -129,9 +129,9 @@ describe('setvalue tests', () => {
 
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
-          <fx-button id="btn" label="say 'hello Universe'">
+          <fx-trigger id="btn" label="say 'hello Universe'">
             <fx-setvalue ref="greeting"></fx-setvalue>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);

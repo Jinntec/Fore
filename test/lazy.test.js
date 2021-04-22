@@ -4,6 +4,55 @@ import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 import '../index.js';
 
 describe('lazy initialize', () => {
+  it('creates model and instance', async () => {
+    const el = await fixtureSync(html`
+        <fx-form>
+            <fx-output ref="greeting">Hello Universe</fx-output>
+        </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
+    expect(model.modelItems.length).to.equal(1);
+
+    const mi1 = model.modelItems[0];
+    expect(mi1.value).to.equal('Hello Universe');
+    expect(mi1.readonly).to.equal(false);
+    expect(mi1.required).to.equal(false);
+    expect(mi1.relevant).to.equal(true);
+    expect(mi1.constraint).to.equal(true);
+    expect(mi1.type).to.equal('xs:string');
+    expect(mi1.path).to.equal('/greeting[1]');
+
+  });
+
+  it('constructs correct elements for nested location path', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+          <fx-output ref="planet/greeting"></fx-output>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
+    expect(model.modelItems.length).to.equal(1);
+
+    const inst = el.querySelector('fx-instance');
+    console.log('++++++++++++ inst ', inst);
+    // await elementUpdated(inst);
+    expect(inst).to.exist;
+    expect(inst.instanceData).to.exist;
+    const root = inst.instanceData.firstElementChild;
+    expect(root.nodeName).to.equal('data');
+    const outer = root.firstElementChild;
+    expect(outer.nodeName).to.equal('planet');
+    const inner = outer.firstElementChild;
+    expect(inner.nodeName).to.equal('greeting');
+  });
+
+
   it('creates modelItem during refresh', async () => {
     const el = await fixtureSync(html`
       <fx-form>
@@ -92,4 +141,5 @@ describe('lazy initialize', () => {
     const inner2 = inner.nextSibling;
     expect(inner2.nodeName).to.equal('inner2');
   });
+
 });

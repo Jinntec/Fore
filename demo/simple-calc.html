@@ -21,11 +21,6 @@
             background: #76ff03;
         }
 
-        fx-input[required]:after {
-            content: "*";
-            display: inline;
-            color: red;
-        }
 
     </style>
 </head>
@@ -55,8 +50,9 @@
                 <fx-group>
 
 
-                    <fx-input ref="value" label="some string">
-                    </fx-input>
+                    <fx-control ref="value" update-event="input">
+                        <label>some string</label>
+                    </fx-control>
                     <h2>
                         String length is:
                         <fx-output id="output" ref="computed"></fx-output>

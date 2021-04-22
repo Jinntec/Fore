@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hi</title>
+
+    <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        fx-trigger{
+            display: block;
+            width: 200px;
+            margin:1rem 0;
+        }
+        fx-trigger *{
+            cursor: pointer;
+        }
+        .image img{
+            width: 200px;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Trigger</h1>
+
+    <p>Trigger just do that - trigger actions.</p>
+    <p>Triggers will contain arbitrary markup to visualize an element for the user to interact with. </p>
+    <p>`fx-trigger` listens to 'enter' and 'space' keys and to 'click' events to trigger its action(s).</p>
+    <span>
+        <a href="#">test</a>
+    </span>
+    <demo-snippet>
+        <template>
+            <fx-form>
+                <fx-trigger>
+                    <button>I'm a button</button>
+                    <fx-message class="action">Hi from button</fx-message>
+                </fx-trigger>
+
+                <fx-trigger label="I'm a labelled button">
+                    <button>I'm a button</button>
+                    <fx-message class="action">Hi from button</fx-message>
+                </fx-trigger>
+
+                <fx-trigger>
+                    <a href="#">I'm a link</a>
+                    <fx-message>Hi from link</fx-message>
+                </fx-trigger>
+
+                <fx-trigger class="image">
+                    <img src="../resources/images/light6.png" title="click on me">
+                    <fx-message>Hi from image</fx-message>
+                </fx-trigger>
+
+            </fx-form>
+        </template>
+    </demo-snippet>
+    <button>test</button>
+    <h2>Description</h2>
+    <p>
+    </p>
+</div>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

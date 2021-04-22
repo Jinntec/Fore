@@ -38,7 +38,7 @@ export class FxAction extends foreElementMixin(HTMLElement) {
     }
   }
 
-  execute() {
+  execute(e) {
     if (this.isBound()) {
       this.evalInContext();
     }

@@ -114,11 +114,13 @@ export class FxForm extends HTMLElement {
     console.group('### refresh');
     // await this.updateComplete;
 
-    // ### refresh template expressions
-    this._refreshTemplateExpressions();
 
     Fore.refreshChildren(this);
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
+
+    // ### refresh template expressions
+    this._refreshTemplateExpressions();
+
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
@@ -180,7 +182,8 @@ export class FxForm extends HTMLElement {
     const { name } = exprObj;
     const { node } = exprObj;
     console.log('expr ', expr);
-    const matches = expr.match(/{\w+}/g);
+    // const matches = expr.match(/{\w+}/g);
+    const matches = expr.match(/{[a-z,'.','..','/','@','(','),'[','\]','=',\s]*}/g);
     matches.forEach(match => {
       console.log('match ', match);
       const naked = match.substring(1, match.length - 1);
@@ -232,11 +235,12 @@ export class FxForm extends HTMLElement {
       const generatedInstance = document.createElement('fx-instance');
       model.appendChild(generatedInstance);
 
-      const generated = document.implementation.createDocument(null, 'data');
+      const generated = document.implementation.createDocument(null, 'data',null);
       // const newData = this._generateInstance(this, generated.firstElementChild);
       this._generateInstance(this, generated.firstElementChild);
       generatedInstance.instanceData = generated;
       model.instances.push(generatedInstance);
+      console.log('generatedInstance ', this.getModel().getDefaultInstanceData())
     }
   }
 
@@ -247,6 +251,60 @@ export class FxForm extends HTMLElement {
   _generateInstance(start, parent) {
     if (start.hasAttribute('ref')) {
       const ref = start.getAttribute('ref');
+
+      if(ref.includes('/')){
+        console.log('complex path to create ', ref);
+        const steps = ref.split('/');
+        steps.forEach(step => {
+          console.log('step ', step);
+
+          // const generated = document.createElement(ref);
+          parent = this._generateNode(parent, step, start);
+        });
+      }else{
+        parent = this._generateNode(parent, ref, start);
+      }
+
+    }
+
+    if (start.hasChildNodes()) {
+      const list = start.children;
+      for (let i = 0; i < list.length; i += 1) {
+        this._generateInstance(list[i], parent);
+      }
+    }
+    return parent;
+  }
+
+  _generateNode(parent, step, start) {
+    const generated = parent.ownerDocument.createElement(step);
+    if (start.children.length === 0) {
+      generated.textContent = start.textContent;
+    }
+    parent.appendChild(generated);
+    parent = generated;
+    return parent;
+  }
+
+  _createStep(){
+
+  }
+
+/*
+  _generateInstance(start, parent) {
+    if (start.hasAttribute('ref')) {
+      const ref = start.getAttribute('ref');
+
+      if(ref.includes('/')){
+        console.log('complex path to create ', ref);
+        const steps = ref.split('/');
+        steps.forEach(step => {
+          console.log('step ', step);
+
+
+        });
+      }
+
       // const generated = document.createElement(ref);
       const generated = parent.ownerDocument.createElement(ref);
       if (start.children.length === 0) {
@@ -264,6 +322,7 @@ export class FxForm extends HTMLElement {
     }
     return parent;
   }
+*/
 
   async _initUI() {
     console.log('### _initUI()');

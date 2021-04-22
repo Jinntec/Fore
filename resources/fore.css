@@ -6,4 +6,9 @@ fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
     display:none;
 }
 
+fx-control[required]:after {
+    content: "*";
+    display: inline;
+    color: red;
+}
 

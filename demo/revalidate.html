@@ -13,6 +13,7 @@
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
 
+    <link rel="stylesheet" href="../resources/fore.css">
 
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
@@ -21,12 +22,15 @@
             background: #76ff03;
         }
 
-        fx-input {
+        fx-alert{
+            color:red;
+        }
+        fx-control {
             display: block;
             padding: 10px 0;
         }
 
-        fx-input[required]:after {
+        fx-control[required]:after {
             content: "*";
             color: red;
         }
@@ -70,14 +74,18 @@
                     <fx-hint>must be one character long</fx-hint>
                 </fx-output>
 
-                <fx-input label="A-label" ref="a">
+                <fx-control label="A-label" ref="a" update-event="input">
                     <fx-alert>Constraint not valid</fx-alert>
                     <fx-hint>must be one character long</fx-hint>
-                </fx-input>
+                </fx-control>
 
-                <fx-input label="B-label" ref="b"></fx-input>
+                <fx-control ref="b" update-event="input">
+                    <label>B-label</label>
+                </fx-control>
 
-                <fx-input label="C" ref="c"></fx-input>
+                <fx-control label="C" ref="c" update-event="input">
+                    <label>C-label</label>
+                </fx-control>
 
             </fx-group>
         </fx-form>

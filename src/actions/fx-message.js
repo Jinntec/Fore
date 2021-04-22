@@ -68,7 +68,6 @@ class FxMessage extends LitElement {
   }
 
   execute(e) {
-    console.log('fx-message.execute ', e.detail);
     console.log('fx-message.execute textContent: ', this.textContent);
 
     const details = e.detail;

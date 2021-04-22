@@ -70,16 +70,16 @@ describe('control tests', () => {
           </fx-instance>
         </fx-model>
 
-        <fx-input id="input1" label="A-label" ref="a"> </fx-input>
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
       </fx-form>
     `);
 
     await elementUpdated(el);
     // let { detail } = await oneEvent(el, 'refresh-done');
     const input = document.getElementById('input1');
-    expect(input.control).to.exist;
-    console.log('control value ', input.control);
-    expect(input.control.value).to.equal('A');
+    expect(input.widget).to.exist;
+    console.log('control value ', input.widget);
+    expect(input.widget.value).to.equal('A');
   });
 
   /*

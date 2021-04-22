@@ -8,15 +8,14 @@ import './src/fx-submission.js';
 // ui classes
 import './src/ui/fx-alert.js';
 import './src/ui/fx-control.js';
-import './src/ui/fx-button.js';
 import './src/ui/fx-container.js';
 import './src/ui/fx-group.js';
 import './src/ui/fx-hint.js';
-import './src/ui/fx-input.js';
 import './src/ui/fx-items.js';
 import './src/ui/fx-output.js';
 import './src/ui/fx-repeat.js';
 import './src/ui/fx-switch.js';
+import './src/ui/fx-trigger.js';
 import './src/ui/fx-case.js';
 
 // action classes
