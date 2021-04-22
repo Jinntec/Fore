@@ -21,12 +21,6 @@
             background: #76ff03;
         }
 
-        fx-input[required]:after {
-            content: "*";
-            display: inline;
-            color: red;
-        }
-
         [unresolved] {
             display: none;
         }
@@ -90,7 +84,9 @@
                     <fx-label>Greeting:</fx-label>
                 </fx-output>
 
-                <fx-input label="Greeting" ref="greeting"></fx-input>
+                <fx-control ref="greeting">
+                    <label>Greeting</label>
+                </fx-control>
 
                 <h2>Replace the instance with empty data</h2>
 

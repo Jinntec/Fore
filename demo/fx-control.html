@@ -57,11 +57,13 @@
                         <item>foobar</item>
                         <checked>true</checked>
                         <listitem>foo</listitem>
+                        <label>a bound label</label>
                     </data>
                 </fx-instance>
                 <fx-bind ref="item" required="true()"></fx-bind>
                 <fx-bind ref="checked" type="boolean"></fx-bind>
                 <fx-bind ref="listitem"></fx-bind>
+                <fx-bind ref="label"></fx-bind>
             </fx-model>
             <fx-group>
 
@@ -83,7 +85,6 @@
 
                 <section>
                     <h3>Shortest way to bind a control to a node in the data</h3>
-<!--
                     <demo-snippet>
                         <template>
 
@@ -91,7 +92,6 @@
                             <fx-control ref="item"></fx-control>
                         </template>
                     </demo-snippet>
--->
                     <p>When nothing is specified or wrapped a native input will be created, listening for blur event to
                         update
                         the bound node.</p>
@@ -217,6 +217,11 @@
                                                 <paper-input  class="fxWidget" label="the item in paper land"></paper-input>
                                             </fx-control>
 
+                                            <h3>Using template expression to bind label to control</h3>
+                                            <fx-control ref="item" update-event="change">
+                                                <paper-input  class="fxWidget" label="{../label}"></paper-input>
+                                            </fx-control>
+
                                             <h3>with incremental firing</h3>
                                             <fx-control ref="item" update-event="keyup">
                                                 <paper-input class="fxWidget" label="the item in paper land"></paper-input>
@@ -225,6 +230,7 @@
                                             <fx-control ref="checked" update-event="change" value-prop="checked">
                                                 <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
                                             </fx-control>
+
                                         </template>
                                     </demo-snippet>
                                 </section>
@@ -246,6 +252,22 @@
             </fx-group>
         </fx-form>
 
+<!--
+        <fx-control ref="checked" link="paper-checkbox"></fx-control>
+        <fx-control ref="item" link="paper-input-blur"></fx-control>
+
+        <fx-control-factory>
+            <template id="paper-checkbox" update-event="change" value-prop="checked">
+                <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
+            </template>
+            <template id="paper-input-blur" update-event="blur">
+                <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
+            </template>
+            <template id="paper-input" update-event="input">
+                <paper-checkbox  class="fxWidget">paper checkbox</paper-checkbox>
+            </template>
+        </fx-control-factory>
+-->
 
 <script type="module" src="../index.js"></script>
 

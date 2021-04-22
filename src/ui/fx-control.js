@@ -3,6 +3,8 @@ import XfAbstractControl from './abstract-control.js';
 import {Fore} from '../fore.js';
 import {evaluateXPathToNodes} from '../xpath-evaluation.js';
 
+const WIDGETCLASS = "widget";
+
 /**
  * `fx-control`
  * a generic wrapper for controls
@@ -27,27 +29,28 @@ class FxControl extends XfAbstractControl {
         this.valueProp = this.hasAttribute('value-prop') ? this.getAttribute('value-prop') : 'value';
 
         const style = `
-          :host {
-            display: inline-block;
-          }
-          #widget {
-            display: inline-block;
-          }
-          [name='label'] {
-            display: inline;
-          }
         `;
 
+/*
         const controlHtml = `
             <slot></slot>
             <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
         `;
+*/
 
+/*
         this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${controlHtml}
+        `
+*/
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${this.renderHTML(this.ref)}
         `
         this.widget = this.getWidget();
         console.log('widget ', this.widget);
@@ -62,14 +65,21 @@ class FxControl extends XfAbstractControl {
 
     }
 
+    renderHTML(ref){
+        return `
+            <slot></slot>
+            <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
+        `;
+    }
+
     getWidget() {
-        let widget =  this.querySelector('.fxWidget');
+        let widget =  this.querySelector(`.${WIDGETCLASS}`);
         if(!widget){
             widget = this.querySelector('input');
         }
         if(!widget){
             const input = document.createElement('input');
-            input.classList.add('fxWidget');
+            input.classList.add(WIDGETCLASS);
             input.setAttribute('type', 'text');
             this.appendChild(input);
             return input;

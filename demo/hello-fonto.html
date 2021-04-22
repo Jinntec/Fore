@@ -15,11 +15,6 @@
             background: #76ff03;
         }
 
-        fx-input[required]:after {
-            content: "*";
-            display: inline;
-            color: red;
-        }
         [unresolved]{
             display:none;
         }
@@ -27,7 +22,7 @@
 </head>
 <body unresolved="unresolved">
 
-
+<h2>Bound to the same node</h2>
 <fx-form>
     <fx-message event="refresh-done">refresh has been done</fx-message>
     <fx-message event="ready">Hey it's ready</fx-message>
@@ -77,7 +72,9 @@
             </fx-output>
         </h1>
 
-        <fx-input label="Greeting" ref="greeting">
+        <fx-control label="Greeting" ref="greeting">
+            <label>Greeting</label>
+
             <fx-message event="value-changed">value-changed fired on input</fx-message>
             <fx-message event="required">required should fire on input 'Greeting'</fx-message>
             <fx-message event="optional">optional should fire on input</fx-message>
@@ -85,10 +82,11 @@
             <fx-message event="readwrite">readwrite should fire on input</fx-message>
             <fx-message event="readonly">readonly should fire on input</fx-message>
 
-        </fx-input>
+        </fx-control>
 
-        <fx-input label="Greeting2" ref="greeting">
-        </fx-input>
+        <fx-control ref="greeting">
+            <label>Greeting</label>
+        </fx-control>
 
 
         <fx-button label="say 'hello Universe'">

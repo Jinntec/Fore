@@ -21,12 +21,6 @@
             background: #76ff03;
         }
 
-        fx-input[required]:after {
-            content: "*";
-            display: inline;
-            color: red;
-        }
-
     </style>
 </head>
 <body unresolved="unresolved">
@@ -47,8 +41,8 @@
             <fx-group>
 
                 <h1>Unbound control is not showing</h1>
-                <fx-input id="output" ref="greeting"></fx-input>
-                <fx-input ref="greet"></fx-input>
+                <fx-control id="output" ref="greeting"></fx-control>
+                <fx-control ref="greet"></fx-control>
 
             </fx-group>
         </fx-form>

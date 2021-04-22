@@ -10,15 +10,6 @@
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-        import '../src/fx-form.js';
-        import '../src/fx-model.js';
-        import '../src/fx-bind.js';
-        import '../src/fx-instance.js';
-        import '../src/ui/fx-repeat.js';
-        import '../src/actions/fx-delete.js';
-        import '../src/actions/fx-append.js';
-        import '../src/ui/fx-input.js';
-        import '../src/ui/fx-button.js';
     </script>
 
 
@@ -77,13 +68,14 @@
             border: thin solid white;
             background: lightsteelblue;
             margin: 4px 0;
+            display: block;
         }
 
-        fx-input {
+        fx-control {
             background: white;
             border-radius: 5px;
-            padding: 6px;
-            margin: 4px;
+            /*padding: 6px;*/
+            /*margin: 4px;*/
         }
 
         [repeat-index] {
@@ -116,20 +108,32 @@
 
             <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
                 <template>
-                    <fx-input id="task" label="Task" ref="." type="text"></fx-input>
-                    <fx-input label="Due" ref="@due" type="date"></fx-input>
-                    <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
-                    <fx-button label="delete">
+                    <fx-control id="task" label="Task" ref="." type="text">
+                        <label>Task</label>
+                    </fx-control>
+                    <fx-control ref="@due" type="date">
+                        <label>Due</label>
+                        <input class="widget" type="date">
+                    </fx-control>
+                    <fx-control ref="@complete" type="checkbox">
+                        <label>Status</label>
+                        <input class="widget" type="checkbox">
+                    </fx-control>
+                    <fx-trigger label="delete">
+                        <button>delete</button>
                         <fx-delete ref="."></fx-delete>
-                    </fx-button>
+                    </fx-trigger>
                 </template>
             </fx-repeat>
 
-            <fx-button label="append">
+            <fx-trigger>
+                <button>append</button>
                 <fx-append ref="task" repeat="todos"></fx-append>
-            </fx-button>
+            </fx-trigger>
         </fx-form>
     </template>
 </demo-snippet>
+<script type="module" src="../index.js"></script>
+
 </body>
 </html>

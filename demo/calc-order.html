@@ -21,7 +21,7 @@
             background: #76ff03;
         }
 
-        fx-input[required]:after {
+        fx-control[required]:after {
             content: "*";
             display: inline;
             color: red;
@@ -60,9 +60,20 @@
                 </fx-model>
                 <fx-group>
 
+                    <fx-control ref="m1" update-event="input">
+                        <label>m1</label>
+                        <input type="text">
+                    </fx-control>
 
-                    <fx-input ref="value" label="some string">
-                    </fx-input>
+                    <p>
+                        this will not work as it attempts to set a calculated value.
+
+                        todo: make sure calculated nodes are treated readonly -> ignore attempts to set values on them
+                    </p>
+                    <fx-control ref="m2" update-event="input">
+                        <label>m2</label>
+                        <input type="text">
+                    </fx-control>
                     <h2>
                         Computed value (should be 11):
                         <fx-output id="output" ref="add"></fx-output>

@@ -6,7 +6,7 @@
 
     <title>Template Expressions</title>
 
-    <script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
@@ -58,7 +58,9 @@
 
 <!--                <div class="static {greeting}">Greeting {greeting} another {greeting}</div>-->
                 <div class="static {greeting}">Greeting: {greeting}</div>
-                <fx-input ref="greeting" label="greeting"></fx-input>
+                <fx-control ref="greeting" update-event="input">
+                    <label>Hey!</label>
+                </fx-control>
 
 
             </fx-form>

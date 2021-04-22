@@ -17,6 +17,7 @@ import './src/ui/fx-items.js';
 import './src/ui/fx-output.js';
 import './src/ui/fx-repeat.js';
 import './src/ui/fx-switch.js';
+import './src/ui/fx-trigger.js';
 import './src/ui/fx-case.js';
 
 // action classes

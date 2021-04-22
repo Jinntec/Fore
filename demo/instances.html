@@ -13,11 +13,6 @@
         .dynamic{
             background: #76ff03;
         }
-        fx-input[required]:after{
-            content: "*";
-            display: inline;
-            color:red;
-        }
 
     </style>
 </head>
@@ -65,7 +60,7 @@
 <!--            Greeting: <fx-output ref="instance()/greeting" id="output"></fx-output>-->
         </h1>
 
-        <fx-input ref="greeting" label="Greeting"></fx-input>
+        <fx-control ref="greeting" label="Greeting"></fx-control>
 
 <!--
         <h1>

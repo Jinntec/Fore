@@ -10,6 +10,7 @@ import { ModelItem } from '../modelitem.js';
  * todo: remove LitElement dependency
  */
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
+/*
   static get properties() {
     return {
       ...super.properties,
@@ -21,6 +22,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       },
     };
   }
+*/
 
   constructor() {
     super();
@@ -32,6 +34,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // this.attachShadow({ mode: 'open' });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getWidget(){
     throw new Error('You have to implement the method updateWidgetValue!');
   }

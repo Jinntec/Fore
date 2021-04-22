@@ -114,11 +114,13 @@ export class FxForm extends HTMLElement {
     console.group('### refresh');
     // await this.updateComplete;
 
-    // ### refresh template expressions
-    this._refreshTemplateExpressions();
 
     Fore.refreshChildren(this);
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
+
+    // ### refresh template expressions
+    this._refreshTemplateExpressions();
+
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
@@ -180,7 +182,8 @@ export class FxForm extends HTMLElement {
     const { name } = exprObj;
     const { node } = exprObj;
     console.log('expr ', expr);
-    const matches = expr.match(/{\w+}/g);
+    // const matches = expr.match(/{\w+}/g);
+    const matches = expr.match(/{[a-z,'.','..','/','@','(','),'[','\]','=',\s]*}/g);
     matches.forEach(match => {
       console.log('match ', match);
       const naked = match.substring(1, match.length - 1);

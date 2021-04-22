@@ -78,8 +78,8 @@
                 <template>
 
                     <fx-control ref="listitem" update-event="change">
-                        <label slot="label">native select</label>
-                        <select>
+                        <label>native select</label>
+                        <select class="widget">
                             <option value=""></option>
                             <option value="foo">foo</option>
                             <option value="bar">bar</option>
@@ -102,8 +102,8 @@
                     breaking of the contentmodel of the select.
                     -->
                     <fx-control ref="fruit" update-event="change">
-                        <label slot="label">native select</label>
-                        <select ref="instance('fruits')//fruit">
+                        <label>native select</label>
+                        <select ref="instance('fruits')//fruit" class="widget">
                             <template>
                                 <option value="{@value}">{.}</option>
                             </template>
