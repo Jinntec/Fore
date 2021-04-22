@@ -235,7 +235,7 @@ export class FxForm extends HTMLElement {
       const generatedInstance = document.createElement('fx-instance');
       model.appendChild(generatedInstance);
 
-      const generated = document.implementation.createDocument(null, 'data');
+      const generated = document.implementation.createDocument(null, 'data',null);
       // const newData = this._generateInstance(this, generated.firstElementChild);
       this._generateInstance(this, generated.firstElementChild);
       generatedInstance.instanceData = generated;

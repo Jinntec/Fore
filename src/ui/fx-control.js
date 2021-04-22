@@ -22,12 +22,13 @@ class FxControl extends XfAbstractControl {
         this.inited = false;
         this.attachShadow({mode: 'open'});
 
+
     }
 
     connectedCallback() {
         this.updateEvent = this.hasAttribute('update-event') ? this.getAttribute('update-event') : 'blur';
         this.valueProp = this.hasAttribute('value-prop') ? this.getAttribute('value-prop') : 'value';
-
+        this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
         const style = `
         `;
 
@@ -67,6 +68,7 @@ class FxControl extends XfAbstractControl {
 
     renderHTML(ref){
         return `
+            ${this.label ? `${this.label}` : ''}
             <slot></slot>
             <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
         `;

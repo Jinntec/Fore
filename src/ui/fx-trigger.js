@@ -52,13 +52,14 @@ export class FxTrigger extends XfAbstractControl {
 
     }
 
+    // eslint-disable-next-line class-methods-use-this
     renderHTML() {
         return `
             <slot></slot>
     `;
     }
 
-    performActions(e) {
+    performActions() {
         console.log('performActions ', this.children);
         const repeatedItem = this.closest('fx-repeatitem');
         if (repeatedItem) {
@@ -70,7 +71,7 @@ export class FxTrigger extends XfAbstractControl {
             const child = this.children[i];
 
             if (typeof child.execute === 'function') {
-                child.execute(e);
+                child.execute();
             }
         }
 

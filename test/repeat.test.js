@@ -1,16 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
-/*
-import '../src/fx-instance.js';
-import '../src/modelitem.js';
-import '../src/fx-model.js';
-import '../src/fx-bind.js';
-import '../src/fx-button.js';
-import '../src/fx-repeat.js';
-import '../src/fx-repeatitem.js';
-*/
-import '../src/ui/fx-repeat.js';
+import '../index.js';
 import { FxModel } from '../src/fx-model.js';
 
 describe('repeat Tests', () => {
@@ -320,36 +311,37 @@ describe('repeat Tests', () => {
         <fx-group>
           <h1>todos</h1>
 
-          <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+          <fx-repeat id="todos" ref="task" id="r-todos">
             <template>
-              <fx-input label="Task" ref="." id="task" type="text"></fx-input>
+              <fx-control ref="." id="task" type="text">
+                <label>Task</label>
+              </fx-control>
             </template>
           </fx-repeat>
 
-          <fx-button label="append">
+          <fx-trigger label="append">
+            <button>append</button>
             <fx-append repeat="todos" ref="task"></fx-append>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);
 
-    await elementUpdated(el);
+    // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
 
-    const button = el.querySelector('fx-button');
-    await elementUpdated(button);
-
+    const button = el.querySelector('fx-trigger');
     button.performActions();
-
     const repeat = el.querySelector('fx-repeat');
-    await elementUpdated(repeat);
 
     expect(repeat).to.exist;
     const rItems = repeat.querySelectorAll('fx-repeatitem');
-    console.log('fx-repeat ', repeat);
     expect(rItems.length).to.equal(3);
 
     // appended item should have repeatindex set
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
+
+
   });
 
   it('deletes an item', async () => {
@@ -374,16 +366,20 @@ describe('repeat Tests', () => {
 
           <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
             <template>
-              <fx-input label="Task" ref="." id="task" type="text"></fx-input>
-              <fx-button label="delete">
+              <fx-control ref="." id="task" type="text">
+                <label>Task</label>
+              </fx-control>
+              <fx-trigger>
+                <label>delete</label>
                 <fx-delete ref="."></fx-delete>
-              </fx-button>
+              </fx-trigger>
             </template>
           </fx-repeat>
 
-          <fx-button label="append">
+          <fx-trigger>
+            <label>append</label>
             <fx-append repeat="todos" ref="task"></fx-append>
-          </fx-button>
+          </fx-trigger>
         </fx-group>
       </fx-form>
     `);
@@ -391,7 +387,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
-    const button = el.querySelector('fx-button');
+    const button = el.querySelector('fx-trigger');
     button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
@@ -426,10 +422,12 @@ describe('repeat Tests', () => {
 
           <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
             <template>
-              <fx-input label="Task" ref="." id="task" type="text"></fx-input>
-              <fx-button label="delete">
+              <fx-control ref="." id="task" type="text">
+                <label>Task</label>
+              </fx-control>
+              <fx-trigger>
                 <fx-delete ref="."></fx-delete>
-              </fx-button>
+              </fx-trigger>
             </template>
           </fx-repeat>
 
@@ -443,7 +441,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     // hits the first button which is the delete button here
-    const buttons = el.querySelectorAll('fx-button');
+    const buttons = el.querySelectorAll('fx-trigger');
     buttons[2].performActions();
 
     const repeat = el.querySelector('fx-repeat');
@@ -476,18 +474,18 @@ describe('repeat Tests', () => {
 
         <fx-repeat focus-on-create="task" id="r-todos" ref="task">
           <template>
-            <fx-input id="task" label="Task" ref="." type="text"></fx-input>
-            <fx-input label="Due" ref="@due" type="date"></fx-input>
-            <fx-input Label="Status" ref="@complete" type="checkbox"></fx-input>
-            <fx-button label="delete">
+            <fx-control id="task" label="Task" ref="." type="text"></fx-control>
+            <fx-control label="Due" ref="@due" type="date"></fx-control>
+            <fx-control Label="Status" ref="@complete" type="checkbox"></fx-control>
+            <fx-trigger label="delete">
               <fx-delete ref="."></fx-delete>
-            </fx-button>
+            </fx-trigger>
           </template>
         </fx-repeat>
 
-        <fx-button id="append" label="append">
+        <fx-trigger id="append" label="append">
           <fx-append ref="task" repeat="r-todos" clear="true"></fx-append>
-        </fx-button>
+        </fx-trigger>
       </fx-form>
     `);
 
@@ -539,18 +537,18 @@ describe('repeat Tests', () => {
               </template>
             </fx-repeat>
 
-            <fx-button label="add subtask">
+            <fx-trigger label="add subtask">
               <fx-append ref="task" repeat="r-subtask" clear="true"></fx-append>
-            </fx-button>
-            <fx-button label="delete">
+            </fx-trigger>
+            <fx-trigger label="delete">
               <fx-delete ref="."></fx-delete>
-            </fx-button>
+            </fx-trigger>
           </template>
         </fx-repeat>
 
-        <fx-button id="outerappend" label="add maintask">
+        <fx-trigger id="outerappend" label="add maintask">
           <fx-append ref="task" repeat="r-todos" clear="true"></fx-append>
-        </fx-button>
+        </fx-trigger>
       </fx-form>
     `);
 

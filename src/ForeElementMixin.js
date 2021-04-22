@@ -37,7 +37,8 @@ export const foreElementMixin = superclass =>
         return this.model;
       }
       // const ownerForm = this.closest('fx-form');
-      const ownerForm = this.getOwnerForm(this);
+      // const ownerForm = this.getOwnerForm(this);
+      const ownerForm = this.getOwnerForm();
       return ownerForm.querySelector('fx-model');
     }
 
