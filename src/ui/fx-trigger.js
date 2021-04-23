@@ -10,9 +10,6 @@ export class FxTrigger extends XfAbstractControl {
           :host {
             cursor:pointer;
           }
-          :host ::slotted(*){
-            width:100%;
-          }
         `;
 
         this.shadowRoot.innerHTML = `

@@ -10,100 +10,102 @@
     <script type="module" src="../index.js"></script>
 
     <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <link href="../resources/fore.css" rel="stylesheet">
     <style>
         .dynamic {
             background: #76ff03;
         }
 
-        [unresolved]{
-            display:none;
+        [unresolved] {
+            display: none;
         }
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+    <h2>Bound to the same node</h2>
+    <fx-form>
+        <fx-message event="refresh-done">refresh has been done</fx-message>
+        <fx-message event="ready">Hey it's ready</fx-message>
 
-<h2>Bound to the same node</h2>
-<fx-form>
-    <fx-message event="refresh-done">refresh has been done</fx-message>
-    <fx-message event="ready">Hey it's ready</fx-message>
+        <fx-model id="model1">
+            <fx-instance>
+                <data>
+                    <greeting>Hello World!</greeting>
+                    <prop></prop>
+                    <class>dynamic</class>
+                </data>
+            </fx-instance>
+            <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6" readonly="string-length(.) < 6">
+                <!--        <fx-bind id="b-greeting" ref="greeting">-->
+                <!--
+                                <fx-bind constraint="string-length(.) > 2">
+                                    <fx-alert>huh? too short!</fx-alert>
+                                </fx-bind>
+                -->
+            </fx-bind>
+            <fx-bind ref="prop"></fx-bind>
 
-    <fx-model id="model1">
-        <fx-instance>
-            <data>
-                <greeting>Hello World!</greeting>
-                <prop></prop>
-                <class>dynamic</class>
-            </data>
-        </fx-instance>
-        <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6" readonly="string-length(.) < 6">
-<!--        <fx-bind id="b-greeting" ref="greeting">-->
+            <fx-instance id="second">
+                <data>
+                    <outro>GoodBye</outro>
+                </data>
+            </fx-instance>
+            <!--            <fx-bind instance="second" ref="outro"></fx-bind>-->
+
+            <fx-message event="model-construct">Hey model-construct was fired</fx-message>
+            <fx-message event="model-construct-done">Hey model-construct is done</fx-message>
+        </fx-model>
+        <fx-group collapse="true">
+
+
             <!--
-                            <fx-bind constraint="string-length(.) > 2">
-                                <fx-alert>huh? too short!</fx-alert>
-                            </fx-bind>
+                            <fx-message event="value-changed">value has changed</fx-message>
+                            <fx-message event="refresh-done">refresh has been done </fx-message>
             -->
-        </fx-bind>
-        <fx-bind ref="prop"></fx-bind>
 
-        <fx-instance id="second">
-            <data>
-                <outro>GoodBye</outro>
-            </data>
-        </fx-instance>
-        <!--            <fx-bind instance="second" ref="outro"></fx-bind>-->
+            <h1 class="{class}">
+                Greeting:
+                <fx-output id="output" ref="./greeting">
+                    <!--                <fx-message event="value-changed">value-changed fired on output</fx-message>-->
+                    <!--                <fx-message event="required">required should not fire on output</fx-message>-->
 
-        <fx-message event="model-construct">Hey model-construct was fired</fx-message>
-        <fx-message event="model-construct-done">Hey model-construct is done</fx-message>
-    </fx-model>
-    <fx-group collapse="true">
+                </fx-output>
+            </h1>
 
+            <fx-control label="Greeting" ref="greeting">
+                <label>Greeting</label>
 
-        <!--
-                        <fx-message event="value-changed">value has changed</fx-message>
-                        <fx-message event="refresh-done">refresh has been done </fx-message>
-        -->
+                <fx-message event="value-changed">value-changed fired on input</fx-message>
+                <fx-message event="required">required should fire on input 'Greeting'</fx-message>
+                <fx-message event="optional">optional should fire on input</fx-message>
+                <fx-message event="valid">valid should fire on input</fx-message>
+                <fx-message event="readwrite">readwrite should fire on input</fx-message>
+                <fx-message event="readonly">readonly should fire on input</fx-message>
 
-        <h1 class="{class}">
-            Greeting:
-            <fx-output id="output" ref="./greeting">
-<!--                <fx-message event="value-changed">value-changed fired on output</fx-message>-->
-<!--                <fx-message event="required">required should not fire on output</fx-message>-->
+            </fx-control>
 
-            </fx-output>
-        </h1>
-
-        <fx-control label="Greeting" ref="greeting">
-            <label>Greeting</label>
-
-            <fx-message event="value-changed">value-changed fired on input</fx-message>
-            <fx-message event="required">required should fire on input 'Greeting'</fx-message>
-            <fx-message event="optional">optional should fire on input</fx-message>
-            <fx-message event="valid">valid should fire on input</fx-message>
-            <fx-message event="readwrite">readwrite should fire on input</fx-message>
-            <fx-message event="readonly">readonly should fire on input</fx-message>
-
-        </fx-control>
-
-        <fx-control ref="greeting">
-            <label>Greeting</label>
-        </fx-control>
+            <fx-control ref="greeting">
+                <label>Greeting</label>
+            </fx-control>
 
 
-        <fx-button label="say 'hello Universe'">
-            <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
-        </fx-button>
-        <fx-button label="say 'hello'">
-            <fx-setvalue ref="greeting" value="Hello"></fx-setvalue>
-        </fx-button>
+            <fx-button label="say 'hello Universe'">
+                <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
+            </fx-button>
+            <fx-button label="say 'hello'">
+                <fx-setvalue ref="greeting" value="Hello"></fx-setvalue>
+            </fx-button>
 
-        <!--
-                                <fx-button label="submit">
-                                    <fx-submit></fx-submit>
-                                </fx-button>
-        -->
-    </fx-group>
-</fx-form>
+            <!--
+                                    <fx-button label="submit">
+                                        <fx-submit></fx-submit>
+                                    </fx-button>
+            -->
+        </fx-group>
+    </fx-form>
 
-
+</div>
 </body>
 </html>

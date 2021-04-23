@@ -1,8 +1,8 @@
 body {
     padding:20px;
     font-family: 'Roboto', 'Noto', sans-serif;
-    font-size: 1.2rem;
-    background: var(--paper-orange-300);
+    /*background: var(--paper-orange-300);*/
+    background: var(--paper-teal-300);
 }
 code{
     font-weight: 700;
@@ -10,10 +10,12 @@ code{
     padding:0 0.3rem;
 }
 h1{
-    color:var(--paper-orange-900);
+    /*color:var(--paper-orange-900);*/
+    color:var(--paper-teal-900);
 }
 h2{
-    color:var(--paper-orange-800);
+    /*color:var(--paper-orange-800);*/
+    color:var(--paper-teal-800);
 }
 #modalMessage{
     background:orange;
@@ -22,7 +24,8 @@ h2{
     text-align:center;
 }
 .note{
-    background: var(--paper-amber-300);
+    /*background: var(--paper-amber-300);*/
+    background: var(--paper-teal-100);
     padding:10px;
 }
 p{

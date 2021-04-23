@@ -20,27 +20,29 @@
             background: #76ff03;
         }
 
-        fx-control{
+        fx-control {
             display: block;
         }
 
-         fx-label{
+        fx-label {
             display: inline;
         }
-        .display{
-            font-size:24px;
+
+        .display {
+            font-size: 24px;
         }
 
-/*
-        .required {
-            content: '*';
-            background: red;
-            padding-left: 4px;
+        /*
+                .required {
+                    content: '*';
+                    background: red;
+                    padding-left: 4px;
+                }
+        */
+        fx-output {
+            display: block;
         }
-*/
-        fx-output{
-            display:block;
-        }
+
         .required [slot=label]:after {
             content: '*';
             color: red;
@@ -51,57 +53,59 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
 
-<demo-snippet>
-    <template>
+            <fx-form>
+                <!--    <fx-message event="refresh-done">refresh has been done</fx-message>-->
 
-        <fx-form>
-            <!--    <fx-message event="refresh-done">refresh has been done</fx-message>-->
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <a>A</a>
+                            <b>B</b>
+                            <c>C</c>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="a" readonly="string-length(depends(../b)) > 1"
+                             required="depends(../b) = 'B'"></fx-bind>
+                    <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
+                    <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
+                </fx-model>
+                <fx-group collapse="true">
+                    <h1>
+                        Recalculation
+                    </h1>
 
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <a>A</a>
-                        <b>B</b>
-                        <c>C</c>
-                    </data>
-                </fx-instance>
-                <fx-bind ref="a" readonly="string-length(depends(../b)) > 1" required="depends(../b) = 'B'"></fx-bind>
-                <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
-                <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
-            </fx-model>
-            <fx-group collapse="true">
-                <h1>
-                    Recalculation
-                </h1>
+                    <div class="display">
+                        <fx-output id="output" ref="a">
+                            <label slot="label">a:</label>
+                        </fx-output>
+                        <fx-output id="output" ref="b">
+                            <fx-label slot="label">b:</fx-label>
+                        </fx-output>
+                        <fx-output id="output" ref="c">
+                            <fx-label slot="label">c:</fx-label>
+                        </fx-output>
+                    </div>
 
-                <div class="display">
-                    <fx-output id="output" ref="a">
-                        <label slot="label">a:</label>
-                    </fx-output>
-                    <fx-output id="output" ref="b">
-                        <fx-label slot="label">b:</fx-label>
-                    </fx-output>
-                    <fx-output id="output" ref="c">
-                        <fx-label slot="label">c:</fx-label>
-                    </fx-output>
-                </div>
-
-                <fx-control ref="a" update-event="input">
-                    <label slot="label">A</label>
-                </fx-control>
-                <fx-control ref="b" update-event="input">
-                    <label slot="label">B</label>
-                </fx-control>
-                <fx-control ref="c" update-event="input">
-                    <label slot="label">C</label>
-                </fx-control>
+                    <fx-control ref="a" update-event="input">
+                        <label slot="label">A</label>
+                    </fx-control>
+                    <fx-control ref="b" update-event="input">
+                        <label slot="label">B</label>
+                    </fx-control>
+                    <fx-control ref="c" update-event="input">
+                        <label slot="label">C</label>
+                    </fx-control>
 
 
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="../index.js"></script>
 
 </body>

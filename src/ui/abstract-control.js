@@ -32,6 +32,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.readonly = false;
     this.widget = null;
     // this.attachShadow({ mode: 'open' });
+
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -204,10 +205,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isValid() {
-    // const widget = this.getControl();
-    const {widget} = this;
-    // if (widget.valid) {
-    if (widget.classList.contains('invalid')) {
+    if (this.classList.contains('invalid')) {
       return false;
     }
     return true;

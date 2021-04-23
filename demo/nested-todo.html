@@ -7,20 +7,25 @@
     <title>todo</title>
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-<!--
     <script type="module">
-        import '../src/fx-form.js';
-        import '../src/fx-model.js';
-        import '../src/fx-bind.js';
-        import '../src/fx-instance.js';
-        import '../src/ui/fx-repeat.js';
-        import '../src/actions/fx-delete.js';
-        import '../src/actions/fx-append.js';
-        import '../src/ui/fx-input.js';
-        import '../src/ui/fx-button.js';
-        import '../src/ui/fx-control.js';
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
--->
+
+    <!--
+        <script type="module">
+            import '../src/fx-form.js';
+            import '../src/fx-model.js';
+            import '../src/fx-bind.js';
+            import '../src/fx-instance.js';
+            import '../src/ui/fx-repeat.js';
+            import '../src/actions/fx-delete.js';
+            import '../src/actions/fx-append.js';
+            import '../src/ui/fx-input.js';
+            import '../src/ui/fx-button.js';
+            import '../src/ui/fx-control.js';
+        </script>
+    -->
 
 
     <!--
@@ -37,6 +42,8 @@
     -->
 
     <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="../resources/demo.css">
+    <link rel="stylesheet" href="../resources/vars.css">
     <link href="../resources/vars.css" rel="stylesheet">
 
     <style>
@@ -62,101 +69,123 @@
             display: block;
             padding: 10px;
         }
-        [unresolved]{
-            display:none;
+
+        [unresolved] {
+            display: none;
         }
 
-        fx-repeat{
+        fx-repeat {
             padding: 20px;
-            background: steelblue;
             display: block;
             height: auto;
         }
-        fx-repeat input{
-            font-size: 22px;
+
+        fx-repeat input {
             background: ghostwhite;
             border-bottom: #0f9d58;
             padding: 4px;
         }
-        fx-repeat fx-repeat{
-            padding:4px 0;
-            margin:8px 0;
-            background: lightsteelblue;
-        }
 
-        fx-repeat fx-repeat input{
-            font-size:14px;
-        }
-
-        fx-repeatitem{
-            border:thin solid white;
-            background: lightsteelblue;
-            margin:4px 0;
-        }
-
-        fx-trigger{
-            height: 24px;
-        }
-        [repeat-index]{
-            /*border:white solid 6px;*/
-            filter: brightness(105%) drop-shadow(0px 0px 10px lightsteelblue) saturate(120%);
+        fx-repeat fx-repeat {
+            /*padding: 4px 0;*/
             margin: 8px 0;
+            /*background: var(--paper-grey-400);*/
+        }
+
+
+        fx-repeatitem {
+            border: thin solid white;
+            background: var(--paper-grey-200);
+            margin: 4px 0;
+        }
+
+        fx-trigger {
+            height: 24px;
+            display: inline;
+        }
+
+        fx-trigger a {
+            display: inline-block;
+            text-decoration: none;
+            color: darkred;
+            /*width:1rem;*/
+            /*height: 1rem;*/
+            /*border-radius:0.5rem;*/
+            /*background: darkred;*/
+        }
+
+        [repeat-index] {
+            outline:var(--paper-blue-500) solid 2px;
+            filter: brightness(120%);
+            /*margin: 8px 0;*/
+        }
     </style>
 </head>
 <body unresolved="unresolved">
-<fx-form>
-    <fx-model id="record">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
 
-        <fx-instance>
-            <data>
-                <task text="Pick up Milk">
-                    <task text="go to store"></task>
-                    <task text="find milk"></task>
-                    <task text="pay milk"></task>
-                    <task text="take it home"></task>
-                </task>
-                <task complete="true" due="2019-01-04" text="Make tutorial part 1">
-                    <task text="take it home"></task>
-                </task>
-            </data>
-        </fx-instance>
+            <fx-form>
+                <fx-model id="record">
+
+                    <fx-instance>
+                        <data>
+                            <task text="Pick up Milk">
+                                <task text="go to store"></task>
+                                <task text="find milk"></task>
+                                <task text="pay milk"></task>
+                                <task text="take it home"></task>
+                            </task>
+                            <task complete="true" due="2019-01-04" text="Make tutorial part 1">
+                                <task text="take it home"></task>
+                            </task>
+                        </data>
+                    </fx-instance>
 
 
-        <fx-bind ref="task">
-            <fx-bind ref="@text"></fx-bind>
+                    <fx-bind ref="task">
+                        <fx-bind ref="@text"></fx-bind>
 
-            <fx-bind ref="task">
-                <fx-bind ref="@text"></fx-bind>
-            </fx-bind>
-        </fx-bind>
+                        <fx-bind ref="task">
+                            <fx-bind ref="@text"></fx-bind>
+                        </fx-bind>
+                    </fx-bind>
 
-    </fx-model>
-        <h1>todos</h1>
-        <fx-repeat focus-on-create="task" id="r-todos" ref="task">
-            <template>
-                <fx-control label="task" ref="@text"></fx-control>
-                <fx-repeat id="r-subtask" ref="task">
+                </fx-model>
+                <h1>todos with subtask</h1>
+                <fx-repeat focus-on-create="task" id="r-todos" ref="task">
                     <template>
-                        <fx-control id="task" label="Task" ref="@text" type="text"></fx-control>
-                        <fx-button label="delete">
+                        <fx-control label="task" ref="@text"></fx-control>
+                        <fx-trigger>
+                            <a href="#">X</a>
                             <fx-delete ref="."></fx-delete>
-                        </fx-button>
+                        </fx-trigger>
+                        <fx-repeat id="r-subtask" ref="task">
+                            <template>
+                                <fx-control id="task" label="Task" ref="@text" type="text"></fx-control>
+                                <fx-trigger>
+                                    <a href="#">X</a>
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-trigger>
+                            </template>
+                        </fx-repeat>
+
+                        <fx-trigger>
+                            <button>add subtask</button>
+                            <fx-append ref="task" repeat="r-subtask"></fx-append>
+                        </fx-trigger>
                     </template>
                 </fx-repeat>
 
-                <fx-button label="add subtask">
-                    <fx-append ref="task" repeat="r-subtask"></fx-append>
-                </fx-button>
-                <fx-button label="delete">
-                    <fx-delete ref="."></fx-delete>
-                </fx-button>
-            </template>
-        </fx-repeat>
-
-        <fx-button label="add maintask">
-            <fx-append ref="task" repeat="r-todos"></fx-append>
-        </fx-button>
-</fx-form>
+                <fx-trigger label="add maintask">
+                    <button>add maintask</button>
+                    <fx-append ref="task" repeat="r-todos"></fx-append>
+                </fx-trigger>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="../index.js"></script>
 
 </body>

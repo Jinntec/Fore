@@ -30,6 +30,9 @@ class FxControl extends XfAbstractControl {
         this.valueProp = this.hasAttribute('value-prop') ? this.getAttribute('value-prop') : 'value';
         this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
         const style = `
+            :host{
+                display:inline-block;
+            }
         `;
 
 /*

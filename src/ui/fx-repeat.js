@@ -71,8 +71,17 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.log('new repeat index ', index);
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    this._setIndex(rItems[this.index - 1]);
+    this.applyIndex(rItems[this.index - 1]);
   }
+
+  applyIndex(repeatItem) {
+    this._removeIndexMarker();
+    if (repeatItem) {
+      repeatItem.setAttribute('repeat-index', '');
+    }
+  }
+
+
 
   connectedCallback() {
     this.ref = this.getAttribute('ref');
@@ -80,7 +89,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.addEventListener('index-changed', e => {
       const { item } = e.detail;
       const idx = Array.from(this.children).indexOf(item);
-      this._setIndex(this.children[idx]);
+      this.applyIndex(this.children[idx]);
     });
 
     const style = `
@@ -179,9 +188,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         const newItem = document.createElement('fx-repeatitem');
         const clonedTemplate = this._clone();
 
-        newItem.style.display = 'none';
+        // newItem.style.display = 'none';
+        newItem.style.opacity = '0';
         newItem.appendChild(clonedTemplate);
-        this._fadeIn(newItem, 'block');
+        this._fadeIn(newItem);
         // const tmpl = this.shadowRoot.querySelector('template');
         // const newItem = tmpl.content.cloneNode(true);
 
@@ -206,12 +216,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _fadeIn(el, display) {
+  _fadeIn(el) {
     // eslint-disable-next-line no-param-reassign
     el.style.opacity = 0;
     // eslint-disable-next-line no-param-reassign
-    el.style.display = display || 'block';
-
     (function fade() {
       let val = parseFloat(el.style.opacity);
       val += 0.1;
@@ -276,7 +284,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.appendChild(repeatItem);
 
       if (repeatItem.index === 1) {
-        this._setIndex(repeatItem);
+        this.applyIndex(repeatItem);
       }
     });
   }
@@ -288,12 +296,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     return document.importNode(content, true);
   }
 
-  _setIndex(repeatItem) {
-    this._removeIndexMarker();
-    if (repeatItem) {
-      repeatItem.setAttribute('repeat-index', '');
-    }
-  }
 
   _removeIndexMarker() {
     Array.from(this.children).forEach(item => {

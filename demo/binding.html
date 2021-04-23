@@ -16,11 +16,13 @@
 
     <link rel="stylesheet" href="../resources/vars.css">
     <style>
-        .required [slot=label]:after {
-            content: '*';
-            color: red;
-            padding-left: 4px;
-        }
+        /*
+                .required:after {
+                    content: '*';
+                    color: red;
+                    padding-left: 4px;
+                }
+        */
 
         [slot=hint] {
             display: block;
@@ -30,94 +32,176 @@
 
         .buttons {
             display: block;
+            width: 10rem;
         }
-        fx-control{
-            margin:20px 0;
+        .buttonArray{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
         }
-        .diagram{
-            width: 400p;
-            margin:30px auto;
+
+        fx-control {
+            margin: 20px 0;
+            width: 5rem;
+        }
+
+
+        .diagram {
+            width: 70%;
+            margin: 0 auto 2rem;
 
         }
+        .modelitems{
+            width: 80%;
+            vertical-align: top;
+            font-size: 1.2rem;
+        }
+
+        td{
+            padding: 0.5rem;
+            vertical-align: top;
+        }
+
     </style>
 </head>
 <body unresolved="unresolved">
 
-<h1>Bindings are fore-ever</h1>
-<p>Sorry for the pun - couldn't resist</p>
-<img src="../resources/images/modelitem.svg" class="diagram">
-<demo-snippet>
-    <template>
+<div class="wrapper">
+    <h1>Bindings are fore-ever</h1>
+    <p>Sorry for the pun - couldn't resist</p>
 
-        <fx-form>
-            <fx-model>
-                <fx-instance>
-                    <data>
-                        <item>Hello</item>
-                        <required>true</required>
-                        <readonly>false</readonly>
-                        <constraint>true</constraint>
-                        <relevant>true</relevant>
-                    </data>
-                </fx-instance>
-                <fx-bind ref="item"
-                         required="boolean-from-string(depends(../required))"
-                         readonly="boolean-from-string(depends(../readonly))"
-                         constraint="boolean-from-string(depends(../constraint))"
-                         relevant="boolean-from-string(depends(../relevant))"
-                ></fx-bind>
-            </fx-model>
-            <fx-group>
-                <fx-control ref="item">
-                    <label slot="label">ItemLabel</label>
-                    <span slot="hint">a hint for this item</span>
-                    <fx-alert slot="alert">This went wrong</fx-alert>
-                    <fx-message event="required">required event fired</fx-message>
-                    <fx-message event="optional">optional event fired</fx-message>
-                    <fx-message event="valid">valid event fired</fx-message>
-                    <fx-message event="invalid">invalid event fired</fx-message>
-                    <fx-message event="readwrite">readwrite event fired</fx-message>
-                    <fx-message event="readonly">readonly event fired</fx-message>
-                    <fx-message event="relevant">relevant event fired</fx-message>
-                    <fx-message event="nonrelevant">nonrelevant event fired</fx-message>
-                </fx-control>
+    <h2>ModelItems</h2>
+    <p>In short model items attach constraints or calculations to the nodes of your data. </p>
+    <img src="../resources/images/modelitem.svg" class="diagram">
 
-                <div class="buttons">
-                    <fx-button label="set required">
-                        <fx-setvalue ref="required" value="true"></fx-setvalue>
-                    </fx-button>
-                    <fx-button label="set optional">
-                        <fx-setvalue ref="required" value="false"></fx-setvalue>
-                    </fx-button>
-                </div>
-                <div class="buttons">
-                    <fx-button label="set readonly">
-                        <fx-setvalue ref="readonly" value="true"></fx-setvalue>
-                    </fx-button>
-                    <fx-button label="set readwrite">
-                        <fx-setvalue ref="readonly" value="false"></fx-setvalue>
-                    </fx-button>
-                </div>
-                <div class="buttons">
-                    <fx-button label="set valid">
-                        <fx-setvalue ref="constraint" value="true"></fx-setvalue>
-                    </fx-button>
-                    <fx-button label="set invalid">
-                        <fx-setvalue ref="constraint" value="false"></fx-setvalue>
-                    </fx-button>
-                </div>
-                <div class="buttons">
-                    <fx-button label="set relevant">
-                        <fx-setvalue ref="relevant" value="true"></fx-setvalue>
-                    </fx-button>
-                    <fx-button label="set non-relevant">
-                        <fx-setvalue ref="relevant" value="false"></fx-setvalue>
-                    </fx-button>
-                </div>
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+    <p>The <code>fx-bind</code> element allows you
+    to use the following 'facets':</p>
+
+    <table class="modelitems">
+        <tr>
+            <td>calculate</td>
+            <td>XPath expression whose result will be stored in node referenced by <code>ref</code></td>
+        </tr>
+        <tr>
+            <td>constraint</td>
+            <td>XPath expression resolving to boolean. When resolving to true the referenced node is considered valid
+            in case <code>required</code> constraint also resolves to true</td>
+        </tr>
+        <tr>
+            <td>readonly</td>
+            <td>boolean XPath expression - when resolving to true it won't be possible any more to change its value
+            with a UI control or by using a <code>setvalue</code> action.</td>
+        </tr>
+        <tr>
+            <td>required</td>
+            <td>boolean XPath expression - when resolving to true the node must have a value to be considered valid
+            before submission.</td>
+        </tr>
+        <tr>
+            <td>relevant</td>
+            <td>boolean XPath expression - when resolving to false the node is considered non-relevant which results
+            in UI controls being not rendered for that node.</td>
+        </tr>
+        <tr>
+            <td>type</td>
+            <td>datatype</td>
+        </tr>
+    </table>
+
+    <p>Each of these attributes will use XPath expressions that evaluate in the context of the node(s) given by the
+    <code>ref</code> attribute</p>
+
+    <demo-snippet>
+        <template>
+            <xf-bind ref="item" calculate="3*11"></xf-bind>
+        </template>
+    </demo-snippet>
+    <p>The above results in the node named 'item' there will be a value of '33'</p>
+    <p class="note">Calculated nodes are always readonly!</p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-form>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item>Hello</item>
+                            <required>true</required>
+                            <readonly>false</readonly>
+                            <constraint>true</constraint>
+                            <relevant>true</relevant>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="item"
+                             required="boolean-from-string(depends(../required))"
+                             readonly="boolean-from-string(depends(../readonly))"
+                             constraint="boolean-from-string(depends(../constraint))"
+                             relevant="boolean-from-string(depends(../relevant))">
+                    </fx-bind>
+                </fx-model>
+                <fx-group class="vertical">
+                    <fx-control ref="item">
+                        <label>An input</label>
+                        <!--                    <xf-hint>a hint for this item</xf-hint>-->
+                        <input>
+                        <fx-alert>This went wrong</fx-alert>
+                        <fx-message event="required">required event fired</fx-message>
+                        <fx-message event="optional">optional event fired</fx-message>
+                        <fx-message event="valid">valid event fired</fx-message>
+                        <fx-message event="invalid">invalid event fired</fx-message>
+                        <fx-message event="readwrite">readwrite event fired</fx-message>
+                        <fx-message event="readonly">readonly event fired</fx-message>
+                        <fx-message event="relevant">relevant event fired</fx-message>
+                        <fx-message event="nonrelevant">nonrelevant event fired</fx-message>
+                    </fx-control>
+
+                    <div class="buttonArray">
+                        <div class="buttons">
+                            <fx-trigger>
+                                <button>set required</button>
+                                <fx-setvalue ref="required" value="true"></fx-setvalue>
+                            </fx-trigger>
+                            <fx-trigger>
+                                <button>set optional</button>
+                                <fx-setvalue ref="required" value="false"></fx-setvalue>
+                            </fx-trigger>
+                        </div>
+                        <div class="buttons">
+                            <fx-trigger>
+                                <button>set readonly</button>
+                                <fx-setvalue ref="readonly" value="true"></fx-setvalue>
+                            </fx-trigger>
+                            <fx-trigger>
+                                <button>set readwrite</button>
+                                <fx-setvalue ref="readonly" value="false"></fx-setvalue>
+                            </fx-trigger>
+                        </div>
+                        <div class="buttons">
+                            <fx-trigger>
+                                <button>set valid</button>
+                                <fx-setvalue ref="constraint" value="true"></fx-setvalue>
+                            </fx-trigger>
+                            <fx-trigger>
+                                <button>set invalid</button>
+                                <fx-setvalue ref="constraint" value="false"></fx-setvalue>
+                            </fx-trigger>
+                        </div>
+                        <div class="buttons">
+                            <fx-trigger>
+                                <button>set relevant</button>
+                                <fx-setvalue ref="relevant" value="true"></fx-setvalue>
+                            </fx-trigger>
+                            <fx-trigger>
+                                <button>set non-relevant</button>
+                                <fx-setvalue ref="relevant" value="false"></fx-setvalue>
+                            </fx-trigger>
+                        </div>
+                    </div>
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="../index.js"></script>
 
 </body>

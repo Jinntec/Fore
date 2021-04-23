@@ -2,13 +2,31 @@
     display: none;
 }
 
+fx-alert{
+    color:darkred;
+    font-size: 0.9rem;
+}
+
 fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
     display:none;
 }
 
-fx-control[required]:after {
+fx-control{
+    white-space: nowrap;
+}
+.required:after {
+    content: '*';
+    color: red;
+    padding-left: 4px;
+}
+
+fx-control [required]:after {
     content: "*";
     display: inline;
     color: red;
+}
+
+.vertical label{
+    display: block;
 }
 

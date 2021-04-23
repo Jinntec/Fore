@@ -31,34 +31,38 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+    <h1>They nest</h1>
 
-<h1>They nest</h1>
-
-<p><code>fx-bind</code> elements can be nested to avoid typing.</p>
+    <p><code>fx-bind</code> elements can be nested to avoid typing.</p>
 
     <p class="note">A <code>ref</code> expression
-is always relative to it's parent binding or if there's none to the root-node of the default instance. This is true
-    for <code>fx-bind</code> but also within the UI elements of the form.</p>
-<demo-snippet>
-    <template>
+        is always relative to it's parent binding or if there's none to the root-node of the default instance. This is
+        true
+        for <code>fx-bind</code> but also within the UI elements of the form.</p>
+    <demo-snippet>
+        <template>
 
-        <fx-form>
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <greeting type="message">Hello World!</greeting>
-                    </data>
-                </fx-instance>
-                <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
-                    <fx-bind id="b-type" ref="@type"></fx-bind>
-                </fx-bind>
-            </fx-model>
-            <fx-group ref="greeting">
-                <fx-output ref="./@type"></fx-output>: <fx-output ref="."> </fx-output>
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+            <fx-form>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <greeting type="message">Hello World!</greeting>
+                        </data>
+                    </fx-instance>
+                    <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+                        <fx-bind id="b-type" ref="@type"></fx-bind>
+                    </fx-bind>
+                </fx-model>
+                <fx-group ref="greeting">
+                    <fx-output ref="./@type"></fx-output>
+                    :
+                    <fx-output ref="."></fx-output>
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="../index.js"></script>
 
 </body>

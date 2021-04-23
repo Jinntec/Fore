@@ -24,30 +24,31 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
 
-<demo-snippet>
-    <template>
+            <fx-form>
+                <fx-message event="refresh-done">refresh has been done</fx-message>
 
-        <fx-form>
-            <fx-message event="refresh-done">refresh has been done</fx-message>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <greeting type="message:">Hello World!</greeting>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-group>
 
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <greeting type="message:">Hello World!</greeting>
-                    </data>
-                </fx-instance>
-            </fx-model>
-            <fx-group>
+                    <h1>Unbound control is not showing</h1>
+                    <fx-control id="output" ref="greeting"></fx-control>
+                    <fx-control ref="greet"></fx-control>
 
-                <h1>Unbound control is not showing</h1>
-                <fx-control id="output" ref="greeting"></fx-control>
-                <fx-control ref="greet"></fx-control>
-
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 
 <script type="module" src="../index.js"></script>
 

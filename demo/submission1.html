@@ -25,7 +25,7 @@
             display: none;
         }
 
-        fx-button {
+        fx-trigger {
             display: block;
         }
 
@@ -35,102 +35,103 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
 
-<demo-snippet>
-    <template>
+            <fx-form>
 
-        <fx-form>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello World!</greeting>
+                            <prop></prop>
+                            <class>dynamic</class>
+                        </data>
+                    </fx-instance>
+                    <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
+                             readonly="string-length(.) < 6"></fx-bind>
 
-            <fx-model>
-                <fx-instance>
-                    <data>
-                        <greeting>Hello World!</greeting>
-                        <prop></prop>
-                        <class>dynamic</class>
-                    </data>
-                </fx-instance>
-                <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
-                         readonly="string-length(.) < 6"></fx-bind>
+                    <fx-submission id="submission"
+                                   url="/submission1"
+                                   method="POST"
+                                   replace="default">
+                        <fx-message event="submit-done">Data have been submitted</fx-message>
+                    </fx-submission>
+                    <fx-submission id="submission2"
+                                   url="/submission2"
+                                   method="POST"
+                                   replace="default">
+                    </fx-submission>
+                    <fx-submission id="submission3"
+                                   url="/submission2"
+                                   method="POST">
+                    </fx-submission>
 
-                <fx-submission id="submission"
-                               url="/submission1"
-                               method="POST"
-                               replace="default">
-                    <fx-message event="submit-done">Data have been submitted</fx-message>
-                </fx-submission>
-                <fx-submission id="submission2"
-                               url="/submission2"
-                               method="POST"
-                               replace="default">
-                </fx-submission>
-                <fx-submission id="submission3"
-                               url="/submission2"
-                               method="POST">
-                </fx-submission>
+                    <fx-submission id="submissionfails"
+                                   url="/submissionfails"
+                                   method="POST"
+                                   replace="default">
+                    </fx-submission>
 
-                <fx-submission id="submissionfails"
-                               url="/submissionfails"
-                               method="POST"
-                               replace="default">
-                </fx-submission>
+                    <fx-message event="ready">Hey it's ready</fx-message>
+                </fx-model>
+                <fx-group collapse="true">
 
-                <fx-message event="ready">Hey it's ready</fx-message>
-            </fx-model>
-            <fx-group collapse="true">
+                    <h1>Submission</h1>
 
-                <h1>Submission</h1>
+                    <fx-output id="output" ref="./greeting">
+                        <fx-label>Greeting:</fx-label>
+                    </fx-output>
 
-                <fx-output id="output" ref="./greeting">
-                    <fx-label>Greeting:</fx-label>
-                </fx-output>
+                    <fx-control ref="greeting">
+                        <label>Greeting</label>
+                    </fx-control>
 
-                <fx-control ref="greeting">
-                    <label>Greeting</label>
-                </fx-control>
+                    <h2>Replace the instance with empty data</h2>
 
-                <h2>Replace the instance with empty data</h2>
+                    <fx-button label="return empty data">
+                        <fx-send submission="submission"></fx-send>
+                    </fx-button>
 
-                <fx-button label="return empty data">
-                    <fx-send submission="submission"></fx-send>
-                </fx-button>
+                    <p>Replacing default instance with empty data also hides control as it's not bound any more.</p>
 
-                <p>Replacing default instance with empty data also hides control as it's not bound any more.</p>
+                    <h2>Replace the instance with data from server</h2>
 
-                <h2>Replace the instance with data from server</h2>
+                    <fx-button label="return greeting from server">
+                        <fx-send submission="submission2"></fx-send>
+                    </fx-button>
 
-                <fx-button label="return greeting from server">
-                    <fx-send submission="submission2"></fx-send>
-                </fx-button>
+                    <p>Replacing the data with a greeting from the server.</p>
 
-                <p>Replacing the data with a greeting from the server.</p>
+                    <h2>Ignore the reponse</h2>
 
-                <h2>Ignore the reponse</h2>
+                    <fx-button label="just send">
+                        <fx-send submission="submission3"></fx-send>
+                    </fx-button>
 
-                <fx-button label="just send">
-                    <fx-send submission="submission3"></fx-send>
-                </fx-button>
+                    <p>Replacing the data with a greeting from the server.</p>
 
-                <p>Replacing the data with a greeting from the server.</p>
+                    <h2>non-existing submission raises error</h2>
 
-                <h2>non-existing submission raises error</h2>
+                    <fx-button label="does not exist">
+                        <fx-send submission="notexistent"></fx-send>
+                    </fx-button>
 
-                <fx-button label="does not exist">
-                    <fx-send submission="notexistent"></fx-send>
-                </fx-button>
+                    <!--
+                                    <h2>corrupt data (does not work yet as expected)</h2>
 
-<!--
-                <h2>corrupt data (does not work yet as expected)</h2>
+                                    <fx-button label="does not work">
+                                        <fx-send submission="submissionfails"></fx-send>
+                                    </fx-button>
 
-                <fx-button label="does not work">
-                    <fx-send submission="submissionfails"></fx-send>
-                </fx-button>
-
-                <p>Attempting to set corrupt data from the server.</p>
--->
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+                                    <p>Attempting to set corrupt data from the server.</p>
+                    -->
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="../index.js"></script>
 
 </body>
