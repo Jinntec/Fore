@@ -47,11 +47,13 @@
     <link href="../resources/vars.css" rel="stylesheet">
 
     <style>
+/*
         .header, fx-repeat-item {
             display: grid;
             grid-template-columns: 200px 120px 50px 20px;
             grid-column-gap: 10px;
         }
+*/
 
         [required] {
             background: lightyellow;
@@ -66,12 +68,29 @@
         }
 
         fx-repeatitem {
+/*
             background: rgba( 255, 255, 255, 0.25 );
             box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
             backdrop-filter: blur( 4px );
             -webkit-backdrop-filter: blur( 4px );
             border-radius: 10px;
             border: 1px solid rgba( 255, 255, 255, 0.18 );
+*/
+            /*border: thin solid white;*/
+            background: var(--paper-grey-200);
+            margin: 4px 0;
+
+            display: block;
+            padding: 1rem;
+
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            background-color: rgba(135,135,135, 0.2);
+            box-shadow: rgba(0, 0, 0, 0.2) 2px 8px 8px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;
+
         }
 
         [unresolved] {
@@ -98,9 +117,6 @@
 
 
         fx-repeatitem {
-            border: thin solid white;
-            background: var(--paper-grey-200);
-            margin: 4px 0;
         }
 
         fx-trigger {
