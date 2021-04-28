@@ -1,7 +1,7 @@
 // import {css, html} from 'lit-element';
 import XfAbstractControl from './abstract-control.js';
 import {Fore} from '../fore.js';
-import {evaluateXPathToNodes} from '../xpath-evaluation.js';
+import {evaluateXPathToNodes, evaluateXPath } from '../xpath-evaluation.js';
 
 const WIDGETCLASS = "widget";
 
@@ -112,7 +112,7 @@ class FxControl extends XfAbstractControl {
 
     async refresh() {
         super.refresh();
-        const {widget} = this;
+        // const {widget} = this;
 
         // ### if we find a ref on control we have a 'select' control of some kind
         // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
@@ -145,7 +145,7 @@ class FxControl extends XfAbstractControl {
                 const valueAttribute = this._getValueAttribute(newEntry);
                 const valueExpr = valueAttribute.value;
                 const cutted = valueExpr.substring(1, valueExpr.length - 1);
-                const evaluated = Fore.evaluateXPath(cutted, node, formElement, Fore.namespaceResolver);
+                const evaluated = evaluateXPath(cutted, node, formElement, Fore.namespaceResolver);
                 valueAttribute.value = evaluated;
 
                 // ### set label
@@ -154,7 +154,7 @@ class FxControl extends XfAbstractControl {
                 console.log('label Expr ', labelExpr);
 
                 // todo : should use evaluateToString()
-                const label = Fore.evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver);
+                const label = evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver);
                 newEntry.textContent = label.textContent;
             });
         }

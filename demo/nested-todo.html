@@ -66,8 +66,12 @@
         }
 
         fx-repeatitem {
-            display: block;
-            padding: 10px;
+            background: rgba( 255, 255, 255, 0.25 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 4px );
+            -webkit-backdrop-filter: blur( 4px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
         }
 
         [unresolved] {
@@ -153,10 +157,10 @@
                     </fx-bind>
 
                 </fx-model>
-                <h1>todos with subtask</h1>
+                <h1>Todos with SubTasks</h1>
                 <fx-repeat focus-on-create="task" id="r-todos" ref="task">
                     <template>
-                        <fx-control label="task" ref="@text"></fx-control>
+                        <fx-control label="Todo" ref="@text"></fx-control>
                         <fx-trigger>
                             <a href="#">X</a>
                             <fx-delete ref="."></fx-delete>
@@ -172,13 +176,13 @@
                         </fx-repeat>
 
                         <fx-trigger>
-                            <button>add subtask</button>
+                            <button>add Task</button>
                             <fx-append ref="task" repeat="r-subtask"></fx-append>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
 
-                <fx-trigger label="add maintask">
+                <fx-trigger label="add Todo">
                     <button>add maintask</button>
                     <fx-append ref="task" repeat="r-todos"></fx-append>
                 </fx-trigger>

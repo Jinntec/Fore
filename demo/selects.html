@@ -6,10 +6,11 @@
 
     <title>Country selector</title>
 
-    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '../node_modules/@vanillawc/wc-codemirror/index.js';
     </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
@@ -60,70 +61,93 @@
 <body unresolved="unresolved">
 
 <div class="wrapper">
-<h1>Selects</h1>
-<demo-snippet>
-    <template>
+    <h1>Selects - one depends on the other</h1>
 
-        <fx-form>
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <selected></selected>
-                        <continent></continent>
-                    </data>
-                </fx-instance>
+    <p>Select a continent on the left and see what happens. The demo show how to setup a <code>select</code> whose items
+        will be
+        dependent on the selection of the first <code>select</code>. Here selecting a continent will constrain the list
+        of countries
+        by the continent selected.</p>
 
-                <fx-instance id="countries" src="countries.xml"></fx-instance>
+    <demo-snippet>
+        <template>
 
-            </fx-model>
-            <fx-group>
+            <fx-form>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <selected></selected>
+                            <continent></continent>
+                        </data>
+                    </fx-instance>
 
-                <h2>one depends the other</h2>
-                <p></p>
+                    <fx-instance id="countries" src="countries.xml"></fx-instance>
 
-                <div class="grid">
-                    <div class="wrapit">
-                        <fx-control ref="continent" update-event="change">
-                            <label slot="label">Continent</label>
-                            <select>
-                                <option value=""></option>
-                                <option value="asia">Asia</option>
-                                <option value="africa">Africa</option>
-                                <option value="antarctica">Antarctica</option>
-                                <option value="australasia">Australia</option>
-                                <option value="europe">Europe</option>
-                                <option value="north america">North America</option>
-                                <option value="central america">Central America</option>
-                                <option value="south america">South America</option>
-                            </select>
-                        </fx-control>
-                        <br>
-                        Selected Continent:
-                        <fx-output ref="continent"></fx-output>
+                </fx-model>
+                <fx-group>
+
+                    <p></p>
+
+                    <div class="grid">
+                        <div class="wrapit">
+                            <fx-control ref="continent" update-event="change">
+                                <label>Continent</label>
+                                <select class="widget">
+                                    <option value=""></option>
+                                    <option value="asia">Asia</option>
+                                    <option value="africa">Africa</option>
+                                    <option value="antarctica">Antarctica</option>
+                                    <option value="australasia">Australia</option>
+                                    <option value="europe">Europe</option>
+                                    <option value="north america">North America</option>
+                                    <option value="central america">Central America</option>
+                                    <option value="south america">South America</option>
+                                </select>
+                            </fx-control>
+                            <br>
+                            Selected Continent:
+                            <fx-output ref="continent"></fx-output>
+                        </div>
+
+                        <div class="wrapit">
+
+                            <fx-control ref="selected" update-event="change">
+                                <label>Country</label>
+                                <select class="widget"
+                                        ref="instance('countries')//country[@continent = instance('default')/continent]">
+                                    <template>
+                                        <option value="{@code}">{.}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                            <br>
+                            Country code is:
+                            <fx-output ref="selected"></fx-output>
+                        </div>
                     </div>
 
-                    <div class="wrapit">
+<!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+    <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
 
-                        <fx-control ref="selected" update-event="change">
-                            <label slot="label">Country</label>
-                            <select ref="instance('countries')//country[@continent = instance('default')/continent]">
-                                <template>
-                                    <option value="{@code}">{.}</option>
-                                </template>
-                            </select>
-                        </fx-control>
-                        <br>
-                        Country code is:
-                        <fx-output ref="selected"></fx-output>
-                    </div>
-                </div>
+    <p>It is structered by this:</p>
 
-
-            </fx-group>
-        </fx-form>
-    </template>
-</demo-snippet>
+    <wc-codemirror mode="xml">
+        <script type="wc-content">
+        <countries>
+            <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+            <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+            <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+            <country>...</country>
+        </countries>
+        </script>
+    </wc-codemirror>
 </div>
+
+
 <script type="module" src="../index.js"></script>
 
 </body>

@@ -16,10 +16,6 @@
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
-        .dynamic {
-            background: #76ff03;
-        }
-
         fx-control {
             display: block;
         }
@@ -42,14 +38,6 @@
         fx-output {
             display: block;
         }
-
-        .required [slot=label]:after {
-            content: '*';
-            color: red;
-            padding-left: 4px;
-        }
-
-
     </style>
 </head>
 <body unresolved="unresolved">
@@ -91,13 +79,13 @@
                     </div>
 
                     <fx-control ref="a" update-event="input">
-                        <label slot="label">A</label>
+                        <label>A</label>
                     </fx-control>
                     <fx-control ref="b" update-event="input">
-                        <label slot="label">B</label>
+                        <label>B</label>
                     </fx-control>
                     <fx-control ref="c" update-event="input">
-                        <label slot="label">C</label>
+                        <label>C</label>
                     </fx-control>
 
 

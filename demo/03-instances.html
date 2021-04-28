@@ -10,6 +10,8 @@
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '../node_modules/@vanillawc/wc-codemirror/index.js';
+
     </script>
 
 
@@ -64,8 +66,10 @@
     developer tool.</p>
 
     <h2>Addressing instances</h2>
+<!--
     <demo-snippet>
         <template>
+-->
             <fx-form>
                 <fx-model>
                     <fx-instance>
@@ -81,9 +85,28 @@
                 </fx-model>
                 <fx-output ref="foobar"></fx-output>
                 <fx-output ref="instance('second')//item"></fx-output>
+
+                <fx-output ref="instance('default')" mediatype="xml"></fx-output>
+<!--
+                <wc-codemirror mode="xml">
+                    <script type="wc-content">
+                        {instance('default')}
+                    </script>
+                </wc-codemirror>
+-->
+
+<!--
+                <textarea>
+                    {serialize(instance('default'))}
+                </textarea>
+-->
             </fx-form>
+
+
+<!--
         </template>
     </demo-snippet>
+-->
 
     <p>To refer to a node in a non-default instance you have to use the <code>instance()</code> function which takes
     the <code>id</code> as parameter. This returns the root-node of that instance.</p>

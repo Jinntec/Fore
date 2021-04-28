@@ -90,40 +90,44 @@
 
                     <h2>Replace the instance with empty data</h2>
 
-                    <fx-button label="return empty data">
+                    <fx-trigger>
+                        <button>return empty data</button>
                         <fx-send submission="submission"></fx-send>
-                    </fx-button>
+                    </fx-trigger>
 
                     <p>Replacing default instance with empty data also hides control as it's not bound any more.</p>
 
                     <h2>Replace the instance with data from server</h2>
 
-                    <fx-button label="return greeting from server">
+                    <fx-trigger>
+                        <button>return greeting from server</button>
                         <fx-send submission="submission2"></fx-send>
-                    </fx-button>
+                    </fx-trigger>
 
                     <p>Replacing the data with a greeting from the server.</p>
 
                     <h2>Ignore the reponse</h2>
 
-                    <fx-button label="just send">
+                    <fx-trigger>
+                        <button>just send</button>
                         <fx-send submission="submission3"></fx-send>
-                    </fx-button>
+                    </fx-trigger>
 
                     <p>Replacing the data with a greeting from the server.</p>
 
                     <h2>non-existing submission raises error</h2>
 
-                    <fx-button label="does not exist">
+                    <fx-trigger>
+                        <button>does not exist</button>
                         <fx-send submission="notexistent"></fx-send>
-                    </fx-button>
+                    </fx-trigger>
 
                     <!--
                                     <h2>corrupt data (does not work yet as expected)</h2>
 
-                                    <fx-button label="does not work">
+                                    <fx-trigger label="does not work">
                                         <fx-send submission="submissionfails"></fx-send>
-                                    </fx-button>
+                                    </fx-trigger>
 
                                     <p>Attempting to set corrupt data from the server.</p>
                     -->

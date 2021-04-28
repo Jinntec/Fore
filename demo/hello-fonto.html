@@ -65,7 +65,8 @@
                             <fx-message event="refresh-done">refresh has been done </fx-message>
             -->
 
-            <h1 class="{class}">
+<!--            <h1 class="{class}">-->
+            <h1>
                 Greeting:
                 <fx-output id="output" ref="./greeting">
                     <!--                <fx-message event="value-changed">value-changed fired on output</fx-message>-->
@@ -91,12 +92,14 @@
             </fx-control>
 
 
-            <fx-button label="say 'hello Universe'">
+            <fx-trigger>
+                <button>say 'hello Universe'</button>
                 <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
-            </fx-button>
-            <fx-button label="say 'hello'">
+            </fx-trigger>
+            <fx-trigger>
+                <button>say 'hello'</button>
                 <fx-setvalue ref="greeting" value="Hello"></fx-setvalue>
-            </fx-button>
+            </fx-trigger>
 
             <!--
                                     <fx-button label="submit">

@@ -86,7 +86,6 @@ export default class FxSetvalue extends FxAction {
     const item = modelItem;
     if (!item) return;
 
-    if(modelItem.readonly) return; // readonly nodes must not be changed
     if (item.value !== newVal) {
       item.value = newVal;
       item.changed = true;
