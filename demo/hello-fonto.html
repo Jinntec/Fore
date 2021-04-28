@@ -20,6 +20,12 @@
         [unresolved] {
             display: none;
         }
+
+        pre{
+            position:absolute;
+            right:5rem;
+            top:3rem;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -100,6 +106,10 @@
                 <button>say 'hello'</button>
                 <fx-setvalue ref="greeting" value="Hello"></fx-setvalue>
             </fx-trigger>
+            <pre>
+                {log('default')}
+            </pre>
+
 
             <!--
                                     <fx-button label="submit">

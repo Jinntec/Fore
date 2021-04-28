@@ -3,11 +3,27 @@ import {
   evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
   evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
+  evaluateXPathToString as fxEvaluateXPathToString,
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const instance = formElement.querySelector(`fx-instance[id=${string}]`);
+    if (instance) {
+      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+      return def;
+    }
+    return null;
+  },
+);
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
@@ -83,6 +99,7 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
 function functionNameResolver({ _prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'log':
     case 'instance':
     case 'depends':
     case 'boolean-from-string':
@@ -180,6 +197,33 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement, namespaceR
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement, namespaceResolver) {
   return fxEvaluateXPathToBoolean(
+    xpath,
+    contextNode,
+    null,
+    {},
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
+}
+
+/**
+ * Evaluate an XPath to a string
+ *
+ * @param  {string} xpath  The XPath to run
+ * @param  {Node} contextNode The start of the XPath
+ * @param  {Node} formElement  The form element associated to the XPath
+ * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
+ * namespace resolver in the scope of the element this XPath is declared on
+ * @return {string}
+ */
+export function evaluateXPathToString(xpath, contextNode, formElement, namespaceResolver) {
+  return fxEvaluateXPathToString(
     xpath,
     contextNode,
     null,

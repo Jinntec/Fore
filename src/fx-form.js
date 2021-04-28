@@ -9,6 +9,7 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
+import { evaluateXPath, evaluateXPathToString } from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -188,9 +189,13 @@ export class FxForm extends HTMLElement {
       console.log('match ', match);
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
+/*
       const result = fx.evaluateXPathToString(naked, inscope, null, {
         namespaceResolver: Fore.namespaceResolver,
       });
+*/
+      const result = evaluateXPathToString(naked, inscope, this, Fore.namespaceResolver);
+
       // console.log('result of eval ', result);
       const replaced = expr.replaceAll(match, result);
       console.log('result of replacing ', replaced);
