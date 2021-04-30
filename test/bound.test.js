@@ -58,7 +58,7 @@ describe('fx-control tests', () => {
         <fx-group>
           <fx-control id="input1" ref="item" update-event="blur" value-prop="value">
             <label>with onblur handler</label>
-            <input class="fxWidget" name="value" value="" />
+            <input class="widget" name="value" value="" />
           </fx-control>
         </fx-group>
       </fx-form>
@@ -70,12 +70,12 @@ describe('fx-control tests', () => {
     const bound = el.querySelector('#input1');
     expect(bound).to.exist;
 
-    const control = document.querySelector('.fxWidget');
+    const control = document.querySelector('.widget');
     expect(bound.widget).to.equal(control);
   });
 
 
-  it('is initialized', async () => {
+  it('creates fx-control', async () => {
     const el = await fixture(html`
       <fx-form>
         <fx-model id="model1">

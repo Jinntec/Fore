@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import {html, fixtureSync, expect, elementUpdated, oneEvent} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -27,15 +27,15 @@ describe('control tests', () => {
           </fx-bind>
         </fx-model>
 
-        <fx-input id="input1" label="A-label" ref="a">
+        <fx-control id="input1" label="A-label" ref="a">
           <fx-alert>Constraint not valid</fx-alert>
           <fx-hint>must be one character long</fx-hint>
-        </fx-input>
+        </fx-control>
 
-        <fx-input id="input2" label="B-label" ref="b">
+        <fx-control id="input2" label="B-label" ref="b">
           <fx-alert id="alert1">Constraint not valid</fx-alert>
           <fx-hint>must be one character long</fx-hint>
-        </fx-input>
+        </fx-control>
       </fx-form>
     `);
 
@@ -59,6 +59,55 @@ describe('control tests', () => {
     expect(alert2.getAttribute('style')).to.equal('display: none;');
   });
 
+  it('keeps on displaying alert as long as modelItem is invalid', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>Aa</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
+
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a">
+          <fx-alert id="alert1">Constraint not valid</fx-alert>
+        </fx-control>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = document.getElementById('model1');
+    console.log('items ', model.modelItems);
+
+    const alert1 = document.getElementById('alert1');
+    console.log('alert1 ', alert1);
+    expect(alert1).to.exist;
+    expect(alert1).to.be.visible;
+
+    // const input = document.getElementById('input1');
+    const input = el.querySelector('#input1');
+    const widget = input.getWidget();
+    expect(widget).to.exist;
+    expect(widget.value).to.equal('Aa');
+    expect(input.getWidget().value).to.equal('Aa');
+
+    // widget.value = 'Aaa';
+    // widget.blur();
+    model.modelItems[0].value = 'Aaa';
+    model.updateModel();
+
+    console.log('items ', model.modelItems);
+    expect(model.modelItems[0].value).to.equal('Aaa')
+      expect(alert1).to.exist;
+      expect(alert1).to.be.visible;
+      // expect(alert1.style.display).to.be.visible;
+      expect(input.classList.contains('invalid')).to.be.true;
+
+  });
+
   it('has a control child with value "A"', async () => {
     const el = await fixtureSync(html`
       <fx-form>
@@ -68,6 +117,8 @@ describe('control tests', () => {
               <a>A</a>
             </data>
           </fx-instance>
+          <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
+
         </fx-model>
 
         <fx-control id="input1" label="A-label" ref="a"> </fx-control>
@@ -93,13 +144,13 @@ describe('control tests', () => {
                                 <a>A</a>
                             </data>
                         </fx-instance>
-                
+
                     </fx-model>
-                    
+
                     <fx-input id="input1" label="A-label" ref="a">
                     </fx-input>
-                    
-                    
+
+
                 </fx-form>`)
         );
 

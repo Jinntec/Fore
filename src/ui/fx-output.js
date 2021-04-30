@@ -1,5 +1,3 @@
-import {html, css} from 'lit-element';
-
 import XfAbstractControl from './abstract-control.js';
 
 export class FxOutput extends XfAbstractControl {

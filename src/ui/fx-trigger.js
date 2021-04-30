@@ -20,7 +20,7 @@ export class FxTrigger extends XfAbstractControl {
         `;
 
         const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', event => {
+        slot.addEventListener('slotchange', () => {
             const elements = slot.assignedElements({flatten:true});
             elements[0].setAttribute('tabindex','0');
             elements[0].setAttribute('role','button');

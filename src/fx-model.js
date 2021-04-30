@@ -15,6 +15,7 @@ export class FxModel extends HTMLElement {
 
     this.mainGraph = new DepGraph(false);
     this.inited = false;
+    this.modelConstructed = false;
     this.attachShadow({ mode: 'open' });
   }
 
@@ -27,6 +28,11 @@ export class FxModel extends HTMLElement {
     this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
+    this.addEventListener('model-construct-done', () =>{
+      this.modelConstructed = true;
+      console.log('model-construct-done fired ', this.modelConstructed);
+
+    });
   }
 
   static lazyCreateModelItem(model, ref, node) {
@@ -101,6 +107,7 @@ export class FxModel extends HTMLElement {
         })
       );
     }
+    console.log('INITED');
     this.inited = true;
   }
 
@@ -190,20 +197,35 @@ export class FxModel extends HTMLElement {
     console.groupEnd();
   }
 
+  /**
+   * Iterates all modelItems to calculate the validation status.
+   *
+   * Model alerts are given on 'fx-bind' elements as either attribute `alert` or as `fx-alert` child elements.
+   *
+   * During model-construct all model alerts are added to the modelItem if any
+   *
+   * to revalidate:
+   * Gets the `constraint` attribute declaration from modelItem.bind
+   * Computes the XPath to a Boolean
+   * Updates the modelItem.constraint property
+   *
+   * todo: type checking
+   * todo: run browser validation API
+   *
+   */
   revalidate() {
     console.group('### revalidate');
 
     this.modelItems.forEach(modelItem => {
       // console.log('validating node ', modelItem.node);
-      modelItem.alerts = []; // reset alerts
 
       const { bind } = modelItem;
       if (bind) {
-        // console.log('modelItem bind ', bind);
 
-        // todo: investigate why bind is an element when created in fx-bind.init() and an ...
-        // fx-bind object when created lazily.
-
+        /*
+        todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
+          created lazily.
+        */
         if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
           const constraint = bind.getAttribute('constraint');
           if (constraint) {
@@ -215,10 +237,14 @@ export class FxModel extends HTMLElement {
             );
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
-            if (!compute) {
+
+            // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
+            if (!this.modelConstructed) {
               // todo: get alert from attribute or child element
               const alert = bind.getAlert();
-              modelItem.addAlert(alert);
+              if(alert){
+                modelItem.addAlert(alert);
+              }
             }
           }
         }

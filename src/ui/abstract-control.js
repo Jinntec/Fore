@@ -146,36 +146,36 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     }
   }
 
-  // todo - there's a bug still in here somewhere - see binding.html and click set invalid button - will never trigger
+  // todo - review alert handling altogether. There could be potentially multiple ones in model
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
-
     const alert = this.querySelector('fx-alert');
-    if (alert) {
-      alert.style.display = 'none';
-    }
 
-    // if (this.isValid() !== this.modelItem.valid) {
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
         this.classList.remove('invalid');
+        alert.style.display = 'none';
         this.dispatchEvent(new CustomEvent('valid', {}));
       } else {
+        // ### constraint is invalid - handle alerts
         this.classList.add('invalid');
+        if (alert) {
+          alert.style.display = 'block';
+        }
         if (this.modelItem.alerts.length !== 0) {
-          // const alert = this.querySelector('fx-alert');
-          if (alert) {
-            alert.style.display = 'block';
-          } else {
             const { alerts } = this.modelItem;
             console.log('alerts from bind: ', alerts);
-            alerts.forEach(modelAlert => {
-              const newAlert = document.createElement('fx-alert');
-              newAlert.innerHTML = modelAlert;
-              this.appendChild(newAlert);
-              newAlert.style.display = 'block';
-            });
-          }
+
+            const controlAlert = this.querySelector('fx-alert');
+            if(!controlAlert){
+              alerts.forEach(modelAlert => {
+                const newAlert = document.createElement('fx-alert');
+                newAlert.innerHTML = modelAlert;
+                this.appendChild(newAlert);
+                newAlert.style.display = 'block';
+              });
+            }
+
         }
 
         this.dispatchEvent(new CustomEvent('invalid', {}));
