@@ -36,8 +36,8 @@ export default class FxSetvalue extends FxAction {
     this.value = this.getAttribute('value');
   }
 
-  execute() {
-    super.execute();
+  execute(e) {
+    super.execute(e);
     // this.setValue(this.modelItem, this.value);
 
     let { value } = this;
