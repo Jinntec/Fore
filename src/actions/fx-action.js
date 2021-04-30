@@ -1,4 +1,6 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
+import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-action`
@@ -36,15 +38,37 @@ export class FxAction extends foreElementMixin(HTMLElement) {
       this.targetElement.addEventListener(this.event, e => this.execute(e));
       // console.log('adding listener for ', this.event , ` to `, this);
     }
+
+    this.ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
   }
 
+  /**
+   * executes the action. This function is usually triggered by a fx-trigger.
+   *
+   *
+   * @param e
+   * @returns {boolean} result of evaluation of the if expression. Concrete actions check for that before doing their task.
+   */
   execute(e) {
+    console.log('execute e ', e);
+    console.log('execute this ', this);
+
     if (this.isBound()) {
       this.evalInContext();
     }
+
+    // ### evaluate if expression and return result to caller
+    const ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
+    if(ifExpr){
+      return evaluateXPathToBoolean(ifExpr, this.nodeset, this.getOwnerForm(), Fore.namespaceResolver);
+    }
+    return true;
   }
 
   actionPerformed() {
+
+    console.log('action parentNode ', this.parentNode);
+
     const model = this.getModel();
     if (this.needsRebuild) {
       model.rebuild();

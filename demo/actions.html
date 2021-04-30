@@ -10,16 +10,39 @@
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import '@polymer/paper-checkbox/paper-checkbox.js';
+
     </script>
 
 
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
-        pre{
-            position:absolute;
-            right:5rem;
-            top:3rem;
+        pre {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            width: 100vw;
+            z-index: 5;
+            padding: 1rem 0 0;
+        }
+        pre:before{
+            content:'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top:-21px;
+            left:0;
+            color:var(--paper-grey-800);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+        fx-control{
+            font-size: 1.2rem;
+        }
+        fx-output{
+            display: none;
         }
     </style>
 
@@ -29,46 +52,62 @@
 
     <h1>Actions</h1>
 
-    <demo-snippet>
-        <template>
-            <style>
-            </style>
+    <fx-form>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <confirmation>false</confirmation>
+                    <entered>false</entered>
+                </data>
+            </fx-instance>
 
-            <fx-form>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <confirmation>false</confirmation>
-                            <done>false</done>
-                        </data>
-                    </fx-instance>
+        </fx-model>
 
-                </fx-model>
+<!--
+        <fx-control ref="confirmation" update-event="input" value-prop="checked">
+            <input id="confirm" type="checkbox">
+            <label for="confirm">i agree</label>
+        </fx-control>
+-->
 
-                <fx-control ref="confirmation" update-event="input" value-prop="checked">
-                    <input type="checkbox">
-                </fx-control>
+        <h2>conditional action</h2>
+        <demo-snippet>
+            <template>
+                <fx-group>
 
-                <fx-trigger>
-                    <button>fire when confirmed</button>
-                    <fx-setvalue if="../confirmation = 'true'" ref="done" value="true"></fx-setvalue>
-                </fx-trigger>
+                    <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
+                        <paper-checkbox class="widget">i agree</paper-checkbox>
+                        <fx-message if=".='true'" event="value-changed">Thanks</fx-message>
+                    </fx-control>
 
-                <fx-trigger>
-                    <button>execute action block</button>
-                    <fx-action>
-                        <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
-                        <fx-setvalue ref="done" value="true"></fx-setvalue>
-                    </fx-action>
-                </fx-trigger>
+                    <fx-trigger>
+                        <button>come in</button>
+                        <fx-setvalue if="../confirmation = 'true'" ref="entered" value="true"></fx-setvalue>
+                    </fx-trigger>
 
-                <pre>
-                    {log('default')}
-                </pre>
+                    <fx-output ref="entered">
+                        <fx-message event="value-changed" level="modal">Welcome!</fx-message>
+                    </fx-output>
+                </fx-group>
+            </template>
+        </demo-snippet>
 
-            </fx-form>
-        </template>
-    </demo-snippet>
+<!--
+        <fx-trigger>
+            <button>execute action block</button>
+            <fx-action>
+                <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
+                <fx-setvalue ref="done" value="true"></fx-setvalue>
+            </fx-action>
+        </fx-trigger>
+-->
+
+
+        <pre>
+                {log('default')}
+        </pre>
+
+    </fx-form>
 
 </div>
 

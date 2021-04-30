@@ -37,7 +37,9 @@ export default class FxSetvalue extends FxAction {
   }
 
   execute(e) {
-    super.execute(e);
+    // super.execute(e);
+    const proceed = super.execute(e);
+    if(!proceed) return ;
     // this.setValue(this.modelItem, this.value);
 
     let { value } = this;
@@ -49,7 +51,7 @@ export default class FxSetvalue extends FxAction {
       value = '';
     }
     this.setValue(this.getModelItem(), value);
-
+    return true;
     /*
                 const repeated = this.closest('fx-repeat-item');
 

@@ -6,8 +6,6 @@ import { ModelItem } from '../modelitem.js';
  * `AbstractControl` -
  * is a general base class for control elements.
  *
- *
- * todo: remove LitElement dependency
  */
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
 /*
@@ -72,14 +70,14 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;
         await this.updateWidgetValue();
+        this.handleModelItemProperties();
 
         // if(!this.closest('fx-form').ready) return; // state change event do not fire during init phase (initial refresh)
-        // if(!this._getForm().ready) return; // state change event do not fire during init phase (initial refresh)
+        if(!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
           this.dispatchEvent(new CustomEvent('value-changed', {}));
         }
         // this.requestUpdate();
-        this.handleModelItemProperties();
       }
     }
     // await this.updateComplete;

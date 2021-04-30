@@ -1,4 +1,3 @@
-// import {LitElement, html, css} from 'lit-element';
 import * as fx from 'fontoxpath';
 import { ModelItem } from './modelitem.js';
 import { XPathUtil } from './xpath-util.js';

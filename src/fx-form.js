@@ -19,7 +19,6 @@ import { evaluateXPath, evaluateXPathToString } from './xpath-evaluation.js';
  *
  * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
  *
- * This element uses LitElement as it uses shadowDOM to tempate global message dialogs
  */
 export class FxForm extends HTMLElement {
   static get properties() {

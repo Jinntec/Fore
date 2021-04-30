@@ -3,7 +3,6 @@ import { FxModel } from './fx-model.js';
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
-// export class ForeElement extends LitElement {
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {

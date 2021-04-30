@@ -41,6 +41,7 @@ class FxMessage extends LitElement {
       },
       eventTarget: {
         type: String,
+        attribute:'event-target'
       },
       targetElement: {
         type: Object,
@@ -68,7 +69,9 @@ class FxMessage extends LitElement {
   }
 
   execute(e) {
-    console.log('fx-message.execute textContent: ', this.textContent);
+    // console.log('fx-message.execute textContent: ', this.textContent);
+    // const proceed = super.execute(e);
+    // if(!proceed) return ;
 
     const details = e.detail;
     const result = parseTpl(this.textContent, details);
