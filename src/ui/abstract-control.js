@@ -99,6 +99,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     return this.getModel().parentNode;
   }
 
+  _dispatchEvent(event){
+    if(this.getOwnerForm().ready){
+      this.dispatchEvent(new CustomEvent(event, {}));
+    }
+  }
+
   // eslint-disable-next-line class-methods-use-this
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
@@ -107,13 +113,15 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
         this.widget.setAttribute('required', 'required');
-        // this.shadowRoot.getElementById('widget').setAttribute('required','required');
-        // this.widget.setAttribute('required','required');
-        // this.required = true;
-        // this.setAttribute('required','required');
+        this.classList.add('required');
+        // this.dispatchEvent(new CustomEvent('required', {}));
 
-        this.classList.toggle('required');
-        this.dispatchEvent(new CustomEvent('required', {}));
+        /*
+        if(this.getOwnerForm().ready){
+          this.dispatchEvent(new CustomEvent('required', {}));
+        }
+*/
+        this._dispatchEvent('required');
       } else {
         this.widget.removeAttribute('required');
         this.required = false;
@@ -132,7 +140,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.widget.setAttribute('readonly', 'readonly');
         // this.setAttribute('readonly','readonly');
         this.classList.toggle('readonly');
-        this.dispatchEvent(new CustomEvent('readonly', {}));
+        // this.dispatchEvent(new CustomEvent('readonly', {}));
+        this._dispatchEvent('readonly');
       }
       if (!this.modelItem.readonly) {
         this.widget.removeAttribute('readonly');
@@ -176,7 +185,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         }
 
-        this.dispatchEvent(new CustomEvent('invalid', {}));
+        // this.dispatchEvent(new CustomEvent('invalid', {}));
+        this._dispatchEvent('invalid');
       }
     }
   }
@@ -188,7 +198,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.dispatchEvent(new CustomEvent('relevant', {}));
         this._fadeIn(this, this.display);
       } else {
-        this.dispatchEvent(new CustomEvent('nonrelevant', {}));
+        // this.dispatchEvent(new CustomEvent('nonrelevant', {}));
+        this._dispatchEvent('nonrelevant');
         this._fadeOut(this);
       }
     }

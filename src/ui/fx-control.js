@@ -55,7 +55,8 @@ class FxControl extends XfAbstractControl {
                 ${style}
             </style>
             ${this.renderHTML(this.ref)}
-        `
+        `;
+
         this.widget = this.getWidget();
         console.log('widget ', this.widget);
         this.widget.addEventListener(this.updateEvent, () => {
@@ -92,8 +93,9 @@ class FxControl extends XfAbstractControl {
         return widget;
     }
 
+    // todo: check again
     async updateWidgetValue() {
-        // this.control[this.valueProp] = this.value;
+        // this.widget[this.valueProp] = this.value;
         if (this.valueProp === 'checked') {
             if (this.value === 'true') {
                 this.widget.checked = true;

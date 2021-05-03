@@ -205,7 +205,9 @@
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
+
                 </fx-repeat>
+                <fx-message event="index-changed" target="todos">index changed</fx-message>
 
                 <fx-trigger>
                     <button>append</button>

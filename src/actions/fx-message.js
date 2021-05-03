@@ -1,16 +1,16 @@
-import { LitElement, html } from 'lit-element';
 import { parseTpl } from './StringTpl.js';
+import {FxAction} from "./fx-action";
 
 /**
  * `fx-message`
- * general class for bound elements
+ *
+ * Action to display messages to the user.
  *
  * todo: implementation and demo
  *
- * @customElement
- * @polymer
  */
-class FxMessage extends LitElement {
+class FxMessage extends FxAction {
+/*
   static get template() {
     return html`
       <style>
@@ -20,36 +20,30 @@ class FxMessage extends LitElement {
       </style>
     `;
   }
+*/
 
-  static get properties() {
-    return {
-      bind: {
-        type: String,
-      },
-      repeat: {
-        type: String,
-      },
-      event: {
-        type: String,
-      },
-      level: {
-        type: String,
-        value: 'ephemeral',
-      },
-      id: {
-        type: String,
-      },
-      eventTarget: {
-        type: String,
-        attribute:'event-target'
-      },
-      targetElement: {
-        type: Object,
-      },
-    };
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
+    this.event=this.hasAttribute('event')?this.getAttribute('event'):'';
+    this.level=this.hasAttribute('level')?this.getAttribute('level'):'ephemeral';
+    const style = `
+        :host{
+            display:none;
+        }
+    `;
+    this.shadowRoot.innerHTML = `
+        <style>
+            ${style}
+        </style>
+        ${this.renderHTML()}
+    `;
+
+    this.eventTarget=this.hasAttribute('target')?this.getAttribute('target'):'';
     // super.connectedCallback();
     console.log('### fx-message connected ', this);
 
@@ -67,6 +61,13 @@ class FxMessage extends LitElement {
     // super.disconnectedCallback();
     this.targetElement.removeEventListener(this.event, e => this.execute(e));
   }
+
+  renderHTML(){
+    return `
+        <slot></slot>
+    `;
+  }
+
 
   execute(e) {
     // console.log('fx-message.execute textContent: ', this.textContent);
