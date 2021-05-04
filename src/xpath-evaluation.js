@@ -96,7 +96,7 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
  * Implementation of the functionNameResolver passed to FontoXPath to
  * redirect function resolving for unprefixed functions to either the fn or the xf namespace
  */
-function functionNameResolver({ _prefix, localName }, _arity) {
+function functionNameResolver({ localName }) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
     case 'log':
@@ -109,6 +109,25 @@ function functionNameResolver({ _prefix, localName }, _arity) {
   }
 }
 
+function namespaceResolver(prefix) {
+  // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+
+  /**
+   * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
+   * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
+   *   // Return value
+   *  }
+   * }
+   */
+
+  // console.log('namespaceResolver  prefix', prefix);
+  const ns = {
+    xhtml: 'http://www.w3.org/1999/xhtml',
+    // ''    : Fore.XFORMS_NAMESPACE_URI
+  };
+  return ns[prefix] || null;
+}
+
 /**
  * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
  * type of the output is more predictable.
@@ -116,12 +135,10 @@ function functionNameResolver({ _prefix, localName }, _arity) {
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
- * namespace resolver in the scope of the element this XPath is declared on
  * @return {any}
  */
-export function evaluateXPath(xpath, contextNode, formElement, namespaceResolver) {
-  return fxEvaluateXPath(xpath, contextNode, null, {}, 'xs:anyType', {
+export function evaluateXPath(xpath, contextNode, formElement) {
+  return fxEvaluateXPath(xpath, contextNode, null, {}, fxEvaluateXPath.ANY_TYPE, {
     currentContext: { formElement },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
@@ -137,11 +154,9 @@ export function evaluateXPath(xpath, contextNode, formElement, namespaceResolver
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
- * namespace resolver in the scope of the element this XPath is declared on
  * @return {Node}  The first node found by the XPath
  */
-export function evaluateXPathToFirstNode(xpath, contextNode, formElement, namespaceResolver) {
+export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   return fxEvaluateXPathToFirstNode(
     xpath,
     contextNode,
@@ -164,11 +179,9 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement, namesp
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
- * namespace resolver in the scope of the element this XPath is declared on
  * @return {Node[]}  All nodes
  */
-export function evaluateXPathToNodes(xpath, contextNode, formElement, namespaceResolver) {
+export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   return fxEvaluateXPathToNodes(
     xpath,
     contextNode,
@@ -191,11 +204,9 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement, namespaceR
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
- * namespace resolver in the scope of the element this XPath is declared on
  * @return {boolean}
  */
-export function evaluateXPathToBoolean(xpath, contextNode, formElement, namespaceResolver) {
+export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   return fxEvaluateXPathToBoolean(
     xpath,
     contextNode,
@@ -218,11 +229,9 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement, namespac
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @param {(string)=>string|undefined} namespaceResolver Used to resolve namespaces. This must be the
- * namespace resolver in the scope of the element this XPath is declared on
  * @return {string}
  */
-export function evaluateXPathToString(xpath, contextNode, formElement, namespaceResolver) {
+export function evaluateXPathToString(xpath, contextNode, formElement) {
   return fxEvaluateXPathToString(
     xpath,
     contextNode,

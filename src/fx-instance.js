@@ -1,6 +1,6 @@
 import '@polymer/iron-ajax/iron-ajax.js';
 
-import * as fx from 'fontoxpath';
+import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 export class FxInstance extends HTMLElement {
   constructor() {
@@ -67,7 +67,8 @@ export class FxInstance extends HTMLElement {
   }
 
   evalXPath(xpath) {
-    const result = fx.evaluateXPathToFirstNode(xpath, this.getDefaultContext(), null, {});
+    const formElement = this.parentElement.parentElement;
+    const result = evaluateXPathToFirstNode(xpath, this.getDefaultContext(), formElement);
     return result;
   }
 

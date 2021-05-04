@@ -1,5 +1,5 @@
 import { parseTpl } from './StringTpl.js';
-import {FxAction} from "./fx-action";
+import { FxAction } from './fx-action.js';
 
 /**
  * `fx-message`
@@ -10,18 +10,17 @@ import {FxAction} from "./fx-action";
  *
  */
 class FxMessage extends FxAction {
-/*
-  static get template() {
-    return html`
-      <style>
-        :host {
-          display: none;
-        }
-      </style>
-    `;
-  }
-*/
-
+  /*
+    static get template() {
+      return html`
+        <style>
+          :host {
+            display: none;
+          }
+        </style>
+      `;
+    }
+  */
 
   constructor() {
     super();
@@ -29,8 +28,8 @@ class FxMessage extends FxAction {
   }
 
   connectedCallback() {
-    this.event=this.hasAttribute('event')?this.getAttribute('event'):'';
-    this.level=this.hasAttribute('level')?this.getAttribute('level'):'ephemeral';
+    this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
+    this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
     const style = `
         :host{
             display:none;
@@ -43,7 +42,7 @@ class FxMessage extends FxAction {
         ${this.renderHTML()}
     `;
 
-    this.eventTarget=this.hasAttribute('target')?this.getAttribute('target'):'';
+    this.eventTarget = this.hasAttribute('target') ? this.getAttribute('target') : '';
     // super.connectedCallback();
     console.log('### fx-message connected ', this);
 
@@ -62,12 +61,11 @@ class FxMessage extends FxAction {
     this.targetElement.removeEventListener(this.event, e => this.execute(e));
   }
 
-  renderHTML(){
+  renderHTML() {
     return `
         <slot></slot>
     `;
   }
-
 
   execute(e) {
     // console.log('fx-message.execute textContent: ', this.textContent);

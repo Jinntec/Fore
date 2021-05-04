@@ -1,8 +1,7 @@
-import * as fx from 'fontoxpath';
 import { ModelItem } from './modelitem.js';
 import { XPathUtil } from './xpath-util.js';
 import { foreElementMixin } from './ForeElementMixin.js';
-import { evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -235,7 +234,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         // Note:
         // This here runs XPath without setting a namespace resolve. Is this correct?
 
-        const other = fx.evaluateXPath(ref, node);
+        const other = evaluateXPath(ref, node, this.getOwnerForm());
         const otherPath = XPathUtil.getPath(other);
 
         if (!this.model.mainGraph.hasNode(otherPath)) {
@@ -319,9 +318,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
-            const localResult = fx.evaluateXPathToNodes(this.ref, n, null, {
-              namespaceResolver: this.namespaceResolver,
-            });
+            const localResult = evaluateXPathToNodes(this.ref, n, this.getOwnerForm());
             localResult.forEach(item => {
               this.nodeset.push(item);
             });
@@ -347,8 +344,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         this.nodeset = evaluateXPathToNodes(
           this.ref,
           inscopeContext,
-          formElement,
-          this.namespaceResolver,
+          formElement
         );
       } else {
         this.nodeset = this.ref;
@@ -523,7 +519,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     // evaluate expression to boolean
     const propertyExpr = this[property];
     // console.log('####### ', propertyExpr);
-    const result = evaluateXPathToBoolean(propertyExpr, node, this, this.namespaceResolver);
+    const result = evaluateXPathToBoolean(propertyExpr, node, this);
     return result;
   }
 

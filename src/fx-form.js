@@ -4,12 +4,11 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@vaadin/vaadin-notification/vaadin-notification.js';
-import * as fx from 'fontoxpath';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
-import { evaluateXPath, evaluateXPathToString } from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -137,7 +136,7 @@ export class FxForm extends HTMLElement {
   _refreshTemplateExpressions() {
     const search =
       ".//*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//*[name(.) != 'fx-model']/@*[contains(.,'{')]";
-    const tmplExpressions = fx.evaluateXPathToNodes(search, this, null, null);
+    const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
@@ -193,7 +192,7 @@ export class FxForm extends HTMLElement {
         namespaceResolver: Fore.namespaceResolver,
       });
 */
-      const result = evaluateXPathToString(naked, inscope, this, Fore.namespaceResolver);
+      const result = evaluateXPathToString(naked, inscope, this);
 
       // console.log('result of eval ', result);
       const replaced = expr.replaceAll(match, result);

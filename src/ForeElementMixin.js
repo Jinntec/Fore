@@ -1,6 +1,5 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 export const foreElementMixin = superclass =>
@@ -73,9 +72,7 @@ export const foreElementMixin = superclass =>
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, null, {
-              namespaceResolver: this.namespaceResolver,
-            });
+            const localResult = evaluateXPathToFirstNode(this.ref, n, null);
             // console.log('local result: ', localResult);
             this.nodeset.push(localResult);
           }
@@ -88,8 +85,7 @@ export const foreElementMixin = superclass =>
         this.nodeset = evaluateXPathToFirstNode(
           this.ref,
           inscopeContext,
-          formElement,
-          Fore.namespaceResolver,
+          formElement
         );
         // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
       }
