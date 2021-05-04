@@ -33,8 +33,7 @@
     "@polymer/paper-input": "^3.2.1",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@vanillawc/wc-codemirror": "^1.9.1",
-    "fontoxpath": "^3.17.0",
-    "lit-element": "^2.3.1"
+    "fontoxpath": "^3.17.0"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",

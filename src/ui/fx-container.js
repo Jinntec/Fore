@@ -1,5 +1,3 @@
-import { LitElement } from 'lit-element';
-
 import '../fx-model.js';
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
@@ -8,23 +6,32 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  * `fx-container` -
  * is a general class for container elements.
  *
- * todo: remove LitElement dependency
  */
-// export class FxContainer extends BoundElement {
-// export class FxContainer extends foreElementMixin(LitElement) {
-export class FxContainer extends foreElementMixin(LitElement) {
-  /*
+export class FxContainer extends foreElementMixin(HTMLElement) {
+
   constructor () {
     super();
+    this.attachShadow({ mode: 'open' });
   }
 
-*/
-  /*
-    firstUpdated(_changedProperties) {
-        // console.log('firstUpdated ', this);
-        this.control = this.shadowRoot.querySelector('#control');
-    }
-*/
+  connectedCallback(){
+    const style = `
+        :host {
+            display: block;
+        }
+    `;
+
+    const html = `
+      <slot></slot>
+    `;
+
+    this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${html}
+    `;
+  }
 
   /**
    * (re)apply all state properties to this control.
@@ -44,8 +51,6 @@ export class FxContainer extends foreElementMixin(LitElement) {
     if (this._getForm().ready) {
       this.handleModelItemProperties();
     }
-    // this.requestUpdate();
-
     Fore.refreshChildren(this);
   }
 
