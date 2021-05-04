@@ -69,7 +69,7 @@ registerXQueryModule(`
     };
 `);
 
-// How to run XQUF:
+// How to run XQUERY:
 /**
 registerXQueryModule(`
 module namespace my-custom-namespace = "my-custom-uri";
