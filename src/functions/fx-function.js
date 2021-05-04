@@ -1,5 +1,5 @@
 import { registerCustomXPathFunction } from 'fontoxpath';
-import { evaluateXPath } from '../xpath-evaluation';
+import { evaluateXPath } from '../xpath-evaluation.js';
 
 /**
  * Allows to extend a form with local custom functions.
@@ -22,7 +22,7 @@ export class FxFunction extends HTMLElement {
     this.shadowRoot.innerHTML = `<slot></slot>`;
 
     this.override = this.hasAttribute('override') ? this.getAttribute('override') : 'true';
-    this.functionBody = this.innerHTML;
+    this.functionBody = this.innerText;
 
     const type = this.getAttribute('type') || 'text/xpath';
 
@@ -56,24 +56,41 @@ export class FxFunction extends HTMLElement {
       : [];
 
     switch (type) {
-      case 'text/javascript':
-        {
-          // eslint-disable-next-line no-new-func
-          const fun = new Function(
-            '_domFacade',
-            ...paramParts.map(paramPart => paramPart.variableName),
-            this.functionBody,
-          );
-          console.log(fun);
-          // @ts-ignore
-          registerCustomXPathFunction(
-            `${prefix ? `${prefix}:` : ''}${localName}`,
-            paramParts.map(paramPart => paramPart.variableType),
-            returnType || 'item()*',
-            fun,
-          );
-        }
+      case 'text/javascript': {
+        // eslint-disable-next-line no-new-func
+        const fun = new Function(
+          '_domFacade',
+          ...paramParts.map(paramPart => paramPart.variableName),
+          this.functionBody,
+        );
+        registerCustomXPathFunction(
+          `${prefix ? `${prefix}:` : ''}${localName}`,
+          paramParts.map(paramPart => paramPart.variableType),
+          returnType || 'item()*',
+          fun,
+        );
         break;
+      }
+
+      case 'text/xpath': {
+        const fun = (domFacade, ...args) =>
+          evaluateXPath(
+            this.functionBody,
+            null,
+            null,
+            paramParts.reduce((variablesByName, paramPart, i) => {
+              variablesByName[paramPart.variableName.replace('$', '')] = args[i];
+              return variablesByName;
+            }, {}),
+          );
+        registerCustomXPathFunction(
+          `${prefix ? `${prefix}:` : ''}${localName}`,
+          paramParts.map(paramPart => paramPart.variableType),
+          returnType || 'item()*',
+          fun,
+        );
+        break;
+      }
 
       default:
         throw new Error(`Unexpected mimetype ${type} for function`);

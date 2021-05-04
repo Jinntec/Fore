@@ -138,10 +138,9 @@ function namespaceResolver(prefix) {
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @return {any}
  */
-export function evaluateXPath(xpath, contextNode, formElement) {
-  return fxEvaluateXPath(xpath, contextNode, null, {}, fxEvaluateXPath.ANY_TYPE, {
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+  return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
     currentContext: { formElement },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
