@@ -1,67 +1,60 @@
-import { LitElement, html, css } from 'lit-element';
 import '@polymer/iron-ajax/iron-ajax.js';
 
-// import * as fx from 'fontoxpath';
 import { foreElementMixin } from './ForeElementMixin.js';
 
-export class FxSubmission extends foreElementMixin(LitElement) {
-  static get styles() {
-    return css`
-      :host {
-        display: none;
-      }
-    `;
-  }
-
-  static get properties() {
-    return {
-      ...super.properties,
-      id: {
-        type: String,
-      },
-      /**
-       * submission method - one of GET, POST, PUT, DELETE (HEAD?)
-       */
-      method: {
-        type: String,
-      },
-      nonrelevant: {
-        type: String,
-      },
-      /**
-       * what to do with the submission response. Either 'none' or 'instance' for now.
-       */
-      replace: {
-        type: String,
-      },
-      targetref: {
-        type: String,
-      },
-      /**
-       * the URL to submit to
-       */
-      url: {
-        type: String,
-      },
-      validate: {
-        type: Boolean,
-      },
-    };
-  }
+export class FxSubmission extends foreElementMixin(HTMLElement) {
 
   constructor() {
     super();
-    this.model = this.parentNode;
-    // ### setting defaults...
-    this.method = 'GET';
-    this.nonrelevant = 'remove';
-    this.url = '';
-    this.replace = 'none';
-    this.targetref = '';
-    this.type = 'xml';
-    this.validate = true;
+    this.attachShadow({ mode: 'open' });
   }
 
+  connectedCallback(){
+    this.style.display = 'none';
+    this.model = this.parentNode;
+
+    // ### initialize properties with defaults
+    if(!this.hasAttribute('id'))
+      throw new Error('id is required');
+    this.id = this.getAttribute('id');
+
+    this.method = this.hasAttribute('method')?this.getAttribute('method'):'get';
+    this.nonrelevant = this.hasAttribute('nonrelevant')?this.getAttribute('nonrelevant'):'remove';
+    this.replace = this.hasAttribute('replace')?this.getAttribute('replace'):'none';
+
+    if(!this.hasAttribute('url'))
+      throw new Error(`url is required for submission: ${this.id}`);
+    this.url = this.getAttribute('url');
+
+    this.targetref = this.hasAttribute('targetref')?this.getAttribute('targetref'):null;
+
+    this.mediatype = this.hasAttribute('mediatype')?this.getAttribute('mediatype'):'application/xml';
+    this.validate = this.getAttribute('validate')?this.getAttribute('validate'):'true';
+
+    this.shadowRoot.innerHTML = this.renderHTML();
+    console.log('innerHTML ', this.shadowRoot.innerHTML)
+
+    // ### add listener to iron-ajax
+    const sub = this.shadowRoot.querySelector('#submitter');
+    sub.addEventListener('response', () => this._handleResponse());
+    sub.addEventListener('error', () => this._handleError());
+
+  }
+
+  renderHTML () {
+    return `
+      <slot></slot>
+      <iron-ajax
+        id="submitter"
+        content-type="text/xml"
+        url="${this.url}"
+        method="${this.method}"
+        handle-as="text"
+        with-credentials></iron-ajax>
+    `;
+  }
+
+  /*
   render() {
     return html`
       ${this.url
@@ -81,6 +74,7 @@ export class FxSubmission extends foreElementMixin(LitElement) {
       <slot></slot>
     `;
   }
+*/
 
   submit() {
     // todo: call pre-hook once there is one ;)

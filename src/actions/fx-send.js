@@ -45,6 +45,7 @@ export default class FxSend extends FxAction {
           detail: { message: `fx-submission element with id: '${this.submission}' not found` },
         }),
       );
+      throw new Error(`submission with id: ${this.submission} not found`);
     }
     console.log('submission', submission);
     submission.submit();
