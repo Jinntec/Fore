@@ -180,8 +180,7 @@ export class FxModel extends HTMLElement {
               const compute = evaluateXPathToBoolean(
                 expr,
                 modelItem.node,
-                this,
-                Fore.namespaceResolver,
+                this
               );
               modelItem[property] = compute;
               // console.log(`modelItem computed`, modelItem.required);
@@ -232,8 +231,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(
               constraint,
               modelItem.node,
-              this,
-              Fore.namespaceResolver,
+              this
             );
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;

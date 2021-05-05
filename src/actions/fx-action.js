@@ -1,6 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
-import { Fore } from '../fore.js';
 
 /**
  * `fx-action`
@@ -60,7 +59,7 @@ export class FxAction extends foreElementMixin(HTMLElement) {
     // ### evaluate if expression and return result to caller
     const ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
     if(ifExpr){
-      return evaluateXPathToBoolean(ifExpr, this.nodeset, this.getOwnerForm(), Fore.namespaceResolver);
+      return evaluateXPathToBoolean(ifExpr, this.nodeset, this.getOwnerForm());
     }
     return true;
   }

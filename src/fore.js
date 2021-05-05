@@ -33,25 +33,6 @@ export class Fore {
     ];
   }
 
-  static namespaceResolver(prefix) {
-    // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
-
-    /**
-     * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-     * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-     *   // Return value
-     *  }
-     * }
-     */
-
-    // console.log('namespaceResolver  prefix', prefix);
-    const ns = {
-      xhtml: 'http://www.w3.org/1999/xhtml',
-      // ''    : Fore.XFORMS_NAMESPACE_URI
-    };
-    return ns[prefix] || null;
-  }
-
   static get XFORMS_NAMESPACE_URI() {
     // todo: should be centralized somewhere as constant. Exists in several? places
     return 'http://www.w3.org/2002/xforms';

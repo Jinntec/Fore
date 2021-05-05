@@ -125,7 +125,7 @@ class FxControl extends XfAbstractControl {
             const ref = this.widget.getAttribute('ref');
             const inscope = this._inScopeContext();
             const formElement = this.closest('fx-form');
-            const nodeset = evaluateXPathToNodes(ref, inscope, formElement, Fore.namespaceResolver);
+            const nodeset = evaluateXPathToNodes(ref, inscope, formElement);
 
             // ### clear items
             const {children} = this.widget;

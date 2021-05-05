@@ -1,4 +1,4 @@
-import * as fx from 'fontoxpath';
+import { evaluateXPathToNodes } from '../xpath-evaluation.js';
 import { FxAction } from './fx-action.js';
 
 /**
@@ -53,7 +53,7 @@ class FxAppend extends FxAction {
    */
   execute() {
     const inscope = this._inScopeContext();
-    this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
+    this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
     const newItem = this._dataFromTemplate(inscope);
     console.log('################ newItem ', newItem);
 
