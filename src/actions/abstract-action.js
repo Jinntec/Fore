@@ -1,6 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
-import { AbstractAction } from './abstract-action.js';
+import {evaluateXPathToBoolean} from "../xpath-evaluation";
 
 /**
  * `fx-action`
@@ -9,31 +8,16 @@ import { AbstractAction } from './abstract-action.js';
  * @customElement
  * @demo demo/index.html
  */
-export class FxAction extends AbstractAction {
+export class AbstractAction extends foreElementMixin(HTMLElement) {
 
-
-  perform() {
-    const {children} = this;
-    Array.from(children).forEach(action => {
-      action.perform();
-    });
-    this.needsUpdate = true;
-  }
-
-  // eslint-disable-next-line no-useless-constructor
-/*
   constructor() {
     super();
-
-    // this.needsRebuild = false;
-    // this.needsRecalculate = false;
-    // this.needsRevalidate = false;
-    // this.needsRefresh = false;
+    this.needsUpdate = false;
+    this.ifCondition=false;
   }
-*/
 
-/*
   connectedCallback() {
+
     this.style.display = 'none';
 
     if (this.hasAttribute('event')) {
@@ -54,7 +38,6 @@ export class FxAction extends AbstractAction {
 
     this.ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
   }
-*/
 
   /**
    * executes the action. This function is usually triggered by a fx-trigger.
@@ -63,34 +46,43 @@ export class FxAction extends AbstractAction {
    * @param e
    * @returns {boolean} result of evaluation of the if expression. Concrete actions check for that before doing their task.
    */
-/*
+  // eslint-disable-next-line class-methods-use-this
   execute(e) {
-    console.log('execute e ', e);
-    console.log('execute this ', this);
-
+    this.needsUpdate = false;
     if (this.isBound()) {
       this.evalInContext();
     }
 
-    // ### evaluate if expression and return result to caller
-    const ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
-    let ifCond = true;
-    if(ifExpr){
-      ifCond = evaluateXPathToBoolean(ifExpr, this.nodeset, this.getOwnerForm());
+    if(this.ifExpr){
+      this.ifCondition = evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm());
+      if(this.ifCondition){
+        this.perform();
+      }
+    }else{
+      this.perform();
     }
-    if(!ifCond){
-      return;
-    }
-    // return ifCond;
+    this.actionPerformed();
   }
-*/
 
-/*
+  // eslint-disable-next-line class-methods-use-this
+  perform (){
+    if (this.isBound() || this.nodeName === 'FX-ACTION') {
+      this.evalInContext();
+    }
+
+    // throw new Error('needs to be implemented by subclass');
+  }
+
   actionPerformed() {
-
     console.log('action parentNode ', this.parentNode);
-
-    const model = this.getModel();
+    if(this.needsUpdate){
+      const model = this.getModel();
+      model.recalculate();
+      model.revalidate();
+      model.parentNode.refresh();
+      this._dispatchActionPerformed();
+    }
+/*
     if (this.needsRebuild) {
       model.rebuild();
     }
@@ -103,16 +95,14 @@ export class FxAction extends AbstractAction {
     if (this.needsRefresh) {
       model.parentNode.refresh();
     }
-  }
 */
+  }
 
-/*
-  dispatchActionPerformed() {
+  _dispatchActionPerformed() {
     this.dispatchEvent(
       new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
     );
   }
-*/
 }
 
-window.customElements.define('fx-action', FxAction);
+window.customElements.define('abstracdt-action', AbstractAction);

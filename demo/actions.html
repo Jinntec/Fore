@@ -74,6 +74,7 @@
 <!--
         <demo-snippet>
             <template>
+-->
                 <fx-group>
 
                     <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
@@ -90,6 +91,7 @@
                         <fx-message event="value-changed" level="modal">Welcome!</fx-message>
                     </fx-output>
                 </fx-group>
+<!--
             </template>
         </demo-snippet>
 -->
@@ -98,7 +100,7 @@
             <button>execute action block</button>
             <fx-action>
                 <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
-                <fx-setvalue ref="done" value="true"></fx-setvalue>
+                <fx-setvalue ref="entered" value="true"></fx-setvalue>
             </fx-action>
         </fx-trigger>
 

@@ -61,13 +61,16 @@ class FxControl extends XfAbstractControl {
         console.log('widget ', this.widget);
         this.widget.addEventListener(this.updateEvent, () => {
             console.log('eventlistener ', this.updateEvent);
-
-            const modelitem = this.getModelItem();
-            const setval = this.shadowRoot.getElementById('setvalue');
-            setval.setValue(modelitem, this.widget[this.valueProp]);
-            // console.log('updated modelitem ', modelitem);
+            this.setValue(this.widget[this.valueProp]);
         });
 
+    }
+
+    setValue(val){
+        const modelitem = this.getModelItem();
+        const setval = this.shadowRoot.getElementById('setvalue');
+        setval.setValue(modelitem, val);
+        setval.actionPerformed();
     }
 
     renderHTML(ref){
