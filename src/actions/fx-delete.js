@@ -16,8 +16,8 @@ class FxDelete extends FxAction {
   /**
    * deletes a
    */
-  execute() {
-    super.execute();
+  perform() {
+    super.perform();
     console.log('##### fx-delete executing...');
 
     // this.ref = this.getAttribute('ref');
@@ -61,11 +61,14 @@ class FxDelete extends FxAction {
       }
     }
 
-    this.needsRebuild = true;
-    this.needsRecalculate = true;
-    this.needsRevalidate = true;
-    this.needsRefresh = true;
-    this.actionPerformed();
+    // this.needsRebuild = true;
+    // this.needsRecalculate = true;
+    // this.needsRevalidate = true;
+    // this.needsRefresh = true;
+
+    this.needsUpdate = true;
+
+    // this.actionPerformed();
   }
 }
 

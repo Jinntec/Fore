@@ -51,7 +51,7 @@ class FxAppend extends FxAction {
    * behavior should be needed for some reason later on, it can be added easier by a providing an 'duplicate' action.
    *
    */
-  execute() {
+  perform() {
     const inscope = this._inScopeContext();
     this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
     const newItem = this._dataFromTemplate(inscope);
@@ -70,12 +70,20 @@ class FxAppend extends FxAction {
     console.log('modified instance >>>');
     console.log(instData);
 
-    this.needsRebuild = true;
-    this.needsRecalculate = true;
-    this.needsRevalidate = true;
-    this.needsRefresh = true;
-    this.actionPerformed();
+    // this.needsRebuild = true;
+    // this.needsRecalculate = true;
+    // this.needsRevalidate = true;
+    // this.needsRefresh = true;
+    // this.actionPerformed();
+    // const repeat = document.getElementById(this.repeat);
+    // repeat.setIndex(this.nodeset.length + 1);
+    // this.dispatch();
 
+    this.needsUpdate = true;
+  }
+
+  actionPerformed() {
+    super.actionPerformed();
     const repeat = document.getElementById(this.repeat);
     repeat.setIndex(this.nodeset.length + 1);
   }
@@ -104,6 +112,7 @@ class FxAppend extends FxAction {
   }
 
   dispatch() {
+    console.log('dispatch index change');
     const repeat = document.getElementById(this.repeat);
     console.log('dispatching index change ', this.nodeset.length + 1);
     repeat.dispatchEvent(
