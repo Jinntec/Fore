@@ -98,6 +98,16 @@ export class Fore {
     return refreshed;
   }
 
+  static isRepeated(element){
+    return element.closest('fx-repeatitem') !== null;
+  }
+
+  static getRepeatTarget(element, id){
+    const repeatContextItem = element.closest('fx-repeatitem');
+    const target = repeatContextItem.querySelector(`#${id}`);
+    return target;
+  }
+
   /**
    * clear all text nodes and attribute values to get a 'clean' template.
    * @param n

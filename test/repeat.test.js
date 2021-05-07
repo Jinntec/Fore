@@ -193,6 +193,7 @@ describe('repeat Tests', () => {
 
     expect(m.value).to.equal('Make tutorial part 1');
   });
+
   it('has initialized repeat with 2 repeat items and proper UI state', async () => {
     const el = await fixtureSync(html`
       <fx-form>
@@ -337,10 +338,54 @@ describe('repeat Tests', () => {
     expect(repeat).to.exist;
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(3);
+  });
 
+  it('set the index to new item after append', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task complete="false" due="2019-02-04">Pick up Milk</task>
+              <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+            </data>
+          </fx-instance>
+
+          <fx-bind ref="task" readonly="count(../task) lt 3">
+            <fx-bind ref="./text()" required="true()"></fx-bind>
+            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+            <fx-bind ref="@due" type="xs:date"></fx-bind>
+          </fx-bind>
+        </fx-model>
+        <fx-group>
+          <h1>todos</h1>
+
+          <fx-repeat id="todos" ref="task" id="r-todos">
+            <template>
+              <fx-control ref="." id="task" type="text">
+                <label>Task</label>
+              </fx-control>
+            </template>
+          </fx-repeat>
+
+          <fx-trigger label="append">
+            <button>append</button>
+            <fx-append repeat="todos" ref="task"></fx-append>
+          </fx-trigger>
+        </fx-group>
+      </fx-form>
+    `);
+
+    // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
+
+    const button = el.querySelector('fx-trigger');
+    button.performActions();
+    const repeat = el.querySelector('fx-repeat');
+    expect(repeat.index).to.equal('3');
     // appended item should have repeatindex set
+    const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
-
 
   });
 
@@ -450,6 +495,50 @@ describe('repeat Tests', () => {
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(3);
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
+  });
+
+  it('sets index to 1 by default in simple repeat', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task complete="false" due="2019-02-04">Pick up Milk</task>
+              <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+            </data>
+          </fx-instance>
+
+          <fx-bind ref="task">
+            <fx-bind ref="./text()" required="true()"></fx-bind>
+            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+            <fx-bind ref="@due" type="xs:date"></fx-bind>
+          </fx-bind>
+        </fx-model>
+
+        <h1>todos</h1>
+
+        <fx-repeat focus-on-create="task" id="r-todos" ref="task">
+          <template>
+            <fx-control id="task" label="Task" ref="." type="text"></fx-control>
+            <fx-control label="Due" ref="@due" type="date"></fx-control>
+            <fx-control Label="Status" ref="@complete" type="checkbox"></fx-control>
+            <fx-trigger label="delete">
+              <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+          </template>
+        </fx-repeat>
+
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-todos');
+    expect(repeat).to.exist;
+
+    const rItems = repeat.querySelectorAll(':scope > fx-repeatitem');
+    expect(rItems.length).to.equal(2);
+    expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
   });
 
   it('handles indexes in simple repeat', async () => {

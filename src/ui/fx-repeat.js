@@ -82,15 +82,32 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
   }
 
+  get index(){
+    return this.getAttribute('index');
+  }
 
+  set index(idx){
+    this.setAttribute('index', idx);
+  }
 
   connectedCallback() {
     this.ref = this.getAttribute('ref');
     // console.log('### fx-repeat connected ', this.id);
-    this.addEventListener('index-changed', e => {
+    this.addEventListener('item-changed', e => {
+      console.log('handle index event ', e);
       const { item } = e.detail;
       const idx = Array.from(this.children).indexOf(item);
       this.applyIndex(this.children[idx]);
+      this.index = idx + 1;
+    });
+    this.addEventListener('index-changed', e => {
+      e.stopPropagation();
+      console.log('handle index event ', e);
+      // const { item } = e.detail;
+      // const idx = Array.from(this.children).indexOf(item);
+      const {index} = e.detail;
+      this.index = index;
+      this.applyIndex(this.children[index-1]);
     });
 
     const style = `

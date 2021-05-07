@@ -19,6 +19,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   connectedCallback() {
 
     this.style.display = 'none';
+    this.repeatContext = undefined;
 
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
@@ -37,6 +38,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     this.ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
+
   }
 
   /**

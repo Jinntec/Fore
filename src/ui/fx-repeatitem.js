@@ -28,7 +28,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     // console.log('_dispatchIndexChange on index ', this.index);
     if (this.parentNode) {
       this.parentNode.dispatchEvent(
-        new CustomEvent('index-changed', { composed: true, bubbles: true, detail: { item: this } }),
+        new CustomEvent('item-changed', { composed: true, bubbles: true, detail: { item: this } }),
       );
     }
   }

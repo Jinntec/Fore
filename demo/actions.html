@@ -71,10 +71,10 @@
 -->
 
         <h2>conditional action</h2>
-<!--
+        <p>Any action element may have a <code>if</code> attribute that contains an XPath expression that needs to
+        evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
         <demo-snippet>
             <template>
--->
                 <fx-group>
 
                     <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
@@ -91,10 +91,8 @@
                         <fx-message event="value-changed" level="modal">Welcome!</fx-message>
                     </fx-output>
                 </fx-group>
-<!--
             </template>
         </demo-snippet>
--->
 
         <fx-trigger>
             <button>execute action block</button>

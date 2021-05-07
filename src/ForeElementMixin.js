@@ -14,10 +14,7 @@ export const foreElementMixin = superclass =>
         },
         modelItem: {
           type: Object,
-        },
-        repeated: {
-          type: Boolean,
-        },
+        }
       };
     }
 
@@ -26,7 +23,6 @@ export const foreElementMixin = superclass =>
       this.model = null;
       this.modelItem = {};
       this.ref = this.hasAttribute('ref')?this.getAttribute('ref'):'';
-      this.repeated = false;
     }
 
     getModel() {
@@ -164,38 +160,10 @@ export const foreElementMixin = superclass =>
     _inScopeContext() {
       let resultNodeset;
 
-      // console.log('this ', this);
-      // console.log('this ', this.parentNode);
-
-      /*
-        if(this.nodeName.toUpperCase() === 'fx-REPEATITEM'){
-            const index = this.index;
-            console.log('>>>>>>>>>>< index ', index);
-            return this.parentNode.host.nodeset[this.index -1];
-        }
-*/
-      /*
-        if(this.repeated){
-            const parentItem = this.parentNode.closest('fx-repeatitem');
-            return parentItem.nodeset;
-        }
-*/
       const repeatItem = this.parentNode.closest('fx-repeatitem');
       if (repeatItem) {
         return repeatItem.nodeset;
       }
-
-      /*
-
-        let parentBind;
-        if(this.parentNode.host){
-            parentBind = this.parentNode.host;
-        }else{
-            parentBind = this.parentNode.closest('[ref]');
-        }
-        // const parentBind = this.parentNode.closest('[ref]');
-        // console.log('parentBind ', parentBind);
-*/
 
       const parentBind = this.parentNode.closest('[ref]');
 

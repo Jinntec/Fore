@@ -134,10 +134,16 @@
             /*background: darkred;*/
         }
 
+
         [repeat-index] {
-            outline:var(--paper-blue-500) solid 2px;
+            filter:none;
+            outline:none;
+            /*outline:var(--paper-blue-500) solid 2px;*/
             filter: brightness(120%);
             /*margin: 8px 0;*/
+        }
+        [repeat-index] [repeat-index] {
+            outline:var(--paper-blue-500) solid 2px;
         }
     </style>
 </head>

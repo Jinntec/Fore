@@ -1,4 +1,4 @@
-import { FxAction } from './fx-action.js';
+import {AbstractAction} from "./abstract-action.js";
 
 /**
  * `fx-delete`
@@ -7,7 +7,7 @@ import { FxAction } from './fx-action.js';
  * @customElement
  * @demo demo/todo.html
  */
-class FxDelete extends FxAction {
+class FxDelete extends AbstractAction {
   constructor() {
     super();
     this.repeatId = '';
