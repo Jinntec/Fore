@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import {evaluateXPathToBoolean} from "../xpath-evaluation";
+import {evaluateXPathToBoolean} from "../xpath-evaluation.js";
 
 /**
  * `fx-action`
@@ -44,11 +44,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   /**
    * executes the action. This function is usually triggered by a fx-trigger.
    *
-   *
    * @param e
-   * @returns {boolean} result of evaluation of the if expression. Concrete actions check for that before doing their task.
    */
-  // eslint-disable-next-line class-methods-use-this
   execute(e) {
     this.needsUpdate = false;
     if (this.isBound()) {
@@ -56,6 +53,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     if(this.ifExpr){
+      if(this.nodeset === undefined){
+        this.nodeset = this.targetElement.nodeset;
+      }
       this.ifCondition = evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm());
       if(this.ifCondition){
         this.perform();
@@ -66,17 +66,17 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     this.actionPerformed();
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  /**
+   * this should only be called by bound actions
+   */
   perform (){
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
-
-    // throw new Error('needs to be implemented by subclass');
   }
 
   actionPerformed() {
-    console.log('action parentNode ', this.parentNode);
+    // console.log('actionPerformed action parentNode ', this.parentNode);
     if(this.needsUpdate){
       const model = this.getModel();
       model.recalculate();
@@ -101,6 +101,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   _dispatchActionPerformed() {
+    // console.log('action-performed ', this);
     this.dispatchEvent(
       new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
     );

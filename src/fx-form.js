@@ -279,6 +279,7 @@ export class FxForm extends HTMLElement {
     return parent;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _generateNode(parent, step, start) {
     const generated = parent.ownerDocument.createElement(step);
     if (start.children.length === 0) {
@@ -289,9 +290,11 @@ export class FxForm extends HTMLElement {
     return parent;
   }
 
+/*
   _createStep(){
 
   }
+*/
 
 /*
   _generateInstance(start, parent) {

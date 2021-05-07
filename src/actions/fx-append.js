@@ -34,6 +34,7 @@ class FxAppend extends AbstractAction {
     }
 
     connectedCallback() {
+        super.connectedCallback();
         console.log('connectedCallback ', this);
         this.ref = this.getAttribute('ref');
         this.repeat = this.getAttribute('repeat');
@@ -60,11 +61,13 @@ class FxAppend extends AbstractAction {
         super.perform();
 
         this._dataFromTemplate();
+/*
         const instData = new XMLSerializer().serializeToString(
             this.getModel()
                 .getDefaultInstance()
                 .getInstanceData(),
         );
+*/
         // console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
 
         this.needsUpdate = true;
@@ -72,8 +75,8 @@ class FxAppend extends AbstractAction {
 
     actionPerformed() {
         super.actionPerformed();
-        const repeat = document.getElementById(this.repeat);
-        repeat.setIndex(repeat.nodeset.length);
+        // const repeat = document.getElementById(this.repeat);
+        // repeat.setIndex(repeat.nodeset.length);
         this.dispatch();
     }
 
@@ -119,7 +122,6 @@ class FxAppend extends AbstractAction {
         if (Fore.isRepeated(this)) {
             console.log('append repeated ', this.repeatContext);
             targetRepeat = Fore.getRepeatTarget(this,this.repeat);
-
         }else{
             targetRepeat = document.getElementById(this.repeat);
         }

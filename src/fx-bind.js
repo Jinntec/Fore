@@ -281,16 +281,17 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
     */
 
+/*
   namespaceResolver(prefix) {
     // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
 
-    /**
+    /!**
      * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
      * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
      *   // Return value
      *  }
      * }
-     */
+     *!/
 
     // console.log('namespaceResolver  prefix', prefix);
     const ns = {
@@ -299,6 +300,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     };
     return ns[prefix] || null;
   }
+*/
 
   /**
    * overwrites

@@ -27,8 +27,9 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   connectedCallback() {
-    console.log('connectedCallback ', this);
-    super.connectedCallback();
+    if(super.connectedCallback)
+      super.connectedCallback();
+
     if (this.hasAttribute('ref')) {
       this.ref = this.getAttribute('ref');
     } else {
@@ -39,6 +40,7 @@ export default class FxSetvalue extends AbstractAction {
 
   perform() {
     super.perform();
+
     let { value } = this;
     if (this.value !== null) {
       value = this.value;

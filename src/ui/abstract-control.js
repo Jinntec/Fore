@@ -75,6 +75,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // if(!this.closest('fx-form').ready) return; // state change event do not fire during init phase (initial refresh)
         if(!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
+          // console.log('dispatching value-changed for ', this);
           this.dispatchEvent(new CustomEvent('value-changed', {}));
         }
         // this.requestUpdate();
@@ -83,6 +84,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // await this.updateComplete;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async updateWidgetValue() {
     throw new Error('You have to implement the method updateWidgetValue!');
   }
@@ -241,6 +243,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     el.style.opacity = 1;
 
     (function fade() {
+      // eslint-disable-next-line no-cond-assign
       if ((el.style.opacity -= 0.1) < 0) {
         el.style.display = 'none';
       } else {
@@ -256,6 +259,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     (function fade() {
       let val = parseFloat(el.style.opacity);
+      // eslint-disable-next-line no-cond-assign
       if (!((val += 0.1) > 1)) {
         el.style.opacity = val;
         requestAnimationFrame(fade);

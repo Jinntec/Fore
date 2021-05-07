@@ -1,5 +1,4 @@
 import './fx-repeatitem.js';
-import * as fx from 'fontoxpath';
 
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
