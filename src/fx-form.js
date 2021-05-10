@@ -182,7 +182,7 @@ export class FxForm extends HTMLElement {
     const { node } = exprObj;
     console.log('expr ', expr);
     // const matches = expr.match(/{\w+}/g);
-    const matches = expr.match(/{[a-z,'.','..','/','@','(','),'[','\]','=',\s]*}/g);
+    const matches = expr.match(/{[^}]*}/g);
     matches.forEach(match => {
       console.log('match ', match);
       const naked = match.substring(1, match.length - 1);

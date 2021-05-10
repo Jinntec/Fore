@@ -96,7 +96,7 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
  * Implementation of the functionNameResolver passed to FontoXPath to
  * redirect function resolving for unprefixed functions to either the fn or the xf namespace
  */
-function functionNameResolver({ localName }) {
+function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
     case 'log':
@@ -105,7 +105,10 @@ function functionNameResolver({ localName }) {
     case 'boolean-from-string':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
-      return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
+      if (prefix === '' || prefix === 'fn') {
+        return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
+      }
+      return null;
   }
 }
 
@@ -135,10 +138,9 @@ function namespaceResolver(prefix) {
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
  * @param  {Node} formElement  The form element associated to the XPath
- * @return {any}
  */
-export function evaluateXPath(xpath, contextNode, formElement) {
-  return fxEvaluateXPath(xpath, contextNode, null, {}, fxEvaluateXPath.ANY_TYPE, {
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+  return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
     currentContext: { formElement },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
