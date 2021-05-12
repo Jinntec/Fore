@@ -2,6 +2,7 @@ import { ModelItem } from './modelitem.js';
 import { XPathUtil } from './xpath-util.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
+import {DependencyNotifyingDomFacade} from "./DependencyNotifyingDomFacade";
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -175,13 +176,18 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   _buildBindGraph() {
     if (this.bindType === 'xml') {
+
+
+
       this.nodeset.forEach(node => {
         const path = XPathUtil.getPath(node);
+
+        const dependencies = [];
 
         const calculateRefs = this._getReferencesForProperty(this.calculate, node);
         if (calculateRefs.length !== 0) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
-          this._addDependencies(calculateRefs, node, path, 'calculate');
+          // this._addDependencies(calculateRefs, node, path, 'calculate');
         } else if (this.calculate) {
           this.model.mainGraph.addNode(`${path}:calculate`, node);
         }
@@ -242,6 +248,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this.model.mainGraph.addNode(otherPath, other);
         }
         this.model.mainGraph.addDependency(`${path}:${property}`, otherPath);
+
       });
     } else {
       this.model.mainGraph.addNode(`${path}:${property}`, node);
@@ -343,7 +350,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       }
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, formElement);
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this.getOwnerForm());
       } else {
         this.nodeset = this.ref;
       }
