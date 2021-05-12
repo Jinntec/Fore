@@ -62,6 +62,14 @@ export class FxInstance extends HTMLElement {
     } else {
       this._initJSONInstance();
     }
+    this.dispatchEvent(
+        new CustomEvent('instance-loaded', {
+          composed: true,
+          bubbles: true,
+          detail: { instance: this },
+        })
+    );
+
     return this;
     // this.shadowRoot.getElementById('data').appendChild(this.instanceData.cloneNode(true));
   }
@@ -118,7 +126,7 @@ export class FxInstance extends HTMLElement {
           this.instanceData = instanceData;
           console.log('fx-instance data: ', this.instanceData);
           this.dispatchEvent(new CustomEvent('instance-loaded', {}));
-          resolve('done');
+          resolve(instanceData);
         });
         loader.addEventListener('error', () => {
           console.log('error while loading data from src: ', loader.lastError);
@@ -145,7 +153,7 @@ export class FxInstance extends HTMLElement {
   }
 
   _useInlineData() {
-    // console.log('innerText ', this.innerHTML.toString());
+    console.log('innerHTML ', this.innerHTML);
     const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
 
     // console.log('created instanceData ', new XMLSerializer().serializeToString(instanceData));

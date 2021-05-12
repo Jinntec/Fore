@@ -1,9 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import {html, fixture, fixtureSync, expect, elementUpdated, oneEvent} from '@open-wc/testing';
 
-import '../src/fx-instance.js';
-import '../src/ui/fx-container.js';
-import '../src/fx-bind.js';
+import '../index.js';
 
 describe('bind Tests', () => {
   it('is initialized', async () => {
@@ -339,4 +337,43 @@ describe('bind Tests', () => {
     expect(out2.ref).to.equal('greeting/@type');
     expect(out2.value).to.equal('message');
   });
+
+  it('fails using camelcase node names', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <theanswer></theanswer>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="theanswer"></fx-output>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
+    expect(model.modelItems.length).to.equal(1);
+
+  });
+
+  it('works with camelcase node names from external xml file', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model>
+          <fx-instance src="base/test/answer.xml"></fx-instance>
+        </fx-model>
+        <fx-output ref="theAnswer"></fx-output>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
+    expect(model.modelItems.length).to.equal(1);
+
+  });
+
 });

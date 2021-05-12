@@ -95,8 +95,8 @@ describe('functions', () => {
     });
   });
 
-  // The following two tests are failing. Unknown why
-  it.skip('can define a simple function', async () => {
+  // The following two tests are failing.
+  it('can define a simple function', async () => {
     const el = await fixtureSync(html`
       <fx-form>
         <fx-model>
@@ -108,7 +108,7 @@ describe('functions', () => {
             return 21*2;
           </fx-function>
         </fx-model>
-        <fx-output ref="theAnswer">{local:theanswer()}</fx-output>
+        <fx-output ref="theanswer">{local:theanswer()}</fx-output>
       </fx-form>
     `);
 
@@ -117,20 +117,20 @@ describe('functions', () => {
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
 
-    const mi1 = model.modelItems[0];
-    expect(mi1.value).to.equal('42');
+    const output = el.querySelector('fx-output');
+    expect(output.textContent).to.equal('42');
   });
 
-  it.skip('can define a simple function using explicit models', async () => {
+  it('can define a simple function using explicit models', async () => {
     const el = await fixtureSync(html`
       <fx-form>
         <fx-model>
           <fx-instance>
             <data>
-              <theAnswer></theAnswer>
+              <theanswer></theanswer>
             </data>
           </fx-instance>
-          <fx-bind ref="theAnswer" required="true()" calculate="local:theans"></fx-bind>
+          <fx-bind ref="theanswer" required="true()" calculate="local:theans"></fx-bind>
           <fx-function
             signature="local:theanswer() as xs:decimal"
             override="no"
@@ -139,7 +139,7 @@ describe('functions', () => {
             return 21*2;
           </fx-function>
         </fx-model>
-        <fx-output ref="theAnswer">{local:theanswer()}</fx-output>
+        <fx-output ref="theanswer">{local:theanswer()}</fx-output>
       </fx-form>
     `);
 
@@ -148,7 +148,11 @@ describe('functions', () => {
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
 
-    const mi1 = model.modelItems[0];
-    expect(mi1.value).to.equal('42');
+    // following assumptions were wrong - output is never setting the value
+    // const mi1 = model.modelItems[0];
+    // expect(mi1.value).to.equal('42');
+    const output = el.querySelector('fx-output');
+    expect(output.textContent).to.equal('42');
+
   });
 });
