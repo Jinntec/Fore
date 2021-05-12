@@ -6,32 +6,35 @@ import '../index.js';
 describe('model tests', () => {
   it('rebuilds and recalcuates correctly intitially', async () => {
     const el = await fixtureSync(html`
-            <fx-form>
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <a>A</a>
-                        <b>B</b>
-                        <c>C</c>
-                    </data>
-                </fx-instance>
-                <fx-bind ref="a" readonly="string-length(depends(../b)) gt 1" required="depends(../b) = 'B'"></fx-bind>
-                <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
-                <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
-            </fx-model>
-            <fx-group collapse="true">
-                <fx-control ref="a" update-event="input">
-                    <label slot="label">A</label>
-                </fx-control>
-                <fx-control ref="b" update-event="input">
-                    <label slot="label">B</label>
-                </fx-control>
-                <fx-control ref="c" update-event="input">
-                    <label slot="label">C</label>
-                </fx-control>
-            </fx-group>
-        </fx-form>
-
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+              <b>B</b>
+              <c>C</c>
+            </data>
+          </fx-instance>
+          <fx-bind
+            ref="a"
+            readonly="string-length(depends(../b)) gt 1"
+            required="depends(../b) = 'B'"
+          ></fx-bind>
+          <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
+          <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
+        </fx-model>
+        <fx-group collapse="true">
+          <fx-control ref="a" update-event="input">
+            <label slot="label">A</label>
+          </fx-control>
+          <fx-control ref="b" update-event="input">
+            <label slot="label">B</label>
+          </fx-control>
+          <fx-control ref="c" update-event="input">
+            <label slot="label">C</label>
+          </fx-control>
+        </fx-group>
+      </fx-form>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -40,7 +43,14 @@ describe('model tests', () => {
     expect(model.modelItems.length).to.equal(3);
     const mainGraph = model.mainGraph.overallOrder();
     expect(mainGraph.length).to.equal(6);
-    expect(mainGraph).to.eql(['/b[1]','/a[1]:readonly','/a[1]:required','/c[1]','/b[1]:required','/c[1]:relevant']);
+    expect(mainGraph).to.eql([
+      '/b[1]',
+      '/a[1]:readonly',
+      '/a[1]:required',
+      '/c[1]',
+      '/b[1]:required',
+      '/c[1]:relevant',
+    ]);
 
     const mi1 = model.modelItems[0];
     expect(mi1.value).to.equal('A');
@@ -68,47 +78,49 @@ describe('model tests', () => {
     expect(mi3.constraint).to.equal(true);
     expect(mi3.type).to.equal('xs:string');
     expect(mi3.path).to.equal('/c[1]');
-
   });
 
   it('rebuilds and recalcuates correctly after value change', async () => {
     const el = await fixtureSync(html`
-            <fx-form>
-            <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <a>A</a>
-                        <b>B</b>
-                        <c>C</c>
-                    </data>
-                </fx-instance>
-                <fx-bind ref="a" readonly="string-length(depends(../b)) gt 1" required="depends(../b) = 'B'"></fx-bind>
-                <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
-                <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
-            </fx-model>
-            <fx-group collapse="true">
-                <fx-control ref="a" update-event="input">
-                    <label slot="label">A</label>
-                </fx-control>
-                <fx-control ref="b" update-event="input">
-                    <label slot="label">B</label>
-                </fx-control>
-                <fx-control ref="c" update-event="input">
-                    <label slot="label">C</label>
-                </fx-control>
-            </fx-group>
-        </fx-form>
-
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+              <b>B</b>
+              <c>C</c>
+            </data>
+          </fx-instance>
+          <fx-bind
+            ref="a"
+            readonly="string-length(depends(../b)) gt 1"
+            required="depends(../b) = 'B'"
+          ></fx-bind>
+          <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
+          <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
+        </fx-model>
+        <fx-group collapse="true">
+          <fx-control ref="a" update-event="input">
+            <label slot="label">A</label>
+          </fx-control>
+          <fx-control ref="b" update-event="input">
+            <label slot="label">B</label>
+          </fx-control>
+          <fx-control ref="c" update-event="input">
+            <label slot="label">C</label>
+          </fx-control>
+        </fx-group>
+      </fx-form>
     `);
 
     await oneEvent(el, 'refresh-done');
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
 
-    const mi = model.modelItems[1] // <b>B</b>
+    const mi = model.modelItems[1]; // <b>B</b>
     expect(mi.path).to.equal('/b[1]');
 
-    mi.value = "BB"; // making <c>C</c> non-relevant
+    mi.value = 'BB'; // making <c>C</c> non-relevant
     model.updateModel();
 
     const mi1 = model.modelItems[0];
@@ -137,7 +149,5 @@ describe('model tests', () => {
     expect(mi3.constraint).to.equal(true);
     expect(mi3.type).to.equal('xs:string');
     expect(mi3.path).to.equal('/c[1]');
-
   });
-
 });

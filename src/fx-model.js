@@ -1,4 +1,4 @@
-import { DepGraph }  from './dep_graph.js';
+import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
@@ -28,10 +28,9 @@ export class FxModel extends HTMLElement {
     this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
-    this.addEventListener('model-construct-done', () =>{
+    this.addEventListener('model-construct-done', () => {
       this.modelConstructed = true;
       console.log('model-construct-done fired ', this.modelConstructed);
-
     });
   }
 
@@ -104,7 +103,7 @@ export class FxModel extends HTMLElement {
           composed: true,
           bubbles: true,
           detail: { model: this },
-        })
+        }),
       );
     }
     console.log('INITED');
@@ -177,11 +176,7 @@ export class FxModel extends HTMLElement {
             const expr = modelItem.bind[property];
             if (expr) {
               // console.log('recalc expr: ', expr);
-              const compute = evaluateXPathToBoolean(
-                expr,
-                modelItem.node,
-                this
-              );
+              const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
               modelItem[property] = compute;
               // console.log(`modelItem computed`, modelItem.required);
             }
@@ -220,7 +215,6 @@ export class FxModel extends HTMLElement {
 
       const { bind } = modelItem;
       if (bind) {
-
         /*
         todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
           created lazily.
@@ -228,11 +222,7 @@ export class FxModel extends HTMLElement {
         if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
           const constraint = bind.getAttribute('constraint');
           if (constraint) {
-            const compute = evaluateXPathToBoolean(
-              constraint,
-              modelItem.node,
-              this
-            );
+            const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
 
@@ -240,7 +230,7 @@ export class FxModel extends HTMLElement {
             if (!this.modelConstructed) {
               // todo: get alert from attribute or child element
               const alert = bind.getAlert();
-              if(alert){
+              if (alert) {
                 modelItem.addAlert(alert);
               }
             }

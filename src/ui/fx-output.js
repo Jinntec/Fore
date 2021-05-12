@@ -1,23 +1,21 @@
 import XfAbstractControl from './abstract-control.js';
 
 export class FxOutput extends XfAbstractControl {
+  static get properties() {
+    return {
+      ...super.properties,
+    };
+  }
 
-    static get properties() {
-        return {
-            ...super.properties,
-        };
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+  connectedCallback() {
+    console.log('connectedCallback output', this.shadowRoot);
 
-    }
-
-    connectedCallback() {
-        console.log('connectedCallback output', this.shadowRoot);
-
-        const style = `
+    const style = `
           :host {
             display: inline-block;
           }
@@ -29,35 +27,34 @@ export class FxOutput extends XfAbstractControl {
           }
         `;
 
-        const outputHtml = `
+    const outputHtml = `
             <slot name="label"></slot>
             <span id="widget">${this.value}</span>
         `;
 
-        this.shadowRoot.innerHTML = `
+    this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${outputHtml}
-        `
-        // this.widget = this.shadowRoot.querySelector('#widget');
-        this.widget = this.getWidget();
-        console.log('widget ', this.widget);
+        `;
+    // this.widget = this.shadowRoot.querySelector('#widget');
+    this.widget = this.getWidget();
+    console.log('widget ', this.widget);
+  }
 
-    }
+  getWidget() {
+    return this.shadowRoot.querySelector('#widget');
+  }
 
-    getWidget() {
-        return this.shadowRoot.querySelector('#widget');
-    }
+  async updateWidgetValue() {
+    this.widget.innerHTML = this.value;
+  }
 
-    async updateWidgetValue() {
-        this.widget.innerHTML = this.value;
-    }
-
-    isReadonly() {
-        this.readonly = true;
-        return this.readonly;
-    }
+  isReadonly() {
+    this.readonly = true;
+    return this.readonly;
+  }
 }
 
 customElements.define('fx-output', FxOutput);

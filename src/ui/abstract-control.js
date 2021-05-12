@@ -8,7 +8,7 @@ import { ModelItem } from '../modelitem.js';
  *
  */
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
-/*
+  /*
   static get properties() {
     return {
       ...super.properties,
@@ -30,11 +30,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.readonly = false;
     this.widget = null;
     // this.attachShadow({ mode: 'open' });
-
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getWidget(){
+  getWidget() {
     throw new Error('You have to implement the method updateWidgetValue!');
   }
 
@@ -73,7 +72,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.handleModelItemProperties();
 
         // if(!this.closest('fx-form').ready) return; // state change event do not fire during init phase (initial refresh)
-        if(!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
+        if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
           // console.log('dispatching value-changed for ', this);
           this.dispatchEvent(new CustomEvent('value-changed', {}));
@@ -89,7 +88,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     throw new Error('You have to implement the method updateWidgetValue!');
   }
 
-
   handleModelItemProperties() {
     this.handleRequired();
     this.handleReadonly();
@@ -101,8 +99,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     return this.getModel().parentNode;
   }
 
-  _dispatchEvent(event){
-    if(this.getOwnerForm().ready){
+  _dispatchEvent(event) {
+    if (this.getOwnerForm().ready) {
       this.dispatchEvent(new CustomEvent(event, {}));
     }
   }
@@ -172,19 +170,18 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           alert.style.display = 'block';
         }
         if (this.modelItem.alerts.length !== 0) {
-            const { alerts } = this.modelItem;
-            console.log('alerts from bind: ', alerts);
+          const { alerts } = this.modelItem;
+          console.log('alerts from bind: ', alerts);
 
-            const controlAlert = this.querySelector('fx-alert');
-            if(!controlAlert){
-              alerts.forEach(modelAlert => {
-                const newAlert = document.createElement('fx-alert');
-                newAlert.innerHTML = modelAlert;
-                this.appendChild(newAlert);
-                newAlert.style.display = 'block';
-              });
-            }
-
+          const controlAlert = this.querySelector('fx-alert');
+          if (!controlAlert) {
+            alerts.forEach(modelAlert => {
+              const newAlert = document.createElement('fx-alert');
+              newAlert.innerHTML = modelAlert;
+              this.appendChild(newAlert);
+              newAlert.style.display = 'block';
+            });
+          }
         }
 
         // this.dispatchEvent(new CustomEvent('invalid', {}));
@@ -206,7 +203,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       }
     }
   }
-
 
   isRequired() {
     if (this.widget.hasAttribute('required')) {

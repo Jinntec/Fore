@@ -153,6 +153,5 @@ describe('functions', () => {
     // expect(mi1.value).to.equal('42');
     const output = el.querySelector('fx-output');
     expect(output.textContent).to.equal('42');
-
   });
 });

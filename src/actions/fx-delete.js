@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action.js";
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-delete`

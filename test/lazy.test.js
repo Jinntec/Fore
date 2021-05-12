@@ -6,9 +6,9 @@ import '../index.js';
 describe('lazy initialize', () => {
   it('creates model and instance', async () => {
     const el = await fixtureSync(html`
-        <fx-form>
-            <fx-output ref="greeting">Hello Universe</fx-output>
-        </fx-form>
+      <fx-form>
+        <fx-output ref="greeting">Hello Universe</fx-output>
+      </fx-form>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -24,13 +24,12 @@ describe('lazy initialize', () => {
     expect(mi1.constraint).to.equal(true);
     expect(mi1.type).to.equal('xs:string');
     expect(mi1.path).to.equal('/greeting[1]');
-
   });
 
   it('constructs correct elements for nested location path', async () => {
     const el = await fixtureSync(html`
       <fx-form>
-          <fx-output ref="planet/greeting"></fx-output>
+        <fx-output ref="planet/greeting"></fx-output>
       </fx-form>
     `);
 
@@ -51,7 +50,6 @@ describe('lazy initialize', () => {
     const inner = outer.firstElementChild;
     expect(inner.nodeName).to.equal('greeting');
   });
-
 
   it('creates modelItem during refresh', async () => {
     const el = await fixtureSync(html`
@@ -141,5 +139,4 @@ describe('lazy initialize', () => {
     const inner2 = inner.nextSibling;
     expect(inner2.nodeName).to.equal('inner2');
   });
-
 });

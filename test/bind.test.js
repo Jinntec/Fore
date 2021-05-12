@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixture, fixtureSync, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -356,7 +356,6 @@ describe('bind Tests', () => {
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
-
   });
 
   it('works with camelcase node names from external xml file', async () => {
@@ -373,7 +372,5 @@ describe('bind Tests', () => {
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
-
   });
-
 });

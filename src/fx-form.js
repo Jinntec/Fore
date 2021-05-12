@@ -113,7 +113,6 @@ export class FxForm extends HTMLElement {
     console.group('### refresh');
     // await this.updateComplete;
 
-
     Fore.refreshChildren(this);
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
 
@@ -187,7 +186,7 @@ export class FxForm extends HTMLElement {
       console.log('match ', match);
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
-/*
+      /*
       const result = fx.evaluateXPathToString(naked, inscope, null, {
         namespaceResolver: Fore.namespaceResolver,
       });
@@ -238,12 +237,12 @@ export class FxForm extends HTMLElement {
       const generatedInstance = document.createElement('fx-instance');
       model.appendChild(generatedInstance);
 
-      const generated = document.implementation.createDocument(null, 'data',null);
+      const generated = document.implementation.createDocument(null, 'data', null);
       // const newData = this._generateInstance(this, generated.firstElementChild);
       this._generateInstance(this, generated.firstElementChild);
       generatedInstance.instanceData = generated;
       model.instances.push(generatedInstance);
-      console.log('generatedInstance ', this.getModel().getDefaultInstanceData())
+      console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
     }
   }
 
@@ -255,7 +254,7 @@ export class FxForm extends HTMLElement {
     if (start.hasAttribute('ref')) {
       const ref = start.getAttribute('ref');
 
-      if(ref.includes('/')){
+      if (ref.includes('/')) {
         console.log('complex path to create ', ref);
         const steps = ref.split('/');
         steps.forEach(step => {
@@ -264,10 +263,9 @@ export class FxForm extends HTMLElement {
           // const generated = document.createElement(ref);
           parent = this._generateNode(parent, step, start);
         });
-      }else{
+      } else {
         parent = this._generateNode(parent, ref, start);
       }
-
     }
 
     if (start.hasChildNodes()) {
@@ -290,13 +288,13 @@ export class FxForm extends HTMLElement {
     return parent;
   }
 
-/*
+  /*
   _createStep(){
 
   }
 */
 
-/*
+  /*
   _generateInstance(start, parent) {
     if (start.hasAttribute('ref')) {
       const ref = start.getAttribute('ref');

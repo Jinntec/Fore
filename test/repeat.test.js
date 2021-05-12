@@ -386,7 +386,6 @@ describe('repeat Tests', () => {
     // appended item should have repeatindex set
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
-
   });
 
   it('deletes an item', async () => {
@@ -527,7 +526,6 @@ describe('repeat Tests', () => {
             </fx-trigger>
           </template>
         </fx-repeat>
-
       </fx-form>
     `);
 

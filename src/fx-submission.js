@@ -3,45 +3,45 @@ import '@polymer/iron-ajax/iron-ajax.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 
 export class FxSubmission extends foreElementMixin(HTMLElement) {
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }
 
-  connectedCallback(){
+  connectedCallback() {
     this.style.display = 'none';
     this.model = this.parentNode;
 
     // ### initialize properties with defaults
-    if(!this.hasAttribute('id'))
-      throw new Error('id is required');
+    if (!this.hasAttribute('id')) throw new Error('id is required');
     this.id = this.getAttribute('id');
 
-    this.method = this.hasAttribute('method')?this.getAttribute('method'):'get';
-    this.nonrelevant = this.hasAttribute('nonrelevant')?this.getAttribute('nonrelevant'):'remove';
-    this.replace = this.hasAttribute('replace')?this.getAttribute('replace'):'none';
+    this.method = this.hasAttribute('method') ? this.getAttribute('method') : 'get';
+    this.nonrelevant = this.hasAttribute('nonrelevant')
+      ? this.getAttribute('nonrelevant')
+      : 'remove';
+    this.replace = this.hasAttribute('replace') ? this.getAttribute('replace') : 'none';
 
-    if(!this.hasAttribute('url'))
-      throw new Error(`url is required for submission: ${this.id}`);
+    if (!this.hasAttribute('url')) throw new Error(`url is required for submission: ${this.id}`);
     this.url = this.getAttribute('url');
 
-    this.targetref = this.hasAttribute('targetref')?this.getAttribute('targetref'):null;
+    this.targetref = this.hasAttribute('targetref') ? this.getAttribute('targetref') : null;
 
-    this.mediatype = this.hasAttribute('mediatype')?this.getAttribute('mediatype'):'application/xml';
-    this.validate = this.getAttribute('validate')?this.getAttribute('validate'):'true';
+    this.mediatype = this.hasAttribute('mediatype')
+      ? this.getAttribute('mediatype')
+      : 'application/xml';
+    this.validate = this.getAttribute('validate') ? this.getAttribute('validate') : 'true';
 
     this.shadowRoot.innerHTML = this.renderHTML();
-    console.log('innerHTML ', this.shadowRoot.innerHTML)
+    console.log('innerHTML ', this.shadowRoot.innerHTML);
 
     // ### add listener to iron-ajax
     const sub = this.shadowRoot.querySelector('#submitter');
     sub.addEventListener('response', () => this._handleResponse());
     sub.addEventListener('error', () => this._handleError());
-
   }
 
-  renderHTML () {
+  renderHTML() {
     return `
       <slot></slot>
       <iron-ajax

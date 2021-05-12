@@ -1,6 +1,6 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
-import {AbstractAction} from "./abstract-action.js";
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-setvalue`
@@ -27,8 +27,7 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   connectedCallback() {
-    if(super.connectedCallback)
-      super.connectedCallback();
+    if (super.connectedCallback) super.connectedCallback();
 
     if (this.hasAttribute('ref')) {
       this.ref = this.getAttribute('ref');
@@ -51,7 +50,6 @@ export default class FxSetvalue extends AbstractAction {
     }
     const mi = this.getModelItem();
     this.setValue(mi, value);
-
   }
 
   setValue(modelItem, newVal) {

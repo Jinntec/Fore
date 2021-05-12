@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixture, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
 describe('fx-control tests', () => {
-
   it('is creates a native input when no control is provided', async () => {
     const el = await fixture(html`
       <fx-form>
@@ -36,7 +35,7 @@ describe('fx-control tests', () => {
     expect(bound.modelItem.value).to.equal('foobar');
     expect(input.value).to.equal('foobar');
 
-    bound.modelItem.value='new';
+    bound.modelItem.value = 'new';
     // input.blur();
     // await oneEvent(bound, 'value-changed');
     // expect(bound.modelItem.value).to.equal('new');
@@ -73,7 +72,6 @@ describe('fx-control tests', () => {
     const control = document.querySelector('.widget');
     expect(bound.widget).to.equal(control);
   });
-
 
   it('creates fx-control', async () => {
     const el = await fixture(html`

@@ -8,13 +8,12 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  *
  */
 export class FxContainer extends foreElementMixin(HTMLElement) {
-
-  constructor () {
+  constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }
 
-  connectedCallback(){
+  connectedCallback() {
     const style = `
         :host {
             display: block;

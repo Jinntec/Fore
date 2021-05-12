@@ -81,11 +81,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
   }
 
-  get index(){
+  get index() {
     return this.getAttribute('index');
   }
 
-  set index(idx){
+  set index(idx) {
     this.setAttribute('index', idx);
   }
 
@@ -104,9 +104,9 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
-      const {index} = e.detail;
+      const { index } = e.detail;
       this.index = index;
-      this.applyIndex(this.children[index-1]);
+      this.applyIndex(this.children[index - 1]);
     });
 
     const style = `
@@ -312,7 +312,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const content = this.template.content.cloneNode(true);
     return document.importNode(content, true);
   }
-
 
   _removeIndexMarker() {
     Array.from(this.children).forEach(item => {

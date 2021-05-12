@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixture, fixtureSync, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -16,7 +16,7 @@ describe('action Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        
+
         <fx-control ref="value"></fx-control>
       </fx-form>
     `);
@@ -33,7 +33,6 @@ describe('action Tests', () => {
 
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
-
   });
 
   it('triggers action, executes and updates', async () => {
@@ -46,13 +45,12 @@ describe('action Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        
+
         <fx-control ref="value"></fx-control>
         <fx-trigger>
-            <button></button>
-            <fx-setvalue ref="value" value="B"></fx-setvalue>
+          <button></button>
+          <fx-setvalue ref="value" value="B"></fx-setvalue>
         </fx-trigger>
-        
       </fx-form>
     `);
 
@@ -67,7 +65,6 @@ describe('action Tests', () => {
 
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
-
   });
 
   it('falsy condition prevents performing the action', async () => {
@@ -81,13 +78,12 @@ describe('action Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        
+
         <fx-control ref="value"></fx-control>
         <fx-trigger>
-            <button></button>
-            <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
+          <button></button>
+          <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
         </fx-trigger>
-        
       </fx-form>
     `);
 
@@ -102,7 +98,6 @@ describe('action Tests', () => {
 
     expect(control.value).to.equal('A');
     expect(control.getModelItem().value).to.equal('A');
-
   });
 
   it('truthy condition performs the action', async () => {
@@ -116,13 +111,12 @@ describe('action Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        
+
         <fx-control ref="value"></fx-control>
         <fx-trigger>
-            <button></button>
-            <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
+          <button></button>
+          <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
         </fx-trigger>
-        
       </fx-form>
     `);
 
@@ -135,11 +129,8 @@ describe('action Tests', () => {
     const trigger = el.querySelector('fx-trigger');
     trigger.performActions();
 
-
-
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
-
   });
 
   it('fx-action executes its children', async () => {
@@ -153,17 +144,16 @@ describe('action Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        
+
         <fx-control id="c1" ref="value"></fx-control>
         <fx-control id="c2" ref="confirmation"></fx-control>
         <fx-trigger>
-            <button></button>
-            <fx-action>
-              <fx-setvalue ref="value" value="B"></fx-setvalue>
-              <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
-            </fx-action>
+          <button></button>
+          <fx-action>
+            <fx-setvalue ref="value" value="B"></fx-setvalue>
+            <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
+          </fx-action>
         </fx-trigger>
-        
       </fx-form>
     `);
 
@@ -185,7 +175,5 @@ describe('action Tests', () => {
 
     expect(control2.value).to.equal('true');
     expect(control2.getModelItem().value).to.equal('true');
-
   });
-
 });

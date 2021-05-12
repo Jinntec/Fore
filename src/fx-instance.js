@@ -63,11 +63,11 @@ export class FxInstance extends HTMLElement {
       this._initJSONInstance();
     }
     this.dispatchEvent(
-        new CustomEvent('instance-loaded', {
-          composed: true,
-          bubbles: true,
-          detail: { instance: this },
-        })
+      new CustomEvent('instance-loaded', {
+        composed: true,
+        bubbles: true,
+        detail: { instance: this },
+      }),
     );
 
     return this;

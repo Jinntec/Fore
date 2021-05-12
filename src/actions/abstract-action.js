@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import {evaluateXPathToBoolean} from "../xpath-evaluation.js";
+import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
 
 /**
  * `fx-action`
@@ -9,15 +9,13 @@ import {evaluateXPathToBoolean} from "../xpath-evaluation.js";
  * @demo demo/index.html
  */
 export class AbstractAction extends foreElementMixin(HTMLElement) {
-
   constructor() {
     super();
     this.needsUpdate = false;
-    this.ifCondition=false;
+    this.ifCondition = false;
   }
 
   connectedCallback() {
-
     this.style.display = 'none';
     this.repeatContext = undefined;
 
@@ -30,15 +28,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     this.target = this.getAttribute('target');
     if (this.target) {
       this.targetElement = document.getElementById(this.target);
-      this.targetElement.addEventListener(this.event, (e) => this.execute(e));
+      this.targetElement.addEventListener(this.event, e => this.execute(e));
     } else {
       this.targetElement = this.parentNode;
       this.targetElement.addEventListener(this.event, e => this.execute(e));
       // console.log('adding listener for ', this.event , ` to `, this);
     }
 
-    this.ifExpr = this.hasAttribute('if')?this.getAttribute('if'):null;
-
+    this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
   }
 
   /**
@@ -52,15 +49,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.evalInContext();
     }
 
-    if(this.ifExpr){
-      if(this.nodeset === undefined){
+    if (this.ifExpr) {
+      if (this.nodeset === undefined) {
         this.nodeset = this.targetElement.nodeset;
       }
       this.ifCondition = evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm());
-      if(this.ifCondition){
+      if (this.ifCondition) {
         this.perform();
       }
-    }else{
+    } else {
       this.perform();
     }
     this.actionPerformed();
@@ -69,7 +66,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   /**
    * this should only be called by bound actions
    */
-  perform (){
+  perform() {
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
@@ -77,14 +74,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
   actionPerformed() {
     // console.log('actionPerformed action parentNode ', this.parentNode);
-    if(this.needsUpdate){
+    if (this.needsUpdate) {
       const model = this.getModel();
       model.recalculate();
       model.revalidate();
       model.parentNode.refresh();
       this._dispatchActionPerformed();
     }
-/*
+    /*
     if (this.needsRebuild) {
       model.rebuild();
     }

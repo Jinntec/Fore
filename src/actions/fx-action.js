@@ -8,16 +8,13 @@ import { AbstractAction } from './abstract-action.js';
  * @demo demo/index.html
  */
 export class FxAction extends AbstractAction {
-
-
   perform() {
-    const {children} = this;
+    const { children } = this;
     Array.from(children).forEach(action => {
       action.perform();
     });
     this.needsUpdate = true;
   }
-
 }
 
 window.customElements.define('fx-action', FxAction);

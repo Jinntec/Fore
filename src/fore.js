@@ -98,11 +98,11 @@ export class Fore {
     return refreshed;
   }
 
-  static isRepeated(element){
+  static isRepeated(element) {
     return element.closest('fx-repeatitem') !== null;
   }
 
-  static getRepeatTarget(element, id){
+  static getRepeatTarget(element, id) {
     const repeatContextItem = element.closest('fx-repeatitem');
     const target = repeatContextItem.querySelector(`#${id}`);
     return target;

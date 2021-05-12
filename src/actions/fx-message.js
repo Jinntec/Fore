@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action.js";
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-message`
@@ -8,7 +8,6 @@ import {AbstractAction} from "./abstract-action.js";
  *
  */
 class FxMessage extends AbstractAction {
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -37,7 +36,7 @@ class FxMessage extends AbstractAction {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  renderHTML () {
+  renderHTML() {
     return `
         <slot></slot>
     `;

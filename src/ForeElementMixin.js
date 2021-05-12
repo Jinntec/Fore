@@ -14,7 +14,7 @@ export const foreElementMixin = superclass =>
         },
         modelItem: {
           type: Object,
-        }
+        },
       };
     }
 
@@ -22,7 +22,7 @@ export const foreElementMixin = superclass =>
       super();
       this.model = null;
       this.modelItem = {};
-      this.ref = this.hasAttribute('ref')?this.getAttribute('ref'):'';
+      this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
     }
 
     getModel() {
@@ -78,11 +78,7 @@ export const foreElementMixin = superclass =>
 
         // todo: code below fails - why?
         const formElement = this.closest('fx-form');
-        this.nodeset = evaluateXPathToFirstNode(
-          this.ref,
-          inscopeContext,
-          formElement
-        );
+        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
         // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);

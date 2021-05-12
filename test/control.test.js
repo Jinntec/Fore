@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixtureSync, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -69,7 +69,6 @@ describe('control tests', () => {
             </data>
           </fx-instance>
           <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
-
         </fx-model>
 
         <fx-control id="input1" label="A-label" ref="a">
@@ -100,12 +99,11 @@ describe('control tests', () => {
     model.updateModel();
 
     console.log('items ', model.modelItems);
-    expect(model.modelItems[0].value).to.equal('Aaa')
-      expect(alert1).to.exist;
-      expect(alert1).to.be.visible;
-      // expect(alert1.style.display).to.be.visible;
-      expect(input.classList.contains('invalid')).to.be.true;
-
+    expect(model.modelItems[0].value).to.equal('Aaa');
+    expect(alert1).to.exist;
+    expect(alert1).to.be.visible;
+    // expect(alert1.style.display).to.be.visible;
+    expect(input.classList.contains('invalid')).to.be.true;
   });
 
   it('has a control child with value "A"', async () => {
@@ -118,7 +116,6 @@ describe('control tests', () => {
             </data>
           </fx-instance>
           <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
-
         </fx-model>
 
         <fx-control id="input1" label="A-label" ref="a"> </fx-control>

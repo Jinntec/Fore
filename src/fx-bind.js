@@ -281,7 +281,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
     */
 
-/*
+  /*
   namespaceResolver(prefix) {
     // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
 
@@ -314,7 +314,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach((n) => {
+      inscopeContext.forEach(n => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {
@@ -343,11 +343,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       }
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(
-          this.ref,
-          inscopeContext,
-          formElement
-        );
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, formElement);
       } else {
         this.nodeset = this.ref;
       }
@@ -366,7 +362,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
-      Array.from(this.nodeset).forEach((n) => {
+      Array.from(this.nodeset).forEach(n => {
         // console.log('node ',n);
         // this._createModelItem(n, index);
         this._createModelItem(n);
@@ -378,7 +374,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   static lazyCreateModelitems(model, ref, nodeset) {
     if (Array.isArray(nodeset)) {
-      Array.from(nodeset).forEach((n) => {
+      Array.from(nodeset).forEach(n => {
         FxBind.lazyCreateModelItem(model, ref, n);
       });
     } else {
@@ -528,7 +524,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   static shortenPath(path) {
     const steps = path.split('/');
     let result = '';
-    for (let i = 2; i < steps.length; i+= 1) {
+    for (let i = 2; i < steps.length; i += 1) {
       const step = steps[i];
       if (step.indexOf('{}') !== -1) {
         const q = step.split('{}');

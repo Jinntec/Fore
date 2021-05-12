@@ -129,7 +129,7 @@ var DepGraph = (exports.DepGraph = function DepGraph(opts) {
 });
 */
 
-export   function DepGraph(opts) {
+export function DepGraph(opts) {
   this.nodes = {}; // Node -> Node/Data (treated like a Set)
   this.outgoingEdges = {}; // Node -> [Dependency Node]
   this.incomingEdges = {}; // Node -> [Dependant Node]
