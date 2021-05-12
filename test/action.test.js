@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';

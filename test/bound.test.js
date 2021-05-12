@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -25,7 +25,7 @@ describe('fx-control tests', () => {
       </fx-form>
     `);
 
-    await elementUpdated(el);
+    // await elementUpdated(el);
     const bound = el.querySelector('#input1');
     expect(bound).to.exist;
 
@@ -63,7 +63,7 @@ describe('fx-control tests', () => {
       </fx-form>
     `);
 
-    await elementUpdated(el);
+    // await elementUpdated(el);
     // await oneEvent(el, 'refresh-done');
 
     const bound = el.querySelector('#input1');

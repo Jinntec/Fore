@@ -43,6 +43,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    *
    * @param e
    */
+
+  // eslint-disable-next-line no-unused-vars
   execute(e) {
     this.needsUpdate = false;
     if (this.isBound()) {

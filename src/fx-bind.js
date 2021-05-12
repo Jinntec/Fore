@@ -493,6 +493,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   }
 
   // _getReferencesForProperty(propertyExpr, node) {
+
+  // eslint-disable-next-line class-methods-use-this
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
       // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));

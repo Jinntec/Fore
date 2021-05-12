@@ -39,7 +39,7 @@ export class FxFunction extends HTMLElement {
     const { prefix, localName, params, returnType } = signatureParseResult.groups;
 
     // TODO: lookup prefix
-    const namespaceURI = prefix || 'local';
+    // const namespaceURI = prefix || 'local';
 
     const paramParts = params
       ? params.split(',').map(param => {
