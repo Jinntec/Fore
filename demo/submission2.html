@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission Demo</title>
+
+    <!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
+
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-trigger {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 2rem;
+        }
+        button{
+            padding: 0.5rem;
+            font-size:1rem;
+            margin:0.5rem 0;
+        }
+        p{
+            font-size: 1rem;
+        }
+        fx-control, input{
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-form>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello World!</greeting>
+                            <prop></prop>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="submission"
+                                   url="/submission1"
+                                   method="POST"
+                                   replace="none">
+                        <fx-message event="submit-done">Data have been submitted - replacing nothing</fx-message>
+                    </fx-submission>
+
+                    <fx-submission id="submission2"
+                                   url="/submission2"
+                                   method="POST"
+                                   replace="instance">
+                    </fx-submission>
+
+                    <fx-submission id="submission3"
+                                   url="/submission1"
+                                   method="POST"
+                                   replace="instance">
+                    </fx-submission>
+
+                    <fx-submission id="submission4"
+                                   url="/submission1"
+                                   method="POST">
+                    </fx-submission>
+
+                </fx-model>
+                <fx-group collapse="true">
+
+                    <h1>Submission replace modes</h1>
+
+                    <fx-control ref="greeting">
+                        <label>Data:</label>
+                    </fx-control>
+
+                    <h2>submission replace='none'</h2>
+                    <p>Just sends the data but ignores the response</p>
+                    <fx-trigger>
+                        <button>replace none</button>
+                        <fx-send submission="submission"></fx-send>
+                    </fx-trigger>
+
+
+                    <h2>submission replace='instance'</h2>
+                    <p>Sends the data and replaces the default instance with response</p>
+
+                    <fx-trigger>
+                        <button>replace instance</button>
+                        <fx-send submission="submission2"></fx-send>
+                    </fx-trigger>
+
+                    <h2>submission replace='instance' with empty response</h2>
+                    <p>Sends the data and replaces the default instance with response</p>
+
+                    <fx-trigger>
+                        <button>replace with empty data</button>
+                        <fx-send submission="submission3"></fx-send>
+                    </fx-trigger>
+
+                </fx-group>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>

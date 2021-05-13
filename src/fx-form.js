@@ -7,7 +7,7 @@ import '@vaadin/vaadin-notification/vaadin-notification.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
-import { FxModel} from './fx-model.js';
+import { FxModel } from './fx-model.js';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 
 /**

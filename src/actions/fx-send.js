@@ -1,7 +1,6 @@
-import { FxAction } from './fx-action.js';
-
 import '../fx-model.js';
 import '../fx-submission.js';
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-send` - finds and activates a `fx-submission` element.
@@ -9,7 +8,7 @@ import '../fx-submission.js';
  *
  * @customElement
  */
-export default class FxSend extends FxAction {
+class FxSend extends AbstractAction {
   static get properties() {
     return {
       ...super.properties,
@@ -25,12 +24,13 @@ export default class FxSend extends FxAction {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');
   }
 
-  execute() {
-    super.execute();
+  perform() {
+    super.perform();
 
     console.log('submitting ', this.submission);
     console.log('submitting model', this.getModel());
@@ -49,7 +49,6 @@ export default class FxSend extends FxAction {
     }
     console.log('submission', submission);
     submission.submit();
-
     // if not of type fx-submission signal error
   }
 }

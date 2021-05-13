@@ -13,7 +13,6 @@ export class FxModel extends HTMLElement {
     super();
     // this.id = '';
 
-
     this.instances = [];
     this.modelItems = [];
     this.defaultContext = {};
@@ -33,10 +32,14 @@ export class FxModel extends HTMLElement {
     this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
-    this.addEventListener('model-construct-done', () => {
+
+    this.addEventListener('model-construct-done', e => {
       this.modelConstructed = true;
-      console.log('model-construct-done fired ', this.modelConstructed);
+      // console.log('model-construct-done fired ', this.modelConstructed);
+      console.log('model-construct-done fired ', e.detail.model.instances);
     });
+
+    // logging
   }
 
   static lazyCreateModelItem(model, ref, node) {
@@ -111,7 +114,6 @@ export class FxModel extends HTMLElement {
         }),
       );
     }
-    console.log('INITED');
     this.inited = true;
   }
 
@@ -142,12 +144,14 @@ export class FxModel extends HTMLElement {
 
     // console.log(`dependencies of a `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}a[1]:required"));
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
-    console.log(`rebuild mainGraph`, this.mainGraph);
+    // console.log(`rebuild mainGraph`, this.mainGraph);
     console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+    /*
     console.log(
       `rebuild finished with modelItems ${this.modelItems.length} item(s)`,
       this.modelItems,
     );
+*/
     console.groupEnd();
   }
 
@@ -158,7 +162,7 @@ export class FxModel extends HTMLElement {
    */
   recalculate() {
     console.group('### recalculate');
-    console.group('### recalculate instances ', this.instances);
+    console.log('recalculate instances ', this.instances);
 
     const v = this.mainGraph.overallOrder();
     v.forEach(path => {
@@ -216,6 +220,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     console.group('### revalidate');
 
+    let valid = true;
     this.modelItems.forEach(modelItem => {
       // console.log('validating node ', modelItem.node);
 
@@ -231,7 +236,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
-
+            if (!compute) valid = false;
             // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
             if (!this.modelConstructed) {
               // todo: get alert from attribute or child element
@@ -246,6 +251,7 @@ export class FxModel extends HTMLElement {
     });
     console.log('modelItems after revalidate: ', this.modelItems);
     console.groupEnd();
+    return valid;
   }
 
   /**
