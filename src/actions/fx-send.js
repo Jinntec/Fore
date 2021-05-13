@@ -9,14 +9,6 @@ import { AbstractAction } from './abstract-action.js';
  * @customElement
  */
 class FxSend extends AbstractAction {
-  static get properties() {
-    return {
-      ...super.properties,
-      submission: {
-        type: String,
-      },
-    };
-  }
 
   constructor() {
     super();
@@ -24,6 +16,7 @@ class FxSend extends AbstractAction {
   }
 
   connectedCallback() {
+    // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+// eslint-disable-next-line no-unused-vars
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';

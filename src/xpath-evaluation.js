@@ -96,6 +96,7 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
  * Implementation of the functionNameResolver passed to FontoXPath to
  * redirect function resolving for unprefixed functions to either the fn or the xf namespace
  */
+// eslint-disable-next-line no-unused-vars
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
