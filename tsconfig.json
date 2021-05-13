@@ -3,6 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "ts",
     "lib": [
       "es2017",
       "dom"

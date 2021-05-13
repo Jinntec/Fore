@@ -3,6 +3,8 @@ import '@polymer/iron-ajax/iron-ajax.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 
 export class FxSubmission extends foreElementMixin(HTMLElement) {
+
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -16,10 +18,14 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     if (!this.hasAttribute('id')) throw new Error('id is required');
     this.id = this.getAttribute('id');
 
+    this.instance = this.hasAttribute('instance')?this.getAttribute('instance'):null;
+
     this.method = this.hasAttribute('method') ? this.getAttribute('method') : 'get';
     this.nonrelevant = this.hasAttribute('nonrelevant')
       ? this.getAttribute('nonrelevant')
       : 'remove';
+
+    /** replace might be 'all', 'instance' or 'none' */
     this.replace = this.hasAttribute('replace') ? this.getAttribute('replace') : 'none';
 
     if (!this.hasAttribute('url')) throw new Error(`url is required for submission: ${this.id}`);
@@ -39,6 +45,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     const sub = this.shadowRoot.querySelector('#submitter');
     sub.addEventListener('response', () => this._handleResponse());
     sub.addEventListener('error', () => this._handleError());
+    this.addEventListener('submit', () => this._submit());
   }
 
   renderHTML() {
@@ -76,9 +83,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 */
 
-  submit() {
-    // todo: call pre-hook once there is one ;)
-
+  _submit(){
+    console.log('submit event handler');
+    console.log('submit', this);
     // ### 1. update xpath context
     this.evalInContext();
 
@@ -105,6 +112,48 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     console.log('serialized data ', data);
     submitter.body = data;
     submitter.generateRequest();
+
+  }
+
+  submit() {
+    // todo: call pre-hook once there is one ;)
+    this.dispatchEvent(
+        new CustomEvent('submit', {
+          composed: true,
+          bubbles: true,
+          detail: { },
+        }),
+    );
+
+/*
+    console.log('submit', this);
+    // ### 1. update xpath context
+    this.evalInContext();
+
+    // ### 2. validate for submission
+    const model = this.getModel();
+    model.recalculate();
+
+    if (this.validate) {
+      model.revalidate();
+    }
+
+    // ### [3. select relevant nodes]
+    // ### [4. set request headers]
+    // ### 5. resolve URL
+    // ### 6. get serialized data if necessary
+    console.log('data ', this.nodeset);
+    // ### 7. trigger the submit execution
+
+    const submitter = this.shadowRoot.getElementById('submitter');
+    console.log('submitter ', submitter);
+
+    const serializer = new XMLSerializer();
+    const data = serializer.serializeToString(this.nodeset);
+    console.log('serialized data ', data);
+    submitter.body = data;
+    submitter.generateRequest();
+*/
   }
 
   /*
@@ -120,6 +169,25 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     console.log('response ', submitter.lastResponse);
     console.log('response ', submitter.lastError);
 
+    if(this.replace === 'instance'){
+
+      let targetInstance;
+      if(this.instance){
+        targetInstance = this.model.getInstance(this.instance);
+      }else{
+        targetInstance = this.model.getInstance('default');
+      }
+      if (targetInstance) {
+        const instanceData = new DOMParser().parseFromString(submitter.lastResponse, 'text/xml');
+        targetInstance.instanceData = instanceData;
+        console.log('replaced instance ', targetInstance.instanceData);
+        this.model.updateModel(); // force update
+        this.model.formElement.refresh();
+      }else{
+        throw new Error(`target instance not found: ${targetInstance}`)
+      }
+
+    }
     if (this.replace !== 'none') {
       // ### 1. try to get instance with matching id
       const targetInstance = this.model.getInstance(this.replace);
@@ -128,8 +196,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         targetInstance.instanceData = instanceData;
         // targetInstance.instanceData = submitter.lastResponse;
         console.log('replaced instance ', targetInstance.instanceData);
-        this.model.updateModel(); // force update
-        this.model.formElement.refresh();
+        // this.model.updateModel(); // force update
+        // this.model.formElement.refresh();
       }
 
       // todo: evaluate expression in curly braces as xpath to resolve to the targetNode to replace

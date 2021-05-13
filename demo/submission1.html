@@ -6,7 +6,8 @@
 
     <title>Submission Demo</title>
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
 
     <link rel="stylesheet" href="../resources/fore.css">
     <link href="../resources/demo.css" rel="stylesheet">
@@ -16,29 +17,43 @@
     </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
-    <style>
-        .dynamic {
-            background: #76ff03;
-        }
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
 
-        [unresolved] {
-            display: none;
-        }
+            [unresolved] {
+                display: none;
+            }
 
-        fx-trigger {
-            display: block;
-        }
+            fx-trigger {
+                display: block;
+            }
 
-        h2 {
-            margin-top: 100px;
-        }
-    </style>
+            h2 {
+                margin-top: 100px;
+            }
+            .demo{
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+                background-color: rgba(135,135,135, 0.2);
+                box-shadow: rgba(0, 0, 0, 0.2) 2px 8px 8px;
+                border: 2px rgba(255,255,255,0.4) solid;
+                border-bottom: 2px rgba(40,40,40,0.35) solid;
+                border-right: 2px rgba(40,40,40,0.35) solid;
+
+            }
+
+
+        </style>
+    </custom-style>
+
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
     <demo-snippet>
         <template>
-
             <fx-form>
 
                 <fx-model>
@@ -49,19 +64,23 @@
                             <class>dynamic</class>
                         </data>
                     </fx-instance>
+                    <fx-instance id="other">
+                        <data></data>
+                    </fx-instance>
                     <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
                              readonly="string-length(.) < 6"></fx-bind>
 
                     <fx-submission id="submission"
                                    url="/submission1"
                                    method="POST"
-                                   replace="default">
+                                   replace="instance"
+                                   instance="default">
                         <fx-message event="submit-done">Data have been submitted</fx-message>
                     </fx-submission>
                     <fx-submission id="submission2"
                                    url="/submission2"
                                    method="POST"
-                                   replace="default">
+                                   replace="instance">
                     </fx-submission>
                     <fx-submission id="submission3"
                                    url="/submission2"
@@ -72,6 +91,15 @@
                                    url="/submissionfails"
                                    method="POST"
                                    replace="default">
+                    </fx-submission>
+
+                    <fx-submission id="hooks"
+                                   url="/submission2"
+                                   method="POST"
+                                   replace="default">
+                        <fx-message event="submit">Going to submit</fx-message>
+                        <fx-message event="submit-done">have submitted</fx-message>
+                        <fx-message event="submit-error">Error occured</fx-message>
                     </fx-submission>
 
                     <fx-message event="ready">Hey it's ready</fx-message>
@@ -120,6 +148,12 @@
                     <fx-trigger>
                         <button>does not exist</button>
                         <fx-send submission="notexistent"></fx-send>
+                    </fx-trigger>
+
+                    <h2>hooks</h2>
+                    <fx-trigger>
+                        <button>fire hooks</button>
+                        <fx-send submission="hooks"></fx-send>
                     </fx-trigger>
 
                     <!--

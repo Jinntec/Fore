@@ -5,10 +5,15 @@ import { ModelItem } from './modelitem.js';
 import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
+/**
+ * @ts-check
+ */
 export class FxModel extends HTMLElement {
   constructor() {
     super();
     // this.id = '';
+
+
     this.instances = [];
     this.modelItems = [];
     this.defaultContext = {};
@@ -153,6 +158,7 @@ export class FxModel extends HTMLElement {
    */
   recalculate() {
     console.group('### recalculate');
+    console.group('### recalculate instances ', this.instances);
 
     const v = this.mainGraph.overallOrder();
     v.forEach(path => {
@@ -242,6 +248,11 @@ export class FxModel extends HTMLElement {
     console.groupEnd();
   }
 
+  /**
+   *
+   * @param node
+   * @returns {ModelItem}
+   */
   getModelItem(node) {
     return this.modelItems.find(m => m.node === node);
   }

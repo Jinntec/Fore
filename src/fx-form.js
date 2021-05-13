@@ -7,7 +7,7 @@ import '@vaadin/vaadin-notification/vaadin-notification.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
-import './fx-model.js';
+import { FxModel} from './fx-model.js';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 
 /**
@@ -18,6 +18,7 @@ import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.
  *
  * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
  *
+ * @ts-check
  */
 export class FxForm extends HTMLElement {
   static get properties() {
@@ -339,6 +340,10 @@ export class FxForm extends HTMLElement {
     this.dispatchEvent(new CustomEvent('ready', {}));
   }
 
+  /**
+   *
+   * @returns {FxModel}
+   */
   getModel() {
     return this.querySelector('fx-model');
   }
