@@ -27,22 +27,31 @@
             z-index: 5;
             padding: 1rem 0 0;
         }
-        pre:before{
-            content:'instance:default';
+
+        pre:before {
+            content: 'instance:default';
             font-size: 0.8rem;
             position: absolute;
-            top:-21px;
-            left:0;
-            color:var(--paper-grey-800);
+            top: -21px;
+            left: 0;
+            color: var(--paper-grey-800);
             background: rgba(255, 255, 255, 0.8);
             padding: 2pt 6pt;
             border-top-right-radius: 0.3rem;
         }
-        fx-control{
+
+        fx-control {
             font-size: 1.2rem;
         }
-        fx-output{
+
+        fx-output {
             display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
         }
     </style>
 
@@ -63,44 +72,52 @@
 
         </fx-model>
 
-<!--
-        <fx-control ref="confirmation" update-event="input" value-prop="checked">
-            <input id="confirm" type="checkbox">
-            <label for="confirm">i agree</label>
-        </fx-control>
--->
+        <!--
+                <fx-control ref="confirmation" update-event="input" value-prop="checked">
+                    <input id="confirm" type="checkbox">
+                    <label for="confirm">i agree</label>
+                </fx-control>
+        -->
 
-        <h2>conditional action</h2>
-        <p>Any action element may have a <code>if</code> attribute that contains an XPath expression that needs to
-        evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
-        <demo-snippet>
-            <template>
-                <fx-group>
+        <fx-group>
 
+            <h2>conditional action</h2>
+            <p>Any action element may have a <code>if</code> attribute that contains an XPath expression that needs to
+                evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
+
+            <demo-snippet>
+                <template>
                     <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
                         <paper-checkbox class="widget">i agree</paper-checkbox>
                         <fx-message if=".='true'" event="value-changed">Thanks</fx-message>
                     </fx-control>
 
+
                     <fx-trigger>
                         <button>come in</button>
                         <fx-setvalue if="../confirmation = 'true'" ref="entered" value="true"></fx-setvalue>
                     </fx-trigger>
+                </template>
+            </demo-snippet>
 
-                    <fx-output ref="entered">
-                        <fx-message event="value-changed" level="modal">Welcome!</fx-message>
-                    </fx-output>
-                </fx-group>
+            <fx-output ref="entered">
+                <fx-message event="value-changed" level="modal">Welcome!</fx-message>
+            </fx-output>
+        </fx-group>
+
+        <h2>Action block</h2>
+        <p>defers update cycle to the end of the action block.</p>
+        <demo-snippet>
+            <template>
+                <fx-trigger>
+                    <button>execute action block</button>
+                    <fx-action>
+                        <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
+                        <fx-setvalue ref="entered" value="true"></fx-setvalue>
+                    </fx-action>
+                </fx-trigger>
             </template>
         </demo-snippet>
-
-        <fx-trigger>
-            <button>execute action block</button>
-            <fx-action>
-                <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
-                <fx-setvalue ref="entered" value="true"></fx-setvalue>
-            </fx-action>
-        </fx-trigger>
 
 
         <pre>
