@@ -1,6 +1,6 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { evaluateXPath,evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
@@ -78,7 +78,11 @@ export const foreElementMixin = superclass =>
 
         // todo: code below fails - why?
         const formElement = this.closest('fx-form');
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+        if(inscopeContext.nodeType){
+          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+        }else{
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement)
+        }
         // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);

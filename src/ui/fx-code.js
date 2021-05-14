@@ -1,6 +1,8 @@
 import XfAbstractControl from './abstract-control.js';
+import '@vanillawc/wc-codemirror/index.js';
+import '@vanillawc/wc-codemirror/mode/xml/xml.js';
 
-export class FxOutput extends XfAbstractControl {
+export class FxCode extends XfAbstractControl {
   static get properties() {
     return {
       ...super.properties,
@@ -28,9 +30,7 @@ export class FxOutput extends XfAbstractControl {
         `;
 
     const outputHtml = `
-            <slot name="label"></slot>
             <slot></slot>
-            <span id="widget">${this.value}</span>
         `;
 
     this.shadowRoot.innerHTML = `
@@ -56,7 +56,8 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    this.widget.innerHTML = this.value;
+    this.widget.setValue(this.modelItem.node.outerHTML);
+    this.widget.editor.refresh();
   }
 
   isReadonly() {
@@ -65,4 +66,4 @@ export class FxOutput extends XfAbstractControl {
   }
 }
 
-customElements.define('fx-output', FxOutput);
+customElements.define('fx-code', FxCode);

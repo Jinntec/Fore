@@ -31,6 +31,7 @@
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
+    "@teambit/bvm": "^0.0.20",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@vanillawc/wc-codemirror": "^1.9.1",
     "fontoxpath": "^3.17.0"

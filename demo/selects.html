@@ -11,6 +11,7 @@
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
         import '../node_modules/@vanillawc/wc-codemirror/index.js';
+        import '../node_modules/@vanillawc/wc-codemirror/mode/xml/xml.js';
     </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
@@ -126,7 +127,7 @@
                         </div>
                     </div>
 
-<!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
+                    <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
                 </fx-group>
             </fx-form>
         </template>
@@ -135,16 +136,18 @@
 
     <p>It is structered by this:</p>
 
-    <wc-codemirror mode="xml">
-        <script type="wc-content">
-        <countries>
-            <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
-            <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
-            <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
-            <country>...</country>
-        </countries>
-        </script>
-    </wc-codemirror>
+    <fx-output ref="instance('default')">
+        <wc-codemirror mode="xml" id="widget">
+            <script type="wc-content">
+                <countries>
+                    <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+                    <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+                    <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+                    <country>...</country>
+                </countries>
+            </script>
+        </wc-codemirror>
+    </fx-output>
 </div>
 
 
