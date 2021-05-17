@@ -3,6 +3,7 @@ import './fx-repeatitem.js';
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToNodes } from '../xpath-evaluation.js';
+import getInScopeContext from "../getInScopeContext";
 
 /**
  * `fx-repeat`
@@ -156,7 +157,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    * @private
    */
   _evalNodeset() {
-    const inscope = this._inScopeContext();
+    // const inscope = this._inScopeContext();
+    const inscope = getInScopeContext(this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());

@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     
     <title>Submission Demo</title>
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"/>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     
+<!--
     <script type="module">
         import './resources/js/fore-all.js';
     </script>
+-->
     <style>
     fx-repeat {
             padding: 10px;
@@ -28,66 +29,86 @@
             border-bottom: 2px rgba(40,40,40,0.35) solid;
             border-right: 2px rgba(40,40,40,0.35) solid;            
         }
+        #one{
+            background: #aeea00;
+        }
+        #two{
+            background: yellow;
+        }
     </style>
 </head>
 
 <body unresolved="unresolved">
     <div class="wrapper">
         <fx-form>
-            
-        
             <fx-model>
                 <fx-instance id="i-default">
                     <data>
-                        <page/>
+                        <page></page>
                         <repeat>
                             <item>1</item>
                             <item>2</item>
                             <item>3</item>
                         </repeat>
+                        <repeat>
+                            <item>4</item>
+                            <item>5</item>
+                            <item>6</item>
+                        </repeat>
                     </data>
                 </fx-instance>
+<!--
+                <fx-bind ref="repeat">
+                    <fx-bind ref="item">
+                        fx-bind ref="text()"></fx-bind>
+                    </fx-bind>
+                </fx-bind>
+-->
             </fx-model>
             
             <h1>Repeat in Switch / Case</h1>
              <fx-trigger label="toggle page 1">
-                <paper-button>toogle page 1</paper-button>
+                <paper-button raised>toogle page 1</paper-button>
                 <fx-toggle case="one"/>
             </fx-trigger>
 
             <fx-trigger label="toggle page 2" raised="raised">
-                <paper-button>toggle page 2</paper-button>
+                <paper-button raised>toggle page 2</paper-button>
                 <fx-toggle case="two"/>
             </fx-trigger>
 
             <h2>Repeat inside Switch / Case</h2>
              <fx-switch ref="page">
                 <fx-case id="one" name="Page 1 ">
-                    <fx-repeat id="r-item" ref="instance('i-default')/repeat/item">
+                    <fx-repeat id="r-item" ref="//repeat[1]/item">
                         <template>
                             <label>Item:</label>
-                            <fx-output ref="text()"/>
+                            <fx-output ref="text()"></fx-output>
                         </template>
                     </fx-repeat>
                 </fx-case>
                 <fx-case id="two" name="page2">
-                    <fx-repeat id="r-item" ref="repeat/item">
+                    <fx-repeat id="r-item" ref="//repeat[2]/item">
                         <template>
                             <label>Item:</label>
-                            <fx-output ref="text()"/>
+                            <fx-output ref="text()"></fx-output>
                         </template>
                     </fx-repeat>
                 </fx-case>
             </fx-switch>
-            
+
+<!--
             <h2>Repate outside Switch / Case</h2>
-            <fx-repeat id="r-item" ref="instance('i-default')/repeat/item">
+            <fx-repeat id="item" ref="//item">
                 <template>
                     <label>Item:</label>
-                    <fx-output ref="text()"/>
+                    <fx-output ref="text()"></fx-output>
                 </template>
             </fx-repeat>
+-->
         </fx-form>
     </div>
+    <script type="module" src="../index.js"></script>
+
 </body>
 </html>
