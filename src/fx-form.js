@@ -99,6 +99,10 @@ export class FxForm extends HTMLElement {
     });
   }
 
+  evaluateToNodes(xpath, context){
+    return evaluateXPathToNodes(xpath,context,this);
+  }
+
   disconnectedCallback() {}
 
   /**
@@ -152,6 +156,9 @@ export class FxForm extends HTMLElement {
       } else {
         parent = node.parentNode;
       }
+
+      if(parent.nodeName === 'FX-FUNCTION') return ;
+
       // console.log('parent ', parent);
       const expr = this._getTemplateExpression(node);
       // console.log('expr ', expr);

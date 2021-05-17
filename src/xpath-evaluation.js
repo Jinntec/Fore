@@ -10,6 +10,10 @@ import {
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log' },
   ['xs:string?'],
@@ -106,7 +110,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
     case 'boolean-from-string':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
-      if (prefix === '' || prefix === 'fn') {
+      if (prefix === '' || prefix === 'fn' || prefix === 'local') {
         return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
       }
       return null;

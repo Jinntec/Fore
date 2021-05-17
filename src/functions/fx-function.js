@@ -1,5 +1,5 @@
 import { registerCustomXPathFunction } from 'fontoxpath';
-import { evaluateXPath } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
 
 /**
  * Allows to extend a form with local custom functions.

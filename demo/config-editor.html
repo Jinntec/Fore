@@ -8,6 +8,7 @@
         <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 <!--    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"/>-->
 
+
     <style>
         fx-repeat {
             padding: 20px;
@@ -76,6 +77,31 @@
             <fx-instance src="config-data.xml"></fx-instance>
 
             <fx-message event="ready">Hey it's ready</fx-message>
+
+<!--
+            <fx-function
+                    signature="local:lookup($who as xs:string, $xpath as xs:string) as element()"
+                    type="text/xpath">
+                instance('default')//server
+            </fx-function>
+-->
+            <fx-function
+                    signature="local:server($who as xs:string) as element()*"
+                    type="text/javascript">
+<!--                import { evaluateXPathToNodes } from '../src/xpath-evaluation.js';-->
+
+                console.log('who ',$who);
+
+                const form = document.querySelector('fx-form');
+                const model = form.getModel();
+<!--                const nodes = evaluateXPathToNodes($xpath,model.getDefaultInstanceData(),form);-->
+
+<!--                const nodes = Array.from(model.getDefaultInstanceData().children);-->
+                const nodes = form.evaluateToNodes('//server[@id = (' || $who || ')]');
+
+                return nodes;
+            </fx-function>
+
         </fx-model>
         <fx-group collapse="true">
 
@@ -105,7 +131,8 @@
                         <fx-output ref="."></fx-output>
                     </h4>
 
-                    <fx-repeat id="env-servers" ref="tokenize(@servers,',')">
+                    <fx-repeat id="env-servers" ref="local:server(data(@servers))">
+<!--                    <fx-repeat id="env-servers" ref="tokenize(@servers,',')">-->
                         <template>
                             <p>{.}</p>
 <!--                            <p>{instance('default')/servers/server[@id=.]/@name}</p>-->
