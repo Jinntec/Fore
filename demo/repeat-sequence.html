@@ -79,9 +79,10 @@
                 <h1>Repeat from sequence</h1>
 
 <!--                <fx-repeat ref="tokenize((1,2,3),',')">-->
-                <fx-repeat ref="(1 to 10)">
+                <fx-repeat ref="'abc','def','gjh'">
                     <template>
                         <fx-control id="task" ref="."></fx-control>
+                        <fx-control id="task" ref="instance('default')/servers/server[@id=.]"></fx-control>
                     </template>
                 </fx-repeat>
 
