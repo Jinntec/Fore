@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    
+    <title>Submission Demo</title>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"/>
+    
+    <script type="module">
+        import './resources/js/fore-all.js';
+    </script>
+    <style>
+    fx-repeat {
+            padding: 10px;
+            display: block;
+            height: auto;
+            border:1px solid black;
+        }
+    
+        fx-repeatitem {
+            display: block;
+        }
+        [repeat-index] {
+            background-color: rgba(255,255,255, 0.4);
+            box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;            
+        }
+    </style>
+</head>
+
+<body unresolved="unresolved">
+    <div class="wrapper">
+        <fx-form>
+            
+        
+            <fx-model>
+                <fx-instance id="i-default">
+                    <data>
+                        <page/>
+                        <repeat>
+                            <item>1</item>
+                            <item>2</item>
+                            <item>3</item>
+                        </repeat>
+                    </data>
+                </fx-instance>
+            </fx-model>
+            
+            <h1>Repeat in Switch / Case</h1>
+             <fx-trigger label="toggle page 1">
+                <paper-button>toogle page 1</paper-button>
+                <fx-toggle case="one"/>
+            </fx-trigger>
+
+            <fx-trigger label="toggle page 2" raised="raised">
+                <paper-button>toggle page 2</paper-button>
+                <fx-toggle case="two"/>
+            </fx-trigger>
+
+            <h2>Repeat inside Switch / Case</h2>
+             <fx-switch ref="page">
+                <fx-case id="one" name="Page 1 ">
+                    <fx-repeat id="r-item" ref="instance('i-default')/repeat/item">
+                        <template>
+                            <label>Item:</label>
+                            <fx-output ref="text()"/>
+                        </template>
+                    </fx-repeat>
+                </fx-case>
+                <fx-case id="two" name="page2">
+                    <fx-repeat id="r-item" ref="repeat/item">
+                        <template>
+                            <label>Item:</label>
+                            <fx-output ref="text()"/>
+                        </template>
+                    </fx-repeat>
+                </fx-case>
+            </fx-switch>
+            
+            <h2>Repate outside Switch / Case</h2>
+            <fx-repeat id="r-item" ref="instance('i-default')/repeat/item">
+                <template>
+                    <label>Item:</label>
+                    <fx-output ref="text()"/>
+                </template>
+            </fx-repeat>
+        </fx-form>
+    </div>
+</body>
+</html>
