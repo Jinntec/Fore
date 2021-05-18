@@ -29,7 +29,6 @@ describe('template expressions', () => {
     );
 
     const theDiv = el.querySelector('.static');
-    expect(theDiv).to.be.equal(el.storedTemplateExpressions[0].parent);
 
     expect(theDiv.getAttribute('class')).to.equal('static Hello Universe');
     expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');

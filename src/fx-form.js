@@ -8,7 +8,7 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
-import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString, evaluateTemplateExpression } from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -144,24 +144,10 @@ export class FxForm extends HTMLElement {
     }
 
     Array.from(tmplExpressions).forEach(node => {
-      // console.log('node ', node);
-
-      let parent;
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        parent = node.ownerElement;
-      } else {
-        parent = node.parentNode;
-      }
-      // console.log('parent ', parent);
       const expr = this._getTemplateExpression(node);
-      // console.log('expr ', expr);
-
-      // ### store template expression
       this.storedTemplateExpressions.push({
-        parent,
         expr,
-        name: node.nodeName,
-        node,
+        node
       });
     });
 
@@ -176,34 +162,10 @@ export class FxForm extends HTMLElement {
   _processTemplateExpression(exprObj) {
     console.log('processing template expression ', exprObj);
 
-    const { parent } = exprObj;
     const { expr } = exprObj;
-    const { name } = exprObj;
     const { node } = exprObj;
-    console.log('expr ', expr);
-    // const matches = expr.match(/{\w+}/g);
-    const matches = expr.match(/{[^}]*}/g);
-    matches.forEach(match => {
-      console.log('match ', match);
-      const naked = match.substring(1, match.length - 1);
-      const inscope = getInScopeContext(node, naked);
-      /*
-      const result = fx.evaluateXPathToString(naked, inscope, null, {
-        namespaceResolver: Fore.namespaceResolver,
-      });
-*/
-      const result = evaluateXPathToString(naked, inscope, this);
-
-      // console.log('result of eval ', result);
-      const replaced = expr.replaceAll(match, result);
-      console.log('result of replacing ', replaced);
-
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        parent.setAttribute(name, replaced);
-      } else if (node.nodeType === Node.TEXT_NODE) {
-        node.textContent = replaced;
-      }
-    });
+    // console.log('expr ', expr);
+    evaluateTemplateExpression(expr,node, this);
   }
 
   // eslint-disable-next-line class-methods-use-this
