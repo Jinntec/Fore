@@ -139,7 +139,7 @@ export class FxForm extends HTMLElement {
       ".//!*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//!*[name(.) != 'fx-model']/@*[contains(.,'{')]";
 */
     const search =
-      ".//*[not(ancestor-or-self::fx-model)]/text()[contains(.,'{')] | .//*[name(.) != 'xf-submission']/@*[contains(.,'{')]";
+		  "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
 /*
     const search =
