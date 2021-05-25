@@ -228,16 +228,18 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 /**
  * Evaluate an XPath to a string
  *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
  * @return {string}
  */
-export function evaluateXPathToString(xpath, contextNode, formElement) {
+export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
-    null,
+    domFacade,
     {},
     {
       currentContext: { formElement },
