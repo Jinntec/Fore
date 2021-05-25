@@ -2,113 +2,104 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-    
+
     <title>Submission Demo</title>
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    
-<!--
     <script type="module">
-        import './resources/js/fore-all.js';
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
--->
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <link href="../resources/fore.css" rel="stylesheet">
+
     <style>
-    fx-repeat {
+        fx-repeat {
             padding: 10px;
             display: block;
             height: auto;
-            border:1px solid black;
+            border: 1px solid black;
         }
-    
+
         fx-repeatitem {
             display: block;
         }
+
         [repeat-index] {
-            background-color: rgba(255,255,255, 0.4);
+            background-color: rgba(255, 255, 255, 0.4);
             box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
-            border: 2px rgba(255,255,255,0.4) solid;
-            border-bottom: 2px rgba(40,40,40,0.35) solid;
-            border-right: 2px rgba(40,40,40,0.35) solid;            
+            border: 2px rgba(255, 255, 255, 0.4) solid;
+            border-bottom: 2px rgba(40, 40, 40, 0.35) solid;
+            border-right: 2px rgba(40, 40, 40, 0.35) solid;
         }
-        #one{
+
+        #one {
             background: #aeea00;
         }
-        #two{
+
+        #two {
             background: yellow;
         }
     </style>
 </head>
 
 <body unresolved="unresolved">
-    <div class="wrapper">
-        <fx-form>
-            <fx-model>
-                <fx-instance id="i-default">
-                    <data>
-                        <page></page>
-                        <repeat>
-                            <item>1</item>
-                            <item>2</item>
-                            <item>3</item>
-                        </repeat>
-                        <repeat>
-                            <item>4</item>
-                            <item>5</item>
-                            <item>6</item>
-                        </repeat>
-                    </data>
-                </fx-instance>
-<!--
-                <fx-bind ref="repeat">
-                    <fx-bind ref="item">
-                        fx-bind ref="text()"></fx-bind>
-                    </fx-bind>
-                </fx-bind>
--->
-            </fx-model>
-            
-            <h1>Repeat in Switch / Case</h1>
-             <fx-trigger label="toggle page 1">
-                <paper-button raised>toogle page 1</paper-button>
-                <fx-toggle case="one"/>
-            </fx-trigger>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-form>
+                <fx-model>
+                    <fx-instance id="i-default">
+                        <data>
+                            <page></page>
+                            <repeat>
+                                <item>1</item>
+                                <item>2</item>
+                                <item>3</item>
+                            </repeat>
+                            <repeat>
+                                <item>4</item>
+                                <item>5</item>
+                                <item>6</item>
+                            </repeat>
+                        </data>
+                    </fx-instance>
+                </fx-model>
 
-            <fx-trigger label="toggle page 2" raised="raised">
-                <paper-button raised>toggle page 2</paper-button>
-                <fx-toggle case="two"/>
-            </fx-trigger>
+                <h1>Repeat in Switch / Case</h1>
+                <fx-trigger label="toggle page 1">
+                    <paper-button raised>toogle page 1</paper-button>
+                    <fx-toggle case="one"/>
+                </fx-trigger>
 
-            <h2>Repeat inside Switch / Case</h2>
-             <fx-switch ref="page">
-                <fx-case id="one" name="Page 1 ">
-                    <fx-repeat id="r-item" ref="//repeat[1]/item">
-                        <template>
-                            <label>Item:</label>
-                            <fx-output ref="text()"></fx-output>
-                        </template>
-                    </fx-repeat>
-                </fx-case>
-                <fx-case id="two" name="page2">
-                    <fx-repeat id="r-item" ref="//repeat[2]/item">
-                        <template>
-                            <label>Item:</label>
-                            <fx-output ref="text()"></fx-output>
-                        </template>
-                    </fx-repeat>
-                </fx-case>
-            </fx-switch>
+                <fx-trigger label="toggle page 2" raised="raised">
+                    <paper-button raised>toggle page 2</paper-button>
+                    <fx-toggle case="two"/>
+                </fx-trigger>
 
-<!--
-            <h2>Repate outside Switch / Case</h2>
-            <fx-repeat id="item" ref="//item">
-                <template>
-                    <label>Item:</label>
-                    <fx-output ref="text()"></fx-output>
-                </template>
-            </fx-repeat>
--->
-        </fx-form>
-    </div>
-    <script type="module" src="../index.js"></script>
+                <fx-switch ref="page">
+                    <fx-case id="one" name="Page 1 ">
+                        <fx-repeat id="r-item" ref="//repeat[1]/item">
+                            <template>
+                                <label>Item:</label>
+                                <fx-output ref="text()"></fx-output>
+                            </template>
+                        </fx-repeat>
+                    </fx-case>
+                    <fx-case id="two" name="page2">
+                        <fx-repeat id="r-item" ref="//repeat[2]/item">
+                            <template>
+                                <label>Item:</label>
+                                <fx-output ref="text()"></fx-output>
+                            </template>
+                        </fx-repeat>
+                    </fx-case>
+                </fx-switch>
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../index.js"></script>
 
 </body>
 </html>

@@ -78,7 +78,10 @@
                 <fx-group collapse="true">
 
                     <h1>Submission Chaining</h1>
-
+                    <p>
+                        Submissions can be chained by using their event-hooks. In the example below
+                        the second submission will fire after the first has successfully returned.
+                    </p>
                     <fx-trigger>
                         <button>fire chain</button>
                         <fx-send submission="sub1"></fx-send>
