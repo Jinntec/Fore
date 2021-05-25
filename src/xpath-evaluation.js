@@ -255,29 +255,31 @@ export function evaluateXPathToString(xpath, contextNode, formElement) {
 /**
  * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
  * @param expr the XPath to evaluate
- * @param node the context node
+ * @param node the node which will get updated with evaluation result
  * @param form the form element
  */
 export function evaluateTemplateExpression(expr, node, form) {
     const matches = expr.match(/{[^}]*}/g);
-    matches.forEach(match => {
-        console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
-        const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, form);
+    if(matches){
+        matches.forEach(match => {
+            console.log('match ', match);
+            const naked = match.substring(1, match.length - 1);
+            const inscope = getInScopeContext(node, naked);
+            const result = evaluateXPathToString(naked, inscope, form);
 
-        // console.log('result of eval ', result);
-        const replaced = expr.replaceAll(match, result);
-        console.log('result of replacing ', replaced);
+            // console.log('result of eval ', result);
+            const replaced = expr.replaceAll(match, result);
+            console.log('result of replacing ', replaced);
 
-        if (node.nodeType === Node.ATTRIBUTE_NODE) {
-            const parent = node.ownerElement;
+            if (node.nodeType === Node.ATTRIBUTE_NODE) {
+                const parent = node.ownerElement;
 
-            // parent.setAttribute(name, replaced);
-            parent.setAttribute(node.nodeName, replaced);
-        } else if (node.nodeType === Node.TEXT_NODE) {
-            node.textContent = replaced;
-        }
-    });
+                // parent.setAttribute(name, replaced);
+                parent.setAttribute(node.nodeName, replaced);
+            } else if (node.nodeType === Node.TEXT_NODE) {
+                node.textContent = replaced;
+            }
+        });
+    }
 }
 
