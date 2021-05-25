@@ -118,7 +118,7 @@ export class FxForm extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
 
     // ### refresh template expressions
-    this._refreshTemplateExpressions();
+    this._updateTemplateExpressions();
 
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
@@ -133,9 +133,19 @@ export class FxForm extends HTMLElement {
    *
    * @private
    */
-  _refreshTemplateExpressions() {
+  _updateTemplateExpressions() {
+/*
     const search =
-      ".//*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//*[name(.) != 'fx-model']/@*[contains(.,'{')]";
+      ".//!*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//!*[name(.) != 'fx-model']/@*[contains(.,'{')]";
+*/
+    const search =
+      ".//*[not(ancestor-or-self::fx-model)]/text()[contains(.,'{')] | .//*[name(.) != 'xf-submission']/@*[contains(.,'{')]";
+
+/*
+    const search =
+      ".//!*[not(ancestor::fx-model)]/text()[contains(.,'{')] | .//@*[not(ancestor::fx-model)][contains(.,'{')]"
+*/
+
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
@@ -143,6 +153,9 @@ export class FxForm extends HTMLElement {
       this.storedTemplateExpressions = [];
     }
 
+    /*
+    storing expressions and their nodes for re-evaluation
+     */
     Array.from(tmplExpressions).forEach(node => {
       const expr = this._getTemplateExpression(node);
       this.storedTemplateExpressions.push({
