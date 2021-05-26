@@ -1,8 +1,7 @@
 import '@polymer/iron-ajax/iron-ajax.js';
 
 import { foreElementMixin } from './ForeElementMixin.js';
-import {evaluateTemplateExpression, evaluateXPathToNodes} from './xpath-evaluation.js';
-
+import { evaluateTemplateExpression, evaluateXPathToNodes } from './xpath-evaluation.js';
 
 export class FxSubmission extends foreElementMixin(HTMLElement) {
   constructor() {
@@ -89,38 +88,35 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       }
     }
 
-    this.url = 'foobar';
-    // this._updateTemplateExpressions();
+    this._updateTemplateExpressions();
     this._serializeAndSend();
   }
 
-  _updateTemplateExpressions(){
+  _updateTemplateExpressions() {
     if (!this.storedTemplateExpressions) {
       this.storedTemplateExpressions = [];
     }
 
-/*
-    const search =
-        ".//@*[contains(.,'{')]";
-
-    const tmplExpressions = evaluateXPathToNodes(search, this, this.getOwnerForm());
-*/
     const tmplExpressions = this.attributes;
     /*
-    storing expressions and their nodes for re-evaluation
-     */
-    Array.from(tmplExpressions).forEach(node => {
-      const expr = node.value;
-      this.storedTemplateExpressions.push({
-        expr,
-        node
-      });
-    });
+        storing expressions and their nodes for re-evaluation
+         */
+    for (let i = tmplExpressions.length - 1; i >= 0; i -= 1) {
+      console.log('tmplExpression ', tmplExpressions[i]);
+      const expr = tmplExpressions[i].value;
+      const node = tmplExpressions[i];
+
+      if (expr.indexOf('{') !== -1 && expr.indexOf('}') !== -1) {
+        this.storedTemplateExpressions.push({
+          expr,
+          node,
+        });
+      }
+    }
 
     this.storedTemplateExpressions.forEach(tmpl => {
       this._processTemplateExpression(tmpl);
     });
-
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -130,12 +126,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     const { expr } = exprObj;
     const { node } = exprObj;
     // console.log('expr ', expr);
-    evaluateTemplateExpression(expr,node, this);
+    evaluateTemplateExpression(expr, node, this);
   }
-
 
   _serializeAndSend() {
     const submitter = this.shadowRoot.getElementById('submitter');
+    const urlAttr = this.getAttribute('url');
+    // const url = new URL(urlAttr);
+    submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
+    console.log('url ', submitter.url);
+    submitter.params = query;
+    // submitter.url = this.getAttribute('url');
     const serializer = new XMLSerializer();
     const data = serializer.serializeToString(this.nodeset);
     submitter.body = data;
@@ -143,10 +144,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   /*
-  _handleOnSubmit() {
-    // todo: implement submission pre-hook
-  }
-*/
+    _handleOnSubmit() {
+      // todo: implement submission pre-hook
+    }
+  */
 
   _handleResponse() {
     // ### check for 'replace' option
@@ -203,4 +204,5 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     );
   }
 }
+
 customElements.define('fx-submission', FxSubmission);

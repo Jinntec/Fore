@@ -7,7 +7,7 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
-import getInScopeContext from "./getInScopeContext";
+import getInScopeContext from './getInScopeContext.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -261,27 +261,26 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
  * @param form the form element
  */
 export function evaluateTemplateExpression(expr, node, form) {
-    const matches = expr.match(/{[^}]*}/g);
-    if(matches){
-        matches.forEach(match => {
-            console.log('match ', match);
-            const naked = match.substring(1, match.length - 1);
-            const inscope = getInScopeContext(node, naked);
-            const result = evaluateXPathToString(naked, inscope, form);
+  const matches = expr.match(/{[^}]*}/g);
+  if (matches) {
+    matches.forEach(match => {
+      console.log('match ', match);
+      const naked = match.substring(1, match.length - 1);
+      const inscope = getInScopeContext(node, naked);
+      const result = evaluateXPathToString(naked, inscope, form);
 
-            // console.log('result of eval ', result);
-            const replaced = expr.replaceAll(match, result);
-            console.log('result of replacing ', replaced);
+      // console.log('result of eval ', result);
+      const replaced = expr.replaceAll(match, result);
+      console.log('result of replacing ', replaced);
 
-            if (node.nodeType === Node.ATTRIBUTE_NODE) {
-                const parent = node.ownerElement;
+      if (node.nodeType === Node.ATTRIBUTE_NODE) {
+        const parent = node.ownerElement;
 
-                // parent.setAttribute(name, replaced);
-                parent.setAttribute(node.nodeName, replaced);
-            } else if (node.nodeType === Node.TEXT_NODE) {
-                node.textContent = replaced;
-            }
-        });
-    }
+        // parent.setAttribute(name, replaced);
+        parent.setAttribute(node.nodeName, replaced);
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = replaced;
+      }
+    });
+  }
 }
-

@@ -3,7 +3,7 @@ import './fx-repeatitem.js';
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToNodes } from '../xpath-evaluation.js';
-import getInScopeContext from "../getInScopeContext";
+import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * `fx-repeat`

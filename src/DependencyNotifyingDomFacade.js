@@ -23,7 +23,7 @@ export class DependencyNotifyingDomFacade {
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
   getAllAttributes(node, _bucket) {
-      return Array.from(node.attributes);
+    return Array.from(node.attributes);
   }
 
   /**
@@ -55,15 +55,14 @@ export class DependencyNotifyingDomFacade {
    *
    * @param  node -
    */
-	getData(node) {
-		if (node.nodeType === Node.ATTRIBUTE_NODE) {
-			this._onNodeTouched(node);
-			   return node.value;
-
-		}
-// Text node
-					this._onNodeTouched(node.parentNode);
-return node.data;
+  getData(node) {
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      this._onNodeTouched(node);
+      return node.value;
+    }
+    // Text node
+    this._onNodeTouched(node.parentNode);
+    return node.data;
   }
 
   /**

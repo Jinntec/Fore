@@ -8,7 +8,11 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
-import { evaluateXPathToNodes, evaluateXPathToString, evaluateTemplateExpression } from './xpath-evaluation.js';
+import {
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+  evaluateTemplateExpression,
+} from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -134,19 +138,15 @@ export class FxForm extends HTMLElement {
    * @private
    */
   _updateTemplateExpressions() {
-/*
     const search =
-      ".//!*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//!*[name(.) != 'fx-model']/@*[contains(.,'{')]";
-*/
-    const search =
-		  "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
+      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::*[name(.)='fx-model']/descendant-or-self::node()/(text(), @*)";
 
-/*
+    /*
     const search =
-      ".//!*[not(ancestor::fx-model)]/text()[contains(.,'{')] | .//@*[not(ancestor::fx-model)][contains(.,'{')]"
+        "(descendant::fx-group/text() | descendant::fx-group/@*)[matches(.,'\\{.*\\}')]";
 */
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+    const tmplExpressions = evaluateXPathToNodes(search, this, null);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
@@ -160,7 +160,7 @@ export class FxForm extends HTMLElement {
       const expr = this._getTemplateExpression(node);
       this.storedTemplateExpressions.push({
         expr,
-        node
+        node,
       });
     });
 
@@ -178,7 +178,7 @@ export class FxForm extends HTMLElement {
     const { expr } = exprObj;
     const { node } = exprObj;
     // console.log('expr ', expr);
-    evaluateTemplateExpression(expr,node, this);
+    evaluateTemplateExpression(expr, node, this);
   }
 
   // eslint-disable-next-line class-methods-use-this
