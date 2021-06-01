@@ -1,6 +1,7 @@
 import '@polymer/iron-ajax/iron-ajax.js';
 
 import { foreElementMixin } from './ForeElementMixin.js';
+import { evaluateTemplateExpression, evaluateXPathToNodes } from './xpath-evaluation.js';
 
 export class FxSubmission extends foreElementMixin(HTMLElement) {
   constructor() {
@@ -64,7 +65,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   submit() {
-    // todo: call pre-hook once there is one ;)
     this.dispatchEvent(
       new CustomEvent('submit', {
         composed: true,
@@ -72,36 +72,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         detail: {},
       }),
     );
-
-    /*
-    console.log('submit', this);
-    // ### 1. update xpath context
-    this.evalInContext();
-
-    // ### 2. validate for submission
-    const model = this.getModel();
-    model.recalculate();
-
-    if (this.validate) {
-      model.revalidate();
-    }
-
-    // ### [3. select relevant nodes]
-    // ### [4. set request headers]
-    // ### 5. resolve URL
-    // ### 6. get serialized data if necessary
-    console.log('data ', this.nodeset);
-    // ### 7. trigger the submit execution
-
-    const submitter = this.shadowRoot.getElementById('submitter');
-    console.log('submitter ', submitter);
-
-    const serializer = new XMLSerializer();
-    const data = serializer.serializeToString(this.nodeset);
-    console.log('serialized data ', data);
-    submitter.body = data;
-    submitter.generateRequest();
-*/
   }
 
   _submit() {
@@ -113,17 +83,60 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     if (this.validate) {
       const valid = model.revalidate();
-
       if (!valid) {
         return;
       }
     }
 
+    this._updateTemplateExpressions();
     this._serializeAndSend();
+  }
+
+  _updateTemplateExpressions() {
+    if (!this.storedTemplateExpressions) {
+      this.storedTemplateExpressions = [];
+    }
+
+    const tmplExpressions = this.attributes;
+    /*
+        storing expressions and their nodes for re-evaluation
+         */
+    for (let i = tmplExpressions.length - 1; i >= 0; i -= 1) {
+      console.log('tmplExpression ', tmplExpressions[i]);
+      const expr = tmplExpressions[i].value;
+      const node = tmplExpressions[i];
+
+      if (expr.indexOf('{') !== -1 && expr.indexOf('}') !== -1) {
+        this.storedTemplateExpressions.push({
+          expr,
+          node,
+        });
+      }
+    }
+
+    this.storedTemplateExpressions.forEach(tmpl => {
+      this._processTemplateExpression(tmpl);
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _processTemplateExpression(exprObj) {
+    console.log('processing template expression ', exprObj);
+
+    const { expr } = exprObj;
+    const { node } = exprObj;
+    // console.log('expr ', expr);
+    evaluateTemplateExpression(expr, node, this);
   }
 
   _serializeAndSend() {
     const submitter = this.shadowRoot.getElementById('submitter');
+    const urlAttr = this.getAttribute('url');
+    // const url = new URL(urlAttr);
+    submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
+    console.log('url ', submitter.url);
+    submitter.params = query;
+    // submitter.url = this.getAttribute('url');
     const serializer = new XMLSerializer();
     const data = serializer.serializeToString(this.nodeset);
     submitter.body = data;
@@ -131,10 +144,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   /*
-  _handleOnSubmit() {
-    // todo: implement submission pre-hook
-  }
-*/
+    _handleOnSubmit() {
+      // todo: implement submission pre-hook
+    }
+  */
 
   _handleResponse() {
     // ### check for 'replace' option
@@ -191,4 +204,5 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     );
   }
 }
+
 customElements.define('fx-submission', FxSubmission);

@@ -82,7 +82,7 @@
         <fx-group>
 
             <h2>conditional action</h2>
-            <p>Any action element may have a <code>if</code> attribute that contains an XPath expression that needs to
+            <p>Any action element may have an <code>if</code> attribute that contains an XPath expression that needs to
                 evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
 
             <demo-snippet>
@@ -97,12 +97,13 @@
                         <button>come in</button>
                         <fx-setvalue if="../confirmation = 'true'" ref="entered" value="true"></fx-setvalue>
                     </fx-trigger>
+
+                    <fx-output ref="entered">
+                        <fx-message event="value-changed" level="modal">Welcome!</fx-message>
+                    </fx-output>
                 </template>
             </demo-snippet>
 
-            <fx-output ref="entered">
-                <fx-message event="value-changed" level="modal">Welcome!</fx-message>
-            </fx-output>
         </fx-group>
 
         <h2>Action block</h2>

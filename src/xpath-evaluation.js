@@ -7,6 +7,7 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
+import getInScopeContext from './getInScopeContext.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -233,16 +234,18 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 /**
  * Evaluate an XPath to a string
  *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
  * @return {string}
  */
-export function evaluateXPathToString(xpath, contextNode, formElement) {
+export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
-    null,
+    domFacade,
     {},
     {
       currentContext: { formElement },
@@ -253,4 +256,35 @@ export function evaluateXPathToString(xpath, contextNode, formElement) {
       namespaceResolver,
     },
   );
+}
+
+/**
+ * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
+ * @param expr the XPath to evaluate
+ * @param node the node which will get updated with evaluation result
+ * @param form the form element
+ */
+export function evaluateTemplateExpression(expr, node, form) {
+  const matches = expr.match(/{[^}]*}/g);
+  if (matches) {
+    matches.forEach(match => {
+      console.log('match ', match);
+      const naked = match.substring(1, match.length - 1);
+      const inscope = getInScopeContext(node, naked);
+      const result = evaluateXPathToString(naked, inscope, form);
+
+      // console.log('result of eval ', result);
+      const replaced = expr.replaceAll(match, result);
+      console.log('result of replacing ', replaced);
+
+      if (node.nodeType === Node.ATTRIBUTE_NODE) {
+        const parent = node.ownerElement;
+
+        // parent.setAttribute(name, replaced);
+        parent.setAttribute(node.nodeName, replaced);
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = replaced;
+      }
+    });
+  }
 }

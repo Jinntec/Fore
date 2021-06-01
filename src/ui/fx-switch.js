@@ -1,4 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
+import {Fore} from "../fore";
 
 /**
  * `fx-switch`
@@ -52,6 +53,9 @@ class FxSwitch extends foreElementMixin(HTMLElement) {
       this.modelItem = this.getModelItem();
       this.value = this.modelItem.value;
     }
+
+    Fore.refreshChildren(this);
+
     // console.log('value ', this.value);
   }
 

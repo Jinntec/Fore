@@ -9,7 +9,6 @@ import { AbstractAction } from './abstract-action.js';
  * @customElement
  */
 class FxSend extends AbstractAction {
-
   constructor() {
     super();
     this.value = '';

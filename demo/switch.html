@@ -35,7 +35,8 @@
             background: lightblue;
             padding: 10px;
         }
-        fx-trigger{
+
+        fx-trigger {
             display: inline-block;
         }
 
@@ -58,53 +59,53 @@
     <h1>Switch</h1>
     <h2>fx-switch with toggle</h2>
     <p>
-        fx-case child elements can be switched by explicit toggle action which take the id of an
-        `fx-case` element.
+        <code>fx-case</code> child elements can be switched by an explicit <code>fx-toggle</code> action which take the id of an
+        <code>fx-case</code> element.
     </p>
+
+    <demo-snippet>
+        <template>
+            <fx-form>
+
+                <fx-trigger label="page 1">
+                    <paper-button>toggle page 1</paper-button>
+                    <fx-toggle case="one"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 2" raised="raised">
+                    <paper-button>toggle page 2</paper-button>
+                    <fx-toggle case="two"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 3" raised="raised">
+                    <paper-button>toggle page 3</paper-button>
+                    <fx-toggle case="three"></fx-toggle>
+                </fx-trigger>
+
+                <fx-switch ref="page">
+                    <fx-case id="one" name="page1">
+                        some exclusive content
+                    </fx-case>
+                    <fx-case id="two" name="page2">
+                        some further content
+                    </fx-case>
+                    <fx-case id="three" name="page3">
+                        some completely unneeded content
+                    </fx-case>
+                </fx-switch>
+            </fx-form>
+        </template>
+    </demo-snippet>
+
 
     <!--
-        <demo-snippet>
-            <template>
-    -->
-        <fx-form>
 
+<h2>bound fx-switch</h2>
+<p>
+    fx-case child elements can be switched by explicit toggle action which take the id of an
+    `fx-case` element.
+</p>
 
-
-            <fx-trigger label="toggle page 1">
-                <paper-button>toggle page 1</paper-button>
-                <fx-toggle case="one"></fx-toggle>
-            </fx-trigger>
-
-            <fx-trigger label="toggle page 2" raised="raised">
-                <paper-button>toggle page 2</paper-button>
-                <fx-toggle case="two"></fx-toggle>
-            </fx-trigger>
-
-            <fx-trigger label="toggle page 3" raised="raised">
-                <paper-button>toggle page 3</paper-button>
-                <fx-toggle case="three"></fx-toggle>
-            </fx-trigger>
-
-            <fx-switch ref="page">
-                <fx-case id="one" name="page1">
-                    some exclusive content
-                </fx-case>
-                <fx-case id="two" name="page2">
-                    some further content
-                </fx-case>
-                <fx-case id="three" name="page3">
-                    some completely unneeded content
-                </fx-case>
-            </fx-switch>
-        </fx-form>
-
-    <h2>bound fx-switch</h2>
-    <p>
-        fx-case child elements can be switched by explicit toggle action which take the id of an
-        `fx-case` element.
-    </p>
-
-<!--
     <fx-form>
         <xf-model>
             <xf-instance>
@@ -127,11 +128,6 @@
         </fx-switch>
     </fx-form>
 -->
-
-    <!--
-            </template>
-        </demo-snippet>
-    -->
 
 
 </div>

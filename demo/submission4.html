@@ -49,45 +49,25 @@
                 <fx-model>
                     <fx-instance>
                         <data>
+                            <bar>bar</bar>
                         </data>
-                    </fx-instance>
-                    <fx-instance id="other">
-                        <data></data>
                     </fx-instance>
 
                     <fx-submission id="sub1"
-                                   url="/submission2"
-                                   method="POST"
+                                   url="/submission2?foo={bar}"
+                                   method="GET"
                                    replace="none">
-                        <fx-action event="submit">
-                            <fx-message>Going to submit</fx-message>
-                        </fx-action>
-                        <fx-action event="submit-done">
-                            <fx-message>First submission done</fx-message>
-                            <fx-send submission="second"></fx-send>
-                        </fx-action>
-                    </fx-submission>
-
-                    <fx-submission id="second" url="/submission2"
-                                   method="POST"
-                                   replace="instance">
-                        <fx-message event="submit-done">Second submission done</fx-message>
                     </fx-submission>
 
                 </fx-model>
-                <fx-group collapse="true">
+                <fx-group>
 
-                    <h1>Submission Chaining</h1>
-                    <p>
-                        Submissions can be chained by using their event-hooks. In the example below
-                        the second submission will fire after the first has successfully returned.
-                    </p>
+                    <h1>Submission with Template Expression</h1>
+
                     <fx-trigger>
-                        <button>fire chain</button>
+                        <button>submit</button>
                         <fx-send submission="sub1"></fx-send>
                     </fx-trigger>
-
-                    <p><fx-output ref="greeting"></fx-output></p>
 
                 </fx-group>
             </fx-form>

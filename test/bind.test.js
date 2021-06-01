@@ -58,7 +58,7 @@ describe('bind Tests', () => {
                             <fx-bind id="b-type" ref="@type"></fx-bind>
                         </fx-bind>
                     </fx-model>
-                </fx-form>               
+                </fx-form>
             `)
         );
 
@@ -254,7 +254,7 @@ describe('bind Tests', () => {
                     </fx-model>
                     <fx-output id="output" ref="greet"></fx-output>
 
-                </fx-form>               
+                </fx-form>
             `)
         );
 
@@ -336,6 +336,86 @@ describe('bind Tests', () => {
     console.log('++++++++++++ nodeset ', out2.nodeset.parentNode);
     expect(out2.ref).to.equal('greeting/@type');
     expect(out2.value).to.equal('message');
+  });
+
+  it('can resolve calculates in bind in the correct order: nodes', async () => {
+    const el = await fixture(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <m1>3</m1>
+              <m2>0</m2>
+              <add>0</add>
+              <result></result>
+            </data>
+          </fx-instance>
+          <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
+          <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
+        </fx-model>
+        <fx-group>
+          <fx-output id="output" ref="add"></fx-output>
+        </fx-group>
+      </fx-form>
+    `);
+
+    await elementUpdated(el);
+
+    const output = el.querySelector('#output');
+    expect(output.value).to.equal('11');
+  });
+
+  it('can resolve calculates in bind in the correct order: attributes', async () => {
+    const el = await fixture(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <m1 val="3"></m1>
+              <m2 val="0"></m2>
+              <add val="0"></add>
+              <result></result>
+            </data>
+          </fx-instance>
+          <fx-bind ref="add" calculate="../m2/@val + 5"></fx-bind>
+          <fx-bind ref="m2/@val" calculate="../../m1/@val * 2"></fx-bind>
+        </fx-model>
+        <fx-group>
+          <fx-output id="output" ref="add"></fx-output>
+        </fx-group>
+      </fx-form>
+    `);
+
+    await elementUpdated(el);
+
+    const output = el.querySelector('#output');
+    expect(output.value).to.equal('11');
+  });
+
+  it('does not explode on recursive dependencies', async () => {
+    const el = await fixture(html`
+            <fx-form>
+
+                <fx-model id="model1">
+                        <data>
+                            <m1>3</m1>
+                            <m2>0</m2>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="m1" calculate="../m2 + 5"></fx-bind>
+                    <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
+                </fx-model>
+                <fx-group>
+                  <fx-output id="output" ref="add"></fx-output>
+                </fx-group>
+            </fx-form>
+
+    `);
+
+    await elementUpdated(el);
+
+    const output = el.querySelector('#output');
+    expect(output.value).to.equal('');
   });
 
   it('fails using camelcase node names', async () => {

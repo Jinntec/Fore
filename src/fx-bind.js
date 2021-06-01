@@ -1,7 +1,12 @@
-import { ModelItem } from './modelitem.js';
-import { XPathUtil } from './xpath-util.js';
+import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 import { foreElementMixin } from './ForeElementMixin.js';
-import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
+import { ModelItem } from './modelitem.js';
+import {
+  evaluateXPathToBoolean,
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+} from './xpath-evaluation.js';
+import { XPathUtil } from './xpath-util.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -178,12 +183,17 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this.nodeset.forEach(node => {
         const path = XPathUtil.getPath(node);
 
+        if (this.calculate) {
+          this.model.mainGraph.addNode(`${path}:calculate`, node);
+          // Calculated values are a dependency of the model item.
+          // Make `model1` depend on `model1:calculate`
+          this.model.mainGraph.addNode(path, node);
+          this.model.mainGraph.addDependency(path, `${path}:calculate`);
+        }
+
         const calculateRefs = this._getReferencesForProperty(this.calculate, node);
         if (calculateRefs.length !== 0) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
-          this._addDependencies(calculateRefs, node, path, 'calculate');
-        } else if (this.calculate) {
-          this.model.mainGraph.addNode(`${path}:calculate`, node);
         }
 
         const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
@@ -224,27 +234,31 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
   }
 
+  /**
+   * Add the dependencies of this bind
+   *
+   * @param  {Node[]}  refs The nodes that are referenced by this bind. these need to be resolved before
+   * this bind can be resolved.
+   * @param  {Node}    node The start of the reference
+   * @param  {string}  path The path to the start of the reference
+   * @param  {string}  property The property with this dependency
+   */
   _addDependencies(refs, node, path, property) {
+    const nodeHash = `${path}:${property}`;
     if (refs.length !== 0) {
-      if (!this.model.mainGraph.hasNode(`${path}:${property}`)) {
-        // this.model.mainGraph.addNode(`${path}:${property}`, { node });
-        this.model.mainGraph.addNode(`${path}:${property}`, node);
+      if (!this.model.mainGraph.hasNode(nodeHash)) {
+        this.model.mainGraph.addNode(nodeHash, node);
       }
       refs.forEach(ref => {
-        // Note:
-        // This here runs XPath without setting a namespace resolve. Is this correct?
-
-        const other = evaluateXPath(ref, node, this.getOwnerForm());
-        const otherPath = XPathUtil.getPath(other);
+        const otherPath = XPathUtil.getPath(ref);
 
         if (!this.model.mainGraph.hasNode(otherPath)) {
-          // this.model.mainGraph.addNode(otherPath,{node:other});
-          this.model.mainGraph.addNode(otherPath, other);
+          this.model.mainGraph.addNode(otherPath, ref);
         }
-        this.model.mainGraph.addDependency(`${path}:${property}`, otherPath);
+        this.model.mainGraph.addDependency(nodeHash, otherPath);
       });
     } else {
-      this.model.mainGraph.addNode(`${path}:${property}`, node);
+      this.model.mainGraph.addNode(nodeHash, node);
     }
   }
 
@@ -343,7 +357,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       }
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, formElement);
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this.getOwnerForm());
       } else {
         this.nodeset = this.ref;
       }
@@ -492,25 +506,22 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     this.getModel().registerModelItem(newItem);
   }
 
-  // _getReferencesForProperty(propertyExpr, node) {
-
-  // eslint-disable-next-line class-methods-use-this
+  /**
+   * Get the nodes that are referred by the given XPath expression
+   *
+   * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
+   *
+   * @return {Node[]}  The nodes that are referenced by the XPath
+   */
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
-      // const ast = fx.parseScript(propertyExpr, {}, new DOMParser().parseFromString('<nothing/>', 'text/xml'));
-      // console.log(`AST for ${propertyExpr}`, ast.innerHTML);p
-
-      const pieces = propertyExpr.split('depends');
-      const dependants = [];
-      pieces.forEach(step => {
-        // console.log('step ', step);
-        if (step.trim().startsWith('(')) {
-          const name = step.substring(1, step.indexOf(')'));
-          dependants.push(name);
-        }
+      const touchedNodes = new Set();
+      const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
+      this.nodeset.forEach(node => {
+        evaluateXPathToString(propertyExpr, node, null, domFacade);
       });
-      // console.log(`dependants of ${propertyExpr} `, dependants);
-      return dependants;
+
+      return Array.from(touchedNodes.values());
     }
     return [];
   }

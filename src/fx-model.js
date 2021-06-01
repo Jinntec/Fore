@@ -180,7 +180,7 @@ export class FxModel extends HTMLElement {
       const modelItem = this.getModelItem(node);
       // console.log('modelitem ', modelItem);
 
-      if (modelItem && path.indexOf(':')) {
+      if (modelItem && path.includes(':')) {
         const property = path.split(':')[1];
         if (property) {
           if (property === 'calculate') {

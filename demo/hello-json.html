@@ -9,12 +9,12 @@
     <script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module" src="../index.js"></script>
 
-<!--
-    <script type="module">
-        import '../src/fx-form.js';
-        import '../src/actions/fx-setvalue.js';
-    </script>
--->
+    <!--
+        <script type="module">
+            import '../src/fx-form.js';
+            import '../src/actions/fx-setvalue.js';
+        </script>
+    -->
 
     <link href="../resources/vars.css" rel="stylesheet">
     <style>
@@ -33,32 +33,66 @@
     <fx-model id="model1">
         <fx-instance type="json">
             {
-                "prop":"value"
+                "automobiles": [
+                    {
+                        "maker": "Nissan",
+                        "model": "Teana",
+                        "year": 2000
+                    },
+                    {
+                        "maker": "Honda",
+                        "model": "Jazz",
+                        "year": 2023
+                    },
+                    {
+                        "maker": "Honda",
+                        "model": "Civic",
+                        "year": 2007
+                    },
+                    {
+                        "maker": "Toyota",
+                        "model": "Yaris",
+                        "year": 2008
+                    },
+                    {
+                        "maker": "Honda",
+                        "model": "Accord",
+                        "year": 2011
+                    }
+                ],
+                "motorcycles": [{
+                    "maker": "Honda",
+                    "model": "ST1300",
+                    "year": 2012
+                }]
             }
         </fx-instance>
-        <fx-bind ref="prop" required="prop.length < 6" readonly="prop.length < 6"></fx-bind>
+<!--
+        <fx-bind ref="?automobiles">
+            <fx-bind ref="?maker" required=". > 1"></fx-bind>
+            <fx-bind ref="?maker" required=". > 1"></fx-bind>
+        </fx-bind>
+-->
 
+        <!--
+        ?automobiles[?maker = “Honda” and ?year > 2009]?model
+        -->
     </fx-model>
     <fx-group>
 
 
         <h1>
-            Greeting:
-            <fx-output id="output" ref="prop"></fx-output>
+            Your favorite car:
+<!--            <fx-output id="output" ref="?automobiles[?maker = 'Honda' and ?model = 'Accord']"></fx-output>-->
+            {?automobiles[?maker = 'Honda']}
         </h1>
 
-        <fx-control label="Greeting" ref="prop"></fx-control>
-
-
 <!--
-        <fx-button label="say 'hello Universe'">
-            <fx-setvalue ref="prop" value="Hello Universe"></fx-setvalue>
-        </fx-button>
-        <fx-button label="say 'hello'">
-            <fx-setvalue ref="prop" value="Hello"></fx-setvalue>
-        </fx-button>
+        <fx-trigger>
+            <button>set year</button>
+            <fx-setvalue ref="?automobiles[?maker = 'Honda' and ?model = 'Accord']?year" value="2020"></fx-setvalue>
+        </fx-trigger>
 -->
-
     </fx-group>
 </fx-form>
 </body>

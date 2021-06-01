@@ -8,7 +8,11 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
-import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import {
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+  evaluateTemplateExpression,
+} from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -122,7 +126,7 @@ export class FxForm extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
 
     // ### refresh template expressions
-    this._refreshTemplateExpressions();
+    this._updateTemplateExpressions();
 
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
@@ -137,37 +141,29 @@ export class FxForm extends HTMLElement {
    *
    * @private
    */
-  _refreshTemplateExpressions() {
+  _updateTemplateExpressions() {
     const search =
-      ".//*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//*[name(.) != 'fx-model']/@*[contains(.,'{')]";
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::*[name(.)='fx-model']/descendant-or-self::node()/(text(), @*)";
+
+    /*
+    const search =
+        "(descendant::fx-group/text() | descendant::fx-group/@*)[matches(.,'\\{.*\\}')]";
+*/
+
+    const tmplExpressions = evaluateXPathToNodes(search, this, null);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
       this.storedTemplateExpressions = [];
     }
 
+    /*
+    storing expressions and their nodes for re-evaluation
+     */
     Array.from(tmplExpressions).forEach(node => {
-      // console.log('node ', node);
-
-      let parent;
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        parent = node.ownerElement;
-      } else {
-        parent = node.parentNode;
-      }
-
-      if(parent.nodeName === 'FX-FUNCTION') return ;
-
-      // console.log('parent ', parent);
       const expr = this._getTemplateExpression(node);
-      // console.log('expr ', expr);
-
-      // ### store template expression
       this.storedTemplateExpressions.push({
-        parent,
         expr,
-        name: node.nodeName,
         node,
       });
     });
@@ -183,34 +179,10 @@ export class FxForm extends HTMLElement {
   _processTemplateExpression(exprObj) {
     console.log('processing template expression ', exprObj);
 
-    const { parent } = exprObj;
     const { expr } = exprObj;
-    const { name } = exprObj;
     const { node } = exprObj;
-    console.log('expr ', expr);
-    // const matches = expr.match(/{\w+}/g);
-    const matches = expr.match(/{[^}]*}/g);
-    matches.forEach(match => {
-      console.log('match ', match);
-      const naked = match.substring(1, match.length - 1);
-      const inscope = getInScopeContext(node, naked);
-      /*
-      const result = fx.evaluateXPathToString(naked, inscope, null, {
-        namespaceResolver: Fore.namespaceResolver,
-      });
-*/
-      const result = evaluateXPathToString(naked, inscope, this);
-
-      // console.log('result of eval ', result);
-      const replaced = expr.replaceAll(match, result);
-      console.log('result of replacing ', replaced);
-
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        parent.setAttribute(name, replaced);
-      } else if (node.nodeType === Node.TEXT_NODE) {
-        node.textContent = replaced;
-      }
-    });
+    // console.log('expr ', expr);
+    evaluateTemplateExpression(expr, node, this);
   }
 
   // eslint-disable-next-line class-methods-use-this

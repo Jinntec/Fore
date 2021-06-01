@@ -51,10 +51,10 @@
                             <result></result>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="add" calculate="depends(../m2) + 5"></fx-bind>
-                    <fx-bind ref="m2" calculate="depends(../m1) * 2"></fx-bind>
+                    <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
+                    <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
                     <!--
-                                        <fx-bind ref="result" calculate="depends(add)"></fx-bind>
+                                        <fx-bind ref="result" calculate="add"></fx-bind>
                     -->
 
                 </fx-model>

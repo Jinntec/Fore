@@ -1,6 +1,7 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPath,evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import getInScopeContext from './getInScopeContext.js';
 
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
@@ -59,7 +60,8 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // todo: should be replaced with Fore.getInScopeContext
-      const inscopeContext = this._inScopeContext();
+      // const inscopeContext = this._inScopeContext();
+      const inscopeContext = getInScopeContext(this, this.ref);
 
       if (this.ref === '') {
         this.nodeset = inscopeContext;

@@ -153,7 +153,7 @@ export class FxInstance extends HTMLElement {
   }
 
   _useInlineData() {
-    console.log('innerHTML ', this.innerHTML);
+    // console.log('innerHTML ', this.innerHTML);
     const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
 
     // console.log('created instanceData ', new XMLSerializer().serializeToString(instanceData));
