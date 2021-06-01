@@ -30,30 +30,41 @@ registerCustomXPathFunction(
   },
 );
 
+const instance = (dynamicContext, string) => {
+  // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
+  // TODO: handle no string passed (null will be passed instead)
+
+  const { formElement } = dynamicContext.currentContext;
+
+  // console.log('fnInstance dynamicContext: ', dynamicContext);
+  // console.log('fnInstance string: ', string);
+
+  const instance = string
+    ? formElement.querySelector(`fx-instance[id=${string}]`)
+    : formElement.querySelector(`fx-instance`);
+
+  // const def = instance.getInstanceData();
+  if (instance) {
+    const def = instance.getDefaultContext();
+    // console.log('target instance root node: ', def);
+
+    return def;
+  }
+  return null;
+};
+
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
+  [],
+  'element()?',
+  domFacade => instance(domFacade, null),
+);
+
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
   ['xs:string?'],
   'element()?',
-  (dynamicContext, string) => {
-    // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
-    // TODO: handle no string passed (null will be passed instead)
-
-    const { formElement } = dynamicContext.currentContext;
-
-    // console.log('fnInstance dynamicContext: ', dynamicContext);
-    // console.log('fnInstance string: ', string);
-
-    const instance = formElement.querySelector(`fx-instance[id=${string}]`);
-
-    // const def = instance.getInstanceData();
-    if (instance) {
-      const def = instance.getDefaultContext();
-      // console.log('target instance root node: ', def);
-
-      return def;
-    }
-    return null;
-  },
+  instance,
 );
 
 registerCustomXPathFunction(
@@ -111,8 +122,11 @@ function functionNameResolver({ prefix, localName }, _arity) {
     case 'boolean-from-string':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
-      if (prefix === '' || prefix === 'fn' || prefix === 'local') {
+      if (prefix === '' || prefix === 'fn') {
         return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
+      }
+      if (prefix === 'local') {
+        return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
       }
       return null;
   }
