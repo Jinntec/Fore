@@ -45,12 +45,13 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     this.shadowRoot.innerHTML = this.renderHTML();
 
     // ### add listener to iron-ajax
-    const sub = this.shadowRoot.querySelector('#submitter');
-    sub.addEventListener('response', () => this._handleResponse());
-    sub.addEventListener('error', () => this._handleError());
+    // const sub = this.shadowRoot.querySelector('#submitter');
+    // sub.addEventListener('response', () => this._handleResponse());
+    // sub.addEventListener('error', () => this._handleError());
     this.addEventListener('submit', () => this._submit());
   }
 
+/*
   renderHTML() {
     return `
       <slot></slot>
@@ -61,6 +62,13 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         method="${this.method}"
         handle-as="text"
         with-credentials></iron-ajax>
+    `;
+  }
+*/
+
+  renderHTML() {
+    return `
+      <slot></slot>
     `;
   }
 
@@ -130,24 +138,57 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   _serializeAndSend() {
+    fetch(this.url, {
+      method: this.method,
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        'Content-type': 'application/xml; charset=UTF-8'
+      }
+    }).then(response => response.text()).then(text => {
+      this.da = text;
+    });
+  }
+/*
+  _serializeAndSend() {
     const submitter = this.shadowRoot.getElementById('submitter');
     const urlAttr = this.getAttribute('url');
     // const url = new URL(urlAttr);
     submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
     console.log('url ', submitter.url);
-    submitter.params = query;
+
+    // const urlExpr = this._getUrlExpr();
+    const query = urlAttr.substring(urlAttr.indexOf('?')+1,urlAttr.length);
+    if(query){
+      // const {expr} = urlExpr;
+      // const queryString = expr.substring(expr.indexOf('?')+1,expr.length);
+
+      // const params = queryString.split('&');
+      const params = new URLSearchParams(query);
+      for(let pair of params.entries()) {
+        console.log('param name', pair[0]);
+        console.log('param value', pair[1]);
+      };
+      submitter.params = params;
+    }
+
     // submitter.url = this.getAttribute('url');
     const serializer = new XMLSerializer();
     const data = serializer.serializeToString(this.nodeset);
     submitter.body = data;
     submitter.generateRequest();
   }
+*/
 
   /*
     _handleOnSubmit() {
       // todo: implement submission pre-hook
     }
   */
+
+  _getUrlExpr(){
+    return this.storedTemplateExpressions.find( stored => stored.node.nodeName === 'url');
+  }
 
   _handleResponse() {
     // ### check for 'replace' option

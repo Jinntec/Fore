@@ -50,11 +50,12 @@
                     <fx-instance>
                         <data>
                             <bar>bar</bar>
+                            <another>value2</another>
                         </data>
                     </fx-instance>
 
                     <fx-submission id="sub1"
-                                   url="/submission2?foo={bar}"
+                                   url="/submission2?foo={bar}&param2={another}"
                                    method="GET"
                                    replace="none">
                     </fx-submission>
