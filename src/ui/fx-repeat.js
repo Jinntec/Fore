@@ -157,7 +157,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    * @private
    */
   _evalNodeset() {
-    // const inscope = this._inScopeContext();
+    // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);

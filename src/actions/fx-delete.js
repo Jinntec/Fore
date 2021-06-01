@@ -21,7 +21,7 @@ class FxDelete extends AbstractAction {
     console.log('##### fx-delete executing...');
 
     // this.ref = this.getAttribute('ref');
-    // const inscope = this._inScopeContext();
+    // const inscope = this.getInScopeContext();
     // this.nodeset = fx.evaluateXPathToNodes(this.ref, inscope, null, {});
 
     console.log('delete nodeset ', this.nodeset);

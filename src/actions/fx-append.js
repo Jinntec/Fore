@@ -85,7 +85,7 @@ class FxAppend extends AbstractAction {
    * @private
    */
   _dataFromTemplate() {
-    const inscope = this._inScopeContext();
+    const inscope = this.getInScopeContext();
     const parentForm = this.getOwnerForm();
     const repeat = parentForm.querySelector(`#${this.repeat}`);
     // console.log('_dataFromTemplate repeat', repeat);
