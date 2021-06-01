@@ -18,7 +18,7 @@ class ForeElement{
     abstract evalInContext()
     isBound()
     isNotBound()
-    _inScopeContext()
+    getInScopeContext()
 }
 
 class BoundElement{

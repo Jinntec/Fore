@@ -18,7 +18,7 @@ class ForeElementMixin{
     isBound()
     getBindingExpr()
     _getParentBindingElement()
-    _inScopeContext()
+    getInScopeContext()
 }
 package "model" #DDDDDD {
     class FxModel{

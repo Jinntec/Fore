@@ -185,12 +185,7 @@ export class FxModel extends HTMLElement {
         if (property) {
           if (property === 'calculate') {
             const expr = modelItem.bind[property];
-            const compute = evaluateXPath(
-              expr,
-              modelItem.node,
-              this.getOwnerForm(),
-              Fore.namespaceResolver,
-            );
+            const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
             // console.log('recalculating property ', property);
