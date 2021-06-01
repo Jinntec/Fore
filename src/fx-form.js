@@ -8,7 +8,11 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
-import { evaluateXPathToNodes, evaluateTemplateExpression } from './xpath-evaluation.js';
+import {
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+  evaluateTemplateExpression,
+} from './xpath-evaluation.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -134,19 +138,11 @@ export class FxForm extends HTMLElement {
    * @private
    */
   _updateTemplateExpressions() {
-    /*
-    const search =
-      ".//!*[name(.) != 'fx-model']/text()[contains(.,'{')] | .//!*[name(.) != 'fx-model']/@*[contains(.,'{')]";
-*/
+    // Note the fact we're going over HTML here: therefore the `html` prefix.
     const search =
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
 
-    /*
-    const search =
-      ".//!*[not(ancestor::fx-model)]/text()[contains(.,'{')] | .//@*[not(ancestor::fx-model)][contains(.,'{')]"
-*/
-
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+    const tmplExpressions = evaluateXPathToNodes(search, this, null);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {

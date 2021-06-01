@@ -1,7 +1,11 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import { ModelItem } from './modelitem.js';
-import { evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import {
+  evaluateXPathToBoolean,
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+} from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
 /**
@@ -514,7 +518,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       const touchedNodes = new Set();
       const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
       this.nodeset.forEach(node => {
-          evaluateXPathToString(propertyExpr, node, null, domFacade);
+        evaluateXPathToString(propertyExpr, node, null, domFacade);
       });
 
       return Array.from(touchedNodes.values());
