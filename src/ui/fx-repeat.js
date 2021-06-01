@@ -162,19 +162,29 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
 
-    const seq = evaluateXPath(this.ref,inscope,this.getOwnerForm());
-    if(seq){
-      const item = seq[0];
-      console.log('item ', item);
+    const seq = evaluateXPath(this.ref, inscope, this.getOwnerForm());
+    if (seq === null) {
+      // Empty sequence
+      this.nodeset = [];
+      return;
+    }
 
-      if(item.nodeType){
-        this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+    if (typeof seq === 'object') {
+      // Either a node or an array
+      if ('nodeType' in seq) {
+        // Node
+        this.nodeset = [seq];
+        return;
+      }
+
+      if (Array.isArray(seq) && seq.every(item => 'nodeType' in item)) {
+        // multiple Nodes
+        this.nodeset = seq;
+        return;
       }
     }
-    // this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    // this.nodeset = evaluateXPath(this.ref, inscope, this.getOwnerForm());
-    this.nodeset = seq;
-    console.log('foooooo');
+
+    throw new Error(`Unexpected result of repeat nodeset: ${seq}`);
   }
 
   async refresh() {
@@ -182,8 +192,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     if (!this.inited) this.init();
 
-/*
-    const inscope = this._inScopeContext();
+    /*
+    const inscope = this.getInScopeContext();
     this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
 */
 

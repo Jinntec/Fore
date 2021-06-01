@@ -1,11 +1,12 @@
 import { registerCustomXPathFunction } from 'fontoxpath';
+import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
 
 /**
  * Allows to extend a form with local custom functions.
  *
  * ` */
-export class FxFunction extends HTMLElement {
+export class FxFunction extends foreElementMixin(HTMLElement) {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -39,7 +40,10 @@ export class FxFunction extends HTMLElement {
     const { prefix, localName, params, returnType } = signatureParseResult.groups;
 
     // TODO: lookup prefix
-    // const namespaceURI = prefix || 'local';
+    const functionIdentifier =
+      prefix === 'local'
+        ? { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName }
+        : `${prefix}:${localName}`;
 
     const paramParts = params
       ? params.split(',').map(param => {
@@ -60,14 +64,15 @@ export class FxFunction extends HTMLElement {
         // eslint-disable-next-line no-new-func
         const fun = new Function(
           '_domFacade',
-          ...paramParts.map(paramPart => paramPart.variableName),
+			...paramParts.map(paramPart => paramPart.variableName),
+			'form',
           this.functionBody,
         );
-        registerCustomXPathFunction(
-          `${prefix ? `${prefix}:` : ''}${localName}`,
+          registerCustomXPathFunction(
+			  functionIdentifier,
           paramParts.map(paramPart => paramPart.variableType),
           returnType || 'item()*',
-          fun,
+			  (...args) => fun.apply(this.getInScopeContext(), [...args, this.getOwnerForm()]),
         );
         break;
       }
@@ -76,15 +81,15 @@ export class FxFunction extends HTMLElement {
         const fun = (domFacade, ...args) =>
           evaluateXPath(
             this.functionBody,
-            null,
-            null,
+              this.getInScopeContext(),
+              this.getOwnerForm(),
             paramParts.reduce((variablesByName, paramPart, i) => {
               variablesByName[paramPart.variableName.replace('$', '')] = args[i];
               return variablesByName;
             }, {}),
           );
         registerCustomXPathFunction(
-          `${prefix ? `${prefix}:` : ''}${localName}`,
+			functionIdentifier,
           paramParts.map(paramPart => paramPart.variableType),
           returnType || 'item()*',
           fun,
