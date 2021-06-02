@@ -117,17 +117,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.method.toLowerCase() === 'get') {
             serialized = undefined;
         }
-        /*
-            const options = {
-              method: this.method,
-              mode: 'cors',
-              credentials: 'same-origin',
-              headers: {
-                'Content-type': 'application/xml; charset=UTF-8'
-              }
-            }
-            const response = await fetch(resolvedUrl, options);
-        */
         const response = await fetch(resolvedUrl, {
             method: this.method,
             mode: 'cors',
@@ -148,7 +137,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             );
         }
 
-
         const contentType = response.headers.get('content-type').toLowerCase();
 
         if (contentType.startsWith('text/plain') || contentType.startsWith('text/html')) {
@@ -165,76 +153,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             const blob = await response.blob();
             this._handleResponse(blob);
         }
-        /*
-            fetch(resolvedUrl, {
-              method: this.method,
-              mode: 'cors',
-              credentials: 'same-origin',
-              headers: {
-                'Content-type': 'application/xml; charset=UTF-8'
-              }
-            })
-            .then(response => {
-              if(!response.ok) {
-                this.dispatchEvent(
-                    new CustomEvent('submit-error', {
-                      composed: true,
-                      bubbles: true,
-                      detail: {'message':`Error while submitting ${this.id}`},
-                    }),
-                );
-              }
-              let data;
-              const contentType = response.headers.get('content-type');
-              if(contentType === 'application/xml'){
-                  data = new DOMParser().parseFromString(response.text(), 'application/xml');
-              }else if (contentType === 'application/json'){
-                  data = response.json();
-              }else if(contentType === 'text/plain'){
-                  data = response.text();
-              }
-              return data;
-            })
-            .then(data => this._handleResponse(data));
-        */
     }
-
-    /*
-      _serializeAndSend() {
-        const submitter = this.shadowRoot.getElementById('submitter');
-        const urlAttr = this.getAttribute('url');
-        // const url = new URL(urlAttr);
-        submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
-        console.log('url ', submitter.url);
-
-        // const urlExpr = this._getUrlExpr();
-        const query = urlAttr.substring(urlAttr.indexOf('?')+1,urlAttr.length);
-        if(query){
-          // const {expr} = urlExpr;
-          // const queryString = expr.substring(expr.indexOf('?')+1,expr.length);
-
-          // const params = queryString.split('&');
-          const params = new URLSearchParams(query);
-          for(let pair of params.entries()) {
-            console.log('param name', pair[0]);
-            console.log('param value', pair[1]);
-          };
-          submitter.params = params;
-        }
-
-        // submitter.url = this.getAttribute('url');
-        const serializer = new XMLSerializer();
-        const data = serializer.serializeToString(this.nodeset);
-        submitter.body = data;
-        submitter.generateRequest();
-      }
-    */
-
-    /*
-      _handleOnSubmit() {
-        // todo: implement submission pre-hook
-      }
-    */
 
     _getUrlExpr() {
         return this.storedTemplateExpressions.find(stored => stored.node.nodeName === 'url');
@@ -280,21 +199,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if(this.replace === 'redirect'){
             window.location.href = data;
         }
-        /*
-            if (this.replace !== 'none') {
-              // ### 1. try to get instance with matching id
-              const targetInstance = this.model.getInstance(this.replace);
-              if (targetInstance) {
-                const instanceData = data;
-                targetInstance.instanceData = instanceData;
-                // targetInstance.instanceData = submitter.lastResponse;
-                // this.model.updateModel(); // force update
-                // this.model.formElement.refresh();
-              }
-
-              // todo: evaluate expression in curly braces as xpath to resolve to the targetNode to replace
-            }
-        */
 
         this.dispatchEvent(
             new CustomEvent('submit-done', {
@@ -305,52 +209,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         );
 
     }
-
-    /*
-      _handleResponse() {
-        // ### check for 'replace' option
-        const submitter = this.shadowRoot.getElementById('submitter');
-
-        if (this.replace === 'instance') {
-          let targetInstance;
-          if (this.instance) {
-            targetInstance = this.model.getInstance(this.instance);
-          } else {
-            targetInstance = this.model.getInstance('default');
-          }
-          if (targetInstance) {
-            const instanceData = new DOMParser().parseFromString(submitter.lastResponse, 'text/xml');
-            targetInstance.instanceData = instanceData;
-            console.log('### replaced instance ', targetInstance.instanceData);
-            this.model.updateModel(); // force update
-            this.model.formElement.refresh();
-          } else {
-            throw new Error(`target instance not found: ${targetInstance}`);
-          }
-        }
-        if (this.replace !== 'none') {
-          // ### 1. try to get instance with matching id
-          const targetInstance = this.model.getInstance(this.replace);
-          if (targetInstance) {
-            const instanceData = new DOMParser().parseFromString(submitter.lastResponse, 'text/xml');
-            targetInstance.instanceData = instanceData;
-            // targetInstance.instanceData = submitter.lastResponse;
-            // this.model.updateModel(); // force update
-            // this.model.formElement.refresh();
-          }
-
-          // todo: evaluate expression in curly braces as xpath to resolve to the targetNode to replace
-        }
-
-        this.dispatchEvent(
-          new CustomEvent('submit-done', {
-            composed: true,
-            bubbles: true,
-            detail: {},
-          }),
-        );
-      }
-    */
 
     _handleError() {
         console.log('ERRRORRRRR');
