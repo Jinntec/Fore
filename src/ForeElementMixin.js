@@ -60,7 +60,7 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // todo: should be replaced with Fore.getInScopeContext
-      // const inscopeContext = this._inScopeContext();
+      // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
 
       if (this.ref === '') {
@@ -159,7 +159,7 @@ export const foreElementMixin = superclass =>
       return existed;
     }
 
-    _inScopeContext() {
+    getInScopeContext() {
       let resultNodeset;
 
       const repeatItem = this.parentNode.closest('fx-repeatitem');
@@ -184,7 +184,7 @@ export const foreElementMixin = superclass =>
         return [];
       }
 
-      // console.log('_inScopeContext ', resultNodeset);
+      // console.log('getInScopeContext ', resultNodeset);
       // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
       return resultNodeset;
     }

@@ -57,9 +57,9 @@ export class FxModel extends HTMLElement {
 
     // const path = fx.evaluateXPath('path()',node);
     let path;
-    if(node.nodeType){
+    if (node.nodeType) {
       path = XPathUtil.getPath(node);
-    }else{
+    } else {
       path = null;
       targetNode = node;
     }
@@ -185,7 +185,7 @@ export class FxModel extends HTMLElement {
         if (property) {
           if (property === 'calculate') {
             const expr = modelItem.bind[property];
-            const compute = evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
+            const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
             // console.log('recalculating property ', property);

@@ -122,7 +122,7 @@ class FxControl extends XfAbstractControl {
 
       // ### eval nodeset for list control
       const ref = this.widget.getAttribute('ref');
-      const inscope = this._inScopeContext();
+      const inscope = this.getInScopeContext();
       const formElement = this.closest('fx-form');
       const nodeset = evaluateXPathToNodes(ref, inscope, formElement);
 

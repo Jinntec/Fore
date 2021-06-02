@@ -78,26 +78,20 @@
 
             <fx-message event="ready">Hey it's ready</fx-message>
 
-<!--
             <fx-function
-                    signature="local:lookup($who as xs:string, $xpath as xs:string) as element()"
-                    type="text/xpath">
-                instance('default')//server
-            </fx-function>
--->
-            <fx-function
-                    signature="local:server($who as xs:string) as element()*"
-                    type="text/javascript">
+                signature="local:server($who as xs:string) as element()*"
+                type="text/javascript">
 <!--                import { evaluateXPathToNodes } from '../src/xpath-evaluation.js';-->
 
                 console.log('who ',$who);
 
-                const form = document.querySelector('fx-form');
-                const model = form.getModel();
 <!--                const nodes = evaluateXPathToNodes($xpath,model.getDefaultInstanceData(),form);-->
 
 <!--                const nodes = Array.from(model.getDefaultInstanceData().children);-->
-                const nodes = form.evaluateToNodes('//server[@id = (' || $who || ')]');
+				const nodes = form.evaluateToNodes(
+				`//server[@id = ("${$who}" => tokenize(','))]`,
+				this
+				);
 
                 return nodes;
             </fx-function>
@@ -134,12 +128,11 @@
                     <fx-repeat id="env-servers" ref="local:server(data(@servers))">
 <!--                    <fx-repeat id="env-servers" ref="tokenize(@servers,',')">-->
                         <template>
-                            <p>{.}</p>
+                            <p>{@name}</p>
 <!--                            <p>{instance('default')/servers/server[@id=.]/@name}</p>-->
 <!--                            <fx-output ref="instance('default')/servers/server[@id=data(.)]/@name"></fx-output>-->
                         </template>
                     </fx-repeat>
-
                 </template>
             </fx-repeat>
         </fx-group>
