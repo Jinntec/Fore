@@ -56,7 +56,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       // this.control = this.querySelector('#control');
 
       if (this.nodeset === null) {
-        this.style.display = 'none';
+        // this.style.display = 'none';
         return;
       }
 

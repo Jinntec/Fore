@@ -315,6 +315,7 @@ export class FxForm extends HTMLElement {
     await this.refresh();
     this.ready = true;
     console.log('### <<<<< dispatching ready >>>>>');
+    console.log('########## modelItems: ', this.getModel().modelItems);
     console.log('########## FORE: form fully initialized... ##########');
     this.dispatchEvent(new CustomEvent('ready', {}));
   }
