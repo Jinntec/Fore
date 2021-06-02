@@ -132,10 +132,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   _serializeAndSend() {
     const submitter = this.shadowRoot.getElementById('submitter');
     const urlAttr = this.getAttribute('url');
+    this.url = urlAttr;
     // const url = new URL(urlAttr);
-    submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
+    // submitter.url = urlAttr.substring(0, urlAttr.indexOf('?'));
     console.log('url ', submitter.url);
-    submitter.params = query;
+    // submitter.params = query;
     // submitter.url = this.getAttribute('url');
     const serializer = new XMLSerializer();
     const data = serializer.serializeToString(this.nodeset);
