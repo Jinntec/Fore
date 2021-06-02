@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <servers>
+        <server name="abc-backend" type="backend" id="sb1" ansible_host="foo-sync-abc-01.ipa.foobar.org"/>
+        <server name="abc-frontend1" type="frontend" id="sf1" ansible_host="foo-staging-abc-01.ipa.foobar.org"/>
+        <server name="abc-frontend2" type="frontend" id="sf2" ansible_host="foo-staging-abc-02.ipa.foobar.org"/>
+
+        <server name="def-backend" type="backend" id="ub1" ansible_host="foo-sync-def-01.ipa.foobar.org"/>
+        <server name="def-frontend1" type="frontend" id="uf1" ansible_host="foo-staging-def-01.ipa.foobar.org"/>
+        <server name="def-frontend2" type="frontend" id="uf2" ansible_host="foo-staging-def-02.ipa.foobar.org"/>
+
+        <server name="ghi-backend" type="backend" id="pb1" ansible_host="foo-worker-ghi-19.ipa.foobar.org"/>
+        <server name="ghi-frontend1" type="frontend" id="pf1" ansible_host="foo-worker-ghi-16.ipa.foobar.org"/>
+        <server name="ghi-frontend2" type="frontend" id="pf2" ansible_host="foo-worker-ghi-17.ipa.foobar.org"/>
+        <server name="ghi-staging" type="frontend" id="pf3" ansible_host="foo-staging-ghi-01.ipa.foobar.org"/>
+    </servers>
+    <envs>
+        <env src-path="/usr/local/existdb/sources/env-abc" servers="sf1,sf2,sb1">abc</env>
+        <env src-path="/usr/local/existdb/sources/env-def" servers="ub1,uf1,uf2">def</env>
+        <env src-path="/usr/local/existdb/sources/env-ghi" servers="pb1,pf1,pf2,pf3">ghi</env>
+    </envs>
+</config>
