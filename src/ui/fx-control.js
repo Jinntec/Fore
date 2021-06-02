@@ -146,8 +146,12 @@ class FxControl extends XfAbstractControl {
         const valueAttribute = this._getValueAttribute(newEntry);
         const valueExpr = valueAttribute.value;
         const cutted = valueExpr.substring(1, valueExpr.length - 1);
-        const evaluated = evaluateXPath(cutted, node, formElement, Fore.namespaceResolver);
+        const evaluated = evaluateXPath(cutted, node, formElement);
         valueAttribute.value = evaluated;
+
+        if(this.value === evaluated){
+          newEntry.setAttribute('selected','selected');
+        }
 
         // ### set label
         const optionLabel = newEntry.textContent;
@@ -155,7 +159,7 @@ class FxControl extends XfAbstractControl {
         console.log('label Expr ', labelExpr);
 
         // todo : should use evaluateToString()
-        const label = evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver);
+        const label = evaluateXPath(labelExpr, node, formElement);
         newEntry.textContent = label.textContent;
       });
     }
