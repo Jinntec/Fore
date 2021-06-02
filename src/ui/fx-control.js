@@ -122,7 +122,7 @@ class FxControl extends XfAbstractControl {
 
       // ### eval nodeset for list control
       const ref = this.widget.getAttribute('ref');
-      const inscope = this._inScopeContext();
+      const inscope = this.getInScopeContext();
       const formElement = this.closest('fx-form');
       const nodeset = evaluateXPathToNodes(ref, inscope, formElement);
 
@@ -146,7 +146,8 @@ class FxControl extends XfAbstractControl {
         const valueAttribute = this._getValueAttribute(newEntry);
         const valueExpr = valueAttribute.value;
         const cutted = valueExpr.substring(1, valueExpr.length - 1);
-        const evaluated = evaluateXPath(cutted, node, formElement, Fore.namespaceResolver);
+        // const evaluated = evaluateXPath(cutted, node, formElement, Fore.namespaceResolver);
+        const evaluated = evaluateXPath(cutted, node, formElement);
         valueAttribute.value = evaluated;
 
         // ### set label
@@ -154,8 +155,9 @@ class FxControl extends XfAbstractControl {
         const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
         console.log('label Expr ', labelExpr);
 
+        const label = evaluateXPath(labelExpr, node, formElement);
         // todo : should use evaluateToString()
-        const label = evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver);
+        // const label = evaluateXPath(labelExpr, node, formElement, Fore.namespaceResolver);
         newEntry.textContent = label.textContent;
       });
     }

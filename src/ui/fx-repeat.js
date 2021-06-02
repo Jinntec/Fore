@@ -2,7 +2,7 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToNodes } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -157,11 +157,34 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    * @private
    */
   _evalNodeset() {
-    // const inscope = this._inScopeContext();
+    // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
-    this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+
+    const seq = evaluateXPath(this.ref, inscope, this.getOwnerForm());
+    if (seq === null) {
+      // Empty sequence
+      this.nodeset = [];
+      return;
+    }
+
+    if (typeof seq === 'object') {
+      // Either a node or an array
+      if ('nodeType' in seq) {
+        // Node
+        this.nodeset = [seq];
+        return;
+      }
+
+      if (Array.isArray(seq) && seq.every(item => 'nodeType' in item)) {
+        // multiple Nodes
+        this.nodeset = seq;
+        return;
+      }
+    }
+
+    throw new Error(`Unexpected result of repeat nodeset: ${seq}`);
   }
 
   async refresh() {
@@ -169,8 +192,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     if (!this.inited) this.init();
 
-    const inscope = this._inScopeContext();
+    /*
+    const inscope = this.getInScopeContext();
     this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+*/
+
+    this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
 
     const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');

@@ -31,7 +31,7 @@ describe('scoped resolution tests', () => {
     const parent = el.querySelector('#parent');
     const child = el.querySelector('#child');
 
-    expect(child._inScopeContext()).to.equal(parent.nodeset);
+    expect(child.getInScopeContext()).to.equal(parent.nodeset);
   });
 
   it('inscopeContext for second child bind is equal to its parent', async () => {
@@ -61,7 +61,7 @@ describe('scoped resolution tests', () => {
 
     const parent = el.querySelector('#parent');
     const child = el.querySelector('#child2');
-    expect(child._inScopeContext()).to.equal(parent.nodeset);
+    expect(child.getInScopeContext()).to.equal(parent.nodeset);
   });
 
   it('inscopeContext for subchild bind is equal to its parent', async () => {
@@ -94,7 +94,7 @@ describe('scoped resolution tests', () => {
     const child = el.querySelector('#child2');
     const subchild = el.querySelector('#subchild');
 
-    const c = subchild._inScopeContext();
+    const c = subchild.getInScopeContext();
     expect(c).to.equal(child.nodeset);
   });
 

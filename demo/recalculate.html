@@ -56,10 +56,10 @@
                             <c>C</c>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="a" readonly="string-length(depends(../b)) > 1"
-                             required="depends(../b) = 'B'"></fx-bind>
-                    <fx-bind ref="b" required="depends(../c) = 'C'"></fx-bind>
-                    <fx-bind ref="c" relevant="depends(../b) = 'B'"></fx-bind>
+                    <fx-bind ref="a" readonly="string-length(../b) > 1"
+                             required="../b = 'B'"></fx-bind>
+                    <fx-bind ref="b" required="../c = 'C'"></fx-bind>
+                    <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
                 </fx-model>
                 <fx-group collapse="true">
                     <h1>

@@ -56,7 +56,14 @@ export class FxModel extends HTMLElement {
     }
 
     // const path = fx.evaluateXPath('path()',node);
-    const path = XPathUtil.getPath(node);
+    let path;
+    if (node.nodeType) {
+      path = XPathUtil.getPath(node);
+    } else {
+      path = null;
+      targetNode = node;
+    }
+    // const path = XPathUtil.getPath(node);
 
     // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
     const mi = new ModelItem(
@@ -178,7 +185,7 @@ export class FxModel extends HTMLElement {
         if (property) {
           if (property === 'calculate') {
             const expr = modelItem.bind[property];
-            const compute = evaluateXPath(expr, modelItem.node, this, Fore.namespaceResolver);
+            const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
             // console.log('recalculating property ', property);

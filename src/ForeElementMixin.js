@@ -1,6 +1,6 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToFirstNode } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
 export const foreElementMixin = superclass =>
@@ -60,7 +60,7 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // todo: should be replaced with Fore.getInScopeContext
-      // const inscopeContext = this._inScopeContext();
+      // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
 
       if (this.ref === '') {
@@ -80,7 +80,11 @@ export const foreElementMixin = superclass =>
 
         // todo: code below fails - why?
         const formElement = this.closest('fx-form');
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+        if(inscopeContext.nodeType){
+          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+        }else{
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement)
+        }
         // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
@@ -155,7 +159,7 @@ export const foreElementMixin = superclass =>
       return existed;
     }
 
-    _inScopeContext() {
+    getInScopeContext() {
       let resultNodeset;
 
       const repeatItem = this.parentNode.closest('fx-repeatitem');
@@ -180,7 +184,7 @@ export const foreElementMixin = superclass =>
         return [];
       }
 
-      // console.log('_inScopeContext ', resultNodeset);
+      // console.log('getInScopeContext ', resultNodeset);
       // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
       return resultNodeset;
     }

@@ -320,7 +320,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * overwrites
    */
   _evalInContext() {
-    const inscopeContext = this._inScopeContext();
+    const inscopeContext = this.getInScopeContext();
 
     // reset nodeset
     this.nodeset = [];
@@ -518,7 +518,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       const touchedNodes = new Set();
       const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
       this.nodeset.forEach(node => {
-        evaluateXPathToString(propertyExpr, node, null, domFacade);
+        evaluateXPathToString(propertyExpr, node, this.getOwnerForm(), domFacade);
       });
 
       return Array.from(touchedNodes.values());

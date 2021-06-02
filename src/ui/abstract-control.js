@@ -41,7 +41,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
    * (re)apply all modelItem state properties to this control. model -> UI
    */
   async refresh() {
-    // console.log('### AbstractControl.refresh on : ', this);
+    console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
 
@@ -56,7 +56,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       // this.control = this.querySelector('#control');
 
       if (this.nodeset === null) {
-        this.style.display = 'none';
+        // this.style.display = 'none';
         return;
       }
 
