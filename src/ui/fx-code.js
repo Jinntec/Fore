@@ -19,7 +19,8 @@ export class FxCode extends XfAbstractControl {
 
     const style = `
           :host {
-            display: inline-block;
+            display: block;
+            width:100%;
           }
           #widget {
             display: inline-block;
@@ -30,7 +31,7 @@ export class FxCode extends XfAbstractControl {
         `;
 
     const outputHtml = `
-            <slot></slot>
+            <wc-codemirror class="widget">${this.value}</wc-codemirror>
         `;
 
     this.shadowRoot.innerHTML = `

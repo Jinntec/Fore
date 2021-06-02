@@ -27,6 +27,16 @@
             color: red;
         }
 
+        fx-output{
+            display: block;
+            padding-top: 1rem;
+
+        }
+        label{
+            width: 12rem;
+            display: inline-block;
+            text-align: right;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -37,6 +47,9 @@
     <h1>Computations</h1>
 
     <p>Any node may receive a computation through the <code>calculate</code> property.</p>
+
+    <p>The builtin dependency graph will determine the right order of the calculations independent
+    of document order of the <code>fx-bind</code> element.</p>
     <demo-snippet>
         <template>
 
@@ -53,31 +66,21 @@
                     </fx-instance>
                     <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
                     <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
-                    <!--
-                                        <fx-bind ref="result" calculate="add"></fx-bind>
-                    -->
-
                 </fx-model>
                 <fx-group>
-
+                    <h2>Calculations</h2>
+                    <p class="note">Calculated nodes are always readonly!</p>
                     <fx-control ref="m1" update-event="input">
-                        <label>m1</label>
+                        <label>start:</label>
                         <input type="text">
                     </fx-control>
 
-                    <p>
-                        this will not work as it attempts to set a calculated value.
-
-                        todo: make sure calculated nodes are treated readonly -> ignore attempts to set values on them
-                    </p>
-                    <fx-control ref="m2" update-event="input">
-                        <label>m2</label>
-                        <input type="text">
-                    </fx-control>
-                    <h2>
-                        Computed value (should be 11):
-                        <fx-output id="output" ref="add"></fx-output>
-                    </h2>
+                    <fx-output ref="m2" update-event="input">
+                        <label slot="label">* 2  = </label>
+                    </fx-output>
+                    <fx-output id="output" ref="add">
+                        <label slot="label">+ 5 = </label>
+                    </fx-output>
 
 
                 </fx-group>

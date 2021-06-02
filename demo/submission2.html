@@ -122,9 +122,9 @@
 
                     <h1>Submission replace modes</h1>
 
-                    <fx-control ref="greeting">
-                        <label>Data:</label>
-                    </fx-control>
+                    <p>What to do with the response data a server might send us back?</p>
+
+                    <p>The <code>replace</code> attribute allows several ways of dealing with response data.</p>
 
                     <h2>replace='none'</h2>
                     <p>Just sends the data but ignores the response</p>
@@ -132,10 +132,15 @@
                         <button>replace none</button>
                         <fx-send submission="submission"></fx-send>
                     </fx-trigger>
-
+                    <p class="note">You won't notice a difference unless you're using a developer tool to inspect the network
+                    requests.</p>
 
                     <h2>replace='instance'</h2>
                     <p>Sends the data and replaces the default instance with response</p>
+
+                    <fx-control ref="greeting">
+                        <label>Data:</label>
+                    </fx-control>
 
                     <fx-trigger>
                         <button>replace instance</button>

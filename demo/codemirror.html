@@ -10,10 +10,8 @@
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-/*
         import '../node_modules/@vanillawc/wc-codemirror/index.js';
         import '../node_modules/@vanillawc/wc-codemirror/mode/xml/xml.js';
-*/
     </script>
 
     <link href="../resources/vars.css" rel="stylesheet">
@@ -92,12 +90,15 @@
             </fx-output>
 -->
 
+            <fx-code ref="instance('default')"></fx-code>
+<!--
             <fx-code ref="instance('default')">
                 <wc-codemirror mode="xml" class="widget">
                     <script type="wc-content">
                     </script>
                 </wc-codemirror>
             </fx-code>
+-->
 
 <!--
             <wc-codemirror mode="xml" class="widget">
@@ -112,6 +113,7 @@
     </fx-form>
     <!--        </template>-->
     <!--    </demo-snippet>-->
+<!--
     <script type="text/javascript">
         const f = document.querySelector('fx-form');
         const li = f.addEventListener('refresh-done', (e) => {
@@ -119,11 +121,12 @@
             const wc = document.querySelector('wc-codemirror');
             const val = wc.value;
             console.log('val ', val);
-            // const inst = f.getModel().getInstance('default').instanceData.outerHTML;
-            // wc.setValue(inst);
+            const inst = f.getModel().getInstance('default').instanceData.outerHTML;
+            wc.setValue(inst);
             wc.editor.refresh();
         });
     </script>
+-->
 </div>
 
 
