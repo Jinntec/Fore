@@ -43,14 +43,14 @@ export class FxOutput extends XfAbstractControl {
     this.widget = this.getWidget();
     console.log('widget ', this.widget);
 
-    this.addEventListener('slotchange', (e) => {
-      console.log('slotchange ',e);
+    this.addEventListener('slotchange', e => {
+      console.log('slotchange ', e);
     });
   }
 
   getWidget() {
     const widget = this.querySelector('.widget');
-    if(widget) return widget;
+    if (widget) return widget;
 
     return this.shadowRoot.querySelector('#widget');
   }

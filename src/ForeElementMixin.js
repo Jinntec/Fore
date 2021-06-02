@@ -80,10 +80,10 @@ export const foreElementMixin = superclass =>
 
         // todo: code below fails - why?
         const formElement = this.closest('fx-form');
-        if(inscopeContext.nodeType){
+        if (inscopeContext.nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
-        }else{
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement)
+        } else {
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement);
         }
         // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
       }

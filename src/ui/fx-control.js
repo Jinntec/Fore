@@ -149,8 +149,8 @@ class FxControl extends XfAbstractControl {
         const evaluated = evaluateXPath(cutted, node, formElement);
         valueAttribute.value = evaluated;
 
-        if(this.value === evaluated){
-          newEntry.setAttribute('selected','selected');
+        if (this.value === evaluated) {
+          newEntry.setAttribute('selected', 'selected');
         }
 
         // ### set label

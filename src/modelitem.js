@@ -40,7 +40,7 @@ export class ModelItem {
 */
 
   get value() {
-    if(!this.node.nodeType) return this.node;
+    if (!this.node.nodeType) return this.node;
 
     if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
       return this.node.nodeValue;

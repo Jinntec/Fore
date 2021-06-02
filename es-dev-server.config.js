@@ -16,7 +16,10 @@ module.exports = {
           const foo = context.URL.searchParams.get('foo');
           const param = context.URL.searchParams.get('param2');
           context.response.status = 200;
-          return { body: `Params received: <ul><li>foo=${ foo }</li><li>param2=${param}</li></ul>`, type: 'text' };
+          return {
+            body: `Params received: <ul><li>foo=${foo}</li><li>param2=${param}</li></ul>`,
+            type: 'text',
+          };
         }
         if (context.originalUrl === '/submission2') {
           // console.log('>>>> context ', context);

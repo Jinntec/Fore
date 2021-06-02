@@ -64,15 +64,15 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
         // eslint-disable-next-line no-new-func
         const fun = new Function(
           '_domFacade',
-			...paramParts.map(paramPart => paramPart.variableName),
-			'form',
+          ...paramParts.map(paramPart => paramPart.variableName),
+          'form',
           this.functionBody,
         );
-          registerCustomXPathFunction(
-			  functionIdentifier,
+        registerCustomXPathFunction(
+          functionIdentifier,
           paramParts.map(paramPart => paramPart.variableType),
           returnType || 'item()*',
-			  (...args) => fun.apply(this.getInScopeContext(), [...args, this.getOwnerForm()]),
+          (...args) => fun.apply(this.getInScopeContext(), [...args, this.getOwnerForm()]),
         );
         break;
       }
@@ -81,15 +81,15 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
         const fun = (domFacade, ...args) =>
           evaluateXPath(
             this.functionBody,
-              this.getInScopeContext(),
-              this.getOwnerForm(),
+            this.getInScopeContext(),
+            this.getOwnerForm(),
             paramParts.reduce((variablesByName, paramPart, i) => {
               variablesByName[paramPart.variableName.replace('$', '')] = args[i];
               return variablesByName;
             }, {}),
           );
         registerCustomXPathFunction(
-			functionIdentifier,
+          functionIdentifier,
           paramParts.map(paramPart => paramPart.variableType),
           returnType || 'item()*',
           fun,

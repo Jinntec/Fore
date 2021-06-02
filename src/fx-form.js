@@ -103,8 +103,8 @@ export class FxForm extends HTMLElement {
     });
   }
 
-  evaluateToNodes(xpath, context){
-    return evaluateXPathToNodes(xpath,context,this);
+  evaluateToNodes(xpath, context) {
+    return evaluateXPathToNodes(xpath, context, this);
   }
 
   disconnectedCallback() {}
