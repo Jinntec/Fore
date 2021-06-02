@@ -33,4 +33,25 @@ describe('template expressions', () => {
     expect(theDiv.getAttribute('class')).to.equal('static Hello Universe');
     expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');
   });
+
+  it('skips the contents of fx-model for template detection', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greeting>Hello {unreplaced} Universe</greeting>
+            </data>
+          </fx-instance>
+        </fx-model>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    expect(el.storedTemplateExpressions.length).to.equal(0);
+
+    const greeting = el.querySelector('greeting');
+
+    expect(greeting.textContent).to.equal('Hello {unreplaced} Universe');
+  });
 });
