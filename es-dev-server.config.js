@@ -8,9 +8,15 @@ module.exports = {
       serve(context) {
         console.log('context path ', context);
         if (context.originalUrl === '/submission1') {
-          // console.log('>>>> context ', context);
+          console.log('>>>> context ', context);
           context.response.status = 200;
           return { body: '<data></data>', type: 'xml' };
+        }
+        if (context.originalUrl === '/submission2?foo=bar&param2=value2') {
+          const foo = context.URL.searchParams.get('foo');
+          const param = context.URL.searchParams.get('param2');
+          context.response.status = 200;
+          return { body: `Params received: <ul><li>foo=${ foo }</li><li>param2=${param}</li></ul>`, type: 'text' };
         }
         if (context.originalUrl === '/submission2') {
           // console.log('>>>> context ', context);
@@ -29,6 +35,22 @@ module.exports = {
           // console.log('>>>> context ', context);
           context.response.status = 200;
           return { body: '<data>', type: 'xml' };
+        }
+        if (context.originalUrl === '/replaceall') {
+          // console.log('>>>> context ', context);
+          context.response.status = 200;
+          return {
+            body: '<div>Thanks for being here</div>',
+            type: 'html',
+          };
+        }
+        if (context.originalUrl === '/redirect') {
+          // console.log('>>>> context ', context);
+          context.response.status = 200;
+          return {
+            body: '/index.html',
+            type: 'text',
+          };
         }
         return null;
       },

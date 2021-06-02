@@ -60,6 +60,10 @@
                         </data>
                     </fx-instance>
 
+                    <fx-instance id="replaced">
+                        <data></data>
+                    </fx-instance>
+
                     <fx-submission id="submission"
                                    url="/submission1"
                                    method="POST"
@@ -80,8 +84,37 @@
                     </fx-submission>
 
                     <fx-submission id="submission4"
-                                   url="/submission1"
-                                   method="POST">
+                                   url="/replaceall"
+                                   method="POST"
+                                   replace="all">
+                    </fx-submission>
+
+                    <fx-submission id="submission5"
+                                   url="/submissionxy"
+                                   method="POT">
+                        <fx-message event="submit-error">Wrong method</fx-message>
+
+                    </fx-submission>
+
+                    <fx-submission id="submission6"
+                                   url="/submission2"
+                                   method="get"
+                                   replace="instance"
+                                   instance="replaced">
+
+                    </fx-submission>
+
+                    <fx-submission id="submission7"
+                                   url="/replaceall"
+                                   method="get"
+                                   replace="target"
+                                   target="#target">
+                    </fx-submission>
+
+                    <fx-submission id="submission8"
+                                   url="/redirect"
+                                   method="get"
+                                   replace="redirect">
                     </fx-submission>
 
                 </fx-model>
@@ -93,7 +126,7 @@
                         <label>Data:</label>
                     </fx-control>
 
-                    <h2>submission replace='none'</h2>
+                    <h2>replace='none'</h2>
                     <p>Just sends the data but ignores the response</p>
                     <fx-trigger>
                         <button>replace none</button>
@@ -101,20 +134,69 @@
                     </fx-trigger>
 
 
-                    <h2>submission replace='instance'</h2>
+                    <h2>replace='instance'</h2>
                     <p>Sends the data and replaces the default instance with response</p>
 
                     <fx-trigger>
                         <button>replace instance</button>
                         <fx-send submission="submission2"></fx-send>
                     </fx-trigger>
+                    <fx-output ref="greeting">
+                        <label slot="label">This message comes from default instance:</label>
+                    </fx-output>
 
-                    <h2>submission replace='instance' with empty response</h2>
+                    <h2>replace='instance' - instance='replaced'</h2>
+                    <p>Sends the data and replaces the instance with id='replaced'</p>
+                    <fx-trigger>
+                        <button>replace another instance</button>
+                        <fx-send submission="submission6"></fx-send>
+                    </fx-trigger>
+
+                    <fx-output ref="instance('replaced')/greeting">
+                        <label slot="label">This message comes from replaced instance:</label>
+                    </fx-output>
+
+                    <h2>replace='instance' with empty response</h2>
                     <p>Sends the data and replaces the default instance with response</p>
 
                     <fx-trigger>
                         <button>replace with empty data</button>
                         <fx-send submission="submission3"></fx-send>
+                    </fx-trigger>
+
+                    <h2>replace='all'</h2>
+                    <p>Replaces the whole viewport (window) with response. However that will not change the
+                    URL shown in the browser location bar.</p>
+
+                    <fx-trigger>
+                        <button>replace=all</button>
+                        <fx-send submission="submission4"></fx-send>
+                    </fx-trigger>
+
+
+                    <h2>replace=target</h2>
+                    <p>Replaces some HTML at target position. target is a CSS selector pointing to the wanted element.</p>
+
+                    <fx-trigger>
+                        <button>replace=target</button>
+                        <fx-send submission="submission7"></fx-send>
+                    </fx-trigger>
+
+                    <h1 id="target"></h1>
+                    <h2>replace=redirect</h2>
+                    <p>expects a URL returned as simple string and redirect to that.</p>
+
+                    <fx-trigger>
+                        <button>replace=redirect</button>
+                        <fx-send submission="submission8"></fx-send>
+                    </fx-trigger>
+
+
+                    <h2>Errors</h2>
+                    <p>If something goes wrong the 'submit-error' event will fire.</p>
+                    <fx-trigger>
+                        <button>network error</button>
+                        <fx-send submission="submission5"></fx-send>
                     </fx-trigger>
 
                 </fx-group>
