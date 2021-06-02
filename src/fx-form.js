@@ -138,13 +138,9 @@ export class FxForm extends HTMLElement {
    * @private
    */
   _updateTemplateExpressions() {
+    // Note the fact we're going over HTML here: therefore the `html` prefix.
     const search =
-      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::*[name(.)='fx-model']/descendant-or-self::node()/(text(), @*)";
-
-    /*
-    const search =
-        "(descendant::fx-group/text() | descendant::fx-group/@*)[matches(.,'\\{.*\\}')]";
-*/
+      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, null);
     console.log('template expressions found ', tmplExpressions);
