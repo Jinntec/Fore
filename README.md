@@ -84,8 +84,7 @@ The master branch is only used for releases.
 
 ### Contributing demo forms
 
-There is a file called `demo/sample.html` which can be used to quickly write new demos. Requires to use a local clone of the project.
-
+There is a file called `demo/sample.html` which can be used to quickly write new demos. See below under 'Developing' for the required setup.
 
 ## Installation
 
