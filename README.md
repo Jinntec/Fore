@@ -63,10 +63,17 @@ customize the wiring of the widget you use.
 
 More examples are found in the demos (see running)
 
+## Documentation
+
+Currently the demos are the documentation (see 'demo' folder). All files listed on the demo.html page are expected to work.
+
+Some of them also offer some explanations and should give you an idea of building your own.
 
 ## Warning
 
-This project is still in its early stages.
+The project is still in it's prerelease phase. However there are already about 100 tests and what can be seen in demos is expected to work. The overall architecture matures quite nicely but certainly can still undergo some fundamental changes. There won't be any major releases before 1.0.0 so be aware of breaking changes (will annouce them). 
+
+It's expected that a first release will be available during this summer.
 
 ## Development and Contributions
 
