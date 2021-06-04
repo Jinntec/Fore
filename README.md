@@ -82,6 +82,11 @@ feature additions or bugfixes will always go into 'dev'.
 
 The master branch is only used for releases. 
 
+### Contributing demo forms
+
+There is a file called `demo/sample.html` which can be used to quickly write new demos. Requires to use a local clone of the project.
+
+
 ## Installation
 
 Run
