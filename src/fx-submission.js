@@ -1,6 +1,6 @@
 import { foreElementMixin } from './ForeElementMixin.js';
 import { evaluateXPathToString } from './xpath-evaluation.js';
-import getInScopeContext from './getInScopeContext';
+import getInScopeContext from './getInScopeContext.js';
 
 export class FxSubmission extends foreElementMixin(HTMLElement) {
   constructor() {
