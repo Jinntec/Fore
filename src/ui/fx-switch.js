@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { Fore } from '../fore';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-switch`
