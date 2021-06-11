@@ -146,6 +146,7 @@ function namespaceResolver(prefix) {
   // console.log('namespaceResolver  prefix', prefix);
   const ns = {
     xhtml: 'http://www.w3.org/1999/xhtml',
+    tei: 'http://www.tei-c.org/ns/1.0',
     // ''    : Fore.XFORMS_NAMESPACE_URI
   };
   return ns[prefix] || null;

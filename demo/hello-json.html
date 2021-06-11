@@ -6,7 +6,7 @@
 
     <title>Hello JSON World</title>
 
-    <script src="@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module" src="../index.js"></script>
 
     <!--
@@ -67,13 +67,6 @@
                 }]
             }
         </fx-instance>
-<!--
-        <fx-bind ref="?automobiles">
-            <fx-bind ref="?maker" required=". > 1"></fx-bind>
-            <fx-bind ref="?maker" required=". > 1"></fx-bind>
-        </fx-bind>
--->
-
         <!--
         ?automobiles[?maker = “Honda” and ?year > 2009]?model
         -->
@@ -83,8 +76,8 @@
 
         <h1>
             Your favorite car:
-<!--            <fx-output id="output" ref="?automobiles[?maker = 'Honda' and ?model = 'Accord']"></fx-output>-->
-            {?automobiles[?maker = 'Honda']}
+<!--            {?1?automobiles[1]?maker[1]}-->
+            {parse-json(instance())}
         </h1>
 
 <!--

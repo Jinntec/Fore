@@ -112,10 +112,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     const style = `
             :host {
-                display: none;
+                // display: none;
             }
             ::slotted(*){
-                display:none;
+                // display:none;
             }
             .fade-out-bottom {
                 -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
