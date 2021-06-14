@@ -106,7 +106,8 @@ class FxAppend extends AbstractAction {
     // const data = this._dataFromRefs(rootNode, templ.content)
     const data = this._generateInstance(templ.content, rootNode);
     // console.log('_dataFromTemplate DATA', data);
-    inscope.appendChild(data);
+    // inscope.appendChild(data);
+    repeat.getInScopeContext().appendChild(data);
     console.log('appended new item ', data);
     // return data;
   }

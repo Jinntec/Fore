@@ -6,14 +6,7 @@
 
     <title>TEI header editor sample</title>
 
-    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
-
-        <script type="module">
-            import '@polymer/iron-demo-helpers/demo-snippet.js';
-            import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-            import '@polymer/paper-button/paper-button.js';
-        </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/webcomponents-loader@1.0.1/index.js"></script>
 
     <link href="../resources/fore.css" rel="stylesheet"/>
     <link href="../resources/vars.css" rel="stylesheet"/>
@@ -47,17 +40,19 @@
         details{
             padding:1rem;
             margin:1rem 0;
-            background: white;
+            /*background: white;*/
+
         }
         details[open]{
-            background: var(--paper-grey-100);
+            /*background: var(--paper-grey-100);*/
+            background-color:rgba(255, 255,255, 0.5);
         }
 
         fx-case{
             margin-top:1px;
             border: 1px solid var(--paper-light-blue-900);
             padding:2rem;
-            min-height:60vh;
+            background-color:rgba(255, 255, 255, 0.5);
         }
 
         fx-control, input,textarea {
@@ -127,6 +122,15 @@
     <fx-form>
         <fx-model>
             <fx-instance src="tei/header.xml"></fx-instance>
+
+            <fx-instance id="result">
+                <data></data>
+            </fx-instance>
+
+            <fx-submission id="save"
+                           url="/echo"
+                           method="post"
+                           replace="all"></fx-submission>
         </fx-model>
 
         <fx-group ref="teiHeader">
@@ -220,10 +224,13 @@
 
                     <details>
                         <summary>sourceDesc</summary>
-                        <fx-group ref=".//sourceDesc/*/text()">
+                        <fx-group ref=".//sourceDesc/p">
                             <fx-control ref="." update-event="input">
                                 <textarea class="widget"></textarea>
-                                <fx-append event="value-changed" ref="instance()//change" repeat="changes"></fx-append>
+<!--                                <fx-action event="value-changed">-->
+<!--                                    <fx-append event="value-changed" ref="//change" repeat="changes"></fx-append>-->
+<!--                                    <fx-setvalue event="value-changed" ref="//change[position()=1]" value="new change"></fx-setvalue>-->
+<!--                                </fx-action>-->
                             </fx-control>
                         </fx-group>
                     </details>
@@ -280,6 +287,12 @@
 
                 </fx-case>
             </fx-switch>
+<!--
+            <fx-trigger>
+                <button>save</button>
+                <fx-send submission="save"></fx-send>
+            </fx-trigger>
+-->
         </fx-group>
 
         <details class="log">

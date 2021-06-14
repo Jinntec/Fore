@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>TEI header editor sample</title>
+
+<!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/webcomponents-loader@1.0.1/index.js"></script>
+
+    <link href="../resources/fore.css" rel="stylesheet"/>
+    <link href="../resources/vars.css" rel="stylesheet"/>
+    <link href="../resources/demo.css" rel="stylesheet"/>
+
+<!--
+    <style>
+        body {
+            background: var(&#45;&#45;paper-light-blue-200);
+            color: var(&#45;&#45;paper-light-blue-900)
+        }
+
+        .card {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        #changes fx-repeatitem {
+            display: grid;
+            grid-template-columns: auto min-content;
+            grid-column-gap: 1rem;
+        }
+
+        #changes fx-repeatitem fx-output {
+            white-space: nowrap;
+        }
+
+        .deleteIcon button {
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: red;
+        }
+
+        details {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: white;
+        }
+
+        details[open] {
+            background: var(&#45;&#45;paper-grey-100);
+        }
+
+        fx-case {
+            margin-top: 1px;
+            border: 1px solid var(&#45;&#45;paper-light-blue-900);
+            padding: 2rem;
+            min-height: 60vh;
+        }
+
+        fx-control, input, textarea {
+            width: 100%;
+            margin: 0.3rem 0;
+        }
+
+        input {
+            padding: 0.3rem;
+        }
+
+        label {
+            display: block;
+            color: var(&#45;&#45;paper-blue-900);
+        }
+
+        fx-control {
+            /*margin-top: 1rem;*/
+        }
+
+        fx-group {
+            margin-top: 1rem;
+            padding: 1rem;
+        }
+
+        h3, fx-output, input {
+            border: none;
+        }
+
+        h3, h4 {
+            margin-bottom: 0;
+            margin-top: 1rem;
+        }
+
+        fx-repeat {
+            display: block;
+        }
+
+        fx-repeatitem {
+            display: block;
+        }
+
+        fx-repeatitem {
+            display: grid;
+            grid-template-columns: auto 30px;
+            width: 100%;
+            align-items: baseline;
+        }
+
+        details.log {
+            background: var(&#45;&#45;paper-light-blue-100);
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        #langs fx-repeatitem, #terms fx-repeatitem {
+            display: inline-block;
+            width: auto;
+        }
+
+        #langs fx-repeatitem fx-control, #terms fx-repeatitem fx-control {
+            width: 2.5rem;
+        }
+    </style>
+-->
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Editing an TEI header</h1>
+
+    <fx-form>
+        <fx-model>
+            <fx-instance src="tei/header.xml"></fx-instance>
+        </fx-model>
+
+        <fx-group ref="teiHeader">
+            <fx-group ref=".//titleStmt">
+                <h4>Title</h4>
+                <fx-repeat ref="title" id="titles">
+                    <template>
+                        <fx-control ref="."></fx-control>
+                        <fx-trigger class="deleteIcon">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+                <fx-trigger>
+                    <button>add title</button>
+                    <fx-append ref="title" repeat="titles"></fx-append>
+                </fx-trigger>
+
+                <h4>Author</h4>
+                <fx-repeat ref="author" id="authors">
+                    <template>
+                        <fx-control ref="."></fx-control>
+                        <fx-trigger class="deleteIcon">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+                <fx-trigger>
+                    <button>add author</button>
+                    <fx-append ref="author" repeat="authors"></fx-append>
+                </fx-trigger>
+
+                <h4>Editor</h4>
+                <fx-repeat ref="editor" id="editors">
+                    <template>
+                        <fx-control ref="."></fx-control>
+                        <fx-trigger class="deleteIcon">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+                <fx-trigger>
+                    <button>add editor</button>
+                    <fx-append ref="editor" repeat="editors"></fx-append>
+                </fx-trigger>
+            </fx-group>
+        </fx-group>
+
+    </fx-form>
+
+
+    <script type="module" src="../index.js"></script>
+</body>
+</html>
