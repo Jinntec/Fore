@@ -61,7 +61,8 @@
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-minify-html-literals": "^1.2.6",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "xmlserializer": "^0.6.1"
   },
   "scripts": {
     "test": "karma start",

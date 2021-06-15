@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+        schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI>
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Main title for the electronic version of the text</title>
+                <title type="sub">One or more additional titles, which may have a @type</title>
+                <author>Rudi Rüssel</author>
+                <author>Berta Bär</author>
+                <editor>Heinz Hund</editor>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Name of the institution publishing the electronic version</publisher>
+                <date when="2021-06-03"/>
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution
+                        ShareAlike 3.0 License
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p>A free text paragraph describing the manuscript used</p>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+            <langUsage>
+                <language ident="de"/>
+            </langUsage>
+            <textClass>
+                <keywords>
+                    <term>XML</term>
+                    <term>TEI</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+        <revisionDesc>
+            <change when="2021-05-31T09:04:25+02:00">teiHeader was automatically produced from the database</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <p>Some text here.</p>
+        </body>
+    </text>
+</TEI>

@@ -30,6 +30,90 @@ registerCustomXPathFunction(
   },
 );
 
+function buildTree(tree, data){
+
+    if(!data) return ;
+    if(data.nodeType === Node.ELEMENT_NODE){
+        if(data.children){
+            const details = document.createElement('details');
+            details.setAttribute('data-path',data.nodeName)
+            const summary = document.createElement('summary');
+
+            let display = ` <${data.nodeName}`;
+            Array.from(data.attributes).forEach(attr =>{
+                display += ` ${attr.nodeName}="${attr.nodeValue}"`;
+            });
+
+            let contents;
+            if(data.firstChild && data.firstChild.nodeType === Node.TEXT_NODE && data.firstChild.data.trim() !== ''){
+                // console.log('whoooooooooopp');
+                contents =data.firstChild.nodeValue;
+                display += `>${contents}</${data.nodeName}>`;
+            }else{
+                display += '>';
+            }
+            summary.textContent = display;
+
+            details.appendChild(summary);
+            if(data.childElementCount !== 0){
+                details.setAttribute('open','open');
+            }else{
+                summary.setAttribute('style','list-style:none;')
+            }
+            tree.appendChild(details);
+
+            Array.from(data.children).forEach(child =>{
+                // if(child.nodeType === Node.ELEMENT_NODE){
+                    // child.parentNode.appendChild(buildTree(child));
+                    buildTree(details,child);
+                // }
+            })
+        }
+    }/*else if(data.nodeType === Node.ATTRIBUTE_NODE){
+        //create span for now
+        // const span = document.createElement('span');
+        // span.style.background = 'grey';
+        // span.textContent = data.value;
+        // tree.appendChild(span);
+        tree.setAttribute(data.nodeName,data.value);
+    }else {
+        tree.textContent = data;
+    }*/
+
+
+    return tree;
+
+};
+
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree' },
+  ['xs:string?'],
+  'element()?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const instance = formElement.querySelector(`fx-instance[id=${string}]`);
+    if (instance) {
+      // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+      // const def = JSON.stringify(instance.getDefaultContext());
+
+      const tree = document.createElement('div');
+      tree.setAttribute('class','logtree');
+      // const datatree = buildTree(tree,instance.getDefaultContext());
+      // return tree.appendChild(datatree);
+      // return  buildTree(root,instance.getDefaultContext());;
+        const { formElement } = dynamicContext.currentContext;
+        const logtree = formElement.querySelector('.logtree');
+        if(logtree){
+            logtree.parentNode.removeChild(logtree);
+        }
+        formElement.appendChild(buildTree(tree, instance.getDefaultContext()));
+
+    }
+    return null;
+  },
+);
+
+
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
@@ -117,6 +201,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
     case 'log':
+    case 'logtree':
     case 'instance':
     case 'depends':
     case 'boolean-from-string':
@@ -146,6 +231,7 @@ function namespaceResolver(prefix) {
   // console.log('namespaceResolver  prefix', prefix);
   const ns = {
     xhtml: 'http://www.w3.org/1999/xhtml',
+    tei: 'http://www.tei-c.org/ns/1.0',
     // ''    : Fore.XFORMS_NAMESPACE_URI
   };
   return ns[prefix] || null;
