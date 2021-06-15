@@ -25,6 +25,13 @@ fx-control [required]:after {
     display: inline;
     color: red;
 }
+.logtree details{
+    padding:0.1rem 1rem;
+    margin:0;
+}
+.logtree details summary{
+
+}
 
 .vertical label{
     display: block;
