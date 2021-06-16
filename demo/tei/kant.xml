@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="main">Critik der reinen Vernunft</title>
+                <author>
+                    <persName ref="http://d-nb.info/gnd/118559796">
+                        <surname>Kant</surname>
+                        <forename>Immanuel</forename>
+                    </persName>
+                </author>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName ref="http://d-nb.info/gnd/115266127">
+                        <surname>Geyken</surname>
+                        <forename>Alexander</forename>
+                    </persName>
+                </editor>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName ref="http://d-nb.info/gnd/1018099549">
+                        <surname>Haaf</surname>
+                        <forename>Susanne</forename>
+                    </persName>
+                </editor>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName ref="http://d-nb.info/gnd/1019062681">
+                        <surname>Jurish</surname>
+                        <forename>Bryan</forename>
+                    </persName>
+                </editor>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName>
+                        <surname>Boenig</surname>
+                        <forename>Matthias</forename>
+                    </persName>
+                </editor>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName>
+                        <surname>Thomas</surname>
+                        <forename>Christian</forename>
+                    </persName>
+                </editor>
+                <editor corresp="#DTACorpusPublisher">
+                    <persName>
+                        <surname>Wiegand</surname>
+                        <forename>Frank</forename>
+                    </persName>
+                </editor>
+                <respStmt>
+                    <orgName ref="http://www.clarin-d.de">CLARIN-D</orgName>
+                    <resp>
+                        <note type="remarkResponsibility">Langfristige Bereitstellung der
+                            DTA-Ausgabe</note>
+                        <ref target="http://fedora.dwds.de"/>
+                    </resp>
+                </respStmt>
+            </titleStmt>
+            <editionStmt>
+                <edition>Vollständige digitalisierte Ausgabe.</edition>
+            </editionStmt>
+            <extent>
+                <measure type="images">889</measure>
+                <measure type="tokens">176505</measure>
+                <measure type="types">10880</measure>
+                <measure type="characters">1298438</measure>
+            </extent>
+            <publicationStmt>
+                <publisher xml:id="DTACorpusPublisher">
+                    <email>dta@bbaw.de</email>
+                    <orgName role="project">Deutsches Textarchiv</orgName>
+                    <orgName role="hostingInstitution" xml:lang="en">Berlin-Brandenburg Academy of
+                        Sciences and Humanities (BBAW)</orgName>
+                    <orgName role="hostingInstitution" xml:lang="de">Berlin-Brandenburgische
+                        Akademie der Wissenschaften (BBAW)</orgName>
+                    <address>
+                        <addrLine>Jägerstr. 22/23, 10117 Berlin</addrLine>
+                        <country>Germany</country>
+                    </address>
+                </publisher>
+                <pubPlace>Berlin</pubPlace>
+                <date type="publication">2016-10-10T16:34:28Z</date>
+                <availability status="unknown">
+                    <licence target="http://creativecommons.org/licenses/by-nc/3.0/de/">
+                        <p>Distributed under the Creative Commons Attribution-NonCommercial 3.0
+                            Unported License.</p>
+                    </licence>
+                </availability>
+                <idno>
+                    <idno type="URLWeb">http://www.deutschestextarchiv.de/kant_rvernunft_1781</idno>
+                    <idno type="URLXML"
+                        >http://www.deutschestextarchiv.de/book/download_xml/kant_rvernunft_1781</idno>
+                    <idno type="URLHTML"
+                        >http://www.deutschestextarchiv.de/book/download_html/kant_rvernunft_1781</idno>
+                    <idno type="URLText"
+                        >http://www.deutschestextarchiv.de/book/download_text/kant_rvernunft_1781</idno>
+                    <idno type="DTADirName">kant_rvernunft_1781</idno>
+                    <idno type="DTAID">16204</idno>
+                    <idno type="URN">urn:nbn:de:kobv:b4-200905192998</idno>
+                </idno>
+            </publicationStmt>
+            <sourceDesc>
+                <bibl type="M">Kant, Immanuel: Critik der reinen Vernunft. Riga, 1781.</bibl>
+                <biblFull>
+                    <titleStmt>
+                        <title level="m" type="main">Critik der reinen Vernunft</title>
+                        <author>
+                            <persName ref="http://d-nb.info/gnd/118559796">
+                                <surname>Kant</surname>
+                                <forename>Immanuel</forename>
+                            </persName>
+                        </author>
+                    </titleStmt>
+                    <editionStmt>
+                        <edition n="1"/>
+                    </editionStmt>
+                    <extent>
+                        <measure type="pages">[22], 856 S.</measure>
+                    </extent>
+                    <publicationStmt>
+                        <publisher>
+                            <name>Hartknoch</name>
+                        </publisher>
+                        <pubPlace>Riga</pubPlace>
+                        <date type="publication">1781</date>
+                    </publicationStmt>
+                </biblFull>
+                <msDesc>
+                    <msIdentifier>
+                        <repository>Staatsbibliothek zu Berlin – Preußischer
+                            Kulturbesitz</repository>
+                        <idno>
+                            <idno type="shelfmark">SBB-PK, 8 Libri impr. rari 290</idno>
+                            <idno type="URLCatalogue"
+                                >http://stabikat.de/DB=1/SET=12/TTL=1/CMD?ACT=SRCHA&amp;IKT=1016&amp;SRT=YOP&amp;TRM=414821769</idno>
+                        </idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <typeDesc>
+                            <p>Fraktur</p>
+                        </typeDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <editorialDecl>
+                <p>Dieses Werk wurde gemäß den <ref
+                        target="http://www.deutschestextarchiv.de/doku/richtlinien"
+                        >DTA-Transkriptionsrichtlinien</ref> im Double-Keying-Verfahren von
+                    Nicht-Muttersprachlern erfasst und in XML/TEI P5 nach <ref
+                        target="http://www.deutschestextarchiv.de/doku/basisformat"
+                        >DTA-Basisformat</ref> kodiert.</p>
+            </editorialDecl>
+            <tagsDecl>
+                <rendition scheme="css" xml:id="aq">font-family:sans-serif</rendition>
+                <rendition scheme="css" xml:id="b">font-weight:bold</rendition>
+                <rendition scheme="css" xml:id="blue">color:blue</rendition>
+                <rendition scheme="css" xml:id="c">display:block; text-align:center</rendition>
+                <rendition scheme="css" xml:id="et">display:block; margin-left:2em;
+                    text-indent:0</rendition>
+                <rendition scheme="css" xml:id="et2">display:block; margin-left:4em;
+                    text-indent:0</rendition>
+                <rendition scheme="css" xml:id="et3">display:block; margin-left:6em;
+                    text-indent:0</rendition>
+                <rendition scheme="css" xml:id="f">border:1px dotted silver</rendition>
+                <rendition scheme="css" xml:id="fr">border:1px dotted silver</rendition>
+                <rendition scheme="css" xml:id="g">letter-spacing:0.125em</rendition>
+                <rendition scheme="css" xml:id="i">font-style:italic</rendition>
+                <rendition scheme="css" xml:id="in">font-size:150%</rendition>
+                <rendition scheme="css" xml:id="k">font-variant:small-caps</rendition>
+                <rendition scheme="css" xml:id="larger">font-size:larger</rendition>
+                <rendition scheme="css" xml:id="red">color:red</rendition>
+                <rendition scheme="css" xml:id="right">display:block; text-align:right</rendition>
+                <rendition scheme="css" xml:id="s">text-decoration:line-through</rendition>
+                <rendition scheme="css" xml:id="smaller">font-size:smaller</rendition>
+                <rendition scheme="css" xml:id="sub">vertical-align:sub; font-size:.7em</rendition>
+                <rendition scheme="css" xml:id="sup">vertical-align:super;
+                    font-size:.7em</rendition>
+                <rendition scheme="css" xml:id="u">text-decoration:underline</rendition>
+                <rendition scheme="css" xml:id="uu">border-bottom:double 3px #000</rendition>
+            </tagsDecl>
+        </encodingDesc>
+        <profileDesc>
+            <langUsage>
+                <language ident="de">German</language>
+            </langUsage>
+            <textClass>
+                <catRef scheme="#genre" target="#philosophy"/>
+                <catRef scheme="#form" target="#print"/>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#dtamain"
+                    >Fachtext</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#dtasub"
+                    >Philosophie</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#dwds1main"
+                    >Wissenschaft</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#dwds1sub"
+                    >Philosophie</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#DTACorpus"
+                    >core</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#DTACorpus"
+                    >ready</classCode>
+                <classCode scheme="http://www.deutschestextarchiv.de/doku/klassifikation#DTACorpus"
+                    >china</classCode>
+            </textClass>
+        </profileDesc>
+    </teiHeader>
+</TEI>

@@ -1,10 +1,11 @@
+
 module.exports = {
   port: 8090,
   watch: true,
   nodeResolve: true,
   appIndex: './index.html',
   plugins: [
-    {
+      {
       serve(context) {
         console.log('context path ', context);
         if (context.originalUrl === '/submission1') {
@@ -56,7 +57,7 @@ module.exports = {
           };
         }
         return null;
-      },
+      }
     },
   ],
   moduleDirs: ['node_modules', 'web_modules'],

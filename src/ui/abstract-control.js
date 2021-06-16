@@ -75,7 +75,11 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
           // console.log('dispatching value-changed for ', this);
-          this.dispatchEvent(new CustomEvent('value-changed', {}));
+          // console.log('value-changed path ', this.modelItem.path);
+          this.dispatchEvent(
+              new CustomEvent('value-changed', { composed: true, bubbles: true, detail: {path:this.modelItem.path} })
+          );
+
         }
         // this.requestUpdate();
       }
