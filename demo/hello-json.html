@@ -31,7 +31,7 @@
     <fx-message event="refresh-done">refresh has been done</fx-message>
 
     <fx-model id="model1">
-        <fx-instance type="json">
+        <fx-instance id="instance1" type="json">
             {
                 "automobiles": [
                     {
@@ -72,18 +72,27 @@
         -->
     </fx-model>
     <fx-group>
-
-
         <h1>
-            Your favorite car:
-<!--            {?1?automobiles[1]?maker[1]}-->
-            {parse-json(instance())}
+            The car maker of the day:
+            {?automobiles?*[current-date() => day-from-date() mod 5]?maker}
         </h1>
+
+		<h2>Repeating over JSON</h2>
+
+		<ul>
+		  <fx-repeat ref="?automobiles">
+			<template>
+			  <li>
+				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <i>{let $maker := ?maker =>trace() return if(instance('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
+			  </li>
+			</template>
+		  </fx-repeat>
+		</ul>
 
 <!--
         <fx-trigger>
             <button>set year</button>
-            <fx-setvalue ref="?automobiles[?maker = 'Honda' and ?model = 'Accord']?year" value="2020"></fx-setvalue>
+            <fx-setvalue ref="?automobiles?*[?maker = 'Honda' and ?model = 'Accord']?year" value="2020"></fx-setvalue>
         </fx-trigger>
 -->
     </fx-group>

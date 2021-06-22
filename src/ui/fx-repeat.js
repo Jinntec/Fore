@@ -177,8 +177,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         return;
       }
 
-      if (Array.isArray(seq) && seq.every(item => 'nodeType' in item)) {
-        // multiple Nodes
+      if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
+        // multiple Nodes or maps
         this.nodeset = seq;
         return;
       }
