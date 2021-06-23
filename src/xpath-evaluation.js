@@ -72,7 +72,7 @@ function buildTree(tree, data) {
         // }
       });
     }
-  } /*else if(data.nodeType === Node.ATTRIBUTE_NODE){
+  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
         //create span for now
         // const span = document.createElement('span');
         // span.style.background = 'grey';
@@ -81,7 +81,7 @@ function buildTree(tree, data) {
         tree.setAttribute(data.nodeName,data.value);
     }else {
         tree.textContent = data;
-    }*/
+    } */
 
   return tree;
 }
@@ -136,17 +136,19 @@ const instance = (dynamicContext, string) => {
   return null;
 };
 
+// Note that this is not to spec. The spec enforces elements to be returned from the
+// instance. However, we allow instances to actually be JSON!
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
   [],
-  'element()?',
+  'item()?',
   domFacade => instance(domFacade, null),
 );
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
   ['xs:string?'],
-  'element()?',
+  'item()?',
   instance,
 );
 
@@ -346,6 +348,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     contextNode,
     domFacade,
     {},
+
     {
       currentContext: { formElement },
       functionNameResolver,
