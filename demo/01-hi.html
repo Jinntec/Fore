@@ -6,7 +6,6 @@
 
     <title>Hi</title>
 
-<!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
 
     <link href="../resources/fore.css" rel="stylesheet">
@@ -18,11 +17,6 @@
         .dynamic {
             background: #76ff03;
         }
-/*
-        fx-model{
-            display: none;
-        }
-*/
     </style>
 </head>
 <body unresolved="unresolved">
@@ -41,20 +35,18 @@
     <h2>Description</h2>
     <p>
         Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-form</code> element. Besides
-        that we have a <code>fx-output</code> which - well -outputs a referenced data node.
+        that we have a <code>fx-output</code> which - well - outputs a referenced data node.
     </p>
     <p>
-        Fore is MVC but where's the model? It gets auto-generated if you don't provide one.
+        Fore is MVC but where's the model? It gets <strong>auto-generated</strong> if you don't provide one.
         For each Fore component with a <code>ref</code> a node in the instance data is created. The value of that
         bound component is taken as the default value. The form will create a XML document for your data.
     </p>
 
     <p>If you haven't felt that lazy this morning you could have written the equivalent like so:</p>
 
-<!--
     <demo-snippet>
         <template>
--->
             <fx-form>
                 <fx-model>
                     <fx-instance>
@@ -65,39 +57,8 @@
                 </fx-model>
                 <fx-output ref="greeting"></fx-output>
             </fx-form>
-<!--
         </template>
     </demo-snippet>
--->
-
-    <p>The form holds a single <code>fx-model</code> which itself contains a <code>fx-instance</code> element. This
-    is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
-    as you like.</p>
-
-    <h2>Nesting refs</h2>
-
-<!--
-    <demo-snippet>
-        <template>
--->
-            <fx-form>
-                <fx-group ref="planet">
-                    <fx-output ref="greeting">Hello Earth</fx-output>
-                </fx-group>
-            </fx-form>
-<!--
-        </template>
-    </demo-snippet>
--->
-    <code-tex lang="html" theme="zenburn" source="
-<fx-instance>
-    <data>
-        <planet>
-            <greeting>Hello Earth</greeting>
-        </planet>
-    </data>
-</fx-instance>
-    "></code-tex>
 
     <p>Guess how the instance looks like now? Here it is </p>
     <demo-snippet>
@@ -112,10 +73,10 @@
         </template>
     </demo-snippet>
 
+
 </div>
 
 
-<!--<script type="module" src="../index.js"></script>-->
 <script type="module" src="../dist/fore-all.js"></script>
 </body>
 </html>
