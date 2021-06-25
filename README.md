@@ -3,6 +3,8 @@
 
 >'situated in front of something else' - Merriam Webster
 
+## [Demos](https://jinntec.github.io/Fore)
+
 ## An xformish forms framework in Web Components
 
 Fore is a model-driven forms framework that follows the ideas of the XForms 2.0
