@@ -33,6 +33,9 @@ export class FxInstance extends HTMLElement {
             :host {
                 display: none;
             }
+            :host * {
+                display:none;
+            }
             ::slotted(*){
                 display:none;
             }

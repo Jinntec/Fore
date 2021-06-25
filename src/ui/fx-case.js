@@ -26,10 +26,11 @@ class FxCase extends HTMLElement {
 
     const style = `
             :host {
-                display: block;
+                display: none;
             }
         `;
     const html = `
+           ${this.label ? `<span>${this.label}</span>` : ''}
            <slot></slot>
         `;
     this.shadowRoot.innerHTML = `
@@ -37,7 +38,9 @@ class FxCase extends HTMLElement {
                 ${style}
             </style>
             ${html}
-        `;
+    `;
+
+    this.style.display = 'none';
   }
 }
 

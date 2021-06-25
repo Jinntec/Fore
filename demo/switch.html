@@ -20,6 +20,9 @@
 
 
     <style>
+        :host{
+            display:none;
+        }
         .dynamic {
             background: #76ff03;
         }
@@ -41,7 +44,7 @@
         }
 
         [unresolved] {
-            display: block;
+            display: none;
         }
 
         #two {
@@ -82,7 +85,7 @@
                     <fx-toggle case="three"></fx-toggle>
                 </fx-trigger>
 
-                <fx-switch ref="page">
+                <fx-switch>
                     <fx-case id="one" name="page1">
                         some exclusive content
                     </fx-case>
@@ -98,37 +101,48 @@
     </demo-snippet>
 
 
-    <!--
 
 <h2>bound fx-switch</h2>
 <p>
-    fx-case child elements can be switched by explicit toggle action which take the id of an
-    `fx-case` element.
+    When <code>fx-switch</code> is bound it will activate the <code>fx-case</code> whose <code>name</code> attribute
+    matches the bound value.
 </p>
+    <demo-snippet>
+        <template>
 
     <fx-form>
-        <xf-model>
-            <xf-instance>
+        <fx-model>
+            <fx-instance>
                 <data>
                     <page>page2</page>
                 </data>
-            </xf-instance>
-        </xf-model>
+            </fx-instance>
+        </fx-model>
+
+        <fx-control ref="page" update-event="change">
+            <label>select page</label>
+            <select class="widget">
+                <option>page1</option>
+                <option>page2</option>
+                <option>page3</option>
+            </select>
+        </fx-control>
 
         <fx-switch ref="page">
             <fx-case name="page1">
-                some exclusive content
+                <h2>Page1</h2>
             </fx-case>
             <fx-case name="page2">
-                some further content
+                <h2>Page 2</h2>
             </fx-case>
             <fx-case name="page3">
-                some completely unneeded content
+                <h2>Page 3</h2>
             </fx-case>
         </fx-switch>
     </fx-form>
--->
 
+        </template>
+    </demo-snippet>
 
 </div>
 
