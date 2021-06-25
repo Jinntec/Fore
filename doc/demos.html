@@ -11,6 +11,19 @@
     <link rel="stylesheet" href="../resources/demo.css">
 
     <style>
+        body {
+            animation: fadeInAnimation ease 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
         .logo{
             width: 100vw;
             margin: 0 auto;
@@ -26,7 +39,6 @@
 </head>
 <body>
     <div class="wrapper demos topic">
-<!--        <img class="logo tilt-in-top-1" src="../resources/images/light7.png">-->
 
         <h1>Demos and Docs</h1>
 
