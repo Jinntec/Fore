@@ -6,7 +6,7 @@
 
     <title>Hi</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '../assets/@polymer/iron-demo-helpers/demo-snippet.js';
         import '../assets/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
@@ -45,20 +45,18 @@
     <h2>Description</h2>
     <p>
         Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-form</code> element. Besides
-        that we have a <code>fx-output</code> which - well -outputs a referenced data node.
+        that we have a <code>fx-output</code> which - well - outputs a referenced data node.
     </p>
     <p>
-        Fore is MVC but where's the model? It gets auto-generated if you don't provide one.
+        Fore is MVC but where's the model? It gets <strong>auto-generated</strong> if you don't provide one.
         For each Fore component with a <code>ref</code> a node in the instance data is created. The value of that
         bound component is taken as the default value. The form will create a XML document for your data.
     </p>
 
     <p>If you haven't felt that lazy this morning you could have written the equivalent like so:</p>
 
-<!--
     <demo-snippet>
         <template>
--->
             <fx-form>
                 <fx-model>
                     <fx-instance>
@@ -69,10 +67,10 @@
                 </fx-model>
                 <fx-output ref="greeting"></fx-output>
             </fx-form>
-<!--
         </template>
     </demo-snippet>
--->
+
+    <!--
 
     <p>The form holds a single <code>fx-model</code> which itself contains a <code>fx-instance</code> element. This
     is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
@@ -80,19 +78,19 @@
 
     <h2>Nesting refs</h2>
 
-<!--
+&lt;!&ndash;
     <demo-snippet>
         <template>
--->
+&ndash;&gt;
             <fx-form>
                 <fx-group ref="planet">
                     <fx-output ref="greeting">Hello Earth</fx-output>
                 </fx-group>
             </fx-form>
-<!--
+&lt;!&ndash;
         </template>
     </demo-snippet>
--->
+&ndash;&gt;
 
     <p>Guess how the instance looks like now? Here it is </p>
     <demo-snippet>
@@ -107,6 +105,7 @@
         </template>
     </demo-snippet>
 
+-->
 </div>
 
 

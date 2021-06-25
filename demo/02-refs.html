@@ -6,18 +6,14 @@
 
     <title>Refs</title>
 
-<!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.5.0/webcomponents-loader.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@polymer/iron-demo-helpers@3.1.0/demo-snippet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@polymer/iron-demo-helpers@3.1.0/demo-pages-shared-styles.js"></script>
-<!--
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
         import '@polymer/iron-demo-helpers/demo-snippet.js';
         import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
     </script>
--->
 
 
+    <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -35,18 +31,11 @@
     <h1>What are these <code>ref</code>s about?</h1>
     <p>Seen that <code>ref</code> thingy before but what does it actually do?</p>
 
-    <demo-snippet>
-        <template>
-            <fx-form>
-                <fx-output ref="greeting">Hello Universe</fx-output>
-            </fx-form>
-        </template>
-    </demo-snippet>
-
-
     <h2>Description</h2>
     <p>A <code>ref</code> (short for 'reference') points to some location in your instance data and binds to it. Whenever
         that bound node changes the UI will follow.</p>
+
+    <p>Likewise when a control or action changes the bound node, the instance data will be updated.</p>
 
 
     <demo-snippet>

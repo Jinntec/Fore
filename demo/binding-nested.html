@@ -6,6 +6,7 @@
 
     <title>Binding</title>
     <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
@@ -37,9 +38,12 @@
     <p><code>fx-bind</code> elements can be nested to avoid typing.</p>
 
     <p class="note">A <code>ref</code> expression
-        is always relative to it's parent binding or if there's none to the root-node of the default instance. This is
-        true
-        for <code>fx-bind</code> but also within the UI elements of the form.</p>
+        is always relative to it's parent binding or if there's none to the root-node of the default instance.
+    </p>
+    <p class="note">
+        This is true
+        for <code>fx-bind</code> but also within all other 'fx-' elements.
+    </p>
     <demo-snippet>
         <template>
 
