@@ -109,12 +109,4 @@ thead td{
     font-size: 16px;
     font-weight: bold;
 }
-.wrapper{
-    width:80%;
-    height:auto;
-    max-width:1200px;
-    margin: 0 auto;
-    background: var(--paper-light-blue-300);
-    position: relative;
-}
 

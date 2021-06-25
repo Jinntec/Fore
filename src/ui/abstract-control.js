@@ -77,9 +77,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           // console.log('dispatching value-changed for ', this);
           // console.log('value-changed path ', this.modelItem.path);
           this.dispatchEvent(
-              new CustomEvent('value-changed', { composed: true, bubbles: true, detail: {path:this.modelItem.path} })
+            new CustomEvent('value-changed', {
+              composed: true,
+              bubbles: true,
+              detail: { path: this.modelItem.path },
+            }),
           );
-
         }
         // this.requestUpdate();
       }

@@ -30,46 +30,49 @@ registerCustomXPathFunction(
   },
 );
 
-function buildTree(tree, data){
+function buildTree(tree, data) {
+  if (!data) return;
+  if (data.nodeType === Node.ELEMENT_NODE) {
+    if (data.children) {
+      const details = document.createElement('details');
+      details.setAttribute('data-path', data.nodeName);
+      const summary = document.createElement('summary');
 
-    if(!data) return ;
-    if(data.nodeType === Node.ELEMENT_NODE){
-        if(data.children){
-            const details = document.createElement('details');
-            details.setAttribute('data-path',data.nodeName)
-            const summary = document.createElement('summary');
+      let display = ` <${data.nodeName}`;
+      Array.from(data.attributes).forEach(attr => {
+        display += ` ${attr.nodeName}="${attr.nodeValue}"`;
+      });
 
-            let display = ` <${data.nodeName}`;
-            Array.from(data.attributes).forEach(attr =>{
-                display += ` ${attr.nodeName}="${attr.nodeValue}"`;
-            });
+      let contents;
+      if (
+        data.firstChild &&
+        data.firstChild.nodeType === Node.TEXT_NODE &&
+        data.firstChild.data.trim() !== ''
+      ) {
+        // console.log('whoooooooooopp');
+        contents = data.firstChild.nodeValue;
+        display += `>${contents}</${data.nodeName}>`;
+      } else {
+        display += '>';
+      }
+      summary.textContent = display;
 
-            let contents;
-            if(data.firstChild && data.firstChild.nodeType === Node.TEXT_NODE && data.firstChild.data.trim() !== ''){
-                // console.log('whoooooooooopp');
-                contents =data.firstChild.nodeValue;
-                display += `>${contents}</${data.nodeName}>`;
-            }else{
-                display += '>';
-            }
-            summary.textContent = display;
+      details.appendChild(summary);
+      if (data.childElementCount !== 0) {
+        details.setAttribute('open', 'open');
+      } else {
+        summary.setAttribute('style', 'list-style:none;');
+      }
+      tree.appendChild(details);
 
-            details.appendChild(summary);
-            if(data.childElementCount !== 0){
-                details.setAttribute('open','open');
-            }else{
-                summary.setAttribute('style','list-style:none;')
-            }
-            tree.appendChild(details);
-
-            Array.from(data.children).forEach(child =>{
-                // if(child.nodeType === Node.ELEMENT_NODE){
-                    // child.parentNode.appendChild(buildTree(child));
-                    buildTree(details,child);
-                // }
-            })
-        }
-    }/*else if(data.nodeType === Node.ATTRIBUTE_NODE){
+      Array.from(data.children).forEach(child => {
+        // if(child.nodeType === Node.ELEMENT_NODE){
+        // child.parentNode.appendChild(buildTree(child));
+        buildTree(details, child);
+        // }
+      });
+    }
+  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
         //create span for now
         // const span = document.createElement('span');
         // span.style.background = 'grey';
@@ -78,12 +81,10 @@ function buildTree(tree, data){
         tree.setAttribute(data.nodeName,data.value);
     }else {
         tree.textContent = data;
-    }*/
+    } */
 
-
-    return tree;
-
-};
+  return tree;
+}
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree' },
@@ -97,22 +98,20 @@ registerCustomXPathFunction(
       // const def = JSON.stringify(instance.getDefaultContext());
 
       const tree = document.createElement('div');
-      tree.setAttribute('class','logtree');
+      tree.setAttribute('class', 'logtree');
       // const datatree = buildTree(tree,instance.getDefaultContext());
       // return tree.appendChild(datatree);
       // return  buildTree(root,instance.getDefaultContext());;
-        const { formElement } = dynamicContext.currentContext;
-        const logtree = formElement.querySelector('.logtree');
-        if(logtree){
-            logtree.parentNode.removeChild(logtree);
-        }
-        formElement.appendChild(buildTree(tree, instance.getDefaultContext()));
-
+      const { formElement } = dynamicContext.currentContext;
+      const logtree = formElement.querySelector('.logtree');
+      if (logtree) {
+        logtree.parentNode.removeChild(logtree);
+      }
+      formElement.appendChild(buildTree(tree, instance.getDefaultContext()));
     }
     return null;
   },
 );
-
 
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
@@ -137,17 +136,19 @@ const instance = (dynamicContext, string) => {
   return null;
 };
 
+// Note that this is not to spec. The spec enforces elements to be returned from the
+// instance. However, we allow instances to actually be JSON!
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
   [],
-  'element()?',
+  'item()?',
   domFacade => instance(domFacade, null),
 );
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance' },
   ['xs:string?'],
-  'element()?',
+  'item()?',
   instance,
 );
 
@@ -347,6 +348,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     contextNode,
     domFacade,
     {},
+
     {
       currentContext: { formElement },
       functionNameResolver,

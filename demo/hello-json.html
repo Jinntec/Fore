@@ -22,17 +22,22 @@
         .dynamic {
             background: #76ff03;
         }
-
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+<h1>JSON binding examples</h1>
 
+<p>JSON can be addressed via the XPATH3 support for JSON using the maps and arrays operators.</p>
+<p>See examples inline.</p>
+<demo-snippet>
+    <template>
 
 <fx-form>
     <fx-message event="refresh-done">refresh has been done</fx-message>
 
     <fx-model id="model1">
-        <fx-instance type="json">
+        <fx-instance id="instance1" type="json">
             {
                 "automobiles": [
                     {
@@ -73,22 +78,30 @@
         -->
     </fx-model>
     <fx-group>
-
-
         <h1>
-            Your favorite car:
-<!--            {?1?automobiles[1]?maker[1]}-->
-            {parse-json(instance())}
+            The car maker of the day:
+            {?automobiles?*[current-date() => day-from-date() mod 7]?maker}
         </h1>
 
-<!--
-        <fx-trigger>
-            <button>set year</button>
-            <fx-setvalue ref="?automobiles[?maker = 'Honda' and ?model = 'Accord']?year" value="2020"></fx-setvalue>
-        </fx-trigger>
--->
+		<h2>Repeating over JSON</h2>
+
+		<ul>
+		  <fx-repeat ref="?automobiles">
+			<template>
+			  <li>
+				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <strong>Year:</strong> {?year}- <i>{let $maker := ?maker =>trace() return if(instance('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
+			  </li>
+			</template>
+		  </fx-repeat>
+		</ul>
+
     </fx-group>
 </fx-form>
+
+    </template>
+</demo-snippet>
+</div>
+
 <script type="module" src="../dist/fore-all.js"></script>
 
 </body>

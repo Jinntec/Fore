@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
@@ -35,7 +35,7 @@
     "@polymer/paper-input": "^3.2.1",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@vanillawc/wc-codemirror": "^1.9.1",
-    "fontoxpath": "^3.17.4"
+    "fontoxpath": "^3.18.1"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",

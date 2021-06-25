@@ -62,16 +62,10 @@ export default class FxSetvalue extends AbstractAction {
       item.value = newVal;
       item.changed = true;
 
-      // this.needsRebuild = false;
-      // this.needsRecalculate = true;
-      // this.needsRevalidate = true;
-      // this.needsRefresh = true;
-
       this.needsUpdate = true;
 
       console.log('setvalue[2] ', item, newVal);
     }
-    // this.setAttribute('value', modelItem.value);
   }
 }
 
