@@ -7,14 +7,7 @@
     <title>Actions</title>
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module">
-        import '@polymer/iron-demo-helpers/demo-snippet.js';
-        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-        import '@polymer/paper-checkbox/paper-checkbox.js';
-
-    </script>
-
-
+    <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
@@ -88,7 +81,9 @@
             <demo-snippet>
                 <template>
                     <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
-                        <paper-checkbox class="widget">i agree</paper-checkbox>
+                        <input id="cb" type="checkbox" class="widget">
+                        <label for="cb">i agree</label>
+
                         <fx-message if=".='true'" event="value-changed">Thanks</fx-message>
                     </fx-control>
 
@@ -130,6 +125,6 @@
 </div>
 
 
-<script type="module" src="../index.js"></script>
+<script type="module" src="../dist/fore-all.js"></script>
 </body>
 </html>
