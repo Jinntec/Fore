@@ -9,24 +9,28 @@
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module" src="../index.js"></script>
 
-    <!--
-        <script type="module">
-            import '../src/fx-form.js';
-            import '../src/actions/fx-setvalue.js';
-        </script>
-    -->
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
 
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
     <style>
         .dynamic {
             background: #76ff03;
         }
-
     </style>
 </head>
 <body unresolved="unresolved">
+<div class="wrapper">
+<h1>JSON binding examples</h1>
 
+<p>JSON can be addressed via the XPATH3 support for JSON using the maps and arrays operators.</p>
+<p>See examples inline.</p>
+<demo-snippet>
+    <template>
 
 <fx-form>
     <fx-message event="refresh-done">refresh has been done</fx-message>
@@ -75,7 +79,7 @@
     <fx-group>
         <h1>
             The car maker of the day:
-            {?automobiles?*[current-date() => day-from-date() mod 5]?maker}
+            {?automobiles?*[current-date() => day-from-date() mod 7]?maker}
         </h1>
 
 		<h2>Repeating over JSON</h2>
@@ -84,19 +88,17 @@
 		  <fx-repeat ref="?automobiles">
 			<template>
 			  <li>
-				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <i>{let $maker := ?maker =>trace() return if(instance('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
+				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <strong>Year:</strong> {?year}- <i>{let $maker := ?maker =>trace() return if(instance('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
 			  </li>
 			</template>
 		  </fx-repeat>
 		</ul>
 
-<!--
-        <fx-trigger>
-            <button>set year</button>
-            <fx-setvalue ref="?automobiles?*[?maker = 'Honda' and ?model = 'Accord']?year" value="2020"></fx-setvalue>
-        </fx-trigger>
--->
     </fx-group>
 </fx-form>
+
+    </template>
+</demo-snippet>
+</div>
 </body>
 </html>
