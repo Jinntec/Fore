@@ -181,17 +181,19 @@ describe('fx-dispatch tests', () => {
 
         await oneEvent(el, 'refresh-done');
 
-/*
         const bar = document.getElementById('bar');
-        bar.addEventListener('click', (event) => {
-            bar.innerText = event.detail.instance;
-        });
-*/
+        const control = el.querySelector('fx-control');
+        /*
+                bar.addEventListener('click', (event) => {
+                    bar.innerText = event.detail.instance;
+                });
+        */
 
         const trigger = el.querySelector('fx-trigger');
         trigger.performActions();
+        await oneEvent(control, 'value-changed');
 
-        expect(bar.innerText).to.equal('aString');
+        expect(bar.innerText).to.equal('foobar');
     });
 
 });
