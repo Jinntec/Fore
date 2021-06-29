@@ -58,14 +58,14 @@
                 </fx-model>
                 <fx-trigger>
                     <button>dispatch it</button>
-                    <fx-dispatch event="foo" targetid="bar">
+                    <fx-dispatch name="foo" targetid="bar">
                         <fx-property name="instance" expr="instance('default')"></fx-property>
                         <fx-property name="string" value="aString"></fx-property>
                     </fx-dispatch>
                 </fx-trigger>
                 <fx-trigger>
                     <button>dispatch string property</button>
-                    <fx-dispatch event="myEvent" targetid="bar">
+                    <fx-dispatch name="myEvent" targetid="bar">
                         <fx-property name="string" value="aString"></fx-property>
                     </fx-dispatch>
                 </fx-trigger>
