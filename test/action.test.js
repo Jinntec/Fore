@@ -81,7 +81,7 @@ describe('action Tests', () => {
         <fx-control ref="value"></fx-control>
         <fx-trigger>
           <button></button>
-          <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
+          <fx-setvalue if="../confirmation='true'" ref="value">8</fx-setvalue>
         </fx-trigger>
       </fx-form>
     `);
