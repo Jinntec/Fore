@@ -114,8 +114,9 @@ describe('initialize form', () => {
     // await elementUpdated(el);
     await oneEvent(el, 'refresh-done');
     console.log('el ', el);
-    const dialog = el.shadowRoot.querySelector('paper-dialog');
+    const dialog = el.shadowRoot.querySelector('#modalMessage');
     expect(dialog).to.exist;
-    expect(dialog.id).to.be.equal('modalMessage');
+    expect(dialog.classList.contains('overlay')).to.be.true;
+    expect(dialog).to.be.visible;
   });
 });

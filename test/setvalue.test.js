@@ -19,7 +19,7 @@ describe('setvalue tests', () => {
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
           <fx-trigger id="btn" label="say 'hello Universe'">
-            <fx-setvalue ref="greeting" value="Hello Universe"></fx-setvalue>
+            <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
           </fx-trigger>
         </fx-group>
       </fx-form>
@@ -56,7 +56,7 @@ describe('setvalue tests', () => {
         <fx-group>
           <fx-output id="output" ref="greeting"></fx-output>
           <fx-trigger id="btn" label="say 'hello Universe'">
-            <fx-setvalue ref="foo" value="Hello Universe"></fx-setvalue>
+            <fx-setvalue ref="foo">Hello Universe</fx-setvalue>
           </fx-trigger>
         </fx-group>
       </fx-form>
@@ -79,7 +79,7 @@ describe('setvalue tests', () => {
     expect(out.modelItem.value).to.equal('Hello World!');
   });
 
-  it('ignores uses element content if oresent', async () => {
+  it('uses element content instead of "value" attr if present', async () => {
     const el = await fixtureSync(html`
       <fx-form>
         <fx-model id="model1">

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>barebone Fore form</title>
+
+    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <fx-form>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <foo>fooVal</foo>
+                    <bar>barVal</bar>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-trigger>
+            <button>change value</button>
+            <fx-setvalue ref="foo">foo</fx-setvalue>
+        </fx-trigger>
+
+        <fx-group>
+            <fx-dispatch name="click" targetid="bar" event="value-changed">
+                <fx-property name="instance" expr="instance('default')"></fx-property>
+                <fx-property name="string" value="group"></fx-property>
+            </fx-dispatch>
+
+            <fx-control ref="foo">
+                <fx-dispatch name="click" targetid="bar" event="value-changed">
+                    <fx-property name="instance" expr="instance('default')"></fx-property>
+                    <fx-property name="string" value="control"></fx-property>
+                </fx-dispatch>
+            </fx-control>
+
+        </fx-group>
+    </fx-form>
+    <div id="bar" onclick="event.target.innerHTML = event.detail.string"></div>
+    <div id="displayValue"></div>
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

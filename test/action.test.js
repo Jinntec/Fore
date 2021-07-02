@@ -48,7 +48,7 @@ describe('action Tests', () => {
         <fx-control ref="value"></fx-control>
         <fx-trigger>
           <button></button>
-          <fx-setvalue ref="value" value="B"></fx-setvalue>
+          <fx-setvalue ref="value">B</fx-setvalue>
         </fx-trigger>
       </fx-form>
     `);
@@ -81,7 +81,7 @@ describe('action Tests', () => {
         <fx-control ref="value"></fx-control>
         <fx-trigger>
           <button></button>
-          <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
+          <fx-setvalue if="../confirmation='true'" ref="value">8</fx-setvalue>
         </fx-trigger>
       </fx-form>
     `);
@@ -114,7 +114,7 @@ describe('action Tests', () => {
         <fx-control ref="value"></fx-control>
         <fx-trigger>
           <button></button>
-          <fx-setvalue if="../confirmation='true'" ref="value" value="B"></fx-setvalue>
+          <fx-setvalue if="../confirmation='true'" ref="value">B</fx-setvalue>
         </fx-trigger>
       </fx-form>
     `);
@@ -149,8 +149,8 @@ describe('action Tests', () => {
         <fx-trigger>
           <button></button>
           <fx-action>
-            <fx-setvalue ref="value" value="B"></fx-setvalue>
-            <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
+            <fx-setvalue ref="value">B</fx-setvalue>
+            <fx-setvalue ref="confirmation">true</fx-setvalue>
           </fx-action>
         </fx-trigger>
       </fx-form>

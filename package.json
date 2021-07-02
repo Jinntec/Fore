@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
@@ -31,7 +31,6 @@
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
-    "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@vanillawc/wc-codemirror": "^1.9.1",

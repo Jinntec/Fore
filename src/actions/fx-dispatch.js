@@ -13,7 +13,7 @@ export class FxDispatch extends AbstractAction {
 
   constructor() {
     super();
-    this.event = null;
+    this.name = null;
     this.targetid = null;
     this.details = null;
     this.attachShadow({ mode: 'open' });
@@ -25,8 +25,9 @@ export class FxDispatch extends AbstractAction {
    * @throws Error when no `event` attribute is given
    */
   connectedCallback() {
-    this.event = this.getAttribute('event');
-    if(!this.event){
+    super.connectedCallback();
+    this.name = this.getAttribute('name');
+    if(!this.name){
       throw new Error('no event specified for dispatch', this);
     }
 
@@ -96,7 +97,7 @@ export class FxDispatch extends AbstractAction {
         throw new Error(`targetid ${this.targetid} does not exist in document`);
       }
       target.dispatchEvent(
-          new CustomEvent(this.event, {
+          new CustomEvent(this.name, {
             composed: true,
             bubbles: true,
             detail: details,
@@ -104,7 +105,7 @@ export class FxDispatch extends AbstractAction {
       );
     }else{
       document.dispatchEvent(
-          new CustomEvent(this.event, {
+          new CustomEvent(this.name, {
             composed: true,
             bubbles: true,
             detail: details,

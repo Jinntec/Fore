@@ -161,6 +161,20 @@ registerCustomXPathFunction(
     nodes[0],
 );
 
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'event' },
+  ['xs:string?'],
+  'item()?',
+  (dynamicContext, arg) => {
+      const payload = dynamicContext.currentContext.variables[arg];
+      if(payload.nodeType){
+          console.log('got some node as js object');
+      }
+
+    return dynamicContext.currentContext.variables[arg];
+  }
+);
+
 // Implement the XForms standard functions here.
 registerXQueryModule(`
     module namespace xf="${XFORMS_NAMESPACE_URI}";
@@ -201,11 +215,12 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'boolean-from-string':
+    case 'depends':
+    case 'event':
+    case 'instance':
     case 'log':
     case 'logtree':
-    case 'instance':
-    case 'depends':
-    case 'boolean-from-string':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
       if (prefix === '' || prefix === 'fn') {
@@ -248,7 +263,7 @@ function namespaceResolver(prefix) {
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
   return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
-    currentContext: { formElement },
+    currentContext: { formElement,variables },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
     },

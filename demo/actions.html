@@ -90,7 +90,7 @@
 
                     <fx-trigger>
                         <button>come in</button>
-                        <fx-setvalue if="../confirmation = 'true'" ref="entered" value="true"></fx-setvalue>
+                        <fx-setvalue if="../confirmation = 'true'" ref="entered">true</fx-setvalue>
                     </fx-trigger>
 
             <fx-output ref="entered">
@@ -108,8 +108,8 @@
                 <fx-trigger>
                     <button>execute action block</button>
                     <fx-action>
-                        <fx-setvalue ref="confirmation" value="true"></fx-setvalue>
-                        <fx-setvalue ref="entered" value="true"></fx-setvalue>
+                        <fx-setvalue ref="confirmation">true</fx-setvalue>
+                        <fx-setvalue ref="entered">true</fx-setvalue>
                     </fx-action>
                 </fx-trigger>
             </template>
