@@ -166,7 +166,7 @@ describe('fx-dispatch tests', () => {
                 </fx-model>
                 <fx-trigger>
                     <button>change value</button>
-                    <fx-setvalue ref="foo" value="foo"></fx-setvalue>
+                    <fx-setvalue ref="foo">foo</fx-setvalue>
                 </fx-trigger>
                 
                     <fx-control ref="foo">

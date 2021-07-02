@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Events</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '@polymer/iron-demo-helpers/demo-snippet.js';
+        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        pre {
+            /*position: fixed;*/
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 5;
+            padding: 1rem;
+            color:var(--paper-red-500)
+        }
+
+        pre:before {
+            content: 'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top: -21px;
+            left: 0;
+            color: var(--paper-red-500);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h2>Passing data as event params</h2>
+    <p>Some inline JavaScript creates a XML document that is then passed via an event param to the
+    <code>fx-setvalue</code> action which will append it to its context node (root node of default instance here).</p>
+    <demo-snippet>
+        <template>
+
+            <fx-form>
+                <fx-model>
+                    <fx-instance id="default">
+                        <data>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="foo" required="true()"></fx-bind>
+                </fx-model>
+                <!--
+                ### bubbling listener
+                -->
+                <fx-action event="custom">
+                    <fx-setvalue ref="instance('default')" value="event('data')"></fx-setvalue>
+<!--                    <fx-setvalue ref="foo" value="event('data')"></fx-setvalue>-->
+
+                </fx-action>
+                <button onclick="firecustom(event)">fire custom event from js</button>
+                <h3>{nodes/node1}</h3>
+                <h3>{nodes/node2}</h3>
+                <pre>
+                    {log('default')}
+                </pre>
+            </fx-form>
+
+            <script>
+                function firecustom(event) {
+                    const data = new DOMParser().parseFromString('<nodes><node1>nodeVal1</node1><node2>nodeVal2</node2></nodes>', 'application/xml');
+                    event.target.dispatchEvent(
+                        new CustomEvent('custom', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {data: data},
+                        }),
+                    );
+                }
+            </script>
+        </template>
+    </demo-snippet>
+
+    <h2>If you just wanted a node in the tree...</h2>
+    <demo-snippet>
+        <template>
+
+            <fx-form>
+                <fx-model>
+                    <fx-instance id="default">
+                        <data>
+                            <foo></foo>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="foo" required="true()"></fx-bind>
+                </fx-model>
+                <!--
+                ### bubbling listener
+                -->
+                <fx-action event="custom">
+                    <fx-setvalue ref="foo" value="event('data')"></fx-setvalue>
+                </fx-action>
+                <button onclick="firecustom(event)">fire custom event from js</button>
+                <h3>{foo/nodes/node1}</h3>
+                <h3>{foo/nodes/node2}</h3>
+                <pre>
+                    {log('default')}
+                </pre>
+            </fx-form>
+
+            <script>
+                function firecustom(event) {
+                    const data = new DOMParser().parseFromString('<nodes><node1>nodeVal1</node1><node2>nodeVal2</node2></nodes>', 'application/xml');
+                    event.target.dispatchEvent(
+                        new CustomEvent('custom', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {data: data},
+                        }),
+                    );
+                }
+            </script>
+        </template>
+    </demo-snippet>
+
+
+
+</div>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

@@ -290,7 +290,7 @@ export class FxForm extends HTMLElement {
      * @param {Element} parent
      */
     _generateInstance(start, parent) {
-        if (start.hasAttribute('ref')) {
+        if (start.hasAttribute('ref') && !Fore.isActionElement(start.nodeName)) {
             const ref = start.getAttribute('ref');
 
             if (ref.includes('/')) {

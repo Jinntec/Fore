@@ -29,7 +29,6 @@
     "@polymer/iron-ajax": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
-    "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
     "@vaadin/vaadin-notification": "^1.4.0",
     "@vanillawc/wc-codemirror": "^1.9.1",

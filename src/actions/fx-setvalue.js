@@ -1,6 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
+import {evaluateXPath} from "../xpath-evaluation";
 
 /**
  * `fx-setvalue`
@@ -14,7 +15,7 @@ export default class FxSetvalue extends AbstractAction {
       ref: {
         type: String,
       },
-      value: {
+      valueAttr: {
         type: String,
       },
     };
@@ -23,26 +24,25 @@ export default class FxSetvalue extends AbstractAction {
   constructor() {
     super();
     this.ref = '';
-    this.value = '';
+    this.valueAttr = '';
   }
 
   connectedCallback() {
-    if (super.connectedCallback) super.connectedCallback();
+    super.connectedCallback();
 
     if (this.hasAttribute('ref')) {
       this.ref = this.getAttribute('ref');
     } else {
       throw new Error('fx-setvalue must specify a "ref" attribute');
     }
-    this.value = this.getAttribute('value');
+    this.valueAttr = this.getAttribute('value');
   }
 
   perform() {
     super.perform();
-
     let { value } = this;
-    if (this.value !== null) {
-      value = this.value;
+    if (this.valueAttr !== null) {
+      value = evaluateXPath(this.valueAttr,this.getInScopeContext(),this.getOwnerForm(),this.detail);
     } else if (this.textContent !== '') {
       value = this.textContent;
     } else {

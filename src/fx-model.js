@@ -46,7 +46,7 @@ export class FxModel extends HTMLElement {
     // console.log('lazyCreateModelItem ', node);
 
     let targetNode = {};
-    if (node === null) return null;
+    if (node === null || node === undefined) return null;
     if (node.nodeType === node.TEXT_NODE) {
       // const parent = node.parentNode;
       // console.log('PARENT ', parent);

@@ -32,11 +32,26 @@
                     display: none;
                 }
         */
+        fx-trigger:nth-child(1){
+            background: lightblue;
+        }
+        fx-trigger:nth-child(2){
+            background: #ffca28;
+        }
+        fx-trigger:nth-child(3){
+            background: #aeea00;
+        }
         fx-case {
             width: 600px;
             height: 400px;
             background: lightblue;
             padding: 10px;
+        }
+        .second fx-case{
+            background: black;
+        }
+        .second fx-case h2{
+            color:white;
         }
 
         fx-trigger {
@@ -128,7 +143,7 @@
             </select>
         </fx-control>
 
-        <fx-switch ref="page">
+        <fx-switch class="second" ref="page">
             <fx-case name="page1">
                 <h2>Page1</h2>
             </fx-case>
