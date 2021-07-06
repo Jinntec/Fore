@@ -54,4 +54,45 @@ describe('template expressions', () => {
 
     expect(greeting.textContent).to.equal('Hello {unreplaced} Universe');
   });
+
+  it('Correctly resolves namespaces based on the context of the template', async () => {
+    const el = await fixtureSync(html`
+      <fx-form xpath-default-namespace="CCC">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greeting xmlns="AAA">Hello AAA</greeting>
+              <greeting xmlns="BBB">Hello BBB</greeting>
+              <greeting xmlns="CCC">Hello CCC</greeting>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div xmlns:ns="AAA" class="greetingA {ns:greeting}">
+          Greeting: {ns:greeting} another {ns:greeting}
+        </div>
+        <div xmlns:ns="BBB" class="greetingB {ns:greeting}">
+          Greeting: {ns:greeting} another {ns:greeting}
+        </div>
+        <div class="greetingC {greeting}">
+          Greeting: {greeting} another {greeting}
+        </div>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const theDivA = el.querySelector('.greetingA');
+
+    expect(theDivA.getAttribute('class')).to.equal('greetingA Hello AAA');
+    expect(theDivA.innerText).to.equal('Greeting: Hello AAA another Hello AAA');
+
+    const theDivB = el.querySelector('.greetingB');
+    expect(theDivB.getAttribute('class')).to.equal('greetingB Hello BBB');
+    expect(theDivB.innerText).to.equal('Greeting: Hello BBB another Hello BBB');
+
+    const theDivC = el.querySelector('.greetingC');
+    expect(theDivC.getAttribute('class')).to.equal('greetingC Hello CCC');
+    expect(theDivC.innerText).to.equal('Greeting: Hello CCC another Hello CCC');
+  });
 });

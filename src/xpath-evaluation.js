@@ -250,24 +250,47 @@ function functionNameResolver({ prefix, localName }, _arity) {
   }
 }
 
-function namespaceResolver(prefix) {
-  // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+/**
+ * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
+ * XPath in which the namespace is being resolved. The prefix will be resolved by using the
+ * ancestry of said element.
+ *
+ * It has two ways of doing so:
+ *
+ * - If the prefix is defined in an `xmlns:XXX="YYY"` namespace declaration, it will return 'YYY'.
+ * - If the prefix is the empty prefix and there is an `xpath-default-namespace="YYY"` attribute in the
+ * - ancestry, that attribute will be used and 'YYY' will be returned
+ *
+ * @param  {Element}  contextElement  The element that is most closely related with the XPath in which this prefix is resolved.
+ * @param  {string}   prefix          The prefix to resolve
+ */
+function resolveNamespacePrefix(contextElement, prefix) {
+  if (prefix === 'xhtml') {
+    return 'http://www.w3.org/1999/xhtml';
+  }
 
-  /**
-   * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-   * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-   *   // Return value
-   *  }
-   * }
-   */
+  if (prefix === '') {
+    return (
+      fxEvaluateXPathToString(
+        'ancestor-or-self::*/@xpath-default-namespace[last()]',
+        contextElement,
+      ) || null
+    );
+  }
 
-  // console.log('namespaceResolver  prefix', prefix);
-  const ns = {
-    xhtml: 'http://www.w3.org/1999/xhtml',
-    tei: 'http://www.tei-c.org/ns/1.0',
-    // ''    : Fore.XFORMS_NAMESPACE_URI
-  };
-  return ns[prefix] || null;
+  // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
+  // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
+  // attributes. Which they technically ARE NOT!
+
+  const result = fxEvaluateXPathToString(
+    'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+    contextElement,
+    null,
+    { prefix },
+  );
+
+  console.log('result', result);
+  return result;
 }
 
 /**
@@ -285,7 +308,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
       xf: XFORMS_NAMESPACE_URI,
     },
     functionNameResolver,
-    namespaceResolver,
+    namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
   });
 }
 
@@ -304,7 +327,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
     null,
     {},
     {
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
       defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
@@ -334,7 +357,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
@@ -359,7 +382,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
@@ -387,7 +410,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
@@ -414,7 +437,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }

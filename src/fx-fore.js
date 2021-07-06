@@ -69,7 +69,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-            
+
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -105,7 +105,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-            
+
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -200,7 +200,7 @@ export class FxFore extends HTMLElement {
     const search =
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, null);
+    const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
