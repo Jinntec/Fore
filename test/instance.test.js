@@ -172,7 +172,32 @@ describe('instance Tests', () => {
     expect(modelItems[0].required).to.equal(false);
   });
 
-  it('loads data from external xml file via src attr', async () => {
+  it('Can run the instance function from text nodes', async () => {
+    const el = await fixtureSync(html`
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <foobar></foobar>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <item>Maybe</item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <span id="the-span">{instance('second')/item}</span>
+      </fx-form>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const theSpan = el.querySelector('#the-span');
+    expect(theSpan.innerText).to.equal('Maybe');
+  });
+
+  it('loads data from external file via src attr', async () => {
     const el = await fixtureSync(html`
                 <fx-fore>
                     <fx-model id="model1">

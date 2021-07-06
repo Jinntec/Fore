@@ -117,7 +117,10 @@ const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
 
-  const { formElement } = dynamicContext.currentContext;
+  const formElement = fxEvaluateXPathToFirstNode(
+    'ancestor-or-self::fx-form',
+    dynamicContext.currentContext.formElement,
+  );
 
   // console.log('fnInstance dynamicContext: ', dynamicContext);
   // console.log('fnInstance string: ', string);
