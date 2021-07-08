@@ -172,14 +172,13 @@ describe('instance Tests', () => {
     expect(modelItems[0].required).to.equal(false);
   });
 
-  it('loads data from external file via src attr', async () => {
+  it('loads data from external xml file via src attr', async () => {
     const el = await fixtureSync(html`
                 <fx-form>
                     <fx-model id="model1">
                         <fx-instance src="base/test/instance1.xml"></fx-instance>
                         <fx-bind ref="greeting"</fx-bind>
                     </fx-model>
-                    <fx-message event="instance-loaded"
                 </fx-form>
             `);
 
@@ -193,6 +192,87 @@ describe('instance Tests', () => {
 
     expect(modelItems[0].required).to.be.false;
     expect(modelItems[0].value).to.equal('hello from file');
+  });
+
+  it('loads inline json data', async () => {
+    const el = await fixtureSync(html`
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance type="json">
+                          {
+                              "automobiles": [
+                                  {
+                                      "maker": "Nissan",
+                                      "model": "Teana",
+                                      "year": 2000
+                                  },
+                                  {
+                                      "maker": "Honda",
+                                      "model": "Jazz",
+                                      "year": 2023
+                                  },
+                                  {
+                                      "maker": "Honda",
+                                      "model": "Civic",
+                                      "year": 2007
+                                  },
+                                  {
+                                      "maker": "Toyota",
+                                      "model": "Yaris",
+                                      "year": 2008
+                                  },
+                                  {
+                                      "maker": "Honda",
+                                      "model": "Accord",
+                                      "year": 2011
+                                  }
+                              ],
+                              "motorcycles": [{
+                                  "maker": "Honda",
+                                  "model": "ST1300",
+                                  "year": 2012
+                              }]
+                          }                                    
+                        </fx-instance>
+                    </fx-model>
+                </fx-form>
+            `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[0].instanceData).to.exist;
+    expect(instances[0].instanceData.automobiles).to.exist;
+    expect(instances[0].instanceData.automobiles[0].maker).to.equal('Nissan');
+  });
+
+  it('loads data from external json file via src attr', async () => {
+    const el = await fixtureSync(html`
+                <fx-form>
+                    <fx-model id="model1">
+                        <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
+                    </fx-model>
+                </fx-form>
+            `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[0].instanceData).to.exist;
+
+
+
+    // const model = el.querySelector('fx-model');
+    // const { modelItems } = model;
+    // expect(modelItems[0].value).to.equal('hello from file');
+
+    // const out = el.querySelector('fx-output');
+    // const span = el.querySelector('fx-output');
+    // expect(span.textContent).to.equal('Honda');
+    // expect(out.textContent).to.equal('Honda');
+
   });
 
   /*

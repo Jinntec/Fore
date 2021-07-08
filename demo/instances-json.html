@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Instance super powers</title>
+    <title>Instances with JSON</title>
 
     <script src="../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module">
@@ -35,21 +35,6 @@
         <template>
             <fx-form>
                 <fx-model>
-                    <fx-instance src="instance1.xml"></fx-instance>
-                </fx-model>
-                <fx-output ref="greeting"></fx-output>
-            </fx-form>
-        </template>
-    </demo-snippet>
-    <h3>Description</h3>
-    <p>This instance loads its data from a local file. However this can be any kind of URL.</p>
-
-    <h2>JSON instances just work the same</h2>
-    <p>Just note the syntax to access JSON values. XPath 3.1 notation is used to query the JSON.</p>
-    <demo-snippet>
-        <template>
-            <fx-form>
-                <fx-model>
                     <fx-instance src="automobiles.json" type="json"></fx-instance>
                 </fx-model>
                 <fx-output ref="?automobiles?1?maker">
@@ -60,23 +45,6 @@
         </template>
     </demo-snippet>
 
-    <h2>Using the queryString</h2>
-    <demo-snippet>
-        <template>
-            <fx-form>
-                <fx-model>
-                    <fx-instance src="#querystring"></fx-instance>
-                </fx-model>
-                <fx-output ref="param1"></fx-output>
-                <fx-output ref=param2></fx-output>
-            </fx-form>
-        </template>
-    </demo-snippet>
-    <h3>Description</h3>
-    <p>Notice that we've called this demo with 2 parameter on the querystring of the URL. When using the constant
-    <code>#querystring</code> as the <code>src</code> of an instance it will created a instance with one node for
-        each param on the querystring.
-    </p>
 </div>
 
 

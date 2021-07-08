@@ -26,7 +26,6 @@
     "dist/fore-all.js"
   ],
   "dependencies": {
-    "@polymer/iron-ajax": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-input": "^3.2.1",
