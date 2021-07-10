@@ -12,21 +12,21 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,
-      detail:{
-        type:Object
+      detail: {
+        type: Object,
       },
       needsUpdate: {
         type: Boolean,
       },
       ifCondition: {
         type: Boolean,
-      }
+      },
     };
   }
 
   constructor() {
     super();
-    this.detail={};
+    this.detail = {};
     this.needsUpdate = false;
     this.ifCondition = false;
   }
@@ -43,9 +43,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     this.target = this.getAttribute('target');
     if (this.target) {
-      if(this.target === '#document'){
+      if (this.target === '#document') {
         document.addEventListener(this.event, e => this.execute(e));
-      }else{
+      } else {
         this.targetElement = document.getElementById(this.target);
         this.targetElement.addEventListener(this.event, e => this.execute(e));
       }
@@ -65,8 +65,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   // eslint-disable-next-line no-unused-vars
   execute(e) {
-
-    if(e && e.detail){
+    if (e && e.detail) {
       this.detail = e.detail;
     }
     this.needsUpdate = false;

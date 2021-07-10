@@ -8,7 +8,6 @@ import { AbstractAction } from './abstract-action.js';
  * @demo demo/index.html
  */
 export class FxAction extends AbstractAction {
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -16,7 +15,7 @@ export class FxAction extends AbstractAction {
 
   connectedCallback() {
     super.connectedCallback();
-    this.src = this.hasAttribute('src')?this.getAttribute('src'):null;
+    this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     const style = `
         :host{
             display:none;
@@ -33,7 +32,7 @@ export class FxAction extends AbstractAction {
   perform() {
     const { children } = this;
 
-    if(this.src){
+    if (this.src) {
       this.innerHTML = ''; // reset
       console.log('### fx-script.perform ');
       const script = document.createElement('script');

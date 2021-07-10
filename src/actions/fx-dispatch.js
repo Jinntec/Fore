@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action.js";
+import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 
 /**
@@ -10,7 +10,6 @@ import { evaluateXPath } from '../xpath-evaluation.js';
  * can be accessed in usual JavaScript way.
  */
 export class FxDispatch extends AbstractAction {
-
   constructor() {
     super();
     this.name = null;
@@ -27,14 +26,14 @@ export class FxDispatch extends AbstractAction {
   connectedCallback() {
     super.connectedCallback();
     this.name = this.getAttribute('name');
-    if(!this.name){
+    if (!this.name) {
       throw new Error('no event specified for dispatch', this);
     }
 
-    this.targetid = this.hasAttribute('targetid')? this.getAttribute('targetid'):null;
+    this.targetid = this.hasAttribute('targetid') ? this.getAttribute('targetid') : null;
 
     // ### has a shadow just to hide
-/*
+    /*
     this.shadowRoot.innerHTML = `
         <style>
             :host *{
@@ -44,7 +43,6 @@ export class FxDispatch extends AbstractAction {
         <slot></slot>
     `;
 */
-
   }
 
   /*
@@ -66,24 +64,24 @@ export class FxDispatch extends AbstractAction {
       const expr = prop.getAttribute('expr');
 
       let propVal;
-      if(expr){
-        if(value) {
+      if (expr) {
+        if (value) {
           throw new Error('if "expr" is given there must not be a "value" attribute');
         }
-        const result = evaluateXPath(expr,this.getInScopeContext(),this.getOwnerForm());
+        const result = evaluateXPath(expr, this.getInScopeContext(), this.getOwnerForm());
         let serialized = null;
-        if(result.nodeName){
+        if (result.nodeName) {
           const serializer = new XMLSerializer();
           serialized = serializer.serializeToString(result);
         }
-        if(serialized){
+        if (serialized) {
           details[name] = serialized;
-        }else{
+        } else {
           details[name] = result;
         }
       }
 
-      if(value){
+      if (value) {
         details[name] = value;
       }
     });
@@ -91,31 +89,28 @@ export class FxDispatch extends AbstractAction {
     console.log('details ', details);
 
     // ### when targetid is given dispatch to that if present (throw an error if not) - otherwise dispatch to document
-    if(this.targetid){
+    if (this.targetid) {
       const target = document.getElementById(this.targetid);
-      if(!target){
+      if (!target) {
         throw new Error(`targetid ${this.targetid} does not exist in document`);
       }
       target.dispatchEvent(
-          new CustomEvent(this.name, {
-            composed: true,
-            bubbles: true,
-            detail: details,
-          }),
+        new CustomEvent(this.name, {
+          composed: true,
+          bubbles: true,
+          detail: details,
+        }),
       );
-    }else{
+    } else {
       document.dispatchEvent(
-          new CustomEvent(this.name, {
-            composed: true,
-            bubbles: true,
-            detail: details,
-          }),
+        new CustomEvent(this.name, {
+          composed: true,
+          bubbles: true,
+          detail: details,
+        }),
       );
     }
-
   }
-
-
 }
 
 window.customElements.define('fx-dispatch', FxDispatch);
