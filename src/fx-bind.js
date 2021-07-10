@@ -348,13 +348,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
       });
     } else {
-      let formElement;
-      for (let anc = this; anc; anc = anc.parentNode) {
-        if (anc.localName === 'fx-form') {
-          formElement = anc;
-          break;
-        }
-      }
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this.getOwnerForm());

@@ -1,6 +1,6 @@
 import { registerCustomXPathFunction } from 'fontoxpath';
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import { evaluateXPath } from '../xpath-evaluation.js';
 
 /**
  * Allows to extend a form with local custom functions.

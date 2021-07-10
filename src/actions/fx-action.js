@@ -14,7 +14,9 @@ export class FxAction extends AbstractAction {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    if(super.connectedCallback){
+      super.connectedCallback();
+    }
     this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     const style = `
         :host{

@@ -83,7 +83,7 @@ function buildTree(tree, data) {
         tree.textContent = data;
     } */
 
-  return tree;
+  // return tree;
 }
 
 registerCustomXPathFunction(
@@ -102,12 +102,12 @@ registerCustomXPathFunction(
       // const datatree = buildTree(tree,instance.getDefaultContext());
       // return tree.appendChild(datatree);
       // return  buildTree(root,instance.getDefaultContext());;
-      const { formElement } = dynamicContext.currentContext;
-      const logtree = formElement.querySelector('.logtree');
+      const form = dynamicContext.currentContext.formElement;
+      const logtree = form.querySelector('.logtree');
       if (logtree) {
         logtree.parentNode.removeChild(logtree);
       }
-      formElement.appendChild(buildTree(tree, instance.getDefaultContext()));
+        form.appendChild(buildTree(tree, instance.getDefaultContext()));
     }
     return null;
   },
@@ -122,13 +122,13 @@ const instance = (dynamicContext, string) => {
   // console.log('fnInstance dynamicContext: ', dynamicContext);
   // console.log('fnInstance string: ', string);
 
-  const instance = string
+  const inst = string
     ? formElement.querySelector(`fx-instance[id=${string}]`)
     : formElement.querySelector(`fx-instance`);
 
   // const def = instance.getInstanceData();
-  if (instance) {
-    const def = instance.getDefaultContext();
+  if (inst) {
+    const def = inst.getDefaultContext();
     // console.log('target instance root node: ', def);
 
     return def;

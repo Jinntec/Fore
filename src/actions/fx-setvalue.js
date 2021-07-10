@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath } from '../xpath-evaluation';
+import { evaluateXPath } from '../xpath-evaluation.js';
 
 /**
  * `fx-setvalue`
@@ -28,7 +28,9 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    if(super.connectedCallback){
+      super.connectedCallback();
+    }
 
     if (this.hasAttribute('ref')) {
       this.ref = this.getAttribute('ref');

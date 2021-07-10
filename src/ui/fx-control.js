@@ -1,6 +1,4 @@
-// import {css, html} from 'lit-element';
 import XfAbstractControl from './abstract-control.js';
-import { Fore } from '../fore.js';
 import { evaluateXPathToNodes, evaluateXPath } from '../xpath-evaluation.js';
 
 const WIDGETCLASS = 'widget';

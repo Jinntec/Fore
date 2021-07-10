@@ -56,14 +56,13 @@ export class FxDispatch extends AbstractAction {
     console.log('### fx-dispatch.perform ', this);
 
     const properties = this.querySelectorAll('fx-property');
-    let details = {};
+    const details = {};
     Array.from(properties).forEach(prop => {
       console.log('prop ', prop);
       const name = prop.getAttribute('name');
       const value = prop.getAttribute('value');
       const expr = prop.getAttribute('expr');
 
-      let propVal;
       if (expr) {
         if (value) {
           throw new Error('if "expr" is given there must not be a "value" attribute');

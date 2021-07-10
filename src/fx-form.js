@@ -4,9 +4,6 @@ import './fx-model.js';
 import '@jinntec/jinn-toast';
 import { evaluateXPathToNodes, evaluateTemplateExpression } from './xpath-evaluation.js';
 
-function close() {
-  document.getElementById('modalMessage').classList.remove('show');
-}
 /**
  * Root element for forms. Kicks off initialization and displays messages.
  *
