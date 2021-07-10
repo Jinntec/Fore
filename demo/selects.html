@@ -7,16 +7,9 @@
     <title>Country selector</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
-<!--
-    <script type="module">
-        import '../node_modules/@vanillawc/wc-codemirror/index.js';
-        import '../node_modules/@vanillawc/wc-codemirror/mode/xml/xml.js';
-    </script>
--->
 
-    <link href="../resources/fore.css" rel="stylesheet">
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
 
     <style>
         body {
@@ -137,20 +130,17 @@
 
     <p>It is structered by this:</p>
 
-<!--
-    <fx-output ref="instance('default')">
-        <wc-codemirror mode="xml" id="widget">
-            <script type="wc-content">
-                <countries>
-                    <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
-                    <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
-                    <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
-                    <country>...</country>
-                </countries>
-            </script>
-        </wc-codemirror>
-    </fx-output>
--->
+    <demo-snippet>
+        <template>
+            <countries>
+                <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+                <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+                <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+                <country>...</country>
+            </countries>
+        </template>
+    </demo-snippet>
+
 </div>
 
 

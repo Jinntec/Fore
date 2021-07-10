@@ -1,0 +1,15 @@
+{
+  "name": "fore demos",
+  "version": "0.22.0",
+  "description": "Fore - Demos",
+  "module": "./demo.js",
+  "dependencies": {
+    "@polymer/iron-component-page": "^4.0.1",
+    "@polymer/iron-demo-helpers": "^3.1.0",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-input": "^3.2.1"
+  },
+  "author": "Joern Turner",
+  "license": "MIT"
+}

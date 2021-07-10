@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-control</title>
+
+<!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link rel="stylesheet" href="../resources/demo.css">
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <script type="module">
+        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+        import './node_modules/@polymer/paper-input/paper-input.js';
+        import './node_modules/@polymer/paper-checkbox/paper-checkbox.js';
+        import './node_modules/@polymer/paper-button/paper-button.js';
+    </script>
+
+    <style>
+        body {
+            font-size: 18px;
+        }
+
+        fx-instance {
+            display: none;
+        }
+
+        fx-control {
+            display: table-row;
+
+        }
+
+        fx-output {
+            margin: 1rem 0;
+        }
+
+        label {
+            /*display: table-cell;*/
+            display: block;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+
+        section {
+            padding-bottom: 50px;
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        fx-setvalue, fx-message {
+            display: none;
+        }
+
+        [type=checkbox], .inline {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-form>
+        <fx-model id="model1">
+            <fx-instance>
+                <data>
+                    <item>foobar</item>
+                    <checked>true</checked>
+                    <listitem>foo</listitem>
+                    <label>a bound label</label>
+                </data>
+            </fx-instance>
+            <fx-bind ref="item"></fx-bind>
+            <fx-bind ref="checked" type="boolean"></fx-bind>
+            <fx-bind ref="listitem"></fx-bind>
+            <fx-bind ref="label"></fx-bind>
+        </fx-model>
+        <fx-group>
+
+            <h1>Running from a build version</h1>
+
+            <p>Just shows running the build version yields same results</p>
+            <p>Should show some messages when typing into control.</p>
+            <section>
+                <h3>Wrapped paper controls</h3>
+
+                <demo-snippet>
+                    <template>
+
+                        <fx-control ref="item" update-event="input">
+                            <paper-input class="widget" label="the item in paper land"></paper-input>
+                            <fx-message event="value-changed">Hi {.}</fx-message>
+                        </fx-control>
+
+                    </template>
+                </demo-snippet>
+            </section>
+
+        </fx-group>
+    </fx-form>
+
+</div>
+<script type="module" src="../dist/fore-all.js"></script>
+
+</body>
+</html>

@@ -3,11 +3,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Submission Demo</title>
+    <title>Repeat in Switch</title>
     <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
-    <link href="../resources/fore.css" rel="stylesheet">
 
     <style>
         fx-repeat {
@@ -45,9 +43,9 @@
         <template>
             <fx-form>
                 <fx-model>
-                    <fx-instance id="i-default">
+                    <fx-instance id="default">
                         <data>
-                            <page></page>
+                            <page>Page 1</page>
                             <repeat>
                                 <item>1</item>
                                 <item>2</item>
@@ -74,7 +72,7 @@
                 </fx-trigger>
 
                 <fx-switch ref="page">
-                    <fx-case id="one" name="Page 1 ">
+                    <fx-case id="one" name="Page 1">
                         <fx-repeat id="r-item" ref="//repeat[1]/item">
                             <template>
                                 <label>Item:</label>

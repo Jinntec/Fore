@@ -26,11 +26,7 @@
     "dist/fore-all.js"
   ],
   "dependencies": {
-    "@polymer/paper-button": "^3.0.1",
-    "@polymer/paper-checkbox": "^3.1.0",
-    "@polymer/paper-input": "^3.2.1",
-    "@vaadin/vaadin-notification": "^1.4.0",
-    "@vanillawc/wc-codemirror": "^1.9.1",
+    "@jinntec/jinn-toast": "^1.0.2",
     "fontoxpath": "^3.18.1"
   },
   "devDependencies": {
@@ -42,8 +38,6 @@
     "@open-wc/testing": "^2.0.0",
     "@open-wc/testing-karma": "^3.0.0",
     "@open-wc/testing-karma-bs": "^1.0.0",
-    "@polymer/iron-component-page": "^4.0.1",
-    "@polymer/iron-demo-helpers": "^3.1.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^6.1.0",
     "@skypack/package-check": "^0.2.2",
