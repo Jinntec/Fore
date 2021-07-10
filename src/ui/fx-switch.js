@@ -1,4 +1,3 @@
-import { foreElementMixin } from '../ForeElementMixin.js';
 import { Fore } from '../fore.js';
 import { FxContainer } from './fx-container.js';
 
@@ -18,7 +17,9 @@ class FxSwitch extends FxContainer {
     */
 
   connectedCallback() {
-    super.connectedCallback();
+    if(super.connectedCallback){
+      super.connectedCallback();
+    }
     /*
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');
@@ -45,27 +46,6 @@ class FxSwitch extends FxContainer {
                 `;
         */
 
-    const slot = this.shadowRoot.querySelector('slot');
-    slot.addEventListener('slotchange', event => {
-      // console.log('fx-switch slotchange ', event.target.assignedElements());
-      const cases = event.target.assignedElements();
-      // console.log('fx-switch slotchange ', cases[0]);
-
-      /*
-            if (this.isBound()) {
-                cases.forEach(caseElem => {
-                    const name = caseElem.getAttribute('name');
-                    if (name === this.modelItem.value) {
-                        caseElem.style.display = 'block';
-                    } else {
-                        caseElem.style.display = 'none';
-                    }
-                });
-            } else {
-                cases[0].style.display = 'block';
-            }
-*/
-    });
   }
 
   refresh() {
@@ -86,7 +66,6 @@ class FxSwitch extends FxContainer {
     }
 
     Fore.refreshChildren(this);
-
     // console.log('value ', this.value);
   }
 

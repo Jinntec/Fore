@@ -147,15 +147,18 @@ export class FxInstance extends HTMLElement {
         if (responseContentType.startsWith('text/plain')) {
           // console.log("********** inside  res plain *********");
           return response.text();
-        } else if (responseContentType.startsWith('application/json')) {
+        }
+        if (responseContentType.startsWith('application/json')) {
           // console.log("********** inside res json *********");
           return response.json();
-        } else if (responseContentType.startsWith('application/xml')) {
+        }
+        if (responseContentType.startsWith('application/xml')) {
           return response.text().then(result => {
             console.log('xml ********', result);
             return new DOMParser().parseFromString(result, 'application/xml');
           });
         }
+        return 'done';
       })
       .then(data => {
         this.instanceData = data;
@@ -169,12 +172,12 @@ export class FxInstance extends HTMLElement {
   _getContentType() {
     if (this.type === 'xml') {
       return 'application/xml';
-    } else if (this.type === 'json') {
-      return 'application/json';
-    } else {
-      console.warn('content-type unknown ', this.type);
-      return null;
     }
+    if (this.type === 'json') {
+      return 'application/json';
+    }
+    console.warn('content-type unknown ', this.type);
+    return null;
   }
 
   _useInlineData() {

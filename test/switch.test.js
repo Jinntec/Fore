@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
-import { FxModel } from '../src/fx-model.js';
 
 describe('fx-switch Tests', () => {
   it('shows first case by default', async () => {

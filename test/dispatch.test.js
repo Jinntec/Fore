@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
-import * as fx from 'fontoxpath';
 
 describe('fx-dispatch tests', () => {
   it('dispatches an event with a static property', async () => {
