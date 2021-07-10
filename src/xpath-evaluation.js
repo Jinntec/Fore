@@ -166,13 +166,13 @@ registerCustomXPathFunction(
   ['xs:string?'],
   'item()?',
   (dynamicContext, arg) => {
-      const payload = dynamicContext.currentContext.variables[arg];
-      if(payload.nodeType){
-          console.log('got some node as js object');
-      }
+    const payload = dynamicContext.currentContext.variables[arg];
+    if (payload.nodeType) {
+      console.log('got some node as js object');
+    }
 
     return dynamicContext.currentContext.variables[arg];
-  }
+  },
 );
 
 // Implement the XForms standard functions here.
@@ -263,7 +263,7 @@ function namespaceResolver(prefix) {
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
   return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
-    currentContext: { formElement,variables },
+    currentContext: { formElement, variables },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
     },

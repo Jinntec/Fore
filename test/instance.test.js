@@ -196,47 +196,18 @@ describe('instance Tests', () => {
 
   it('loads inline json data', async () => {
     const el = await fixtureSync(html`
-                <fx-form>
-                    <fx-model id="model1">
-                        <fx-instance type="json">
-                          {
-                              "automobiles": [
-                                  {
-                                      "maker": "Nissan",
-                                      "model": "Teana",
-                                      "year": 2000
-                                  },
-                                  {
-                                      "maker": "Honda",
-                                      "model": "Jazz",
-                                      "year": 2023
-                                  },
-                                  {
-                                      "maker": "Honda",
-                                      "model": "Civic",
-                                      "year": 2007
-                                  },
-                                  {
-                                      "maker": "Toyota",
-                                      "model": "Yaris",
-                                      "year": 2008
-                                  },
-                                  {
-                                      "maker": "Honda",
-                                      "model": "Accord",
-                                      "year": 2011
-                                  }
-                              ],
-                              "motorcycles": [{
-                                  "maker": "Honda",
-                                  "model": "ST1300",
-                                  "year": 2012
-                              }]
-                          }                                    
-                        </fx-instance>
-                    </fx-model>
-                </fx-form>
-            `);
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance type="json">
+            { "automobiles": [ { "maker": "Nissan", "model": "Teana", "year": 2000 }, { "maker":
+            "Honda", "model": "Jazz", "year": 2023 }, { "maker": "Honda", "model": "Civic", "year":
+            2007 }, { "maker": "Toyota", "model": "Yaris", "year": 2008 }, { "maker": "Honda",
+            "model": "Accord", "year": 2011 } ], "motorcycles": [{ "maker": "Honda", "model":
+            "ST1300", "year": 2012 }] }
+          </fx-instance>
+        </fx-model>
+      </fx-form>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -249,20 +220,18 @@ describe('instance Tests', () => {
 
   it('loads data from external json file via src attr', async () => {
     const el = await fixtureSync(html`
-                <fx-form>
-                    <fx-model id="model1">
-                        <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
-                    </fx-model>
-                </fx-form>
-            `);
+      <fx-form>
+        <fx-model id="model1">
+          <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
+        </fx-model>
+      </fx-form>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
     const instances = el.querySelectorAll('fx-instance');
     expect(instances[0].id).to.equal('default');
     expect(instances[0].instanceData).to.exist;
-
-
 
     // const model = el.querySelector('fx-model');
     // const { modelItems } = model;
@@ -272,7 +241,6 @@ describe('instance Tests', () => {
     // const span = el.querySelector('fx-output');
     // expect(span.textContent).to.equal('Honda');
     // expect(out.textContent).to.equal('Honda');
-
   });
 
   /*

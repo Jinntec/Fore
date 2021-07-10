@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import {evaluateXPath} from "../xpath-evaluation";
+import { evaluateXPath } from '../xpath-evaluation';
 
 /**
  * `fx-setvalue`
@@ -42,7 +42,12 @@ export default class FxSetvalue extends AbstractAction {
     super.perform();
     let { value } = this;
     if (this.valueAttr !== null) {
-      value = evaluateXPath(this.valueAttr,this.getInScopeContext(),this.getOwnerForm(),this.detail);
+      value = evaluateXPath(
+        this.valueAttr,
+        this.getInScopeContext(),
+        this.getOwnerForm(),
+        this.detail,
+      );
     } else if (this.textContent !== '') {
       value = this.textContent;
     } else {

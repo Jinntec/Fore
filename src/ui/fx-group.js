@@ -37,7 +37,7 @@ class FxGroup extends FxContainer {
 
   render() {
     return html`
-        <slot></slot>
+      <slot></slot>
     `;
   }
 
