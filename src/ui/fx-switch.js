@@ -9,7 +9,7 @@ import {FxContainer} from './fx-container.js';
  *  * todo: implement
  * @customElement
  */
-class FxSwitch extends foreElementMixin(FxContainer) {
+class FxSwitch extends FxContainer {
     /*
       constructor() {
         super();
@@ -19,9 +19,11 @@ class FxSwitch extends foreElementMixin(FxContainer) {
 
     connectedCallback() {
         super.connectedCallback();
+/*
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');
         }
+*/
 
         /*
             const style = `
@@ -69,12 +71,8 @@ class FxSwitch extends foreElementMixin(FxContainer) {
     }
 
     refresh() {
-        // console.log('refresh on switch ');
-        if (this.ref) {
-            this.evalInContext();
-            this.modelItem = this.getModelItem();
-            this.value = this.modelItem.value;
-        }
+        super.refresh();
+        console.log('refresh on switch ');
         const cases = this.querySelectorAll('fx-case');
         if (this.isBound()) {
             Array.from(cases).forEach(caseElem => {

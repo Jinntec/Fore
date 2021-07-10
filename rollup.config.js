@@ -49,7 +49,6 @@ export default [
       resolve(),
       babel({
         babelrc: false,
-        exclude: 'node_modules/**',
         plugins: [
           // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
           // TODO: reconsider whether that is a good idea.

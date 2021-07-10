@@ -1,11 +1,9 @@
-import '@vaadin/vaadin-notification/vaadin-notification.js';
-import getInScopeContext from './getInScopeContext.js';
 import {Fore} from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
+import '@jinntec/jinn-toast';
 import {
     evaluateXPathToNodes,
-    evaluateXPathToString,
     evaluateTemplateExpression,
 } from './xpath-evaluation.js';
 
@@ -31,7 +29,7 @@ export class FxForm extends HTMLElement {
             },
             ready: {
                 type: Boolean,
-            },
+            }
         };
     }
 
@@ -125,11 +123,11 @@ export class FxForm extends HTMLElement {
         `;
 
         const html = `
+           <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <slot></slot>
            <div id="modalMessage" class="overlay">
                 <div class="popup">
                    <h2></h2>
-
                     <a class="close" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
                     <div id="messageContent"></div>
                 </div>
@@ -399,7 +397,7 @@ export class FxForm extends HTMLElement {
         this._showMessage('modal', msg);
     }
 
-    _showMessage(level, msg) {
+     _showMessage(level, msg) {
         if (level === 'modal') {
             // this.$.messageContent.innerText = msg;
             // this.$.modalMessage.open();
@@ -409,32 +407,10 @@ export class FxForm extends HTMLElement {
             this.shadowRoot.getElementById('modalMessage').classList.add('show');
         } else if (level === 'modeless') {
             // const notification = this.$.modeless;
-
-            const notification = document.createElement('vaadin-notification');
-            notification.duration = 0;
-            notification.setAttribute('theme', 'error');
-            notification.renderer = root => {
-                // console.log('root ', root);
-
-                root.textContent = msg;
-
-                const closeIcon = window.document.createElement('paper-icon-button');
-                closeIcon.setAttribute('icon', 'close');
-                closeIcon.addEventListener('click', () => {
-                    // console.log(e);
-                    notification.close();
-                });
-                root.appendChild(closeIcon);
-            };
-            this.appendChild(notification);
-            notification.open();
+            this.shadowRoot.querySelector('#message').showToast(msg);
         } else {
-            const notification = document.createElement('vaadin-notification');
-            notification.renderer = root => {
-                root.textContent = msg;
-            };
-            this.appendChild(notification);
-            notification.open();
+            const toast = this.shadowRoot.querySelector('#message');
+            toast.showToast(msg);
         }
     }
 }
