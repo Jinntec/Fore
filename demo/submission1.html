@@ -7,10 +7,18 @@
     <title>Submission Demo</title>
 
 <!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
 
     <link href="../resources/demo.css" rel="stylesheet">
-    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
+    <script type="module">
+        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+
 
     <link href="../resources/vars.css" rel="stylesheet">
     <custom-style>
@@ -103,7 +111,7 @@
         </template>
     </demo-snippet>
 </div>
-<script type="module" src="../dist/fore-all.js"></script>
+<script type="module" src="../index.js"></script>
 
 </body>
 </html>

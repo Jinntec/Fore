@@ -6,11 +6,15 @@
 
     <title>load data from queryString</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<!--
+    <script type="module">
+        import '../src/fx-form.js';
+        import '../src/actions/fx-message.js';
+    </script>
+-->
 
-    <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="../resources/vars.css">
-    <link rel="stylesheet" href="../resources/demo.css">
     <style>
         div{
             white-space: nowrap;
@@ -41,7 +45,7 @@
             </div>
         </fx-group>
     </fx-form>
-    <script type="module" src="../dist/fore-all.js"></script>
+    <script type="module" src="../index.js"></script>
 
 </body>
 </html>
