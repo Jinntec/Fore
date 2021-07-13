@@ -39,6 +39,22 @@
     <h3>Description</h3>
     <p>This instance loads its data from a local file. However this can be any kind of URL.</p>
 
+    <h2>JSON instances just work the same</h2>
+    <p>Just note the syntax to access JSON values. XPath 3.1 notation is used to query the JSON.</p>
+    <demo-snippet>
+        <template>
+            <fx-form>
+                <fx-model>
+                    <fx-instance src="automobiles.json" type="json"></fx-instance>
+                </fx-model>
+                <fx-output ref="?automobiles?1?maker">
+                    <label>Car Maker:</label>
+                </fx-output>
+                <div>Another one: {?automobiles?2?maker}</div>
+            </fx-form>
+        </template>
+    </demo-snippet>
+
     <h2>Using the queryString</h2>
     <demo-snippet>
         <template>

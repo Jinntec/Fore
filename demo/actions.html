@@ -10,6 +10,8 @@
     <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
+
     <style>
         pre {
             position: fixed;
@@ -81,9 +83,7 @@
             <demo-snippet>
                 <template>
                     <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
-                        <input id="cb" type="checkbox" class="widget">
-                        <label for="cb">i agree</label>
-
+                        <paper-checkbox class="widget">i agree</paper-checkbox>
                         <fx-message if=".='true'" event="value-changed">Thanks</fx-message>
                     </fx-control>
 
