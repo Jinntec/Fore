@@ -20,32 +20,20 @@ class FxSwitch extends FxContainer {
     if(super.connectedCallback){
       super.connectedCallback();
     }
-    /*
-        if (this.hasAttribute('ref')) {
-            this.ref = this.getAttribute('ref');
-        }
-*/
-
-    /*
-            const style = `
-                    :host {
-                        display: block;
-                    }
-                    :host ::slotted(fx-case){
-                        display:none;
-                    }
-                `;
-            const html = `
-                   <slot></slot>
-                `;
-            this.shadowRoot.innerHTML = `
-                    <style>
-                        ${style}
-                    </style>
-                    ${html}
-                `;
-        */
-
+    const style = `
+       :host ::slotted(fx-case.selected-case){
+        display: block !important;
+    }
+    `;
+    const html = `
+       <slot></slot>
+    `;
+    this.shadowRoot.innerHTML = `
+        <style>
+            ${style}
+        </style>
+        ${html}
+    `;
   }
 
   refresh() {
@@ -56,13 +44,16 @@ class FxSwitch extends FxContainer {
       Array.from(cases).forEach(caseElem => {
         const name = caseElem.getAttribute('name');
         if (name === this.modelItem.value) {
-          caseElem.style.display = 'block';
+          caseElem.classList.add('selected-case');
         } else {
-          caseElem.style.display = 'none';
+          caseElem.classList.remove('selected-case')
         }
       });
     } else {
-      cases[0].style.display = 'block';
+      const selected = this.querySelector('.selected-case');
+      if(!selected){
+        cases[0].classList.add('selected-case');
+      }
     }
 
     Fore.refreshChildren(this);
@@ -74,10 +65,11 @@ class FxSwitch extends FxContainer {
     Array.from(cases).forEach(c => {
       if (caseElement === c) {
         // eslint-disable-next-line no-param-reassign
-        c.style.display = 'block';
+        c.classList.add('selected-case');
+
       } else {
         // eslint-disable-next-line no-param-reassign
-        c.style.display = 'none';
+        c.classList.remove('selected-case')
       }
     });
   }
