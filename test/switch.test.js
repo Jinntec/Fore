@@ -38,9 +38,9 @@ describe('fx-switch Tests', () => {
 
     await oneEvent(el, 'refresh-done');
     const cases = el.querySelectorAll('fx-case');
-    expect(cases[0].style.display).to.equal('block');
-    expect(cases[1].style.display).to.equal('none');
-    expect(cases[2].style.display).to.equal('none');
+    expect(cases[0].classList.contains('selected-case')).to.be.true;
+    expect(cases[1].classList.contains('selected-case')).to.be.false;
+    expect(cases[2].classList.contains('selected-case')).to.be.false;
 
     // expect(model.modelItems[5].value).to.equal('2019-01-04');
   });
@@ -84,9 +84,10 @@ describe('fx-switch Tests', () => {
     trigger[1].performActions();
 
     const cases = el.querySelectorAll('fx-case');
-    expect(cases[0].style.display).to.equal('none');
-    expect(cases[1].style.display).to.equal('block');
-    expect(cases[2].style.display).to.equal('none');
+    expect(cases[0].classList.contains('selected-case')).to.be.false;
+    expect(cases[1].classList.contains('selected-case')).to.be.true;
+    expect(cases[2].classList.contains('selected-case')).to.be.false;
+
   });
 
   it('activates case that matches bound value', async () => {
@@ -126,8 +127,9 @@ describe('fx-switch Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const cases = el.querySelectorAll('fx-case');
-    expect(cases[0].style.display).to.equal('none');
-    expect(cases[1].style.display).to.equal('none');
-    expect(cases[2].style.display).to.equal('block');
+    expect(cases[0].classList.contains('selected-case')).to.be.false;
+    expect(cases[1].classList.contains('selected-case')).to.be.false;
+    expect(cases[2].classList.contains('selected-case')).to.be.true;
+
   });
 });
