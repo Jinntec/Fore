@@ -100,7 +100,7 @@ describe('instance Tests', () => {
 
   it('resolves instances with the instance() function', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -116,7 +116,7 @@ describe('instance Tests', () => {
           <fx-bind ref="instance('second')/item"></fx-bind>
         </fx-model>
         <fx-output ref="instance('second')//item"></fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -136,7 +136,7 @@ describe('instance Tests', () => {
 
   it('Allows calling the boolean-from-string function', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -154,7 +154,7 @@ describe('instance Tests', () => {
             required="boolean-from-string('maybe!~')"
           ></fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -174,12 +174,12 @@ describe('instance Tests', () => {
 
   it('loads data from external xml file via src attr', async () => {
     const el = await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance src="base/test/instance1.xml"></fx-instance>
                         <fx-bind ref="greeting"</fx-bind>
                     </fx-model>
-                </fx-form>
+                </fx-fore>
             `);
 
     await oneEvent(el, 'refresh-done');
@@ -196,7 +196,7 @@ describe('instance Tests', () => {
 
   it('loads inline json data', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance type="json">
             { "automobiles": [ { "maker": "Nissan", "model": "Teana", "year": 2000 }, { "maker":
@@ -206,7 +206,7 @@ describe('instance Tests', () => {
             "ST1300", "year": 2012 }] }
           </fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -220,11 +220,11 @@ describe('instance Tests', () => {
 
   it('loads data from external json file via src attr', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

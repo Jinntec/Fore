@@ -8,17 +8,8 @@
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <script type="module">
-        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    </script>
 
-
-    <script type="module" src="../index.js"></script>
-
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
-    <link href="../resources/fore.css" rel="stylesheet">
     <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
 
     <style>
@@ -43,7 +34,7 @@
     <demo-snippet>
         <template>
 
-            <fx-form>
+            <fx-fore>
                 <fx-message event="refresh-done">refresh-done has was fired</fx-message>
                 <fx-message event="ready">ready was fired</fx-message>
 
@@ -104,9 +95,11 @@
             </pre>
 -->
                 </fx-group>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
 </div>
+<script type="module" src="./demo.js"></script>
+
 </body>
 </html>

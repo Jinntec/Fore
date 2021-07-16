@@ -1,3 +1,5 @@
+@import 'vars.css';
+@import 'fore.css';
 body {
     padding:20px;
     font-family: 'Roboto', 'Noto', sans-serif;

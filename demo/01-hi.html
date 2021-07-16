@@ -7,16 +7,8 @@
     <title>Hi</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module">
-        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    </script>
 
-
-    <link href="../resources/fore.css" rel="stylesheet">
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
-
 
     <style>
         .dynamic {
@@ -32,19 +24,20 @@
 <body unresolved="unresolved">
 <div class="wrapper">
 
-    <h1>Lazy Greeting</h1>
-
+    <h1>Lazy Mode</h1>
+    <p>In lazy mode you don't even need to create a model. This is for the 'small and quick' use cases where
+    you don't need much logic or constraints.</p>
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-output ref="greeting">Hello Universe</fx-output>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
 
     <h2>Description</h2>
     <p>
-        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-form</code> element. Besides
+        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-fore</code> element. Besides
         that we have a <code>fx-output</code> which - well - outputs a referenced data node.
     </p>
     <p>
@@ -57,7 +50,7 @@
 
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -66,11 +59,9 @@
                     </fx-instance>
                 </fx-model>
                 <fx-output ref="greeting"></fx-output>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
-
-    <!--
 
     <p>The form holds a single <code>fx-model</code> which itself contains a <code>fx-instance</code> element. This
     is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
@@ -78,19 +69,15 @@
 
     <h2>Nesting refs</h2>
 
-&lt;!&ndash;
     <demo-snippet>
         <template>
-&ndash;&gt;
-            <fx-form>
+            <fx-fore>
                 <fx-group ref="planet">
                     <fx-output ref="greeting">Hello Earth</fx-output>
                 </fx-group>
-            </fx-form>
-&lt;!&ndash;
+            </fx-fore>
         </template>
     </demo-snippet>
-&ndash;&gt;
 
     <p>Guess how the instance looks like now? Here it is </p>
     <demo-snippet>
@@ -104,11 +91,9 @@
             </fx-instance>
         </template>
     </demo-snippet>
-
--->
 </div>
 
 
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>

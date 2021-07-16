@@ -15,7 +15,7 @@ export default function getInScopeContext(node, ref) {
   }
   const parentBind = parent.closest('[ref]');
 
-  const ownerForm = parent.closest('fx-form');
+  const ownerForm = parent.closest('fx-fore');
   const model = ownerForm.getModel();
 
   if (parentBind !== null) {

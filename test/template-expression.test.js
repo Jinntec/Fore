@@ -6,7 +6,7 @@ import '../index.js';
 describe('template expressions', () => {
   it('detects template expressions', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -17,7 +17,7 @@ describe('template expressions', () => {
 
         <div class="static {greeting}">Greeting: {greeting} another {greeting}</div>
         <fx-input ref="greeting" label="greeting"></fx-input>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -36,7 +36,7 @@ describe('template expressions', () => {
 
   it('skips the contents of fx-model for template detection', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -44,7 +44,7 @@ describe('template expressions', () => {
             </data>
           </fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

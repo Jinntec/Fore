@@ -7,16 +7,6 @@
     <title>Country selector</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module">
-        import '@polymer/iron-demo-helpers/demo-snippet.js';
-        import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-/*
-        import '../node_modules/@vanillawc/wc-codemirror/index.js';
-        import '../node_modules/@vanillawc/wc-codemirror/mode/xml/xml.js';
-*/
-    </script>
-
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
     <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
 
@@ -53,7 +43,7 @@
             grid-template-columns: 50% 50%;
         }
 
-        fx-form {
+        fx-fore {
             max-width: 600px;
         }
 
@@ -76,7 +66,7 @@
     <demo-snippet>
         <template>
 
-            <fx-form>
+            <fx-fore>
                 <fx-model id="model1">
                     <fx-instance>
                         <data>
@@ -132,7 +122,7 @@
 
                     <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
                 </fx-group>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
     <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
@@ -149,7 +139,6 @@
             </countries>
         </template>
     </demo-snippet>
-    >
     <!--
         <fx-output ref="instance('default')">
             <wc-codemirror mode="xml" class="widget">
@@ -168,7 +157,7 @@
 </div>
 
 
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 
 </body>
 </html>

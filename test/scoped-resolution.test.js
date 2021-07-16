@@ -6,7 +6,7 @@ import '../index.js';
 describe('scoped resolution tests', () => {
   it('inscopeContext for child bind is equal to its parent', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -21,7 +21,7 @@ describe('scoped resolution tests', () => {
             <fx-bind id="child" ref="@side"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -36,7 +36,7 @@ describe('scoped resolution tests', () => {
 
   it('inscopeContext for second child bind is equal to its parent', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -52,7 +52,7 @@ describe('scoped resolution tests', () => {
             <fx-bind id="child2" ref="hand"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -66,7 +66,7 @@ describe('scoped resolution tests', () => {
 
   it('inscopeContext for subchild bind is equal to its parent', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -84,7 +84,7 @@ describe('scoped resolution tests', () => {
             </fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -100,7 +100,7 @@ describe('scoped resolution tests', () => {
 
   it('has 2 arms as nodeset', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -123,7 +123,7 @@ describe('scoped resolution tests', () => {
             </fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -134,7 +134,7 @@ describe('scoped resolution tests', () => {
 
   it('has a 3 finger nodeset for the left arm', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -159,7 +159,7 @@ describe('scoped resolution tests', () => {
             </fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -172,7 +172,7 @@ describe('scoped resolution tests', () => {
 
   it('correctly binds form controls', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -205,7 +205,7 @@ describe('scoped resolution tests', () => {
             <fx-output id="output3" ref="/data/arm[2]/@side"></fx-output>
           </h2>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     const model = el.querySelector('fx-model');
@@ -224,7 +224,7 @@ describe('scoped resolution tests', () => {
     it('dispatches a bind exception for non-existing ref', async () => {
         const el =  (
             await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="record">
                         <fx-instance>
                             <data>
@@ -235,7 +235,7 @@ describe('scoped resolution tests', () => {
                     </fx-model>
                     <fx-group ref="bar">
                     </fx-group>
-                </fx-form>`)
+                </fx-fore>`)
         );
 
         await elementUpdated(el);

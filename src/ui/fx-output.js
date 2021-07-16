@@ -1,5 +1,9 @@
 import XfAbstractControl from './abstract-control.js';
 
+
+/**
+ * todo: review placing of value. should probably work with value attribute and not allow slotted content.
+ */
 export class FxOutput extends XfAbstractControl {
   static get properties() {
     return {
@@ -30,7 +34,6 @@ export class FxOutput extends XfAbstractControl {
     const outputHtml = `
             <slot name="label"></slot>
             <slot></slot>
-            <span id="widget">${this.value}</span>
         `;
 
     this.shadowRoot.innerHTML = `
@@ -49,14 +52,11 @@ export class FxOutput extends XfAbstractControl {
   }
 
   getWidget() {
-    const widget = this.querySelector('.widget');
-    if (widget) return widget;
-
-    return this.shadowRoot.querySelector('#widget');
+    return this;
   }
 
   async updateWidgetValue() {
-    this.widget.innerHTML = this.value;
+    this.textContent = this.value;
   }
 
   isReadonly() {

@@ -1,6 +1,6 @@
 // core + models classes
 import './src/fx-bind.js';
-import './src/fx-form.js';
+import './src/fx-fore.js';
 import './src/fx-instance.js';
 import './src/fx-model.js';
 import './src/fx-submission.js';

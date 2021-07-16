@@ -7,14 +7,6 @@
     <title>Events</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module">
-        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    </script>
-
-
-    <link href="../resources/fore.css" rel="stylesheet">
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
         pre {
@@ -67,13 +59,13 @@
 
 
     </p>
-    <p>As actions by default attach the listener to their parent element (fx-form here) the <code>fx-action</code>
+    <p>As actions by default attach the listener to their parent element (fx-fore here) the <code>fx-action</code>
     will receive the event.</p>
     <p>The <code>event()</code> function allows us to use the event detail params in further actions.</p>
     <demo-snippet>
         <template>
 
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -95,7 +87,7 @@
 
                 <h3>{param1}</h3>
                 <h3>{param2}</h3>
-            </fx-form>
+            </fx-fore>
 
             <script>
                 function firecustom(event) {
@@ -115,7 +107,7 @@
     <demo-snippet>
         <template>
 
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -136,8 +128,8 @@
                 <div id="eventTarget"></div>
                 <h3>{param1}</h3>
                 <h3>{param2}</h3>
-            </fx-form>
-            <!-- ### button outside of fx-form -->
+            </fx-fore>
+            <!-- ### button outside of fx-fore -->
             <button onclick="firecustomTarget(event)">fire custom event to target</button>
 
             <script>
@@ -160,7 +152,7 @@
     <demo-snippet>
         <template>
 
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -180,8 +172,8 @@
 
                 <h3>{param1}</h3>
                 <h3>{param2}</h3>
-            </fx-form>
-            <!-- ### button outside of fx-form -->
+            </fx-fore>
+            <!-- ### button outside of fx-fore -->
             <button onclick="firecustomDoc(event)">fire custom event to document</button>
 
             <script>
@@ -204,8 +196,6 @@
     -->
 
 </div>
-
-
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>

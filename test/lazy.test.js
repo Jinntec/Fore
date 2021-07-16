@@ -6,9 +6,9 @@ import '../index.js';
 describe('lazy initialize', () => {
   it('creates model and instance', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-output ref="greeting">Hello Universe</fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -28,9 +28,9 @@ describe('lazy initialize', () => {
 
   it('constructs correct elements for nested location path', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-output ref="planet/greeting"></fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -53,7 +53,7 @@ describe('lazy initialize', () => {
 
   it('creates modelItem during refresh', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-message event="refresh-done">refresh has been done</fx-message>
 
         <fx-model id="model1">
@@ -71,7 +71,7 @@ describe('lazy initialize', () => {
           <fx-output id="output" ref="greeting/@type"></fx-output>
           <fx-output id="output" ref="greeting"></fx-output>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -100,7 +100,7 @@ describe('lazy initialize', () => {
 
   it('creates a model when there is none', async () => {
     const el = await fixtureSync(html`
-      <fx-form> </fx-form>
+      <fx-fore> </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -112,12 +112,12 @@ describe('lazy initialize', () => {
 
   it('constructs an instance when there is none', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-group ref="outer">
           <fx-output ref="inner1">inner1</fx-output>
           <fx-output ref="inner2">inner2</fx-output>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await oneEvent(el, 'model-construct-done');

@@ -7,15 +7,9 @@
     <title>ultra-lazy authoring</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link href="../resources/demo.css" rel="stylesheet">
     <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
 
-    <!--
-        <script type="module">
-            import '@polymer/iron-demo-helpers/demo-snippet.js';
-        </script>
-    -->
-
-<!--    <link href="../resources/vars.css" rel="stylesheet">-->
     <style>
         .dynamic {
             background: #76ff03;
@@ -26,7 +20,7 @@
 <body unresolved="unresolved">
 
 
-<fx-form url="wheretopost" method="post" src="whattoload">
+<fx-fore url="wheretopost" method="post" src="whattoload">
         <h1>ultra-lazy greeting</h1>
 
         <p>
@@ -49,12 +43,12 @@
         </demo-snippet>
 -->
     <fx-message event="ready">its ready</fx-message>
-</fx-form>
+</fx-fore>
 <textarea id="debug" rows="20" cols="80"></textarea>
 
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 <script>
-    const form = document.querySelector('fx-form');
+    const form = document.querySelector('fx-fore');
     form.addEventListener('refresh-done', () => {
     const inst = form.model.getDefaultInstanceData();
     const ser = new XMLSerializer();

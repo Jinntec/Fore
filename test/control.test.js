@@ -6,7 +6,7 @@ import '../index.js';
 describe('control tests', () => {
   it('shows control alert defined on control', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -36,7 +36,7 @@ describe('control tests', () => {
           <fx-alert id="alert1">Constraint not valid</fx-alert>
           <fx-hint>must be one character long</fx-hint>
         </fx-control>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -61,7 +61,7 @@ describe('control tests', () => {
 
   it('keeps on displaying alert as long as modelItem is invalid', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -74,7 +74,7 @@ describe('control tests', () => {
         <fx-control id="input1" label="A-label" ref="a">
           <fx-alert id="alert1">Constraint not valid</fx-alert>
         </fx-control>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -108,7 +108,7 @@ describe('control tests', () => {
 
   it('has a control child with value "A"', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -119,7 +119,7 @@ describe('control tests', () => {
         </fx-model>
 
         <fx-control id="input1" label="A-label" ref="a"> </fx-control>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -134,7 +134,7 @@ describe('control tests', () => {
     it('listens for event', async () => {
         const el =  (
             await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance>
                             <data>
@@ -148,7 +148,7 @@ describe('control tests', () => {
                     </fx-input>
 
 
-                </fx-form>`)
+                </fx-fore>`)
         );
 
         await elementUpdated(el);

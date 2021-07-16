@@ -6,7 +6,7 @@ import '../index.js';
 describe('fx-switch Tests', () => {
   it('shows first case by default', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-trigger label="page 1">
           <paper-button>toggle page 1</paper-button>
           <fx-toggle case="one"></fx-toggle>
@@ -33,7 +33,7 @@ describe('fx-switch Tests', () => {
             some completely unneeded content
           </fx-case>
         </fx-switch>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -47,7 +47,7 @@ describe('fx-switch Tests', () => {
 
   it('toggles case by action', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-trigger label="page 1">
           <paper-button>toggle page 1</paper-button>
           <fx-toggle case="one"></fx-toggle>
@@ -74,7 +74,7 @@ describe('fx-switch Tests', () => {
             some completely unneeded content
           </fx-case>
         </fx-switch>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -92,7 +92,7 @@ describe('fx-switch Tests', () => {
 
   it('activates case that matches bound value', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -121,7 +121,7 @@ describe('fx-switch Tests', () => {
             <h2>Page 3</h2>
           </fx-case>
         </fx-switch>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

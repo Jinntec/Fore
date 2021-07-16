@@ -7,7 +7,7 @@ import { FxModel } from '../src/fx-model.js';
 describe('repeat Tests', () => {
   it('has initialized modelItems', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -35,7 +35,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-button>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -71,7 +71,7 @@ describe('repeat Tests', () => {
 
   it('has initialized repeat with 2 repeat items', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -98,7 +98,7 @@ describe('repeat Tests', () => {
         <fx-button label="append">
           <fx-append repeat="todos" ref="task"></fx-append>
         </fx-button>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -137,7 +137,7 @@ describe('repeat Tests', () => {
 
   it('has initialized repeat with 2 repeat items within a outer group', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -165,7 +165,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-button>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -196,7 +196,7 @@ describe('repeat Tests', () => {
 
   it('has initialized repeat with 2 repeat items and proper UI state', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -224,7 +224,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-button>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -245,7 +245,7 @@ describe('repeat Tests', () => {
     it('handles a modelItem for the repeat itself', async () => {
         const el =  (
             await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="record">
 
                         <fx-instance>
@@ -276,7 +276,7 @@ describe('repeat Tests', () => {
                             <fx-append repeat="todos" ref="task"></fx-append>
                         </fx-button>
                     </fx-group>
-                </fx-form>
+                </fx-fore>
             `)
         );
 
@@ -294,7 +294,7 @@ describe('repeat Tests', () => {
 
   it('appends an item', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -325,7 +325,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -342,7 +342,7 @@ describe('repeat Tests', () => {
 
   it('set the index to new item after append', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -373,7 +373,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -390,7 +390,7 @@ describe('repeat Tests', () => {
 
   it('deletes an item', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -425,7 +425,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -444,7 +444,7 @@ describe('repeat Tests', () => {
 
   it('deletes an item and sets index', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -479,7 +479,7 @@ describe('repeat Tests', () => {
             <fx-append repeat="todos" ref="task"></fx-append>
           </fx-button>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -498,7 +498,7 @@ describe('repeat Tests', () => {
 
   it('sets index to 1 by default in simple repeat', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -526,7 +526,7 @@ describe('repeat Tests', () => {
             </fx-trigger>
           </template>
         </fx-repeat>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -541,7 +541,7 @@ describe('repeat Tests', () => {
 
   it('handles indexes in simple repeat', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -573,7 +573,7 @@ describe('repeat Tests', () => {
         <fx-trigger id="append" label="append">
           <fx-append ref="task" repeat="r-todos" clear="true"></fx-append>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -593,7 +593,7 @@ describe('repeat Tests', () => {
 
   it('handles indexes in nested repeat', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -636,7 +636,7 @@ describe('repeat Tests', () => {
         <fx-trigger id="outerappend" label="add maintask">
           <fx-append ref="task" repeat="r-todos" clear="true"></fx-append>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

@@ -13,7 +13,7 @@ loadForm-->-controller:
 controller-->-user:
 
 
-user->+init: fx-form is loaded and calls init(token)
+user->+init: fx-fore is loaded and calls init(token)
 init->*compile: not present in session?
 note right of compile: compile form
 compile-->init: return xquery code for form

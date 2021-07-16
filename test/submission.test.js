@@ -7,7 +7,7 @@ import '../index.js';
 describe('submissionn tests', () => {
   it.skip('replaces the default instance with empty response', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -28,7 +28,7 @@ describe('submissionn tests', () => {
         <fx-trigger>
           <fx-send submission="submission"></fx-send>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
