@@ -26,14 +26,16 @@ export class FxOutput extends XfAbstractControl {
           #widget {
             display: inline-block;
           }
-          [name='label'] {
-            display: inline;
+          .label{
+            display: inline-block;
           }
         `;
 
     const outputHtml = `
             <slot name="label"></slot>
-            <slot></slot>
+            <span id="value">
+                <slot></slot>
+            </span>
         `;
 
     this.shadowRoot.innerHTML = `
@@ -43,8 +45,8 @@ export class FxOutput extends XfAbstractControl {
             ${outputHtml}
         `;
     // this.widget = this.shadowRoot.querySelector('#widget');
-    this.widget = this.getWidget();
-    console.log('widget ', this.widget);
+    // this.widget = this.getWidget();
+    // console.log('widget ', this.widget);
 
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
@@ -52,11 +54,13 @@ export class FxOutput extends XfAbstractControl {
   }
 
   getWidget() {
-    return this;
+    const valueWrapper = this.shadowRoot.getElementById('value');
+    return valueWrapper;
   }
 
   async updateWidgetValue() {
-    this.textContent = this.value;
+    const valueWrapper = this.shadowRoot.getElementById('value');
+    valueWrapper.innerHTML = this.value;
   }
 
   isReadonly() {

@@ -29,5 +29,3 @@ import './src/actions/fx-toggle.js';
 import './src/actions/fx-dispatch.js';
 
 import './src/functions/fx-function.js';
-import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
