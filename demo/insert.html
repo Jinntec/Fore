@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
+        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    </script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinn-toast/src/toastify.css">
+
+    <style>
+        .header {
+            display: grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+
+        .required:after{
+            content:'*';
+            color:red;
+            margin-left:-4pt;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        fx-form{
+            position: relative;
+        }
+        .highlight {
+            background: red;
+        }
+
+        input{
+            background: rgba(255,255,255,0.3);
+            border:none;
+            padding: 0.3rem;
+            border-radius: 0.2rem;
+        }
+
+        /*fx-repeatitem {*/
+        /*    display: block;*/
+        /*}*/
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-repeat {
+            padding: 20px;
+            display: block;
+            height: auto;
+        }
+
+        fx-repeatitem {
+            /*border: thin solid white;*/
+            /*background: lightsteelblue;*/
+            margin: 0.5rem 0;
+            display: block;
+        }
+
+        fx-control {
+            display: inline-block;
+            padding: 0 6px;
+            white-space: nowrap;
+
+            /*padding: 6px;*/
+            /*margin: 4px;*/
+        }
+        fx-trigger{
+            display: inline-block;
+        }
+        input{
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color:var(--paper-grey-900);
+        }
+
+        [repeat-index] {
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            background-color: rgba(255,255,255, 0.3);
+            box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;
+        }
+        [repeat-index] input{
+            color:black;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+            <fx-form>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <task complete="false" due="2019-02-04">Pick up Milk</task>
+                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
+                        </data>
+                    </fx-instance>
+
+                    <fx-bind ref="task">
+                        <fx-bind ref="./text()" required="true()"></fx-bind>
+<!--
+                        <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                        <fx-bind ref="@due" type="xs:date"></fx-bind>
+-->
+                    </fx-bind>
+                </fx-model>
+
+                <h1>todos</h1>
+
+
+                <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+<!--
+                        <fx-control ref="@due">
+                            <input class="widget" type="date">
+                        </fx-control>
+                        <fx-control ref="@complete">
+                            <input class="widget" type="checkbox">
+                        </fx-control>
+-->
+                        <fx-trigger>
+                            <button>delete</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+
+                </fx-repeat>
+
+                <fx-trigger>
+                    <button>insert before second</button>
+                    <fx-insert ref="task" position="before" at="1"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert after second</button>
+                    <fx-insert ref="task" position="after" at="1"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert as first</button>
+                    <fx-insert ref="task" at="1" position="before"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert as last</button>
+                    <fx-insert ref="task"></fx-insert>
+                </fx-trigger>
+
+            </fx-form>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../index.js"></script>
+
+</body>
+</html>
