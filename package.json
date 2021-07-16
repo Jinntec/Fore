@@ -21,6 +21,7 @@
     "index.js",
     "resources/fore.css",
     "resources/vars.css",
+    "resources/toastify.css",
     "src/**/*",
     "dist/fore.js",
     "dist/fore-all.js"
