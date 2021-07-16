@@ -7,7 +7,7 @@ import * as fx from 'fontoxpath';
 describe('setvalue tests', () => {
   it('creates modelItem during refresh', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -22,7 +22,7 @@ describe('setvalue tests', () => {
             <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -44,7 +44,7 @@ describe('setvalue tests', () => {
 
   it('ignores setvalue actions with do not bind to a existing node', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -59,7 +59,7 @@ describe('setvalue tests', () => {
             <fx-setvalue ref="foo">Hello Universe</fx-setvalue>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -81,7 +81,7 @@ describe('setvalue tests', () => {
 
   it('uses element content instead of "value" attr if present', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -96,7 +96,7 @@ describe('setvalue tests', () => {
             <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -118,7 +118,7 @@ describe('setvalue tests', () => {
 
   it('defaults to empty string if neither value nor textContent are present', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -133,7 +133,7 @@ describe('setvalue tests', () => {
             <fx-setvalue ref="greeting"></fx-setvalue>
           </fx-trigger>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);

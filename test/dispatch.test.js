@@ -6,7 +6,7 @@ import '../index.js';
 describe('fx-dispatch tests', () => {
   it('dispatches an event with a static property', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data></data>
@@ -18,7 +18,7 @@ describe('fx-dispatch tests', () => {
             <fx-property name="string" value="aString"></fx-property>
           </fx-dispatch>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
       <div id="bar"></div>
     `);
 
@@ -37,7 +37,7 @@ describe('fx-dispatch tests', () => {
 
   it('dispatches an event with a dynamic property', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -52,7 +52,7 @@ describe('fx-dispatch tests', () => {
             <fx-property name="instance" expr="instance()"></fx-property>
           </fx-dispatch>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
       <div id="bar"></div>
     `);
 
@@ -73,7 +73,7 @@ describe('fx-dispatch tests', () => {
 
   it('dispatches an event with a mixed properties', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -89,7 +89,7 @@ describe('fx-dispatch tests', () => {
             <fx-property name="string" value="aString"></fx-property>
           </fx-dispatch>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
       <div id="bar"></div>
       <div id="displayValue"></div>
     `);
@@ -114,7 +114,7 @@ describe('fx-dispatch tests', () => {
 
   it('fires within an fx-action', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -132,7 +132,7 @@ describe('fx-dispatch tests', () => {
             </fx-dispatch>
           </fx-action>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
       <div id="bar"></div>
       <div id="displayValue"></div>
     `);
@@ -157,7 +157,7 @@ describe('fx-dispatch tests', () => {
 
   it('fires from another event', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -176,7 +176,7 @@ describe('fx-dispatch tests', () => {
             <fx-property name="string" value="aString"></fx-property>
           </fx-dispatch>
         </fx-control>
-      </fx-form>
+      </fx-fore>
       <div id="bar" onclick="event.target.innerHTML = 'foobar'"></div>
     `);
 

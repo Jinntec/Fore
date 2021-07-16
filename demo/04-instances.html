@@ -6,7 +6,7 @@
 
     <title>Instance super powers</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-loader.js"></script>
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -26,12 +26,12 @@
 
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance src="instance1.xml"></fx-instance>
                 </fx-model>
                 <fx-output ref="greeting"></fx-output>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
     <h3>Description</h3>
@@ -41,7 +41,7 @@
     <p>Just note the syntax to access JSON values. XPath 3.1 notation is used to query the JSON.</p>
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance src="automobiles.json" type="json"></fx-instance>
                 </fx-model>
@@ -49,20 +49,20 @@
                     <label>Car Maker:</label>
                 </fx-output>
                 <div>Another one: {?automobiles?2?maker}</div>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
 
     <h2>Using the queryString</h2>
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance src="#querystring"></fx-instance>
                 </fx-model>
                 <fx-output ref="param1"></fx-output>
                 <fx-output ref=param2></fx-output>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
     <h3>Description</h3>
@@ -72,5 +72,7 @@
     </p>
 </div>
 
-<script type="module" src="../dist/fore-all.js"></script>
+
+<script type="module" src="./demo.js"></script>
+</body>
 </html>

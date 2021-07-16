@@ -8,7 +8,7 @@ import * as fx from 'fontoxpath';
 describe('Event Tests', () => {
   it('passes event detail object', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-action event="custom">
           <fx-setvalue ref="param1" value="event('param1')"></fx-setvalue>
           <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
@@ -22,7 +22,7 @@ describe('Event Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -46,7 +46,7 @@ describe('Event Tests', () => {
 
   it('handles bubbling events', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -64,7 +64,7 @@ describe('Event Tests', () => {
           <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
         </fx-action>
         <button onclick="firecustom(event)">fire custom event from js</button>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -88,7 +88,7 @@ describe('Event Tests', () => {
 
   it('handles at-target events', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -107,7 +107,7 @@ describe('Event Tests', () => {
         </fx-action>
         <div id="target"></div>
         <button onclick="firecustom(event)">fire custom event from js</button>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -133,7 +133,7 @@ describe('Event Tests', () => {
 
   it('handles events on document', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -152,7 +152,7 @@ describe('Event Tests', () => {
         </fx-action>
         <div id="target"></div>
         <button onclick="firecustom(event)">fire custom event from js</button>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

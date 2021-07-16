@@ -1,4 +1,4 @@
-import './fx-form.js';
+import './fx-fore.js';
 import './fx-model.js';
 import './fx-instance.js';
 import './fx-bind.js';

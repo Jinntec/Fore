@@ -6,7 +6,7 @@ import '../index.js';
 describe('fx-control tests', () => {
   it('is creates a native input when no control is provided', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -22,7 +22,7 @@ describe('fx-control tests', () => {
             <label slot="label">with onblur handler</label>
           </fx-control>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -43,7 +43,7 @@ describe('fx-control tests', () => {
 
   it('is initialized', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -60,7 +60,7 @@ describe('fx-control tests', () => {
             <input class="widget" name="value" value="" />
           </fx-control>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     // await elementUpdated(el);
@@ -75,7 +75,7 @@ describe('fx-control tests', () => {
 
   it('creates fx-control', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -92,7 +92,7 @@ describe('fx-control tests', () => {
             <input name="value" value="" />
           </fx-control>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -102,7 +102,7 @@ describe('fx-control tests', () => {
 
   it('it updates when update event fires', async () => {
     const el = await fixture(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance>
                             <data>
@@ -121,7 +121,7 @@ describe('fx-control tests', () => {
                 
                     </fx-group>
                     <fx-setvalue event="refresh-done" ref="item"">foo</fx-setvalue>
-                </fx-form>
+                </fx-fore>
             `);
 
     // await elementUpdated(el);
@@ -137,7 +137,7 @@ describe('fx-control tests', () => {
 
   it('initialzes native select', async () => {
     const el = await fixture(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model>
                         <fx-instance>
                             <data>
@@ -155,7 +155,7 @@ describe('fx-control tests', () => {
                             <select>
                         </fx-control>
                     </fx-group>
-                </fx-form>
+                </fx-fore>
             `);
 
     // await elementUpdated(el);
@@ -175,7 +175,7 @@ describe('fx-control tests', () => {
     it('is initialized', async () => {
         const el =  (
             await fixture(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance>
                             <data>
@@ -202,7 +202,7 @@ describe('fx-control tests', () => {
                             <input name="value" type="checkbox">
                         </fx-control>
                     </fx-group>
-                </fx-form>
+                </fx-fore>
             `)
         );
 

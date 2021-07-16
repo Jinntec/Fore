@@ -6,7 +6,7 @@ import '../index.js';
 describe('bind Tests', () => {
   it('is initialized', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -15,7 +15,7 @@ describe('bind Tests', () => {
           </fx-instance>
           <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -47,7 +47,7 @@ describe('bind Tests', () => {
     it('works with nested attribute', async () => {
         const el =  (
             await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance>
                             <data>
@@ -58,7 +58,7 @@ describe('bind Tests', () => {
                             <fx-bind id="b-type" ref="@type"></fx-bind>
                         </fx-bind>
                     </fx-model>
-                </fx-form>
+                </fx-fore>
             `)
         );
 
@@ -81,7 +81,7 @@ describe('bind Tests', () => {
 
   it('works with nested element', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -94,7 +94,7 @@ describe('bind Tests', () => {
             <fx-bind id="b-message" ref="message"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -113,7 +113,7 @@ describe('bind Tests', () => {
 
   it('works with nested dot reference', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -124,7 +124,7 @@ describe('bind Tests', () => {
             <fx-bind ref="."></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -137,7 +137,7 @@ describe('bind Tests', () => {
 
   it('works for repeated element', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="record">
           <fx-instance>
             <data>
@@ -152,7 +152,7 @@ describe('bind Tests', () => {
             <fx-bind ref="@due" type="xs:date"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -191,7 +191,7 @@ describe('bind Tests', () => {
 
   it('combines facets for dot reference', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -202,7 +202,7 @@ describe('bind Tests', () => {
             <fx-bind ref="." required="true()"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -216,7 +216,7 @@ describe('bind Tests', () => {
 
   it('uses closest binding expr', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -227,7 +227,7 @@ describe('bind Tests', () => {
             <fx-bind required="true()"></fx-bind>
           </fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -244,7 +244,7 @@ describe('bind Tests', () => {
     it('hides non-relevant (unbound) controls', async () => {
         const el =  (
             await fixtureSync(html`
-                <fx-form>
+                <fx-fore>
                     <fx-model id="model1">
                         <fx-instance>
                             <data>
@@ -254,7 +254,7 @@ describe('bind Tests', () => {
                     </fx-model>
                     <fx-output id="output" ref="greet"></fx-output>
 
-                </fx-form>
+                </fx-fore>
             `)
         );
 
@@ -280,7 +280,7 @@ describe('bind Tests', () => {
 
   it('nested binding are working', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -295,7 +295,7 @@ describe('bind Tests', () => {
           <fx-output id="output1" ref="greeting"> </fx-output> :
           <fx-output id="output2" ref="greeting/@type"></fx-output>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -340,7 +340,7 @@ describe('bind Tests', () => {
 
   it('can resolve calculates in bind in the correct order: nodes', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -356,7 +356,7 @@ describe('bind Tests', () => {
         <fx-group>
           <fx-output id="output" ref="add"></fx-output>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -367,7 +367,7 @@ describe('bind Tests', () => {
 
   it('can resolve calculates in bind in the correct order: attributes', async () => {
     const el = await fixture(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -383,7 +383,7 @@ describe('bind Tests', () => {
         <fx-group>
           <fx-output id="output" ref="add"></fx-output>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await elementUpdated(el);
@@ -394,7 +394,7 @@ describe('bind Tests', () => {
 
   it('does not explode on recursive dependencies', async () => {
     const el = await fixture(html`
-            <fx-form>
+            <fx-fore>
 
                 <fx-model id="model1">
                         <data>
@@ -408,7 +408,7 @@ describe('bind Tests', () => {
                 <fx-group>
                   <fx-output id="output" ref="add"></fx-output>
                 </fx-group>
-            </fx-form>
+            </fx-fore>
 
     `);
 
@@ -420,7 +420,7 @@ describe('bind Tests', () => {
 
   it('fails using camelcase node names', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -429,7 +429,7 @@ describe('bind Tests', () => {
           </fx-instance>
         </fx-model>
         <fx-output ref="theanswer"></fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -440,12 +440,12 @@ describe('bind Tests', () => {
 
   it('works with camelcase node names from external xml file', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance src="base/test/answer.xml"></fx-instance>
         </fx-model>
         <fx-output ref="theAnswer"></fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

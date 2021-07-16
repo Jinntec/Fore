@@ -7,17 +7,12 @@
     <title>barebone Fore form</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link href="../resources/demo.css" rel="stylesheet">
 
-    <link href="../resources/fore.css" rel="stylesheet">
-    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
-    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
-
-    <style>
-    </style>
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
-    <fx-form>
+    <fx-fore>
         <fx-model>
             <fx-instance>
                 <data>
@@ -45,10 +40,10 @@
             </fx-control>
 
         </fx-group>
-    </fx-form>
+    </fx-fore>
     <div id="bar" onclick="event.target.innerHTML = event.detail.string"></div>
     <div id="displayValue"></div>
 </div>
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>

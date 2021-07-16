@@ -6,7 +6,7 @@ describe('functions', () => {
   describe('Functions in JavaScript', () => {
     it('can define a simple function', async () => {
       const el = await fixtureSync(html`
-        <fx-form>
+        <fx-fore>
           <fx-model>
             <fx-function
               signature="local:theanswer() as xs:decimal"
@@ -17,7 +17,7 @@ describe('functions', () => {
             </fx-function>
           </fx-model>
           <label>{local:theanswer()}</label>
-        </fx-form>
+        </fx-fore>
       `);
 
       await oneEvent(el, 'refresh-done');
@@ -28,7 +28,7 @@ describe('functions', () => {
 
     it('can define a simple function with an argument', async () => {
       const el = await fixtureSync(html`
-        <fx-form>
+        <fx-fore>
           <fx-model>
             <fx-function
               signature="local:pow2($arg as xs:decimal) as xs:decimal"
@@ -39,7 +39,7 @@ describe('functions', () => {
             </fx-function>
           </fx-model>
           <label>{local:pow2(10)}</label>
-        </fx-form>
+        </fx-fore>
       `);
 
       await oneEvent(el, 'refresh-done');
@@ -52,7 +52,7 @@ describe('functions', () => {
   describe('functions in XPath', () => {
     it('can define a simple function', async () => {
       const el = await fixtureSync(html`
-        <fx-form>
+        <fx-fore>
           <fx-model>
             <fx-function
               signature="local:hello-world() as xs:string"
@@ -63,7 +63,7 @@ describe('functions', () => {
             </fx-function>
           </fx-model>
           <label>{local:hello-world()}</label>
-        </fx-form>
+        </fx-fore>
       `);
 
       await oneEvent(el, 'refresh-done');
@@ -74,7 +74,7 @@ describe('functions', () => {
 
     it('can define a simple function with an argument', async () => {
       const el = await fixtureSync(html`
-        <fx-form>
+        <fx-fore>
           <fx-model>
             <fx-function
               signature="local:hello($who as xs:string) as xs:string"
@@ -85,7 +85,7 @@ describe('functions', () => {
             </fx-function>
           </fx-model>
           <label>{local:hello("World")}</label>
-        </fx-form>
+        </fx-fore>
       `);
 
       await oneEvent(el, 'refresh-done');
@@ -98,7 +98,7 @@ describe('functions', () => {
   // The following two tests are failing.
   it('can define a simple function', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-function
             signature="local:theanswer() as xs:decimal"
@@ -109,7 +109,7 @@ describe('functions', () => {
           </fx-function>
         </fx-model>
         <fx-output ref="theanswer">{local:theanswer()}</fx-output>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -123,7 +123,7 @@ describe('functions', () => {
 
   it('can define a simple function using explicit models', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
@@ -139,8 +139,8 @@ describe('functions', () => {
             return 21*2;
           </fx-function>
         </fx-model>
-        <fx-output ref="theanswer">{local:theanswer()}</fx-output>
-      </fx-form>
+        <div id="output">{local:theanswer()}</div>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -149,9 +149,7 @@ describe('functions', () => {
     expect(model.modelItems.length).to.equal(1);
 
     // following assumptions were wrong - output is never setting the value
-    // const mi1 = model.modelItems[0];
-    // expect(mi1.value).to.equal('42');
-    const output = el.querySelector('fx-output');
+    const output = el.querySelector('#output');
     expect(output.textContent).to.equal('42');
   });
 });

@@ -7,17 +7,7 @@
     <title>Instances with JSON</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module">
-        import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
-        import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    </script>
-
-
-
-    <link href="../resources/vars.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
-
-
     <style>
         .dynamic {
             background: #76ff03;
@@ -34,7 +24,7 @@
 
     <demo-snippet>
         <template>
-            <fx-form>
+            <fx-fore>
                 <fx-model>
                     <fx-instance src="automobiles.json" type="json"></fx-instance>
                 </fx-model>
@@ -42,13 +32,13 @@
                     <label>Car Maker:</label>
                 </fx-output>
                 <div>Another one: {?automobiles?2?maker}</div>
-            </fx-form>
+            </fx-fore>
         </template>
     </demo-snippet>
 
 </div>
 
 
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>

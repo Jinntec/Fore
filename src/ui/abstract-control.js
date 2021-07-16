@@ -71,7 +71,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         await this.updateWidgetValue();
         this.handleModelItemProperties();
 
-        // if(!this.closest('fx-form').ready) return; // state change event do not fire during init phase (initial refresh)
+        // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
           // console.log('dispatching value-changed for ', this);

@@ -6,7 +6,7 @@ import '../index.js';
 describe('model tests', () => {
   it('rebuilds and recalcuates correctly intitially', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -34,7 +34,7 @@ describe('model tests', () => {
             <label slot="label">C</label>
           </fx-control>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -82,7 +82,7 @@ describe('model tests', () => {
 
   it('rebuilds and recalcuates correctly after value change', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -110,7 +110,7 @@ describe('model tests', () => {
             <label slot="label">C</label>
           </fx-control>
         </fx-group>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

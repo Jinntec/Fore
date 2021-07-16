@@ -31,7 +31,7 @@ export const foreElementMixin = superclass =>
       if (this.model) {
         return this.model;
       }
-      // const ownerForm = this.closest('fx-form');
+      // const ownerForm = this.closest('fx-fore');
       // const ownerForm = this.getOwnerForm(this);
       const ownerForm = this.getOwnerForm();
       return ownerForm.querySelector('fx-model');
@@ -42,7 +42,7 @@ export const foreElementMixin = superclass =>
       while (currentElement && currentElement.parentNode) {
         // console.log('current ', currentElement);
 
-        if (currentElement.nodeName.toUpperCase() === 'FX-FORM') {
+        if (currentElement.nodeName.toUpperCase() === 'FX-FORE') {
           return currentElement;
         }
 
@@ -79,7 +79,7 @@ export const foreElementMixin = superclass =>
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
 
         // todo: code below fails - why?
-        const formElement = this.closest('fx-form');
+        const formElement = this.closest('fx-fore');
         if (inscopeContext.nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
         } else {

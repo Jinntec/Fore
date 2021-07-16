@@ -7,7 +7,7 @@ import '../src/fx-bind.js';
 describe('action Tests', () => {
   it('setvalue action of control works and triggers update', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -17,7 +17,7 @@ describe('action Tests', () => {
         </fx-model>
 
         <fx-control ref="value"></fx-control>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -36,7 +36,7 @@ describe('action Tests', () => {
 
   it('triggers action, executes and updates', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -50,7 +50,7 @@ describe('action Tests', () => {
           <button></button>
           <fx-setvalue ref="value">B</fx-setvalue>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -68,7 +68,7 @@ describe('action Tests', () => {
 
   it('falsy condition prevents performing the action', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -83,7 +83,7 @@ describe('action Tests', () => {
           <button></button>
           <fx-setvalue if="../confirmation='true'" ref="value">8</fx-setvalue>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -101,7 +101,7 @@ describe('action Tests', () => {
 
   it('truthy condition performs the action', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -116,7 +116,7 @@ describe('action Tests', () => {
           <button></button>
           <fx-setvalue if="../confirmation='true'" ref="value">B</fx-setvalue>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -134,7 +134,7 @@ describe('action Tests', () => {
 
   it('fx-action executes its children', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -153,7 +153,7 @@ describe('action Tests', () => {
             <fx-setvalue ref="confirmation">true</fx-setvalue>
           </fx-action>
         </fx-trigger>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

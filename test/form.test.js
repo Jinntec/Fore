@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
-import '../src/fx-form.js';
+import '../src/fx-fore.js';
 import '../src/fx-model.js';
 import '../src/fx-instance.js';
 import '../src/fx-bind.js';
@@ -20,7 +20,7 @@ describe('initialize form', () => {
 
   it('ready event is emitted after first complete render', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -28,7 +28,7 @@ describe('initialize form', () => {
             </data>
           </fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'ready');
@@ -37,7 +37,7 @@ describe('initialize form', () => {
 
   it('initialized model', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -51,7 +51,7 @@ describe('initialize form', () => {
           </fx-instance>
           <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
     const model = el.querySelector('fx-model');
     // await model.updated();
@@ -63,7 +63,7 @@ describe('initialize form', () => {
 
   it('created modelItem', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -77,7 +77,7 @@ describe('initialize form', () => {
           </fx-instance>
           <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
     const model = el.querySelector('fx-model');
     // await model.updated();
@@ -102,13 +102,13 @@ describe('initialize form', () => {
 
   it('has paper-dialog', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model>
           <fx-instance>
             <data></data>
           </fx-instance>
         </fx-model>
-      </fx-form>
+      </fx-fore>
     `);
     // await model.updated();
     // await elementUpdated(el);

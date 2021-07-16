@@ -7,14 +7,14 @@ import { evaluateXPathToNodes, evaluateTemplateExpression } from './xpath-evalua
 /**
  * Root element for forms. Kicks off initialization and displays messages.
  *
- * fx-form is the outermost container for each form. A form can have exactly one model
+ * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
  *
  * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
  *
  * @ts-check
  */
-export class FxForm extends HTMLElement {
+export class FxFore extends HTMLElement {
   static get properties() {
     return {
       model: {
@@ -407,4 +407,4 @@ export class FxForm extends HTMLElement {
   }
 }
 
-customElements.define('fx-form', FxForm);
+customElements.define('fx-fore', FxFore);
