@@ -109,6 +109,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.index = index;
       this.applyIndex(this.children[index - 1]);
     });
+    document.addEventListener('insert', e =>{
+      const nodes = e.detail.insertedNodes;
+      this.index = e.detail.position;
+      console.log('insert catched', nodes,this.index);
+    });
 
     const style = `
             :host {
@@ -244,20 +249,26 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
         this.appendChild(newItem);
-        modified.push(newItem);
+        // modified.push(newItem);
       }
     }
-    if (modified.length > 0) {
-      modified.forEach(mod => {
-        mod.refresh();
-      });
+
+    for (let position = 0; position < repeatItemCount; position += 1) {
+      const item = repeatItems[position];
+      if(item.nodeset !== this.nodeset[position]){
+        item.nodeset = this.nodeset[position];
+      }
     }
+    Fore.refreshChildren(this);
+/*
     if (!this.inited) {
       Fore.refreshChildren(this);
     }
     if (contextSize === repeatItemCount) {
       Fore.refreshChildren(this);
     }
+*/
+    this.setIndex(this.index);
     console.groupEnd();
   }
 

@@ -9,15 +9,31 @@
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
-
+    <!-- all elements and attributes are OPTIONAL, i.e. may be missing depending on config
+         placeholder P := integer percent value 0 <= P <= 100
+         placeholder I := integer
+         placeholder F := float with 2digit precision (eg 1.12)
+         placeholder S := string (reasonably short)
+         voltage element can be ignored (unimplemented yet)
+    -->
     <fx-fore>
-        <fx-moodel>
-            <fx-instance></fx-instance>
-        </fx-moodel>
+        <fx-model>
+            <fx-instance>
+                <g5-cooler board="S" cpuspeed="I">
+                    <rear-fans speed="P" pwm="I" voltage="F"/>
+                    <water-pump speed="P" pwm="I" voltage="F"/>
+                    <water-tank level="P" absolute="F"/>
+                    <front-env temperature="F" humidity="F"/>
+                    <rear-env temperature="F" humidity="F"/>
+                    <voltage vrail="F" v5="F" vcpu="F"/>
+                    <memory heap="I" fragmentation="P"/>
+                </g5-cooler>
+            </fx-instance>
+        </fx-model>
         ...add UI here...
     </fx-fore>
 
 </div>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@0.19.0/dist/fore-all.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@0.24.0/dist/fore-all.js"></script>
 </body>
 </html>

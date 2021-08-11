@@ -429,6 +429,7 @@ describe('repeat Tests', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
+    expect(el.getModel().modelItems.length).to.equal(6);
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
@@ -440,6 +441,7 @@ describe('repeat Tests', () => {
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(1);
     expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
+    expect(el.getModel().modelItems.length).to.equal(3);
   });
 
   it('deletes an item and sets index', async () => {

@@ -17,7 +17,7 @@ export class FxModel extends HTMLElement {
     this.modelItems = [];
     this.defaultContext = {};
 
-    this.mainGraph = new DepGraph(false);
+    // this.mainGraph = new DepGraph(false);
     this.inited = false;
     this.modelConstructed = false;
     this.attachShadow({ mode: 'open' });
@@ -141,6 +141,7 @@ export class FxModel extends HTMLElement {
   rebuild() {
     console.group('### rebuild');
 
+    this.mainGraph = new DepGraph(false);
     this.modelItems = [];
 
     // trigger recursive initialization of the fx-bind elements
@@ -151,7 +152,7 @@ export class FxModel extends HTMLElement {
 
     // console.log(`dependencies of a `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}a[1]:required"));
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
-    // console.log(`rebuild mainGraph`, this.mainGraph);
+    console.log(`rebuild mainGraph`, this.mainGraph);
     console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
     /*
     console.log(
@@ -173,7 +174,7 @@ export class FxModel extends HTMLElement {
 
     const v = this.mainGraph.overallOrder();
     v.forEach(path => {
-      // console.log('recalculating path ', path);
+      console.log('recalculating path ', path);
 
       const node = this.mainGraph.getNodeData(path);
       // console.log('recalculating node ', node);
@@ -188,14 +189,14 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
-            // console.log('recalculating property ', property);
+            console.log('recalculating property ', property);
 
             const expr = modelItem.bind[property];
             if (expr) {
-              // console.log('recalc expr: ', expr);
+              console.log('recalc expr: ', expr);
               const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
               modelItem[property] = compute;
-              // console.log(`modelItem computed`, modelItem.required);
+              console.log(`modelItem computed`, modelItem.required);
             }
           }
         }

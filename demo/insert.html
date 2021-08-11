@@ -113,6 +113,11 @@
                             <task complete="true" due="2020-01-05">Make tutorial part 2</task>
                         </data>
                     </fx-instance>
+                    <fx-instance id="templ">
+                        <data>
+                            <task complete="" due=""> </task>
+                        </data>
+                    </fx-instance>
 
                     <fx-bind ref="task">
                         <fx-bind ref="./text()" required="true()"></fx-bind>
@@ -146,21 +151,31 @@
                 </fx-repeat>
 
                 <fx-trigger>
-                    <button>insert before second</button>
-                    <fx-insert ref="task" position="before" at="1"></fx-insert>
-                </fx-trigger>
-                <fx-trigger>
-                    <button>insert after second</button>
-                    <fx-insert ref="task" position="after" at="1"></fx-insert>
+                    <button>insert at end</button>
+                    <fx-insert ref="task"></fx-insert>
                 </fx-trigger>
                 <fx-trigger>
                     <button>insert as first</button>
-                    <fx-insert ref="task" at="1" position="before"></fx-insert>
+                    <fx-insert ref="task" position="before" at="1"></fx-insert>
                 </fx-trigger>
+                <fx-trigger>
+                    <button>insert after first</button>
+                    <fx-insert ref="task" position="after" at="1"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert as first from origin</button>
+                    <fx-insert ref="task" origin="instance('templ')/task" at="1" position="before"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert at end from origin</button>
+                    <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
+                </fx-trigger>
+<!--
                 <fx-trigger>
                     <button>insert as last</button>
                     <fx-insert ref="task"></fx-insert>
                 </fx-trigger>
+-->
 
             </fx-fore>
         </template>
