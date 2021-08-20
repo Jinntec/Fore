@@ -113,6 +113,7 @@ registerCustomXPathFunction(
   },
 );
 
+
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
@@ -135,6 +136,24 @@ const instance = (dynamicContext, string) => {
   }
   return null;
 };
+
+registerCustomXPathFunction(
+    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
+    ['xs:string?'],
+    'xs:integer?',
+    (dynamicContext, string) => {
+        const { formElement } = dynamicContext.currentContext;
+        const repeat = string
+            ? formElement.querySelector(`fx-repeat[id=${string}]`)
+            : null;
+
+        // const def = instance.getInstanceData();
+        if (repeat) {
+            return repeat.getAttribute('index');
+        }
+        return Number(1);
+    }
+);
 
 // Note that this is not to spec. The spec enforces elements to be returned from the
 // instance. However, we allow instances to actually be JSON!
@@ -218,6 +237,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
     case 'boolean-from-string':
     case 'depends':
     case 'event':
+    case 'index':
     case 'instance':
     case 'log':
     case 'logtree':

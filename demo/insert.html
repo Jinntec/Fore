@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>todo</title>
+    <title>insert action</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
@@ -77,6 +77,10 @@
         fx-trigger{
             display: inline-block;
         }
+        .index{
+            margin:1rem 0;
+            font-size:1.2rem;
+        }
         input{
             width: 100%;
             font-size: 0.9rem;
@@ -116,38 +120,26 @@
                     <fx-instance id="templ">
                         <data>
                             <task complete="" due=""> </task>
+                            <foo> </foo>
                         </data>
                     </fx-instance>
 
                     <fx-bind ref="task">
                         <fx-bind ref="./text()" required="true()"></fx-bind>
-<!--
-                        <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
-                        <fx-bind ref="@due" type="xs:date"></fx-bind>
--->
                     </fx-bind>
                 </fx-model>
 
-                <h1>todos</h1>
+                <h1>insert action</h1>
 
 
-                <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
+                <fx-repeat focus-on-create="task" id="todos" ref="task">
                     <template>
                         <fx-control id="task" ref="."></fx-control>
-<!--
-                        <fx-control ref="@due">
-                            <input class="widget" type="date">
-                        </fx-control>
-                        <fx-control ref="@complete">
-                            <input class="widget" type="checkbox">
-                        </fx-control>
--->
                         <fx-trigger>
                             <button>delete</button>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
-
                 </fx-repeat>
 
                 <fx-trigger>
@@ -157,6 +149,10 @@
                 <fx-trigger>
                     <button>insert as first</button>
                     <fx-insert ref="task" position="before" at="1"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert 'foo'</button>
+                    <fx-insert ref="instance('default')" origin="instance('tmpl')/foo"></fx-insert>
                 </fx-trigger>
                 <fx-trigger>
                     <button>insert after first</button>
@@ -170,12 +166,15 @@
                     <button>insert at end from origin</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
-<!--
                 <fx-trigger>
-                    <button>insert as last</button>
-                    <fx-insert ref="task"></fx-insert>
+                    <button>insert before current</button>
+                    <fx-insert ref="task" at="index('todos')" position="before"></fx-insert>
                 </fx-trigger>
--->
+                <fx-trigger>
+                    <button>insert after current</button>
+                    <fx-insert ref="task" at="index('todos')"></fx-insert>
+                </fx-trigger>
+                <div class="index">Index is: {index('todos')}</div>
 
             </fx-fore>
         </template>

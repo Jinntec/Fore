@@ -100,6 +100,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.applyIndex(this.children[idx]);
       this.index = idx + 1;
     });
+    // todo: review - this is just used by append action - event consolidation ?
     this.addEventListener('index-changed', e => {
       e.stopPropagation();
       console.log('handle index event ', e);

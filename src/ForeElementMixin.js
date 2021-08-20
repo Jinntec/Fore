@@ -79,13 +79,13 @@ export const foreElementMixin = superclass =>
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
 
         // todo: code below fails - why?
-        const formElement = this.closest('fx-fore');
+        const formElement = this.getOwnerForm();
         if (inscopeContext.nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
         } else {
           this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement);
         }
-        // this.nodeset = Fore.evaluateXPath(this.ref,inscopeContext,formElement,Fore.namespaceResolver)
+        // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }

@@ -152,4 +152,67 @@ describe('functions', () => {
     const output = el.querySelector('#output');
     expect(output.textContent).to.equal('42');
   });
+
+  it('returns 1 for repeat index() by default', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <theanswer></theanswer>
+              <theanswer></theanswer>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="repeat">
+            <template>
+                <fx-output ref="theanswer"></fx-output>
+            </template>
+        </fx-repeat>
+        <span id="index">{index('repeat')}</span>
+        
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const indexVal = document.getElementById('index').innerText;
+
+    expect(Number(indexVal)).to.equal(1);
+
+  });
+
+  it('returns correct index after insert for repeat index()', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <theanswer></theanswer>
+              <theanswer></theanswer>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="repeat">
+            <template>
+                <fx-output ref="theanswer"></fx-output>
+            </template>
+        </fx-repeat>
+        <span id="index">{index('repeat')}</span>
+        <fx-trigger>
+            <button>insert at end</button>
+            <fx-insert ref="theanswer"></fx-insert>
+        </fx-trigger>
+
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    trigger.performActions();
+
+    const indexVal = document.getElementById('index').innerText;
+    expect(Number(indexVal)).to.equal(3);
+
+  });
 });
