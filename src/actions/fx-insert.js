@@ -33,7 +33,7 @@ export class FxInsert extends AbstractAction {
         this.at = Number(this.hasAttribute('at') ? this.getAttribute('at') : 0); // default: size of nodeset, determined later
         this.position = this.hasAttribute('position') ? this.getAttribute('position') : 'after';
         this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
-
+        this.keepValues = this.hasAttribute('keep-values') ? true: false;
     }
 
     perform() {
@@ -63,6 +63,9 @@ export class FxInsert extends AbstractAction {
         } else if (targetSequence) {
             // ### use last item of targetSequence
             originSequence = this._cloneTargetSequence(targetSequence);
+            if(originSequence && !this.keepValues){
+                this._clear(originSequence);
+            }
         }
         if (!originSequence) return; // if no origin back out without effect
 
@@ -96,7 +99,14 @@ export class FxInsert extends AbstractAction {
 
             // ### if the contextItem is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
             if(!contextItem){
+                index = 1;
+
                 contextItem = targetSequence;
+                const context = evaluateXPath('count(preceding::*)', targetSequence, this.getOwnerForm());
+                console.log('context',context);
+                index = context +1;
+                // index = targetSequence.findIndex(contextItem);
+
             }
 
             if (this.position && this.position === 'before') {
@@ -106,7 +116,7 @@ export class FxInsert extends AbstractAction {
 
             if (this.position && this.position === 'after') {
                 // contextItem.parentNode.append(originSequence);
-                const nextSibl = contextItem.nextSibling;
+                // const nextSibl = contextItem.nextSibling;
                 index += 1;
                 contextItem.insertAdjacentElement('afterend',originSequence.cloneNode(true));
             }
@@ -146,6 +156,35 @@ export class FxInsert extends AbstractAction {
         this.getModel().rebuild();
         super.actionPerformed();
     }
+
+    /**
+     * clear all text nodes and attribute values to get a 'clean' template.
+     * @param n
+     * @private
+     */
+    _clear(n) {
+        const attrs = n.attributes;
+
+        //clear attrs
+        for (let i = 0; i < attrs.length; i += 1) {
+            // n.setAttribute(attrs[i].name,'');
+            attrs[i].value = '';
+        }
+        // clear text content
+        if(n.textContent){
+            n.textContent = '';
+        }
+
+        let node = n.firstChild;
+        while (node) {
+            if (node.nodeType === 1 && node.hasAttributes()) {
+                node.textContent = '';
+            }
+            this._clear(node);
+            node = node.nextSibling;
+        }
+    }
+
 
 }
 

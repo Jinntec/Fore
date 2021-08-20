@@ -37,7 +37,16 @@
         .highlight {
             background: red;
         }
-
+        .deletebtn{
+            border-radius: 50%;
+            border:none;
+            background: #f9602c;
+            color:white;
+            font-size:0.9rem;
+        }
+        .deletebtn:hover{
+            filter: brightness(150%) ;
+        }
         input{
             background: rgba(255,255,255,0.3);
             border:none;
@@ -56,7 +65,18 @@
         fx-repeat {
             padding: 20px;
             display: block;
-            height: auto;
+            height: 100vh;
+            position: fixed;
+            background: rgba(255,255,255,0.9);
+            right: 0;
+            top:0;
+            border-left:solid 1px darkgray;
+            z-index: 5;
+            min-width: 220px;
+        }
+        fx-repeat::before{
+            content:'TODOS';
+            font-size:1.2rem;
         }
 
         fx-repeatitem {
@@ -64,6 +84,7 @@
             /*background: lightsteelblue;*/
             margin: 0.5rem 0;
             display: block;
+            padding:0.4rem;
         }
 
         fx-control {
@@ -89,8 +110,7 @@
         }
 
         [repeat-index] {
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px);
             background-color: rgba(255,255,255, 0.3);
             box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
             border: 2px rgba(255,255,255,0.4) solid;
@@ -100,6 +120,9 @@
         [repeat-index] input{
             color:black;
             font-weight: 500;
+        }
+        fx-trigger button{
+            font-size:1.2rem;
         }
     </style>
 </head>
@@ -119,7 +142,7 @@
                     </fx-instance>
                     <fx-instance id="templ">
                         <data>
-                            <task complete="" due=""> </task>
+                            <task complete="" due="">new task</task>
                             <foo> </foo>
                         </data>
                     </fx-instance>
@@ -131,48 +154,92 @@
 
                 <h1>insert action</h1>
 
+                <div class="note">
+                    You'll have to reload this page in order to test the actions in isolation.
+                </div>
 
                 <fx-repeat focus-on-create="task" id="todos" ref="task">
                     <template>
                         <fx-control id="task" ref="."></fx-control>
                         <fx-trigger>
-                            <button>delete</button>
+                            <button class="deletebtn">X</button>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
 
+                <h2>Appending an item</h2>
+                <p>If just the <code>ref</code>is given the last element of the list is cloned and appended.</p>
+                <p>Important: if the list is empty this action has no effect! See below.</p>
+                <p class="note">
+                    Fore differs from XForms in that it will clear the values of the cloned item as most of the time
+                    that's what is wanted. To preserve the values add <code>keep-values</code> marker attribute.
+                </p>
                 <fx-trigger>
                     <button>insert at end</button>
                     <fx-insert ref="task"></fx-insert>
                 </fx-trigger>
+
+                <h2>Appendening an item keeping the values</h2>
+                <p>When no <code>origin</code> attribute is given the last entry of the list is cloned and
+                inserted. This behavior is conformant with XForms 2.0.</p>
+                <fx-trigger>
+                    <button>insert at end with keepValues</button>
+                    <fx-insert ref="task" keep-values></fx-insert>
+                </fx-trigger>
+
+                <h2>Inserting at given position</h2>
+                <p>Inserts an entry to the top of the list here.</p>
                 <fx-trigger>
                     <button>insert as first</button>
                     <fx-insert ref="task" position="before" at="1"></fx-insert>
                 </fx-trigger>
+
+                <h2>Insert a different item from template.</h2>
+                <p>With <code>origin</code> you can select nodes to be used as templates for insertion.</p>
                 <fx-trigger>
                     <button>insert 'foo'</button>
                     <fx-insert ref="instance('default')" origin="instance('tmpl')/foo"></fx-insert>
                 </fx-trigger>
+
+                <h2>Insert before a entry at position</h2>
+                <p>Inserts an item after the first in the list</p>
                 <fx-trigger>
                     <button>insert after first</button>
                     <fx-insert ref="task" position="after" at="1"></fx-insert>
                 </fx-trigger>
+
+                <h2>Insert a template node before the first</h2>
                 <fx-trigger>
                     <button>insert as first from origin</button>
                     <fx-insert ref="task" origin="instance('templ')/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
+
+                <h2>Insert at end of list from template</h2>
+                <p>No <code>at</code> given means we append the template to the list</p>
                 <fx-trigger>
                     <button>insert at end from origin</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
+
+                <h2>Inserting using the current repeat index</h2>
+                <p>inserts an item before the currently selected item.</p>
                 <fx-trigger>
                     <button>insert before current</button>
                     <fx-insert ref="task" at="index('todos')" position="before"></fx-insert>
                 </fx-trigger>
+
+                <h2>Insert after currently selected item</h2>
                 <fx-trigger>
                     <button>insert after current</button>
                     <fx-insert ref="task" at="index('todos')"></fx-insert>
+                </fx-trigger>
+
+                <h2>Duplicating (Copying) an item</h2>
+                <p>Will copy the referenced node and insert it after it.</p>
+                <fx-trigger>
+                    <button>duplicate second</button>
+                    <fx-insert ref="task[2]" keep-values></fx-insert>
                 </fx-trigger>
                 <div class="index">Index is: {index('todos')}</div>
 

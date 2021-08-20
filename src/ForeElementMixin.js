@@ -7,6 +7,9 @@ export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
       return {
+        context:{
+          type: Object
+        },
         model: {
           type: Object,
         },
@@ -21,6 +24,7 @@ export const foreElementMixin = superclass =>
 
     constructor() {
       super();
+      this.context = null;
       this.model = null;
       this.modelItem = {};
       this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
