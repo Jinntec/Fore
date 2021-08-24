@@ -118,7 +118,7 @@ const instance = (dynamicContext, string) => {
   // TODO: handle no string passed (null will be passed instead)
 
   const formElement = fxEvaluateXPathToFirstNode(
-    'ancestor-or-self::fx-form',
+    'ancestor-or-self::fx-fore',
     dynamicContext.currentContext.formElement,
   );
 

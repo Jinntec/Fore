@@ -174,7 +174,7 @@ describe('instance Tests', () => {
 
   it('Can run the instance function from text nodes', async () => {
     const el = await fixtureSync(html`
-      <fx-form>
+      <fx-fore>
         <fx-model id="model1">
           <fx-instance>
             <data>
@@ -188,7 +188,7 @@ describe('instance Tests', () => {
           </fx-instance>
         </fx-model>
         <span id="the-span">{instance('second')/item}</span>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
