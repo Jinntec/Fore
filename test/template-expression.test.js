@@ -57,7 +57,7 @@ describe('template expressions', () => {
 
   it('Correctly resolves namespaces based on the context of the template', async () => {
     const el = await fixtureSync(html`
-      <fx-form xpath-default-namespace="CCC">
+      <fx-fore xpath-default-namespace="CCC">
         <fx-model>
           <fx-instance>
             <data>
@@ -77,7 +77,7 @@ describe('template expressions', () => {
         <div class="greetingC {greeting}">
           Greeting: {greeting} another {greeting}
         </div>
-      </fx-form>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
