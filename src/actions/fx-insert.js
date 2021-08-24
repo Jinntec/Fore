@@ -1,6 +1,10 @@
-import {AbstractAction} from './abstract-action.js';
-import getInScopeContext from "../getInScopeContext.js";
-import {evaluateXPath} from "../xpath-evaluation.js";
+import { AbstractAction } from './abstract-action.js';
+import getInScopeContext from '../getInScopeContext.js';
+import {
+    evaluateXPathToNodes,
+    evaluateXPathToFirstNode,
+    evaluateXPathToNumber,
+} from '../xpath-evaluation.js';
 
 /**
  * `fx-insert`
@@ -11,7 +15,7 @@ import {evaluateXPath} from "../xpath-evaluation.js";
 export class FxInsert extends AbstractAction {
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
@@ -19,43 +23,42 @@ export class FxInsert extends AbstractAction {
             super.connectedCallback();
         }
         const style = `
-        :host{
-            display:none;
-        }
-    `;
+                :host{
+                        display:none;
+                }
+        `;
         this.shadowRoot.innerHTML = `
-        <style>
-            ${style}
-        </style>
-        <slot></slot>
-    `;
+                <style>
+                        ${style}
+                </style>
+                <slot></slot>
+        `;
 
         this.at = Number(this.hasAttribute('at') ? this.getAttribute('at') : 0); // default: size of nodeset, determined later
         this.position = this.hasAttribute('position') ? this.getAttribute('position') : 'after';
         this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
-        this.keepValues = this.hasAttribute('keep-values') ? true: false;
+        this.keepValues = !!this.hasAttribute('keep-values');
     }
 
     perform() {
-
         /*
-         todo: !!! calling super here does not correctly give the nodeset - it's likely still a bug in ForeElementMixin !!!
-        super.perform();
-        console.log('this.nodeset', this.nodeset);
-        */
+                 todo: !!! calling super here does not correctly give the nodeset - it's likely still a bug in ForeElementMixin !!!
+                super.perform();
+                console.log('this.nodeset', this.nodeset);
+                */
 
         // ### obtaining targetSequence
         const inscope = getInScopeContext(this, this.ref);
         // @ts-ignore
-        const targetSequence = evaluateXPath(this.ref, inscope, this.getOwnerForm());
+        const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
         console.log('insert nodeset ', targetSequence);
 
         // ### obtaining originSequence
         let originSequence;
         if (this.origin) {
             // ### if there's an origin attribute use it
-            const originTarget = evaluateXPath(this.origin, inscope, this.getOwnerForm());
-            if(Array.isArray(originTarget) && originTarget.length === 0){
+            const originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
+            if (originTarget === null) {
                 console.warn('invalid origin for this insert action - ignoring...', this);
                 return;
             }
@@ -63,7 +66,7 @@ export class FxInsert extends AbstractAction {
         } else if (targetSequence) {
             // ### use last item of targetSequence
             originSequence = this._cloneTargetSequence(targetSequence);
-            if(originSequence && !this.keepValues){
+            if (originSequence && !this.keepValues) {
                 this._clear(originSequence);
             }
         }
@@ -73,7 +76,7 @@ export class FxInsert extends AbstractAction {
         let index;
 
         // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
-        if(targetSequence.length === 0){
+        if (targetSequence.length === 0) {
             contextItem = inscope;
             inscope.appendChild(originSequence);
             index = 1;
@@ -82,31 +85,36 @@ export class FxInsert extends AbstractAction {
             // todo: eval 'at'
 
             /*
-            insert at position given by 'at' or use the last item in the targetSequence
-             */
+                        insert at position given by 'at' or use the last item in the targetSequence
+                         */
             // if (this.at) {
             if (this.hasAttribute('at')) {
                 // index = this.at;
                 // contextItem = targetSequence[this.at - 1];
 
-                index = evaluateXPath(this.getAttribute('at'), inscope, this.getOwnerForm());
+                // The 'at' attribute is an XPath that will resolv to a number
+                index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this.getOwnerForm());
                 contextItem = targetSequence[index - 1];
             } else {
                 // this.at = targetSequence.length;
+
+                // TODO: when the target sequence is just the `data` element, this results in
+                // attempting to insert new nodes _next to_ that data element. Causing a DOM error:
+                // the data element resides directly under a document node.
+                // I guess we meant to fall back to the CHILDNODES of the target sequence here. But I am unsure where to add such a fallback.
                 index = targetSequence.length;
                 contextItem = targetSequence[targetSequence.length - 1];
             }
 
             // ### if the contextItem is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
-            if(!contextItem){
+            if (!contextItem) {
                 index = 1;
 
                 contextItem = targetSequence;
-                const context = evaluateXPath('count(preceding::*)', targetSequence, this.getOwnerForm());
-                console.log('context',context);
-                index = context +1;
+                const context = evaluateXPathToNumber('count(preceding::*)', targetSequence, this.getOwnerForm());
+                console.log('context', context);
+                index = context + 1;
                 // index = targetSequence.findIndex(contextItem);
-
             }
 
             if (this.position && this.position === 'before') {
@@ -118,9 +126,8 @@ export class FxInsert extends AbstractAction {
                 // contextItem.parentNode.append(originSequence);
                 // const nextSibl = contextItem.nextSibling;
                 index += 1;
-                contextItem.insertAdjacentElement('afterend',originSequence.cloneNode(true));
+                contextItem.insertAdjacentElement('afterend', originSequence.cloneNode(true));
             }
-
         }
 
         // console.log('insert context item ', contextItem);
@@ -133,7 +140,7 @@ export class FxInsert extends AbstractAction {
             new CustomEvent('insert', {
                 composed: true,
                 bubbles: true,
-                detail: { insertedNodes:originSequence, position: index },
+                detail: { insertedNodes: originSequence, position: index },
             }),
         );
 
@@ -141,16 +148,15 @@ export class FxInsert extends AbstractAction {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    _cloneTargetSequence (seq){
+    _cloneTargetSequence(seq) {
         if (Array.isArray(seq) && seq.length !== 0) {
-            return  seq[seq.length - 1].cloneNode(true);
+            return seq[seq.length - 1].cloneNode(true);
         }
-        if(!Array.isArray(seq) && seq){
+        if (!Array.isArray(seq) && seq) {
             return seq.cloneNode(true);
         }
         return null;
     }
-
 
     actionPerformed() {
         this.getModel().rebuild();
@@ -165,13 +171,13 @@ export class FxInsert extends AbstractAction {
     _clear(n) {
         const attrs = n.attributes;
 
-        //clear attrs
+        // clear attrs
         for (let i = 0; i < attrs.length; i += 1) {
             // n.setAttribute(attrs[i].name,'');
             attrs[i].value = '';
         }
         // clear text content
-        if(n.textContent){
+        if (n.textContent) {
             n.textContent = '';
         }
 
@@ -184,8 +190,6 @@ export class FxInsert extends AbstractAction {
             node = node.nextSibling;
         }
     }
-
-
 }
 
 window.customElements.define('fx-insert', FxInsert);

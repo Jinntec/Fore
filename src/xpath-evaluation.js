@@ -1,8 +1,9 @@
 import {
   evaluateXPath as fxEvaluateXPath,
+  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
   evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
-  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
+  evaluateXPathToNumber as fxEvaluateXPathToNumber,
   evaluateXPathToString as fxEvaluateXPathToString,
   registerCustomXPathFunction,
   registerXQueryModule,
@@ -107,12 +108,11 @@ registerCustomXPathFunction(
       if (logtree) {
         logtree.parentNode.removeChild(logtree);
       }
-        form.appendChild(buildTree(tree, instance.getDefaultContext()));
+      form.appendChild(buildTree(tree, instance.getDefaultContext()));
     }
     return null;
   },
 );
-
 
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
@@ -138,21 +138,19 @@ const instance = (dynamicContext, string) => {
 };
 
 registerCustomXPathFunction(
-    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
-    ['xs:string?'],
-    'xs:integer?',
-    (dynamicContext, string) => {
-        const { formElement } = dynamicContext.currentContext;
-        const repeat = string
-            ? formElement.querySelector(`fx-repeat[id=${string}]`)
-            : null;
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
+  ['xs:string?'],
+  'xs:integer?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const repeat = string ? formElement.querySelector(`fx-repeat[id=${string}]`) : null;
 
-        // const def = instance.getInstanceData();
-        if (repeat) {
-            return repeat.getAttribute('index');
-        }
-        return Number(1);
+    // const def = instance.getInstanceData();
+    if (repeat) {
+      return repeat.getAttribute('index');
     }
+    return Number(1);
+  },
 );
 
 // Note that this is not to spec. The spec enforces elements to be returned from the
@@ -379,6 +377,34 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
  */
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   return fxEvaluateXPathToString(
+    xpath,
+    contextNode,
+    domFacade,
+    {},
+
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
+}
+
+/**
+ * Evaluate an XPath to a number
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @return {string}
+ */
+export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
+  return fxEvaluateXPathToNumber(
     xpath,
     contextNode,
     domFacade,
