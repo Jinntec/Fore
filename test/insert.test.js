@@ -63,7 +63,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="task"></fx-insert>
+                    <fx-insert ref="task" keep-values></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -116,7 +116,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert as first</button>
-                    <fx-insert ref="task" position="before" at="1"></fx-insert>
+                    <fx-insert ref="task" position="before" at="1" keep-values></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -165,7 +165,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert after first</button>
-                    <fx-insert ref="task" position="after" at="1"></fx-insert>
+                    <fx-insert ref="task" position="after" at="1" keep-values></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -217,7 +217,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="instance('default')" origin="instance('tmpl')/foo"></fx-insert>
+                    <fx-insert ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -227,7 +227,7 @@ describe('insert Tests', () => {
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
-    const tasks = fx.evaluateXPath('//foo', inst, null, {});
+    const tasks = fx.evaluateXPathToNodes('//foo', inst, null, {});
 
     expect(tasks.length).to.equal(1);
   });
@@ -288,7 +288,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="task" at="index('todos')"></fx-insert>
+                    <fx-insert ref="task" at="index('todos')" keep-values></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -324,7 +324,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="task" at="index('todos')" position="before"></fx-insert>
+                    <fx-insert ref="task" at="index('todos')" position="before" keep-values></fx-insert>
                 </fx-trigger>
             </fx-fore>
     `);
@@ -339,6 +339,37 @@ describe('insert Tests', () => {
     expect(tasks.length).to.equal(4);
 
     expect(tasks[0].textContent).to.equal('three');
+
+  });
+
+  it('inserts with context wether list is empty or not', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <list><a>1</a><a>2</a><a>3</a></list>
+                            <blank><a>0</a></blank>
+                          </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>insert at end</button>
+                    <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>
+                </fx-trigger>
+            </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    trigger.performActions();
+
+    const inst = el.getModel().getDefaultContext();
+    console.log('instance after insert', inst);
+    const items = fx.evaluateXPath('//list/a', inst, null, {});
+
+    expect(items.length).to.equal(4);
+    expect(items[3].textContent).to.equal('0');
 
   });
 

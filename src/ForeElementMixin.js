@@ -63,10 +63,8 @@ export const foreElementMixin = superclass =>
      * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
      */
     evalInContext() {
-      // todo: should be replaced with Fore.getInScopeContext
       // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
-
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
@@ -137,12 +135,6 @@ export const foreElementMixin = superclass =>
       if (mi) {
         this.modelItem = mi;
       }
-      /*
-        if(this.modelItem.node instanceof Node){
-            // console.log('modelItem is already initialized ', this.modelItem);
-            return this.modelItem;
-        }
-*/
 
       const repeated = this.closest('fx-repeatitem');
       let existed;
@@ -164,32 +156,7 @@ export const foreElementMixin = superclass =>
     }
 
     getInScopeContext() {
-      let resultNodeset;
-
-      const repeatItem = this.parentNode.closest('fx-repeatitem');
-      if (repeatItem) {
-        return repeatItem.nodeset;
-      }
-
-      const parentBind = this.parentNode.closest('[ref]');
-
-      if (parentBind !== null) {
-        resultNodeset = parentBind.nodeset;
-      } else if (XPathUtil.isAbsolutePath(this.ref)) {
-        const instanceId = XPathUtil.getInstanceId(this.ref);
-        resultNodeset = this.getModel()
-          .getInstance(instanceId)
-          .getDefaultContext();
-      } else if (this.getModel().getDefaultInstance() !== null) {
-        resultNodeset = this.getModel()
-          .getDefaultInstance()
-          .getDefaultContext();
-      } else {
-        return [];
-      }
-
-      // console.log('getInScopeContext ', resultNodeset);
-      // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
-      return resultNodeset;
+      return getInScopeContext(this,this.ref);
     }
+
   };

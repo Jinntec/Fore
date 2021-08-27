@@ -1,33 +1,58 @@
+// import evaluateXPathToNodes from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToFirstNode } from './xpath-evaluation.js';
+
 import { XPathUtil } from './xpath-util.js';
 
-export default function getInScopeContext(node, ref) {
-  let resultNodeset;
-  let parent;
+function _getParentElement(node){
   if (node.nodeType === Node.ATTRIBUTE_NODE) {
-    parent = node.ownerElement;
-  } else {
-    parent = node.parentNode;
+    return node.ownerElement;
+  }
+  return  node.parentNode;
+}
+
+function _getForeContext(node){
+ return node.closest('fx-fore');
+}
+
+function _getModelInContext(node){
+  // const ownerForm = node.closest('fx-fore');
+  const ownerForm = _getForeContext(node);
+  return ownerForm.getModel();
+}
+
+function _getInitialContext(node, ref){
+  const parentBind = node.closest('[ref]');
+
+  if (parentBind !== null) {
+    return parentBind.nodeset;
   }
 
-  const repeatItem = parent.closest('fx-repeatitem');
+  const model = _getModelInContext(node);
+  if (XPathUtil.isAbsolutePath(ref)) {
+    const instanceId = XPathUtil.getInstanceId(ref);
+    return model.getInstance(instanceId).getDefaultContext();
+  }
+  if (model.getDefaultInstance() !== null) {
+    return model.getDefaultInstance().getDefaultContext();
+  }
+  return [];
+
+}
+
+export default function getInScopeContext(node, ref) {
+
+  const parentElement = _getParentElement(node);
+  const repeatItem = parentElement.closest('fx-repeatitem');
   if (repeatItem) {
     return repeatItem.nodeset;
   }
-  const parentBind = parent.closest('[ref]');
 
-  const ownerForm = parent.closest('fx-fore');
-  const model = ownerForm.getModel();
-
-  if (parentBind !== null) {
-    resultNodeset = parentBind.nodeset;
-  } else if (XPathUtil.isAbsolutePath(ref)) {
-    const instanceId = XPathUtil.getInstanceId(ref);
-    resultNodeset = model.getInstance(instanceId).getDefaultContext();
-  } else if (model.getDefaultInstance() !== null) {
-    resultNodeset = model.getDefaultInstance().getDefaultContext();
-  } else {
-    return [];
+  if(node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('context')){
+    const initialContext = _getInitialContext(node.parentNode,ref);
+    const contextAttr = node.getAttribute('context');
+    return evaluateXPathToFirstNode(contextAttr,initialContext,_getForeContext(parentElement))
   }
-  // todo: no support for xforms 'context' yet - see https://github.com/betterFORM/betterFORM/blob/02fd3ec595fa275589185658f3011a2e2e826f4d/core/src/main/java/de/betterform/xml/xforms/XFormsElement.java#L451
-  return resultNodeset;
+  return _getInitialContext(parentElement,ref);
 }
+
+

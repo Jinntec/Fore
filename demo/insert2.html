@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>insert action</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .header {
+            display: grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+
+        .required:after{
+            content:'*';
+            color:red;
+            margin-left:-4pt;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        fx-fore{
+            position: relative;
+        }
+        .highlight {
+            background: red;
+        }
+        .deletebtn{
+            border-radius: 50%;
+            border:none;
+            background: #f9602c;
+            color:white;
+            font-size:0.9rem;
+        }
+        .deletebtn:hover{
+            filter: brightness(150%) ;
+        }
+        input{
+            background: rgba(255,255,255,0.3);
+            border:none;
+            padding: 0.3rem;
+            border-radius: 0.2rem;
+        }
+
+        /*fx-repeatitem {*/
+        /*    display: block;*/
+        /*}*/
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-repeat {
+            padding: 20px;
+            display: block;
+            background: rgba(255,255,255,0.9);
+            min-width: 220px;
+        }
+        fx-repeat::before{
+            content:'TODOS';
+            font-size:1.2rem;
+        }
+
+        fx-repeatitem {
+            /*border: thin solid white;*/
+            /*background: lightsteelblue;*/
+            margin: 0.5rem 0;
+            display: block;
+            padding:0.4rem;
+        }
+
+        fx-control {
+            display: inline-block;
+            padding: 0 6px;
+            white-space: nowrap;
+
+            /*padding: 6px;*/
+            /*margin: 4px;*/
+        }
+        fx-trigger{
+            display: inline-block;
+        }
+        .index{
+            margin:1rem 0;
+            font-size:1.2rem;
+        }
+        input{
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color:var(--paper-grey-900);
+        }
+
+        [repeat-index] {
+            backdrop-filter: blur(3px);
+            background-color: rgba(255,255,255, 0.3);
+            box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;
+        }
+        [repeat-index] input{
+            color:black;
+            font-weight: 500;
+        }
+        fx-trigger button{
+            font-size:1.2rem;
+        }
+        pre{
+            font-size:1.2rem;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <list>
+                                <a>1</a>
+                                <a>2</a>
+                                <a>3</a>
+                            </list>
+                            <blank><a>0</a></blank>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <h1>insert action with context</h1>
+
+                <fx-repeat id="todos" ref="list/a">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
+                <fx-trigger>
+                    <button>insert with context</button>
+                    <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>
+                </fx-trigger>
+
+                <div class="index">Index is: {index('todos')}</div>
+                <details class="log" open>
+                    <summary>Data</summary>
+                    <pre>
+                        {log('default')}
+</pre>
+                </details>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
