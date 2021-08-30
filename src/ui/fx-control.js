@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPathToNodes, evaluateXPath } from '../xpath-evaluation.js';
+import {evaluateXPathToNodes, evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -134,6 +134,7 @@ class FxControl extends XfAbstractControl {
 
       // ### build the items
       Array.from(nodeset).forEach(node => {
+        console.log('#### node', node);
         const content = tmpl.content.firstElementChild.cloneNode(true);
         const newEntry = document.importNode(content, true);
         // console.log('newEntry ', newEntry);
@@ -154,11 +155,9 @@ class FxControl extends XfAbstractControl {
         // ### set label
         const optionLabel = newEntry.textContent;
         const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
-        console.log('label Expr ', labelExpr);
 
-        // todo : should use evaluateToString()
-        const label = evaluateXPath(labelExpr, node, formElement);
-        newEntry.textContent = label.textContent;
+        const label = evaluateXPathToString(labelExpr, node, formElement);
+        newEntry.textContent = label;
       });
     }
   }

@@ -2,7 +2,7 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
+import { evaluateXPath , evaluateXPathToNodes} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -169,6 +169,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.log('##### ref ', this.ref);
 
     const seq = evaluateXPath(this.ref, inscope, this.getOwnerForm());
+    // const seq = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
     if (seq === null) {
       // Empty sequence
       this.nodeset = [];
@@ -183,7 +184,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         return;
       }
 
-      if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
+      // if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
+      if (Array.isArray(seq) ) {
         // multiple Nodes or maps
         this.nodeset = seq;
         return;

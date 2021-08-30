@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>barebone Fore form</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+        fx-repeatitem{
+            display: block;
+            margin:1rem;
+        }
+        [repeat-index]{
+            background: lightblue;
+        }
+
+        [repeat-index] [repeat-index]{
+            background: steelblue;
+        }
+
+        [repeat-index] fx-repeat{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="default" src="editor/template.xml"> </fx-instance>
+
+            <fx-instance id="elements" src="editor/elements.xml"> </fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <current></current>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <h1>Fore Editor</h1>
+
+        <fx-repeat ref="instance('elements')/*">
+            <template>
+                <div>{name(.)}</div>
+                <fx-repeat ref="./@*" id="inner">
+                    <template>
+                        <div style="margin-left:2rem;">{name(.)}</div>
+                    </template>
+                </fx-repeat>
+            </template>
+        </fx-repeat>
+<!--
+        <fx-control ref="instance('vars')/current">
+            <select ref="instance('elements')/*" class="widget" update-event="change">
+                <template>
+                    <option value="{name(.)}">{name(.)}</option>
+                </template>
+            </select>
+        </fx-control>
+-->
+
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

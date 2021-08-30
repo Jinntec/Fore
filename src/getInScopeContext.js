@@ -42,6 +42,12 @@ function _getInitialContext(node, ref){
 export default function getInScopeContext(node, ref) {
 
   const parentElement = _getParentElement(node);
+/*
+  if(parentElement.nodeName.toUpperCase() === 'FX-REPEATITEM'){
+    return parentElement.nodeset;
+  }
+*/
+
   const repeatItem = parentElement.closest('fx-repeatitem');
   if (repeatItem) {
     return repeatItem.nodeset;

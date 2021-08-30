@@ -1,0 +1,13 @@
+<data>
+    <fx-instance src=""/>
+    <fx-bind readonly="" required="" relevant="" constraint="" calculate="" type=""/>
+    <fx-submission url="" replace=""/>
+    <fx-group ref=""/>
+    <fx-repeat ref=""/>
+    <fx-switch ref=""/>
+    <fx-control ref=""/>
+    <fx-output ref=""/>
+    <fx-trigger ref=""/>
+    <fx-insert ref="" position="" at=""/>
+    <fx-setvalue ref="" value=""/>
+</data>

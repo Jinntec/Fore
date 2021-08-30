@@ -1,6 +1,12 @@
 import {AbstractAction} from './abstract-action.js';
 import getInScopeContext from "../getInScopeContext.js";
-import {evaluateXPath} from "../xpath-evaluation.js";
+import {
+    evaluateXPath,
+    evaluateXPathToNodes,
+    evaluateXPathToFirstNode,
+    evaluateXPathToNumber,
+} from '../xpath-evaluation.js';
+import {or} from "../../assets/prsc";
 
 /**
  * `fx-insert`
@@ -36,6 +42,37 @@ export class FxInsert extends AbstractAction {
         this.keepValues = this.hasAttribute('keep-values') ? true: false;
     }
 
+    _getOriginSequence(inscope,targetSequence){
+        let originSequence;
+        if (this.origin) {
+            // ### if there's an origin attribute use it
+            const originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
+            if(Array.isArray(originTarget) && originTarget.length === 0){
+                console.warn('invalid origin for this insert action - ignoring...', this);
+                // return;
+                originSequence = null;
+            }
+            originSequence = originTarget.cloneNode(true);
+        } else if (targetSequence) {
+            // ### use last item of targetSequence
+            originSequence = this._cloneTargetSequence(targetSequence);
+            if(originSequence && !this.keepValues){
+                this._clear(originSequence);
+            }
+        }
+        return originSequence;
+    }
+
+    _getInsertIndex(inscope, targetSequence) {
+        if (targetSequence.length === 0) {
+            return null;
+        }
+        if (this.hasAttribute('at')) {
+            return evaluateXPathToNumber(this.getAttribute('at'), inscope, this.getOwnerForm());
+        }
+        return targetSequence.length;
+    }
+
     perform() {
 
         /*
@@ -48,14 +85,15 @@ export class FxInsert extends AbstractAction {
         const inscope = getInScopeContext(this, this.ref);
 
         // @ts-ignore
-        const targetSequence = evaluateXPath(this.ref, inscope, this.getOwnerForm());
+        const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
         console.log('insert nodeset ', targetSequence);
 
         // ### obtaining originSequence
+/*
         let originSequence;
         if (this.origin) {
             // ### if there's an origin attribute use it
-            const originTarget = evaluateXPath(this.origin, inscope, this.getOwnerForm());
+            const originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
             if(Array.isArray(originTarget) && originTarget.length === 0){
                 console.warn('invalid origin for this insert action - ignoring...', this);
                 return;
@@ -68,14 +106,19 @@ export class FxInsert extends AbstractAction {
                 this._clear(originSequence);
             }
         }
+*/
+        const originSequence = this._getOriginSequence(inscope,targetSequence);
         if (!originSequence) return; // if no origin back out without effect
 
-        let contextItem;
+        let insertLocationNode;
         let index;
+
+        let idx = this._getInsertIndex(inscope, targetSequence);
+        console.log('insert index',idx);
 
         // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
         if(targetSequence.length === 0){
-            contextItem = inscope;
+            insertLocationNode = inscope;
             inscope.appendChild(originSequence);
             index = 1;
             console.log('appended', inscope);
@@ -88,44 +131,44 @@ export class FxInsert extends AbstractAction {
             // if (this.at) {
             if (this.hasAttribute('at')) {
                 // index = this.at;
-                // contextItem = targetSequence[this.at - 1];
+                // insertLocationNode = targetSequence[this.at - 1];
 
-                index = evaluateXPath(this.getAttribute('at'), inscope, this.getOwnerForm());
-                contextItem = targetSequence[index - 1];
+                index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this.getOwnerForm());
+                insertLocationNode = targetSequence[index - 1];
             } else {
                 // this.at = targetSequence.length;
                 index = targetSequence.length;
-                contextItem = targetSequence[targetSequence.length - 1];
+                insertLocationNode = targetSequence[targetSequence.length - 1];
             }
 
-            // ### if the contextItem is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
-            if(!contextItem){
+            // ### if the insertLocationNode is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
+            if(!insertLocationNode){
                 index = 1;
 
-                contextItem = targetSequence;
+                insertLocationNode = targetSequence;
                 const context = evaluateXPath('count(preceding::*)', targetSequence, this.getOwnerForm());
                 console.log('context',context);
                 index = context +1;
-                // index = targetSequence.findIndex(contextItem);
+                // index = targetSequence.findIndex(insertLocationNode);
 
             }
 
             if (this.position && this.position === 'before') {
                 // this.at -= 1;
-                contextItem.parentNode.insertBefore(originSequence.cloneNode(true), contextItem);
+                insertLocationNode.parentNode.insertBefore(originSequence.cloneNode(true), insertLocationNode);
             }
 
             if (this.position && this.position === 'after') {
-                // contextItem.parentNode.append(originSequence);
-                // const nextSibl = contextItem.nextSibling;
+                // insertLocationNode.parentNode.append(originSequence);
+                // const nextSibl = insertLocationNode.nextSibling;
                 index += 1;
-                contextItem.insertAdjacentElement('afterend',originSequence.cloneNode(true));
+                insertLocationNode.insertAdjacentElement('afterend',originSequence.cloneNode(true));
             }
 
         }
 
-        // console.log('insert context item ', contextItem);
-        // console.log('parent ', contextItem.parentNode);
+        // console.log('insert context item ', insertLocationNode);
+        // console.log('parent ', insertLocationNode.parentNode);
         console.log('instance ', this.getModel().getDefaultContext());
 
         console.log('<<<<<<< at', this.at);

@@ -4,6 +4,7 @@ import {
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
   evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
   evaluateXPathToString as fxEvaluateXPathToString,
+    evaluateXPathToNumber as fxEvaluateXPathToNumber,
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
@@ -394,7 +395,33 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     },
   );
 }
+/**
+ * Evaluate an XPath to a number
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @return {string}
+ */
+export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
+    return fxEvaluateXPathToNumber(
+        xpath,
+        contextNode,
+        domFacade,
+        {},
 
+        {
+            currentContext: { formElement },
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver,
+        },
+    );
+}
 /**
  * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
  * @param expr the XPath to evaluate

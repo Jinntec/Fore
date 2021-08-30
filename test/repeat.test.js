@@ -655,4 +655,26 @@ describe('repeat Tests', () => {
     console.log('ritems ', rItems);
     expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
   });
+
+  it('handles atomic value', async () => {
+    const el = await fixtureSync(html`
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data> </data>
+            </fx-instance>
+        </fx-model>
+        <fx-repeat ref="1 to 10">
+            <template>
+                {.}
+            </template>
+        </fx-repeat>
+    </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const rItems = el.querySelectorAll('fx-repeatitem');
+    expect(rItems.length).to.equal(10);
+  });
 });
