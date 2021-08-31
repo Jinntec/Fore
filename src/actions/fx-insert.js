@@ -6,7 +6,6 @@ import {
     evaluateXPathToFirstNode,
     evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
-import {or} from "../../assets/prsc";
 
 /**
  * `fx-insert`
