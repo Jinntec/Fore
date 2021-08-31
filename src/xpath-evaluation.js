@@ -441,7 +441,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
