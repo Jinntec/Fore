@@ -43,6 +43,7 @@ class FxMessage extends AbstractAction {
   }
 
   perform() {
+    super.perform();
     const message = this.textContent;
     this.dispatchEvent(
       new CustomEvent('message', {

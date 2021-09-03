@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>barebone Fore form</title>
+
+    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <counter>0</counter>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>delayed message</button>
+                    <fx-message delay="2000">coming up with 2 secs of delay</fx-message>
+<!--                    <fx-setvalue ref="color" value="'red'" delay="1000"></fx-setvalue>-->
+                </fx-trigger>
+
+
+                <div id="poll">
+                    <fx-message  event="doit" delay="2000">from poll</fx-message>
+                </div>
+                {counter}
+                <fx-trigger>
+                    <button>delayed message with while condition</button>
+
+                    <fx-action while="counter < 10">
+                        <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
+                        <fx-dispatch name="doit" targetid="poll"></fx-dispatch>
+                    </fx-action>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

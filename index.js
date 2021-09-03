@@ -27,5 +27,7 @@ import './src/actions/fx-setvalue.js';
 import './src/actions/fx-send.js';
 import './src/actions/fx-toggle.js';
 import './src/actions/fx-dispatch.js';
+import './src/actions/fx-update.js';
+import './src/actions/fx-refresh.js';
 
 import './src/functions/fx-function.js';

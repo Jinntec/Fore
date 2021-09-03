@@ -175,4 +175,30 @@ describe('action Tests', () => {
     expect(control2.value).to.equal('true');
     expect(control2.getModelItem().value).to.equal('true');
   });
+
+  it('executes while condition is true', async () => {
+    const el = await fixtureSync(html`
+        <fx-fore>
+            <fx-model>
+                <fx-instance>
+                    <data>
+                        <counter>0</counter>
+                    </data>
+                </fx-instance>
+            </fx-model>
+            <fx-trigger>
+                <button>Count to 10</button>
+                <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
+            </fx-trigger>
+            <fx-output ref="counter"></fx-output>
+        </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    trigger.performActions();
+
+    const control1 = el.querySelector('fx-output');
+    expect(control1.value).to.equal('10');
+  });
 });

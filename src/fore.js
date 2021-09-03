@@ -30,6 +30,7 @@ export class Fore {
       'FX-SETINDEX',
       'FX-SETVALUE',
       'FX-TOGGLE',
+      'FX-UPDATE',
     ];
   }
 

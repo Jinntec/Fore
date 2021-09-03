@@ -17,10 +17,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       },
       needsUpdate: {
         type: Boolean,
-      },
-      ifCondition: {
-        type: Boolean,
-      },
+      }
     };
   }
 
@@ -28,7 +25,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     super();
     this.detail = {};
     this.needsUpdate = false;
-    this.ifCondition = false;
   }
 
   connectedCallback() {
@@ -56,6 +52,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
+    this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
+    this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')):0;
   }
 
   /**
@@ -69,20 +67,38 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.detail = e.detail;
     }
     this.needsUpdate = false;
-    if (this.isBound()) {
-      this.evalInContext();
+
+    this.evalInContext();
+    if(this.targetElement && this.targetElement.nodeset){
+      this.nodeset = this.targetElement.nodeset;
     }
 
     if (this.ifExpr) {
-      if (this.nodeset === undefined) {
-        this.nodeset = this.targetElement.nodeset;
+      if (evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm()) === false) {
+        return;
       }
-      this.ifCondition = evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm());
-      if (this.ifCondition) {
+    }
+
+    if (this.whileExpr){
+      while(evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true){
+        // if(this.delay){
+        //   setTimeout(() => {
+        //     this.perform();
+        //   },this.delay);
+        // }else{
+          this.perform();
+        // }
+      }
+      this.actionPerformed();
+      return;
+    }
+
+    if(this.delay){
+      setTimeout(() => {
         this.perform();
-      }
-    } else {
-      this.perform(this.detail);
+      },this.delay);
+    }else{
+      this.perform();
     }
     this.actionPerformed();
   }
@@ -110,7 +126,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   _dispatchActionPerformed() {
-    // console.log('action-performed ', this);
+    console.log('action-performed ', this);
     this.dispatchEvent(
       new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
     );
