@@ -1,6 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
 
-
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
  */

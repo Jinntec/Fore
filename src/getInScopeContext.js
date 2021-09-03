@@ -3,24 +3,24 @@ import { evaluateXPathToNodes, evaluateXPathToFirstNode } from './xpath-evaluati
 
 import { XPathUtil } from './xpath-util.js';
 
-function _getParentElement(node){
+function _getParentElement(node) {
   if (node.nodeType === Node.ATTRIBUTE_NODE) {
     return node.ownerElement;
   }
-  return  node.parentNode;
+  return node.parentNode;
 }
 
-function _getForeContext(node){
- return node.closest('fx-fore');
+function _getForeContext(node) {
+  return node.closest('fx-fore');
 }
 
-function _getModelInContext(node){
+function _getModelInContext(node) {
   // const ownerForm = node.closest('fx-fore');
   const ownerForm = _getForeContext(node);
   return ownerForm.getModel();
 }
 
-function _getInitialContext(node, ref){
+function _getInitialContext(node, ref) {
   const parentBind = node.closest('[ref]');
 
   if (parentBind !== null) {
@@ -36,13 +36,11 @@ function _getInitialContext(node, ref){
     return model.getDefaultInstance().getDefaultContext();
   }
   return [];
-
 }
 
 export default function getInScopeContext(node, ref) {
-
   const parentElement = _getParentElement(node);
-/*
+  /*
   if(parentElement.nodeName.toUpperCase() === 'FX-REPEATITEM'){
     return parentElement.nodeset;
   }
@@ -53,12 +51,10 @@ export default function getInScopeContext(node, ref) {
     return repeatItem.nodeset;
   }
 
-  if(node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('context')){
-    const initialContext = _getInitialContext(node.parentNode,ref);
+  if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('context')) {
+    const initialContext = _getInitialContext(node.parentNode, ref);
     const contextAttr = node.getAttribute('context');
-    return evaluateXPathToFirstNode(contextAttr,initialContext,_getForeContext(parentElement))
+    return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
   }
-  return _getInitialContext(parentElement,ref);
+  return _getInitialContext(parentElement, ref);
 }
-
-

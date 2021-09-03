@@ -7,8 +7,8 @@ export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
       return {
-        context:{
-          type: Object
+        context: {
+          type: Object,
         },
         model: {
           type: Object,
@@ -156,7 +156,6 @@ export const foreElementMixin = superclass =>
     }
 
     getInScopeContext() {
-      return getInScopeContext(this,this.ref);
+      return getInScopeContext(this, this.ref);
     }
-
   };

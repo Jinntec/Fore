@@ -17,7 +17,7 @@ class FxSwitch extends FxContainer {
     */
 
   connectedCallback() {
-    if(super.connectedCallback){
+    if (super.connectedCallback) {
       super.connectedCallback();
     }
     const style = `
@@ -46,12 +46,12 @@ class FxSwitch extends FxContainer {
         if (name === this.modelItem.value) {
           caseElem.classList.add('selected-case');
         } else {
-          caseElem.classList.remove('selected-case')
+          caseElem.classList.remove('selected-case');
         }
       });
     } else {
       const selected = this.querySelector('.selected-case');
-      if(!selected){
+      if (!selected) {
         cases[0].classList.add('selected-case');
       }
     }
@@ -66,10 +66,9 @@ class FxSwitch extends FxContainer {
       if (caseElement === c) {
         // eslint-disable-next-line no-param-reassign
         c.classList.add('selected-case');
-
       } else {
         // eslint-disable-next-line no-param-reassign
-        c.classList.remove('selected-case')
+        c.classList.remove('selected-case');
       }
     });
   }

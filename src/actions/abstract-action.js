@@ -17,7 +17,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       },
       needsUpdate: {
         type: Boolean,
-      }
+      },
     };
   }
 
@@ -53,7 +53,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
     this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
-    this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')):0;
+    this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')) : 0;
   }
 
   /**
@@ -69,7 +69,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     this.needsUpdate = false;
 
     this.evalInContext();
-    if(this.targetElement && this.targetElement.nodeset){
+    if (this.targetElement && this.targetElement.nodeset) {
       this.nodeset = this.targetElement.nodeset;
     }
 
@@ -79,25 +79,25 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       }
     }
 
-    if (this.whileExpr){
-      while(evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true){
+    if (this.whileExpr) {
+      while (evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true) {
         // if(this.delay){
         //   setTimeout(() => {
         //     this.perform();
         //   },this.delay);
         // }else{
-          this.perform();
+        this.perform();
         // }
       }
       this.actionPerformed();
       return;
     }
 
-    if(this.delay){
+    if (this.delay) {
       setTimeout(() => {
         this.perform();
-      },this.delay);
-    }else{
+      }, this.delay);
+    } else {
       this.perform();
     }
     this.actionPerformed();

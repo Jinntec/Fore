@@ -658,18 +658,18 @@ describe('repeat Tests', () => {
 
   it('handles atomic value', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
+      <fx-fore>
         <fx-model>
-            <fx-instance>
-                <data> </data>
-            </fx-instance>
+          <fx-instance>
+            <data> </data>
+          </fx-instance>
         </fx-model>
         <fx-repeat ref="1 to 10">
-            <template>
-                {.}
-            </template>
+          <template>
+            {.}
+          </template>
         </fx-repeat>
-    </fx-fore>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

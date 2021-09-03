@@ -165,12 +165,11 @@ describe('functions', () => {
           </fx-instance>
         </fx-model>
         <fx-repeat id="repeat">
-            <template>
-                <fx-output ref="theanswer"></fx-output>
-            </template>
+          <template>
+            <fx-output ref="theanswer"></fx-output>
+          </template>
         </fx-repeat>
         <span id="index">{index('repeat')}</span>
-        
       </fx-fore>
     `);
 
@@ -179,7 +178,6 @@ describe('functions', () => {
     const indexVal = document.getElementById('index').innerText;
 
     expect(Number(indexVal)).to.equal(1);
-
   });
 
   it('returns correct index after insert for repeat index()', async () => {
@@ -194,16 +192,15 @@ describe('functions', () => {
           </fx-instance>
         </fx-model>
         <fx-repeat id="repeat">
-            <template>
-                <fx-output ref="theanswer"></fx-output>
-            </template>
+          <template>
+            <fx-output ref="theanswer"></fx-output>
+          </template>
         </fx-repeat>
         <span id="index">{index('repeat')}</span>
         <fx-trigger>
-            <button>insert at end</button>
-            <fx-insert ref="theanswer"></fx-insert>
+          <button>insert at end</button>
+          <fx-insert ref="theanswer"></fx-insert>
         </fx-trigger>
-
       </fx-fore>
     `);
 
@@ -213,6 +210,5 @@ describe('functions', () => {
 
     const indexVal = document.getElementById('index').innerText;
     expect(Number(indexVal)).to.equal(3);
-
   });
 });

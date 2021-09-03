@@ -7,11 +7,9 @@ import { AbstractAction } from './abstract-action.js';
  *
  */
 class FxRefresh extends AbstractAction {
-
   perform() {
     this.getOwnerForm().refresh();
   }
-
 }
 
 window.customElements.define('fx-refresh', FxRefresh);

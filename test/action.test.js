@@ -178,20 +178,20 @@ describe('action Tests', () => {
 
   it('executes while condition is true', async () => {
     const el = await fixtureSync(html`
-        <fx-fore>
-            <fx-model>
-                <fx-instance>
-                    <data>
-                        <counter>0</counter>
-                    </data>
-                </fx-instance>
-            </fx-model>
-            <fx-trigger>
-                <button>Count to 10</button>
-                <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
-            </fx-trigger>
-            <fx-output ref="counter"></fx-output>
-        </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <counter>0</counter>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger>
+          <button>Count to 10</button>
+          <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
+        </fx-trigger>
+        <fx-output ref="counter"></fx-output>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

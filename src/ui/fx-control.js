@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import {evaluateXPathToNodes, evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 
 const WIDGETCLASS = 'widget';
 

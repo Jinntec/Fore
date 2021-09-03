@@ -4,7 +4,7 @@ import {
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
   evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
   evaluateXPathToString as fxEvaluateXPathToString,
-    evaluateXPathToNumber as fxEvaluateXPathToNumber,
+  evaluateXPathToNumber as fxEvaluateXPathToNumber,
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
@@ -108,12 +108,11 @@ registerCustomXPathFunction(
       if (logtree) {
         logtree.parentNode.removeChild(logtree);
       }
-        form.appendChild(buildTree(tree, instance.getDefaultContext()));
+      form.appendChild(buildTree(tree, instance.getDefaultContext()));
     }
     return null;
   },
 );
-
 
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
@@ -139,21 +138,19 @@ const instance = (dynamicContext, string) => {
 };
 
 registerCustomXPathFunction(
-    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
-    ['xs:string?'],
-    'xs:integer?',
-    (dynamicContext, string) => {
-        const { formElement } = dynamicContext.currentContext;
-        const repeat = string
-            ? formElement.querySelector(`fx-repeat[id=${string}]`)
-            : null;
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
+  ['xs:string?'],
+  'xs:integer?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const repeat = string ? formElement.querySelector(`fx-repeat[id=${string}]`) : null;
 
-        // const def = instance.getInstanceData();
-        if (repeat) {
-            return repeat.getAttribute('index');
-        }
-        return Number(1);
+    // const def = instance.getInstanceData();
+    if (repeat) {
+      return repeat.getAttribute('index');
     }
+    return Number(1);
+  },
 );
 
 // Note that this is not to spec. The spec enforces elements to be returned from the
@@ -406,21 +403,21 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
  * @return {string}
  */
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
-    return fxEvaluateXPathToNumber(
-        xpath,
-        contextNode,
-        domFacade,
-        {},
+  return fxEvaluateXPathToNumber(
+    xpath,
+    contextNode,
+    domFacade,
+    {},
 
-        {
-            currentContext: { formElement },
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            namespaceResolver,
-        },
-    );
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
 }
 /**
  * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.

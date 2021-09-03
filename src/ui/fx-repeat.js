@@ -2,7 +2,7 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPath , evaluateXPathToNodes} from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -110,10 +110,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.index = index;
       this.applyIndex(this.children[index - 1]);
     });
-    document.addEventListener('insert', e =>{
+    document.addEventListener('insert', e => {
       const nodes = e.detail.insertedNodes;
       this.index = e.detail.position;
-      console.log('insert catched', nodes,this.index);
+      console.log('insert catched', nodes, this.index);
     });
 
     const style = `
@@ -185,7 +185,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       }
 
       // if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
-      if (Array.isArray(seq) ) {
+      if (Array.isArray(seq)) {
         // multiple Nodes or maps
         this.nodeset = seq;
         return;
@@ -258,12 +258,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
-      if(item.nodeset !== this.nodeset[position]){
+      if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
     }
     Fore.refreshChildren(this);
-/*
+    /*
     if (!this.inited) {
       Fore.refreshChildren(this);
     }

@@ -87,7 +87,6 @@ describe('fx-switch Tests', () => {
     expect(cases[0].classList.contains('selected-case')).to.be.false;
     expect(cases[1].classList.contains('selected-case')).to.be.true;
     expect(cases[2].classList.contains('selected-case')).to.be.false;
-
   });
 
   it('activates case that matches bound value', async () => {
@@ -130,6 +129,5 @@ describe('fx-switch Tests', () => {
     expect(cases[0].classList.contains('selected-case')).to.be.false;
     expect(cases[1].classList.contains('selected-case')).to.be.false;
     expect(cases[2].classList.contains('selected-case')).to.be.true;
-
   });
 });

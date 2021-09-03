@@ -7,11 +7,9 @@ import { AbstractAction } from './abstract-action.js';
  *
  */
 class FxUpdate extends AbstractAction {
-
   perform() {
     this.getModel().updateModel();
   }
-
 }
 
 window.customElements.define('fx-update', FxUpdate);

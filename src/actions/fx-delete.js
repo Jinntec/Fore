@@ -75,7 +75,6 @@ class FxDelete extends AbstractAction {
     this.getModel().rebuild();
     super.actionPerformed();
   }
-
 }
 
 window.customElements.define('fx-delete', FxDelete);

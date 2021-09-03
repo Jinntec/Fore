@@ -28,7 +28,7 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   connectedCallback() {
-    if(super.connectedCallback){
+    if (super.connectedCallback) {
       super.connectedCallback();
     }
 
