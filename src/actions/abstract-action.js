@@ -133,4 +133,4 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 }
 
-window.customElements.define('abstracdt-action', AbstractAction);
+window.customElements.define('abstract-action', AbstractAction);
