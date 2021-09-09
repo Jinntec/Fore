@@ -46,7 +46,7 @@ export default class FxSetvalue extends AbstractAction {
     if (this.valueAttr !== null) {
       value = evaluateXPath(
         this.valueAttr,
-        this.getInScopeContext(),
+        this.nodeset,
         this.getOwnerForm(),
         this.detail,
       );
