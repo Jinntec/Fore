@@ -10,18 +10,21 @@ DEMOS CURRENTLY OUTDATED AS OF 0.23.0 - WILL BE UPDATED SOONISH
 > Please note that not all demos are online as there are some technical obstacles still. If you don't want to miss 
 > new demos you should have your own clone running.
 
-## An xformish forms framework in Web Components
+## An xformish framework in Web Components
 
-Fore is a model-driven forms framework that follows the ideas of the XForms 2.0
-Standard but translates those into the world of HTML5 Web Components.
+Fore is a model-driven framework that follows the ideas of the XForms 2.0
+Standard but translates those into the world of HTML5 Web Components. Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
+ochestrate and interact with them by binding their properties to data instances.
 
-Fore uses XML as it's main data model but is intended to allow JSON alternatively or at the same time.
+Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. Accessing and mutating JSON data with declarative
+actions makes JSON processing even easier than in native JavaScript.
 
 Through the wonderful [fontoXPath library](https://github.com/FontoXML/fontoxpath) Fore is able to process XML in the client with XPath 3.1 and 
 XQuery 3.1 support.
 
-Being as close as possible to the web platform standards available in browsers natively Fore combines well with any other 
+Being as close as possible to the web platform standards available in browsers natively, Fore combines well with any other 
 JS framework or component library.
+
 
 ## Features
 
@@ -34,6 +37,7 @@ JS framework or component library.
 * generic UI control to bind any kind of component 
 * bound template expressions
 * powerful XPath/XQuery 3.1 support in the browser
+* Submission module declaratively wrapping the fetch API
 
 ## Framework-agnostic
 
@@ -46,7 +50,7 @@ by itself but allows you to use whatever uber-fancy components you have
 found elsewhere. May it be some material-design date-picker or 
 that nice jquery(sic!) timeline nobody has done better yet. 
 
-That comes to the price of slightly more markup up-front (working on it already)
+That comes to the price of slightly more markup up-front
 but allows big flexibility and makes it compatible with any framework
 that plays by the rules of the platform.
 
@@ -78,7 +82,7 @@ Some of them also offer some explanations and should give you an idea of buildin
 
 ## Warning
 
-The project is still in it's prerelease phase. However there are already about 100 tests and what can be seen in demos is expected to work. The overall architecture matures quite nicely but certainly can still undergo some fundamental changes. There won't be any major releases before 1.0.0 so be aware of breaking changes (will annouce them). 
+The project is still in it's prerelease phase. However there are already about 130 tests and what can be seen in demos is expected to work. The overall architecture matures quite nicely but certainly can still undergo some fundamental changes. There won't be any major releases before 1.0.0 so be aware of breaking changes (will annouce them). 
 
 It's expected that a first release will be available during this summer.
 
@@ -91,7 +95,7 @@ The master branch is only used for releases.
 
 ### Contributing demo forms
 
-There is a file called `demo/sample.html` which can be used to quickly write new demos. See below under 'Developing' for the required setup.
+There is a directory called 'template' that contains some barebones that can be copied to quickly get going.
 
 ## Installation
 
