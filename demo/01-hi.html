@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Hi</title>
+    <title>Get started</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link href="../resources/demo.css" rel="stylesheet">
@@ -23,8 +23,27 @@
 <body unresolved="unresolved">
 <div class="wrapper">
 
-    <h1>Lazy Mode</h1>
-    <p>In lazy mode you don't even need to create a model. This is for the 'small and quick' use cases where
+    <h1>Get started</h1>
+
+    <p>Fore is a fully declarative state engine with an MVC architecture that is implemented as a set of
+        <a href="https://www.webcomponents.org/">Web Components</a>. Even complex, data-driven applications
+    can be implemented without writing any JavaScript code.</p>
+
+    <p class="note">This documentation follows the principle of 'example over theory'. By studying the demos
+    you'll learn about the inner workings step-by-step and see what can be done.</p>
+
+    <h2>The very basics</h2>
+    <ul>
+        <li>All Fore elements use the prefix 'fx-'</li>
+        <li>Each Fore application will have an <code>fx-fore</code>element</li>
+        <li>All other elements are always children of a <code>fx-fore</code>element</li>
+        <li>A Fore application has one model</li>
+        <li>A model has at least one instance (data container) but may have any number of them.</li>
+    </ul>
+
+    <h2>Lazy greeting</h2>
+    <p>Let's jump right into the simplest possible example...</p>
+    <p>In lazy mode you don't even need to write a model. This is for the 'small and quick' use cases where
     you don't need much logic or constraints.</p>
     <demo-snippet>
         <template>
@@ -34,18 +53,22 @@
         </template>
     </demo-snippet>
 
-    <h2>Description</h2>
     <p>
-        Fore is implemented as Web Components. A form in Fore is always wrapped up in a <code>fx-fore</code> element. Besides
-        that we have a <code>fx-output</code> which - well - outputs a referenced data node.
-    </p>
-    <p>
-        Fore is MVC but where's the model? It gets <strong>auto-generated</strong> if you don't provide one.
-        For each Fore component with a <code>ref</code> a node in the instance data is created. The value of that
-        bound component is taken as the default value. The form will create a XML document for your data.
+        Besides the <code>fx-fore</code> element we have a <code>fx-output</code> here
+         which - well - outputs a referenced data node.
     </p>
 
-    <p>If you haven't felt that lazy this morning you could have written the equivalent like so:</p>
+    <p>Note the <code>ref</code> attribute. <code>ref</code> stands for 'reference' and is a pointer
+    to some data node. Currently Fore supports XML and JSON as its data formats. </p>
+
+    <h3>What is happening here?</h3>
+    <p>When the page is loaded the Fore element will start initialization. If it does not find a <code>fx-model</code>
+    one will get generated with a default instance.</p>
+    <p>Fore will look for elements having a <code>ref</code> and create data nodes using the value of the
+    reference as name for the property and its content as value.</p>
+
+
+    <p>This is what is auto-generated for you:</p>
 
     <demo-snippet>
         <template>
@@ -53,13 +76,11 @@
                 <fx-model>
                     <fx-instance>
                         <data>
-                            <greeting>Universe</greeting>
+                            <greeting>Hello Universe</greeting>
                         </data>
                     </fx-instance>
                 </fx-model>
-                <fx-output ref="greeting">
-                    <label slot="label">Hi </label>
-                </fx-output>
+                <fx-output ref="greeting"></fx-output>
             </fx-fore>
         </template>
     </demo-snippet>
@@ -74,7 +95,7 @@
     as you like.</p>
 
     <h2>Nesting refs</h2>
-
+    <p>References can nested and Fore will create the respective hierarchy.</p>
     <demo-snippet>
         <template>
             <fx-fore>

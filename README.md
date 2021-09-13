@@ -93,10 +93,17 @@ feature additions or bugfixes will always go into 'dev'.
 
 The master branch is only used for releases. 
 
-### Contributing demo forms
+### Contributing demos
 
-There is a directory called 'template' that contains some barebones that can be copied to quickly get going.
+There is a directory called 'template' that contains some blueprints that can be copied to quickly get going.
 
+## Running from CDN
+
+Include the following snippet at end of body:
+
+```
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore-all.js"></script>
+```
 ## Installation
 
 Run
@@ -121,7 +128,6 @@ If you intend to hack it yourself ...
 
 * clone this repo to your machine
 * run `npm i` to install dependencies
-
 
 ## Running demos and docs
 
@@ -156,6 +162,6 @@ The package is still huge but is expected to shrink massively.
 Include the repective bundle in your webpage with a module import:
 ```
 <script type="module">
-    import 'fore-all.js';
+    import 'dist/fore-all.js';
 </script>
 ```
