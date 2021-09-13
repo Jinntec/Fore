@@ -181,14 +181,14 @@ describe('action Tests', () => {
       <fx-fore>
         <fx-model>
           <fx-instance>
-            <data>
+            <data>  
               <counter>0</counter>
             </data>
           </fx-instance>
         </fx-model>
         <fx-trigger>
           <button>Count to 10</button>
-          <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
+          <fx-setvalue id="setval" ref="counter" value=".+1" while=". < 10"></fx-setvalue>
         </fx-trigger>
         <fx-output ref="counter"></fx-output>
       </fx-fore>
@@ -197,6 +197,9 @@ describe('action Tests', () => {
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
     trigger.performActions();
+
+    const setval = document.getElementById('setval');
+    await oneEvent(setval, 'action-performed');
 
     const control1 = el.querySelector('fx-output');
     expect(control1.value).to.equal('10');

@@ -83,6 +83,9 @@
         </template>
     </demo-snippet>
 
+    <h2>User controlled start/stop loop</h2>
+    <p>When hitting 'start' this will execute a delayed message until 'stop' is clicked. This should certainly
+    used with caution and is included here for demo purposes.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -96,12 +99,12 @@
 
                 <fx-trigger>
                     <button>Start</button>
-                    <fx-message while="stop eq 'false'">hey</fx-message>
+                    <fx-message delay="1000" while="stop eq 'false'">hey</fx-message>
                 </fx-trigger>
                 {counter}
                 <fx-trigger>
                     <button>reset</button>
-                    <fx-setvalue ref="counter" value="0"></fx-setvalue>
+                    <fx-setvalue ref="stop">false</fx-setvalue>
                 </fx-trigger>
                 <fx-trigger>
                     <button>stop</button>

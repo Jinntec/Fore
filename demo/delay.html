@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>barebone Fore form</title>
+    <title>the 'delay' attribute</title>
 
 
     <link href="../resources/fore.css" rel="stylesheet">
@@ -36,23 +36,27 @@
                         <fx-setvalue ref="color" value="'red'" ></fx-setvalue>
                     </fx-action>
                 </fx-trigger>
-                Color:{color}
+                <div style="background:{color};width:100px;height: 100px;"></div>
 
+                <br>
                 <div id="poll">
                     <fx-message  event="doit" >from poll</fx-message>
                 </div>
                 <fx-trigger>
                     <button>delayed message with while condition</button>
 
-<!--                    <fx-action while="counter < 10" delay="2000">-->
-                    <fx-action while="counter < 10">
-                        <fx-setvalue ref="counter" value=".+1" delay="1000"></fx-setvalue>
+                    <fx-action while="counter < 10" delay="1000">
+                        <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
                         <fx-update></fx-update>
                         <fx-refresh></fx-refresh>
                         <fx-message>{counter}</fx-message>
                     </fx-action>
                 </fx-trigger>
                 Counter: {counter}
+                <fx-trigger>
+                    <button>reset</button>
+                    <fx-setvalue ref="counter">0</fx-setvalue>
+                </fx-trigger>
 
             </fx-fore>
         </template>

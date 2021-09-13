@@ -53,21 +53,23 @@ export class FxTrigger extends XfAbstractControl {
     `;
   }
 
-  performActions(e) {
-    console.log('performActions ', this.children);
+  async performActions(e) {
     const repeatedItem = this.closest('fx-repeatitem');
     if (repeatedItem) {
       console.log('repeated click');
       repeatedItem.click();
     }
-    for (let i = 0; i < this.children.length; i += 1) {
-      // console.log('child ', this.children[i]);
-      const child = this.children[i];
 
-      if (typeof child.execute === 'function') {
-        child.execute(e);
+    const forLoop = async () => {
+      for (let i = 0; i < this.children.length; i += 1) {
+        const child = this.children[i];
+        if (typeof child.execute === 'function') {
+          // eslint-disable-next-line no-await-in-loop
+          await child.execute(e);
+        }
       }
     }
+    forLoop();
   }
 
   /*

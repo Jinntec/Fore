@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import {  evaluateXPathToBoolean } from '../xpath-evaluation.js';
 
 /**
  * `fx-action`
@@ -57,12 +57,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   /**
-   * executes the action. This function is usually triggered by a fx-trigger.
+   * executes the action.
    *
    * @param e
    */
   // eslint-disable-next-line no-unused-vars
-  execute(e) {
+  async execute(e) {
+    console.log('executing',this);
     if (e && e.detail) {
       this.detail = e.detail;
     }
@@ -73,6 +74,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.nodeset = this.targetElement.nodeset;
     }
 
+    /*
+    First check if 'if' condition is true - otherwise exist right away
+     */
     if (this.ifExpr) {
       if (evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm()) === false) {
         return;
@@ -80,31 +84,48 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     if (this.whileExpr) {
-      while (evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true) {
-        // if(this.delay){
-        //   setTimeout(() => {
-        //     this.perform();
-        //   },this.delay);
-        // }else{
-        this.perform();
-        // }
-      }
-      this.actionPerformed();
-      return;
-    }
+      const doSomething = () =>
+          new Promise((resolve) => {
+            /*
+             The default delay is 0 so we can use setTimeout regardless if a 'delay' attribute exists
+             on this element.
+             */
+            setTimeout(() => {
+              const expr = evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true;
+              resolve(expr)
+            }, this.delay)
+          })
 
-    if (this.delay) {
+      const loop = () =>
+          doSomething().then(result => {
+            if (result === false) {
+              console.log('loop done')
+            } else {
+              this.perform();
+              return loop()
+            }
+            return null;
+          })
+
+      /*
+      after loop is done call actionPerformed to update the model and UI
+       */
+      await loop().then(() => this.actionPerformed());
+    }else if (this.delay) {
       setTimeout(() => {
         this.perform();
+        this.actionPerformed();
       }, this.delay);
     } else {
       this.perform();
+      this.actionPerformed();
     }
-    this.actionPerformed();
+
   }
 
   /**
-   * this should only be called by bound actions
+   * Template method to be implemented by each action that is called by execute() as part of
+   * the processing.
    *
    * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
    */

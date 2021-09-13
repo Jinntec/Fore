@@ -43,9 +43,10 @@ export class FxAction extends AbstractAction {
     } else {
       Array.from(children).forEach(action => {
         action.detail = this.detail;
-        action.perform();
+        // action.perform();
+        action.execute();
       });
-      this.needsUpdate = true;
+      this.needsUpdate = false;
     }
   }
 }
