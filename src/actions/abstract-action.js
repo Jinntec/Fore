@@ -1,6 +1,10 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
 
+async function wait(howLong) {
+  return new Promise(resolve => setTimeout(() => resolve(), howLong));
+}
+
 /**
  * `fx-action`
  * a button triggering Fore actions
@@ -61,7 +65,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    *
    * @param e
    */
-  // eslint-disable-next-line no-unused-vars
   async execute(e) {
     console.log('executing', this);
     if (e && e.detail) {
@@ -74,53 +77,52 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.nodeset = this.targetElement.nodeset;
     }
 
-    /*
-    First check if 'if' condition is true - otherwise exist right away
-     */
-    if (this.ifExpr) {
-      if (evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm()) === false) {
+    // First check if 'if' condition is true - otherwise exist right away
+    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm())) {
+      return;
+    }
+
+    if (this.whileExpr) {
+      // While: while the condition is true, delay a bit and execute the action
+      const loop = async () => {
+        // Start by waiting
+        await wait(this.delay || 0);
+
+        if (!this.ownerDocument.contains(this)) {
+          // We are no longer in the document. Stop working
+          return;
+        }
+
+        if (!evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm())) {
+          // Done with iterating
+          return;
+        }
+
+        // Perform the action once
+        this.perform();
+
+        // Go for one more iteration
+        await loop();
+      };
+
+      // After loop is done call actionPerformed to update the model and UI
+      await loop();
+      this.actionPerformed();
+      return;
+    }
+
+    if (this.delay) {
+      // Delay further execution until the delay is done
+      await wait(this.delay);
+      if (!this.ownerDocument.contains(this)) {
+        // We are no longer in the document. Stop working
+        this.actionPerformed();
         return;
       }
     }
 
-    if (this.whileExpr) {
-      const doSomething = () =>
-        new Promise(resolve => {
-          /*
-             The default delay is 0 so we can use setTimeout regardless if a 'delay' attribute exists
-             on this element.
-             */
-          setTimeout(() => {
-            const expr =
-              evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true;
-            resolve(expr);
-          }, this.delay);
-        });
-
-      const loop = () =>
-        doSomething().then(result => {
-          if (result === false) {
-            console.log('loop done');
-          } else {
-            this.perform();
-            return loop();
-          }
-          return null;
-        });
-
-      /*
-      after loop is done call actionPerformed to update the model and UI
-       */
-      await loop().then(() => this.actionPerformed());
-    } else if (this.delay) {
-      setTimeout(() => {
-        this.perform();
-        this.actionPerformed();
-      }, this.delay);
-    } else {
-      this.perform();
-      this.actionPerformed();
-    }
+    this.perform();
+    this.actionPerformed();
   }
 
   /**
