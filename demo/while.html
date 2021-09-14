@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
@@ -14,9 +14,9 @@
 
     <style>
     </style>
-</head>
-<body>
-<div class="wrapper">
+  </head>
+  <body>
+	<div class="wrapper">
 
     <h1>The <code>while</code> attribute</h1>
     <p>The <code>while</code> attribute is allowed on actions to execute a loop until the condition becomes
@@ -113,6 +113,55 @@
             </fx-fore>
         </template>
     </demo-snippet>
+
+
+<h2>Canceled loops</h2>
+<p>When the trigger is removed, the loop should also stop</p>
+<demo-snippet>
+  <template>
+    <fx-fore>
+      <fx-model>
+        <fx-instance>
+          <data>
+            <task>Hey there!</task>
+          </data>
+        </fx-instance>
+        <fx-instance id="templ">
+          <data>
+            <task>I'm new!</task>
+          </data>
+        </fx-instance>
+
+		<fx-bind ref="task">
+          <fx-bind ref="./text()" required="true()"></fx-bind>
+        </fx-bind>
+
+      </fx-model>
+
+	  <fx-repeat focus-on-create="task" id="tasks" ref="task">
+        <template>
+		  <fx-control id="task" ref="."></fx-control>
+
+		  <fx-trigger>
+            <button>Start</button>
+            <fx-message delay="1000" while="true()">{.}</fx-message>
+		  </fx-trigger>
+		  {counter}
+		  <fx-trigger>
+			<button class="deletebtn">X</button>
+			<fx-delete ref="."></fx-delete>
+		  </fx-trigger>
+		</template>
+	  </fx-repeat>
+
+	  <fx-trigger>
+        <button>insert a new one</button>
+        <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
+      </fx-trigger>
+
+    </fx-fore>
+  </template>
+</demo-snippet>
 
 </div>
 <script type="module" src="./demo.js"></script>
