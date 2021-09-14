@@ -68,7 +68,7 @@ export class FxTrigger extends XfAbstractControl {
           await child.execute(e);
         }
       }
-    }
+    };
     forLoop();
   }
 

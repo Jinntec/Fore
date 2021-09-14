@@ -44,12 +44,7 @@ export default class FxSetvalue extends AbstractAction {
     super.perform();
     let { value } = this;
     if (this.valueAttr !== null) {
-      value = evaluateXPath(
-        this.valueAttr,
-        this.nodeset,
-        this.getOwnerForm(),
-        this.detail,
-      );
+      value = evaluateXPath(this.valueAttr, this.nodeset, this.getOwnerForm(), this.detail);
     } else if (this.textContent !== '') {
       value = this.textContent;
     } else {

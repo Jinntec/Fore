@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import {  evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
 
 /**
  * `fx-action`
@@ -63,7 +63,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   // eslint-disable-next-line no-unused-vars
   async execute(e) {
-    console.log('executing',this);
+    console.log('executing', this);
     if (e && e.detail) {
       this.detail = e.detail;
     }
@@ -85,33 +85,34 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     if (this.whileExpr) {
       const doSomething = () =>
-          new Promise((resolve) => {
-            /*
+        new Promise(resolve => {
+          /*
              The default delay is 0 so we can use setTimeout regardless if a 'delay' attribute exists
              on this element.
              */
-            setTimeout(() => {
-              const expr = evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true;
-              resolve(expr)
-            }, this.delay)
-          })
+          setTimeout(() => {
+            const expr =
+              evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm()) === true;
+            resolve(expr);
+          }, this.delay);
+        });
 
       const loop = () =>
-          doSomething().then(result => {
-            if (result === false) {
-              console.log('loop done')
-            } else {
-              this.perform();
-              return loop()
-            }
-            return null;
-          })
+        doSomething().then(result => {
+          if (result === false) {
+            console.log('loop done');
+          } else {
+            this.perform();
+            return loop();
+          }
+          return null;
+        });
 
       /*
       after loop is done call actionPerformed to update the model and UI
        */
       await loop().then(() => this.actionPerformed());
-    }else if (this.delay) {
+    } else if (this.delay) {
       setTimeout(() => {
         this.perform();
         this.actionPerformed();
@@ -120,7 +121,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.perform();
       this.actionPerformed();
     }
-
   }
 
   /**

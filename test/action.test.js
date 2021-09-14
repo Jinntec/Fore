@@ -181,14 +181,14 @@ describe('action Tests', () => {
       <fx-fore>
         <fx-model>
           <fx-instance>
-            <data>  
+            <data>
               <counter>0</counter>
             </data>
           </fx-instance>
         </fx-model>
         <fx-trigger>
           <button>Count to 10</button>
-          <fx-setvalue id="setval" ref="counter" value=".+1" while=". < 10"></fx-setvalue>
+          <fx-setvalue id="setval" ref="counter" value=".+1" while=". lt 10"></fx-setvalue>
         </fx-trigger>
         <fx-output ref="counter"></fx-output>
       </fx-fore>

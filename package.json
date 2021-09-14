@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.2",
-    "fontoxpath": "^3.18.1"
+    "fontoxpath": "^3.20.4"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",

@@ -2,7 +2,7 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPath, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -218,7 +218,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // const contextSize = this.nodeset.length;
     const contextSize = nodeCount;
-    const modified = [];
+    // const modified = [];
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position -= 1) {
         // remove repeatitem

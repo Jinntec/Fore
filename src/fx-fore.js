@@ -2,7 +2,8 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
 import '@jinntec/jinn-toast';
-import { evaluateXPathToNodes, evaluateTemplateExpression } from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import getInScopeContext from './getInScopeContext.js';
 
 /**
  * Root element for forms. Kicks off initialization and displays messages.
@@ -231,7 +232,38 @@ export class FxFore extends HTMLElement {
     const { expr } = exprObj;
     const { node } = exprObj;
     // console.log('expr ', expr);
-    evaluateTemplateExpression(expr, node, this);
+    this.evaluateTemplateExpression(expr, node, this);
+  }
+
+  /**
+   * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
+   * @param expr the XPath to evaluate
+   * @param node the node which will get updated with evaluation result
+   * @param form the form element
+   */
+  evaluateTemplateExpression(expr, node) {
+    const matches = expr.match(/{[^}]*}/g);
+    if (matches) {
+      matches.forEach(match => {
+        console.log('match ', match);
+        const naked = match.substring(1, match.length - 1);
+        const inscope = getInScopeContext(node, naked);
+        const result = evaluateXPathToString(naked, inscope, this);
+
+        // console.log('result of eval ', result);
+        const replaced = expr.replaceAll(match, result);
+        console.log('result of replacing ', replaced);
+
+        if (node.nodeType === Node.ATTRIBUTE_NODE) {
+          const parent = node.ownerElement;
+
+          // parent.setAttribute(name, replaced);
+          parent.setAttribute(node.nodeName, replaced);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+          node.textContent = replaced;
+        }
+      });
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this

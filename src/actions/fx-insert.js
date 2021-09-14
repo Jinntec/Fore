@@ -38,7 +38,7 @@ export class FxInsert extends AbstractAction {
     this.at = Number(this.hasAttribute('at') ? this.getAttribute('at') : 0); // default: size of nodeset, determined later
     this.position = this.hasAttribute('position') ? this.getAttribute('position') : 'after';
     this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
-    this.keepValues = this.hasAttribute('keep-values') ? true : false;
+    this.keepValues = !!this.hasAttribute('keep-values');
   }
 
   _getOriginSequence(inscope, targetSequence) {
@@ -113,7 +113,7 @@ export class FxInsert extends AbstractAction {
     let insertLocationNode;
     let index;
 
-    let idx = this._getInsertIndex(inscope, targetSequence);
+    const idx = this._getInsertIndex(inscope, targetSequence);
     console.log('insert index', idx);
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
@@ -209,7 +209,7 @@ export class FxInsert extends AbstractAction {
   _clear(n) {
     const attrs = n.attributes;
 
-    //clear attrs
+    // clear attrs
     for (let i = 0; i < attrs.length; i += 1) {
       // n.setAttribute(attrs[i].name,'');
       attrs[i].value = '';
