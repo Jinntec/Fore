@@ -51,33 +51,22 @@
     <demo-snippet>
         <template>
             <fx-fore>
-
                 <fx-model>
                     <fx-instance>
                         <data>
                             <vehicle>car</vehicle>
-                            <motor>electric</motor>
+                            <car>
+                                <motor>electric</motor>
+                            </car>
+                            <thing>thing</thing>
+                            <something>something</something>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="motor" relevant="../vehicle = 'car'"></fx-bind>
-
-                    <fx-instance id="other">
-                        <data></data>
-                    </fx-instance>
-
+                    <fx-bind ref="car/motor" relevant="false()"></fx-bind>
+                    <fx-bind ref="something" relevant="false()"></fx-bind>
                     <fx-submission id="submission"
-                                   url="/submission2"
-                                   method="GET"
-                                   replace="instance"
-                                   instance="other">
-<!--
-                        <fx-action event="submit">
-                            <fx-message>Going to submit</fx-message>
-                            <fx-setvalue ref="prop">submit handler executed</fx-setvalue>
-                        </fx-action>
-                        <fx-message event="submit-done">have submitted</fx-message>
-                        <fx-message event="submit-error">Error occured</fx-message>
--->
+                                    url="/submission2"
+                                    replace="instance">
                     </fx-submission>
 
                 </fx-model>
@@ -85,6 +74,12 @@
 
                     <h1>Relevance processing on submit</h1>
 
+                    <fx-control ref="vehicle">
+                        <label>Vehicle</label>
+                    </fx-control>
+                    <fx-control ref="motor">
+                        <label>Motor</label>
+                    </fx-control>
                     <fx-trigger>
                         <button>fire submission</button>
                         <fx-send submission="submission"></fx-send>
@@ -92,9 +87,9 @@
 
                 </fx-group>
 
-<pre>
-    {log('other')}
-</pre>
+                <pre>
+                    {log('default')}
+                </pre>
 
             </fx-fore>
         </template>

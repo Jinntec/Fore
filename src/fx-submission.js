@@ -112,6 +112,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   async _serializeAndSend() {
     const resolvedUrl = this._evaluateAttributeTemplateExpression(this.url, this);
     const serializer = new XMLSerializer();
+
+    const relevant = this.selectRelevant();
+    console.log('relevant nodes', relevant);
+
     let serialized = serializer.serializeToString(this.nodeset);
     if (this.method.toLowerCase() === 'get') {
       serialized = undefined;
@@ -206,6 +210,47 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         detail: {},
       }),
     );
+  }
+
+  /**
+   * select relevant nodes
+   *
+   * todo: support for 'empty'
+   * @returns {*}
+   */
+  selectRelevant(){
+    if(this.nonrelevant === 'keep'){
+      return this.nodeset;
+    }
+
+    // first check if nodeset of submission is relevant - otherwise bail out
+    const mi = this.getModel().getModelItem(this.nodeset);
+    if(mi && !mi.relevant) return null;
+
+    const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+    const root = doc.firstElementChild;
+    const result = this._filterRelevant(this.nodeset, root);
+    return result;
+  }
+
+  _filterRelevant(node,result){
+
+    // const attrs = node.getAllAttributes();
+    const {children} = node;
+    Array.from(children).forEach( n => {
+      const mi = this.getModel().getModelItem(n);
+      // no ModelItem means we default to relevant=true
+      if (!mi || mi.relevant) {
+          const clone = n.cloneNode();
+          result.appendChild(clone);
+          if(n.innerText){
+            clone.innerText = n.innerText;
+          }
+          return this._filterRelevant(n, clone);
+      }
+          // this._filterRelevant(n.nextElementSibling);
+    });
+    return result;
   }
 
   _handleError() {

@@ -196,7 +196,7 @@ export class FxModel extends HTMLElement {
               console.log('recalc expr: ', expr);
               const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
               modelItem[property] = compute;
-              console.log(`modelItem computed`, modelItem.required);
+              console.log(`modelItem '${property}'='${expr}' computed`, modelItem.required);
             }
           }
         }
