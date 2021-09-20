@@ -62,4 +62,28 @@ export default [
       terser(),
     ],
   },
+  {
+    input: './demo/demo.js',
+    output: [
+      {
+        file: 'dist/fore-demo.js',
+        format: 'es',
+        sourcemap: true,
+      },
+    ],
+    plugins: [
+      resolve(),
+      babel({
+        babelrc: false,
+        plugins: [
+          // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
+          // TODO: reconsider whether that is a good idea.
+          // eslint-disable-next-line global-require
+          [require('@babel/plugin-proposal-class-properties'), { loose: true }],
+        ],
+      }),
+      minifyHTML(),
+      terser(),
+    ],
+  },
 ];
