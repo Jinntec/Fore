@@ -5,10 +5,6 @@
 
 ## [Demos](https://jinntec.github.io/Fore)
 
-DEMOS CURRENTLY OUTDATED AS OF 0.23.0 - WILL BE UPDATED SOONISH
-
-> Please note that not all demos are online as there are some technical obstacles still. If you don't want to miss 
-> new demos you should have your own clone running.
 
 ## An xformish framework in Web Components
 
