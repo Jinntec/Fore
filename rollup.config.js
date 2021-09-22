@@ -63,7 +63,7 @@ export default [
     ],
   },
   {
-    input: './demo/demo.js',
+    input: './demo/demo-build.js',
     output: [
       {
         file: 'dist/fore-demo.js',
