@@ -200,7 +200,7 @@ export class FxFore extends HTMLElement {
     const search =
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, null);
+    const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
