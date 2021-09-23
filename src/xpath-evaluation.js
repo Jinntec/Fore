@@ -399,7 +399,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
  * @param  {Node}       formElement       The form element associated to the XPath
  * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * access. This is used to determine dependencies between bind elements.
- * @return {string}
+ * @return {number}
  */
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
   return fxEvaluateXPathToNumber(
