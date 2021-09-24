@@ -70,7 +70,13 @@
                     <fx-bind ref="something" relevant="false()"></fx-bind>
                     <fx-submission id="submission"
                                     url="/submission2"
-                                    replace="instance">
+                                    replace="none">
+                    </fx-submission>
+
+                    <fx-submission id="empty"
+                                    url="/submission2"
+                                    replace="none"
+                                    nonrelevant="empty">
                     </fx-submission>
 
                 </fx-model>
@@ -87,6 +93,10 @@
                     <fx-trigger>
                         <button>fire submission</button>
                         <fx-send submission="submission"></fx-send>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>fire submission emptying values </button>
+                        <fx-send submission="empty"></fx-send>
                     </fx-trigger>
 
                 </fx-group>

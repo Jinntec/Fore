@@ -170,4 +170,43 @@ describe('submissionn tests', () => {
 
 
   });
+  it('supports "empty" for non-relevant nodes', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
+                            <car>
+                                <motor type="otto">electric</motor>
+                            </car>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
+                    <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
+                    <fx-submission id="submission"
+                                    url="/submission2"
+                                    replace="none"
+                                    nonrelevant="empty">
+                    </fx-submission>
+                </fx-model>
+            </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#submission');
+    expect(sm).to.exist;
+
+    sm.evalInContext();
+    const result = sm.selectRelevant();
+    const vehicle = fx.evaluateXPath('vehicle/text()', result, null, {});
+    // expect(vehicle).to.be.true;
+    expect(vehicle).to.be.empty;
+
+    const motor = fx.evaluateXPath("car/motor/text()", result, null, {});
+    expect(motor).to.be.empty;
+
+
+  });
 });

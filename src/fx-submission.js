@@ -219,9 +219,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @returns {*}
      */
     selectRelevant() {
+        // ### no relevance selection - current nodeset is used 'as-is'
         if (this.nonrelevant === 'keep') {
             return this.nodeset;
         }
+
 
         // first check if nodeset of submission is relevant - otherwise bail out
         const mi = this.getModel().getModelItem(this.nodeset);
@@ -245,9 +247,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                     Array.from(attributes).forEach(attr => {
                         if (this._isRelevant(attr)) {
                             clone.setAttribute(attr.nodeName, attr.value);
-                        } else {
-                            clone.removeAttribute(attr.nodeName);
-                        }
+                        } else if(this.nonrelevant === 'empty'){
+                                clone.setAttribute(attr.nodeName,'');
+                            }else{
+                                clone.removeAttribute(attr.nodeName);
+                            }
                     });
                 }
                 return this._filterRelevant(n, clone);
