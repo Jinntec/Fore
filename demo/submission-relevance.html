@@ -54,15 +54,19 @@
                 <fx-model>
                     <fx-instance>
                         <data>
-                            <vehicle>car</vehicle>
-                            <car>
+                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
+                            <car attr3="a3">
                                 <motor>electric</motor>
                             </car>
                             <thing>thing</thing>
                             <something>something</something>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="car/motor" relevant="false()"></fx-bind>
+                    <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
+                    <fx-bind ref="car">
+                        <fx-bind ref="@attr3" relevant="false()"></fx-bind>
+                        <fx-bind ref="motor/text()" relevant="false()"></fx-bind>
+                    </fx-bind>
                     <fx-bind ref="something" relevant="false()"></fx-bind>
                     <fx-submission id="submission"
                                     url="/submission2"
