@@ -151,7 +151,7 @@ registerCustomXPathFunction(
     if (repeat) {
       return repeat.getAttribute('index');
     }
-    return Number(1);
+    return 1;
   },
 );
 
@@ -398,9 +398,16 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
  * @param  {Node}       formElement       The form element associated to the XPath
  * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
  * @return {string}
  */
-export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
+export function evaluateXPathToString(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
@@ -413,7 +420,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
     },
   );
 }

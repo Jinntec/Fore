@@ -243,12 +243,16 @@ export class FxFore extends HTMLElement {
    */
   evaluateTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
+    const namespaceContextNode =
+      node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
         console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
+        // Templates are special: they use the namespace configuration from the place where they are
+        // being defined
+        const result = evaluateXPathToString(naked, inscope, this, null, namespaceContextNode);
 
         // console.log('result of eval ', result);
         const replaced = expr.replaceAll(match, result);
