@@ -69,13 +69,15 @@
                     </fx-bind>
                     <fx-bind ref="something" relevant="false()"></fx-bind>
                     <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="none">
+                                   method="post"
+                                    url="#echo"
+                                    replace="instance">
                     </fx-submission>
 
                     <fx-submission id="empty"
-                                    url="/submission2"
-                                    replace="none"
+                                    url="#echo"
+                                   method="post"
+                                   replace="instance"
                                     nonrelevant="empty">
                     </fx-submission>
 

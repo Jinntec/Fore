@@ -116,10 +116,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const relevant = this.selectRelevant();
         console.log('relevant nodes', relevant);
 
-        let serialized = serializer.serializeToString(this.nodeset);
+        // let serialized = serializer.serializeToString(this.nodeset);
+        let serialized = serializer.serializeToString(relevant);
         if (this.method.toLowerCase() === 'get') {
             serialized = undefined;
         }
+
+        if(resolvedUrl === '#echo'){
+            this._handleResponse(relevant);
+            return;
+        }
+
         const response = await fetch(resolvedUrl, {
             method: this.method,
             mode: 'cors',
