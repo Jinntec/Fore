@@ -31,21 +31,36 @@ class FxControl extends XfAbstractControl {
             }
         `;
 
-    /*
-        const controlHtml = `
-            <slot></slot>
-            <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
-        `;
-*/
+    if (this.hasAttribute('uri')) {
+      const subForm = this.ownerDocument.querySelector(this.getAttribute('uri'));
 
-    /*
-        this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${controlHtml}
-        `
-*/
+      const localSubForm = this.shadowRoot.appendChild(subForm.cloneNode(true));
+      localSubForm.addEventListener(this.updateEvent, () => {
+        console.log('NEW VALUE~!!!!!!');
+      });
+
+      const ref = this.getAttribute('initial');
+      this.ref = ref;
+      this.evalInContext();
+      const referencedThing = Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
+      // const referencedThing = evaluateXPathToFirstNode(ref, this.getInScopeContext(), this);
+      // Assume this is an element!
+
+      // TODO: use actual setters
+      const fxInstance = localSubForm.getModel().querySelector('fx-instance');
+      fxInstance.innerHTML = referencedThing.outerHTML;
+      // TODO: DRY THIS OUT!
+      this.widget = this.getWidget();
+      console.log('widget ', this.widget);
+      this.addEventListener(this.updateEvent, () => {
+        console.log('eventlistener ', this.updateEvent, localSubForm);
+        // const newValue = localSubForm.getModel().getModelItem(fxInstance.firstChild).value;
+        this.setValue('I have been changed! TODO: getting the new value would be swell!');
+      });
+      const div = this.shadowRoot.appendChild(document.createElement('div'));
+      div.innerHTML = `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`;
+      return;
+    }
     this.shadowRoot.innerHTML = `
             <style>
                 ${style}
