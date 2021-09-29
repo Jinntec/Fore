@@ -121,7 +121,7 @@ export class FxInstance extends HTMLElement {
         root.appendChild(newNode);
       }
       this.instanceData = doc;
-      this.instanceData.firstElementChild.setAttribute('id', this.id);
+      // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // resolve('done');
     } else if (this.src) {
       await this._loadData();
@@ -191,7 +191,7 @@ export class FxInstance extends HTMLElement {
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
       console.log('fx-instance data: ', this.instanceData);
-      this.instanceData.firstElementChild.setAttribute('id', this.id);
+      // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
       this.instanceData = JSON.parse(this.textContent);

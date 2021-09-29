@@ -54,13 +54,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     submit() {
-        this.dispatchEvent(
-            new CustomEvent('submit', {
-                composed: true,
-                bubbles: true,
-                detail: {},
-            }),
-        );
+        this.dispatch('submit',{});
     }
 
     _submit() {
@@ -76,6 +70,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 return;
             }
         }
+        console.log('model updated....');
 
         this._serializeAndSend();
     }
@@ -123,10 +118,13 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
 
         if(resolvedUrl === '#echo'){
-            this._handleResponse(relevant);
+            const doc = new DOMParser().parseFromString(serialized, 'application/xml');
+            // const newDoc = doc.replaceChild(relevant, doc.firstElementChild);
+            this._handleResponse(doc);
             return;
         }
 
+        console.log('###############after echo')
         const response = await fetch(resolvedUrl, {
             method: this.method,
             mode: 'cors',
@@ -146,6 +144,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 }),
             );
         }
+
 
         const contentType = response.headers.get('content-type').toLowerCase();
 
@@ -210,13 +209,16 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             window.location.href = data;
         }
 
-        this.dispatchEvent(
-            new CustomEvent('submit-done', {
-                composed: true,
-                bubbles: true,
-                detail: {},
-            }),
-        );
+/*
+        const event = new CustomEvent('submit-done', {
+            composed: true,
+            bubbles: true,
+            detail: {},
+        });
+        console.log('firing',event);
+        this.dispatchEvent(event);
+*/
+        this.dispatch('submit-done',{});
     }
 
     /**
@@ -254,11 +256,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                     Array.from(attributes).forEach(attr => {
                         if (this._isRelevant(attr)) {
                             clone.setAttribute(attr.nodeName, attr.value);
-                        } else if(this.nonrelevant === 'empty'){
-                                clone.setAttribute(attr.nodeName,'');
-                            }else{
-                                clone.removeAttribute(attr.nodeName);
-                            }
+                        } else if (this.nonrelevant === 'empty') {
+                            clone.setAttribute(attr.nodeName, '');
+                        } else {
+                            clone.removeAttribute(attr.nodeName);
+                        }
                     });
                 }
                 return this._filterRelevant(n, clone);
@@ -277,6 +279,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     _handleError() {
+        this.dispatch('submit-error',{})
+/*
         console.log('ERRRORRRRR');
         this.dispatchEvent(
             new CustomEvent('submit-error', {
@@ -285,6 +289,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 detail: {},
             }),
         );
+*/
     }
 }
 
