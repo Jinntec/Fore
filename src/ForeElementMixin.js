@@ -158,4 +158,16 @@ export const foreElementMixin = superclass =>
     getInScopeContext() {
       return getInScopeContext(this, this.ref);
     }
+
+    dispatch(eventName,detail){
+      const event = new CustomEvent(eventName, {
+        composed: true,
+        bubbles: true,
+        detail,
+      });
+      console.log('firing',event);
+      this.dispatchEvent(event);
+    }
+
+
   };

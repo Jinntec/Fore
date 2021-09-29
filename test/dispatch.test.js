@@ -67,7 +67,7 @@ describe('fx-dispatch tests', () => {
     trigger.performActions();
 
     expect(bar.innerText).to.equal(
-      '<data id="default">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
+      '<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
     );
   });
 
@@ -107,7 +107,7 @@ describe('fx-dispatch tests', () => {
     trigger.performActions();
 
     expect(bar.innerText).to.equal(
-      '<data id="default">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
+      '<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
     );
     expect(dVal.innerText).to.equal('aString');
   });
@@ -150,7 +150,7 @@ describe('fx-dispatch tests', () => {
     trigger.performActions();
 
     expect(bar.innerText).to.equal(
-      '<data id="default">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
+      '<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>',
     );
     expect(dVal.innerText).to.equal('aString');
   });

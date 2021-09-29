@@ -44,6 +44,13 @@
 
         </style>
     </custom-style>
+    <style>
+        pre{
+            background:#333;
+            color:white;
+            font-size:1.2rem;
+        }
+    </style>
 
 </head>
 <body unresolved="unresolved">
@@ -62,27 +69,51 @@
                             <something>something</something>
                         </data>
                     </fx-instance>
+
                     <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
                     <fx-bind ref="car">
                         <fx-bind ref="@attr3" relevant="false()"></fx-bind>
                         <fx-bind ref="motor/text()" relevant="false()"></fx-bind>
                     </fx-bind>
                     <fx-bind ref="something" relevant="false()"></fx-bind>
+
                     <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="none">
+                                   method="post"
+                                    url="#echo"
+                                    replace="instance">
+                        <fx-message event="submit-done">Submitted with non-relevant nodes being removed (default)</fx-message>
                     </fx-submission>
 
                     <fx-submission id="empty"
-                                    url="/submission2"
-                                    replace="none"
+                                    url="#echo"
+                                   method="post"
+                                   replace="instance"
                                     nonrelevant="empty">
+                        <fx-message event="submit-done">Submitted non-relevant nodes with empty values</fx-message>
+                    </fx-submission>
+
+                    <fx-submission id="keep"
+                                    url="#echo"
+                                   method="post"
+                                   replace="instance"
+                                    nonrelevant="keep">
+                        <fx-message event="submit-done">Submitted all data</fx-message>
                     </fx-submission>
 
                 </fx-model>
                 <fx-group collapse="true">
 
                     <h1>Relevance processing on submit</h1>
+
+                    <p>Relevance is a powerful feature that can be used to filter the data being submitted. Using
+                    the <code>nonrelevant</code> attribute allows to set the values:</p>
+                    <ul>
+                        <li><code>keep</code> - all non-relevant nodes are kept and will be submitted.</li>
+                        <li><code>empty</code> - the values of non-relevant values are emptied but the nodes are preserved</li>
+                        <li><code>remove</code> - removes all non-relevant nodes before submission. This is the default behavior.</li>
+                    </ul>
+                    <p>Reload to test other actions</p>
+
 
                     <fx-control ref="vehicle">
                         <label>Vehicle</label>
@@ -91,19 +122,27 @@
                         <label>Motor</label>
                     </fx-control>
                     <fx-trigger>
-                        <button>fire submission</button>
+                        <button>fire submission removing non-relevant nodes</button>
                         <fx-send submission="submission"></fx-send>
                     </fx-trigger>
                     <fx-trigger>
-                        <button>fire submission emptying values </button>
+                        <button>fire submission emptying non-relevant nodes</button>
                         <fx-send submission="empty"></fx-send>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>fire submission keeping non-relevant nodes</button>
+                        <fx-send submission="keep"></fx-send>
                     </fx-trigger>
 
                 </fx-group>
-
-                <pre>
-                    {log('default')}
-                </pre>
+                <p>In this example the submission will use the <code>#echo</code> handler that just returns
+                the data it is getting during submit. Before submission the data are recalculated, revalidated and
+                filtered according to their relevance setting. The result is echoed back into the same instance replacing
+                the existing data.</p>
+        <h3>Live Data</h3>
+        <pre>
+                        {log('default')}
+        </pre>
 
             </fx-fore>
         </template>
