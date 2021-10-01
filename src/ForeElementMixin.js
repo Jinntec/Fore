@@ -65,6 +65,10 @@ export const foreElementMixin = superclass =>
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
+      if(!inscopeContext){
+        console.warn('no in scopeContext for ', this);
+        return;
+      }
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
