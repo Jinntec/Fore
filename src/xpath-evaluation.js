@@ -145,7 +145,13 @@ registerCustomXPathFunction(
   'xs:integer?',
   (dynamicContext, string) => {
     const { formElement } = dynamicContext.currentContext;
-    const repeat = string ? formElement.querySelector(`fx-repeat[id=${string}]`) : null;
+    if (!string) {
+      return 1;
+    }
+
+    const repeat = formElement
+      .querySelectorAll(`fx-repeat[id=${string}]`)
+      .filter(repeat => repeat.closest('xf-fore') === formElement);
 
     // const def = instance.getInstanceData();
     if (repeat) {

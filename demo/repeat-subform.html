@@ -42,15 +42,16 @@
   </head>
   <body unresolved="unresolved">
 
-	<fx-fore id="thesubform" class="widget">
+<template id="thesubform">
+	<fx-fore>
 	  <fx-model>
 		<fx-instance><data/></fx-instance>
 
 	  </fx-model>
 
-	  <label>instance ({.}):</label><fx-control ref="."/>
+	  <label>instance ({.}) (updating on input):</label><fx-control ref="." update-event="input"/>
 	</fx-fore>
-
+</template>
 	<div class="wrapper">
       <demo-snippet>
         <template>
@@ -63,7 +64,7 @@
 
             </fx-model>
 
-            <h1>Repeat from sequence</h1>
+            <h1>Repeat from sequence: Updating on blur</h1>
             <fx-repeat ref="item">
               <template>
 				<fx-control uri="#thesubform" initial="."/>

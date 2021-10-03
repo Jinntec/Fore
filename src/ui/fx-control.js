@@ -1,4 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
+import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToNodes, evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 
 const WIDGETCLASS = 'widget';
@@ -17,6 +18,8 @@ class FxControl extends XfAbstractControl {
     super();
     this.inited = false;
     this.attachShadow({ mode: 'open' });
+
+    this.subForm = null;
   }
 
   connectedCallback() {
@@ -34,8 +37,9 @@ class FxControl extends XfAbstractControl {
     if (this.hasAttribute('uri')) {
       const subForm = this.ownerDocument.querySelector(this.getAttribute('uri'));
 
-      const localSubForm = this.shadowRoot.appendChild(subForm.cloneNode(true));
-      localSubForm.addEventListener(this.updateEvent, () => {
+      this.subForm = this.shadowRoot.appendChild(this.ownerDocument.createElement('fx-fore'));
+      this.subForm.appendChild(subForm.content.cloneNode(true));
+      this.subForm.addEventListener(this.updateEvent, () => {
         console.log('NEW VALUE~!!!!!!');
       });
 
@@ -43,24 +47,25 @@ class FxControl extends XfAbstractControl {
       this.ref = ref;
       this.evalInContext();
       const referencedThing = Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
-      // const referencedThing = evaluateXPathToFirstNode(ref, this.getInScopeContext(), this);
       // Assume this is an element!
 
       // TODO: use actual setters
-      const fxInstance = localSubForm.getModel().querySelector('fx-instance');
+      const fxInstance = this.subForm.getModel().querySelector('fx-instance');
       fxInstance.innerHTML = referencedThing.outerHTML;
-      // TODO: DRY THIS OUT!
-      this.widget = this.getWidget();
-      console.log('widget ', this.widget);
+
       this.addEventListener(this.updateEvent, () => {
-        console.log('eventlistener ', this.updateEvent, localSubForm);
-        // const newValue = localSubForm.getModel().getModelItem(fxInstance.firstChild).value;
-        this.setValue('I have been changed! TODO: getting the new value would be swell!');
+        const newContext = getInScopeContext(fxInstance, '');
+        this.setValue(newContext.cloneNode(true));
       });
+
+      // Add a div to contain the setvalue component
       const div = this.shadowRoot.appendChild(document.createElement('div'));
       div.innerHTML = `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`;
       return;
     }
+
+    this.widget = this.getWidget();
+
     this.shadowRoot.innerHTML = `
             <style>
                 ${style}
@@ -68,7 +73,6 @@ class FxControl extends XfAbstractControl {
             ${this.renderHTML(this.ref)}
         `;
 
-    this.widget = this.getWidget();
     console.log('widget ', this.widget);
     this.widget.addEventListener(this.updateEvent, () => {
       console.log('eventlistener ', this.updateEvent);
@@ -125,12 +129,29 @@ class FxControl extends XfAbstractControl {
   }
 
   async refresh() {
+    if (this.hasAttribute('uri')) {
+      console.log('refresh of subform started');
+      // Actually refresh the subform instead.
+
+      // TODO: do this correctly. I think the instance should actually be injected through  slot: the slotchange event should then make the subform update and kick off its internal rerender.
+      this.evalInContext();
+      const referencedThing = Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
+      // Assume this is an element!
+
+      // TODO: use actual setters
+      const fxInstance = this.subForm.getModel().querySelector('fx-instance');
+      fxInstance.innerHTML = referencedThing.outerHTML;
+      this.subForm.refresh();
+      console.log('refresh of subform done');
+
+      return;
+    }
     super.refresh();
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
     // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
-    if (this.widget.hasAttribute('ref')) {
+    if (this.widget && this.widget.hasAttribute('ref')) {
       const tmpl = this.widget.querySelector('template');
 
       // ### eval nodeset for list control
