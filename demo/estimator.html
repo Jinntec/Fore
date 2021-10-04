@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Estimator</title>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+        <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Estimator</h1>
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <packages>
+                        <package name="project">
+                            <requirement nr="1" hours="8" risk="">
+                                <assigned user="" estimate-in-hours="" risk=""></assigned>
+                            </requirement>
+                        </package>
+                    </packages>
+                    <total-hours></total-hours>
+                    <total-days></total-days>
+                    <rate-per-hour></rate-per-hour>
+                    <total-sum></total-sum>
+                </data>
+            </fx-instance>
+            <fx-bind ref="total-hours" calculate="sum(../packages/package/requirement/@hours)"></fx-bind>
+        </fx-model>
+        <h2>Packages</h2>
+        <fx-group ref="packages">
+            <fx-repeat ref="package">
+                <template>
+                    <fx-control ref="@name"></fx-control>
+                </template>
+            </fx-repeat>
+
+            hours {instance()/total-hours}
+        </fx-group>
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

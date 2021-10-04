@@ -143,7 +143,7 @@
                     <fx-instance id="templ">
                         <data>
                             <task complete="" due="">new task</task>
-                            <foo> </foo>
+                            <foo>bar</foo>
                         </data>
                     </fx-instance>
 
@@ -199,8 +199,9 @@
                 <p>With <code>origin</code> you can select nodes to be used as templates for insertion.</p>
                 <fx-trigger>
                     <button>insert 'foo'</button>
-                    <fx-insert ref="instance('default')" origin="instance('tmpl')/foo"></fx-insert>
+                    <fx-insert ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
                 </fx-trigger>
+                <span>Value of 'foo': {foo}</span>
 
                 <h2>Insert before a entry at position</h2>
                 <p>Inserts an item after the first in the list</p>

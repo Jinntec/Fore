@@ -41,9 +41,13 @@
             width: 100%;
             position:relative;
         }
+        fx-repeat{
+            position:relative;
+        }
         fx-repeatitem{
             display: block;
             min-width: 200px;
+            position:relative;
         }
         input{
             width: calc(100% - 0.5rem);
@@ -56,6 +60,10 @@
         .iconbtn{
             position: absolute;
         }
+        .iconbtn button:hover{
+            background: grey;
+            color:white;
+        }
         .deleteProject{
             right: 1rem;
             position: absolute;
@@ -63,11 +71,11 @@
         .iconbtn button{
             border-radius: 50%;
             border:none;
-            color:darkred;
+            color:black;
             background: white;
         }
         .addProject{
-            right: 3rem;
+            right: 0.5rem;
         }
 
         #project{
@@ -79,8 +87,11 @@
             padding: 1rem;
         }
         .header{
-            border-bottom: thin solid white;
+            /*border-bottom: thin solid white;*/
             padding: 1rem;
+        }
+        .header input{
+            background: transparent;
         }
 
         #project > fx-repeatitem{
@@ -88,6 +99,7 @@
             border:thin solid white;
             position: relative;
             min-width: 320px;
+            padding:0.5rem 0.25rem;
         }
         #project .header > fx-control{
             width: calc(100% - 5rem);
@@ -130,12 +142,18 @@
 
         #activity fx-repeatitem{
             display: grid;
-            grid-template-columns: auto 100px 20px;
+            grid-template-columns: auto 20px;
         }
         #activity .iconbtn{
             position:relative;
+            right:0;
         }
-
+        #activity .iconbtn.delActivity{
+            right: 0;
+        }
+        #task .iconbtn{
+            right: 0.5rem;
+        }
 
     </style>
 </head>
@@ -146,37 +164,46 @@
         <fx-model>
             <fx-instance>
                 <data>
-                    <project name="the great buzz">
+                    <project name="backlog">
                         <task name="make project plan">
-                            <activity priority="3" status="open">create excel sheet</activity>
-                            <activity priority="1" status="open">cook coffee</activity>
-                            <activity priority="1" status="open">plan long and fruitless meetings</activity>
-                            <activity priority="1" status="open">gather numbers and create already outdated plan</activity>
+                            <activity status="open">create excel sheet</activity>
+                            <activity status="open">cook coffee</activity>
+                            <activity status="open">plan long and fruitless meetings</activity>
+                            <activity status="open">gather numbers and create already outdated plan</activity>
                         </task>
                         <task name="estimate">
-                            <activity priority="4" status="open">look after security</activity>
-                            <activity priority="1" status="open">stay calm and underpaid</activity>
+                            <activity status="open">look after security</activity>
+                            <activity status="open">stay calm and underpaid</activity>
                         </task>
                     </project>
-                    <project name="launch the product">
+                    <project name="todo">
                         <task name="launch preps">
-                            <activity priority="2" status="open">prepare laudatio</activity>
-                            <activity priority="1" status="open">show his rolex around</activity>
+                            <activity status="open">prepare laudatio</activity>
+                            <activity status="open">show his rolex around</activity>
                         </task>
                     </project>
-                    <project name="get rich">
+                    <project name="doing">
                         <task name="press investors for more money">
-                            <activity priority="1" status="open">blackmail with dirty private details</activity>
+                            <activity status="open">blackmail with dirty private details</activity>
                         </task>
                         <task name="worst case">
-                            <activity priority="1" status="done">rob the safe</activity>
-                            <activity priority="1" status="inprogress">expansion expansion expansion</activity>
+                            <activity status="done">rob the safe</activity>
+                            <activity status="inprogress">expansion expansion expansion</activity>
+                        </task>
+                    </project>
+                    <project name="done">
+                        <task name="press investors for more money">
+                            <activity status="open">blackmail with dirty private details</activity>
+                        </task>
+                        <task name="worst case">
+                            <activity status="done">rob the safe</activity>
+                            <activity status="inprogress">expansion expansion expansion</activity>
                         </task>
                     </project>
                     <template>
                         <project name=""></project>
                         <task name="newTask"></task>
-                        <activity priority="1" status="todo"></activity>
+                        <activity status="todo"></activity>
                     </template>
                 </data>
             </fx-instance>
@@ -185,54 +212,53 @@
             <template>
                 <div class="header">
                     <fx-control ref="@name"></fx-control>
-                    <fx-trigger class="iconbtn addProject">
+                    <fx-trigger class="iconbtn addProject" title="add card">
                         <button>+</button>
                         <fx-insert context="project" ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
                     </fx-trigger>
+<!--
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>
                         <fx-delete ref="."></fx-delete>
                     </fx-trigger>
+-->
                 </div>
-                <fx-repeat id="task" ref="task">
-                    <template>
-                        <div class="card">
-                            <fx-control ref="@name"></fx-control>
-                            <div class="subheader">Checklist
-                                <fx-trigger class="iconbtn">
-                                    <button>+</button>
-                                    <fx-insert ref="activity" at="1" position="before" origin="instance()/template/activity"></fx-insert>
+                <div class="board">
+                    <fx-repeat id="task" ref="task">
+                        <template>
+                            <div class="card">
+                                <fx-control ref="@name"></fx-control>
+                                <fx-trigger class="iconbtn" title="delete card">
+                                    <button>x</button>
+                                    <fx-delete ref="."></fx-delete>
                                 </fx-trigger>
-                            </div>
-                            <fx-repeat id="activity" class="activity" ref="activity">
-                                <template>
-                                    <div class="act-text">
-                                        <fx-control ref="."></fx-control>
-                                    </div>
-                                    <fx-control ref="@priority" update-event="change" class="priority p{@priority}">
-                                        <select class="widget">
-                                            <option value="1">highest</option>
-                                            <option value="2">high</option>
-                                            <option value="3">medium</option>
-                                            <option value="4">forget it</option>
-                                        </select>
-                                    </fx-control>
-<!--                                    <div class="priority p{@priority}"></div>-->
+                                <div class="subheader">Checklist
                                     <fx-trigger class="iconbtn">
-                                        <button>x</button>
-                                        <fx-delete ref="."></fx-delete>
+                                        <button>+</button>
+                                        <fx-insert ref="activity" at="1" position="before" origin="instance('default')/template/activity"></fx-insert>
                                     </fx-trigger>
-                                </template>
-                            </fx-repeat>
-                        </div>
-                    </template>
-                </fx-repeat>
+                                </div>
+                                <fx-repeat id="activity" class="activity" ref="activity">
+                                    <template>
+                                        <div class="act-text">
+                                            <fx-control ref="."></fx-control>
+                                        </div>
+                                        <fx-trigger class="iconbtn delActivity">
+                                            <button>x</button>
+                                            <fx-delete ref="."></fx-delete>
+                                        </fx-trigger>
+                                    </template>
+                                </fx-repeat>
+                            </div>
+                        </template>
+                    </fx-repeat>
+                </div>
             </template>
         </fx-repeat>
 
         <div class="buttons">
             <fx-trigger>
-                <button>Insert new Project</button>
+                <button>add a column</button>
                 <fx-insert ref="project" at="index('project')" position="before" origin="template/project"></fx-insert>
             </fx-trigger>
             <fx-trigger>
