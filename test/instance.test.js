@@ -268,6 +268,24 @@ describe('instance Tests', () => {
     // expect(out.textContent).to.equal('Honda');
   });
 
+  it('will create an instance', async () => {
+    const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model id="model1">
+                        <fx-instance></fx-instance>
+                    </fx-model>
+                </fx-fore>
+            `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[0].getInstanceData()).to.exist;
+    expect(instances[0].getDefaultContext()).to.exist;
+
+  })
+
   /*
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (
@@ -312,21 +330,5 @@ describe('instance Tests', () => {
       */
 });
 
-it('will create an instance', async () => {
-  const el = await fixtureSync(html`
-                <fx-fore>
-                    <fx-model id="model1">
-                        <fx-instance></fx-instance>
-                    </fx-model>
-                </fx-fore>
-            `);
-
-  await oneEvent(el, 'refresh-done');
-
-  const instances = el.querySelectorAll('fx-instance');
-  expect(instances[0].id).to.equal('default');
-  expect(instances[0].getInstanceData()).to.exist;
-  expect(instances[0].getDefaultContext()).to.exist;
-
-});
+;
 
