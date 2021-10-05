@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission serialization</title>
+
+    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>submit without serialization</h1>
+    <p>Submission gets send but does not serialize. The request is sent to #echo without data. When
+    the instance gets replaced, it will be empty (but still have a root node).</p>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-send event="ready" submission="submission"></fx-send>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <div>a thing</div>
+                        </data>
+                    </fx-instance>
+                    <fx-submission id="submission"
+                                   method="get"
+                                   url="#echo"
+                                   replace="instance"
+                                   serialization="none">
+                    </fx-submission>
+                </fx-model>
+
+                {div}
+                <pre>
+                {log('default')}
+                </pre>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

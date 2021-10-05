@@ -9,11 +9,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     connectedCallback() {
-        this.style.display = 'none';
+        // this.style.display = 'none';
         this.model = this.parentNode;
 
         // ### initialize properties with defaults
-        if (!this.hasAttribute('id')) throw new Error('id is required');
+        // if (!this.hasAttribute('id')) throw new Error('id is required');
+        if (!this.hasAttribute('id')) console.warn('id is required');
         this.id = this.getAttribute('id');
 
         /** if present should be a existing instance id */
@@ -30,7 +31,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         /** replace might be 'all', 'instance' or 'none' */
         this.replace = this.hasAttribute('replace') ? this.getAttribute('replace') : 'all';
 
-        if (!this.hasAttribute('url')) throw new Error(`url is required for submission: ${this.id}`);
+        this.serialization = this.hasAttribute('serialization') ? this.getAttribute('serialization') : 'xml';
+
+        // if (!this.hasAttribute('url')) throw new Error(`url is required for submission: ${this.id}`);
+        if (!this.hasAttribute('url')) console.warn(`url is required for submission: ${this.id}`);
         this.url = this.getAttribute('url');
 
         this.targetref = this.hasAttribute('targetref') ? this.getAttribute('targetref') : null;
@@ -53,11 +57,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     `;
     }
 
-    submit() {
-        this.dispatch('submit',{});
+    async submit() {
+        await this.dispatch('submit',{});
     }
 
-    _submit() {
+    async _submit() {
         console.log('submitting....');
         this.evalInContext();
         const model = this.getModel();
@@ -72,7 +76,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
         console.log('model updated....');
 
-        this._serializeAndSend();
+        await this._serializeAndSend();
     }
 
     /**
@@ -111,14 +115,28 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const relevant = this.selectRelevant();
         console.log('relevant nodes', relevant);
 
+
         // let serialized = serializer.serializeToString(this.nodeset);
-        let serialized = serializer.serializeToString(relevant);
+        let serialized;
+        if(this.serialization === 'none'){
+            serialized = undefined;
+        }else{
+            serialized = serializer.serializeToString(relevant);
+        }
+
+        // let serialized = serializer.serializeToString(relevant);
         if (this.method.toLowerCase() === 'get') {
             serialized = undefined;
         }
 
         if(resolvedUrl === '#echo'){
-            const doc = new DOMParser().parseFromString(serialized, 'application/xml');
+            let doc;
+            if(serialized){
+                doc = new DOMParser().parseFromString(serialized, 'application/xml');
+            }else{
+                doc = undefined;
+            }
+            // const doc = new DOMParser().parseFromString(serialized, 'application/xml');
             // const newDoc = doc.replaceChild(relevant, doc.firstElementChild);
             this._handleResponse(doc);
             return;

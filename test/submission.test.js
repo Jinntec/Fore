@@ -209,4 +209,44 @@ describe('submissionn tests', () => {
 
 
   });
+
+  it('supports serialization none ', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
+                            <car>
+                                <motor type="otto">electric</motor>
+                            </car>
+                        </data>
+                    </fx-instance>
+                    <fx-submission id="submission"
+                                    method="get"
+                                    url="#echo"
+                                    replace="instance"
+                                    serialization="none">
+                    </fx-submission>
+                    <fx-send event="ready" submission="submission"></fx-send>
+
+                </fx-model>
+            </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#submission');
+    expect(sm).to.exist;
+
+    sm.submit();
+
+    const inst = el.querySelector('fx-instance');
+    console.log('instancedata', inst.instanceData);
+    expect(inst).to.exist;
+    expect(inst.getInstanceData()).to.exist;
+    expect(inst.getInstanceData().firstElementChild.nodeName).to.equal('data');
+    expect(inst.getInstanceData().firstElementChild.childNodes).to.not.exist;
+
+  });
 });

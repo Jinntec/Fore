@@ -82,7 +82,18 @@ export class FxInstance extends HTMLElement {
    * @returns {Document | T | any}
    */
   getInstanceData() {
+    if(!this.instanceData){
+      this._createInstanceData();
+    }
     return this.instanceData;
+  }
+
+  setInstanceData(data){
+    if(!data){
+      this._createInstanceData();
+      return;
+    }
+    this.instanceData = data;
   }
 
   /**
@@ -93,6 +104,10 @@ export class FxInstance extends HTMLElement {
   getDefaultContext() {
     // console.log('getDefaultContext ', this.instanceData.firstElementChild);
     if (this.type === 'xml') {
+      // return this.instanceData.firstElementChild;
+      const inst = this.getInstanceData();
+      console.log('inst',inst);
+
       return this.instanceData.firstElementChild;
     }
     return this.instanceData;
@@ -127,6 +142,16 @@ export class FxInstance extends HTMLElement {
       await this._loadData();
     } else if (this.childNodes.length !== 0) {
       this._useInlineData();
+    }
+  }
+
+  _createInstanceData(){
+    if(this.type === 'xml'){
+      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+      this.instanceData = doc;
+    }
+    if(this.type === 'json'){
+      this.instanceData = {};
     }
   }
 
