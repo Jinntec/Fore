@@ -13,49 +13,152 @@
     <!--    <link href="../resources/demo.css" rel="stylesheet">-->
 
     <style>
-        fx-repeatitem{
-            display: block;
-            margin:1rem;
+        body{
+            margin:0;
+            padding:0;
+            border:none;
         }
-        [repeat-index]{
+        #elements{
+            /*position:fixed;*/
+            /*left:0;*/
+            /*top:0;*/
+            /*width:200px;*/
+            height:100vh;
+            overflow: auto;
+        }
+        .element-name{
             background: lightblue;
+            padding: 0.5rem 0.3rem;
+        }
+        #elements fx-repeatitem{
+            border-bottom:thin solid #999;
+            display: block;
         }
 
-        [repeat-index] [repeat-index]{
-            background: steelblue;
+        .elementPanel{
+            overflow: auto;
+            height: 100vh;
+        }
+
+        .wrapper > fx-fore{
+            margin: 0;
+        }
+
+        h1{
+            margin: 0;
+            padding: 0 1rem;
         }
 
         [repeat-index] fx-repeat{
             display: block;
+        }
+        label{
+            display: block;
+        }
+        pre{
+            position:fixed;
+            bottom:0;
+            right:0;
+            background: rgba(255,255,255,0.5);
+            padding: 1rem;
+        }
+        main{
+            width: 100%;
+            height: 100%;
+            background: whitesmoke;
+        }
+        main *{
+            width:100%;
+            background: orange;
+            display: block;
+        }
+        main *::before{
+            content:attr(data-name);
+        }
+        .wrapper{
+            width: 100vw;
+            height: 100vh;
+            margin:0;
+            display: grid;
+            grid-template-columns: 200px auto;
+        }
+        main fx-fore{
+            position: relative;
+        }
+        main fx-fore fx-model *{
+            margin-left: 1rem;
+        }
+        main fx-fore fx-instance{
+            display:block;
+            height:30px;
+            width: 100%;
+            background: lightblue;
+            vertical-align: center;
+        }
+        main fx-model{
+            background: rgba(255,255,255,0.8);
+            min-height : 200px;
+            width: 100%;
+            display: block;
+        }
+        main fx-model:before{
+            content:'Model';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+        main fx-instance:before{
+            content: "Instance: '" attr(id) "'";
         }
     </style>
 </head>
 <body>
 <div class="wrapper">
 
-    <fx-fore>
+    <fx-fore id="editor">
+        <fx-message event="drop" target="fore">got drop</fx-message>
+        <fx-action src="editor/editor.js" event="model-construct-done"></fx-action>
         <fx-model>
             <fx-instance id="default" src="editor/template.xml"> </fx-instance>
-
             <fx-instance id="elements" src="editor/elements.xml"> </fx-instance>
             <fx-instance id="vars">
                 <data>
                     <current></current>
                 </data>
             </fx-instance>
-        </fx-model>
-        <h1>Fore Editor</h1>
+            <fx-function
+                    signature="local:elementLabel($elementName as xs:string) as xs:string?"
+                    type="text/javascript">
+                console.log('elementName', $elementName);
+                return $elementName.substring(3, $elementName.length);
+            </fx-function>
 
-        <fx-repeat ref="instance('elements')/*">
-            <template>
-                <div>{name(.)}</div>
-                <fx-repeat ref="./@*" id="inner">
-                    <template>
-                        <div style="margin-left:2rem;">{name(.)}</div>
-                    </template>
-                </fx-repeat>
-            </template>
-        </fx-repeat>
+        </fx-model>
+
+        <fx-group class="elementPanel">
+            <h4>Model</h4>
+            <fx-repeat id="elements" ref="instance('elements')/model/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+
+            <h4>UI</h4>
+            <fx-repeat id="elements" ref="instance('elements')/UI/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+
+            <h4>Actions</h4>
+            <fx-repeat id="elements" ref="instance('elements')/actions/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+        </fx-group>
+
 <!--
         <fx-control ref="instance('vars')/current">
             <select ref="instance('elements')/*" class="widget" update-event="change">
@@ -66,9 +169,42 @@
         </fx-control>
 -->
 
+<pre>
+{log('elements')}
+</pre>
+
     </fx-fore>
 
+    <main current>
+        <h1>Fore Editor</h1>
+
+        <fx-fore id="edited">
+            <fx-model>
+                <fx-instance draggable="true">
+                    <data></data>
+                </fx-instance>
+            </fx-model>
+            <fx-group></fx-group>
+        </fx-fore>
+    </main>
 </div>
 <script type="module" src="../index.js"></script>
+<script>
+    (function () {
+        console.log('inited page.....')
+        const draggables = document.querySelectorAll('.element-name')
+        Array.from(draggables).forEach(element => {
+            element.addEventListener("dragstart", ev =>{
+                console.log('_handleDragStart',ev);
+                console.log('_handleDragStart target',ev.target);
+                console.log('_handleDragStart target',ev.target.innerText);
+                ev.dataTransfer.setData("text/plain", ev.target.innerText);
+
+            });
+        });
+    })();
+</script>
+<!--<script src="editor/editor.js"></script>-->
+
 </body>
 </html>
