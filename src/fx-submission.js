@@ -95,7 +95,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 const inscope = getInScopeContext(node, naked);
                 const result = evaluateXPathToString(naked, inscope, this.getOwnerForm());
                 const replaced = expr.replaceAll(match, result);
-                console.log('result of replacing ', replaced);
+                console.log('replacing ',expr, ' with ', replaced);
                 expr = replaced;
             });
         }
@@ -112,15 +112,19 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const resolvedUrl = this._evaluateAttributeTemplateExpression(this.url, this);
         const serializer = new XMLSerializer();
 
-        const relevant = this.selectRelevant();
-        console.log('relevant nodes', relevant);
-
+        const instance = this.getInstance();
+        if(instance.type !== 'xml'){
+            console.error('JSON serialization is not supported yet');
+            return;
+        }
 
         // let serialized = serializer.serializeToString(this.nodeset);
         let serialized;
         if(this.serialization === 'none'){
             serialized = undefined;
         }else{
+            const relevant = this.selectRelevant();
+            console.log('relevant nodes', relevant);
             serialized = serializer.serializeToString(relevant);
         }
 

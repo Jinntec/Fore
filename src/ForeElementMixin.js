@@ -116,6 +116,14 @@ export const foreElementMixin = superclass =>
       return parent.getAttribute('ref');
     }
 
+    getInstance(){
+      if(this.ref.startsWith('instance(')){
+        const instId = XPathUtil.getInstanceId(this.ref);
+        return this.getModel().getInstance(instId);
+      }
+      return this.getModel().getInstance('default');
+    }
+
     _getParentBindingElement(start) {
       if (start.parentNode.host) {
         const { host } = start.parentNode;

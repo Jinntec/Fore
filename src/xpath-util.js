@@ -19,6 +19,9 @@ export class XPathUtil {
 
   // todo: this will need more work to look upward for instance() expr.
   static getInstanceId(ref) {
+    if(!ref){
+      return 'default';
+    }
     if (ref.startsWith('instance(')) {
       const result = ref.substring(ref.indexOf('(') + 1);
       return result.substring(1, result.indexOf(')') - 1);
