@@ -33,14 +33,36 @@
                             <greeting type="message:">Hello World!</greeting>
                         </data>
                     </fx-instance>
+                    <fx-instance id="second">
+                        <data>
+                            <greet>Hi!</greet>
+                        </data>
+                    </fx-instance>
+                    <fx-submission id="submission"
+                                   ref="instance('second')"
+                                   url="#echo"
+                                   replace="instance"
+                                   instance="default"
+                                   method="get"></fx-submission>
                 </fx-model>
                 <fx-group>
 
-                    <h1>Unbound control is not showing</h1>
+                    <h1>Unbound control is not relevant</h1>
+                    <p>This effect can be used to advantage when your data structure changes.</p>
+                    <p>Controls will show up as needed if a some node can be bound during a refresh.</p>
+                    <p>Hit the button and thereby change the underlying data by replacing them with
+                    some other data from second instance.</p>
                     <fx-control id="output" ref="greeting"></fx-control>
                     <fx-control ref="greet"></fx-control>
-
+                    <fx-trigger ref="greeting">
+                        <button>change data</button>
+                        <fx-send submission="submission"></fx-send>
+                    </fx-trigger>
                 </fx-group>
+                <p>Note the <code>fx-trigger</code> also being bound to 'greeting'. After the
+                    data changed there's no greeting node any more it can bind to making the trigger
+                    non-relevant.</p>
+
             </fx-fore>
         </template>
     </demo-snippet>
