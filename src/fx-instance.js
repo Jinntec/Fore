@@ -163,7 +163,7 @@ export class FxInstance extends HTMLElement {
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
-      credentials: 'same-origin',
+      credentials: 'include',
       headers: {
         'Content-Type': contentType,
       },
