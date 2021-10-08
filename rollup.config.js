@@ -85,5 +85,5 @@ export default [
       minifyHTML(),
       terser(),
     ],
-  }
+  },
 ];

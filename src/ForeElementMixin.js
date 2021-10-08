@@ -1,6 +1,10 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPath, evaluateXPathToFirstNode, evaluateXPathToString } from './xpath-evaluation.js';
+import {
+  evaluateXPath,
+  evaluateXPathToFirstNode,
+  evaluateXPathToString,
+} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
 export const foreElementMixin = superclass =>
@@ -69,7 +73,7 @@ export const foreElementMixin = superclass =>
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
-      if(!inscopeContext){
+      if (!inscopeContext) {
         console.warn('no in scopeContext for ', this);
         return;
       }
@@ -120,8 +124,8 @@ export const foreElementMixin = superclass =>
       return parent.getAttribute('ref');
     }
 
-    getInstance(){
-      if(this.ref.startsWith('instance(')){
+    getInstance() {
+      if (this.ref.startsWith('instance(')) {
         const instId = XPathUtil.getInstanceId(this.ref);
         return this.getModel().getInstance(instId);
       }
@@ -177,36 +181,32 @@ export const foreElementMixin = superclass =>
      * b: look for textContent and return the value if present
      * c: return null
      */
-    getValue(){
-      if(this.hasAttribute('value')){
+    getValue() {
+      if (this.hasAttribute('value')) {
         const valAttr = this.getAttribute('value');
         const inscopeContext = getInScopeContext(this, valAttr);
         console.log('inscope', inscopeContext);
         const result = evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
-        console.log('result',result);
+        console.log('result', result);
         return result;
       }
-      if(this.textContent){
+      if (this.textContent) {
         return this.textContent;
       }
       return null;
     }
 
-
-
     getInScopeContext() {
       return getInScopeContext(this, this.ref);
     }
 
-    dispatch(eventName,detail){
+    dispatch(eventName, detail) {
       const event = new CustomEvent(eventName, {
         composed: true,
         bubbles: true,
         detail,
       });
-      console.log('firing',event);
+      console.log('firing', event);
       this.dispatchEvent(event);
     }
-
-
   };

@@ -8,7 +8,6 @@ import { ModelItem } from '../modelitem.js';
  *
  */
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
-
   constructor() {
     super();
     this.value = '';
@@ -89,7 +88,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   _dispatchEvent(event) {
     if (this.getOwnerForm().ready) {
-      this.dispatch(event,{})
+      this.dispatch(event, {});
     }
   }
 
@@ -108,7 +107,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.required = false;
         // this.removeAttribute('required');
         this.classList.toggle('required');
-        this._dispatchEvent('optional')
+        this._dispatchEvent('optional');
       }
     }
   }

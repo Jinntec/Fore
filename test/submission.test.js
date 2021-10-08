@@ -39,26 +39,23 @@ describe('submissionn tests', () => {
 
   it('selects relevant nodes', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle>suv</vehicle>
-                            <car>
-                                <motor>electric</motor>
-                            </car>
-                            <thing>thing</thing>
-                            <something>something</something>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
-                    <fx-bind ref="something" relevant="false()"></fx-bind>
-                    <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="instance">
-                    </fx-submission>
-                </fx-model>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <vehicle>suv</vehicle>
+              <car>
+                <motor>electric</motor>
+              </car>
+              <thing>thing</thing>
+              <something>something</something>
+            </data>
+          </fx-instance>
+          <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
+          <fx-bind ref="something" relevant="false()"></fx-bind>
+          <fx-submission id="submission" url="/submission2" replace="instance"> </fx-submission>
+        </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -85,31 +82,27 @@ describe('submissionn tests', () => {
 
     const something = fx.evaluateXPath('exists(something)', result, null, {});
     expect(something).to.be.false;
-
   });
 
   it('filters non-relevant attrs', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                            <car>
-                                <motor type="otto">electric</motor>
-                            </car>
-                            <thing>thing</thing>
-                            <something>something</something>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
-                    <fx-bind ref="car/motor/@type" relevant="false()"></fx-bind>
-                    <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="instance">
-                    </fx-submission>
-                </fx-model>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <vehicle attr1="a1" attr2="a2">suv</vehicle>
+              <car>
+                <motor type="otto">electric</motor>
+              </car>
+              <thing>thing</thing>
+              <something>something</something>
+            </data>
+          </fx-instance>
+          <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
+          <fx-bind ref="car/motor/@type" relevant="false()"></fx-bind>
+          <fx-submission id="submission" url="/submission2" replace="instance"> </fx-submission>
+        </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -125,34 +118,29 @@ describe('submissionn tests', () => {
     const vehicleText = fx.evaluateXPathToBoolean("vehicle/text() = 'suv'", result, null, {});
     expect(vehicleText).to.be.true;
 
-    const vehicleAttr1 = fx.evaluateXPathToBoolean("exists(vehicle/@attr1)", result, null, {});
+    const vehicleAttr1 = fx.evaluateXPathToBoolean('exists(vehicle/@attr1)', result, null, {});
     expect(vehicleAttr1).to.be.false;
 
-    const motorAttr = fx.evaluateXPathToBoolean("exists(car/motor/@type)", result, null, {});
+    const motorAttr = fx.evaluateXPathToBoolean('exists(car/motor/@type)', result, null, {});
     expect(motorAttr).to.be.false;
-
-
   });
   it('filter non-relevant textnodes', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                            <car>
-                                <motor type="otto">electric</motor>
-                            </car>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
-                    <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
-                    <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="instance">
-                    </fx-submission>
-                </fx-model>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <vehicle attr1="a1" attr2="a2">suv</vehicle>
+              <car>
+                <motor type="otto">electric</motor>
+              </car>
+            </data>
+          </fx-instance>
+          <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
+          <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
+          <fx-submission id="submission" url="/submission2" replace="instance"> </fx-submission>
+        </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -165,32 +153,27 @@ describe('submissionn tests', () => {
     const vehicle = fx.evaluateXPathToBoolean('exists(vehicle/text())', result, null, {});
     expect(vehicle).to.be.false;
 
-    const motor = fx.evaluateXPathToBoolean("exists(car/motor/text())", result, null, {});
+    const motor = fx.evaluateXPathToBoolean('exists(car/motor/text())', result, null, {});
     expect(motor).to.be.false;
-
-
   });
   it('supports "empty" for non-relevant nodes', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                            <car>
-                                <motor type="otto">electric</motor>
-                            </car>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
-                    <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
-                    <fx-submission id="submission"
-                                    url="/submission2"
-                                    replace="none"
-                                    nonrelevant="empty">
-                    </fx-submission>
-                </fx-model>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <vehicle attr1="a1" attr2="a2">suv</vehicle>
+              <car>
+                <motor type="otto">electric</motor>
+              </car>
+            </data>
+          </fx-instance>
+          <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
+          <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
+          <fx-submission id="submission" url="/submission2" replace="none" nonrelevant="empty">
+          </fx-submission>
+        </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -204,34 +187,33 @@ describe('submissionn tests', () => {
     // expect(vehicle).to.be.true;
     expect(vehicle).to.be.empty;
 
-    const motor = fx.evaluateXPath("car/motor/text()", result, null, {});
+    const motor = fx.evaluateXPath('car/motor/text()', result, null, {});
     expect(motor).to.be.empty;
-
-
   });
 
   it('supports serialization none ', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                            <car>
-                                <motor type="otto">electric</motor>
-                            </car>
-                        </data>
-                    </fx-instance>
-                    <fx-submission id="submission"
-                                    method="get"
-                                    url="#echo"
-                                    replace="instance"
-                                    serialization="none">
-                    </fx-submission>
-                    <fx-send event="ready" submission="submission"></fx-send>
-
-                </fx-model>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <vehicle attr1="a1" attr2="a2">suv</vehicle>
+              <car>
+                <motor type="otto">electric</motor>
+              </car>
+            </data>
+          </fx-instance>
+          <fx-submission
+            id="submission"
+            method="get"
+            url="#echo"
+            replace="instance"
+            serialization="none"
+          >
+          </fx-submission>
+          <fx-send event="ready" submission="submission"></fx-send>
+        </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -247,6 +229,5 @@ describe('submissionn tests', () => {
     expect(inst.getInstanceData()).to.exist;
     expect(inst.getInstanceData().firstElementChild.nodeName).to.equal('data');
     expect(inst.getInstanceData().firstElementChild.childNodes).to.not.exist;
-
   });
 });

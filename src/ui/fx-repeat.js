@@ -103,7 +103,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // todo: review - this is just used by append action - event consolidation ?
     this.addEventListener('index-changed', e => {
       e.stopPropagation();
-      if(!e.target === this) return ;
+      if (!e.target === this) return;
       console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
@@ -296,7 +296,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   _fadeOut(el) {
     el.classList.add('fade-out-bottom');
     el.parentNode.removeChild(el);
-/*
+    /*
         el.style.opacity = 1;
 
         (function fade() {

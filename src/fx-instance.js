@@ -1,4 +1,4 @@
-import {Fore} from './fore.js';
+import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 /**
@@ -83,14 +83,14 @@ export class FxInstance extends HTMLElement {
    * @returns {Document | T | any}
    */
   getInstanceData() {
-    if(!this.instanceData){
+    if (!this.instanceData) {
       this._createInstanceData();
     }
     return this.instanceData;
   }
 
-  setInstanceData(data){
-    if(!data){
+  setInstanceData(data) {
+    if (!data) {
       this._createInstanceData();
       return;
     }
@@ -107,7 +107,7 @@ export class FxInstance extends HTMLElement {
     if (this.type === 'xml') {
       // return this.instanceData.firstElementChild;
       const inst = this.getInstanceData();
-      console.log('inst',inst);
+      console.log('inst', inst);
 
       return this.instanceData.firstElementChild;
     }
@@ -146,19 +146,19 @@ export class FxInstance extends HTMLElement {
     }
   }
 
-  _createInstanceData(){
-    if(this.type === 'xml'){
+  _createInstanceData() {
+    if (this.type === 'xml') {
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
     }
-    if(this.type === 'json'){
+    if (this.type === 'json') {
       this.instanceData = {};
     }
   }
 
   async _loadData() {
     const url = `${this.src}`;
-    const contentType = Fore.getContentType(this)
+    const contentType = Fore.getContentType(this);
 
     await fetch(url, {
       method: 'GET',

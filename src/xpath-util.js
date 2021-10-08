@@ -19,7 +19,7 @@ export class XPathUtil {
 
   // todo: this will need more work to look upward for instance() expr.
   static getInstanceId(ref) {
-    if(!ref){
+    if (!ref) {
       return 'default';
     }
     if (ref.startsWith('instance(')) {

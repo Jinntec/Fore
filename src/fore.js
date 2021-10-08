@@ -1,4 +1,3 @@
-
 export class Fore {
   static READONLY_DEFAULT = false;
 

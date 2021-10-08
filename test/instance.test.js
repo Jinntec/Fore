@@ -2,7 +2,7 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
-import {Fore} from '../src/fore.js';
+import { Fore } from '../src/fore.js';
 
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
@@ -222,34 +222,32 @@ describe('instance Tests', () => {
 
   it('uses correct content-type for xml', async () => {
     const el = await fixtureSync(html`
-                <fx-fore>
-                    <fx-model id="model1">
-                        <fx-instance src="base/test/instance1.xml"></fx-instance>
-                    </fx-model>
-                </fx-fore>
-            `);
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance src="base/test/instance1.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
     const instances = el.querySelectorAll('fx-instance');
     expect(Fore.getContentType(instances[0])).to.equal('application/xml; charset=UTF-8');
-
   });
 
   it('uses correct content-type for json', async () => {
     const el = await fixtureSync(html`
-                <fx-fore>
-                    <fx-model id="model1">
-                        <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
-                    </fx-model>
-                </fx-fore>
-            `);
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
     const instances = el.querySelectorAll('fx-instance');
     expect(Fore.getContentType(instances[0])).to.equal('application/json');
-
   });
 
   it('loads inline json data', async () => {
@@ -303,12 +301,12 @@ describe('instance Tests', () => {
 
   it('will create an instance', async () => {
     const el = await fixtureSync(html`
-                <fx-fore>
-                    <fx-model id="model1">
-                        <fx-instance></fx-instance>
-                    </fx-model>
-                </fx-fore>
-            `);
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -316,8 +314,7 @@ describe('instance Tests', () => {
     expect(instances[0].id).to.equal('default');
     expect(instances[0].getInstanceData()).to.exist;
     expect(instances[0].getDefaultContext()).to.exist;
-
-  })
+  });
 
   /*
           it('does NOT copy a "body" element from inline data', async () => {
@@ -362,6 +359,3 @@ describe('instance Tests', () => {
           });
       */
 });
-
-;
-

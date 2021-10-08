@@ -466,7 +466,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
     // let value = null;
     // const mItem = {};
-/*
+    /*
     let targetNode = {};
     if (node.nodeType === node.TEXT_NODE) {
       // const parent = node.parentNode;

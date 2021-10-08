@@ -46,14 +46,14 @@ export class FxInsert extends AbstractAction {
     if (this.origin) {
       // ### if there's an origin attribute use it
       let originTarget;
-      try{
+      try {
         originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
         if (Array.isArray(originTarget) && originTarget.length === 0) {
           console.warn('invalid origin for this insert action - ignoring...', this);
           originSequenceClone = null;
         }
         originSequenceClone = originTarget.cloneNode(true);
-      }catch (error){
+      } catch (error) {
         console.warn('invalid origin for this insert action - ignoring...', this);
       }
     } else if (targetSequence) {
@@ -158,10 +158,7 @@ export class FxInsert extends AbstractAction {
 
       if (this.position && this.position === 'before') {
         // this.at -= 1;
-        insertLocationNode.parentNode.insertBefore(
-          originSequenceClone,
-          insertLocationNode,
-        );
+        insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
       }
 
       if (this.position && this.position === 'after') {
