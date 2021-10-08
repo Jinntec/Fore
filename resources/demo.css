@@ -1,7 +1,7 @@
 @import 'vars.css';
 @import 'fore.css';
 body {
-    padding:20px;
+    padding:0;
     font-family: 'Roboto', 'Noto', sans-serif;
     /*background: var(--paper-orange-300);*/
     background: var(--paper-cyan-300);
@@ -29,7 +29,7 @@ h2{
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap:nowrap;
 }
 .note{
@@ -56,6 +56,9 @@ a, a:link, a:visited {
     text-align: center;
     width: 100px;
 }
+.redline:hover{
+    background: rgba(255,255,255,0.5);
+}
 .redline.next{
     align-self: flex-end;
 }
@@ -76,12 +79,14 @@ a, a:link, a:visited {
 }
 
 .wrapper{
-    width:80%;
     height:auto;
-    max-width:1200px;
+    max-width:800px;
     margin: 0 auto;
     background: var(--paper-cyan-100);
     opacity: 0.95;
     position: relative;
     min-height:80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
 }
