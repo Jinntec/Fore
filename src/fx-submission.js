@@ -1,6 +1,6 @@
 import {Fore} from './fore.js';
 import {foreElementMixin} from './ForeElementMixin.js';
-import {evaluateXPathToString} from './xpath-evaluation.js';
+import {evaluateXPathToString, evaluateXPath} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
 /**
@@ -136,6 +136,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.method.toLowerCase() === 'get') {
             serialized = undefined;
         }
+        // console.log('data being send', serialized);
 
         if (resolvedUrl === '#echo') {
             let doc;
@@ -249,9 +250,19 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.replace === 'instance') {
             const targetInstance = this._getTargetInstance();
             if (targetInstance) {
-                const instanceData = data;
-                targetInstance.instanceData = instanceData;
-                console.log('### replaced instance ', targetInstance.instanceData);
+                if(this.targetref){
+                    const theTarget = evaluateXPath(this.targetref, targetInstance, this.getOwnerForm());
+                    console.log('theTarget', theTarget);
+                    const clone = data.firstElementChild;
+                    const parent = theTarget.parentNode;
+                    parent.replaceChild(clone,theTarget);
+                    console.log('finally ', parent);
+                }else{
+                    const instanceData = data;
+                    targetInstance.instanceData = instanceData;
+                    console.log('### replaced instance ', targetInstance.instanceData);
+                }
+
                 this.model.updateModel(); // force update
                 // this.model.formElement.refresh();
                 this.getOwnerForm().refresh();
@@ -302,6 +313,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
         const root = doc.firstElementChild;
+
+        if(this.nodeset.children.length === 0 && this._isRelevant(this.nodeset)){
+            return this.nodeset;
+        }
         const result = this._filterRelevant(this.nodeset, root);
         return result;
     }
