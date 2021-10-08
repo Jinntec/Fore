@@ -2,6 +2,7 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
+import {Fore} from '../src/fore.js';
 
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
@@ -217,6 +218,38 @@ describe('instance Tests', () => {
 
     expect(modelItems[0].required).to.be.false;
     expect(modelItems[0].value).to.equal('hello from file');
+  });
+
+  it('uses correct content-type for xml', async () => {
+    const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model id="model1">
+                        <fx-instance src="base/test/instance1.xml"></fx-instance>
+                    </fx-model>
+                </fx-fore>
+            `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(Fore.getContentType(instances[0])).to.equal('application/xml; charset=UTF-8');
+
+  });
+
+  it('uses correct content-type for json', async () => {
+    const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model id="model1">
+                        <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
+                    </fx-model>
+                </fx-fore>
+            `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(Fore.getContentType(instances[0])).to.equal('application/json');
+
   });
 
   it('loads inline json data', async () => {

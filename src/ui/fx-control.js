@@ -76,6 +76,10 @@ class FxControl extends XfAbstractControl {
         `;
   }
 
+  /**
+   *
+   * @returns {HTMLElement|*}
+   */
   getWidget() {
     let widget = this.querySelector(`.${WIDGETCLASS}`);
     if (!widget) {

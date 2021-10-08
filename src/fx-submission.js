@@ -1,7 +1,11 @@
+import {Fore} from './fore.js';
 import {foreElementMixin} from './ForeElementMixin.js';
 import {evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * todo: validate='false'
+ */
 export class FxSubmission extends foreElementMixin(HTMLElement) {
     constructor() {
         super();
@@ -71,11 +75,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.validate) {
             const valid = model.revalidate();
             if (!valid) {
+                console.log('validation failed. Bubmission stopped')
                 return;
             }
         }
         console.log('model updated....');
-
         await this._serializeAndSend();
     }
 
@@ -146,27 +150,22 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             return;
         }
 
-        console.log('###############after echo')
+        // ### setting headers
+        const headers = this._getHeaders();
+        console.log('headers',headers);
+
         const response = await fetch(resolvedUrl, {
             method: this.method,
             mode: 'cors',
             credentials: 'same-origin',
-            headers: {
-                'Content-type': 'application/xml; charset=UTF-8',
-            },
+            headers,
             body: serialized,
         });
 
-        if (!response.ok) {
-            this.dispatchEvent(
-                new CustomEvent('submit-error', {
-                    composed: true,
-                    bubbles: true,
-                    detail: {message: `Error while submitting ${this.id}`},
-                }),
-            );
+        if (!response.ok || response.status > 400) {
+            this.dispatch('submit-error',{message: `Error while submitting ${this.id}`})
+            return;
         }
-
 
         const contentType = response.headers.get('content-type').toLowerCase();
 
@@ -184,6 +183,24 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             const blob = await response.blob();
             this._handleResponse(blob);
         }
+    }
+
+    _getHeaders(){
+        const headers = new Headers();
+
+        // ### set content-type header according to type of instance
+        const instance = this.getInstance();
+        const contentType = Fore.getContentType(instance);
+        headers.append('Content-Type', contentType);
+
+        // ### add header defined by fx-header elements
+        const headerElems = this.querySelectorAll('fx-header');
+        Array.from(headerElems).forEach( header => {
+            const {name} = header;
+            const val = header.getValue();
+            headers.append(name,val);
+        });
+        return headers;
     }
 
     _getUrlExpr() {

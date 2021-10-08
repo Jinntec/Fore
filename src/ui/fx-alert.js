@@ -32,5 +32,11 @@ export class FxAlert extends XfAbstractControl {
       <slot></slot>
     `;
   }
+
+  async updateWidgetValue() {
+    console.log('alert update', this);
+    this.innerHTML = this.value;
+  }
+
 }
 customElements.define('fx-alert', FxAlert);

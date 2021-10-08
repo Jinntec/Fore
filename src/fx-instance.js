@@ -1,3 +1,4 @@
+import {Fore} from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 /**
@@ -157,7 +158,8 @@ export class FxInstance extends HTMLElement {
 
   async _loadData() {
     const url = `${this.src}`;
-    const contentType = this._getContentType();
+    const contentType = Fore.getContentType(this)
+
     await fetch(url, {
       method: 'GET',
       mode: 'cors',

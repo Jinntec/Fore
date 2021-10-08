@@ -1,6 +1,6 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPath, evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToFirstNode, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
 export const foreElementMixin = superclass =>
@@ -41,6 +41,10 @@ export const foreElementMixin = superclass =>
       return ownerForm.querySelector('fx-model');
     }
 
+    /**
+     *
+     * @returns {{parentNode}|ForeElementMixin}
+     */
     getOwnerForm() {
       let currentElement = this;
       while (currentElement && currentElement.parentNode) {
@@ -166,6 +170,29 @@ export const foreElementMixin = superclass =>
       }
       return existed;
     }
+
+    /**
+     * Returns the effective value for the element.
+     * a: look for 'value' attribute and if present evaluate it and return the resulting value
+     * b: look for textContent and return the value if present
+     * c: return null
+     */
+    getValue(){
+      if(this.hasAttribute('value')){
+        const valAttr = this.getAttribute('value');
+        const inscopeContext = getInScopeContext(this, valAttr);
+        console.log('inscope', inscopeContext);
+        const result = evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
+        console.log('result',result);
+        return result;
+      }
+      if(this.textContent){
+        return this.textContent;
+      }
+      return null;
+    }
+
+
 
     getInScopeContext() {
       return getInScopeContext(this, this.ref);

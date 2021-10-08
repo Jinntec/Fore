@@ -1,3 +1,4 @@
+
 export class Fore {
   static READONLY_DEFAULT = false;
 
@@ -107,6 +108,23 @@ export class Fore {
     const repeatContextItem = element.closest('fx-repeatitem');
     const target = repeatContextItem.querySelector(`#${id}`);
     return target;
+  }
+
+  /**
+   * returns the proper content-type for instance.
+   *
+   * @param instance an fx-instance element
+   * @returns {string|null}
+   */
+  static getContentType(instance) {
+    if (instance.type === 'xml') {
+      return 'application/xml; charset=UTF-8';
+    }
+    if (instance.type === 'json') {
+      return 'application/json';
+    }
+    console.warn('content-type unknown ', instance.type);
+    return null;
   }
 
   /**

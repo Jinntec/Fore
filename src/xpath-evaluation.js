@@ -302,7 +302,7 @@ function resolveNamespacePrefix(contextElement, prefix) {
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
     return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {

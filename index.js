@@ -4,6 +4,7 @@ import './src/fx-fore.js';
 import './src/fx-instance.js';
 import './src/fx-model.js';
 import './src/fx-submission.js';
+import './src/fx-header.js';
 
 // ui classes
 import './src/ui/fx-alert.js';
