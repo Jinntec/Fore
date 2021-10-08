@@ -185,10 +185,7 @@ export const foreElementMixin = superclass =>
       if (this.hasAttribute('value')) {
         const valAttr = this.getAttribute('value');
         const inscopeContext = getInScopeContext(this, valAttr);
-        console.log('inscope', inscopeContext);
-        const result = evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
-        console.log('result', result);
-        return result;
+        return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
       }
       if (this.textContent) {
         return this.textContent;

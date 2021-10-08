@@ -56,36 +56,37 @@
         <fx-model>
             <fx-instance>
                 <data>
-                    <user pass=""></user>
-                    <status></status>
-                    <auth>foo</auth>
+                    <user>John</user>
+                    <password>1234</password>
                 </data>
             </fx-instance>
-<!--            <fx-bind ref="status" constraint="string-length(.) != 0" alert="Login failed"></fx-bind>-->
-
 
             <fx-submission id="login"
-                           method="post"
+                           method="urlencoded-post"
                            url="/login"
                            replace="none">
-                <fx-message event="submit-error">Login failed</fx-message>
-<!--                <fx-toggle case="home" event="submit-done"></fx-toggle>-->
-                <fx-header name="Authorization" value="auth"></fx-header>
+                <fx-header name="Authorization" value="'auth'"></fx-header>
                 <fx-header name="Another">bar</fx-header>
+
+                <fx-message event="submit-error">Login failed</fx-message>
+                <fx-message event="submit-done">Access granted</fx-message>
+                <!--                <fx-toggle case="home" event="submit-done"></fx-toggle>-->
+
             </fx-submission>
 
         </fx-model>
+<!--
         <fx-switch>
             <fx-case>
+-->
                 <section class="login">
                     <fx-control ref="user">
                         <label>User</label>
                         <input type="text" autofocus>
                     </fx-control>
-                    <fx-control ref="user/@pass" update-event="enter">
+                    <fx-control ref="password" update-event="enter">
                         <label>Password</label>
                         <input type="password">
-<!--                        <fx-alert ref="instance()/status"></fx-alert>-->
                     </fx-control>
 
                     <fx-trigger>
@@ -93,11 +94,13 @@
                         <fx-send submission="login"></fx-send>
                     </fx-trigger>
                 </section>
+<!--
             </fx-case>
             <fx-case id="home">
                 <h1>Welcome</h1>
             </fx-case>
         </fx-switch>
+-->
     </fx-fore>
 
 </div>

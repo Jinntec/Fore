@@ -105,10 +105,6 @@ export class FxInstance extends HTMLElement {
   getDefaultContext() {
     // console.log('getDefaultContext ', this.instanceData.firstElementChild);
     if (this.type === 'xml') {
-      // return this.instanceData.firstElementChild;
-      const inst = this.getInstanceData();
-      console.log('inst', inst);
-
       return this.instanceData.firstElementChild;
     }
     return this.instanceData;
