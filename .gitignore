@@ -8,3 +8,5 @@ assets/
 /.idea/
 /.idea/workspace.xml
 **/.DS_Store
+out/
+fore-elements.json
