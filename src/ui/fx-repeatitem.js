@@ -21,7 +21,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     super();
     this.inited = false;
     this.addEventListener('click', this._dispatchIndexChange);
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' ,delegatesFocus:true});
   }
 
   _dispatchIndexChange() {

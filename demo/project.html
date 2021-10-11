@@ -65,7 +65,7 @@
             color:white;
         }
         .deleteProject{
-            right: 1rem;
+            right: 2rem;
             position: absolute;
         }
         .iconbtn button{
@@ -205,6 +205,7 @@
                         <task name="newTask"></task>
                         <activity status="todo"></activity>
                     </template>
+                    <confirm>false</confirm>
                 </data>
             </fx-instance>
         </fx-model>
@@ -216,12 +217,12 @@
                         <button>+</button>
                         <fx-insert context="project" ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
                     </fx-trigger>
-<!--
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>
-                        <fx-delete ref="."></fx-delete>
+                        <fx-confirm message="really delete?">
+                            <fx-delete ref="." if="instance('default')/confirm"></fx-delete>
+                        </fx-confirm>
                     </fx-trigger>
--->
                 </div>
                 <div class="board">
                     <fx-repeat id="task" ref="task">

@@ -57,7 +57,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.inited = false;
     this.index = 1;
     this.repeatSize = 0;
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' , delegatesFocus:true});
   }
 
   get repeatSize() {

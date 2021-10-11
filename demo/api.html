@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore API</title>
+
+    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+        div{
+            margin:1rem 2rem;
+        }
+        details h2{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="../fore-elements.json" type="json"></fx-instance>
+        </fx-model>
+        <fx-repeat ref="?tags">
+            <template>
+                <h2>{?name}</h2>
+                <div class="description">{?description}</div>
+                <div class="path">{?path}</div>
+
+                <h3>Properties</h3>
+                <table>
+                    <tr>
+                        <td>name</td>
+                        <td>Type</td>
+                        <td>Default</td>
+                    </tr>
+                </table>
+                <table>
+                    <fx-repeat ref="?properties">
+                        <template>
+                            <tr>
+                                <td class="name">{?name}</td>
+                                <td class="type">{?type}</td>
+                                <td class="default">{?default}</td>
+                            </tr>
+                        </template>
+                    </fx-repeat>
+
+                </table>
+<!--
+                <fx-repeat ref="?properties">
+                    <template>
+                        <div class="name">{?name}</div>
+                        <div class="type">{?type}</div>
+                        <div class="default">{?default}</div>
+                    </template>
+                </fx-repeat>
+-->
+            </template>
+        </fx-repeat>
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

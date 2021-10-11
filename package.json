@@ -71,6 +71,7 @@
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
+    "docs": "wca src -f json --outFile fore-elements.json",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",
