@@ -9,9 +9,7 @@
     <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
 
     <link href="../resources/fore.css" rel="stylesheet">
-    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
-    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
-
+    <link href="../resources/vars.css" rel="stylesheet">
     <style>
         div{
             margin:1rem 2rem;
@@ -19,54 +17,148 @@
         details h2{
             display: inline-block;
         }
+        #elements{
+            max-width: 800px;
+            display: block;
+        }
+        #elements h2{
+            background: var(--paper-blue-500) ;
+            color: white;
+            padding: 1rem;
+            font-weight: 300;
+        }
+        #elements .description{
+            font-style: italic;
+            font-size:1.2rem;
+        }
+
+        fx-repeat.properties{
+            display: table;
+            width: 100%;
+        }
+        fx-repeat.properties fx-repeatitem{
+            display: table-row;
+
+        }
+
+        fx-repeat.properties fx-repeatitem div{
+            display: table-cell;
+            padding: 0.5rem;
+        }
+/*
+        fx-repeat.properties fx-repeatitem:first-child{
+            background: var(--paper-blue-100);
+            font-size: 1.2rem;
+        }
+*/
+        fx-repeat.properties fx-repeatitem:first-child div{
+            padding: 0.3rem;
+        }
+        h3{
+            background: var(--paper-blue-300);
+            padding: 0.3rem;
+            color: white;
+            font-weight: 300;
+        }
+        .propWrapper{
+            margin:1rem 0rem 1rem 2rem;
+        }
+        [slot='header']{
+            display: inherit;
+            background: var(--paper-blue-200);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+/*
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(1):before{
+            content:'Name';
+            display: table-caption;
+            width: 100%;
+            background: #00bcd4;
+
+        }
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(2):before{
+            content:'Type';
+            display: table-caption;
+        }
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(3):before{
+            content:'Default';
+            display: table-caption;
+        }
+*/
+
+
     </style>
 </head>
 <body>
 <div class="wrapper">
+    <button onclick="scrollto();">scroll</button>
 
     <fx-fore>
         <fx-model>
-            <fx-instance src="../fore-elements.json" type="json"></fx-instance>
+            <fx-instance id="default" src="../fore-elements.json" type="json"></fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <selected></selected>
+                </data>
+            </fx-instance>
         </fx-model>
-        <fx-repeat ref="?tags">
+        <header>
+            <h1>Fore API</h1>
+            <fx-control id="selected" ref="instance('vars')/selected" update-event="change">
+                <select class="widget" ref="instance('default')?tags">
+                    <template>
+                        <option value="{?name}">{?name}</option>
+                    </template>
+                </select>
+            </fx-control>
+        </header>
+        <fx-repeat id="elements" ref="?tags">
             <template>
-                <h2>{?name}</h2>
+                <h2 id="{?name}" style="transform: translateX(0)">{?name}</h2>
                 <div class="description">{?description}</div>
-                <div class="path">{?path}</div>
+                <div class="path">File: {?path}</div>
 
-                <h3>Properties</h3>
-                <table>
-                    <tr>
-                        <td>name</td>
-                        <td>Type</td>
-                        <td>Default</td>
-                    </tr>
-                </table>
-                <table>
-                    <fx-repeat ref="?properties">
-                        <template>
+                <div class="propWrapper">
+                    <h3>Properties</h3>
+
+                    <fx-repeat class="properties" ref="?properties">
+                        <table slot="header">
                             <tr>
-                                <td class="name">{?name}</td>
-                                <td class="type">{?type}</td>
-                                <td class="default">{?default}</td>
+                                <td>Name</td>
+                                <td>Type</td>
+                                <td>Default</td>
                             </tr>
+                        </table>
+
+                        <template>
+                            <div class="name">{?name}</div>
+                            <div class="type">{?type}</div>
+                            <div class="default">{?default}</div>
                         </template>
                     </fx-repeat>
 
-                </table>
-<!--
-                <fx-repeat ref="?properties">
-                    <template>
-                        <div class="name">{?name}</div>
-                        <div class="type">{?type}</div>
-                        <div class="default">{?default}</div>
-                    </template>
-                </fx-repeat>
--->
+                    <h3>Events</h3>
+                    <fx-repeat class="events" ref="?events">
+                        <template>
+                            <div><span>{?name}</span> - <span>{?description}</span></div>
+                        </template>
+                    </fx-repeat>
+                </div>
             </template>
         </fx-repeat>
     </fx-fore>
-
+    <script>
+        function scrollto(){
+            document.getElementById('fx-submission').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        }
+        const current = document.getElementById('selected');
+        current.addEventListener('value-changed', evt => {
+            console.log('evt', evt.target.value);
+            evt.target.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        });
+    </script>
 </div>
 <script type="module" src="../index.js"></script>
 </body>
