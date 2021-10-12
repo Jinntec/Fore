@@ -21,10 +21,12 @@ describe('template expressions', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
-    expect(el.storedTemplateExpressions).to.exist;
-    expect(el.storedTemplateExpressions.length).to.equal(2);
-    expect(el.storedTemplateExpressions[0].expr).to.equal('static {greeting}');
-    expect(el.storedTemplateExpressions[1].expr).to.equal(
+    const div = el.querySelector('div');
+    const attrNode = div.getAttributeNode('class');
+    expect(el.storedTemplateExpressionByNode).to.exist;
+    expect(el.storedTemplateExpressionByNode.size).to.equal(2);
+    expect(el.storedTemplateExpressionByNode.get(attrNode)).to.equal('static {greeting}');
+    expect(el.storedTemplateExpressionByNode.get(div.firstChild)).to.equal(
       'Greeting: {greeting} another {greeting}',
     );
 
@@ -48,7 +50,7 @@ describe('template expressions', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
-    expect(el.storedTemplateExpressions.length).to.equal(0);
+    expect(el.storedTemplateExpressionByNode.size).to.equal(0);
 
     const greeting = el.querySelector('greeting');
 

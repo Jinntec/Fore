@@ -87,14 +87,10 @@
             display: table-caption;
         }
 */
-
-
     </style>
 </head>
 <body>
 <div class="wrapper">
-    <button onclick="scrollto();">scroll</button>
-
     <fx-fore>
         <fx-model>
             <fx-instance id="default" src="../fore-elements.json" type="json"></fx-instance>
@@ -124,13 +120,14 @@
                     <h3>Properties</h3>
 
                     <fx-repeat class="properties" ref="?properties">
-                        <table slot="header">
-                            <tr>
-                                <td>Name</td>
-                                <td>Type</td>
-                                <td>Default</td>
-                            </tr>
-                        </table>
+					    <!-- TODO: Fix the table here. It needs to be repeated but with a correct content model -->
+                        <!-- <table slot="header"> -->
+                        <!--     <tr> -->
+                        <!--         <td>Name</td> -->
+                        <!--         <td>Type</td> -->
+                        <!--         <td>Default</td> -->
+                        <!--     </tr> -->
+                        <!-- </table> -->
 
                         <template>
                             <div class="name">{?name}</div>
@@ -150,13 +147,11 @@
         </fx-repeat>
     </fx-fore>
     <script>
-        function scrollto(){
-            document.getElementById('fx-submission').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-        }
         const current = document.getElementById('selected');
         current.addEventListener('value-changed', evt => {
             console.log('evt', evt.target.value);
-            evt.target.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+			const scrollTarget = document.getElementById(evt.target.value);
+            scrollTarget.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
         });
     </script>
 </div>

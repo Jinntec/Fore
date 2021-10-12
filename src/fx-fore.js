@@ -39,6 +39,8 @@ export class FxFore extends HTMLElement {
 
     this.ready = false;
 
+    this.storedTemplateExpressionByNode = new Map();
+
     const style = `
             :host {
                 display: block;
@@ -190,7 +192,7 @@ export class FxFore extends HTMLElement {
   /**
    * entry point for processing of template expression enclosed in '{}' brackets.
    *
-   * Expressions are found with an XPath search. For each node an entry is added to storedTemplateExpressions array.
+   * Expressions are found with an XPath search. For each node an entry is added to the storedTemplateExpressionByNode map.
    *
    *
    * @private
@@ -203,26 +205,28 @@ export class FxFore extends HTMLElement {
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
-    if (!this.storedTemplateExpressions) {
-      this.storedTemplateExpressions = [];
-    }
-
     /*
             storing expressions and their nodes for re-evaluation
          */
     Array.from(tmplExpressions).forEach(node => {
+      if (this.storedTemplateExpressionByNode.has(node)) {
+        // If the node is already known, do not process it twice
+        return;
+      }
       const expr = this._getTemplateExpression(node);
-      this.storedTemplateExpressions.push({
-        expr,
+
+      this.storedTemplateExpressionByNode.set(node, expr);
+    });
+
+    // TODO: Should we clean up nodes that existed but are now gone?
+    for (const node of this.storedTemplateExpressionByNode.keys()) {
+      this._processTemplateExpression({
         node,
+        expr: this.storedTemplateExpressionByNode.get(node),
       });
-    });
+    }
 
-    this.storedTemplateExpressions.forEach(tmpl => {
-      this._processTemplateExpression(tmpl);
-    });
-
-    console.log('stored template expressions ', this.storedTemplateExpressions);
+    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
   }
 
   // eslint-disable-next-line class-methods-use-this
