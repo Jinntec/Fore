@@ -33,7 +33,8 @@
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-input": "^3.2.1",
-    "fontoxpath": "^3.20.4"
+    "fontoxpath": "^3.20.4",
+    "web-component-analyzer": "^1.1.6"
   },
   "devDependencies": {
     "@0xcda7a/empathy": "0.0.9",
