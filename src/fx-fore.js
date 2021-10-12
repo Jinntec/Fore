@@ -231,7 +231,7 @@ export class FxFore extends HTMLElement {
 
   // eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
-    console.log('processing template expression ', exprObj);
+    // console.log('processing template expression ', exprObj);
 
     const { expr } = exprObj;
     const { node } = exprObj;
@@ -251,7 +251,7 @@ export class FxFore extends HTMLElement {
       node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
-        console.log('match ', match);
+        // console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
         if (!inscope) {

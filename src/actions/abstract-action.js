@@ -6,9 +6,10 @@ async function wait(howLong) {
 }
 
 /**
- * `fx-action`
- * a button triggering Fore actions
+ * Superclass for all action elements. Provides basic wiring of events to targets as well as
+ * handle conditionals and loops of actions.
  *
+ * @fires action-performed - is dispatched after each execution of an action.
  * @customElement
  * @demo demo/index.html
  */
@@ -16,12 +17,49 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,
+      /**
+       * detail - event detail object
+       */
       detail: {
         type: Object,
       },
+      /**
+       * wether nor not an action needs to run the update cycle
+       */
       needsUpdate: {
         type: Boolean,
       },
+      /**
+       * event to listen for
+       */
+      event:{
+        type: Object
+      },
+      /**
+       * id of target element to attach listener to
+       */
+      target:{
+        type: String
+      },
+      /**
+       * boolean XPath expression. If true the action will be executed.
+       */
+      ifExpr:{
+        type: String
+      },
+      /**
+       * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
+       * to actually run the action.
+       */
+      whileExpr:{
+        type: String
+      },
+      /**
+       * delay before executing action in milliseconds
+       */
+      delay:{
+        type: Number
+      }
     };
   }
 
@@ -62,6 +100,12 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
   /**
    * executes the action.
+   *
+   * Will first evaluate ifExpr and continue only if it evaluates to 'true'. The 'whileExpr' will be executed
+   * considering the delay if present.
+   *
+   * After calling `perform' which actually implements the semantics of an concrete action
+   * `actionPerformed` will make sure that update cycle is run if 'needsUpdate' is true.
    *
    * @param e
    */
@@ -137,6 +181,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
   }
 
+  /**
+   * calls the update cycle if action signalled that update is needed.
+   */
   actionPerformed() {
     // console.log('actionPerformed action parentNode ', this.parentNode);
     if (this.needsUpdate) {
@@ -148,6 +195,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
   }
 
+  /**
+   * @private
+   */
   _dispatchActionPerformed() {
     console.log('action-performed ', this);
     this.dispatchEvent(

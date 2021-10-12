@@ -11,15 +11,27 @@ export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
       return {
+        /**
+         * context object for evaluation
+         */
         context: {
           type: Object,
         },
+        /**
+         * the model of this element
+         */
         model: {
           type: Object,
         },
+        /**
+         * XPath binding expression pointing to bound node
+         */
         ref: {
           type: String,
         },
+        /**
+         * The modelitem object associated to the bound node holding the evaluated state.
+         */
         modelItem: {
           type: Object,
         },

@@ -2,23 +2,25 @@ import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 
 /**
- * `fx-append`
+ * `fx-append` appends an entry to a repeat.
  *
  *
  *
- *
- *
+ * @deprecated - will be replaced with `fx-insert`
+ * @fires index-changed - fired after new item is appended
  * @customElement
  */
 // class FxAppend extends FxAction {
 class FxAppend extends AbstractAction {
-  /*
     static get properties() {
         return {
             ref: {
                 type: String,
             },
-            repeat: {
+          /**
+           * the repeat this action is appending to.
+           */
+          repeat: {
                 type: String,
             },
             clear: {
@@ -26,7 +28,6 @@ class FxAppend extends AbstractAction {
             },
         };
     }
-*/
 
   constructor() {
     super();
@@ -138,6 +139,8 @@ class FxAppend extends AbstractAction {
    * clear all text nodes and attribute values to get a 'clean' template.
    * @param n
    * @private
+   *
+   *
    */
   _clear(n) {
     let node = n.firstChild;
