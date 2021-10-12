@@ -113,6 +113,13 @@ registerCustomXPathFunction(
   },
 );
 
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
+};
+
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
@@ -120,6 +127,9 @@ const instance = (dynamicContext, string) => {
   const formElement = fxEvaluateXPathToFirstNode(
     'ancestor-or-self::fx-fore',
     dynamicContext.currentContext.formElement,
+    null,
+    null,
+    { namespaceResolver: xhtmlNamespaceResolver },
   );
 
   // console.log('fnInstance dynamicContext: ', dynamicContext);
