@@ -22,7 +22,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.inited = false;
     this.display = this.style.display;
     this.addEventListener('click', this._dispatchIndexChange);
-    this.attachShadow({ mode: 'open' ,delegatesFocus:true});
+    this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
   _dispatchIndexChange() {
@@ -103,10 +103,10 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
 */
     // console.log('refresh repeatitem nodeset: ',this.nodeset);
     this.modelItem = this.getModel().getModelItem(this.nodeset);
-    if(this.modelItem.relevant){
+    if (this.modelItem.relevant) {
       this.style.display = this.display;
       Fore.refreshChildren(this);
-    }else{
+    } else {
       this.style.display = 'none';
     }
 

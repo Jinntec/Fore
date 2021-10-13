@@ -475,11 +475,8 @@ export function evaluateXPathToNumber(
  * @return {string}
  */
 registerCustomXPathFunction(
-    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
-    ['xs:string?'],
-    'xs:string?',
-    (dynamicContext, string) => {
-        return btoa(string);
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => btoa(string),
 );
-

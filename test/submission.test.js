@@ -233,33 +233,35 @@ describe('submissionn tests', () => {
 
   it('supports ref and targetref ', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
+      <fx-fore>
         <fx-send event="ready" submission="submission" delay="3000"></fx-send>
 
         <fx-model>
-            <fx-instance>
-                <data>
-                    <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                    <car>
-                        <motor type="otto">electric</motor>
-                    </car>
-                </data>
-            </fx-instance>
-            <fx-instance id="result">
-                <data>
-                    <result></result>
-                </data>
-            </fx-instance>
-            <fx-submission
-                    id="submission"
-                    ref="vehicle"
-                    method="post"
-                    url="#echo"
-                    replace="instance"
-                    instance="result"
-                    targetref="instance('result')/result">
-            </fx-submission>
+          <fx-instance>
+            <data>
+              <vehicle attr1="a1" attr2="a2">suv</vehicle>
+              <car>
+                <motor type="otto">electric</motor>
+              </car>
+            </data>
+          </fx-instance>
+          <fx-instance id="result">
+            <data>
+              <result></result>
+            </data>
+          </fx-instance>
+          <fx-submission
+            id="submission"
+            ref="vehicle"
+            method="post"
+            url="#echo"
+            replace="instance"
+            instance="result"
+            targetref="instance('result')/result"
+          >
+          </fx-submission>
         </fx-model>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -276,7 +278,5 @@ describe('submissionn tests', () => {
     const vehicle = inst.instanceData;
     console.log(vehicle);
     expect(inst[1].instanceData.firstElementChild.firstElementChild.textContent).to.equal('suv');
-
-
   });
 });

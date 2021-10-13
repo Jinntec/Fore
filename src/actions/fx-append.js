@@ -12,22 +12,22 @@ import { Fore } from '../fore.js';
  */
 // class FxAppend extends FxAction {
 class FxAppend extends AbstractAction {
-    static get properties() {
-        return {
-            ref: {
-                type: String,
-            },
-          /**
-           * the repeat this action is appending to.
-           */
-          repeat: {
-                type: String,
-            },
-            clear: {
-                type: String,
-            },
-        };
-    }
+  static get properties() {
+    return {
+      ref: {
+        type: String,
+      },
+      /**
+       * the repeat this action is appending to.
+       */
+      repeat: {
+        type: String,
+      },
+      clear: {
+        type: String,
+      },
+    };
+  }
 
   constructor() {
     super();

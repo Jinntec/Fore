@@ -57,7 +57,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.inited = false;
     this.index = 1;
     this.repeatSize = 0;
-    this.attachShadow({ mode: 'open' , delegatesFocus:true});
+    this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
   get repeatSize() {
@@ -195,12 +195,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-
-    /*
-    const inscope = this.getInScopeContext();
-    this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-*/
-
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
 
@@ -214,6 +208,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // const contextSize = this.nodeset.length;
     const contextSize = nodeCount;
+    // todo: review - cant the context really never be smaller than the repeat count?
+    // todo: this code can be deprecated probably but check first
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position -= 1) {
         // remove repeatitem
@@ -243,13 +239,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       }
     }
 
-    this._fadeIn(repeatItems[this.index-1]);
+    this._fadeIn(repeatItems[this.index - 1]);
     Fore.refreshChildren(this);
     this.setIndex(this.index);
     console.groupEnd();
   }
 
-  _fadeOut (el) {
+  _fadeOut(el) {
     el.style.opacity = 1;
 
     (function fade() {
@@ -264,13 +260,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
   // eslint-disable-next-line class-methods-use-this
   _fadeIn(el) {
-    if(!el) return ;
+    if (!el) return;
 
     el.style.opacity = 0;
-    el.style.display = this.display ;
+    el.style.display = this.display;
 
     (function fade() {
-
       setTimeout(() => {
         let val = parseFloat(el.style.opacity);
         // eslint-disable-next-line no-cond-assign
@@ -278,8 +273,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
           el.style.opacity = val;
           requestAnimationFrame(fade);
         }
-      },40);
-
+      }, 40);
     })();
   }
 

@@ -32,34 +32,34 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       /**
        * event to listen for
        */
-      event:{
-        type: Object
+      event: {
+        type: Object,
       },
       /**
        * id of target element to attach listener to
        */
-      target:{
-        type: String
+      target: {
+        type: String,
       },
       /**
        * boolean XPath expression. If true the action will be executed.
        */
-      ifExpr:{
-        type: String
+      ifExpr: {
+        type: String,
       },
       /**
        * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
        * to actually run the action.
        */
-      whileExpr:{
-        type: String
+      whileExpr: {
+        type: String,
       },
       /**
        * delay before executing action in milliseconds
        */
-      delay:{
-        type: Number
-      }
+      delay: {
+        type: Number,
+      },
     };
   }
 

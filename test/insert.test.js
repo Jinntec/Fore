@@ -369,12 +369,12 @@ describe('insert Tests', () => {
       <fx-fore>
         <fx-model id="record">
           <fx-instance>
-              <data>
-                  <a>a1</a>
-                  <a>a2</a>
-                  <a>a3</a>
-                  <b>b1</b>
-              </data>
+            <data>
+              <a>a1</a>
+              <a>a2</a>
+              <a>a3</a>
+              <b>b1</b>
+            </data>
           </fx-instance>
         </fx-model>
 
@@ -407,6 +407,5 @@ describe('insert Tests', () => {
     expect(item.textContent).to.equal('b1');
     item = fx.evaluateXPath('//b[1]', inst, null, {});
     expect(item.textContent).to.equal('b1');
-
   });
 });

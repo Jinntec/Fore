@@ -1,7 +1,6 @@
 import { foreElementMixin } from './ForeElementMixin.js';
 
 export class FxHeader extends foreElementMixin(HTMLElement) {
-
   constructor() {
     super();
     this.style.display = 'none';

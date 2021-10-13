@@ -7,9 +7,9 @@ export class FxOutput extends XfAbstractControl {
   static get properties() {
     return {
       ...super.properties,
-      valueAttr:{
-        type:String
-      }
+      valueAttr: {
+        type: String,
+      },
     };
   }
 
@@ -56,16 +56,16 @@ export class FxOutput extends XfAbstractControl {
     });
   }
 
-  async refresh () {
+  async refresh() {
     // ### 1. eval 'value' attr
 
-    if(this.valueAttr){
+    if (this.valueAttr) {
       this.value = this.getValue();
       await this.updateWidgetValue();
       return;
     }
     // ### 2. eval 'ref' attr
-    if(this.ref){
+    if (this.ref) {
       super.refresh();
     }
     // ### 3. use inline content which is there anyway

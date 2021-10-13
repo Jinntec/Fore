@@ -1,4 +1,4 @@
-import {FxAction} from "./fx-action.js";
+import { FxAction } from './fx-action.js';
 
 /**
  * `fx-confirm`
@@ -13,7 +13,7 @@ export class FxConfirm extends FxAction {
   }
 
   perform() {
-    if(window.confirm(this.message)){
+    if (window.confirm(this.message)) {
       super.perform();
     }
   }
