@@ -25,9 +25,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       index: {
         type: Number,
       },
-      ref: {
-        type: String,
-      },
       template: {
         type: Object,
       },

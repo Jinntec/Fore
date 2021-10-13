@@ -35,6 +35,12 @@ export const foreElementMixin = superclass =>
         modelItem: {
           type: Object,
         },
+        /**
+         * the node(s) bound by this element
+         */
+        nodeset:{
+          type: Object
+        }
       };
     }
 
