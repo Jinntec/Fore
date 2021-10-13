@@ -20,15 +20,14 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   constructor() {
     super();
     this.inited = false;
-    this.display = this.style.display;
 
     this.addEventListener('click', this._dispatchIndexChange);
-    this.addEventListener('focusin',this._handleFocus);
+    this.addEventListener('focusin', this._handleFocus);
 
     this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
-  _handleFocus(){
+  _handleFocus() {
     this.parentNode.setIndex(this.index);
   }
 
@@ -42,6 +41,8 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    this.display = this.style.display;
+
     const html = `
            <slot></slot>
         `;
@@ -56,8 +57,6 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.removeEventListener('click', this._dispatchIndexChange());
     this.removeEventListener('focusin', this._handleFocus);
   }
-
-
 
   init() {
     // console.log('repeatitem init model ', this.nodeset);
@@ -82,7 +81,6 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
       this.style.display = 'none';
     }
   }
-
 }
 
 window.customElements.define('fx-repeatitem', FxRepeatitem);

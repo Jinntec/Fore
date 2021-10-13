@@ -6,7 +6,7 @@ import * as fx from 'fontoxpath';
 import '../index.js';
 
 describe('submissionn tests', () => {
-  it.skip('replaces the default instance with empty response', async () => {
+  it.skip('replaces the default instance with response', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -26,15 +26,23 @@ describe('submissionn tests', () => {
           >
           </fx-submission>
         </fx-model>
-        <fx-trigger>
-          <fx-send submission="submission"></fx-send>
-        </fx-trigger>
       </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
-    const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    const sm = el.querySelector('#submission');
+    expect(sm).to.exist;
+    sm.submit();
+
+    const inst = el.querySelector('fx-instance');
+    expect(inst).to.exist;
+    expect(inst.instanceData).to.exist;
+    console.log('ljsldkjflsfjkd', inst.instanceData);
+
+    const answer = fx.evaluateXPathToString('//theAnswer/text()', inst.instanceData, null, {});
+    expect(answer).to.exist;
+    console.log('ljsldkjflsfjkd', answer);
+    expect(answer.innerHTML).to.equal(42);
   });
 
   it('selects relevant nodes', async () => {
@@ -156,6 +164,7 @@ describe('submissionn tests', () => {
     const motor = fx.evaluateXPathToBoolean('exists(car/motor/text())', result, null, {});
     expect(motor).to.be.false;
   });
+
   it('supports "empty" for non-relevant nodes', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -234,7 +243,7 @@ describe('submissionn tests', () => {
   it('supports ref and targetref ', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-        <fx-send event="ready" submission="submission" delay="3000"></fx-send>
+        <!--        <fx-send event="ready" submission="submission" delay="3000"></fx-send>-->
 
         <fx-model>
           <fx-instance>
@@ -268,7 +277,6 @@ describe('submissionn tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-
     sm.submit();
 
     const inst = el.querySelectorAll('fx-instance');

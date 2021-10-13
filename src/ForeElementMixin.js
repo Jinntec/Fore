@@ -38,9 +38,9 @@ export const foreElementMixin = superclass =>
         /**
          * the node(s) bound by this element
          */
-        nodeset:{
-          type: Object
-        }
+        nodeset: {
+          type: Object,
+        },
       };
     }
 
