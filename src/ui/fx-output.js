@@ -7,12 +7,16 @@ export class FxOutput extends XfAbstractControl {
   static get properties() {
     return {
       ...super.properties,
+      valueAttr:{
+        type:String
+      }
     };
   }
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this.valueAttr = this.hasAttribute('value') ? this.getAttribute('value') : null;
   }
 
   connectedCallback() {
@@ -50,6 +54,21 @@ export class FxOutput extends XfAbstractControl {
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
     });
+  }
+
+  async refresh () {
+    // ### 1. eval 'value' attr
+
+    if(this.valueAttr){
+      this.value = this.getValue();
+      await this.updateWidgetValue();
+      return;
+    }
+    // ### 2. eval 'ref' attr
+    if(this.ref){
+      super.refresh();
+    }
+    // ### 3. use inline content which is there anyway
   }
 
   getWidget() {

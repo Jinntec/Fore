@@ -244,6 +244,7 @@ registerXQueryModule(`
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'base64encode':
     case 'boolean-from-string':
     case 'depends':
     case 'event':
@@ -468,3 +469,17 @@ export function evaluateXPathToNumber(
     },
   );
 }
+
+/**
+ * @param input as string
+ * @return {string}
+ */
+registerCustomXPathFunction(
+    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
+    ['xs:string?'],
+    'xs:string?',
+    (dynamicContext, string) => {
+        return btoa(string);
+    },
+);
+

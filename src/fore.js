@@ -79,16 +79,14 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
-  // static async refreshChildren(startElement){
   static async refreshChildren(startElement) {
     const refreshed = new Promise(resolve => {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
-          // todo: later - check for AVTs
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             element.refresh();
-          } else if (element.nodeName !== 'fx-MODEL') {
+          } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
             Fore.refreshChildren(element);
           }
         });

@@ -146,7 +146,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         if (alert) {
           alert.style.display = 'block';
         }
-        if (this.modelItem.alerts.length !== 0) {
+        if (this.modelItem?.alerts.length !== 0) {
           const { alerts } = this.modelItem;
           console.log('alerts from bind: ', alerts);
 

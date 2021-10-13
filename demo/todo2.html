@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <style>
+        .header {
+            display: grid;
+            grid-template-columns: 200px 120px 50px 20px;
+            grid-column-gap: 10px;
+        }
+
+        .required:after{
+            content:'*';
+            color:red;
+            margin-left:-4pt;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        fx-fore{
+            position: relative;
+        }
+        input{
+            background: rgba(255,255,255,0.3);
+            border:none;
+            padding: 0.3rem;
+            border-radius: 0.2rem;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-repeat {
+            display: block;
+            height: auto;
+        }
+        fx-repeatitem{
+            width: 100%;
+            display: block;
+            padding: 1rem;
+
+        }
+        fx-repeatitem > div {
+            display: block;
+            display: grid;
+            grid-template-columns: 10% auto 25% 10%;
+            align-items: center;
+        }
+        fx-control {
+            display: inline-block;
+            padding: 0 6px;
+            white-space: nowrap;
+        }
+        fx-trigger{
+            display: inline-block;
+        }
+        .info{
+            font-size: 1.2rem;
+        }
+        .info.big{
+            font-size:1.4rem;
+            padding: 0.5rem 0;
+            color:var(--paper-green-500)
+        }
+        .info.open{
+            color:var(--paper-orange-500);
+        }
+        input[type=text]{
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color:var(--paper-grey-900);
+            font-size: 1.2rem;
+        }
+        input[type=checkbox]{
+            font-size: 1.4rem;
+        }
+
+        .btn button{
+            border-radius: 50%;
+            border: 1px solid var(--paper-grey-500);
+            font-size: 1rem;
+            width: 32px;
+            height: 32px;
+        }
+        .btn button:hover{
+            background: rgba(255,255,255,0.5);
+        }
+
+        .add{
+            position: absolute;
+            top: 24px;
+            left: 80px;
+        }
+        [repeat-index] {
+            border-radius: 10px;
+            /*box-shadow: rgb(0 0 0 / 10%) 1px 1px 14px;*/
+            border: 1px solid var(--paper-grey-300);
+            background: rgba(255,255,255,0.5);
+        }
+        [repeat-index] input{
+            color:black;
+            font-weight: 500;
+        }
+        #task input{
+            text-decoration:none;
+            opacity: 1;
+            transition: all 1s;
+        }
+        #task .true input{
+            text-decoration:line-through;
+            opacity: 0.4;
+            color:green;
+        }
+        .wrapper{
+            max-width: 800px;
+            margin:0 auto;
+            padding:1rem;
+        }
+        .wrapper{
+            height:auto;
+            max-width:800px;
+            margin: 0 auto;
+            opacity: 0.95;
+            position: relative;
+            min-height:80vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem;
+        }
+
+        .hidden {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 2s, opacity 2s linear;
+        }
+        .visible {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 2s linear;
+        }
+
+
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+<!--
+    <demo-snippet>
+        <template>
+-->
+
+            <fx-fore id="todo">
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <task complete="false" due="2021-11-04">Pick up Milk</task>
+                            <task complete="false" due="2021-11-15">Make tutorial part 1</task>
+                            <template>
+                                <task complete="false" due="">new task</task>
+                            </template>
+                            <count>1</count>
+                            <showclosed>false</showclosed>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="task" relevant="./@complete='false' or ../showclosed='true'">
+                        <fx-bind ref="./text()" required="true()"></fx-bind>
+                    </fx-bind>
+
+                </fx-model>
+
+                <h1>Todo</h1>
+                <fx-trigger class="btn add">
+                    <button>+</button>
+                    <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+                </fx-trigger>
+
+                <div class="info">
+                    You have {count(instance()/task[@complete='true'])} completed tasks
+                </div>
+
+                <div class="info open">
+                    {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+                </div>
+
+                <div class="info big">
+                    {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+                </div>
+                <fx-repeat id="task" ref="task"  >
+                    <template>
+                        <div>
+                            <fx-control ref="@complete" value-prop="checked" update-event="input">
+                                <input class="widget" type="checkbox">
+                            </fx-control>
+                            <fx-control class="{@complete}" id="task" ref="."></fx-control>
+                            <fx-control ref="@due">
+                                <input type="date">
+                            </fx-control>
+                            <fx-trigger class="btn delete">
+                                <button>x</button>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </div>
+                    </template>
+                </fx-repeat>
+                <fx-control ref="showclosed" value-prop="checked" update-event="input">
+                    <label for="showcompleted">show completed</label>
+                    <input id="showcompleted" type="checkbox" class="widget">
+                </fx-control>
+
+
+                <!--
+                                <pre>
+                                    {log('default')}
+                                </pre>
+                -->
+
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
