@@ -55,6 +55,20 @@ class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
     console.log('widget ', this.widget);
+
+    // ### convenience marker event
+    if(this.updateEvent === 'enter'){
+      this.widget.addEventListener('keyup', (event) => {
+        if (event.keyCode === 13) {
+          // Cancel the default action, if needed
+          event.preventDefault();
+          this.setValue(this.widget[this.valueProp]);
+        }
+        // console.log('enter handler ', this.updateEvent);
+        // this.setValue(this.widget[this.valueProp]);
+      });
+      this.updateEvent = 'blur'; // needs to be registered too
+    }
     this.widget.addEventListener(this.updateEvent, () => {
       console.log('eventlistener ', this.updateEvent);
       this.setValue(this.widget[this.valueProp]);

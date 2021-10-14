@@ -57,19 +57,24 @@
             <fx-instance>
                 <data>
                     <user>John</user>
-                    <password>1234</password>
+                    <password></password>
+                    <inprogress>false</inprogress>
                 </data>
             </fx-instance>
+            <fx-bind ref="password" constraint="string-length(.) != 0" alert="login failed"></fx-bind>
 
             <fx-submission id="login"
                            method="urlencoded-post"
                            url="/login"
                            replace="none">
+                <fx-setvalue ref="inprogress" event="submit">true</fx-setvalue>
                 <fx-header name="Authorization" value="'auth'"></fx-header>
                 <fx-header name="Another">bar</fx-header>
 
                 <fx-message event="submit-error">Login failed</fx-message>
-                <fx-message event="submit-done">Access granted</fx-message>
+                <fx-action event="submit-done">
+                    <fx-message>Access granted</fx-message>
+                </fx-action>
                 <!--                <fx-toggle case="home" event="submit-done"></fx-toggle>-->
 
             </fx-submission>
@@ -86,12 +91,13 @@
                     </fx-control>
                     <fx-control ref="password" update-event="enter">
                         <label>Password</label>
-                        <input type="password">
+                        <input type="password" class="widget">
+                        <fx-send submission="login" event="value-changed"></fx-send>
                     </fx-control>
 
                     <fx-trigger>
                         <button>Login</button>
-                        <fx-send submission="login"></fx-send>
+                        <fx-send if="inprogress eq 'false'" submission="login"></fx-send>
                     </fx-trigger>
                 </section>
 <!--
