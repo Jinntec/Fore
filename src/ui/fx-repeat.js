@@ -207,14 +207,15 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const contextSize = nodeCount;
     // todo: review - cant the context really never be smaller than the repeat count?
     // todo: this code can be deprecated probably but check first
-    /*
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position -= 1) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
+        itemToRemove.parentNode.removeChild(itemToRemove);
+
+        // this._fadeOut(itemToRemove);
       }
     }
-*/
 
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
@@ -266,14 +267,14 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     el.style.display = this.display;
 
     (function fade() {
-      setTimeout(() => {
+      // setTimeout(() => {
         let val = parseFloat(el.style.opacity);
         // eslint-disable-next-line no-cond-assign
         if (!((val += 0.1) > 1)) {
           el.style.opacity = val;
           requestAnimationFrame(fade);
         }
-      }, 40);
+      // }, 40);
     })();
   }
 

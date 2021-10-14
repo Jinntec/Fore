@@ -133,10 +133,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     // let serialized = serializer.serializeToString(relevant);
-    if (this.method.toLowerCase() === 'get') {
-      serialized = undefined;
-    }
+    // if (this.method.toLowerCase() === 'get') {
+    //   serialized = undefined;
+    // }
     // console.log('data being send', serialized);
+    // console.log('submitting data',serialized);
 
     if (resolvedUrl === '#echo') {
       let doc;
@@ -150,7 +151,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       this._handleResponse(doc);
       return;
     }
-
     // ### setting headers
     const headers = this._getHeaders();
     console.log('headers', headers);

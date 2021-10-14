@@ -53,6 +53,15 @@ export class FxTrigger extends XfAbstractControl {
     `;
   }
 
+  getWidget() {
+    return this;
+  }
+
+  async updateWidgetValue () {
+    console.log('trigger update',this)
+    return null;
+  }
+
   async performActions(e) {
     const repeatedItem = this.closest('fx-repeatitem');
     if (repeatedItem) {

@@ -74,12 +74,21 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     // console.log('refresh repeatitem: ',this.nodeset);
     // console.log('refresh repeatitem nodeset: ',this.nodeset);
     this.modelItem = this.getModel().getModelItem(this.nodeset);
-    if (this.modelItem.relevant) {
-      this.style.display = this.display;
-      Fore.refreshChildren(this);
-    } else {
+
+    if(this.modelItem && !this.modelItem.relevant){
       this.style.display = 'none';
+    }else{
+      this.style.display = this.display;
     }
+
+/*
+    if (this?.modelItem?.relevant) {
+      // Fore.refreshChildren(this);
+    } else {
+    }
+*/
+
+    Fore.refreshChildren(this);
   }
 }
 

@@ -54,7 +54,7 @@
             border: none;
             padding: 4px;
             background: white;
-            font-size: 1rem;
+            font-size: 0.8rem;
         }
         /* project repeat */
         .iconbtn{
@@ -109,8 +109,8 @@
             margin-top:1rem;
         }
         .activity{
-            border: thin solid #b2ff59;
             width: 100%;
+            display: block;
         }
         .priority:before{
             /*color:white;*/
@@ -141,7 +141,8 @@
 
         #activity fx-repeatitem{
             display: grid;
-            grid-template-columns: auto 20px;
+            grid-template-columns: 20px auto 20px;
+            align-items: center;
         }
         #activity .iconbtn{
             position:relative;
@@ -188,7 +189,7 @@
                         </task>
                         <task name="worst case">
                             <activity status="done">rob the safe</activity>
-                            <activity status="inprogress">expansion expansion expansion</activity>
+                            <activity status="done">expansion expansion expansion</activity>
                         </task>
                     </project>
                     <project name="done">
@@ -197,7 +198,7 @@
                         </task>
                         <task name="worst case">
                             <activity status="done">rob the safe</activity>
-                            <activity status="inprogress">expansion expansion expansion</activity>
+                            <activity status="open">expansion expansion expansion</activity>
                         </task>
                     </project>
                     <template>
@@ -241,6 +242,9 @@
                                 </div>
                                 <fx-repeat id="activity" class="activity" ref="activity">
                                     <template>
+                                        <fx-control ref="@status" value-prop="checked" update-event="input">
+                                            <input type="checkbox">
+                                        </fx-control>
                                         <div class="act-text">
                                             <fx-control ref="."></fx-control>
                                         </div>
