@@ -90,3 +90,7 @@ a, a:link, a:visited {
     flex-direction: column;
     padding: 0.5rem;
 }
+
+ul{
+    margin-top:0;
+}

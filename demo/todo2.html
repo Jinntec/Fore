@@ -184,6 +184,12 @@
                     <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
                 </fx-trigger>
 
+<!--
+                <fx-output value="count(instance()/task)">
+                    You're all done.
+                </fx-output>
+-->
+
                 <div class="info">
                     You have {count(instance()/task[@complete='true'])} completed tasks
                 </div>

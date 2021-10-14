@@ -18,6 +18,9 @@ fx-control, fx-trigger{
     white-space: nowrap;
     position: relative;
 }
+fx-hint{
+    display: none;
+}
 fx-repeatitem{
     position:relative;
     /*
@@ -44,14 +47,12 @@ fx-repeatitem{
     content: '*';
     color: red;
     padding-left: 4px;
-    position: absolute;
     right:3px;
     top:3px;
     z-index: 1;
 }
 
-fx-control [required]:after {
-    position: absolute;
+[required]:after {
     content: "*";
     display: inline;
     color: red;
