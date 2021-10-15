@@ -114,8 +114,6 @@ export class FxFore extends HTMLElement {
             #messageContent{
                 margin-top:40px;
             }
-
-
         `;
 
     const html = `

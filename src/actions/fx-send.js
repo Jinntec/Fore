@@ -43,6 +43,7 @@ class FxSend extends AbstractAction {
     submission.submit();
     // if not of type fx-submission signal error
   }
+
 }
 
 window.customElements.define('fx-send', FxSend);

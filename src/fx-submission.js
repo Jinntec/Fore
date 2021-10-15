@@ -52,10 +52,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             : 'application/xml';
 
         this.validate = this.getAttribute('validate') ? this.getAttribute('validate') : 'true';
-
         this.shadowRoot.innerHTML = this.renderHTML();
 
-        this.addEventListener('submit', () => this._submit());
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -66,7 +64,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     async submit() {
-        await this.dispatch('submit', {});
+        await this.dispatch('submit', {submission:this});
+        this._submit();
     }
 
     async _submit() {
@@ -151,6 +150,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             // const doc = new DOMParser().parseFromString(serialized, 'application/xml');
             // const newDoc = doc.replaceChild(relevant, doc.firstElementChild);
             this._handleResponse(doc);
+            this.dispatch('submit-done', {});
             return;
         }
         // ### setting headers
