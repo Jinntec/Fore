@@ -219,7 +219,8 @@ describe('submissionn tests', () => {
             method="post"
             url="#echo"
             replace="instance"
-            serialization="none">
+            serialization="none"
+          >
           </fx-submission>
         </fx-model>
       </fx-fore>
@@ -285,7 +286,6 @@ describe('submissionn tests', () => {
     expect(inst[1].instanceData).to.exist;
     await oneEvent(sm, 'submit-done');
 
-    const vehicle = inst.instanceData;
     expect(inst[1].instanceData.firstElementChild.firstElementChild.textContent).to.equal('suv');
   });
 });

@@ -268,12 +268,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     (function fade() {
       // setTimeout(() => {
-        let val = parseFloat(el.style.opacity);
-        // eslint-disable-next-line no-cond-assign
-        if (!((val += 0.1) > 1)) {
-          el.style.opacity = val;
-          requestAnimationFrame(fade);
-        }
+      let val = parseFloat(el.style.opacity);
+      // eslint-disable-next-line no-cond-assign
+      if (!((val += 0.1) > 1)) {
+        el.style.opacity = val;
+        requestAnimationFrame(fade);
+      }
       // }, 40);
     })();
   }

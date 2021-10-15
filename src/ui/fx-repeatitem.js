@@ -75,13 +75,13 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     // console.log('refresh repeatitem nodeset: ',this.nodeset);
     this.modelItem = this.getModel().getModelItem(this.nodeset);
 
-    if(this.modelItem && !this.modelItem.relevant){
+    if (this.modelItem && !this.modelItem.relevant) {
       this.style.display = 'none';
-    }else{
+    } else {
       this.style.display = this.display;
     }
 
-/*
+    /*
     if (this?.modelItem?.relevant) {
       // Fore.refreshChildren(this);
     } else {

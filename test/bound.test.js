@@ -173,26 +173,25 @@ describe('fx-control tests', () => {
 
   it('does not show trigger bound to non-existing node', async () => {
     const el = await fixture(html`
-                <fx-fore>
-                    <fx-model>
-                        <fx-instance>
-                            <data>
-                                <listitem>foo</listitem>
-                            </data>
-                        </fx-instance>
-                    </fx-model>
-                    <fx-trigger ref="foo">
-                        <button>foo</button>
-                    </fx-trigger>
-                </fx-fore>
-            `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <listitem>foo</listitem>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger ref="foo">
+          <button>foo</button>
+        </fx-trigger>
+      </fx-fore>
+    `);
 
     // await elementUpdated(el);
 
     const bound = el.querySelector('fx-trigger');
     expect(bound).to.exist;
     expect(bound.style.display).to.equal('none');
-
   });
 
   /*
