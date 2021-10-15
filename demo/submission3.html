@@ -54,7 +54,7 @@
                     </fx-instance>
 
                     <fx-submission id="sub1"
-                                   url="/submission2"
+                                   url="#echo
                                    method="POST"
                                    replace="none">
                         <fx-action event="submit">
@@ -66,9 +66,9 @@
                         </fx-action>
                     </fx-submission>
 
-                    <fx-submission id="second" url="/submission2"
+                    <fx-submission id="second" url="#echo"
                                    method="POST"
-                                   replace="instance">
+                                   replace="none">
                         <fx-message event="submit-done">Second submission done</fx-message>
                     </fx-submission>
 
