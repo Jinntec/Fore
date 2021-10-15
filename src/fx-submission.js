@@ -14,6 +14,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     connectedCallback() {
         // this.style.display = 'none';
+        this.methods = ['get','put','post','delete','head','urlencoded-post'];
+
         this.model = this.parentNode;
 
         // ### initialize properties with defaults
@@ -133,9 +135,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
 
         // let serialized = serializer.serializeToString(relevant);
-        // if (this.method.toLowerCase() === 'get') {
-        //   serialized = undefined;
-        // }
+        if (this.method.toLowerCase() === 'get') {
+          serialized = undefined;
+        }
         // console.log('data being send', serialized);
         // console.log('submitting data',serialized);
 
@@ -158,6 +160,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         // ### map urlencoded-post to post for fetch
         if (this.method === 'urlencoded-post') {
             this.method = 'post';
+        }
+
+        if(!this.methods.includes(this.method.toLowerCase())){
+            this.dispatch('error', {message: `Unknown method ${this.method}`});
+            return;
         }
         const response = await fetch(resolvedUrl, {
             method: this.method,
