@@ -154,7 +154,7 @@ export class FxInstance extends HTMLElement {
 
   async _loadData() {
     const url = `${this.src}`;
-    const contentType = Fore.getContentType(this);
+    const contentType = Fore.getContentType(this,'get');
 
     await fetch(url, {
       method: 'GET',

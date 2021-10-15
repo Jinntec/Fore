@@ -77,10 +77,11 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   handleModelItemProperties() {
     console.log('form ready', this.getOwnerForm().ready);
-    if(!this.getOwnerForm().ready) return;
     this.handleRequired();
     this.handleReadonly();
-    this.handleValid();
+    if(this.getOwnerForm().ready){
+      this.handleValid();
+    }
     this.handleRelevant();
   }
 

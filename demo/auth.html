@@ -61,7 +61,7 @@
                     <inprogress>false</inprogress>
                 </data>
             </fx-instance>
-            <fx-bind ref="password" constraint="string-length(.) != 0" alert="login failed"></fx-bind>
+<!--            <fx-bind ref="password" constraint="string-length(.) != 0" alert="login failed"></fx-bind>-->
 
             <fx-submission id="login"
                            method="urlencoded-post"
@@ -69,6 +69,7 @@
                            replace="none">
                 <fx-setvalue ref="inprogress" event="submit">true</fx-setvalue>
                 <fx-header name="Authorization" value="'auth'"></fx-header>
+                <fx-header name="Accept" value="'application/xml'"></fx-header>
                 <fx-header name="Another">bar</fx-header>
 
                 <fx-message event="submit-error">Login failed</fx-message>

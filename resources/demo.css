@@ -55,6 +55,7 @@ a, a:link, a:visited {
     border:thin solid white;
     text-align: center;
     width: 100px;
+    flex-grow:1;
 }
 .redline:hover{
     background: rgba(255,255,255,0.5);
@@ -88,7 +89,7 @@ a, a:link, a:visited {
     min-height:80vh;
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
 }
 
 ul{

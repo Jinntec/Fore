@@ -2,6 +2,17 @@
 [unresolved]{
     display: none;
 }
+[disabled] {
+    pointer-events: none;
+    cursor: default;
+}
+fx-trigger a[disabled] {
+    color:lightgrey;
+}
+fx-trigger img[disabled]{
+    filter:blur(2px);
+}
+
 .error{
     background: var(--paper-red-500);
 }
