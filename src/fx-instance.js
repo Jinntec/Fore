@@ -1,3 +1,4 @@
+import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 /**
@@ -82,7 +83,18 @@ export class FxInstance extends HTMLElement {
    * @returns {Document | T | any}
    */
   getInstanceData() {
+    if (!this.instanceData) {
+      this._createInstanceData();
+    }
     return this.instanceData;
+  }
+
+  setInstanceData(data) {
+    if (!data) {
+      this._createInstanceData();
+      return;
+    }
+    this.instanceData = data;
   }
 
   /**
@@ -121,7 +133,7 @@ export class FxInstance extends HTMLElement {
         root.appendChild(newNode);
       }
       this.instanceData = doc;
-      this.instanceData.firstElementChild.setAttribute('id', this.id);
+      // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // resolve('done');
     } else if (this.src) {
       await this._loadData();
@@ -130,13 +142,24 @@ export class FxInstance extends HTMLElement {
     }
   }
 
+  _createInstanceData() {
+    if (this.type === 'xml') {
+      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+      this.instanceData = doc;
+    }
+    if (this.type === 'json') {
+      this.instanceData = {};
+    }
+  }
+
   async _loadData() {
     const url = `${this.src}`;
-    const contentType = this._getContentType();
+    const contentType = Fore.getContentType(this,'get');
+
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
-      credentials: 'same-origin',
+      credentials: 'include',
       headers: {
         'Content-Type': contentType,
       },
@@ -191,7 +214,7 @@ export class FxInstance extends HTMLElement {
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
       console.log('fx-instance data: ', this.instanceData);
-      this.instanceData.firstElementChild.setAttribute('id', this.id);
+      // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
       this.instanceData = JSON.parse(this.textContent);

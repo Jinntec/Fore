@@ -1,22 +1,44 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { evaluateXPath, evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import {
+  evaluateXPath,
+  evaluateXPathToFirstNode,
+  evaluateXPathToString,
+} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
       return {
+        /**
+         * context object for evaluation
+         */
         context: {
           type: Object,
         },
+        /**
+         * the model of this element
+         */
         model: {
           type: Object,
         },
+        /**
+         * XPath binding expression pointing to bound node
+         */
         ref: {
           type: String,
         },
+        /**
+         * The modelitem object associated to the bound node holding the evaluated state.
+         */
         modelItem: {
+          type: Object,
+        },
+        /**
+         * the node(s) bound by this element
+         */
+        nodeset: {
           type: Object,
         },
       };
@@ -41,6 +63,10 @@ export const foreElementMixin = superclass =>
       return ownerForm.querySelector('fx-model');
     }
 
+    /**
+     *
+     * @returns {{parentNode}|ForeElementMixin}
+     */
     getOwnerForm() {
       let currentElement = this;
       while (currentElement && currentElement.parentNode) {
@@ -65,6 +91,10 @@ export const foreElementMixin = superclass =>
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
+      if (!inscopeContext) {
+        console.warn('no in scopeContext for ', this);
+        return;
+      }
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
@@ -112,6 +142,14 @@ export const foreElementMixin = superclass =>
       return parent.getAttribute('ref');
     }
 
+    getInstance() {
+      if (this.ref.startsWith('instance(')) {
+        const instId = XPathUtil.getInstanceId(this.ref);
+        return this.getModel().getInstance(instId);
+      }
+      return this.getModel().getInstance('default');
+    }
+
     _getParentBindingElement(start) {
       if (start.parentNode.host) {
         const { host } = start.parentNode;
@@ -155,7 +193,40 @@ export const foreElementMixin = superclass =>
       return existed;
     }
 
+    /**
+     * Returns the effective value for the element.
+     * a: look for 'value' attribute and if present evaluate it and return the resulting value
+     * b: look for textContent and return the value if present
+     * c: return null
+     */
+    getValue() {
+      if (this.hasAttribute('value')) {
+        const valAttr = this.getAttribute('value');
+        try {
+          const inscopeContext = getInScopeContext(this, valAttr);
+          return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
+        } catch (error) {
+          console.error(error);
+          this.dispatch('error', { message: error });
+        }
+      }
+      if (this.textContent) {
+        return this.textContent;
+      }
+      return null;
+    }
+
     getInScopeContext() {
       return getInScopeContext(this, this.ref);
+    }
+
+    dispatch(eventName, detail) {
+      const event = new CustomEvent(eventName, {
+        composed: true,
+        bubbles: true,
+        detail,
+      });
+      console.log('firing', event);
+      this.dispatchEvent(event);
     }
   };

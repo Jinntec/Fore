@@ -20,8 +20,15 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   constructor() {
     super();
     this.inited = false;
+
     this.addEventListener('click', this._dispatchIndexChange);
-    this.attachShadow({ mode: 'open' });
+    this.addEventListener('focusin', this._handleFocus);
+
+    this.attachShadow({ mode: 'open', delegatesFocus: true });
+  }
+
+  _handleFocus() {
+    this.parentNode.setIndex(this.index);
   }
 
   _dispatchIndexChange() {
@@ -34,6 +41,8 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    this.display = this.style.display;
+
     const html = `
            <slot></slot>
         `;
@@ -46,6 +55,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   disconnectedCallback() {
     // console.log('disconnectedCallback ', this);
     this.removeEventListener('click', this._dispatchIndexChange());
+    this.removeEventListener('focusin', this._handleFocus);
   }
 
   init() {
@@ -60,59 +70,26 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     return this.getModelItem()[this.index];
   }
 
-  /*
-    _initializeChildren(node) {
-        const children = Array.from(node.children);
-        // console.log('_initializeChildren ', children);
-
-        children.forEach(child => {
-            if (Fore.isUiElement(child.nodeName)) {
-                child.repeated = true;
-            } else if (child.children.length !== 0) {
-                const grantChildren = Array.from(child.children);
-                grantChildren.forEach(grantChild => {
-                    this._initializeChildren(grantChild);
-                });
-            }
-
-        });
-    }
-*/
-
-  /*
-    firstUpdated(_changedProperties) {
-        // console.log('### fx-repeatitem firstUpdated index ', this.index);
-        // console.log('### fx-repeatitem firstUpdated nodeset ', this.nodeset);
-        // console.log('### fx-repeatitem firstUpdated model ', this.model);
-        this.dispatchEvent(new CustomEvent('repeatitem-created', {
-            composed: true,
-            bubbles: true,
-            detail: {item: this}
-        }));
-        // this.init();
-    }
-*/
-
   refresh() {
     // console.log('refresh repeatitem: ',this.nodeset);
-    /*
-        if(!this.inited){
-            this.init();
-        }
-*/
     // console.log('refresh repeatitem nodeset: ',this.nodeset);
-    Fore.refreshChildren(this);
-  }
+    this.modelItem = this.getModel().getModelItem(this.nodeset);
 
-  /*
-    createRenderRoot() {
-        /!**
-         * Render template without shadow DOM. Note that shadow DOM features like
-         * encapsulated CSS and slots are unavailable.
-         *!/
-        return this;
+    if(this.modelItem && !this.modelItem.relevant){
+      this.style.display = 'none';
+    }else{
+      this.style.display = this.display;
+    }
+
+/*
+    if (this?.modelItem?.relevant) {
+      // Fore.refreshChildren(this);
+    } else {
     }
 */
+
+    Fore.refreshChildren(this);
+  }
 }
 
 window.customElements.define('fx-repeatitem', FxRepeatitem);

@@ -38,6 +38,13 @@
 
 <h1>Revalidation and Alerts</h1>
 
+<p><code>fx-alert</code> elements are used to display validation errors.</p>
+<p>They can be used in 3 different ways:</p>
+<ul>
+    <li>as a child of a control</li>
+    <li>as an attribute on <code>fx-bind</code></li>
+    <li>as an child element of a <code>fx-bind</code></li>
+</ul>
 <demo-snippet>
     <template>
 
@@ -61,12 +68,6 @@
                 </fx-bind>
             </fx-model>
             <fx-group collapse="true">
-
-                <fx-output id="output" ref="a">
-                    <fx-label>a-label</fx-label>
-                    <fx-alert>Constraint <b>not</b> valid</fx-alert>
-                    <fx-hint>must be one character long</fx-hint>
-                </fx-output>
 
                 <fx-control label="A-label" ref="a" update-event="input">
                     <fx-alert>Constraint not valid</fx-alert>

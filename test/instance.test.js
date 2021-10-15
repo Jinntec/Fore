@@ -2,6 +2,7 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
+import { Fore } from '../src/fore.js';
 
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
@@ -172,7 +173,32 @@ describe('instance Tests', () => {
     expect(modelItems[0].required).to.equal(false);
   });
 
-  it('loads data from external xml file via src attr', async () => {
+  it('Can run the instance function from text nodes', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <foobar></foobar>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <item>Maybe</item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <span id="the-span">{instance('second')/item}</span>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const theSpan = el.querySelector('#the-span');
+    expect(theSpan.innerText).to.equal('Maybe');
+  });
+
+  it('loads data from external file via src attr', async () => {
     const el = await fixtureSync(html`
                 <fx-fore>
                     <fx-model id="model1">
@@ -192,6 +218,36 @@ describe('instance Tests', () => {
 
     expect(modelItems[0].required).to.be.false;
     expect(modelItems[0].value).to.equal('hello from file');
+  });
+
+  it('uses correct content-type for xml', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance src="base/test/instance1.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(Fore.getContentType(instances[0])).to.equal('application/xml; charset=UTF-8');
+  });
+
+  it('uses correct content-type for json', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance src="base/test/automobiles.json" type="json"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(Fore.getContentType(instances[0])).to.equal('application/json');
   });
 
   it('loads inline json data', async () => {
@@ -241,6 +297,23 @@ describe('instance Tests', () => {
     // const span = el.querySelector('fx-output');
     // expect(span.textContent).to.equal('Honda');
     // expect(out.textContent).to.equal('Honda');
+  });
+
+  it('will create an instance', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instances = el.querySelectorAll('fx-instance');
+    expect(instances[0].id).to.equal('default');
+    expect(instances[0].getInstanceData()).to.exist;
+    expect(instances[0].getDefaultContext()).to.exist;
   });
 
   /*

@@ -8,20 +8,6 @@ import { ModelItem } from '../modelitem.js';
  *
  */
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
-  /*
-  static get properties() {
-    return {
-      ...super.properties,
-      value: {
-        type: String,
-      },
-      widget: {
-        type: Object,
-      },
-    };
-  }
-*/
-
   constructor() {
     super();
     this.value = '';
@@ -34,7 +20,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   // eslint-disable-next-line class-methods-use-this
   getWidget() {
-    throw new Error('You have to implement the method updateWidgetValue!');
+    throw new Error('You have to implement the method getWidget!');
   }
 
   /**
@@ -76,13 +62,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         if (currentVal !== this.value) {
           // console.log('dispatching value-changed for ', this);
           // console.log('value-changed path ', this.modelItem.path);
-          this.dispatchEvent(
-            new CustomEvent('value-changed', {
-              composed: true,
-              bubbles: true,
-              detail: { path: this.modelItem.path },
-            }),
-          );
+          this.dispatch('value-changed', { path: this.modelItem.path });
         }
         // this.requestUpdate();
       }
@@ -96,9 +76,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   handleModelItemProperties() {
+    console.log('form ready', this.getOwnerForm().ready);
     this.handleRequired();
     this.handleReadonly();
-    this.handleValid();
+    if(this.getOwnerForm().ready){
+      this.handleValid();
+    }
     this.handleRelevant();
   }
 
@@ -108,7 +91,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   _dispatchEvent(event) {
     if (this.getOwnerForm().ready) {
-      this.dispatchEvent(new CustomEvent(event, {}));
+      this.dispatch(event, {});
     }
   }
 
@@ -121,21 +104,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem.required) {
         this.widget.setAttribute('required', 'required');
         this.classList.add('required');
-        // this.dispatchEvent(new CustomEvent('required', {}));
-
-        /*
-        if(this.getOwnerForm().ready){
-          this.dispatchEvent(new CustomEvent('required', {}));
-        }
-*/
         this._dispatchEvent('required');
       } else {
         this.widget.removeAttribute('required');
         this.required = false;
         // this.removeAttribute('required');
         this.classList.toggle('required');
-
-        this.dispatchEvent(new CustomEvent('optional', {}));
+        this._dispatchEvent('optional');
       }
     }
   }
@@ -147,15 +122,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.widget.setAttribute('readonly', 'readonly');
         // this.setAttribute('readonly','readonly');
         this.classList.toggle('readonly');
-        // this.dispatchEvent(new CustomEvent('readonly', {}));
         this._dispatchEvent('readonly');
       }
       if (!this.modelItem.readonly) {
         this.widget.removeAttribute('readonly');
         // this.removeAttribute('readonly');
         this.classList.toggle('readonly');
-
-        this.dispatchEvent(new CustomEvent('readwrite', {}));
+        this._dispatchEvent('readwrite');
       }
     }
   }
@@ -168,8 +141,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
         this.classList.remove('invalid');
-        alert.style.display = 'none';
-        this.dispatchEvent(new CustomEvent('valid', {}));
+        if(alert) alert.style.display = 'none';
+        this._dispatchEvent('valid');
       } else {
         // ### constraint is invalid - handle alerts
         this.classList.add('invalid');
@@ -201,10 +174,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip valid', this.modelItem.enabled);
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
-        this.dispatchEvent(new CustomEvent('relevant', {}));
+        this._dispatchEvent('relevant');
         this._fadeIn(this, this.display);
       } else {
-        // this.dispatchEvent(new CustomEvent('nonrelevant', {}));
         this._dispatchEvent('nonrelevant');
         this._fadeOut(this);
       }

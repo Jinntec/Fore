@@ -1,10 +1,10 @@
 @import 'vars.css';
 @import 'fore.css';
 body {
-    padding:20px;
+    padding:0;
     font-family: 'Roboto', 'Noto', sans-serif;
     /*background: var(--paper-orange-300);*/
-    background: var(--google-green-300);
+    background: var(--paper-cyan-300);
 }
 code{
     font-weight: 700;
@@ -13,11 +13,11 @@ code{
 }
 h1{
     /*color:var(--paper-orange-900);*/
-    color:var(--google-green-500);
+    color:var(--paper-cyan-500);
 }
 h2{
     /*color:var(--paper-orange-800);*/
-    color:var(--google-green-500);
+    color:var(--paper-cyan-500);
 }
 #modalMessage{
     background:orange;
@@ -25,9 +25,16 @@ h2{
 #modalMessage .dialogActions{
     text-align:center;
 }
+.nav-buttons{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap:nowrap;
+}
 .note{
     /*background: var(--paper-amber-300);*/
-    background: var(--google-green-100);
+    background: var(--paper-cyan-100);
     padding:10px;
 }
 p{
@@ -41,9 +48,25 @@ p{
 }
 
 a, a:link, a:visited {
-    color:var(--google-green-700);
+    color:var(--paper-cyan-700);
 }
-
+.redline{
+    padding: 1rem 2rem;
+    border:thin solid white;
+    text-align: center;
+    width: 100px;
+    flex-grow:1;
+}
+.redline:hover{
+    background: rgba(255,255,255,0.5);
+}
+.redline.next{
+    align-self: flex-end;
+}
+.redline.prev{
+    align-self: flex-start;
+    border-right: none;
+}
 .wrapper:before{
     content:'Fore';
     position: fixed;
@@ -53,16 +76,22 @@ a, a:link, a:visited {
     font-size:1024px;
     z-index: -1;
     opacity: 0.06;
-    color:var(--google-green-900);
+    color:var(--paper-cyan-900);
 }
 
 .wrapper{
-    width:80%;
     height:auto;
-    max-width:1200px;
+    max-width:800px;
     margin: 0 auto;
-    background: var(--google-green-100);
+    background: var(--paper-cyan-100);
     opacity: 0.95;
     position: relative;
     min-height:80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+}
+
+ul{
+    margin-top:0;
 }

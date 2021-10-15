@@ -113,11 +113,24 @@ registerCustomXPathFunction(
   },
 );
 
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
+};
+
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
 
-  const { formElement } = dynamicContext.currentContext;
+  const formElement = fxEvaluateXPathToFirstNode(
+    'ancestor-or-self::fx-fore',
+    dynamicContext.currentContext.formElement,
+    null,
+    null,
+    { namespaceResolver: xhtmlNamespaceResolver },
+  );
 
   // console.log('fnInstance dynamicContext: ', dynamicContext);
   // console.log('fnInstance string: ', string);
@@ -148,7 +161,7 @@ registerCustomXPathFunction(
     if (repeat) {
       return repeat.getAttribute('index');
     }
-    return Number(1);
+    return 1;
   },
 );
 
@@ -202,26 +215,26 @@ registerXQueryModule(`
 
 // How to run XQUERY:
 /**
-registerXQueryModule(`
-module namespace my-custom-namespace = "my-custom-uri";
-(:~
-	Insert attribute somewhere
-	~:)
-declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
+ registerXQueryModule(`
+ module namespace my-custom-namespace = "my-custom-uri";
+ (:~
+ Insert attribute somewhere
+ ~:)
+ declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
 	if ($ele/@done) then false() else
 	(insert node
 	attribute done {"true"}
 	into $ele, true())
 };
-`)
-// At some point:
-const contextNode = null;
-const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
+ `)
+ // At some point:
+ const contextNode = null;
+ const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
 
-console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
+ console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
 
-executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
-*/
+ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
+ */
 
 /**
  * Implementation of the functionNameResolver passed to FontoXPath to
@@ -231,6 +244,7 @@ executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'base64encode':
     case 'boolean-from-string':
     case 'depends':
     case 'event':
@@ -250,24 +264,47 @@ function functionNameResolver({ prefix, localName }, _arity) {
   }
 }
 
-function namespaceResolver(prefix) {
-  // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
+/**
+ * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
+ * XPath in which the namespace is being resolved. The prefix will be resolved by using the
+ * ancestry of said element.
+ *
+ * It has two ways of doing so:
+ *
+ * - If the prefix is defined in an `xmlns:XXX="YYY"` namespace declaration, it will return 'YYY'.
+ * - If the prefix is the empty prefix and there is an `xpath-default-namespace="YYY"` attribute in the
+ * - ancestry, that attribute will be used and 'YYY' will be returned
+ *
+ * @param  {Node}  contextElement  The element that is most closely related with the XPath in which this prefix is resolved.
+ * @param  {string}   prefix          The prefix to resolve
+ */
+function resolveNamespacePrefix(contextElement, prefix) {
+  if (prefix === 'xhtml') {
+    return 'http://www.w3.org/1999/xhtml';
+  }
 
-  /**
-   * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-   * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-   *   // Return value
-   *  }
-   * }
-   */
+  if (prefix === '') {
+    return (
+      fxEvaluateXPathToString(
+        'ancestor-or-self::*/@xpath-default-namespace[last()]',
+        contextElement,
+      ) || null
+    );
+  }
 
-  // console.log('namespaceResolver  prefix', prefix);
-  const ns = {
-    xhtml: 'http://www.w3.org/1999/xhtml',
-    tei: 'http://www.tei-c.org/ns/1.0',
-    // ''    : Fore.XFORMS_NAMESPACE_URI
-  };
-  return ns[prefix] || null;
+  // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
+  // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
+  // attributes. Which they technically ARE NOT!
+
+  const result = fxEvaluateXPathToString(
+    'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+    contextElement,
+    null,
+    { prefix },
+  );
+
+  console.log('result', result);
+  return result;
 }
 
 /**
@@ -276,7 +313,7 @@ function namespaceResolver(prefix) {
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
   return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
@@ -285,7 +322,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
       xf: XFORMS_NAMESPACE_URI,
     },
     functionNameResolver,
-    namespaceResolver,
+    namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
   });
 }
 
@@ -304,7 +341,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
     null,
     {},
     {
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
       defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
@@ -334,7 +371,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
@@ -359,7 +396,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
     },
   );
 }
@@ -372,9 +409,16 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
  * @param  {Node}       formElement       The form element associated to the XPath
  * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
  * @return {string}
  */
-export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
+export function evaluateXPathToString(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
@@ -387,10 +431,11 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
     },
   );
 }
+
 /**
  * Evaluate an XPath to a number
  *
@@ -398,23 +443,40 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
  * @param  {Node}       contextNode       The start of the XPath
  * @param  {Node}       formElement       The form element associated to the XPath
  * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
  * access. This is used to determine dependencies between bind elements.
- * @return {number}
+ * @return {Number}
  */
-export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
+export function evaluateXPathToNumber(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
   return fxEvaluateXPathToNumber(
     xpath,
     contextNode,
     domFacade,
     {},
-
     {
       currentContext: { formElement },
       functionNameResolver,
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver,
+      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
     },
   );
 }
+
+/**
+ * @param input as string
+ * @return {string}
+ */
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => btoa(string),
+);

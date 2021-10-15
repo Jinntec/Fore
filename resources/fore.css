@@ -1,9 +1,21 @@
 @import 'toastify.css';
-
 [unresolved]{
     display: none;
 }
+[disabled] {
+    pointer-events: none;
+    cursor: default;
+}
+fx-trigger a[disabled] {
+    color:lightgrey;
+}
+fx-trigger img[disabled]{
+    filter:blur(2px);
+}
 
+.error{
+    background: var(--paper-red-500);
+}
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
@@ -13,16 +25,45 @@ fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
     display:none;
 }
 
-fx-control{
+fx-control, fx-trigger{
     white-space: nowrap;
+    position: relative;
 }
+fx-hint{
+    display: none;
+}
+fx-repeatitem{
+    position:relative;
+    /*
+    opacity:1;
+    -webkit-transition: opacity 3s;
+    -moz-transition: opacity 3s;
+    transition: opacity 3s;
+    */
+}
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 2s, opacity 2s linear;
+}
+/*
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 2s linear;
+}
+*/
+
 .required:after {
     content: '*';
     color: red;
     padding-left: 4px;
+    right:3px;
+    top:3px;
+    z-index: 1;
 }
 
-fx-control [required]:after {
+[required]:after {
     content: "*";
     display: inline;
     color: red;
@@ -34,7 +75,11 @@ fx-control [required]:after {
 .logtree details summary{
 
 }
-
+.non-relevant{
+    opacity: 0;
+    height: 0;
+    transition: opacity 1s;
+}
 .vertical label{
     display: block;
 }

@@ -25,9 +25,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       index: {
         type: Number,
       },
-      ref: {
-        type: String,
-      },
       template: {
         type: Object,
       },
@@ -57,7 +54,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.inited = false;
     this.index = 1;
     this.repeatSize = 0;
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
   get repeatSize() {
@@ -103,6 +100,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // todo: review - this is just used by append action - event consolidation ?
     this.addEventListener('index-changed', e => {
       e.stopPropagation();
+      if (!e.target === this) return;
       console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
@@ -117,13 +115,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     });
 
     const style = `
-            :host {
-                // display: none;
-            }
-            ::slotted(*){
-                // display:none;
-            }
-            .fade-out-bottom {
+             .fade-out-bottom {
                 -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
                 animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
             }
@@ -133,6 +125,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             }
         `;
     const html = `
+          <slot name="header"></slot>
           <slot></slot>
         `;
     this.shadowRoot.innerHTML = `
@@ -199,12 +192,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-
-    /*
-    const inscope = this.getInScopeContext();
-    this.nodeset = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-*/
-
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
 
@@ -218,102 +205,87 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // const contextSize = this.nodeset.length;
     const contextSize = nodeCount;
-    // const modified = [];
+    // todo: review - cant the context really never be smaller than the repeat count?
+    // todo: this code can be deprecated probably but check first
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position -= 1) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
-        this._fadeOut(itemToRemove);
-        // setTimeout(itemToRemove.parentNode.removeChild(itemToRemove),1000);
-        // itemToRemove.parentNode.removeChild(itemToRemove);
-        // modified.push(itemToRemove);
-      }
+        itemToRemove.parentNode.removeChild(itemToRemove);
 
-      // todo: update index
+        // this._fadeOut(itemToRemove);
+      }
     }
 
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
-        // const lastRepeatItem = repeatItems[repeatItemCount-1];
-        // const newItem = lastRepeatItem.cloneNode(true);
-
         const newItem = document.createElement('fx-repeatitem');
         const clonedTemplate = this._clone();
-
-        // newItem.style.display = 'none';
-        newItem.style.opacity = '0';
         newItem.appendChild(clonedTemplate);
-        this._fadeIn(newItem);
-        // const tmpl = this.shadowRoot.querySelector('template');
-        // const newItem = tmpl.content.cloneNode(true);
+        this.appendChild(newItem);
 
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
-        this.appendChild(newItem);
-        // modified.push(newItem);
       }
     }
 
+    // ### update nodeset of repeatitems
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
     }
+
+    this._fadeIn(repeatItems[this.index - 1]);
     Fore.refreshChildren(this);
-    /*
-    if (!this.inited) {
-      Fore.refreshChildren(this);
-    }
-    if (contextSize === repeatItemCount) {
-      Fore.refreshChildren(this);
-    }
-*/
     this.setIndex(this.index);
     console.groupEnd();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _fadeIn(el) {
-    // eslint-disable-next-line no-param-reassign
-    el.style.opacity = 0;
-    // eslint-disable-next-line no-param-reassign
+  _fadeOut(el) {
+    el.style.opacity = 1;
+
     (function fade() {
-      let val = parseFloat(el.style.opacity);
-      val += 0.1;
-      if (!(val > 1)) {
-        // eslint-disable-next-line no-param-reassign
-        el.style.opacity = val;
+      // eslint-disable-next-line no-cond-assign
+      if ((el.style.opacity -= 0.1) < 0) {
+        el.style.display = 'none';
+      } else {
         requestAnimationFrame(fade);
       }
     })();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _fadeOut(el) {
-    el.classList.add('fade-out-bottom');
-    /*
-        el.style.opacity = 1;
+  _fadeIn(el) {
+    if (!el) return;
 
-        (function fade() {
-            if ((el.style.opacity -= .01) < 0) {
-                el.style.display = "none";
-            } else {
-                requestAnimationFrame(fade);
-            }
-        })();
-*/
+    el.style.opacity = 0;
+    el.style.display = this.display;
+
+    (function fade() {
+      // setTimeout(() => {
+        let val = parseFloat(el.style.opacity);
+        // eslint-disable-next-line no-cond-assign
+        if (!((val += 0.1) > 1)) {
+          el.style.opacity = val;
+          requestAnimationFrame(fade);
+        }
+      // }, 40);
+    })();
   }
 
   _initTemplate() {
-    const shadowTemplate = this.shadowRoot.querySelector('template');
-    console.log('shadowtempl ', shadowTemplate);
+    // const shadowTemplate = this.shadowRoot.querySelector('template');
+    // console.log('shadowtempl ', shadowTemplate);
 
     // const defaultSlot = this.shadowRoot.querySelector('slot');
     // todo: this is still weak - should handle that better maybe by an explicit slot?
-    this.template = this.firstElementChild;
+    // this.template = this.firstElementChild;
+    this.template = this.querySelector('template');
     console.log('### init template for repeat ', this.id, this.template);
 
     if (this.template === null) {
@@ -333,7 +305,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
   _initRepeatItems() {
     // const model = this.getModel();
-    this.textContent = '';
+    // this.textContent = '';
     this.nodeset.forEach((item, index) => {
       const repeatItem = document.createElement('fx-repeatitem');
       repeatItem.nodeset = this.nodeset[index];

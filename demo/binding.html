@@ -33,10 +33,15 @@
         .buttons {
             display: block;
             width: 10rem;
+            width: 150px;
+        }
+        button{
+            width:150px;
         }
         .buttonArray{
-            display: grid;
-            grid-template-columns: repeat(4,1fr);
+            display: flex;
+            flex-direction: row;
+            flex-flow:wrap;
         }
 
         fx-control {
@@ -121,6 +126,12 @@
     <p>The above results in the node named 'item' there will be a value of '33'</p>
     <p class="note">Calculated nodes are always readonly!</p>
 
+    <h2>ModelItem Tester</h2>
+    <p>Use the buttons to toggle the state of the respective modelitem facet below.
+    Hitting twice will have no additional effect.</p>
+
+    <p>The <code>fx-bind</code> defines a boolean condition for each of the facets. Here we depend on the value
+    of a node which can be set with the corresponding button.</p>
     <demo-snippet>
         <template>
 
@@ -204,6 +215,12 @@
             </fx-fore>
         </template>
     </demo-snippet>
+
+    <div class="nav-buttons">
+        <a class="redline prev" href="./04-instances.html">previous</a>
+        <a class="redline next" href="./binding-nested.html">next</a>
+    </div>
+
 </div>
 <script type="module" src="./demo.js"></script>
 

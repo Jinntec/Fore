@@ -363,4 +363,49 @@ describe('insert Tests', () => {
     expect(items.length).to.equal(4);
     expect(items[3].textContent).to.equal('0');
   });
+
+  it('inserts into inhomogenious nodeset at right position', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <a>a1</a>
+              <a>a2</a>
+              <a>a3</a>
+              <b>b1</b>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger>
+          <button>insert at end</button>
+          <fx-insert ref="a"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    trigger.performActions();
+
+    const inst = el.getModel().getDefaultContext();
+    console.log('instance after insert', inst);
+
+    let item = fx.evaluateXPath('//a[1]', inst, null, {});
+    expect(item.textContent).to.equal('a1');
+    item = fx.evaluateXPath('//a[2]', inst, null, {});
+    expect(item.textContent).to.equal('a2');
+
+    item = fx.evaluateXPath('//a[3]', inst, null, {});
+    expect(item.textContent).to.equal('a3');
+    item = fx.evaluateXPath('//a[4]', inst, null, {});
+    expect(item.textContent).to.equal('');
+    item = fx.evaluateXPath('//*[4]', inst, null, {});
+    expect(item.textContent).to.equal('');
+
+    item = fx.evaluateXPath('//*[5]', inst, null, {});
+    expect(item.textContent).to.equal('b1');
+    item = fx.evaluateXPath('//b[1]', inst, null, {});
+    expect(item.textContent).to.equal('b1');
+  });
 });

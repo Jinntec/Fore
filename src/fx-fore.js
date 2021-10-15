@@ -39,6 +39,8 @@ export class FxFore extends HTMLElement {
 
     this.ready = false;
 
+    this.storedTemplateExpressionByNode = new Map();
+
     const style = `
             :host {
                 display: block;
@@ -69,7 +71,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-            
+
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -105,7 +107,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-            
+
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -118,6 +120,7 @@ export class FxFore extends HTMLElement {
 
     const html = `
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom"></jinn-toast>
            <slot></slot>
            <div id="modalMessage" class="overlay">
                 <div class="popup">
@@ -190,7 +193,7 @@ export class FxFore extends HTMLElement {
   /**
    * entry point for processing of template expression enclosed in '{}' brackets.
    *
-   * Expressions are found with an XPath search. For each node an entry is added to storedTemplateExpressions array.
+   * Expressions are found with an XPath search. For each node an entry is added to the storedTemplateExpressionByNode map.
    *
    *
    * @private
@@ -200,34 +203,36 @@ export class FxFore extends HTMLElement {
     const search =
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, null);
+    const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
 
-    if (!this.storedTemplateExpressions) {
-      this.storedTemplateExpressions = [];
+    /*
+                storing expressions and their nodes for re-evaluation
+             */
+    Array.from(tmplExpressions).forEach(node => {
+      if (this.storedTemplateExpressionByNode.has(node)) {
+        // If the node is already known, do not process it twice
+        return;
+      }
+      const expr = this._getTemplateExpression(node);
+
+      this.storedTemplateExpressionByNode.set(node, expr);
+    });
+
+    // TODO: Should we clean up nodes that existed but are now gone?
+    for (const node of this.storedTemplateExpressionByNode.keys()) {
+      this._processTemplateExpression({
+        node,
+        expr: this.storedTemplateExpressionByNode.get(node),
+      });
     }
 
-    /*
-        storing expressions and their nodes for re-evaluation
-         */
-    Array.from(tmplExpressions).forEach(node => {
-      const expr = this._getTemplateExpression(node);
-      this.storedTemplateExpressions.push({
-        expr,
-        node,
-      });
-    });
-
-    this.storedTemplateExpressions.forEach(tmpl => {
-      this._processTemplateExpression(tmpl);
-    });
-
-    console.log('stored template expressions ', this.storedTemplateExpressions);
+    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
   }
 
   // eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
-    console.log('processing template expression ', exprObj);
+    // console.log('processing template expression ', exprObj);
 
     const { expr } = exprObj;
     const { node } = exprObj;
@@ -243,24 +248,41 @@ export class FxFore extends HTMLElement {
    */
   evaluateTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
+    const namespaceContextNode =
+      node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
-        console.log('match ', match);
+        // console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
+        if (!inscope) {
+          const errNode =
+            node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
+              ? node.parentNode
+              : node;
+          console.warn('no inscope context for ', errNode);
+          return;
+        }
+        // Templates are special: they use the namespace configuration from the place where they are
+        // being defined
 
-        // console.log('result of eval ', result);
-        const replaced = expr.replaceAll(match, result);
-        console.log('result of replacing ', replaced);
+        try {
+          const result = evaluateXPathToString(naked, inscope, this, null, namespaceContextNode);
 
-        if (node.nodeType === Node.ATTRIBUTE_NODE) {
-          const parent = node.ownerElement;
+          // console.log('result of eval ', result);
+          const replaced = expr.replaceAll(match, result);
+          console.log('result of replacing ', replaced);
 
-          // parent.setAttribute(name, replaced);
-          parent.setAttribute(node.nodeName, replaced);
-        } else if (node.nodeType === Node.TEXT_NODE) {
-          node.textContent = replaced;
+          if (node.nodeType === Node.ATTRIBUTE_NODE) {
+            const parent = node.ownerElement;
+
+            // parent.setAttribute(name, replaced);
+            parent.setAttribute(node.nodeName, replaced);
+          } else if (node.nodeType === Node.TEXT_NODE) {
+            node.textContent = replaced;
+          }
+        } catch (error) {
+          this.dispatchEvent(new CustomEvent('error', { detail: error }));
         }
       });
     }
@@ -350,44 +372,44 @@ export class FxFore extends HTMLElement {
   }
 
   /*
-    _createStep(){
+        _createStep(){
 
-    }
-  */
+        }
+      */
 
   /*
-    _generateInstance(start, parent) {
-      if (start.hasAttribute('ref')) {
-        const ref = start.getAttribute('ref');
+        _generateInstance(start, parent) {
+          if (start.hasAttribute('ref')) {
+            const ref = start.getAttribute('ref');
 
-        if(ref.includes('/')){
-          console.log('complex path to create ', ref);
-          const steps = ref.split('/');
-          steps.forEach(step => {
-            console.log('step ', step);
+            if(ref.includes('/')){
+              console.log('complex path to create ', ref);
+              const steps = ref.split('/');
+              steps.forEach(step => {
+                console.log('step ', step);
 
 
-          });
+              });
+            }
+
+            // const generated = document.createElement(ref);
+            const generated = parent.ownerDocument.createElement(ref);
+            if (start.children.length === 0) {
+              generated.textContent = start.textContent;
+            }
+            parent.appendChild(generated);
+            parent = generated;
+          }
+
+          if (start.hasChildNodes()) {
+            const list = start.children;
+            for (let i = 0; i < list.length; i += 1) {
+              this._generateInstance(list[i], parent);
+            }
+          }
+          return parent;
         }
-
-        // const generated = document.createElement(ref);
-        const generated = parent.ownerDocument.createElement(ref);
-        if (start.children.length === 0) {
-          generated.textContent = start.textContent;
-        }
-        parent.appendChild(generated);
-        parent = generated;
-      }
-
-      if (start.hasChildNodes()) {
-        const list = start.children;
-        for (let i = 0; i < list.length; i += 1) {
-          this._generateInstance(list[i], parent);
-        }
-      }
-      return parent;
-    }
-  */
+      */
 
   async _initUI() {
     console.log('### _initUI()');
@@ -418,7 +440,9 @@ export class FxFore extends HTMLElement {
   _displayError(e) {
     // const { error } = e.detail;
     const msg = e.detail.message;
-    this._showMessage('modal', msg);
+    // this._showMessage('modal', msg);
+    const toast = this.shadowRoot.querySelector('#error');
+    toast.showToast(msg);
   }
 
   _showMessage(level, msg) {

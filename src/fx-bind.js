@@ -466,6 +466,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
     // let value = null;
     // const mItem = {};
+    /*
     let targetNode = {};
     if (node.nodeType === node.TEXT_NODE) {
       // const parent = node.parentNode;
@@ -474,6 +475,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     } else {
       targetNode = node;
     }
+*/
+    const targetNode = node;
 
     // const path = fx.evaluateXPath('path()',node);
     // const path = this.getPath(node);

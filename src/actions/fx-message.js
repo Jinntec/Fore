@@ -44,7 +44,15 @@ class FxMessage extends AbstractAction {
 
   perform() {
     super.perform();
-    const message = this.textContent;
+    let message;
+    if (this.hasAttribute('value')) {
+      message = this.getValue();
+    }else{
+      message = this.textContent;
+    }
+
+
+
     this.dispatchEvent(
       new CustomEvent('message', {
         composed: true,

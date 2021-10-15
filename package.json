@@ -33,10 +33,10 @@
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-input": "^3.2.1",
-    "fontoxpath": "^3.20.4"
+    "fontoxpath": "^3.20.4",
+    "web-component-analyzer": "^1.1.6"
   },
   "devDependencies": {
-    "@0xcda7a/empathy": "0.0.9",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@open-wc/building-rollup": "^0.21.1",
     "@open-wc/eslint-config": "^2.0.0",
@@ -71,6 +71,7 @@
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
+    "docs": "wca src -f json --outFile fore-elements.json",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",
@@ -80,8 +81,7 @@
     "test:bs": "karma start karma.bs.config.js --coverage",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
-    "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
-    "empathy": "./node_modules/@0xcda7a/empathy/bin/empathy install"
+    "start": "es-dev-server --app-index index.html --node-resolve --watch --open"
   },
   "keywords": [
     "Fore",
@@ -107,6 +107,7 @@
     ],
     "rules": {
       "no-console": "off",
+      "no-alert": "off",
       "import/no-extraneous-dependencies": [
         "off",
         {

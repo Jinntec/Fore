@@ -41,25 +41,29 @@ export class FxInsert extends AbstractAction {
     this.keepValues = !!this.hasAttribute('keep-values');
   }
 
-  _getOriginSequence(inscope, targetSequence) {
-    let originSequence;
+  _cloneOriginSequence(inscope, targetSequence) {
+    let originSequenceClone;
     if (this.origin) {
       // ### if there's an origin attribute use it
-      const originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
-      if (Array.isArray(originTarget) && originTarget.length === 0) {
+      let originTarget;
+      try {
+        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
+        if (Array.isArray(originTarget) && originTarget.length === 0) {
+          console.warn('invalid origin for this insert action - ignoring...', this);
+          originSequenceClone = null;
+        }
+        originSequenceClone = originTarget.cloneNode(true);
+      } catch (error) {
         console.warn('invalid origin for this insert action - ignoring...', this);
-        // return;
-        originSequence = null;
       }
-      originSequence = originTarget.cloneNode(true);
     } else if (targetSequence) {
       // ### use last item of targetSequence
-      originSequence = this._cloneTargetSequence(targetSequence);
-      if (originSequence && !this.keepValues) {
-        this._clear(originSequence);
+      originSequenceClone = this._cloneTargetSequence(targetSequence);
+      if (originSequenceClone && !this.keepValues) {
+        this._clear(originSequenceClone);
       }
     }
-    return originSequence;
+    return originSequenceClone;
   }
 
   _getInsertIndex(inscope, targetSequence) {
@@ -107,8 +111,8 @@ export class FxInsert extends AbstractAction {
             }
         }
 */
-    const originSequence = this._getOriginSequence(inscope, targetSequence);
-    if (!originSequence) return; // if no origin back out without effect
+    const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
+    if (!originSequenceClone) return; // if no origin back out without effect
 
     let insertLocationNode;
     let index;
@@ -119,7 +123,7 @@ export class FxInsert extends AbstractAction {
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
     if (targetSequence.length === 0) {
       insertLocationNode = inscope;
-      inscope.appendChild(originSequence);
+      inscope.appendChild(originSequenceClone);
       index = 1;
       console.log('appended', inscope);
     } else {
@@ -154,17 +158,14 @@ export class FxInsert extends AbstractAction {
 
       if (this.position && this.position === 'before') {
         // this.at -= 1;
-        insertLocationNode.parentNode.insertBefore(
-          originSequence.cloneNode(true),
-          insertLocationNode,
-        );
+        insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
       }
 
       if (this.position && this.position === 'after') {
         // insertLocationNode.parentNode.append(originSequence);
         // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
-        insertLocationNode.insertAdjacentElement('afterend', originSequence.cloneNode(true));
+        insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
       }
     }
 
@@ -178,7 +179,7 @@ export class FxInsert extends AbstractAction {
       new CustomEvent('insert', {
         composed: true,
         bubbles: true,
-        detail: { insertedNodes: originSequence, position: index },
+        detail: { insertedNodes: originSequenceClone, position: index },
       }),
     );
 

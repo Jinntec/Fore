@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPathToNodes, evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -55,6 +55,20 @@ class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
     console.log('widget ', this.widget);
+
+    // ### convenience marker event
+    if(this.updateEvent === 'enter'){
+      this.widget.addEventListener('keyup', (event) => {
+        if (event.keyCode === 13) {
+          // Cancel the default action, if needed
+          event.preventDefault();
+          this.setValue(this.widget[this.valueProp]);
+        }
+        // console.log('enter handler ', this.updateEvent);
+        // this.setValue(this.widget[this.valueProp]);
+      });
+      this.updateEvent = 'blur'; // needs to be registered too
+    }
     this.widget.addEventListener(this.updateEvent, () => {
       console.log('eventlistener ', this.updateEvent);
       this.setValue(this.widget[this.valueProp]);
@@ -76,6 +90,10 @@ class FxControl extends XfAbstractControl {
         `;
   }
 
+  /**
+   *
+   * @returns {HTMLElement|*}
+   */
   getWidget() {
     let widget = this.querySelector(`.${WIDGETCLASS}`);
     if (!widget) {
@@ -122,7 +140,7 @@ class FxControl extends XfAbstractControl {
       const ref = this.widget.getAttribute('ref');
       const inscope = this.getInScopeContext();
       const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPathToNodes(ref, inscope, formElement);
+      const nodeset = evaluateXPath(ref, inscope, formElement);
 
       // ### clear items
       const { children } = this.widget;

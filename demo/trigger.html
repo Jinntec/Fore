@@ -25,6 +25,12 @@
         .image img{
             width: 200px;
         }
+/*
+        a[disabled] {
+            color:lightgrey;
+        }
+*/
+
     </style>
 </head>
 <body unresolved="unresolved">
@@ -53,6 +59,45 @@
                     <fx-message>Hi from image</fx-message>
                 </fx-trigger>
 
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Disabling triggers</h2>
+    <p>Trigger can be bound too and receive states like becoming non-relevant (hidden from view) or readonly
+    which makes them disabled.</p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <disabled>true</disabled>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="disabled" readonly=". ='true'"></fx-bind>
+                </fx-model>
+                <fx-trigger ref="disabled">
+                    <button>I'm a button</button>
+                    <fx-message class="action">Hi from button</fx-message>
+                </fx-trigger>
+
+                <fx-trigger ref="disabled">
+                    <a href="#">I'm a link</a>
+                    <fx-message>Hi from link</fx-message>
+                </fx-trigger>
+
+                <fx-trigger ref="disabled" class="image">
+                    <img src="../resources/images/light6.png" title="click on me">
+                    <fx-message>Hi from image</fx-message>
+                </fx-trigger>
+
+
+                <fx-control ref="disabled" value-prop="checked" update-event="input">
+                    <label for="check">toggle disabled state</label>
+                    <input id="check" type="checkbox" class="widget">
+                </fx-control>
             </fx-fore>
         </template>
     </demo-snippet>
