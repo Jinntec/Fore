@@ -1,6 +1,14 @@
+![NPM](https://img.shields.io/npm/l/@jinntec/fore)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jinntec/fore/CI)
+![GitHub Discussions](https://img.shields.io/github/discussions/jinntec/fore)
+![GitHub last commit](https://img.shields.io/github/last-commit/jinntec/fore)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jinntec/fore)
+![GitHub top language](https://img.shields.io/github/languages/top/jinntec/fore)
+
 tweet this project
 
 ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec) 
+
 
 ![logo](resources/images/light-200.png)
 
