@@ -6,7 +6,11 @@ import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.
 import getInScopeContext from './getInScopeContext.js';
 
 /**
- * Root element for forms. Kicks off initialization and displays messages.
+ * Main class for Fore.Outermost container element for each Fore application.
+ *
+ *
+ *
+ * Root element for Fore. Kicks off initialization and displays messages.
  *
  * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.

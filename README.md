@@ -5,22 +5,37 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jinntec/fore)
 ![GitHub top language](https://img.shields.io/github/languages/top/jinntec/fore)
 
-tweet this project
 
-![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec) 
 
 
 ![logo](resources/images/light-200.png)
 
 >'situated in front of something else' - Merriam Webster
 
+[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec)](https://twitter.com/JinnForeTec) 
+
 ## [Demos](https://jinntec.github.io/Fore)
+
+# What it does
+
+Fore lets you write data-driven front-end applications in a declarative way
+just using HTML5 and JavaScript (ES6). 
+
+The use cases range from simple to complex forms to full single page
+applications. It can be used standalone or in conjunction with other web 
+components or frameworks. 
+
+By using the bare metal of the browser
+platform, Fore integrates well with any other library you might want to use in
+conjunction with it.
 
 
 ## An xformish framework in Web Components
 
-Fore is a model-driven framework that follows the ideas of the XForms 2.0
-Standard but translates those into the world of HTML5 Web Components. Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
+Fore is a model-driven language that follows the ideas of the XForms 2.0
+Standard but applies those to the world of HTML5 Web Components.
+ 
+Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
 ochestrate and interact with them by binding their properties to data instances.
 
 Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. Accessing and mutating JSON data with declarative
@@ -49,7 +64,7 @@ JS framework or component library.
 ## Framework-agnostic
 
 Fore focuses on providing a stable processing engine for model-driven
-forms. Major premise for a longer-term solution is to stick closely to the features
+apps. Major premise for a longer-term solution is to stick closely to the features
 of the browser platform and avoid specific frameworks for the implementation.
 
 That said it's obvious that Fore does not provide a set of controls
@@ -83,26 +98,34 @@ More examples are found in the demos (see running)
 
 ## Documentation
 
-Currently the demos are the documentation (see 'demo' folder). All files listed on the demo.html page are expected to work.
+Currently the demos are the documentation (see 'demo' folder). All files listed on the demo.html page are expected to work
+and serve the purpose of documentation. The intend is to have at least one demo
+for each feature and show how to use it with an example.
 
 Some of them also offer some explanations and should give you an idea of building your own.
 
-## Warning
-
-The project is still in it's prerelease phase. However there are already about 130 tests and what can be seen in demos is expected to work. The overall architecture matures quite nicely but certainly can still undergo some fundamental changes. There won't be any major releases before 1.0.0 so be aware of breaking changes (will annouce them). 
-
-It's expected that a first release will be available during this summer.
-
 ## Development and Contributions
 
-Contributions are always welcome. Default branch of development is 'dev'. PRs
-feature additions or bugfixes will always go into 'dev'.
+Default branch of development is 'dev'.
+Feature additions or bugfixes will always there.
 
 The master branch is only used for releases. 
 
-### Contributing demos
+Contributions are always welcome.  
 
+### what to contribute
+
+It's not all about code. 
+
+Any feedback is welcome and appreciated. Please use the ['discussions'](https://github.com/Jinntec/Fore/discussions) or
+['issues'](https://github.com/Jinntec/Fore/issues) as appropriate to suggest features or ask your questions.
+
+New demo files are highly welcome as always something new can be learned. 
 There is a directory called 'template' that contains some blueprints that can be copied to quickly get going.
+
+When working on demos it is recommended to copy your file to the 'demo' folder
+and make it work there. If you have additional files you can create
+a subdirectory for the new demo.
 
 ## Running from CDN
 
@@ -172,3 +195,5 @@ Include the repective bundle in your webpage with a module import:
     import 'dist/fore-all.js';
 </script>
 ```
+
+
