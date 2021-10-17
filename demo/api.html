@@ -150,6 +150,8 @@
         </fx-model>
         <header name="top">
             <h1>Fore API</h1>
+            <p>This is not a the real API doc but just another example working with a more
+            complex JSON structure.</p>
             <div class="version">Version: {instance('package')?version}</div>
             <fx-control id="selected" ref="instance('vars')/selected" update-event="change">
                 <label>Jump to</label>
@@ -209,11 +211,6 @@
         </fx-repeat>
     </fx-fore>
     <script>
-/*
-        function scrollto(){
-            document.getElementById('fx-submission').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-        }
-*/
         const current = document.getElementById('selected');
         current.addEventListener('value-changed', evt => {
             console.log('evt', evt.target.value);

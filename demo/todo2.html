@@ -44,7 +44,6 @@
             height: auto;
         }
         fx-repeatitem{
-            width: 100%;
             display: block;
             padding: 1rem;
 
@@ -54,6 +53,7 @@
             display: grid;
             grid-template-columns: 10% auto 25% 10%;
             align-items: center;
+            grid-gap:0.5rem;
         }
         fx-control {
             display: inline-block;
@@ -153,89 +153,67 @@
     </style>
 </head>
 <body unresolved="unresolved">
-<div class="wrapper">
-<!--
-    <demo-snippet>
-        <template>
--->
+    <div class="wrapper">
+        <fx-fore id="todo">
+            <fx-model id="record">
+                <fx-instance>
+                    <data>
+                        <task complete="false" due="2021-11-04">Pick up Milk</task>
+                        <task complete="false" due="2021-11-15">Make tutorial part 1</task>
+                        <template>
+                            <task complete="false" due="">new task</task>
+                        </template>
+                        <count>1</count>
+                        <showclosed>false</showclosed>
+                    </data>
+                </fx-instance>
+                <fx-bind ref="task" relevant="./@complete='false' or ../showclosed='true'">
+                    <fx-bind ref="./text()" required="true()"></fx-bind>
+                </fx-bind>
 
-            <fx-fore id="todo">
-                <fx-model id="record">
-                    <fx-instance>
-                        <data>
-                            <task complete="false" due="2021-11-04">Pick up Milk</task>
-                            <task complete="false" due="2021-11-15">Make tutorial part 1</task>
-                            <template>
-                                <task complete="false" due="">new task</task>
-                            </template>
-                            <count>1</count>
-                            <showclosed>false</showclosed>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="task" relevant="./@complete='false' or ../showclosed='true'">
-                        <fx-bind ref="./text()" required="true()"></fx-bind>
-                    </fx-bind>
+            </fx-model>
 
-                </fx-model>
+            <h1>Todo</h1>
+            <fx-trigger class="btn add">
+                <button>+</button>
+                <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+            </fx-trigger>
 
-                <h1>Todo</h1>
-                <fx-trigger class="btn add">
-                    <button>+</button>
-                    <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
-                </fx-trigger>
+            <div class="info">
+                You have {count(instance()/task[@complete='true'])} completed tasks
+            </div>
 
-<!--
-                <fx-output value="count(instance()/task)">
-                    You're all done.
-                </fx-output>
--->
+            <div class="info open">
+                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+            </div>
 
-                <div class="info">
-                    You have {count(instance()/task[@complete='true'])} completed tasks
-                </div>
+            <div class="info big">
+                {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+            </div>
+            <fx-repeat id="task" ref="task">
+                <template>
+                    <div>
+                        <fx-control ref="@complete" value-prop="checked" update-event="input">
+                            <input class="widget" type="checkbox">
+                        </fx-control>
+                        <fx-control class="{@complete}" id="task" ref="."></fx-control>
+                        <fx-control ref="@due">
+                            <input type="date">
+                        </fx-control>
+                        <fx-trigger class="btn delete">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </div>
+                </template>
+            </fx-repeat>
+            <fx-control ref="showclosed" value-prop="checked" update-event="input">
+                <label for="showcompleted">show completed</label>
+                <input id="showcompleted" type="checkbox" class="widget">
+            </fx-control>
 
-                <div class="info open">
-                    {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
-                </div>
-
-                <div class="info big">
-                    {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
-                </div>
-                <fx-repeat id="task" ref="task"  >
-                    <template>
-                        <div>
-                            <fx-control ref="@complete" value-prop="checked" update-event="input">
-                                <input class="widget" type="checkbox">
-                            </fx-control>
-                            <fx-control class="{@complete}" id="task" ref="."></fx-control>
-                            <fx-control ref="@due">
-                                <input type="date">
-                            </fx-control>
-                            <fx-trigger class="btn delete">
-                                <button>x</button>
-                                <fx-delete ref="."></fx-delete>
-                            </fx-trigger>
-                        </div>
-                    </template>
-                </fx-repeat>
-                <fx-control ref="showclosed" value-prop="checked" update-event="input">
-                    <label for="showcompleted">show completed</label>
-                    <input id="showcompleted" type="checkbox" class="widget">
-                </fx-control>
-
-
-                <!--
-                                <pre>
-                                    {log('default')}
-                                </pre>
-                -->
-
-            </fx-fore>
-<!--
-        </template>
-    </demo-snippet>
--->
-</div>
+        </fx-fore>
+    </div>
 <script type="module" src="./demo.js"></script>
 
 </body>

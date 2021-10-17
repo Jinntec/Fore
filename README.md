@@ -21,6 +21,7 @@
 Fore lets you write data-driven front-end applications in a declarative way
 just using HTML5 and JavaScript (ES6). 
 
+![todo](resources/images/todo-screen.png)
 The use cases range from simple to complex forms to full single page
 applications. It can be used standalone or in conjunction with other web 
 components or frameworks. 

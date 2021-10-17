@@ -34,8 +34,9 @@ h2{
 }
 .note{
     /*background: var(--paper-amber-300);*/
-    background: var(--paper-cyan-100);
+    background: var(--paper-cyan-200);
     padding:10px;
+    font-size: 1rem;
 }
 p{
     font-size:1.4rem;
