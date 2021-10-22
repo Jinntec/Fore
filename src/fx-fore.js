@@ -249,14 +249,15 @@ export class FxFore extends HTMLElement {
    * @param form the form element
    */
   evaluateTemplateExpression(expr, node) {
+    if(expr === '{}') return;
     const matches = expr.match(/{[^}]*}/g);
     const namespaceContextNode =
       node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
         // console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
-        const inscope = getInScopeContext(node, naked);
+        let naked = match.substring(1, match.length - 1);
+        let inscope = getInScopeContext(node, naked);
         if (!inscope) {
           const errNode =
             node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
@@ -282,6 +283,14 @@ export class FxFore extends HTMLElement {
             parent.setAttribute(node.nodeName, replaced);
           } else if (node.nodeType === Node.TEXT_NODE) {
             node.textContent = replaced;
+          }
+
+          if(replaced.includes('{')) {
+            console.log('need to go next round');
+
+            // todo: duplicated code here - see above
+            naked = replaced.substring(1, replaced.length);
+            this.evaluateTemplateExpression(replaced,node);
           }
         } catch (error) {
           this.dispatchEvent(new CustomEvent('error', { detail: error }));
