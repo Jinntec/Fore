@@ -211,4 +211,30 @@ describe('functions', () => {
     const indexVal = document.getElementById('index').innerText;
     expect(Number(indexVal)).to.equal(3);
   });
+
+  it('works with function with two arguments', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <theanswer></theanswer>
+            </data>
+          </fx-instance>
+          <fx-function
+                    signature="local:add($arg1 as xs:integer, $arg2 as xs:integer) as xs:string"
+                    type="text/javascript">
+                return $arg1 + $arg2
+            </fx-function>
+        </fx-model>
+        
+        <div id="result">{local:add(3,7)}</div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const result = el.querySelector('#result');
+
+    expect(result.textContent).to.equal('10');
+  });
 });
