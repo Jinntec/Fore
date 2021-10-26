@@ -269,7 +269,7 @@ export class FxFore extends HTMLElement {
         // being defined
 
         try {
-          const result = evaluateXPathToString(naked, inscope, this, null, namespaceContextNode);
+          const result = evaluateXPathToString(naked, inscope, node, null, namespaceContextNode);
 
           // console.log('result of eval ', result);
           const replaced = expr.replaceAll(match, result);

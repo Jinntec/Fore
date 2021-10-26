@@ -71,14 +71,14 @@ function resolveId(id, sourceObject, nodeName = null) {
   // element that is not in common with the source element, the current index of the repeat
   // determines the set of run-time objects that contains the desired target object.
   for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
-    'ancestor::fx-repeat-item => reverse()',
+    'ancestor::fx-repeatitem => reverse()',
     sourceObject,
     null,
     null,
     { namespaceResolver: xhtmlNamespaceResolver },
   )) {
     const foundTargetObjects = allMatchingTargetObjects.filter(to =>
-      ancestorRepeatItem.includes(to),
+      ancestorRepeatItem.contains(to),
     );
     if (foundTargetObjects.length === 0) {
       continue;
@@ -93,10 +93,10 @@ function resolveId(id, sourceObject, nodeName = null) {
     }
 
     // Multiple target objects are found: they are in a repeat that is not common with the source object
-    // We found a target object in a common repeat! We now need to find the one that is in the repeat-item identified at the current index
+    // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
     const targetObject = foundTargetObjects.find(to =>
       fxEvaluateXPathToNodes(
-        'every $ancestor of ancestor::fx-repeat-item satisfies $ancestor is $ancestor/../child::fx-repeat-item[../@index]',
+        'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
         to,
         null,
         {},

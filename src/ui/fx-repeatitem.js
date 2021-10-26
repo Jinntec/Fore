@@ -29,6 +29,8 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
 
   _handleFocus() {
     this.parentNode.setIndex(this.index);
+    // TODO: do this somewhere else, somewhere more central
+    this.closest('fx-fore').refresh();
   }
 
   _dispatchIndexChange() {

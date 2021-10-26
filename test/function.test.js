@@ -211,4 +211,45 @@ describe('functions', () => {
     const indexVal = document.getElementById('index').innerText;
     expect(Number(indexVal)).to.equal(3);
   });
+
+  it('returns correct index after insert for nested repeat index()', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>1</item>
+              <item>2</item>
+              <item>3</item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <pre id="indices">
+        <fx-repeat id="repeat" ref="/data/item">
+          <template>
+            <fx-repeat id="nested-repeat" ref="/data/item">
+              <template>
+                <span>({index("repeat") || ";" || index("nested-repeat")})</span>
+<input type="text"/>
+
+              </template>
+            </fx-repeat>
+          </template>
+        </fx-repeat>
+</pre>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    // Second row, second item
+    const span = el.querySelectorAll('input')[3 + 1];
+    span.focus();
+
+    const indices = document.getElementById('indices');
+    expect(indices.innerText.replace(/\s/g, '')).to.equal(
+      '(2;1)(2;1)(2;1)(2;2)(2;2)(2;2)(2;1)(2;1)(2;1)',
+      'The outer repeat is indexed at 2, the first and last inner ones at 1, the middle inner one at 2!',
+    );
+  });
 });
