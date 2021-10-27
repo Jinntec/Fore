@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Output</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-output {
+            display: block;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1><code>fx-output</code></h1>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-output ref="div">
+                    <label slot="label">Content of div: </label>
+                </fx-output>
+                <fx-output value="div">
+                    <label slot="label">Same by using <code>value</code>: </label>
+                </fx-output>
+                <fx-output value="3+4">
+                    <label slot="label">another evaluation: </label>
+                </fx-output>
+                <fx-output ref="div" html>
+                    <label slot="label">Output bound node as HTML: </label>
+                </fx-output>
+                <fx-output value="div" html>
+                    <label slot="label">Output evaluated node as HTML: </label>
+                </fx-output>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

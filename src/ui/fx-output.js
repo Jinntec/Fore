@@ -1,4 +1,6 @@
 import XfAbstractControl from './abstract-control.js';
+import {evaluateXPath, evaluateXPathToString} from "../xpath-evaluation.js";
+import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
@@ -56,6 +58,7 @@ export class FxOutput extends XfAbstractControl {
 
   async refresh() {
     // ### 1. eval 'value' attr
+    // await super.refresh();
 
     if (this.valueAttr) {
       this.value = this.getValue();
@@ -69,6 +72,22 @@ export class FxOutput extends XfAbstractControl {
     // ### 3. use inline content which is there anyway
   }
 
+  getValue(){
+    // return 'foobar';
+    try {
+      const inscopeContext = getInScopeContext(this, this.valueAttr);
+      if(this.hasAttribute('html')){
+        return  evaluateXPath(this.valueAttr, inscopeContext, this);
+      }
+      return evaluateXPathToString(this.valueAttr, inscopeContext, this);
+
+    } catch (error) {
+      console.error(error);
+      this.dispatch('error', { message: error });
+    }
+    return null;
+  }
+
   getWidget() {
     const valueWrapper = this.shadowRoot.getElementById('value');
     return valueWrapper;
@@ -76,6 +95,20 @@ export class FxOutput extends XfAbstractControl {
 
   async updateWidgetValue() {
     const valueWrapper = this.shadowRoot.getElementById('value');
+
+    if(this.hasAttribute('html')){
+      if(this.modelItem?.node){
+        valueWrapper.innerHTML = this.modelItem.node.outerHTML;
+        return;
+      }
+
+      // this.innerHTML = this.value.outerHTML;
+      valueWrapper.innerHTML = this.value.outerHTML;
+
+      // this.shadowRoot.appendChild(this.value);
+      return;
+    }
+
     valueWrapper.innerHTML = this.value;
   }
 
