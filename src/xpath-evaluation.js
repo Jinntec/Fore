@@ -173,6 +173,110 @@ export function evaluateXPathToNumber(
     );
 }
 
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
+};
+
+/**
+ * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
+ */
+function resolveId(id, sourceObject, nodeName = null) {
+  const allMatchingTargetObjects = fxEvaluateXPathToNodes(
+    'outermost(ancestor-or-self::fx-fore[1]/(descendant::xf-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
+    sourceObject,
+    null,
+    { id },
+    { namespaceResolver: xhtmlNamespaceResolver },
+  );
+
+  if (allMatchingTargetObjects.length === 0) {
+    return null;
+  }
+
+  if (
+    allMatchingTargetObjects.length === 1 &&
+    fxEvaluateXPathToBoolean(
+      '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
+      allMatchingTargetObjects[0],
+      null,
+      null,
+      { namespaceResolver: xhtmlNamespaceResolver },
+    )
+  ) {
+    // If the target element is not repeated, then the search for the target object is trivial since
+    // there is only one associated with the target element that bears the matching ID. This is true
+    // regardless of whether or not the source object is repeated. However, if the target element is
+    // repeated, then additional information must be used to help select a target object from among
+    // those associated with the identified target element.
+    const targetObject = allMatchingTargetObjects[0];
+    if (nodeName && targetObject.localName !== nodeName) {
+      return null;
+    }
+    return targetObject;
+  }
+
+  // SPEC:
+
+  // 12.2.1 References to Elements within a repeat Element
+
+  // When the target element that is identified by the IDREF of a source object has one or more
+  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
+  // subsets, those in common with the source element and those that are not in common. Any ancestor
+  // repeat elements of the target element not in common with the source element are descendants of
+  // the repeat elements that the source and target element have in common, if any.
+
+  // For the repeat elements that are in common, the desired target object exists in the same set of
+  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
+  // element that is not in common with the source element, the current index of the repeat
+  // determines the set of run-time objects that contains the desired target object.
+  for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
+    'ancestor::fx-repeatitem => reverse()',
+    sourceObject,
+    null,
+    null,
+    { namespaceResolver: xhtmlNamespaceResolver },
+  )) {
+    const foundTargetObjects = allMatchingTargetObjects.filter(to =>
+      ancestorRepeatItem.contains(to),
+    );
+    if (foundTargetObjects.length === 0) {
+      continue;
+    }
+    if (foundTargetObjects.length === 1) {
+      // A single one is found: the target object is directly in a common repeat
+      const targetObject = foundTargetObjects[0];
+      if (nodeName && targetObject.localName !== nodeName) {
+        return null;
+      }
+      return targetObject;
+    }
+
+    // Multiple target objects are found: they are in a repeat that is not common with the source object
+    // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
+    const targetObject = foundTargetObjects.find(to =>
+      fxEvaluateXPathToNodes(
+        'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+        to,
+        null,
+        {},
+      ),
+    );
+    if (!targetObject) {
+      // Nothing valid found for whatever reason. This might be something dynamic?
+      return null;
+    }
+    if (nodeName && targetObject.localName !== nodeName) {
+      return null;
+    }
+    return targetObject;
+  }
+  // We found no target objects in common repeats. The id is unresolvable
+  return null;
+}
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -183,7 +287,7 @@ registerCustomXPathFunction(
   'xs:string?',
   (dynamicContext, string) => {
     const { formElement } = dynamicContext.currentContext;
-    const instance = formElement.querySelector(`fx-instance[id=${string}]`);
+    const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
       const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
       return def;
@@ -254,7 +358,8 @@ registerCustomXPathFunction(
   'element()?',
   (dynamicContext, string) => {
     const { formElement } = dynamicContext.currentContext;
-    const instance = formElement.querySelector(`fx-instance[id=${string}]`);
+    const instance = resolveId(string, formElement, 'fx-instance');
+
     if (instance) {
       // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
       // const def = JSON.stringify(instance.getDefaultContext());
@@ -278,13 +383,6 @@ registerCustomXPathFunction(
   },
 );
 
-const xhtmlNamespaceResolver = prefix => {
-  if (!prefix) {
-    return 'http://www.w3.org/1999/xhtml';
-  }
-  return undefined;
-};
-
 const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
@@ -301,7 +399,7 @@ const instance = (dynamicContext, string) => {
   // console.log('fnInstance string: ', string);
 
   const inst = string
-    ? formElement.querySelector(`fx-instance[id=${string}]`)
+    ? resolveId(string, formElement, 'fx-instance')
     : formElement.querySelector(`fx-instance`);
 
   // const def = instance.getInstanceData();
@@ -340,7 +438,10 @@ registerCustomXPathFunction(
   'xs:integer?',
   (dynamicContext, string) => {
     const { formElement } = dynamicContext.currentContext;
-    const repeat = string ? formElement.querySelector(`fx-repeat[id=${string}]`) : null;
+    if (string === null) {
+      return 1;
+    }
+    const repeat = resolveId(string, formElement, 'fx-repeat');
 
     // const def = instance.getInstanceData();
     if (repeat) {
