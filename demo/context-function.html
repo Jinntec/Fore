@@ -29,12 +29,10 @@
                 </data>
             </fx-instance>
 
-            <fx-bind ref="facets/facet" relevant="local:select(.)">
-                <!--
-                                <fx-bind ref="@count" relevant="false()"></fx-bind>
-                                <fx-bind ref="@selected" relevant="false()"></fx-bind>
-                -->
-                            </fx-bind>
+            <fx-bind ref="facets/facet" relevant="instance('vars')/running != 'true' or @selected='true'">
+                <fx-bind ref="@count" relevant="instance('vars')/running != 'true'"></fx-bind>
+                <fx-bind ref="@selected" relevant="instance('vars')/running != 'true'"></fx-bind>
+            </fx-bind>
 
 
             <fx-instance id="params">
@@ -46,7 +44,7 @@
             </fx-instance>
             <fx-instance id="vars">
                 <data>
-                    <running></running>
+                    <running>false</running>
                 </data>
             </fx-instance>
 
@@ -56,11 +54,13 @@
                           replace="instance"
                           instance="params">
                 <fx-action event="submit">
-                    <fx-setvalue ref="instance('vars')/running" value="'true'">true</fx-setvalue>
+                    <fx-setvalue ref="instance('vars')/running">true</fx-setvalue>
                 </fx-action>
-                <!--
-                                <fx-send submission="dosearch" event="submit-done"></fx-send>
-                -->
+
+                <fx-action event="submit-done">
+                    <fx-setvalue ref="instance('vars')/running">false</fx-setvalue>
+<!--                    <fx-send submission="dosearch"></fx-send>-->
+                </fx-action>
             </fx-submission>
 
             <fx-submission id="dosearch"
@@ -68,12 +68,6 @@
                            replace="instance"
                            instance="default"></fx-submission>
             </fx-submission>
-
-            <fx-function
-                    signature="local:select($in as item()?) as xs:boolean"
-                    type="text/xpath">
-                exists($in)
-            </fx-function>
 
         </fx-model>
         <fx-repeat ref="facets/facet">
