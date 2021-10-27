@@ -127,6 +127,40 @@ export class Fore {
     return null;
   }
 
+  static fadeInElement(element){
+    const duration = 600;
+    const fadeIn = () => {
+      // Stop all current animations
+      if (element.getAnimations) {
+        element.getAnimations().map((anim) => anim.finish());
+      }
+
+      // Play the animation with the newly specified duration
+       const fadeIn = element.animate({
+        opacity: [0, 1]
+      }, duration);
+      return fadeIn.finished;
+    };
+    return fadeIn();
+  }
+
+  static fadeOutElement(element){
+    const duration = 2600;
+    const fadeOut = () => {
+      // Stop all current animations
+      if (element.getAnimations) {
+        element.getAnimations().map((anim) => anim.finish());
+      }
+
+      // Play the animation with the newly specified duration
+       const fadeOut = element.animate({
+        opacity: [1, 0]
+      }, duration);
+      return fadeOut.finished;
+    };
+    return fadeOut();
+  }
+
   /**
    * clear all text nodes and attribute values to get a 'clean' template.
    * @param n

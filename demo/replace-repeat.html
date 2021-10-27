@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>barebone Fore form</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+
+            <fx-instance>
+                <data>
+                    <item>item1</item>
+                    <item>item2</item>
+                    <item>item3</item>
+                    <item>item4</item>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="second">
+                <data>
+                    <item>item8</item>
+                    <item>item9</item>
+                </data>
+            </fx-instance>
+            <fx-submission id="s1"
+                           url="#echo"
+                           method="post"
+                           ref="instance('second')"
+                           replace="instance"
+                           instance="default"></fx-submission>
+        </fx-model>
+        <fx-repeat ref="item">
+            <template>
+                <span>{.}</span>
+            </template>
+        </fx-repeat>
+        <fx-trigger>
+            <button>submit</button>
+            <fx-send submission="s1"></fx-send>
+        </fx-trigger>
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

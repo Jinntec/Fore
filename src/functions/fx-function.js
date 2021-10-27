@@ -28,9 +28,9 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
     const type = this.getAttribute('type') || 'text/xpath';
 
     // Parse the signature to something useful
-    // Signature is of the form `my:sumproduct($p as xs:decimal*, $q as xs:decimal*) as xs:decimal`
+    // Signature is of the form `my:sumproduct($p as xs:decimal*, $q as xs:decimal*) as xs:decimal` or local:something($a as item()*) as item()*
     const signatureParseResult = this.signature.match(
-      /(?:(?<prefix>[^:]*):)?(?<localName>[^(]+)\((?<params>[^)]*)\)(?: as (?<returnType>.*))?/,
+      /(?:(?<prefix>[^:]*):)?(?<localName>[^(]+)\((?<params>(?:\(\)|[^)])*)\)(?: as (?<returnType>.*))?/,
     );
 
     if (!signatureParseResult) {

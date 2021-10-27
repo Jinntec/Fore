@@ -53,6 +53,12 @@
     <p>This not only ensures the integrity of the instance data but also allows us to work with real
     XML documents.</p>
 
+    <h3>Limitations of inline instances</h3>
+    <p class="note">Inline instances use the HTML DOM of the browser which e.g.
+    only supports lowercase element names, no namespaces etc. If you intend to work with
+    full XML documents you need to use external to use external files with the <code>src</code> attribute. See
+    next example.</p>
+
     <h2>Addressing instances</h2>
     <demo-snippet>
         <template>
