@@ -20,8 +20,6 @@ export class FxOutput extends XfAbstractControl {
   }
 
   connectedCallback() {
-    console.log('connectedCallback output', this.shadowRoot);
-
     const style = `
           :host {
             display: inline-block;
