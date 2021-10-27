@@ -175,10 +175,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
-        this._fadeIn(this, this.display);
+        // this._fadeIn(this, this.display);
+        this.style.display = this.display;
       } else {
         this._dispatchEvent('nonrelevant');
-        this._fadeOut(this);
+        // this._fadeOut(this);
+        this.style.display = 'none';
       }
     }
   }
