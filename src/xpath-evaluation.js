@@ -10,6 +10,168 @@ import {
 } from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+/**
+ * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
+ * type of the output is more predictable.
+ *
+ * @param  {string} xpath  The XPath to run
+ * @param  {Node} contextNode The start of the XPath
+ * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
+ */
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+    return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
+        currentContext: { formElement, variables },
+        moduleImports: {
+            xf: XFORMS_NAMESPACE_URI,
+        },
+        functionNameResolver,
+        namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+    });
+}
+
+/**
+ * Evaluate an XPath to the first Node
+ *
+ * @param  {string} xpath  The XPath to run
+ * @param  {Node} contextNode The start of the XPath
+ * @param  {Node} formElement  The form element associated to the XPath
+ * @return {Node}  The first node found by the XPath
+ */
+export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
+    return fxEvaluateXPathToFirstNode(
+        xpath,
+        contextNode,
+        null,
+        {},
+        {
+            namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+            defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            currentContext: { formElement },
+        },
+    );
+}
+
+/**
+ * Evaluate an XPath to all nodes
+ *
+ * @param  {string} xpath  The XPath to run
+ * @param  {Node} contextNode The start of the XPath
+ * @param  {Node} formElement  The form element associated to the XPath
+ * @return {Node[]}  All nodes
+ */
+export function evaluateXPathToNodes(xpath, contextNode, formElement) {
+    return fxEvaluateXPathToNodes(
+        xpath,
+        contextNode,
+        null,
+        {},
+        {
+            currentContext: { formElement },
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+        },
+    );
+}
+
+/**
+ * Evaluate an XPath to a boolean
+ *
+ * @param  {string} xpath  The XPath to run
+ * @param  {Node} contextNode The start of the XPath
+ * @param  {Node} formElement  The form element associated to the XPath
+ * @return {boolean}
+ */
+export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
+    return fxEvaluateXPathToBoolean(
+        xpath,
+        contextNode,
+        null,
+        {},
+        {
+            currentContext: { formElement },
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+        },
+    );
+}
+
+/**
+ * Evaluate an XPath to a string
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @return {string}
+ */
+export function evaluateXPathToString(
+    xpath,
+    contextNode,
+    formElement,
+    domFacade = null,
+    namespaceReferenceNode = formElement,
+) {
+    return fxEvaluateXPathToString(
+        xpath,
+        contextNode,
+        domFacade,
+        {},
+
+        {
+            currentContext: { formElement },
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+        },
+    );
+}
+
+/**
+ * Evaluate an XPath to a number
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * access. This is used to determine dependencies between bind elements.
+ * @return {Number}
+ */
+export function evaluateXPathToNumber(
+    xpath,
+    contextNode,
+    formElement,
+    domFacade = null,
+    namespaceReferenceNode = formElement,
+) {
+    return fxEvaluateXPathToNumber(
+        xpath,
+        contextNode,
+        domFacade,
+        {},
+        {
+            currentContext: { formElement },
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+        },
+    );
+}
 
 /**
  * @param id as string
@@ -97,8 +259,8 @@ registerCustomXPathFunction(
       // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
       // const def = JSON.stringify(instance.getDefaultContext());
 
-      const tree = document.createElement('div');
-      tree.setAttribute('class', 'logtree');
+      const treeDiv = document.createElement('div');
+        treeDiv.setAttribute('class', 'logtree');
       // const datatree = buildTree(tree,instance.getDefaultContext());
       // return tree.appendChild(datatree);
       // return  buildTree(root,instance.getDefaultContext());;
@@ -107,7 +269,10 @@ registerCustomXPathFunction(
       if (logtree) {
         logtree.parentNode.removeChild(logtree);
       }
-      form.appendChild(buildTree(tree, instance.getDefaultContext()));
+      const tree = buildTree(treeDiv, instance.getDefaultContext());
+      if(tree){
+          form.appendChild(tree);
+      }
     }
     return null;
   },
@@ -148,6 +313,26 @@ const instance = (dynamicContext, string) => {
   }
   return null;
 };
+
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'current' },
+  [],
+  'item()?',
+  (dynamicContext, string) => {
+      console.log('currentContext', dynamicContext.parentNode);
+      console.log('currentContext', dynamicContext.currentContext);
+/*
+    const { formElement } = dynamicContext.currentContext;
+    const repeat = string ? formElement.querySelector(`fx-repeat[id=${string}]`) : null;
+
+    // const def = instance.getInstanceData();
+    if (repeat) {
+      return repeat.getAttribute('index');
+    }
+*/
+    return null;
+  },
+);
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
@@ -246,6 +431,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
     // TODO: put the full XForms library functions set here
     case 'base64encode':
     case 'boolean-from-string':
+    case 'current':
     case 'depends':
     case 'event':
     case 'index':
@@ -307,168 +493,6 @@ function resolveNamespacePrefix(contextElement, prefix) {
   return result;
 }
 
-/**
- * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
- * type of the output is more predictable.
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
- */
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
-  return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
-    currentContext: { formElement, variables },
-    moduleImports: {
-      xf: XFORMS_NAMESPACE_URI,
-    },
-    functionNameResolver,
-    namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
-  });
-}
-
-/**
- * Evaluate an XPath to the first Node
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
- * @return {Node}  The first node found by the XPath
- */
-export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
-  return fxEvaluateXPathToFirstNode(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
-      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      currentContext: { formElement },
-    },
-  );
-}
-
-/**
- * Evaluate an XPath to all nodes
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
- * @return {Node[]}  All nodes
- */
-export function evaluateXPathToNodes(xpath, contextNode, formElement) {
-  return fxEvaluateXPathToNodes(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
-    },
-  );
-}
-
-/**
- * Evaluate an XPath to a boolean
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
- * @return {boolean}
- */
-export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
-  return fxEvaluateXPathToBoolean(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
-    },
-  );
-}
-
-/**
- * Evaluate an XPath to a string
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @return {string}
- */
-export function evaluateXPathToString(
-  xpath,
-  contextNode,
-  formElement,
-  domFacade = null,
-  namespaceReferenceNode = formElement,
-) {
-  return fxEvaluateXPathToString(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
-
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
-    },
-  );
-}
-
-/**
- * Evaluate an XPath to a number
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * access. This is used to determine dependencies between bind elements.
- * @return {Number}
- */
-export function evaluateXPathToNumber(
-  xpath,
-  contextNode,
-  formElement,
-  domFacade = null,
-  namespaceReferenceNode = formElement,
-) {
-  return fxEvaluateXPathToNumber(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
-    },
-  );
-}
 
 /**
  * @param input as string
