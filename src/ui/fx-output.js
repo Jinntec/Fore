@@ -97,7 +97,7 @@ export class FxOutput extends XfAbstractControl {
     const valueWrapper = this.shadowRoot.getElementById('value');
 
     if(this.hasAttribute('html')){
-      if(this.modelItem?.node){
+      if(this.modelItem.node){
         valueWrapper.innerHTML = this.modelItem.node.outerHTML;
         return;
       }
