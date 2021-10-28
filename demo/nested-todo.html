@@ -9,6 +9,8 @@
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link rel="stylesheet" href="../resources/demo.css">
+    <link rel="stylesheet" href="../resources/shared.css">
+
 
     <style>
 /*
@@ -113,8 +115,10 @@
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
+<!--
     <demo-snippet>
         <template>
+-->
 
             <fx-fore>
                 <fx-model id="record">
@@ -172,9 +176,13 @@
                     <button>add maintask</button>
                     <fx-append ref="task" repeat="r-todos"></fx-append>
                 </fx-trigger>
+
+<!--                <div id="logtree">{logtree('default')}</div>-->
             </fx-fore>
+<!--
         </template>
     </demo-snippet>
+-->
 </div>
 <script type="module" src="./demo.js"></script>
 

@@ -203,6 +203,8 @@ describe('submissionn tests', () => {
   it('supports serialization none ', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
+        <fx-send event="ready" submission="submission"></fx-send>
+
         <fx-model>
           <fx-instance>
             <data>
@@ -214,13 +216,12 @@ describe('submissionn tests', () => {
           </fx-instance>
           <fx-submission
             id="submission"
-            method="get"
+            method="post"
             url="#echo"
             replace="instance"
             serialization="none"
           >
           </fx-submission>
-          <fx-send event="ready" submission="submission"></fx-send>
         </fx-model>
       </fx-fore>
     `);
@@ -231,6 +232,7 @@ describe('submissionn tests', () => {
     expect(sm).to.exist;
 
     sm.submit();
+    await oneEvent(sm, 'submit-done');
 
     const inst = el.querySelector('fx-instance');
     console.log('instancedata', inst.instanceData);
@@ -282,9 +284,8 @@ describe('submissionn tests', () => {
     const inst = el.querySelectorAll('fx-instance');
     expect(inst[1]).to.exist;
     expect(inst[1].instanceData).to.exist;
+    await oneEvent(sm, 'submit-done');
 
-    const vehicle = inst.instanceData;
-    console.log(vehicle);
     expect(inst[1].instanceData.firstElementChild.firstElementChild.textContent).to.equal('suv');
   });
 });

@@ -174,12 +174,8 @@ export class FxModel extends HTMLElement {
 
     const v = this.mainGraph.overallOrder();
     v.forEach(path => {
-      console.log('recalculating path ', path);
-
       const node = this.mainGraph.getNodeData(path);
-      // console.log('recalculating node ', node);
       const modelItem = this.getModelItem(node);
-      // console.log('modelitem ', modelItem);
 
       if (modelItem && path.includes(':')) {
         const property = path.split(':')[1];
@@ -189,14 +185,14 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
-            console.log('recalculating property ', property);
-
             const expr = modelItem.bind[property];
             if (expr) {
-              console.log('recalc expr: ', expr);
               const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
               modelItem[property] = compute;
-              console.log(`modelItem '${property}'='${expr}' computed`, modelItem.required);
+              console.log(
+                `recalculating path ${path} - Expr:'${expr}' computed`,
+                modelItem[property],
+              );
             }
           }
         }

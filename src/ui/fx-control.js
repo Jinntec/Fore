@@ -57,8 +57,8 @@ class FxControl extends XfAbstractControl {
     console.log('widget ', this.widget);
 
     // ### convenience marker event
-    if(this.updateEvent === 'enter'){
-      this.widget.addEventListener('keyup', (event) => {
+    if (this.updateEvent === 'enter') {
+      this.widget.addEventListener('keyup', event => {
         if (event.keyCode === 13) {
           // Cancel the default action, if needed
           event.preventDefault();

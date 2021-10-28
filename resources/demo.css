@@ -4,7 +4,7 @@ body {
     padding:0;
     font-family: 'Roboto', 'Noto', sans-serif;
     /*background: var(--paper-orange-300);*/
-    background: var(--paper-cyan-300);
+    background: var(--paper-deep-orange-300);
 }
 code{
     font-weight: 700;
@@ -13,11 +13,11 @@ code{
 }
 h1{
     /*color:var(--paper-orange-900);*/
-    color:var(--paper-cyan-500);
+    color:var(--paper-deep-orange-500);
 }
 h2{
     /*color:var(--paper-orange-800);*/
-    color:var(--paper-cyan-500);
+    color:var(--paper-deep-orange-500);
 }
 #modalMessage{
     background:orange;
@@ -34,8 +34,9 @@ h2{
 }
 .note{
     /*background: var(--paper-amber-300);*/
-    background: var(--paper-cyan-100);
+    background: var(--paper-deep-orange-200);
     padding:10px;
+    font-size: 1rem;
 }
 p{
     font-size:1.4rem;
@@ -48,7 +49,7 @@ p{
 }
 
 a, a:link, a:visited {
-    color:var(--paper-cyan-700);
+    color:var(--paper-deep-orange-700);
 }
 .redline{
     padding: 1rem 2rem;
@@ -76,14 +77,14 @@ a, a:link, a:visited {
     font-size:1024px;
     z-index: -1;
     opacity: 0.06;
-    color:var(--paper-cyan-900);
+    color:var(--paper-deep-orange-900);
 }
 
 .wrapper{
     height:auto;
     max-width:800px;
     margin: 0 auto;
-    background: var(--paper-cyan-100);
+    background: var(--paper-deep-orange-100);
     opacity: 0.95;
     position: relative;
     min-height:80vh;

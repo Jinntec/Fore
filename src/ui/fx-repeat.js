@@ -193,7 +193,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     if (!this.inited) this.init();
     this._evalNodeset();
-    // console.log('repeat refresh nodeset ', this.nodeset);
+    console.log('repeat refresh nodeset ', this.nodeset);
+    // console.log('repeatCount', this.repeatCount);
 
     const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     const repeatItemCount = repeatItems.length;
@@ -214,6 +215,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         itemToRemove.parentNode.removeChild(itemToRemove);
 
         // this._fadeOut(itemToRemove);
+        // Fore.fadeOutElement(itemToRemove)
       }
     }
 
@@ -239,9 +241,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       }
     }
 
-    this._fadeIn(repeatItems[this.index - 1]);
     Fore.refreshChildren(this);
     this.setIndex(this.index);
+    // this.repeatCount = contextSize;
+    // console.log('repeatCount', this.repeatCount);
     console.groupEnd();
   }
 
@@ -268,12 +271,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     (function fade() {
       // setTimeout(() => {
-        let val = parseFloat(el.style.opacity);
-        // eslint-disable-next-line no-cond-assign
-        if (!((val += 0.1) > 1)) {
-          el.style.opacity = val;
-          requestAnimationFrame(fade);
-        }
+      let val = parseFloat(el.style.opacity);
+      // eslint-disable-next-line no-cond-assign
+      if (!((val += 0.1) > 1)) {
+        el.style.opacity = val;
+        requestAnimationFrame(fade);
+      }
       // }, 40);
     })();
   }

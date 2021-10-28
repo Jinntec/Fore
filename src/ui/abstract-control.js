@@ -79,7 +79,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     console.log('form ready', this.getOwnerForm().ready);
     this.handleRequired();
     this.handleReadonly();
-    if(this.getOwnerForm().ready){
+    if (this.getOwnerForm().ready) {
       this.handleValid();
     }
     this.handleRelevant();
@@ -141,7 +141,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
         this.classList.remove('invalid');
-        if(alert) alert.style.display = 'none';
+        if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
       } else {
         // ### constraint is invalid - handle alerts
@@ -175,10 +175,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
-        this._fadeIn(this, this.display);
+        // this._fadeIn(this, this.display);
+        this.style.display = this.display;
       } else {
         this._dispatchEvent('nonrelevant');
-        this._fadeOut(this);
+        // this._fadeOut(this);
+        this.style.display = 'none';
       }
     }
   }

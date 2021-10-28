@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>repeat with sequences</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        [unresolved] {
+            display: none;
+        }
+
+        fx-repeat {
+            padding: 20px;
+            display: block;
+            height: auto;
+        }
+
+        fx-repeatitem {
+            /*border: thin solid white;*/
+            /*background: lightsteelblue;*/
+            margin: 0.5rem 0;
+            display: grid;
+
+        }
+        fx-control {
+            display: inline-block;
+            padding: 0 6px;
+            white-space: nowrap;
+
+            /*padding: 6px;*/
+            /*margin: 4px;*/
+        }
+        fx-trigger{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>1</item>
+              <item>2</item>
+              <item>3</item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <pre id="indices">
+        <fx-repeat id="repeat" ref="/data/item">
+          <template>
+            <fx-repeat id="nested-repeat" ref="/data/item">
+              <template>
+                <span>({index("repeat") || ";" || index("nested-repeat")})</span>
+<input type="text"/>
+
+              </template>
+            </fx-repeat>
+          </template>
+        </fx-repeat>
+</pre>
+      </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

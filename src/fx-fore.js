@@ -6,7 +6,11 @@ import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.
 import getInScopeContext from './getInScopeContext.js';
 
 /**
- * Root element for forms. Kicks off initialization and displays messages.
+ * Main class for Fore.Outermost container element for each Fore application.
+ *
+ *
+ *
+ * Root element for Fore. Kicks off initialization and displays messages.
  *
  * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
@@ -114,8 +118,6 @@ export class FxFore extends HTMLElement {
             #messageContent{
                 margin-top:40px;
             }
-
-
         `;
 
     const html = `
@@ -247,13 +249,14 @@ export class FxFore extends HTMLElement {
    * @param form the form element
    */
   evaluateTemplateExpression(expr, node) {
+    if (expr === '{}') return;
     const matches = expr.match(/{[^}]*}/g);
     const namespaceContextNode =
       node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
         // console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
+        let naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
         if (!inscope) {
           const errNode =
@@ -267,7 +270,7 @@ export class FxFore extends HTMLElement {
         // being defined
 
         try {
-          const result = evaluateXPathToString(naked, inscope, this, null, namespaceContextNode);
+          const result = evaluateXPathToString(naked, inscope, node, null, namespaceContextNode);
 
           // console.log('result of eval ', result);
           const replaced = expr.replaceAll(match, result);
@@ -280,6 +283,14 @@ export class FxFore extends HTMLElement {
             parent.setAttribute(node.nodeName, replaced);
           } else if (node.nodeType === Node.TEXT_NODE) {
             node.textContent = replaced;
+          }
+
+          if (replaced.includes('{')) {
+            console.log('need to go next round');
+
+            // todo: duplicated code here - see above
+            naked = replaced.substring(1, replaced.length);
+            this.evaluateTemplateExpression(replaced, node);
           }
         } catch (error) {
           this.dispatchEvent(new CustomEvent('error', { detail: error }));

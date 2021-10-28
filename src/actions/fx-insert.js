@@ -175,11 +175,15 @@ export class FxInsert extends AbstractAction {
 
     console.log('<<<<<<< at', this.at);
     console.log('<<<<<<< index', index);
+    // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
       new CustomEvent('insert', {
         composed: true,
         bubbles: true,
-        detail: { insertedNodes: originSequenceClone, position: index },
+        detail: {
+          insertedNodes: originSequenceClone,
+          position: index,
+        },
       }),
     );
 

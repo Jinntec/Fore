@@ -97,4 +97,68 @@ describe('template expressions', () => {
     expect(theDivC.getAttribute('class')).to.equal('greetingC Hello CCC');
     expect(theDivC.innerText).to.equal('Greeting: Hello CCC another Hello CCC');
   });
+
+  it('evaluates multiple templates with an attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-action event="ready" while="true()" delay="5000">
+          <fx-update></fx-update>
+          <fx-refresh></fx-refresh>
+        </fx-action>
+
+        <fx-model>
+          <fx-instance>
+            <data>
+              <color1>#000</color1>
+              <color2>#fff</color2>
+              <opacity></opacity>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div
+          class="wrapper"
+          style="
+            background:linear-gradient(to right,{color1},{color2});"
+        ></div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const theDiv = el.querySelector('.wrapper');
+    const attr = theDiv.getAttribute('style');
+
+    expect(attr.trim()).to.equal('background:linear-gradient(to right,#000,#fff);');
+  });
+
+  it('empty template expression just does nothing', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-action event="ready" while="true()" delay="5000">
+          <fx-update></fx-update>
+          <fx-refresh></fx-refresh>
+        </fx-action>
+
+        <fx-model>
+          <fx-instance>
+            <data>
+              <color1>#000</color1>
+              <color2>#fff</color2>
+              <opacity></opacity>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div class="wrapper" style="background:{}"></div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const theDiv = el.querySelector('.wrapper');
+    const attr = theDiv.getAttribute('style');
+
+    expect(attr.trim()).to.equal('background:{}');
+  });
 });
