@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
-import {html, oneEvent, fixtureSync, expect} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
 
 describe('template expressions', () => {
-    it('detects template expressions', async () => {
-        const el = await fixtureSync(html`
+  it('detects template expressions', async () => {
+    const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
@@ -20,24 +20,24 @@ describe('template expressions', () => {
       </fx-fore>
     `);
 
-        await oneEvent(el, 'refresh-done');
-        const div = el.querySelector('div');
-        const attrNode = div.getAttributeNode('class');
-        expect(el.storedTemplateExpressionByNode).to.exist;
-        expect(el.storedTemplateExpressionByNode.size).to.equal(2);
-        expect(el.storedTemplateExpressionByNode.get(attrNode)).to.equal('static {greeting}');
-        expect(el.storedTemplateExpressionByNode.get(div.firstChild)).to.equal(
-            'Greeting: {greeting} another {greeting}',
-        );
+    await oneEvent(el, 'refresh-done');
+    const div = el.querySelector('div');
+    const attrNode = div.getAttributeNode('class');
+    expect(el.storedTemplateExpressionByNode).to.exist;
+    expect(el.storedTemplateExpressionByNode.size).to.equal(2);
+    expect(el.storedTemplateExpressionByNode.get(attrNode)).to.equal('static {greeting}');
+    expect(el.storedTemplateExpressionByNode.get(div.firstChild)).to.equal(
+      'Greeting: {greeting} another {greeting}',
+    );
 
-        const theDiv = el.querySelector('.static');
+    const theDiv = el.querySelector('.static');
 
-        expect(theDiv.getAttribute('class')).to.equal('static Hello Universe');
-        expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');
-    });
+    expect(theDiv.getAttribute('class')).to.equal('static Hello Universe');
+    expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');
+  });
 
-    it('skips the contents of fx-model for template detection', async () => {
-        const el = await fixtureSync(html`
+  it('skips the contents of fx-model for template detection', async () => {
+    const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
@@ -49,16 +49,16 @@ describe('template expressions', () => {
       </fx-fore>
     `);
 
-        await oneEvent(el, 'refresh-done');
-        expect(el.storedTemplateExpressionByNode.size).to.equal(0);
+    await oneEvent(el, 'refresh-done');
+    expect(el.storedTemplateExpressionByNode.size).to.equal(0);
 
-        const greeting = el.querySelector('greeting');
+    const greeting = el.querySelector('greeting');
 
-        expect(greeting.textContent).to.equal('Hello {unreplaced} Universe');
-    });
+    expect(greeting.textContent).to.equal('Hello {unreplaced} Universe');
+  });
 
-    it('Correctly resolves namespaces based on the context of the template', async () => {
-        const el = await fixtureSync(html`
+  it('Correctly resolves namespaces based on the context of the template', async () => {
+    const el = await fixtureSync(html`
       <fx-fore xpath-default-namespace="CCC">
         <fx-model>
           <fx-instance>
@@ -82,84 +82,83 @@ describe('template expressions', () => {
       </fx-fore>
     `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const theDivA = el.querySelector('.greetingA');
+    const theDivA = el.querySelector('.greetingA');
 
-        expect(theDivA.getAttribute('class')).to.equal('greetingA Hello AAA');
-        expect(theDivA.innerText).to.equal('Greeting: Hello AAA another Hello AAA');
+    expect(theDivA.getAttribute('class')).to.equal('greetingA Hello AAA');
+    expect(theDivA.innerText).to.equal('Greeting: Hello AAA another Hello AAA');
 
-        const theDivB = el.querySelector('.greetingB');
-        expect(theDivB.getAttribute('class')).to.equal('greetingB Hello BBB');
-        expect(theDivB.innerText).to.equal('Greeting: Hello BBB another Hello BBB');
+    const theDivB = el.querySelector('.greetingB');
+    expect(theDivB.getAttribute('class')).to.equal('greetingB Hello BBB');
+    expect(theDivB.innerText).to.equal('Greeting: Hello BBB another Hello BBB');
 
-        const theDivC = el.querySelector('.greetingC');
-        expect(theDivC.getAttribute('class')).to.equal('greetingC Hello CCC');
-        expect(theDivC.innerText).to.equal('Greeting: Hello CCC another Hello CCC');
-    });
+    const theDivC = el.querySelector('.greetingC');
+    expect(theDivC.getAttribute('class')).to.equal('greetingC Hello CCC');
+    expect(theDivC.innerText).to.equal('Greeting: Hello CCC another Hello CCC');
+  });
 
-    it('evaluates multiple templates with an attribute', async () => {
-        const el = await fixtureSync(html`
-    <fx-fore>
+  it('evaluates multiple templates with an attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
         <fx-action event="ready" while="true()" delay="5000">
-            <fx-update></fx-update>
-            <fx-refresh></fx-refresh>
+          <fx-update></fx-update>
+          <fx-refresh></fx-refresh>
         </fx-action>
 
         <fx-model>
-            <fx-instance>
-                <data>
-                    <color1>#000</color1>
-                    <color2>#fff</color2>
-                    <opacity></opacity>
-                </data>
-            </fx-instance>
-
+          <fx-instance>
+            <data>
+              <color1>#000</color1>
+              <color2>#fff</color2>
+              <opacity></opacity>
+            </data>
+          </fx-instance>
         </fx-model>
 
-        <div class="wrapper" style="
-            background:linear-gradient(to right,{color1},{color2});">
-        </div>
-    </fx-fore>
+        <div
+          class="wrapper"
+          style="
+            background:linear-gradient(to right,{color1},{color2});"
+        ></div>
+      </fx-fore>
     `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const theDiv = el.querySelector('.wrapper');
-        const attr = theDiv.getAttribute('style');
+    const theDiv = el.querySelector('.wrapper');
+    const attr = theDiv.getAttribute('style');
 
-        expect(attr.trim()).to.equal('background:linear-gradient(to right,#000,#fff);');
-    });
+    expect(attr.trim()).to.equal('background:linear-gradient(to right,#000,#fff);');
+  });
 
-    it('empty template expression just does nothing', async () => {
-        const el = await fixtureSync(html`
-    <fx-fore>
+  it('empty template expression just does nothing', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
         <fx-action event="ready" while="true()" delay="5000">
-            <fx-update></fx-update>
-            <fx-refresh></fx-refresh>
+          <fx-update></fx-update>
+          <fx-refresh></fx-refresh>
         </fx-action>
 
         <fx-model>
-            <fx-instance>
-                <data>
-                    <color1>#000</color1>
-                    <color2>#fff</color2>
-                    <opacity></opacity>
-                </data>
-            </fx-instance>
-
+          <fx-instance>
+            <data>
+              <color1>#000</color1>
+              <color2>#fff</color2>
+              <opacity></opacity>
+            </data>
+          </fx-instance>
         </fx-model>
 
-        <div class="wrapper" style="background:{}">
-        </div>
-    </fx-fore>
+        <div class="wrapper" style="background:{}"></div>
+      </fx-fore>
     `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const theDiv = el.querySelector('.wrapper');
-        const attr = theDiv.getAttribute('style');
+    const theDiv = el.querySelector('.wrapper');
+    const attr = theDiv.getAttribute('style');
 
-        expect(attr.trim()).to.equal('background:{}');
-    });
+    expect(attr.trim()).to.equal('background:{}');
+  });
 });

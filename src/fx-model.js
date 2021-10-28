@@ -185,12 +185,14 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPath(expr, modelItem.node, this);
             modelItem.value = compute;
           } else if (property !== 'constraint' && property !== 'type') {
-
             const expr = modelItem.bind[property];
             if (expr) {
               const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
               modelItem[property] = compute;
-              console.log(`recalculating path ${path} - Expr:'${expr}' computed`, modelItem[property]);
+              console.log(
+                `recalculating path ${path} - Expr:'${expr}' computed`,
+                modelItem[property],
+              );
             }
           }
         }

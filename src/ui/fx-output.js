@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import {evaluateXPath, evaluateXPathToString} from "../xpath-evaluation.js";
+import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -72,15 +72,14 @@ export class FxOutput extends XfAbstractControl {
     // ### 3. use inline content which is there anyway
   }
 
-  getValue(){
+  getValue() {
     // return 'foobar';
     try {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
-      if(this.hasAttribute('html')){
-        return  evaluateXPath(this.valueAttr, inscopeContext, this);
+      if (this.hasAttribute('html')) {
+        return evaluateXPath(this.valueAttr, inscopeContext, this);
       }
       return evaluateXPathToString(this.valueAttr, inscopeContext, this);
-
     } catch (error) {
       console.error(error);
       this.dispatch('error', { message: error });
@@ -96,8 +95,8 @@ export class FxOutput extends XfAbstractControl {
   async updateWidgetValue() {
     const valueWrapper = this.shadowRoot.getElementById('value');
 
-    if(this.hasAttribute('html')){
-      if(this.modelItem.node){
+    if (this.hasAttribute('html')) {
+      if (this.modelItem.node) {
         valueWrapper.innerHTML = this.modelItem.node.outerHTML;
         return;
       }

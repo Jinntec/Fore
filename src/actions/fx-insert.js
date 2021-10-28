@@ -182,7 +182,7 @@ export class FxInsert extends AbstractAction {
         bubbles: true,
         detail: {
           insertedNodes: originSequenceClone,
-          position: index
+          position: index,
         },
       }),
     );
