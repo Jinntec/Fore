@@ -10,7 +10,7 @@
 
     <link href="../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
-    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+        <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
         button{
@@ -75,16 +75,14 @@
                 <fx-message event="submit-error">Login failed</fx-message>
                 <fx-action event="submit-done">
                     <fx-message>Access granted</fx-message>
+                    <fx-toggle case="home"></fx-toggle>
                 </fx-action>
-                <!--                <fx-toggle case="home" event="submit-done"></fx-toggle>-->
 
             </fx-submission>
 
         </fx-model>
-<!--
         <fx-switch>
-            <fx-case>
--->
+            <fx-case id="loginCase">
                 <section class="login">
                     <fx-control ref="user">
                         <label>User</label>
@@ -101,13 +99,15 @@
                         <fx-send if="inprogress eq 'false'" submission="login"></fx-send>
                     </fx-trigger>
                 </section>
-<!--
             </fx-case>
             <fx-case id="home">
                 <h1>Welcome</h1>
+                <fx-trigger>
+                    <button>logout</button>
+                    <fx-toggle case="loginCase"></fx-toggle>
+                </fx-trigger>
             </fx-case>
         </fx-switch>
--->
     </fx-fore>
 
 </div>
