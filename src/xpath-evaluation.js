@@ -315,36 +315,39 @@ function resolveId(id, sourceObject, nodeName = null) {
     const foundTargetObjects = allMatchingTargetObjects.filter(to =>
       ancestorRepeatItem.contains(to),
     );
-    if (foundTargetObjects.length === 0) {
-      continue;
-    }
-    if (foundTargetObjects.length === 1) {
-      // A single one is found: the target object is directly in a common repeat
-      const targetObject = foundTargetObjects[0];
-      if (nodeName && targetObject.localName !== nodeName) {
-        return null;
+    switch (foundTargetObjects.length) {
+      case 0:
+        // Nothing found: ignore
+        break;
+      case 1: {
+        // A single one is found: the target object is directly in a common repeat
+        const targetObject = foundTargetObjects[0];
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
       }
-      return targetObject;
+      default: {
+        // Multiple target objects are found: they are in a repeat that is not common with the source object
+        // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
+        const targetObject = foundTargetObjects.find(to =>
+          fxEvaluateXPathToNodes(
+            'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+            to,
+            null,
+            {},
+          ),
+        );
+        if (!targetObject) {
+          // Nothing valid found for whatever reason. This might be something dynamic?
+          return null;
+        }
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
     }
-
-    // Multiple target objects are found: they are in a repeat that is not common with the source object
-    // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
-    const targetObject = foundTargetObjects.find(to =>
-      fxEvaluateXPathToNodes(
-        'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
-        to,
-        null,
-        {},
-      ),
-    );
-    if (!targetObject) {
-      // Nothing valid found for whatever reason. This might be something dynamic?
-      return null;
-    }
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
-    return targetObject;
   }
   // We found no target objects in common repeats. The id is unresolvable
   return null;
