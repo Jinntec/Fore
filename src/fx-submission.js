@@ -173,8 +173,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       body: serialized,
     });
 
-    const contentType = response.headers.get('content-type').toLowerCase();
+    if (!response.ok || response.status > 400) {
+      this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+      return;
+    }
 
+    const contentType = response.headers.get('content-type').toLowerCase();
     if (contentType.startsWith('text/plain') || contentType.startsWith('text/html')) {
       const text = await response.text();
       this._handleResponse(text);
@@ -190,10 +194,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       this._handleResponse(blob);
     }
 
-    if (!response.ok || response.status > 400) {
-      this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
-      return;
-    }
     this.dispatch('submit-done', {});
   }
 
