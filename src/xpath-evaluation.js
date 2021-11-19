@@ -30,14 +30,24 @@ function resolveNamespacePrefix(contextElement, prefix) {
     return 'http://www.w3.org/1999/xhtml';
   }
 
+  if(contextElement.hasAttribute('xpath-default-namespace')){
+     return contextElement.getAttribute('xpath-default-namespace')
+  }
+    else{
+      return null;
+  }
+
+
+/*
   if (prefix === '') {
     return (
       fxEvaluateXPathToString(
-        'ancestor-or-self::*/@xpath-default-namespace[last()]',
+        'ancestor-or-self::*!/@xpath-default-namespace[last()]',
         contextElement,
-      ) || null
+      ) || ""
     );
   }
+*/
 
   // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
   // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as

@@ -1,0 +1,53 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <revisionDesc>
+            <listChange>a change</listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <entry xml:id="uuid-0001">
+                <form type="lemma">
+                    <orth type="greek"/>
+                    <orth type="latin"/>
+                    <orth type="h-variant"/>
+                    <orth type="lgpn"/>
+                    <date notBefore="" notAfter=""/>
+                </form>
+                <gramGrp type="classification">
+                    <gram type="fictitious"/>
+                    <gram type="GPR"/>
+                    <gram type="sublemma" ana="monosemic"/>
+                    <usg type="lang" cert=""/>
+                </gramGrp>
+                <gramGrp cert="high" ana="" type="segmentation" subtype="">
+                    <m baseForm="" type="prefix" n="1" function="" ana="" subtype="" cert="" corresp=""/>
+                    <m baseForm="" type="radical" n="1" function="" ana="" subtype="" cert="" corresp=""/>
+                    <m baseForm="" type="radical" n="2" function="" ana="" subtype="" cert="" corresp=""/>
+                    <m baseForm="" type="suffix" subtype="" n="1"/>
+                    <m baseForm="" type="suffix" n="2"/>
+                    <m baseForm="" type="suffix" n="3"/>
+                    <m baseForm="" type="suffix" n="4"/>
+                    <listBibl>
+                        <cit type="auxiliary">
+                            <quote/>
+                            <bibl>
+                                <author/>
+                            </bibl>
+                            <ref target=""/>
+                            <span/>
+                        </cit>
+                        <cit type="modern">
+                            <quote/>
+                            <bibl>
+                                <author/>
+                            </bibl>
+                            <ref target=""/>
+                            <span/>
+                        </cit>
+                    </listBibl>
+                </gramGrp>
+            </entry>
+        </body>
+    </text>
+</TEI>

@@ -1,0 +1,31 @@
+<html
+>
+<head>
+    <title>Namespace test</title>
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance id="default"
+                     src="data/default.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+        </fx-instance>
+
+        <fx-instance id="second">
+            <data>
+                <morpheme/>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <main>
+        <h2>TEI: {//listChange}</h2>
+        <h2>default ns: {instance('second')/morpheme}</h2>
+    </main>
+</fx-fore>
+</main>
+
+<script type="module" src="../../index.js"></script>
+
+</body>
+</html>

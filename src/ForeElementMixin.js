@@ -24,12 +24,6 @@ export const foreElementMixin = superclass =>
           type: Object,
         },
         /**
-         * XPath binding expression pointing to bound node
-         */
-        ref: {
-          type: String,
-        },
-        /**
          * The modelitem object associated to the bound node holding the evaluated state.
          */
         modelItem: {
@@ -41,6 +35,13 @@ export const foreElementMixin = superclass =>
         nodeset: {
           type: Object,
         },
+        /**
+         * XPath binding expression pointing to bound node
+         */
+        ref: {
+          type: String,
+        }
+
       };
     }
 

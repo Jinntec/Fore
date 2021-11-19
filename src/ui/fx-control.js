@@ -1,5 +1,7 @@
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import getInScopeContext from '../getInScopeContext.js';
+import {XPathUtil} from "../xpath-util";
 
 const WIDGETCLASS = 'widget';
 
@@ -136,11 +138,26 @@ class FxControl extends XfAbstractControl {
     if (this.widget.hasAttribute('ref')) {
       const tmpl = this.widget.querySelector('template');
 
+
       // ### eval nodeset for list control
       const ref = this.widget.getAttribute('ref');
-      const inscope = this.getInScopeContext();
+
+      /*
+      actually a ref on a select or similar component should point to a different instance
+      with an absolute expr e.g. 'instance('theId')/...'
+
+      todo: even bail out if ref is not absolute?
+       */
+      const instanceId = XPathUtil.getInstanceId(ref);
+
+      // const inscope = this.getInScopeContext();
+      const instance = this.getModel().getInstance(instanceId);
+      // const inscope = getInScopeContext(this, ref);
+      const inscope = instance.getInstanceData().firstElementChild;
       const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPath(ref, inscope, formElement);
+
+      // const nodeset = evaluateXPath(ref, inscope, formElement);
+      const nodeset = evaluateXPath(ref, inscope, instance);
 
       // ### clear items
       const { children } = this.widget;

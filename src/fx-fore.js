@@ -4,6 +4,7 @@ import './fx-model.js';
 import '@jinntec/jinn-toast';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {XPathUtil} from "./xpath-util";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -268,9 +269,11 @@ export class FxFore extends HTMLElement {
         }
         // Templates are special: they use the namespace configuration from the place where they are
         // being defined
-
+        const instanceId = XPathUtil.getInstanceId(naked);
+        console.log('target instance ', instanceId);
+        const inst = this.getModel().getInstance(instanceId);
         try {
-          const result = evaluateXPathToString(naked, inscope, node, null, namespaceContextNode);
+          const result = evaluateXPathToString(naked, inscope, node, null, inst);
 
           // console.log('result of eval ', result);
           const replaced = expr.replaceAll(match, result);

@@ -41,7 +41,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
-      this.value = this.modelItem.value;
+      // this.value = this.modelItem.value;
     }
 
     // await this.updateComplete;
