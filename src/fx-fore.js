@@ -4,7 +4,7 @@ import './fx-model.js';
 import '@jinntec/jinn-toast';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
-import {XPathUtil} from "./xpath-util";
+import { XPathUtil } from './xpath-util';
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -204,7 +204,7 @@ export class FxFore extends HTMLElement {
   _updateTemplateExpressions() {
     // Note the fact we're going over HTML here: therefore the `html` prefix.
     const search =
-      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::xhtml:fx-model/descendant-or-self::node()/(., @*)";
+      "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     console.log('template expressions found ', tmplExpressions);
