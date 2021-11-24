@@ -14,6 +14,12 @@
         <fx-instance id="second">
             <data>
                 <morpheme>Default namespace REPRESENT!</morpheme>
+                <item>item1</item>
+                <item>item2</item>
+                <item>item3</item>
+                <item>item4</item>
+                <item>item5</item>
+                <item>item6</item>
             </data>
         </fx-instance>
     </fx-model>
@@ -21,6 +27,13 @@
     <main>
         <h2>TEI: {//listChange}</h2>
         <h2>default ns: {instance('second')/morpheme}</h2>
+        <fx-control ref="//listChange">
+            <select ref="instance('second')//item">
+                <template>
+                    <option>{.}</option>
+                </template>
+            </select>
+        </fx-control>
     </main>
 </fx-fore>
 </main>
