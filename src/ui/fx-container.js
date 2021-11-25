@@ -78,6 +78,8 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
 
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
+    if(!this.modelItem) return ;
+
     if (this.isEnabled() !== this.modelItem.enabled) {
       if (this.modelItem.enabled) {
         this.dispatchEvent(new CustomEvent('enabled', {}));

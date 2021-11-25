@@ -1,5 +1,6 @@
-<html
- >
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html>
 <head>
     <title>LGPN-Ling</title><!--
         ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
@@ -8,149 +9,151 @@
     <link rel="stylesheet" type="text/css" href="resources/css/style.css"/>
 </head>
 <body>
-    <fx-fore>
-        <fx-model id="model-1">
-            <fx-instance id="default" src="data/default.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-<!--            <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>-->
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance id="default" src="data/default.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        <!--            <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>-->
 
-            <fx-instance id="i-template" src="data/template.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-            <fx-instance id="i-controller">
-                <data xmlns="">
-                    <morpheme/>
-                </data>
-            </fx-instance>
-            <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
-            <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"/>
-            <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
-            <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
-            <fx-instance id="i-classification" src="data/xml/classification.xml"/>
-            <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
-            <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
-            <fx-instance id="i-relations" src="data/xml/relations.xml"/>
-            <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
-            <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
-            <fx-instance id="i-functions" src="data/xml/functions.xml"/>
-            <fx-instance id="i-other" src="data/xml/other.xml"/>
-            <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
-            <fx-instance id="ifictitious" src="data/xml/fictitious.xml"></fx-instance>
-            <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-            <fx-instance xmlns="" id="i-dialects" src="../lgpn-ling-data/data/taxonomies/dialects.xml"/>
-            <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
+        <fx-instance id="i-template" src="data/template.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        <fx-instance id="i-controller">
+            <data xmlns="">
+                <morpheme/>
+            </data>
+        </fx-instance>
+        <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
+        <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"/>
+        <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
+        <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
+        <fx-instance id="i-classification" src="data/xml/classification.xml"/>
+        <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
+        <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
+        <fx-instance id="i-relations" src="data/xml/relations.xml"/>
+        <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
+        <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
+        <fx-instance id="i-other" src="data/xml/other.xml"/>
+        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
+        <fx-instance id="ifictitious" src="data/xml/fictitious.xml"></fx-instance>
+        <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
+        <fx-instance xmlns="" id="i-dialects" src="../lgpn-ling-data/data/taxonomies/dialects.xml"/>
+        <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
 
-            <fx-instance id="i-meanings">
-                <meanings xmlns="">
-                    <being-reloaded grp="0" n=""/>
-                    <target>
-                        <taxonomy/>
-                    </target>
-                    <template>
-                        <meaning grp="0" n="0"/>
-                    </template><!-- and actual entries created dynamically e.g.:
+        <fx-instance id="i-meanings">
+            <meanings xmlns="">
+                <being-reloaded grp="0" n=""/>
+                <target>
+                    <taxonomy/>
+                </target>
+                <template>
+                    <meaning grp="0" n="0"/>
+                </template><!-- and actual entries created dynamically e.g.:
                         <meaning grp="1" n="1">
                             <taxonomy/>
                         </meaning>
                         -->
-                </meanings>
-            </fx-instance>
-            <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
-                           resource="modules/load.xql?id={bf:appContext('id')}">
-                <fx-message ev:event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
-                <fx-message ev:event="xforms-submit-error">Failed to load data.</fx-message>
-                <fx-action ev:event="xforms-submit-done">
-                    <fx-action
-                            while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
-                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
-                                     value="instance('i-meanings')/being-reloaded/@grp + 1"/>
-                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
-                        <fx-send submission="s-reload-meanings"/>
-                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
-                        <fx-send submission="s-reload-meanings"/>
-                    </fx-action>
+            </meanings>
+        </fx-instance>
+        <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
+                       resource="modules/load.xql?id={bf:appContext('id')}">
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to load data.</fx-message>
+            <fx-action event="xforms-submit-done">
+                <fx-action
+                        while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                 value="instance('i-meanings')/being-reloaded/@grp + 1"/>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                    <fx-send submission="s-reload-meanings"/>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                    <fx-send submission="s-reload-meanings"/>
                 </fx-action>
-            </fx-submission>
-            <fx-submission id="s-save-data" method="post" replace="none" validate="true" resource="modules/save.xql">
-                <fx-header>
-                    <fx-name>userid</fx-name>
-                    <fx-value>{bf:appContext('id')}</fx-value>
-                </fx-header>
-                <fx-header>
-                    <fx-name>password</fx-name>
-                    <fx-value/>
-                </fx-header>
-                <fx-action ev:event="xforms-submit">
-                    <fx-setvalue ref="instance('i-default')//entry/@xml:id"
-                                 value="instance('i-default')//orth[@type='latin']"/>
-                    <fx-message ev:event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
-                </fx-action>
-                <fx-message ev:event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
-                <fx-message ev:event="xforms-submit-error">Failed to save data</fx-message>
-            </fx-submission>
-            <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
-                           resource="modules/reload-meanings.xql"
-                           ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
-                           targetref="instance('i-meanings')/target/taxonomy">
-                <fx-action ev:event="xforms-submit-done">
-                    <fx-action
-                            if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
-                        <fx-insert context="instance('i-meanings')" nodeset="*[last()]"
-                                   origin="instance('i-meanings')/template/meaning"/>
-                        <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
-                                     value="instance('i-meanings')/being-reloaded/@n"/>
-                        <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
-                                     value="instance('i-meanings')/being-reloaded/@grp"/>
-                    </fx-action>
-                    <fx-delete
-                            context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
-                            nodeset="*"/>
-                    <fx-insert
-                            context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
-                            origin="instance('i-meanings')/target/*"/>
-                    <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
-                </fx-action>
-                <fx-message ev:event="xforms-submit-error" level="ephemeral">Meanings reload failed.</fx-message>
-            </fx-submission>
-            <fx-action ev:event="xforms-ready">
-                <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>
-<!--
-                <script>
-                    clearAndInitAutocompletes();
-                </script>
--->
             </fx-action>
-        </fx-model>
-            <fx-group>
-                <fx-control ref="//usg" id="x-dialects">
-                    <fx-label>Hidden Control</fx-label>
-                    <fx-action ev:event="callback">
-                        <fx-setvalue ref="." value="event('dialects')"/>
-                    </fx-action>
-                </fx-control>
-            </fx-group>
-            <fx-group id="load-subform-group">
-                <fx-action ev:event="load-subform-event" if="string-length(instance('i-controller')/morpheme) &gt; 0">
-                    <fx-load show="embed" targetid="mountpoint">
-                        <fx-resource value="concat('meanings.xhtml?morpheme=', instance('i-controller')/morpheme,'#xforms')"/>
-                        <fx-extension includeCSS="false" includeScript="false"/>
-                    </fx-load>
-                    <bfc-show dialog="meanings"/>
+        </fx-submission>
+        <fx-submission id="s-save-data" method="post" replace="none" validate="true" resource="modules/save.xql">
+            <fx-header>
+                <fx-name>userid</fx-name>
+                <fx-value>{bf:appContext('id')}</fx-value>
+            </fx-header>
+            <fx-header>
+                <fx-name>password</fx-name>
+                <fx-value/>
+            </fx-header>
+            <fx-action event="xforms-submit">
+                <fx-setvalue ref="instance('i-default')//entry/@xml:id"
+                             value="instance('i-default')//orth[@type='latin']"/>
+                <fx-message event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
+            </fx-action>
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to save data</fx-message>
+        </fx-submission>
+        <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
+                       resource="modules/reload-meanings.xql"
+                       ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
+                       targetref="instance('i-meanings')/target/taxonomy">
+            <fx-action event="xforms-submit-done">
+                <fx-action
+                        if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
+                    <fx-insert context="instance('i-meanings')" nodeset="*[last()]"
+                               origin="instance('i-meanings')/template/meaning"/>
+                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
+                                 value="instance('i-meanings')/being-reloaded/@n"/>
+                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
+                                 value="instance('i-meanings')/being-reloaded/@grp"/>
                 </fx-action>
-                <fx-action ev:event="load-subform-event" if="string-length(instance('i-controller')/morpheme) = 0">
-                    <fx-load show="embed" targetid="mountpoint">
-                        <fx-resource value="'meanings.xhtml#xforms'"/>
-                        <fx-extension includeCSS="false" includeScript="false"/>
-                    </fx-load>
-                    <bfc-show dialog="meanings"/>
-                </fx-action>
-            </fx-group>
+                <fx-delete
+                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        nodeset="*"/>
+                <fx-insert
+                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        origin="instance('i-meanings')/target/*"/>
+                <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
+            </fx-action>
+            <fx-message event="xforms-submit-error" level="ephemeral">Meanings reload failed.</fx-message>
+        </fx-submission>
+        <fx-action event="xforms-ready">
+            <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>
+            <!--
+                            <script>
+                                clearAndInitAutocompletes();
+                            </script>
+            -->
+        </fx-action>
+    </fx-model>
+    <fx-group>
+        <fx-control ref="//usg" id="x-dialects">
+            <fx-label>Hidden Control</fx-label>
+            <fx-action event="callback">
+                <fx-setvalue ref="." value="event('dialects')"/>
+            </fx-action>
+        </fx-control>
+    </fx-group>
+    <fx-group id="load-subform-group">
+        <fx-action event="load-subform-event" if="string-length(instance('i-controller')/morpheme) &gt; 0">
+            <fx-load show="embed" targetid="mountpoint">
+                <fx-resource value="concat('meanings.xhtml?morpheme=', instance('i-controller')/morpheme,'#xforms')"/>
+                <fx-extension includeCSS="false" includeScript="false"/>
+            </fx-load>
+            <bfc-show dialog="meanings"/>
+        </fx-action>
+        <fx-action event="load-subform-event" if="string-length(instance('i-controller')/morpheme) = 0">
+            <fx-load show="embed" targetid="mountpoint">
+                <fx-resource value="'meanings.xhtml#xforms'"/>
+                <fx-extension includeCSS="false" includeScript="false"/>
+            </fx-load>
+            <bfc-show dialog="meanings"/>
+        </fx-action>
+    </fx-group>
 
-<header>
-    <div class="tp-row">
-        <h1 class="tp-column-fullwidth tp-headline">LGPN-Ling Editor</h1>
-    </div>
-</header>
+    <header>
+        <div class="tp-row">
+            <h1 class="tp-column-fullwidth tp-headline">LGPN-Ling Editor</h1>
+        </div>
+    </header>
 
-<main>
-    <!-- begin section general -->
+    <main>
+        <!-- begin section general -->
         <section class="tp-section">
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Name in Context</h2>
@@ -176,20 +179,25 @@
                         </div>
                         <div class="tp-form-group-col">
                             <label class="tp-label">H-Variant</label>
-                            <fx-control class="tp-input -form-control" ref="//form[@type='lemma']/orth[@type='h-variant']">
+                            <fx-control class="tp-input -form-control"
+                                        ref="//form[@type='lemma']/orth[@type='h-variant']">
                                 <fx-hint>Latin variant (with parentheses)</fx-hint>
                             </fx-control>
                         </div>
                         <div class="tp-form-group-col">
                             <label class="tp-label">Classification</label>
-                            <fx-control ref="//gramGrp[@type='classification']/gram[@type='fictitious']"  update-event="change">
+<!--
+                            <fx-control ref="//gramGrp[@type='classification']/gram[@type='fictitious']"
+                                        update-event="change">
                                 <select ref="instance('ifictitious')/option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
                                     </template>
                                 </select>
                             </fx-control>
-                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='fictitious']" appearance="full">
+-->
+                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='fictitious']"
+                                       appearance="full">
                                 <fx-itemset nodeset="instance('i-fictitious')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
@@ -198,7 +206,8 @@
                         </div>
                         <div class="tp-form-group-col">
                             <label class="tp-label">Classification</label>
-                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='GPR']" appearance="full">
+                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='GPR']"
+                                       appearance="full">
                                 <fx-itemset nodeset="instance('i-gpr')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
@@ -207,7 +216,8 @@
                         </div>
                         <div class="tp-form-group-col">
                             <label class="tp-label">Sublemma</label>
-                            <fx-select1 class="tp-input -form-control" ref="//gramGrp[@type='classification']/gram[@type='sublemma']">
+                            <fx-select1 class="tp-input -form-control"
+                                        ref="//gramGrp[@type='classification']/gram[@type='sublemma']">
                                 <fx-itemset nodeset="instance('i-sublemma')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="@xml:id"/>
@@ -217,7 +227,8 @@
 
                         <div class="tp-form-group-col">
                             <label class="tp-label">Polysemic</label>
-                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]" appearance="full">
+                            <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]"
+                                       appearance="full">
                                 <fx-itemset nodeset="instance('i-polysemic')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
@@ -252,7 +263,7 @@
                         <fx-group ref="re">
                             <div class="tp-form-group-col">
                                 <label class="tp-label">Relation</label>
-                                <fx-control ref="lbl"  class="tp-input -form-control">
+                                <fx-control ref="lbl" class="tp-input -form-control">
                                     <select ref="instance('i-relations')/option" class="widget">
                                         <template>
                                             <option value="{@xml:id}">{.}</option>
@@ -292,9 +303,9 @@
                 </div>
             </div>
         </section>
-    <!-- // end section general -->
+        <!-- // end section general -->
 
-    <!-- begin section dialects -->
+        <!-- begin section dialects -->
         <section class="tp-section">
             <div class="tp-row">
                 <div class="tp-width-secondary">
@@ -311,7 +322,8 @@
                                             <fx-label class="input-group-addon">
                                                 <i class="glyphicon glyphicon-plus"/>
                                             </fx-label>
-                                            <fx-insert context="//gramGrp[@type='classification']" nodeset="usg" origin="instance('i-template')//usg[@type='lang']"/>
+                                            <fx-insert context="//gramGrp[@type='classification']" nodeset="usg"
+                                                       origin="instance('i-template')//usg[@type='lang']"/>
                                             <script>
                                                 clearAndInitAutocompletes();
                                             </script>
@@ -338,7 +350,8 @@
                                         </div>
                                         <div class="tp-form-group-col">
                                             <label class="tp-label">Uncertain</label>
-                                            <fx-select class="tp-input" ref="@cert" appearance="full" incremental="true">
+                                            <fx-select class="tp-input" ref="@cert" appearance="full"
+                                                       incremental="true">
                                                 <fx-label class="input-group-addon"/>
                                                 <fx-item>
                                                     <fx-label>
@@ -372,9 +385,9 @@
                 </div>
             </div>
         </section>
-    <!-- // end section dialects -->
+        <!-- // end section dialects -->
 
-    <!-- begin section name variants -->
+        <!-- begin section name variants -->
         <section class="tp-section">
             <div class="tp-row">
                 <div class="tp-width-secondary">
@@ -391,7 +404,8 @@
                                             <fx-label class="input-group-addon">
                                                 <i class="glyphicon glyphicon-plus"/>
                                             </fx-label>
-                                            <fx-insert context="//entry" nodeset="form" origin="instance('i-template')//form[@type='variant']"/>
+                                            <fx-insert context="//entry" nodeset="form"
+                                                       origin="instance('i-template')//form[@type='variant']"/>
                                             <script>
                                                 clearAndInitAutocompletes();
                                             </script>
@@ -411,7 +425,8 @@
                                     <div class="tp-row">
                                         <div class="tp-form-group-col">
                                             <label class="tp-label">Linking of the form is uncertain</label>
-                                            <fx-select class="tp-input" ref="@cert" appearance="full" incremental="true">
+                                            <fx-select class="tp-input" ref="@cert" appearance="full"
+                                                       incremental="true">
                                                 <fx-item>
                                                     <fx-label>?</fx-label>
                                                     <fx-value>low</fx-value>
@@ -427,8 +442,10 @@
                                             </fx-control>
                                         </div>
                                         <div class="tp-form-group-col">
-                                            <label class="tp-label tp-invisible">Reading of the form is uncertain</label>
-                                            <fx-select class="tp-input" ref="orth/@cert" appearance="full" incremental="true">
+                                            <label class="tp-label tp-invisible">Reading of the form is
+                                                uncertain</label>
+                                            <fx-select class="tp-input" ref="orth/@cert" appearance="full"
+                                                       incremental="true">
                                                 <fx-item>
                                                     <fx-label>?</fx-label>
                                                     <fx-value>low</fx-value>
@@ -462,7 +479,8 @@
                                         </div>
                                         <div class="tp-form-group-col">
                                             <label class="tp-label">Dialect is uncertain</label>
-                                            <fx-select class="tp-input" ref="usg/@cert" appearance="full" incremental="true">
+                                            <fx-select class="tp-input" ref="usg/@cert" appearance="full"
+                                                       incremental="true">
                                                 <fx-item>
                                                     <fx-label>?</fx-label>
                                                     <fx-value>low</fx-value>
@@ -479,7 +497,8 @@
                                                     <fx-label class="input-group-addon">
                                                         <i class="glyphicon glyphicon-trash"/>
                                                     </fx-label>
-                                                    <fx-delete nodeset="//form[@type='variant'][index('r-nameVariant')]"/>
+                                                    <fx-delete
+                                                            nodeset="//form[@type='variant'][index('r-nameVariant')]"/>
                                                 </fx-trigger>
                                             </div>
                                         </div>
@@ -494,9 +513,9 @@
                 </div>
             </div>
         </section>
-    <!-- // end section name variants -->
+        <!-- // end section name variants -->
 
-    <!-- begin section segmentation -->
+        <!-- begin section segmentation -->
         <section class="tp-section">
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Segmentation and Semantics</h2>
@@ -516,7 +535,8 @@
                                                     <i class="glyphicon glyphicon-plus"/>
                                                 </fx-label>
 
-                                                <fx-insert context="//entry" nodeset="gramGrp" origin="instance('i-template')//gramGrp[@type='segmentation']"/>
+                                                <fx-insert context="//entry" nodeset="gramGrp"
+                                                           origin="instance('i-template')//gramGrp[@type='segmentation']"/>
                                                 <script>
                                                     clearAndInitAutocompletes();
                                                 </script>
@@ -544,7 +564,8 @@
                                             <div class="tp-form-group-col">
                                                 <div class="row">
                                                     <div class="col-xs-8">
-                                                        <label class="tp-label">Complex Structuration and Semantics</label>
+                                                        <label class="tp-label">Complex Structuration and
+                                                            Semantics</label>
                                                         <fx-select1 class=" -form-control tp-input" ref="@subtype">
                                                             <fx-label class="input-group-addon"/>
                                                             <fx-itemset nodeset="instance('i-classification')//option">
@@ -557,7 +578,8 @@
                                                         <label class="tp-label">Struct. uncertain</label>
                                                         <fx-select class="" ref="@ana" appearance="full">
                                                             <fx-label class="input-group-addon"/>
-                                                            <fx-itemset nodeset="instance('i-name-characteristic')//option">
+                                                            <fx-itemset
+                                                                    nodeset="instance('i-name-characteristic')//option">
                                                                 <fx-label ref="."/>
                                                                 <fx-value ref="."/>
                                                             </fx-itemset>
@@ -577,18 +599,20 @@
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Preconstituent</label>
                                             <fx-control class="hidden" ref="m[@type = 'prefix' and @n = 1]">
-                                                <fx-action ev:event="constituent_autocomplete-callback">
+                                                <fx-action event="constituent_autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">preconstituent</fx-label>
                                                 <fx-alert>no whitespace allowed</fx-alert>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="constituent_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input"
+                                                   data-function="constituent_autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
 
                                             <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
                                             <fx-trigger class="hidden constituent_autocomplete-callback">
                                                 <fx-label/>
-                                                <fx-action ev:event="DOMActivate">
+                                                <fx-action event="DOMActivate">
                                                     <fx-setvalue ref="" value=""/>
                                                     <fx-dispatch name="" targetid=""/>
                                                 </fx-action>
@@ -597,24 +621,29 @@
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Preroot</label>
                                             <fx-control class="hidden" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
-                                                <fx-action ev:event="autocomplete-callback">
+                                                <fx-action event="autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
-                                                <fx-action ev:event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="3"/>
+                                                <fx-action event="xforms-value-changed">
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                 value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                 value="3"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
                                         </section>
 
 
                                         <!-- Preroot functions -->
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Preroot (prefix)</label>
-                                            <fx-select class="tp-input-1-row-2-col" ref="m[@type = 'prefix' and @n = 1]/@function" appearance="full" incremental="true">
+                                            <fx-select class="tp-input-1-row-2-col"
+                                                       ref="m[@type = 'prefix' and @n = 1]/@function" appearance="full"
+                                                       incremental="true">
                                                 <fx-label/>
                                                 <fx-item>
                                                     <fx-label>Verb</fx-label>
@@ -659,7 +688,9 @@
                                         <section class="tp-row">
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'prefix' and @n = 1]/@subtype" appearance="full">
+                                                <fx-select class="tp-input"
+                                                           ref="m[@type = 'prefix' and @n = 1]/@subtype"
+                                                           appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
                                                     <fx-itemset nodeset="instance('i-headedness')//option">
                                                         <fx-label ref="."/>
@@ -670,7 +701,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Abbreviation marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'prefix' and @n = 1]/@ana" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'prefix' and @n = 1]/@ana"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>Abbr</fx-label>
                                                         <fx-value>Abbr</fx-value>
@@ -680,7 +712,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Class marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'prefix' and @n = 1]/@cert" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'prefix' and @n = 1]/@cert"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>*</fx-label>
                                                         <fx-value>unattested</fx-value>
@@ -690,7 +723,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Linked compound</label>
-                                                <fx-control class="tp-input -form-control" ref="m[@type = 'prefix' and @n = 1]/@corresp">
+                                                <fx-control class="tp-input -form-control"
+                                                            ref="m[@type = 'prefix' and @n = 1]/@corresp">
                                                     <fx-label class="input-group-addon">
                                                         <span class="glyphicon glyphicon-tag"/>
                                                     </fx-label>
@@ -709,18 +743,20 @@
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Constituent 1</label>
                                             <fx-control class="hidden" ref="m[@type = 'radical' and @n = 1]">
-                                                <fx-action ev:event="constituent_autocomplete-callback">
+                                                <fx-action event="constituent_autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">constituent 1</fx-label>
                                                 <fx-alert>no whitespace allowed</fx-alert>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="constituent_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input"
+                                                   data-function="constituent_autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
 
                                             <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
                                             <fx-trigger class="hidden constituent_autocomplete-callback">
                                                 <fx-label/>
-                                                <fx-action ev:event="DOMActivate">
+                                                <fx-action event="DOMActivate">
                                                     <fx-setvalue ref="" value=""/>
                                                     <fx-dispatch name="" targetid=""/>
                                                 </fx-action>
@@ -730,17 +766,20 @@
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Root 1</label>
                                             <fx-control class="hidden" ref="m[@type = 'radical' and @n = 1]/@baseForm">
-                                                <fx-action ev:event="autocomplete-callback">
+                                                <fx-action event="autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
-                                                <fx-action ev:event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                                                <fx-action event="xforms-value-changed">
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                 value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                 value="1"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
 
                                         </section>
                                         <!-- Root 1  add morpheme -->
@@ -752,9 +791,11 @@
                                                         <fx-label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </fx-label>
-                                                        <fx-action ev:event="DOMActivate">
-                                                            <fx-setvalue ref="instance('i-controller')/morpheme" value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"/>
-                                                            <fx-dispatch name="load-subform-event" targetid="load-subform-group"/>
+                                                        <fx-action event="DOMActivate">
+                                                            <fx-setvalue ref="instance('i-controller')/morpheme"
+                                                                         value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"/>
+                                                            <fx-dispatch name="load-subform-event"
+                                                                         targetid="load-subform-group"/>
                                                         </fx-action>
                                                     </fx-trigger>
                                                 </div>
@@ -769,9 +810,12 @@
                                                                     <span class="input-group-addon">
                                                                         <span class="glyphicon glyphicon-tasks"/>
                                                                         meanings
-                                                                    </span><!--<input class="tags" value="" disabled="disabled"/>-->
+                                                                    </span>
+                                                        <!--<input class="tags" value="" disabled="disabled"/>-->
                                                         <span class="meanings-val">
-                                                                        <fx-repeat nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=1]//category" id="r-meanings-1">
+                                                                        <fx-repeat
+                                                                                nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=1]//category"
+                                                                                id="r-meanings-1">
                                                                             <fx-output ref="catDesc[@xml:lang='en']"/>
                                                                         </fx-repeat>
                                                                     </span>
@@ -782,7 +826,8 @@
                                         <!-- Root 1 functions -->
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Function 1</label>
-                                            <fx-select ref="m[@type = 'radical' and @n = 1]/@function" appearance="full" incremental="true">
+                                            <fx-select ref="m[@type = 'radical' and @n = 1]/@function" appearance="full"
+                                                       incremental="true">
                                                 <fx-item>
                                                     <fx-label>Verb</fx-label>
                                                     <fx-value>V</fx-value>
@@ -826,7 +871,9 @@
                                         <section class="tp-row">
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification 1</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 1]/@subtype" appearance="full">
+                                                <fx-select class="tp-input"
+                                                           ref="m[@type = 'radical' and @n = 1]/@subtype"
+                                                           appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
                                                     <fx-itemset nodeset="instance('i-headedness')//option">
                                                         <fx-label ref="."/>
@@ -837,7 +884,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Abbreviation marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 1]/@ana" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 1]/@ana"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>Abbr</fx-label>
                                                         <fx-value>Abbr</fx-value>
@@ -847,7 +895,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Class marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 1]/@cert" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 1]/@cert"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>*</fx-label>
                                                         <fx-value>unattested</fx-value>
@@ -856,7 +905,8 @@
                                             </div>
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Linked compound</label>
-                                                <fx-control class="tp-input -form-control" ref="m[@type = 'radical' and @n = 1]/@corresp">
+                                                <fx-control class="tp-input -form-control"
+                                                            ref="m[@type = 'radical' and @n = 1]/@corresp">
                                                     <fx-label class="input-group-addon">
                                                         <span class="glyphicon glyphicon-tag"/>
                                                     </fx-label>
@@ -873,30 +923,35 @@
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Constituent 2</label>
                                             <fx-control class="hidden" ref="m[@type = 'radical' and @n = 2]">
-                                                <fx-action ev:event="constituent_autocomplete-callback">
+                                                <fx-action event="constituent_autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">constituent 2</fx-label>
                                                 <fx-alert>no whitespace allowed</fx-alert>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="constituent_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input"
+                                                   data-function="constituent_autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
                                         </section>
 
                                         <!-- Root 2 -->
                                         <section class="tp-form-group-col">
                                             <label class="tp-label">Root 2</label>
                                             <fx-control class="hidden" ref="m[@type = 'radical' and @n = 2]/@baseForm">
-                                                <fx-action ev:event="autocomplete-callback">
+                                                <fx-action event="autocomplete-callback">
                                                     <fx-setvalue ref="." value="event('termValue')"/>
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
-                                                <fx-action ev:event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                                                <fx-action event="xforms-value-changed">
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                 value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
+                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                 value="2"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
                                             </fx-control>
-                                            <input type="hidden" class="tp-input" data-function="autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                                            <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                   placeholder="Type to search ..." autocomplete="off"/>
                                         </section>
 
                                         <!-- Root 2 add morpheme -->
@@ -908,9 +963,11 @@
                                                         <fx-label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </fx-label>
-                                                        <fx-action ev:event="DOMActivate">
-                                                            <fx-setvalue ref="instance('i-controller')/morpheme" value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"/>
-                                                            <fx-dispatch name="load-subform-event" targetid="load-subform-group"/>
+                                                        <fx-action event="DOMActivate">
+                                                            <fx-setvalue ref="instance('i-controller')/morpheme"
+                                                                         value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"/>
+                                                            <fx-dispatch name="load-subform-event"
+                                                                         targetid="load-subform-group"/>
                                                         </fx-action>
                                                     </fx-trigger>
                                                 </div>
@@ -926,9 +983,12 @@
                                                                     <span class="input-group-addon">
                                                                         <span class="glyphicon glyphicon-tasks"/>
                                                                         meanings
-                                                                    </span><!--<input class="tags" value="" disabled="disabled"/>-->
+                                                                    </span>
+                                                        <!--<input class="tags" value="" disabled="disabled"/>-->
                                                         <span class="meanings-val">
-                                                                        <fx-repeat nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=2]//category" id="r-meanings-2">
+                                                                        <fx-repeat
+                                                                                nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=2]//category"
+                                                                                id="r-meanings-2">
                                                                             <fx-output ref="catDesc[@xml:lang='en']"/>
                                                                         </fx-repeat>
                                                                     </span>
@@ -940,11 +1000,13 @@
                                         <!-- Root 2 functions -->
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Function 2</label>
-                                            <fx-select ref="m[@type = 'radical' and @n = 2]/@function" appearance="full" incremental="true">
-                                                {                                       <fx-item>
-                                                <fx-label>Verb</fx-label>
-                                                <fx-value>V</fx-value>
-                                            </fx-item>
+                                            <fx-select ref="m[@type = 'radical' and @n = 2]/@function" appearance="full"
+                                                       incremental="true">
+                                                {
+                                                <fx-item>
+                                                    <fx-label>Verb</fx-label>
+                                                    <fx-value>V</fx-value>
+                                                </fx-item>
                                                 <fx-item>
                                                     <fx-label>VAdj</fx-label>
                                                     <fx-value>VAdj</fx-value>
@@ -984,7 +1046,9 @@
                                         <section class="tp-row">
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification 2</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 2]/@subtype" appearance="full">
+                                                <fx-select class="tp-input"
+                                                           ref="m[@type = 'radical' and @n = 2]/@subtype"
+                                                           appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
                                                     <fx-itemset nodeset="instance('i-headedness')//option">
                                                         <fx-label ref="."/>
@@ -995,7 +1059,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Abbreviation marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 2]/@ana" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 2]/@ana"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>Abbr</fx-label>
                                                         <fx-value>Abbr</fx-value>
@@ -1005,7 +1070,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Class marker</label>
-                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 2]/@cert" appearance="full" incremental="true">
+                                                <fx-select class="tp-input" ref="m[@type = 'radical' and @n = 2]/@cert"
+                                                           appearance="full" incremental="true">
                                                     <fx-item>
                                                         <fx-label>*</fx-label>
                                                         <fx-value>unattested</fx-value>
@@ -1015,7 +1081,8 @@
 
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Linked compound</label>
-                                                <fx-control class="tp-input -form-control" ref="m[@type = 'radical' and @n = 2]/@corresp">
+                                                <fx-control class="tp-input -form-control"
+                                                            ref="m[@type = 'radical' and @n = 2]/@corresp">
                                                     <fx-label class="input-group-addon">
                                                         <span class="glyphicon glyphicon-tag"/>
                                                     </fx-label>
@@ -1030,7 +1097,8 @@
                                         <section class="tp-row">
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">Suffix 4</label>
-                                                <fx-select1 class="tp-input -form-control" ref="m[@type = 'suffix' and @n = '4']">
+                                                <fx-select1 class="tp-input -form-control"
+                                                            ref="m[@type = 'suffix' and @n = '4']">
                                                     <fx-label class="input-group-addon">suffix 4</fx-label>
                                                     <fx-itemset nodeset="instance('i-suffix-4')/option">
                                                         <fx-label ref="."/>
@@ -1040,7 +1108,8 @@
                                             </div>
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">Suffix 3</label>
-                                                <fx-select1 class="tp-input -form-control" ref="m[@type = 'suffix' and @n = '3']">
+                                                <fx-select1 class="tp-input -form-control"
+                                                            ref="m[@type = 'suffix' and @n = '3']">
                                                     <fx-label class="input-group-addon">suffix 3</fx-label>
                                                     <fx-itemset nodeset="instance('i-suffix-3')/option">
                                                         <fx-label ref="."/>
@@ -1050,7 +1119,8 @@
                                             </div>
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">Suffix 2</label>
-                                                <fx-select1 class="tp-input -form-control" ref="m[@type = 'suffix' and @n = '2']">
+                                                <fx-select1 class="tp-input -form-control"
+                                                            ref="m[@type = 'suffix' and @n = '2']">
                                                     <fx-label class="input-group-addon">suffix 2</fx-label>
                                                     <fx-itemset nodeset="instance('i-suffix-2')/option">
                                                         <fx-label ref="."/>
@@ -1062,7 +1132,8 @@
                                                 <div class="tp-row">
                                                     <div class="tp-form-group-col">
                                                         <label class="tp-label">Inflect</label>
-                                                        <fx-select1 class="tp-input -form-control" ref="m[@type = 'suffix' and @n = '1']">
+                                                        <fx-select1 class="tp-input -form-control"
+                                                                    ref="m[@type = 'suffix' and @n = '1']">
                                                             <fx-label class="input-group-addon">inflex 1</fx-label>
                                                             <fx-itemset nodeset="instance('i-suffix-1')/option">
                                                                 <fx-label ref="base"/>
@@ -1072,7 +1143,9 @@
                                                     </div>
                                                     <div class="tp-form-group-col">
                                                         <label class="tp-label">Suffix 1</label>
-                                                        <fx-select class="tp-input" ref="m[@type = 'suffix' and @n = 1]/@subtype" appearance="full" incremental="true">
+                                                        <fx-select class="tp-input"
+                                                                   ref="m[@type = 'suffix' and @n = 1]/@subtype"
+                                                                   appearance="full" incremental="true">
                                                             <fx-item>
                                                                 <fx-label>Suffix 1</fx-label>
                                                                 <fx-value>suff</fx-value>
@@ -1092,7 +1165,8 @@
                                         </section>
                                         <fx-group>
                                             <section class="tp-row tp-repeat-add">
-                                                <h5 class="h4 tp-repeat-headline">Lexical or Lexicographic Significant Sources</h5>
+                                                <h5 class="h4 tp-repeat-headline">Lexical or Lexicographic Significant
+                                                    Sources</h5>
                                                 <div class="tp-repeat-button-left">
                                                     <div class="tp-button-row tp-add">
                                                         <label>Add significant source</label>
@@ -1100,7 +1174,8 @@
                                                             <fx-label class="input-group-addon">
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
-                                                            <fx-insert context="listBibl" nodeset="cit" origin="instance('i-template')//cit[@type='source']"/>
+                                                            <fx-insert context="listBibl" nodeset="cit"
+                                                                       origin="instance('i-template')//cit[@type='source']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1158,7 +1233,8 @@
                                                                 <fx-label class="input-group-addon">
                                                                     <i class="glyphicon glyphicon-trash"/>
                                                                 </fx-label>
-                                                                <fx-delete nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"/>
+                                                                <fx-delete
+                                                                        nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"/>
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1178,7 +1254,8 @@
                                                             <fx-label class="input-group-addon">
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
-                                                            <fx-insert context="listBibl" nodeset="cit" origin="instance('i-template')//cit[@type='auxiliary']"/>
+                                                            <fx-insert context="listBibl" nodeset="cit"
+                                                                       origin="instance('i-template')//cit[@type='auxiliary']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1237,7 +1314,8 @@
                                                                 <fx-label class="input-group-addon">
                                                                     <i class="glyphicon glyphicon-trash"/>
                                                                 </fx-label>
-                                                                <fx-delete nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='auxiliary'][index('r-cit-auxiliary')]"/>
+                                                                <fx-delete
+                                                                        nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='auxiliary'][index('r-cit-auxiliary')]"/>
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1263,7 +1341,8 @@
                                                             <fx-label class="input-group-addon">
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
-                                                            <fx-insert context="listBibl" nodeset="cit" origin="instance('i-template')//cit[@type='linguistic']"/>
+                                                            <fx-insert context="listBibl" nodeset="cit"
+                                                                       origin="instance('i-template')//cit[@type='linguistic']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1322,7 +1401,8 @@
                                                                 <fx-label class="input-group-addon">
                                                                     <i class="glyphicon glyphicon-trash"/>
                                                                 </fx-label>
-                                                                <fx-delete nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='linguistic'][index('r-cit-linguistic')]"/>
+                                                                <fx-delete
+                                                                        nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='linguistic'][index('r-cit-linguistic')]"/>
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1340,7 +1420,8 @@
                                                             <fx-label class="input-group-addon">
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
-                                                            <fx-insert context="listBibl" nodeset="cit" origin="instance('i-template')//cit[@type='modern']"/>
+                                                            <fx-insert context="listBibl" nodeset="cit"
+                                                                       origin="instance('i-template')//cit[@type='modern']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1391,7 +1472,8 @@
                                                                 <fx-label class="input-group-addon">
                                                                     <i class="glyphicon glyphicon-trash"/>
                                                                 </fx-label>
-                                                                <fx-delete nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='modern'][index('r-cit-modern')]"/>
+                                                                <fx-delete
+                                                                        nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='modern'][index('r-cit-modern')]"/>
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1413,7 +1495,8 @@
                                                         <fx-label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-trash"/>
                                                         </fx-label>
-                                                        <fx-delete nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"/>
+                                                        <fx-delete
+                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"/>
                                                     </fx-trigger>
                                                 </div>
                                             </div>
@@ -1471,8 +1554,8 @@
                 </div>
             </div>
         </section>
-    </fx-fore>
-</main>
+    </main>
+</fx-fore>
 
 <bfc-dialog id="meanings" src="meanings.html">
     <fx-label>Add meaning</fx-label>

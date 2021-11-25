@@ -5,17 +5,8 @@
         -->
     <link href="resources/js/vendor/select2/select2.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="resources/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
 
-    <style>
-        fx-hint {
-            display: none;
-        }
-
-        .tp-form-group-col {
-            display: grid;
-            grid-template-columns: 1fr 6fr;
-        }
-    </style>
 </head>
 <body>
 <fx-fore>
@@ -23,7 +14,7 @@
         <fx-instance id="default"
                      src="data/default.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-        <!--            <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>-->
+        <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>
 
         <fx-instance id="i-template"
                      src="data/template.xml"
@@ -66,6 +57,67 @@
                         -->
             </meanings>
         </fx-instance>
+
+        <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
+                       resource="modules/load.xql?id={bf:appContext('id')}">
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to load data.</fx-message>
+            <fx-action event="xforms-submit-done">
+                <fx-action
+                        while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                 value="instance('i-meanings')/being-reloaded/@grp + 1"/>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                    <fx-send submission="s-reload-meanings"/>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                    <fx-send submission="s-reload-meanings"/>
+                </fx-action>
+            </fx-action>
+        </fx-submission>
+        <fx-submission id="s-save-data" method="post" replace="none" validate="true" resource="modules/save.xql">
+            <fx-header>
+                <fx-name>userid</fx-name>
+                <fx-value>{bf:appContext('id')}</fx-value>
+            </fx-header>
+            <fx-header>
+                <fx-name>password</fx-name>
+                <fx-value/>
+            </fx-header>
+            <fx-action event="xforms-submit">
+                <fx-setvalue ref="instance('i-default')//entry/@xml:id"
+                             value="instance('i-default')//orth[@type='latin']"/>
+                <fx-message event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
+            </fx-action>
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to save data</fx-message>
+        </fx-submission>
+        <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
+                       resource="modules/reload-meanings.xql"
+                       ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
+                       targetref="instance('i-meanings')/target/taxonomy">
+            <fx-action event="xforms-submit-done">
+                <fx-action
+                        if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
+                    <fx-insert context="instance('i-meanings')" nodeset="*[last()]"
+                               origin="instance('i-meanings')/template/meaning"/>
+                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
+                                 value="instance('i-meanings')/being-reloaded/@n"/>
+                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
+                                 value="instance('i-meanings')/being-reloaded/@grp"/>
+                </fx-action>
+                <fx-delete
+                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        nodeset="*"/>
+                <fx-insert
+                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        origin="instance('i-meanings')/target/*"/>
+                <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
+            </fx-action>
+            <fx-message event="xforms-submit-error" level="ephemeral">Meanings reload failed.</fx-message>
+        </fx-submission>
+        <fx-action event="xforms-ready">
+            <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>
+
     </fx-model>
     <!--
                 <fx-group>
@@ -129,9 +181,9 @@
                         </div>
                         <div class="tp-form-group-col">
                             <label class="tp-label">Classification</label>
-                            <fx-control class="tp-input" 
-                                       ref="//gramGrp[@type='classification']/gram[@type='GPR']"
-                                       appearance="full">
+                            <fx-control class="tp-input"
+                                        ref="//gramGrp[@type='classification']/gram[@type='GPR']"
+                                        appearance="full">
                                 <select ref="instance('i-gpr')//option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
@@ -154,7 +206,7 @@
                         <div class="tp-form-group-col">
                             <label class="tp-label">Polysemic</label>
                             <fx-control class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]"
-                                       appearance="full">
+                                        appearance="full">
                                 <select ref="instance('i-polysemic')//option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
@@ -164,13 +216,989 @@
                         </div>
                     </fieldset>
 
+                    <div class="tp-section-divider"/>
+
+                    <div class="tp-row">
+                        <div class="tp-row tp-repeat-add">
+                            <fx-label class="tp-form-header">
+                                <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
+                            </fx-label>
+                            <div class="tp-repeat-button-left">
+                                <div class="tp-button-row tp-add">
+                                    <!--                                    <label>Add name</label>-->
+                                    <fx-trigger class="-btn -btn-default">
+                                        <button class="input-group-addon">add</button>
+                                        <fx-insert context="//entry" ref="re"
+                                                   origin="instance('i-template')//re"></fx-insert>
+                                        <!--
+                                                                                <script>
+                                                                                    clearAndInitAutocompletes();
+                                                                                </script>
+                                        -->
+                                    </fx-trigger>
+                                </div>
+                            </div>
+                        </div>
+
+                        <fx-group ref="re">
+                            <div class="tp-form-group-col">
+                                <label class="tp-label">Relation</label>
+                                <fx-control ref="lbl" class="tp-input -form-control">
+                                    <select ref="instance('i-relations')/option" class="widget">
+                                        <template>
+                                            <option value="{@xml:id}">{.}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                            </div>
+
+                            <div class="tp-form-group-col">
+                                <label class="tp-label">Relative name</label>
+                                <fx-control class="tp-input -form-control" ref="//re//orth">
+                                    <fx-hint>Relative name</fx-hint>
+                                </fx-control>
+                            </div>
+
+                            <div class="tp-row tp-repeat-buttons">
+                                <div class="tp-repeat-button-right">
+                                    <div class="tp-button-row tp-delete">
+                                        <!--                                        <label>Delete name</label>-->
+                                        <fx-trigger class="-btn -btn-default">
+                                            <button>delete</button>
+                                            <!--
+                                                                                        <fx-label class="input-group-addon">
+                                                                                            <i class="glyphicon glyphicon-trash"/>
+                                                                                        </fx-label>
+                                            -->
+                                            <fx-delete nodeset="//entry//re"/>
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+                            </div>
+                        </fx-group>
+                    </div>
+
                 </div>
             </div>
         </section>
         <!-- // end section general -->
 
+        <!-- begin section dialects -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <div class="tp-width-secondary">
+                    <fx-group ref="//entry">
+                        <fx-group ref="//gramGrp[@type='classification']">
+                            <div class="tp-row tp-repeat-add">
+                                <fx-label class="tp-form-header">
+                                    <h3>Dialects</h3>
+                                </fx-label>
+                                <div class="tp-repeat-button-left">
+                                    <div class="tp-button-row tp-add">
+                                        <label>Add dialect</label>
+                                        <fx-trigger class="-btn -btn-default ">
+                                            <fx-label class="input-group-addon">
+                                                <i class="glyphicon glyphicon-plus"/>
+                                            </fx-label>
+                                            <fx-insert context="//gramGrp[@type='classification']" nodeset="usg"
+                                                       origin="instance('i-template')//usg[@type='lang']"/>
+                                            <!--
+                                                                                        <script>
+                                                                                            clearAndInitAutocompletes();
+                                                                                        </script>
+                                            -->
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <fx-repeat ref="usg[@type='lang']" id="r-dialect">
+                                <template>
+                                    <fx-group ref=".">
+                                        <div class="tp-row">
+                                            <!--
+                                                                                        <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
+                                                                                            <fx-control ref=".">
+                                                                                                <select ref="instance('i-dialects')//category"
+                                                                                                        class="widget">
+                                                                                                    <template>
+                                                                                                        <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
+                                                                                                    </template>
+                                                                                                </select>
+                                                                                            </fx-control>
+                                                                                        </div>
+                                            -->
+                                            <div class="tp-form-group-col"><label class="tp-label">Uncertain</label>
+                                                <fx-control ref="@cert">
+                                                    <option value="low">(Check if uncertain)</option>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row tp-repeat-buttons">
+                                            <div class="tp-repeat-button-right">
+                                                <div class="tp-button-row tp-delete"><label>Delete dialect</label>
+                                                    <fx-trigger>
+                                                        <button>add</button>
+                                                        <fx-delete
+                                                                nodeset="//usg[@type='lang'][index('r-dialect')]"></fx-delete>
+                                                    </fx-trigger>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fx-group>
+                                </template>
+                            </fx-repeat>
+                        </fx-group>
+
+                        <div class="tp-section-divider"/>
+
+                    </fx-group>
+                </div>
+            </div>
+        </section>
+        <!-- // end section dialects -->
+
+        <!-- begin section name variants -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <div class="tp-width-secondary">
+                    <fx-group ref="//entry">
+                        <fx-group>
+                            <div class="tp-row tp-repeat-add">
+                                <div class="tp-repeat-button-left">
+                                    <div class="tp-button-row tp-add"><label>Add name variant</label>
+                                        <fx-trigger>
+                                            <button>add</button>
+                                            <fx-insert context="//entry" nodeset="form"
+                                                       origin="instance('i-template')//form[@type='variant']"></fx-insert>
+                                            <!--
+                                                                                        <script>
+                                                                                            clearAndInitAutocompletes();
+                                                                                        </script>
+                                            -->
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+                            </div>
+                            <fx-repeat ref="form[@type='variant']" id="r-nameVariant">
+                                <template>
+                                    <div class="tp-row tp-repeat-headline"></div>
+                                    <fx-group ref=".">
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Linking of the form
+                                                is uncertain</label>
+                                                <fx-control ref="@cert">
+                                                    <option value="low">?</option>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Form</label>
+                                                <fx-control class="tp-input -form-control" ref="orth"></fx-control>
+                                            </div>
+                                            <div class="tp-form-group-col"><label class="tp-label tp-invisible">Reading
+                                                of the form is
+                                                uncertain</label>
+                                                <fx-control ref="orth/@cert">
+                                                    <option value="low">?</option>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Gender</label>
+                                                <fx-control ref="gen"><select ref="instance('i-genders')//category"
+                                                                              class="widget">
+                                                    <template>
+                                                        <option value="{catDesc[@xml:lang='en'][@ana='short']}">
+                                                            {@xml:id}
+                                                        </option>
+                                                    </template>
+                                                </select></fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
+                                                <fx-control ref="usg"><select ref="instance('i-dialects')//category"
+                                                                              class="widget">
+                                                    <template>
+                                                        <option value="{catDesc[@xml:lang='en'][@ana='short']}">
+                                                            {@xml:id}
+                                                        </option>
+                                                    </template>
+                                                </select></fx-control>
+                                            </div>
+                                            <div class="tp-form-group-col"><label class="tp-label">Dialect is
+                                                uncertain</label>
+                                                <fx-control ref="usg/@cert">
+                                                    <option value="low">?</option>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row tp-repeat-buttons">
+                                            <div class="tp-repeat-button-right">
+                                                <div class="tp-button-row tp-delete"><label>Delete name variant</label>
+                                                    <fx-trigger>
+                                                        <button>add</button>
+                                                        <fx-delete
+                                                                nodeset="//form[@type='variant'][index('r-nameVariant')]"></fx-delete>
+                                                    </fx-trigger>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fx-group>
+                                    <div class="tp-section-divider"></div>
+                                </template>
+                            </fx-repeat>
+                        </fx-group>
+                    </fx-group>
+                </div>
+            </div>
+        </section>
+
+        <!-- // end section name variants -->
+
+        <!-- begin section segmentation -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Segmentation and Semantics</h2>
+                <div class="tp-width-secondary">
+                    <section class="form-horizontal">
+                        <fx-group ref="//entry">
+                            <fx-group>
+                                <section class="tp-row tp-repeat-add">
+                                    <div class="tp-repeat-button-left">
+                                        <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
+                                            <fx-trigger>
+                                                <button>add</button>
+                                                <fx-insert context="//entry" nodeset="gramGrp"
+                                                           origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+                                                <!--
+                                                                                                <script>
+                                                                                                    clearAndInitAutocompletes();
+                                                                                                </script>
+                                                -->
+                                            </fx-trigger>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="tp-row tp-repeat-headline"></div>
+                                <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
+                                    <template>
+                                        <fx-group ref="."><!-- gen. characteristic l.1 -->
+                                            <section class="tp-row">
+                                                <div class="tp-form-group-col"><label class="tp-label">Certainty</label>
+                                                    <fx-control class="tp-input -form-control" ref="@cert"></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col">
+                                                    <div class="row">
+                                                        <div class="col-xs-8"><label class="tp-label">Complex
+                                                            Structuration and
+                                                            Semantics</label>
+                                                            <fx-control ref="@subtype"><select
+                                                                    ref="instance('i-classification')//option"
+                                                                    class="widget">
+                                                                <template>
+                                                                    <option value="{.}">{@xml:id}</option>
+                                                                </template>
+                                                            </select></fx-control>
+                                                        </div>
+                                                        <div class="col-xs-4"><label class="tp-label">Struct.
+                                                            uncertain</label>
+                                                            <fx-control ref="@ana"><select
+                                                                    ref="instance('i-name-characteristic')//option"
+                                                                    class="widget">
+                                                                <template>
+                                                                    <option value="{.}">{.}</option>
+                                                                </template>
+                                                            </select></fx-control>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <div class="tp-divider"></div>
+                                            <h4>Preroot</h4>
+                                            <!-- Preroot -->
+                                            <section class="tp-form-group-col"><label
+                                                    class="tp-label">Preconstituent</label>
+                                                <fx-control class="hidden" ref="m[@type = 'prefix' and @n = 1]">
+                                                    <fx-action event="constituent_autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-alert>no whitespace allowed</fx-alert>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input"
+                                                       data-function="constituent_autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off">
+                                                <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
+                                                <fx-trigger class="hidden constituent_autocomplete-callback">
+                                                    <fx-action event="DOMActivate">
+                                                        <fx-setvalue ref="" value=""></fx-setvalue>
+<!--                                                        <fx-dispatch name="" targetid=""></fx-dispatch>-->
+                                                    </fx-action>
+                                                </fx-trigger>
+                                            </section>
+                                            <section class="tp-form-group-col"><label class="tp-label">Preroot</label>
+                                                <fx-control class="hidden"
+                                                            ref="m[@type = 'prefix' and @n = 1]/@baseForm">
+                                                    <fx-action event="autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-action event="xforms-value-changed">
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                     value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                     value="3"></fx-setvalue>
+                                                        <fx-send submission="s-reload-meanings"></fx-send>
+                                                    </fx-action>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off"></section>
+                                            <!-- Preroot functions -->
+                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot
+                                                (prefix)</label>
+                                                <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
+                                                    <option value="V">Verb</option>
+                                                    <option value="VAdj">VAdj</option>
+                                                    <option value="Part">Part</option>
+                                                    <option value="AgtN">Agt Noun</option>
+                                                    <option value="ActN">Act Noun</option>
+                                                    <option value="N">Noun</option>
+                                                    <option value="Adj">Adj</option>
+                                                    <option value="Pro">Pron</option>
+                                                    <option value="Adv">Adv</option>
+                                                </fx-control>
+                                            </section>
+                                            <!-- Preroot rest -->
+                                            <section class="tp-row">
+                                                <div class="tp-column-3"><label class="tp-label">Headedness
+                                                    classification</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@subtype"><select
+                                                            ref="instance('i-headedness')//option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{@xml:id}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Abbreviation
+                                                    marker</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@ana">
+                                                        <option value="Abbr">Abbr</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Class marker</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@cert">
+                                                        <option value="unattested">*</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Linked compound</label>
+                                                    <fx-control class="tp-input -form-control"
+                                                                ref="m[@type = 'prefix' and @n = 1]/@corresp">
+                                                        <fx-hint>e.g. linked compound</fx-hint>
+                                                    </fx-control>
+                                                </div>
+                                            </section>
+                                            <!-- Preroot other -->
+                                            <div class="tp-divider"></div>
+                                            <h4>Root 1</h4>
+                                            <!-- Root 1 constituent -->
+                                            <section class="tp-form-group-col"><label class="tp-label">Constituent
+                                                1</label>
+                                                <fx-control class="hidden" ref="m[@type = 'radical' and @n = 1]">
+                                                    <fx-action event="constituent_autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-alert>no whitespace allowed</fx-alert>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input"
+                                                       data-function="constituent_autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off">
+                                                <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
+                                                <fx-trigger class="hidden constituent_autocomplete-callback">
+                                                    <fx-action event="DOMActivate">
+                                                        <fx-setvalue ref="" value=""></fx-setvalue>
+<!--                                                        <fx-dispatch name="" targetid=""></fx-dispatch>-->
+                                                    </fx-action>
+                                                </fx-trigger>
+                                            </section>
+                                            <!-- Root 1 -->
+                                            <section class="tp-form-group-col"><label class="tp-label">Root 1</label>
+                                                <fx-control class="hidden"
+                                                            ref="m[@type = 'radical' and @n = 1]/@baseForm">
+                                                    <fx-action event="autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-action event="xforms-value-changed">
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                     value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                     value="1"></fx-setvalue>
+                                                        <fx-send submission="s-reload-meanings"></fx-send>
+                                                    </fx-action>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off"></section>
+                                            <!-- Root 1  add morpheme -->
+                                            <section class="tp-row tp-repeat-buttons">
+                                                <div class="tp-repeat-button-right">
+                                                    <div class="tp-button-row tp-add"><label>Add root</label>
+                                                        <fx-trigger>
+                                                            <button>add</button>
+                                                            <fx-action event="DOMActivate">
+                                                                <fx-setvalue ref="instance('i-controller')/morpheme"
+                                                                             value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"></fx-setvalue>
+<!--
+                                                                <fx-dispatch name="load-subform-event"
+                                                                             targetid="load-subform-group"></fx-dispatch>
+-->
+                                                            </fx-action>
+                                                        </fx-trigger>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <!-- Meanings 1 -->
+                                            <!--
+                                                                                        <section class="tp-row tp-row-input-group">
+                                                                                            <label class="tp-label">Meanings 1</label>
+                                                                                            <div class="col-xs-6">
+                                                                                                <div class="semantic_tags">
+                                                                                                    <div class="input-group"><span class="input-group-addon"><span
+                                                                                                            class="glyphicon glyphicon-tasks"></span>
+                                                                                                      meanings
+                                                                                                      </span>
+                                                                                                        &lt;!&ndash;<input class="tags" value="" disabled="disabled"/>&ndash;&gt;<span
+                                                                                                                class="meanings-val">
+                                                                                                      <fx-repeat ref="instance('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=1]//TEI:category" id="r-meanings-1"><template>
+                                                                                                            <fx-output ref="catDesc[@xml:lang='en']"></fx-output></template></fx-repeat></span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </section>
+                                            -->
+                                            <!-- Root 1 functions -->
+                                            <section class="tp-row tp-row-input-group">
+                                                <label class="tp-label">Function 1</label>
+                                                <fx-control ref="m[@type = 'radical' and @n = 1]/@function">
+                                                    <option value="V">Verb</option>
+                                                    <option value="VAdj">VAdj</option>
+                                                    <option value="Part">Part</option>
+                                                    <option value="AgtN">Agt Noun</option>
+                                                    <option value="ActN">Act Noun</option>
+                                                    <option value="N">Noun</option>
+                                                    <option value="Adj">Adj</option>
+                                                    <option value="Pro">Pron</option>
+                                                    <option value="Adv">Adv</option>
+                                                </fx-control>
+                                            </section>
+                                            <!-- Root 1 rest -->
+                                            <section class="tp-row">
+                                                <div class="tp-column-3"><label class="tp-label">Headedness
+                                                    classification 1</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 1]/@subtype"><select
+                                                            ref="instance('i-headedness')//option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{@xml:id}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Abbreviation
+                                                    marker</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 1]/@ana">
+                                                        <option value="Abbr">Abbr</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Class marker</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 1]/@cert">
+                                                        <option value="unattested">*</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Linked compound</label>
+                                                    <fx-control class="tp-input -form-control"
+                                                                ref="m[@type = 'radical' and @n = 1]/@corresp">
+                                                        <fx-hint>e.g. linked compound</fx-hint>
+                                                    </fx-control>
+                                                </div>
+                                            </section>
+                                            <div class="tp-divider"></div>
+                                            <h4>Root 2</h4>
+                                            <!-- Root 2 constituent -->
+                                            <section class="tp-form-group-col"><label class="tp-label">Constituent
+                                                2</label>
+                                                <fx-control class="hidden" ref="m[@type = 'radical' and @n = 2]">
+                                                    <fx-action event="constituent_autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-alert>no whitespace allowed</fx-alert>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input"
+                                                       data-function="constituent_autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off">
+                                            </section>
+                                            <!-- Root 2 -->
+                                            <section class="tp-form-group-col"><label class="tp-label">Root 2</label>
+                                                <fx-control class="hidden"
+                                                            ref="m[@type = 'radical' and @n = 2]/@baseForm">
+                                                    <fx-action event="autocomplete-callback">
+                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
+                                                    </fx-action>
+                                                    <fx-action event="xforms-value-changed">
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                                     value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
+                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                                     value="2"></fx-setvalue>
+                                                        <fx-send submission="s-reload-meanings"></fx-send>
+                                                    </fx-action>
+                                                </fx-control>
+                                                <input type="hidden" class="tp-input" data-function="autocomplete"
+                                                       placeholder="Type to search ..." autocomplete="off">
+                                            </section>
+                                            <!-- Root 2 add morpheme -->
+                                            <section class="tp-row tp-repeat-buttons">
+                                                <div class="tp-repeat-button-right">
+                                                    <div class="tp-button-row tp-add"><label>Add root</label>
+                                                        <fx-trigger>
+                                                            <button>add</button>
+                                                            <fx-action event="DOMActivate">
+                                                                <fx-setvalue ref="instance('i-controller')/morpheme"
+                                                                             value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"></fx-setvalue>
+                                                                <fx-dispatch name="load-subform-event"
+                                                                             targetid="load-subform-group"></fx-dispatch>
+                                                            </fx-action>
+                                                        </fx-trigger>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <!-- Meanings 2 -->
+<!--
+                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Meanings
+                                                2</label>
+                                                <div class="col-xs-6">
+                                                    <div class="semantic_tags">
+                                                        <div class="input-group"><span class="input-group-addon"><span
+                                                                class="glyphicon glyphicon-tasks"></span>
+                                                          meanings
+                                                          </span>
+                                                            &lt;!&ndash;<input class="tags" value="" disabled="disabled"/>&ndash;&gt;<span
+                                                                    class="meanings-val">
+                                                          <fx-repeat ref="" id="r-meanings-2"><template>
+                                                                <fx-output
+                                                                        ref="catDesc[@xml:lang='en']"></fx-output></template></fx-repeat></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+-->
+                                            <!-- Root 2 functions -->
+                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Function
+                                                2</label>
+                                                <fx-control ref="m[@type = 'radical' and @n = 2]/@function">
+                                                    {
+
+                                                    <option value="V">Verb</option>
+                                                    <option value="VAdj">VAdj</option>
+                                                    <option value="Part">Part</option>
+                                                    <option value="AgtN">Agt Noun</option>
+                                                    <option value="ActN">Act Noun</option>
+                                                    <option value="N">Noun</option>
+                                                    <option value="Adj">Adj</option>
+                                                    <option value="Pro">Pron</option>
+                                                    <option value="Adv">Adv</option>
+                                                </fx-control>
+                                            </section>
+                                            <!-- Root 2 rest -->
+                                            <section class="tp-row">
+                                                <div class="tp-column-3"><label class="tp-label">Headedness
+                                                    classification 2</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 2]/@subtype"><select
+                                                            ref="instance('i-headedness')//option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{@xml:id}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Abbreviation
+                                                    marker</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 2]/@ana">
+                                                        <option value="Abbr">Abbr</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Class marker</label>
+                                                    <fx-control ref="m[@type = 'radical' and @n = 2]/@cert">
+                                                        <option value="unattested">*</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Linked compound</label>
+                                                    <fx-control class="tp-input -form-control"
+                                                                ref="m[@type = 'radical' and @n = 2]/@corresp">
+                                                        <fx-hint>e.g. linked compound</fx-hint>
+                                                    </fx-control>
+                                                </div>
+                                            </section>
+                                            <h4>Suffixes</h4>
+                                            <!-- Suffixes -->
+                                            <section class="tp-row">
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 4</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '4']"><select
+                                                            ref="instance('i-suffix-4')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 3</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '3']"><select
+                                                            ref="instance('i-suffix-3')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 2</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '2']"><select
+                                                            ref="instance('i-suffix-2')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col">
+                                                    <div class="tp-row">
+                                                        <div class="tp-form-group-col"><label
+                                                                class="tp-label">Inflect</label>
+                                                            <fx-control ref="m[@type = 'suffix' and @n = '1']"><select
+                                                                    ref="instance('i-suffix-1')/option" class="widget">
+                                                                <template>
+                                                                    <option value="{base}">{base}</option>
+                                                                </template>
+                                                            </select></fx-control>
+                                                        </div>
+                                                        <div class="tp-form-group-col"><label class="tp-label">Suffix
+                                                            1</label>
+                                                            <fx-control ref="m[@type = 'suffix' and @n = 1]/@subtype">
+                                                                <option value="suff">Suffix 1</option>
+                                                            </fx-control>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <div class="tp-section-divider"></div>
+                                            <!--- Bibliography -->
+                                            <section class="tp-row tp-repeat-headline">
+                                                <h4 class="h3">Lexical Connections</h4>
+                                            </section>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Lexical or Lexicographic
+                                                        Significant
+                                                        Sources</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add significant
+                                                            source</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                           origin="instance('i-template')//cit[@type='source']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    significant source</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">
+                                                        References in Modern Lexicology and Linguistics
+                                                    </h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add reference</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                           origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='auxiliary']" id="r-cit-auxiliary">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    reference</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='auxiliary'][index('r-cit-auxiliary')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <div class="tp-section-divider"></div>
+                                            <section class="tp-row tp-repeat-headline">
+                                                <h4 class="h3">
+                                                    Onomastics
+                                                </h4>
+                                            </section>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Linked Sources</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add linked
+                                                            source</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                           origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='linguistic']" id="r-cit-linguistic">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    linked source</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='linguistic'][index('r-cit-linguistic')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Modern References</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add modern
+                                                            reference</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                           origin="instance('i-template')//cit[@type='modern']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='modern']" id="r-cit-modern">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    modern reference</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='modern'][index('r-cit-modern')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <!--- /Bibliography -->
+                                            <div class="tp-divider"></div>
+                                            <!-- delete segmentation -->
+                                            <div class="tp-row tp-repeat-buttons">
+                                                <div class="tp-repeat-button-right">
+                                                    <div class="tp-button-row tp-delete"><label><b>Delete segmentation
+                                                        hypothesis</b></label>
+                                                        <fx-trigger>
+                                                            <button>add</button>
+                                                            <fx-delete
+                                                                    nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                                                        </fx-trigger>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fx-group>
+                                        <div class="tp-section-divider"></div>
+                                    </template>
+                                </fx-repeat>
+                            </fx-group>
+                            <!-- // end segmentation -->
+                        </fx-group>
+                    </section>
+                </div>
+            </div>
+        </section>
+        <!-- end section segmentation -->
+
+        <!-- begin section save -->
+        <section class="tp-section tp-section-save">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Save Form</h2>
+                <div class="tp-width-main">
+                    <fieldset class="form-horizontal">
+                        <div class="tp-row tp-repeat-buttons">
+                            <div class="tp-repeat-button-left">
+                                <div class="tp-button-row tp-add"><label><b>Save form</b></label>
+                                    <fx-submit class="-btn -btn-default" submission="s-save-data"></fx-submit>
+                                </div>
+                            </div>
+                            <div class="tp-repeat-button-right">
+                                <div class="tp-button-row tp-delete"><label><span><b>Cancel form</b></span><span>Return to the list of names without saving</span></label>
+                                    <div class="tp-button-cancel">
+                                        <button class="btn btn-default"><i class="glyphicon glyphicon-log-out"></i><a
+                                                href="index.html"></a></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+        <!-- end section save -->
 
     </main>
+    <pre>
+        {log('default')}
+    </pre>
 </fx-fore>
 
 <!-- Modal Dialog -->
