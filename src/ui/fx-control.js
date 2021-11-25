@@ -161,39 +161,54 @@ class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      Array.from(nodeset).forEach(node => {
-        console.log('#### node', node);
-        const content = tmpl.content.firstElementChild.cloneNode(true);
-        const newEntry = document.importNode(content, true);
-        // console.log('newEntry ', newEntry);
-        this.widget.appendChild(newEntry);
+      if(nodeset.length){
+        console.log('nodeset', nodeset);
+        Array.from(nodeset).forEach(node => {
+          console.log('#### node', node);
+          const newEntry = this._createEntry(tmpl);
 
-        // ### initialize new entry
-        // ### set value
+          // ### initialize new entry
+          // ### set value
+          this._updateEntry(newEntry, node, formElement);
+        });
+      } else{
+        const newEntry = this._createEntry(tmpl);
+        this._updateEntry(newEntry, nodeset, formElement);
+      }
 
-        // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
-        const valueAttribute = this._getValueAttribute(newEntry);
-        const valueExpr = valueAttribute.value;
-        const cutted = valueExpr.substring(1, valueExpr.length - 1);
-        const evaluated = evaluateXPath(cutted, node, formElement);
-        valueAttribute.value = evaluated;
-
-        if (this.value === evaluated) {
-          newEntry.setAttribute('selected', 'selected');
-        }
-
-        // ### set label
-        const optionLabel = newEntry.textContent;
-        const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
-
-        const label = evaluateXPathToString(labelExpr, node, formElement);
-        newEntry.textContent = label;
-        //  ### <<< needs rework
-      });
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  _updateEntry(newEntry, node, formElement) {
+    // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
+    const valueAttribute = this._getValueAttribute(newEntry);
+    const valueExpr = valueAttribute.value;
+    const cutted = valueExpr.substring(1, valueExpr.length - 1);
+    const evaluated = evaluateXPath(cutted, node, formElement);
+    valueAttribute.value = evaluated;
+
+    if (this.value === evaluated) {
+      newEntry.setAttribute('selected', 'selected');
+    }
+
+    // ### set label
+    const optionLabel = newEntry.textContent;
+    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+
+    const label = evaluateXPathToString(labelExpr, node, formElement);
+    newEntry.textContent = label;
+    //  ### <<< needs rework
+  }
+
+  _createEntry(tmpl) {
+    const content = tmpl.content.firstElementChild.cloneNode(true);
+    const newEntry = document.importNode(content, true);
+    // console.log('newEntry ', newEntry);
+    this.widget.appendChild(newEntry);
+    return newEntry;
+  }
+
+// eslint-disable-next-line class-methods-use-this
   _getValueAttribute(element) {
     let result;
     Array.from(element.attributes).forEach(attribute => {

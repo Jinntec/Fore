@@ -8,7 +8,7 @@
         <body>
             <entry xml:id="uuid-0001">
                 <form type="lemma">
-                    <orth type="greek"/>
+                    <orth type="greek">Greek</orth>
                     <orth type="latin"/>
                     <orth type="h-variant"/>
                     <orth type="lgpn"/>
