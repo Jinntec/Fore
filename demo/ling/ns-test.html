@@ -25,12 +25,12 @@
     </fx-model>
 
     <main>
-        <h2>TEI: {//listChange}</h2>
-        <h2>default ns: {instance('second')/morpheme}</h2>
+<!--        <h2>TEI: {//listChange}</h2>-->
+<!--        <h2>default ns: {instance('second')/morpheme}</h2>-->
         <fx-control ref="//listChange">
-            <select ref="instance('second')//item">
+            <select ref="instance('second')/item" class="widget">
                 <template>
-                    <option>{.}</option>
+                    <option value="{.}">{.}</option>
                 </template>
             </select>
         </fx-control>

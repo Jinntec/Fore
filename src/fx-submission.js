@@ -265,7 +265,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const targetInstance = this._getTargetInstance();
       if (targetInstance) {
         if (this.targetref) {
-          const theTarget = evaluateXPath(this.targetref, targetInstance, this.getOwnerForm());
+          const theTarget = evaluateXPath(this.targetref, targetInstance.instanceData.firstElementChild, this);
           console.log('theTarget', theTarget);
           const clone = data.firstElementChild;
           const parent = theTarget.parentNode;

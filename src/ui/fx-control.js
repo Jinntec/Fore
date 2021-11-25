@@ -134,10 +134,8 @@ class FxControl extends XfAbstractControl {
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
-    // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
     if (this.widget.hasAttribute('ref')) {
       const tmpl = this.widget.querySelector('template');
-
 
       // ### eval nodeset for list control
       const ref = this.widget.getAttribute('ref');
@@ -150,14 +148,9 @@ class FxControl extends XfAbstractControl {
        */
       const instanceId = XPathUtil.getInstanceId(ref);
 
-      // const inscope = this.getInScopeContext();
-      const instance = this.getModel().getInstance(instanceId);
-      // const inscope = getInScopeContext(this, ref);
-      const inscope = instance.getInstanceData().firstElementChild;
+      const inscope = getInScopeContext(this, ref);
       const formElement = this.closest('fx-fore');
-
-      // const nodeset = evaluateXPath(ref, inscope, formElement);
-      const nodeset = evaluateXPath(ref, inscope, instance);
+      const nodeset = evaluateXPath(ref, inscope, formElement);
 
       // ### clear items
       const { children } = this.widget;
@@ -177,6 +170,8 @@ class FxControl extends XfAbstractControl {
 
         // ### initialize new entry
         // ### set value
+
+        // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
         const valueAttribute = this._getValueAttribute(newEntry);
         const valueExpr = valueAttribute.value;
         const cutted = valueExpr.substring(1, valueExpr.length - 1);
@@ -193,6 +188,7 @@ class FxControl extends XfAbstractControl {
 
         const label = evaluateXPathToString(labelExpr, node, formElement);
         newEntry.textContent = label;
+        //  ### <<< needs rework
       });
     }
   }

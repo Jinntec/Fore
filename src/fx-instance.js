@@ -144,7 +144,8 @@ export class FxInstance extends HTMLElement {
 
   _createInstanceData() {
     if (this.type === 'xml') {
-      const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
+      // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
+      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
     }
     if (this.type === 'json') {
@@ -185,10 +186,6 @@ export class FxInstance extends HTMLElement {
       })
       .then(data => {
         this.instanceData = data;
-        if(this.instanceData.nodeType){
-          this.instanceData.firstElementChild.setAttribute('data-id',this.id);
-        }
-
         console.log('instanceData loaded: ', this.instanceData);
       })
       .catch(error => {
@@ -214,7 +211,6 @@ export class FxInstance extends HTMLElement {
 
       console.log('fx-instance init id:', this.id);
       this.instanceData = instanceData;
-      this.instanceData.firstElementChild.setAttribute('data-id',this.id);
       // console.log('instanceData ', this.instanceData);
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
