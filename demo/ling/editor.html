@@ -98,7 +98,7 @@
             <fx-action event="xforms-submit-done">
                 <fx-action
                         if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
-                    <fx-insert context="instance('i-meanings')" nodeset="*[last()]"
+                    <fx-insert context="instance('i-meanings')" ref="*[last()]"
                                origin="instance('i-meanings')/template/meaning"/>
                     <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
                                  value="instance('i-meanings')/being-reloaded/@n"/>
@@ -339,6 +339,10 @@
                                                 <fx-control ref="@cert" update-event="change" value-prop="checked">
                                                     <input type="checkbox">
                                                     <label>(Check if uncertain)</label>
+                                                    <!--fx-action event="value-changed">
+                                                        <fx-setvalue ref="@cert" if=".=true()" value="'low'"/>
+                                                        <fx-setvalue ref="@cert" if=".=false()" value="''"/>
+                                                    </fx-action-->
                                                 </fx-control>
                                             </div>
                                         </div>
@@ -377,7 +381,7 @@
                                     <div class="tp-button-row tp-add"><label>Add name variant</label>
                                         <fx-trigger>
                                             <button>add</button>
-                                            <fx-insert context="//entry" nodeset="form"
+                                            <fx-insert context="//entry" ref="form"
                                                        origin="instance('i-template')//form[@type='variant']"></fx-insert>
                                             <!--
                                                                                         <script>
@@ -478,7 +482,7 @@
                                         <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
                                             <fx-trigger>
                                                 <button>add</button>
-                                                <fx-insert context="//entry" nodeset="gramGrp"
+                                                <fx-insert context="//entry" ref="gramGrp"
                                                            origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
                                                 <!--
                                                                                                 <script>
@@ -529,33 +533,19 @@
                                             <section class="tp-form-group-col"><label
                                                     class="tp-label">Preconstituent</label>
                                                 <fx-control class="hidden" ref="m[@type = 'prefix' and @n = 1]">
-                                                    <fx-action event="constituent_autocomplete-callback">
-                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
-                                                    </fx-action>
                                                     <fx-alert>no whitespace allowed</fx-alert>
                                                 </fx-control>
-                                                <input type="hidden" class="tp-input"
-                                                       data-function="constituent_autocomplete"
-                                                       placeholder="Type to search ..." autocomplete="off">
-                                                <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
-                                                <fx-trigger class="hidden constituent_autocomplete-callback">
-                                                    <fx-action event="DOMActivate">
-                                                        <fx-setvalue ref="" value=""></fx-setvalue>
-<!--                                                        <fx-dispatch name="" targetid=""></fx-dispatch>-->
-                                                    </fx-action>
-                                                </fx-trigger>
                                             </section>
                                             <section class="tp-form-group-col"><label class="tp-label">Preroot</label>
-                                                <fx-control ref="m[@type = 'prefix' and @n = 1]/@baseForm">
-                                                    <!--input type="text" class="widget" onkeyup="prerootChanged(event)"/-->
+                                                <fx-output id="base-form" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
                                                     <input type="text" class="widget"/>
                                                     <fx-action event="preroot-changed">
-                                                        <fx-setvalue ref="." value="'xxx'"></fx-setvalue>
+                                                        <fx-setvalue ref="m[@type = 'prefix' and @n = 1]/@baseForm" value="event('preroot')"></fx-setvalue>
                                                     </fx-action>
-                                                </fx-control>
+                                                </fx-output>
                                                 <fx-trigger>
                                                     <button class="widget">Change</button>
-                                                    <fx-dispatch name="edit-morpheme">
+                                                    <fx-dispatch name="edit-morpheme" targetid="base-form">
                                                         <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
                                                     </fx-dispatch>
                                                 </fx-trigger>
@@ -563,7 +553,7 @@
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot
                                                 (prefix)</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
-                                                    <select class="widget" multiple>
+                                                    <select class="widget" multiple size="9">
                                                         <option value="V">Verb</option>
                                                         <option value="VAdj">VAdj</option>
                                                         <option value="Part">Part</option>
@@ -903,7 +893,7 @@
                                                             source</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='source']"></fx-insert>
 <!--
                                                                 <script>
@@ -967,7 +957,7 @@
                                                         <div class="tp-button-row tp-add"><label>Add reference</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
 <!--
                                                                 <script>
@@ -1036,7 +1026,7 @@
                                                             source</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
 <!--
                                                                 <script>
@@ -1099,7 +1089,7 @@
                                                             reference</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" nodeset="cit"
+                                                                <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='modern']"></fx-insert>
 <!--
                                                                 <script>
