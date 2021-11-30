@@ -1,0 +1,512 @@
+<html>
+<head>
+    <title>LGPN-Ling Shortened demo</title><!--
+        ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
+        -->
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance id="default"
+                     src="data/default.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        
+        <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>
+
+        <fx-instance id="i-template"
+                     src="data/template.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        
+        <fx-instance id="i-controller">
+            <data xmlns="">
+                <morpheme/>
+            </data>
+        </fx-instance>
+
+        <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
+        <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"/>
+        <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
+        <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
+        <fx-instance id="i-classification" src="data/xml/classification.xml"/>
+        <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
+        <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
+        <fx-instance id="i-relations" src="data/xml/relations.xml"/>
+        <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
+        <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
+        <fx-instance id="i-other" src="data/xml/other.xml"/>
+        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
+        <fx-instance id="fictitious" src="data/xml/fictitious.xml"/>
+        <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
+        <fx-instance id="i-cert" src="data/xml/cert.xml"/>
+
+        <fx-instance 
+            id="i-dialects" src="data/xml/dialects.xml" 
+            xmlns:tei="http://www.tei-c.org/ns/1.0" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        <fx-instance 
+            id="i-genders" src="data/xml/genders.xml" 
+            xmlns:tei="http://www.tei-c.org/ns/1.0" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+        <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
+                       resource="modules/load.xql?id={bf:appContext('id')}">
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to load data.</fx-message>
+        </fx-submission>
+
+        <fx-submission id="s-save-data" method="post" replace="none" validate="true" resource="modules/save.xql">
+            <fx-header>
+                <fx-name>userid</fx-name>
+                <fx-value>{bf:appContext('id')}</fx-value>
+            </fx-header>
+            <fx-header>
+                <fx-name>password</fx-name>
+                <fx-value/>
+            </fx-header>
+            <fx-action event="xforms-submit">
+                <fx-setvalue ref="instance('i-default')//entry/@xml:id"
+                             value="instance('i-default')//orth[@type='latin']"/>
+                <fx-message event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
+            </fx-action>
+            <fx-message event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
+            <fx-message event="xforms-submit-error">Failed to save data</fx-message>
+        </fx-submission>
+    </fx-model>
+
+    <header>
+        <div class="tp-row">
+            <h1 class="tp-column-fullwidth tp-headline">LGPN-Ling Shortened Demo</h1>
+        </div>
+    </header>
+
+    <main>
+        <!-- begin section general -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Name in Context</h2>
+                <div class="tp-width-main">
+                    <fieldset class="form-horizontal" id="general">
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Greek</label>
+                            <fx-control class="tp-input -form-control" ref="//form[@type='lemma']/orth[@type='greek']">
+                                <fx-hint>Greek</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Latin</label>
+                            <fx-control class="tp-input -form-control" ref="//form[@type='lemma']/orth[@type='latin']">
+                                <fx-hint>Latin</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">LGPN</label>
+                            <fx-control class="tp-input -form-control" ref="//form[@type='lemma']/orth[@type='lgpn']">
+                                <fx-hint>LGPN variant (if differs)</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">H-Variant</label>
+                            <fx-control class="tp-input -form-control"
+                                        ref="//form[@type='lemma']/orth[@type='h-variant']">
+                                <fx-hint>Latin variant (with parentheses)</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Classification</label>
+                            <fx-control class="tp-input"
+                                        ref="//gramGrp[@type='classification']/gram[@type='fictitious']">
+                                <select ref="instance('fictitious')/option" class="widget">
+                                    <template>
+                                        <option value="{@value}">{string()}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Classification GPR</label>
+                            <fx-control class="tp-input"
+                                        ref="//gramGrp[@type='classification']/gram[@type='GPR']"
+                                        appearance="full">
+                                <select ref="instance('i-gpr')//option" class="widget">
+                                    <template>
+                                        <option value="{@value}">{string()}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Sublemma</label>
+                            <fx-control class="tp-input -form-control"
+                                        ref="//gramGrp[@type='classification']/gram[@type='sublemma']">
+                                <select ref="instance('i-sublemma')//option" class="widget">
+                                    <template>
+                                        <option value="{@xml:id}">{string()}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Polysemic</label>
+                            <fx-control class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]"
+                                        appearance="full">
+                                <select ref="instance('i-polysemic')//option" class="widget">
+                                    <template>
+                                        <option value="{string()}">{string()}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+                    </fieldset>
+
+                    <div class="tp-section-divider"/>
+
+                    <div class="tp-row">
+                        Relation
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- // end section general -->
+
+        <!-- begin section dialects -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <div class="tp-width-secondary">
+                    <fx-group ref="//entry">
+                        <fx-group ref="//gramGrp[@type='classification']">
+                            <div class="tp-row tp-repeat-add">
+                                <fx-label class="tp-form-header">
+                                    <h3>Dialects</h3>
+                                </fx-label>
+                                <div class="tp-repeat-button-left">
+                                    <div class="tp-button-row tp-add">
+                                        <label>Add dialect</label>
+                                        <fx-trigger class="-btn -btn-default ">
+                                            <button>Add</button>
+                                            <fx-insert 
+                                                ref="usg"
+                                                origin="instance('i-template')//usg[@type='lang']"/>
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <fx-repeat ref="usg[@type='lang']" id="r-dialect">
+                                <template>
+                                    <fx-group ref=".">
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
+                                            <fx-control class="tp-input -form-control"
+                                                    ref=".">
+                                                <!-- <select ref="instance('i-dialects')//option" class="widget">
+                                                    <template>
+                                                        <option value="{string()}">{string()}</option>
+                                                    </template>
+                                                </select> -->
+                                                <select ref="instance('i-dialects')//category" class="widget">
+                                                    <template>
+                                                        <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
+                                                    </template>
+                                                </select>
+                                            </fx-control>
+                                            </div>
+                                            
+                                            <div class="tp-form-group-col"><label class="tp-label">Uncertain</label>
+                                                <fx-control class="tp-input -form-control" ref="@cert">
+                                                    <select ref="instance('i-cert')//option" class="widget">
+                                                        <template>
+                                                            <option value="{@value}">{string()}</option>
+                                                        </template>
+                                                    </select>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row tp-repeat-buttons">
+                                            <div class="tp-repeat-button-right">
+                                                <div class="tp-button-row tp-delete"><label>Delete dialect</label>
+                                                    <fx-trigger>
+                                                        <button>delete</button>
+                                                        <fx-delete
+                                                                nodeset="//usg[@type='lang'][index('r-dialect')]"></fx-delete>
+                                                    </fx-trigger>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fx-group>
+                                </template>
+                            </fx-repeat>
+                        </fx-group>
+
+                        <div class="tp-section-divider"/>
+
+                    </fx-group>
+                </div>
+            </div>
+        </section>
+        <!-- // end section dialects -->
+
+        <!-- begin section segmentation -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Segmentation and Semantics</h2>
+                <div class="tp-width-secondary">
+                    <section class="form-horizontal">
+                        <fx-group ref="//entry">
+                            <fx-group>
+                                <section class="tp-row tp-repeat-add">
+                                    <div class="tp-repeat-button-left">
+                                        <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
+                                            <fx-trigger>
+                                                <button>add</button>
+                                                <fx-insert context="//entry" ref="gramGrp"
+                                                           origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+                                            </fx-trigger>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="tp-row tp-repeat-headline"></div>
+                                <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
+                                    <template>
+                                        <fx-group ref="."><!-- gen. characteristic l.1 -->
+                                            <section class="tp-row">
+                                                <div class="tp-form-group-col"><label class="tp-label">Certainty</label>
+                                                    <fx-control ref="@cert">
+                                                    <select ref="instance('i-cert')//option" class="widget">
+                                                        <template>
+                                                            <option value="{@value}">{string()}</option>
+                                                        </template>
+                                                    </select>
+                                                </fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col">
+                                                    <div class="row">
+                                                        <div class="col-xs-8"><label class="tp-label">Complex
+                                                            Structuration and
+                                                            Semantics</label>
+                                                            <fx-control ref="@subtype"><select
+                                                                    ref="instance('i-classification')//option"
+                                                                    class="widget">
+                                                                <template>
+                                                                    <option value="{.}">{@xml:id}</option>
+                                                                </template>
+                                                            </select></fx-control>
+                                                        </div>
+                                                        <div class="col-xs-4"><label class="tp-label">Struct.
+                                                            uncertain</label>
+                                                            <fx-control ref="@ana">
+                                                                
+                                                                <select ref="instance('i-cert')//option" class="widget">
+                                                                    <template>
+                                                                        <option value="{@value}">{string()}</option>
+                                                                    </template>
+                                                                </select>
+                                                            </fx-control>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <div class="tp-divider"></div>
+                                            <h4>Preroot</h4>
+                                            <!-- Preroot -->
+                                            <section class="tp-form-group-col"><label
+                                                    class="tp-label">Preconstituent</label>
+                                                <fx-control ref="m[@type = 'prefix' and @n = 1]">
+                                                    <fx-alert>no whitespace allowed</fx-alert>
+                                                </fx-control>
+                                            </section>
+                                            <section class="tp-form-group-col"><label class="tp-label">Preroot</label>
+                                                <fx-output id="base-form" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
+                                                    <input type="text" class="widget"/>
+                                                    <fx-action event="preroot-changed">
+                                                        <fx-setvalue ref="m[@type = 'prefix' and @n = 1]/@baseForm" value="event('preroot')"></fx-setvalue>
+                                                    </fx-action>
+                                                </fx-output>
+                                                <fx-trigger>
+                                                    <button class="widget">Change</button>
+                                                    <fx-dispatch name="edit-morpheme" targetid="base-form">
+                                                        <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
+                                                    </fx-dispatch>
+                                                </fx-trigger>
+                                            </section>
+                                            <!-- Preroot functions -->
+                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Functions</label>
+                                                <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
+                                                    <select class="widget" multiple size="9">
+                                                        <option value="V">Verb</option>
+                                                        <option value="VAdj">VAdj</option>
+                                                        <option value="Part">Part</option>
+                                                        <option value="AgtN">Agt Noun</option>
+                                                        <option value="ActN">Act Noun</option>
+                                                        <option value="N">Noun</option>
+                                                        <option value="Adj">Adj</option>
+                                                        <option value="Pro">Pron</option>
+                                                        <option value="Adv">Adv</option>
+                                                    </select>
+                                                </fx-control>
+                                            </section>
+                                            <!-- Preroot rest -->
+                                            <section class="tp-row">
+                                                <div class="tp-column-3"><label class="tp-label">Headedness
+                                                    classification</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@subtype">
+                                                        <select ref="instance('i-headedness')//option" class="widget" multiple size="4">
+                                                        <template>
+                                                            <option value="{@xml:id}">{@xml:id}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Abbreviation
+                                                    marker</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@ana">
+                                                        <option value="Abbr">Abbr</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Class marker</label>
+                                                    <fx-control ref="m[@type = 'prefix' and @n = 1]/@cert">
+                                                        <option value="unattested">*</option>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Linked compound</label>
+                                                    <fx-control class="tp-input -form-control"
+                                                                ref="m[@type = 'prefix' and @n = 1]/@corresp">
+                                                        <fx-hint>e.g. linked compound</fx-hint>
+                                                    </fx-control>
+                                                </div>
+                                            </section>
+                                            <!-- Preroot other -->
+                                            <div class="tp-divider"></div>
+                                            <h4>Suffixes</h4>
+                                            <!-- Suffixes -->
+                                            <section class="tp-row">
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 4</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '4']"><select
+                                                            ref="instance('i-suffix-4')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 3</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '3']"><select
+                                                            ref="instance('i-suffix-3')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col"><label class="tp-label">Suffix 2</label>
+                                                    <fx-control ref="m[@type = 'suffix' and @n = '2']"><select
+                                                            ref="instance('i-suffix-2')/option" class="widget">
+                                                        <template>
+                                                            <option value="{.}">{.}</option>
+                                                        </template>
+                                                    </select></fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col">
+                                                    <div class="tp-row">
+                                                        <div class="tp-form-group-col">
+                                                            <label class="tp-label">Inflect</label>
+                                                            <fx-control ref="m[@type = 'suffix' and @n = '1']/@subtype">
+                                                                <select class="widget">                                                                
+                                                                    <option value="">-</option>
+                                                                    <option value="suff">yes</option>
+                                                                </select>
+                                                            </fx-control>
+                                                        </div>
+                                                        <div class="tp-form-group-col">
+                                                            <label class="tp-label">Suffix 1</label>
+                                                            <fx-control ref="m[@type = 'suffix' and @n = '1']"><select
+                                                                ref="instance('i-suffix-1')/option" class="widget">
+                                                            <template>
+                                                                <option value="{.}">{.}</option>
+                                                            </template>
+                                                        </select></fx-control>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+
+                                            <!--- Put Bibliography here -->
+                                            <div class="tp-divider"></div>
+                                            <!-- delete segmentation -->
+                                            <div class="tp-row tp-repeat-buttons">
+                                                <div class="tp-repeat-button-right">
+                                                    <div class="tp-button-row tp-delete">
+                                                        <label><b>Delete segmentation
+                                                        hypothesis</b></label>
+                                                        <fx-trigger>
+                                                            <button>Delete</button>
+                                                            <fx-delete
+                                                                    nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                                                        </fx-trigger>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fx-group>
+                                        <div class="tp-section-divider"></div>
+                                    </template>
+                                </fx-repeat>
+                            </fx-group>
+                            <!-- // end segmentation -->
+                        </fx-group>
+                    </section>
+                </div>
+            </div>
+        </section>
+        <!-- end section segmentation -->
+
+        <!-- begin section save -->
+        <section class="tp-section tp-section-save">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Save Form</h2>
+                <div class="tp-width-main">
+                    <fieldset class="form-horizontal">
+                        <div class="tp-row tp-repeat-buttons">
+                            <div class="tp-repeat-button-left">
+                                <div class="tp-button-row tp-add"><label><b>Save form</b></label>
+                                    <fx-submit class="-btn -btn-default" submission="s-save-data"></fx-submit>
+                                </div>
+                            </div>
+                            <div class="tp-repeat-button-right">
+                                <div class="tp-button-row tp-delete"><label><span><b>Cancel form</b></span><span>Return to the list of names without saving</span></label>
+                                    <div class="tp-button-cancel">
+                                        <button class="btn btn-default"><i class="glyphicon glyphicon-log-out"></i><a
+                                                href="index.html"></a></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+        <!-- end section save -->
+
+    </main>
+    <pre>
+        {log('default')}
+    </pre>
+</fx-fore>
+<paper-dialog id="morpheme-dialog">
+    <paper-dialog-scrollable>
+        <input type="text" name="query"/>
+        <div class="results">
+            
+        </div>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+        <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+            <pb-i18n key="dialogs.close">Close</pb-i18n>
+        </paper-button>
+    </div>
+</paper-dialog>
+<!-- Modal Dialog -->
+<script type="module" src="../../index.js"></script>
+<script type="module" src="ling.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<taxonomy xmlns="http://www.tei-c.org/ns/1.0" xml:id="genders">
+    <category xml:id="m">
+        <catDesc ana="full" xml:lang="en">masculine</catDesc>
+        <catDesc ana="short" xml:lang="en">m</catDesc>
+        <catDesc ana="full" xml:lang="fr">masculine</catDesc>
+        <catDesc ana="short" xml:lang="fr">m</catDesc>
+    </category>
+    <category xml:id="f">
+        <catDesc ana="full" xml:lang="en">feminine</catDesc>
+        <catDesc ana="short" xml:lang="en">f</catDesc>
+        <catDesc ana="full" xml:lang="fr">feminine</catDesc>
+        <catDesc ana="short" xml:lang="fr">f</catDesc>
+    </category>
+</taxonomy>
