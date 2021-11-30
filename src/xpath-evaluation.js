@@ -1,15 +1,39 @@
 import {
   evaluateXPath as fxEvaluateXPath,
+  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
   evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
-  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
-  evaluateXPathToString as fxEvaluateXPathToString,
   evaluateXPathToNumber as fxEvaluateXPathToNumber,
+  evaluateXPathToString as fxEvaluateXPathToString,
+  evaluateXPathToStrings as fxEvaluateXPathToStrings,
+  parseScript,
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+
+const createdNamespaceResolversByXPathQueryAndNode = new Map();
+
+function getCachedNamespaceResolver(xpath, node) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return null;
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
+}
+function setCachedNamespaceResolver(xpath, node, resolver) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+}
+
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
+};
 
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
@@ -25,33 +49,113 @@ const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
  * @param  {Node}  contextElement  The element that is most closely related with the XPath in which this prefix is resolved.
  * @param  {string}   prefix          The prefix to resolve
  */
-function resolveNamespacePrefix(contextElement, prefix) {
-  if (prefix === 'xhtml') {
-    return 'http://www.w3.org/1999/xhtml';
+function createNamespaceResolver(xpathQuery, formElement) {
+  const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
+  if (cachedResolver) {
+    return cachedResolver;
   }
 
-  if (prefix === '') {
-    return (
-      fxEvaluateXPathToString(
-        'ancestor-or-self::*/@xpath-default-namespace[last()]',
-        contextElement,
-      ) || null
+  // Make namespace resolving use the `instance` element that is related to here
+  const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
+
+  const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
+  let instanceReferences = fxEvaluateXPathToStrings(
+    `descendant::xqx:functionCallExpr
+				[xqx:functionName = "instance"]
+				/xqx:arguments
+				/xqx:stringConstantExpr
+				/xqx:value`,
+    xpathAST,
+    null,
+    {},
+    {
+      namespaceResolver: prefix =>
+        prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+    },
+  );
+  if (instanceReferences.length === 0) {
+    // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
+    const ancestorComponent = fxEvaluateXPathToFirstNode('ancestor::*[@ref][1]', formElement);
+    if (ancestorComponent) {
+      const resolver = createNamespaceResolver(
+        ancestorComponent.getAttribute('ref'),
+        ancestorComponent,
+      );
+      setCachedNamespaceResolver(xpathQuery, formElement);
+      return resolver;
+    }
+    // Nothing found: let's just assume we're supposed to use the `default` instance
+    instanceReferences = ['default'];
+  }
+
+  if (instanceReferences.length === 1) {
+    console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
+    let instance;
+    if (instanceReferences[0] === 'default') {
+      const actualForeElement = fxEvaluateXPathToFirstNode(
+        'ancestor-or-self::fx-fore',
+        formElement,
+        null,
+        null,
+        { namespaceResolver: xhtmlNamespaceResolver },
+      );
+
+      instance = actualForeElement && actualForeElement.querySelector('fx-instance');
+    } else {
+      instance = resolveId(instanceReferences[0], formElement, 'fx-instance');
+    }
+    if (instance && instance.hasAttribute('xpath-default-namespace')) {
+      const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
+      console.log(
+        `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
+      );
+      const resolveNamespacePrefix = prefix => {
+        if (!prefix) {
+          return xpathDefaultNamespace;
+        }
+        return undefined;
+      };
+      setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+      return resolveNamespacePrefix;
+    }
+  }
+  if (instanceReferences.length > 1) {
+    console.warn(
+      `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
     );
   }
 
-  // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
-  // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
-  // attributes. Which they technically ARE NOT!
+  const xpathDefaultNamespace =
+    fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
+    '';
 
-  const result = fxEvaluateXPathToString(
-    'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
-    contextElement,
-    null,
-    { prefix },
-  );
+  const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
+    if (prefix === '') {
+      return xpathDefaultNamespace;
+    }
 
-  console.log('result', result);
-  return result;
+    // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
+    // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
+    // attributes. Which they technically ARE NOT!
+
+    return fxEvaluateXPathToString(
+      'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+      formElement,
+      null,
+      { prefix },
+    );
+  };
+
+  setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+  return resolveNamespacePrefix;
+}
+
+function createNamespaceResolverForNode(query, contextNode, formElement) {
+  if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
+    // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
+    return xhtmlNamespaceResolver;
+  }
+  return createNamespaceResolver(query, formElement);
 }
 
 /**
@@ -92,13 +196,15 @@ function functionNameResolver({ prefix, localName }, _arity) {
  * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+
   return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
     currentContext: { formElement, variables },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
     },
     functionNameResolver,
-    namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+    namespaceResolver,
   });
 }
 
@@ -111,18 +217,19 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
  * @return {Node}  The first node found by the XPath
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToFirstNode(
     xpath,
     contextNode,
     null,
     {},
     {
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
       defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
       currentContext: { formElement },
+      namespaceResolver,
     },
   );
 }
@@ -136,6 +243,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  * @return {Node[]}  All nodes
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToNodes(
     xpath,
     contextNode,
@@ -147,7 +255,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -161,6 +269,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  * @return {boolean}
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToBoolean(
     xpath,
     contextNode,
@@ -172,7 +281,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -195,6 +304,7 @@ export function evaluateXPathToString(
   domFacade = null,
   namespaceReferenceNode = formElement,
 ) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
@@ -207,7 +317,7 @@ export function evaluateXPathToString(
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -230,6 +340,7 @@ export function evaluateXPathToNumber(
   domFacade = null,
   namespaceReferenceNode = formElement,
 ) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToNumber(
     xpath,
     contextNode,
@@ -241,17 +352,10 @@ export function evaluateXPathToNumber(
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+      namespaceResolver,
     },
   );
 }
-
-const xhtmlNamespaceResolver = prefix => {
-  if (!prefix) {
-    return 'http://www.w3.org/1999/xhtml';
-  }
-  return undefined;
-};
 
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve

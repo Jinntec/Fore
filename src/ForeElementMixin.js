@@ -24,12 +24,6 @@ export const foreElementMixin = superclass =>
           type: Object,
         },
         /**
-         * XPath binding expression pointing to bound node
-         */
-        ref: {
-          type: String,
-        },
-        /**
          * The modelitem object associated to the bound node holding the evaluated state.
          */
         modelItem: {
@@ -40,6 +34,12 @@ export const foreElementMixin = superclass =>
          */
         nodeset: {
           type: Object,
+        },
+        /**
+         * XPath binding expression pointing to bound node
+         */
+        ref: {
+          type: String,
         },
       };
     }
@@ -113,9 +113,9 @@ export const foreElementMixin = superclass =>
         // todo: code below fails - why?
         const formElement = this.getOwnerForm();
         if (inscopeContext.nodeType) {
-          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement);
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
         }
         // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }

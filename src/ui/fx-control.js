@@ -1,5 +1,7 @@
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import getInScopeContext from '../getInScopeContext.js';
+import { XPathUtil } from '../xpath-util';
 
 const WIDGETCLASS = 'widget';
 
@@ -132,15 +134,23 @@ class FxControl extends XfAbstractControl {
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
-    // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
     if (this.widget.hasAttribute('ref')) {
       const tmpl = this.widget.querySelector('template');
 
       // ### eval nodeset for list control
       const ref = this.widget.getAttribute('ref');
-      const inscope = this.getInScopeContext();
+
+      /*
+      actually a ref on a select or similar component should point to a different instance
+      with an absolute expr e.g. 'instance('theId')/...'
+
+      todo: even bail out if ref is not absolute?
+       */
+      const instanceId = XPathUtil.getInstanceId(ref);
+
+      const inscope = getInScopeContext(this, ref);
       const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPath(ref, inscope, formElement);
+      const nodeset = evaluateXPath(ref, inscope, this);
 
       // ### clear items
       const { children } = this.widget;
@@ -151,33 +161,50 @@ class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      Array.from(nodeset).forEach(node => {
-        console.log('#### node', node);
-        const content = tmpl.content.firstElementChild.cloneNode(true);
-        const newEntry = document.importNode(content, true);
-        // console.log('newEntry ', newEntry);
-        this.widget.appendChild(newEntry);
+      if (nodeset.length) {
+        console.log('nodeset', nodeset);
+        Array.from(nodeset).forEach(node => {
+          console.log('#### node', node);
+          const newEntry = this._createEntry(tmpl);
 
-        // ### initialize new entry
-        // ### set value
-        const valueAttribute = this._getValueAttribute(newEntry);
-        const valueExpr = valueAttribute.value;
-        const cutted = valueExpr.substring(1, valueExpr.length - 1);
-        const evaluated = evaluateXPath(cutted, node, formElement);
-        valueAttribute.value = evaluated;
-
-        if (this.value === evaluated) {
-          newEntry.setAttribute('selected', 'selected');
-        }
-
-        // ### set label
-        const optionLabel = newEntry.textContent;
-        const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
-
-        const label = evaluateXPathToString(labelExpr, node, formElement);
-        newEntry.textContent = label;
-      });
+          // ### initialize new entry
+          // ### set value
+          this._updateEntry(newEntry, node, formElement);
+        });
+      } else {
+        const newEntry = this._createEntry(tmpl);
+        this._updateEntry(newEntry, nodeset, formElement);
+      }
     }
+  }
+
+  _updateEntry(newEntry, node, formElement) {
+    // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
+    const valueAttribute = this._getValueAttribute(newEntry);
+    const valueExpr = valueAttribute.value;
+    const cutted = valueExpr.substring(1, valueExpr.length - 1);
+    const evaluated = evaluateXPath(cutted, node, newEntry);
+    valueAttribute.value = evaluated;
+
+    if (this.value === evaluated) {
+      newEntry.setAttribute('selected', 'selected');
+    }
+
+    // ### set label
+    const optionLabel = newEntry.textContent;
+    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+
+    const label = evaluateXPathToString(labelExpr, node, newEntry);
+    newEntry.textContent = label;
+    //  ### <<< needs rework
+  }
+
+  _createEntry(tmpl) {
+    const content = tmpl.content.firstElementChild.cloneNode(true);
+    const newEntry = document.importNode(content, true);
+    // console.log('newEntry ', newEntry);
+    this.widget.appendChild(newEntry);
+    return newEntry;
   }
 
   // eslint-disable-next-line class-methods-use-this

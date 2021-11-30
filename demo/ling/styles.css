@@ -1,0 +1,32 @@
+fx-hint {
+    display: none;
+}
+
+/*
+.tp-form-group-col {
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+}
+*/
+.tp-form-group-col .row > div{
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+}
+fieldset > div , fx-group > div{
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+
+}
+fx-group{
+    padding: 1rem;
+    border:thin solid lightgrey;
+}
+fx-repeat{
+    display: block;
+}
+fx-repeatitem{
+    background: #00b8d4;
+    display: block;
+    padding:2px;
+    margin:0.5rem 0;
+}

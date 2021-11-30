@@ -144,6 +144,7 @@ export class FxInstance extends HTMLElement {
 
   _createInstanceData() {
     if (this.type === 'xml') {
+      // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
     }
@@ -177,7 +178,7 @@ export class FxInstance extends HTMLElement {
         }
         if (responseContentType.startsWith('application/xml')) {
           return response.text().then(result => {
-            console.log('xml ********', result);
+            // console.log('xml ********', result);
             return new DOMParser().parseFromString(result, 'application/xml');
           });
         }
