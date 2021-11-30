@@ -39,7 +39,7 @@
         <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
         <fx-instance id="fictitious" src="data/xml/fictitious.xml"/>
         <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-        <fx-instance xmlns="" id="i-dialects" src="../lgpn-ling-data/data/taxonomies/dialects.xml"/>
+        <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml"/>
         <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
 
         <fx-instance id="i-meanings">
@@ -297,10 +297,8 @@
                                     <div class="tp-button-row tp-add">
                                         <label>Add dialect</label>
                                         <fx-trigger class="-btn -btn-default ">
-                                            <fx-label class="input-group-addon">
-                                                <i class="glyphicon glyphicon-plus"/>
-                                            </fx-label>
-                                            <fx-insert context="//gramGrp[@type='classification']" nodeset="usg"
+                                            <button>Add</button>
+                                            <fx-insert ref="usg"
                                                        origin="instance('i-template')//usg[@type='lang']"/>
                                             <!--
                                                                                         <script>
@@ -317,6 +315,14 @@
                                 <template>
                                     <fx-group ref=".">
                                         <div class="tp-row">
+                                            <fx-control class="tp-input -form-control"
+                                                    ref=".">
+                                                <select ref="instance('i-dialects')//option" class="widget">
+                                                    <template>
+                                                        <option value="{string()}">{string()}</option>
+                                                    </template>
+                                                </select>
+                                            </fx-control>
                                             <!--
                                                                                         <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
                                                                                             <fx-control ref=".">
@@ -330,8 +336,9 @@
                                                                                         </div>
                                             -->
                                             <div class="tp-form-group-col"><label class="tp-label">Uncertain</label>
-                                                <fx-control ref="@cert">
-                                                    <option value="low">(Check if uncertain)</option>
+                                                <fx-control ref="@cert" update-event="change" value-prop="checked">
+                                                    <input type="checkbox">
+                                                    <label>(Check if uncertain)</label>
                                                 </fx-control>
                                             </div>
                                         </div>
@@ -339,7 +346,7 @@
                                             <div class="tp-repeat-button-right">
                                                 <div class="tp-button-row tp-delete"><label>Delete dialect</label>
                                                     <fx-trigger>
-                                                        <button>add</button>
+                                                        <button>delete</button>
                                                         <fx-delete
                                                                 nodeset="//usg[@type='lang'][index('r-dialect')]"></fx-delete>
                                                     </fx-trigger>
@@ -539,34 +546,34 @@
                                                 </fx-trigger>
                                             </section>
                                             <section class="tp-form-group-col"><label class="tp-label">Preroot</label>
-                                                <fx-control class="hidden"
-                                                            ref="m[@type = 'prefix' and @n = 1]/@baseForm">
-                                                    <fx-action event="autocomplete-callback">
-                                                        <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
-                                                    </fx-action>
-                                                    <fx-action event="xforms-value-changed">
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
-                                                                     value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
-                                                                     value="3"></fx-setvalue>
-                                                        <fx-send submission="s-reload-meanings"></fx-send>
+                                                <fx-control ref="m[@type = 'prefix' and @n = 1]/@baseForm">
+                                                    <!--input type="text" class="widget" onkeyup="prerootChanged(event)"/-->
+                                                    <input type="text" class="widget"/>
+                                                    <fx-action event="preroot-changed">
+                                                        <fx-setvalue ref="." value="'xxx'"></fx-setvalue>
                                                     </fx-action>
                                                 </fx-control>
-                                                <input type="hidden" class="tp-input" data-function="autocomplete"
-                                                       placeholder="Type to search ..." autocomplete="off"></section>
+                                                <fx-trigger>
+                                                    <button class="widget">Change</button>
+                                                    <fx-dispatch name="edit-morpheme">
+                                                        <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
+                                                    </fx-dispatch>
+                                                </fx-trigger>
                                             <!-- Preroot functions -->
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot
                                                 (prefix)</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
-                                                    <option value="V">Verb</option>
-                                                    <option value="VAdj">VAdj</option>
-                                                    <option value="Part">Part</option>
-                                                    <option value="AgtN">Agt Noun</option>
-                                                    <option value="ActN">Act Noun</option>
-                                                    <option value="N">Noun</option>
-                                                    <option value="Adj">Adj</option>
-                                                    <option value="Pro">Pron</option>
-                                                    <option value="Adv">Adv</option>
+                                                    <select class="widget" multiple>
+                                                        <option value="V">Verb</option>
+                                                        <option value="VAdj">VAdj</option>
+                                                        <option value="Part">Part</option>
+                                                        <option value="AgtN">Agt Noun</option>
+                                                        <option value="ActN">Act Noun</option>
+                                                        <option value="N">Noun</option>
+                                                        <option value="Adj">Adj</option>
+                                                        <option value="Pro">Pron</option>
+                                                        <option value="Adv">Adv</option>
+                                                    </select>
                                                 </fx-control>
                                             </section>
                                             <!-- Preroot rest -->
@@ -1200,9 +1207,21 @@
         {log('default')}
     </pre>
 </fx-fore>
-
+<paper-dialog id="morpheme-dialog">
+    <paper-dialog-scrollable>
+        <input type="text" name="query"/>
+        <div class="results">
+            
+        </div>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+        <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+            <pb-i18n key="dialogs.close">Close</pb-i18n>
+        </paper-button>
+    </div>
+</paper-dialog>
 <!-- Modal Dialog -->
 <script type="module" src="../../index.js"></script>
-
+<script type="module" src="ling.js"></script>
 </body>
 </html>
