@@ -8,10 +8,10 @@ function prerootChanged(ev) {
 }
 
 document.addEventListener('edit-morpheme', function(ev) {
-    changeMorpheme(ev.detail.current);
+    changeMorpheme(ev.detail.current, ev.target);
 });
 
-function changeMorpheme(current) {
+function changeMorpheme(current, target) {
     const dialog = document.getElementById('morpheme-dialog');
     dialog.querySelector('[name=query]').value = current;
     dialog.open();
@@ -32,7 +32,7 @@ function changeMorpheme(current) {
             btn.innerHTML = 'Select';
             btn.addEventListener('click', (ev) => {
                 console.log('current: %o', current);
-                document.dispatchEvent(
+                target.dispatchEvent(
                     new CustomEvent('preroot-changed', {
                         composed: true,
                         bubbles: true,
