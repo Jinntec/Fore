@@ -40,8 +40,7 @@ export const foreElementMixin = superclass =>
          */
         ref: {
           type: String,
-        }
-
+        },
       };
     }
 
@@ -114,9 +113,9 @@ export const foreElementMixin = superclass =>
         // todo: code below fails - why?
         const formElement = this.getOwnerForm();
         if (inscopeContext.nodeType) {
-          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement);
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
         }
         // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }

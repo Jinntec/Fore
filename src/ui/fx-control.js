@@ -1,7 +1,7 @@
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import {XPathUtil} from "../xpath-util";
+import { XPathUtil } from '../xpath-util';
 
 const WIDGETCLASS = 'widget';
 
@@ -150,7 +150,7 @@ class FxControl extends XfAbstractControl {
 
       const inscope = getInScopeContext(this, ref);
       const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPath(ref, inscope, formElement);
+      const nodeset = evaluateXPath(ref, inscope, this);
 
       // ### clear items
       const { children } = this.widget;
@@ -161,7 +161,7 @@ class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      if(nodeset.length){
+      if (nodeset.length) {
         console.log('nodeset', nodeset);
         Array.from(nodeset).forEach(node => {
           console.log('#### node', node);
@@ -171,11 +171,10 @@ class FxControl extends XfAbstractControl {
           // ### set value
           this._updateEntry(newEntry, node, formElement);
         });
-      } else{
+      } else {
         const newEntry = this._createEntry(tmpl);
         this._updateEntry(newEntry, nodeset, formElement);
       }
-
     }
   }
 
@@ -184,7 +183,7 @@ class FxControl extends XfAbstractControl {
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPath(cutted, node, formElement);
+    const evaluated = evaluateXPath(cutted, node, newEntry);
     valueAttribute.value = evaluated;
 
     if (this.value === evaluated) {
@@ -195,7 +194,7 @@ class FxControl extends XfAbstractControl {
     const optionLabel = newEntry.textContent;
     const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
 
-    const label = evaluateXPathToString(labelExpr, node, formElement);
+    const label = evaluateXPathToString(labelExpr, node, newEntry);
     newEntry.textContent = label;
     //  ### <<< needs rework
   }
@@ -208,7 +207,7 @@ class FxControl extends XfAbstractControl {
     return newEntry;
   }
 
-// eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
   _getValueAttribute(element) {
     let result;
     Array.from(element.attributes).forEach(attribute => {

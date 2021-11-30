@@ -13,13 +13,15 @@
 
         <fx-instance id="second">
             <data>
-                <morpheme>Default namespace REPRESENT!</morpheme>
-                <item>item1</item>
-                <item>item2</item>
-                <item>item3</item>
-                <item>item4</item>
-                <item>item5</item>
-                <item>item6</item>
+              <morpheme>Default namespace REPRESENT!</morpheme>
+			  <items>
+                <item><label>item1</label><value>value1</value></item>
+                <item><label>item2</label><value>value2</value></item>
+                <item><label>item3</label><value>value3</value></item>
+                <item><label>item4</label><value>value4</value></item>
+                <item><label>item5</label><value>value5</value></item>
+                <item><label>item6</label><value>value6</value></item>
+			  </items>
             </data>
         </fx-instance>
     </fx-model>
@@ -28,9 +30,9 @@
 <!--        <h2>TEI: {//listChange}</h2>-->
 <!--        <h2>default ns: {instance('second')/morpheme}</h2>-->
         <fx-control ref="//listChange">
-            <select ref="instance('second')/item" class="widget">
+            <select ref="instance('second')/items/item" class="widget">
                 <template>
-                    <option value="{.}">{.}</option>
+                    <option value="{value}">{label}</option>
                 </template>
             </select>
         </fx-control>
