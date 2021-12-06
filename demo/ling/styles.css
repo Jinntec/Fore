@@ -10,10 +10,13 @@ label {
     padding-right: 1em;
 }
 
-/*
+
 .tp-form-group-col {
     display: grid;
     grid-template-columns: 1fr 6fr;
+}
+.tp-form-group-col.block {
+    display: block;
 }
 
 .tp-form-group-col .row > div{
@@ -38,5 +41,3 @@ fx-repeatitem{
     padding:2px;
     margin:0.5rem 0;
 }
-
-*/

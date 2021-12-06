@@ -6,10 +6,16 @@
     <link href="resources/js/vendor/select2/select2.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="resources/css/style.css"/>
     <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link href="../../resources/demo.css" rel="stylesheet">
 
 </head>
 <body>
 <fx-fore>
+    <fx-action event="ready">
+        <fx-message>heyho</fx-message>
+<!--        <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>-->
+    </fx-action>
+
     <fx-model id="model-1">
         <fx-instance id="default"
                      src="data/default.xml"
@@ -60,9 +66,9 @@
 
         <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
                        resource="modules/load.xql?id={bf:appContext('id')}">
-            <fx-message event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
-            <fx-message event="xforms-submit-error">Failed to load data.</fx-message>
-            <fx-action event="xforms-submit-done">
+            <fx-message event="submit-done" level="ephemeral">Data have been loaded.</fx-message>
+            <fx-message event="submit-error">Failed to load data.</fx-message>
+            <fx-action event="submit-done">
                 <fx-action
                         while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
                     <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
@@ -83,19 +89,19 @@
                 <fx-name>password</fx-name>
                 <fx-value/>
             </fx-header>
-            <fx-action event="xforms-submit">
+            <fx-action event="submit">
                 <fx-setvalue ref="instance('i-default')//entry/@xml:id"
                              value="instance('i-default')//orth[@type='latin']"/>
-                <fx-message event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
+                <fx-message event="submit-done" level="ephemeral">Saving...</fx-message>
             </fx-action>
-            <fx-message event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
-            <fx-message event="xforms-submit-error">Failed to save data</fx-message>
+            <fx-message event="submit-done" level="ephemeral">Data have been saved.</fx-message>
+            <fx-message event="submit-error">Failed to save data</fx-message>
         </fx-submission>
         <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
                        resource="modules/reload-meanings.xql"
                        ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
                        targetref="instance('i-meanings')/target/taxonomy">
-            <fx-action event="xforms-submit-done">
+            <fx-action event="submit-done">
                 <fx-action
                         if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
                     <fx-insert context="instance('i-meanings')" ref="*[last()]"
@@ -113,10 +119,8 @@
                         origin="instance('i-meanings')/target/*"/>
                 <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
             </fx-action>
-            <fx-message event="xforms-submit-error" level="ephemeral">Meanings reload failed.</fx-message>
+            <fx-message event="submit-error" level="ephemeral">Meanings reload failed.</fx-message>
         </fx-submission>
-        <fx-action event="xforms-ready">
-            <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>
 
     </fx-model>
     <!--
@@ -501,7 +505,7 @@
                                                 <div class="tp-form-group-col"><label class="tp-label">Certainty</label>
                                                     <fx-control class="tp-input -form-control" ref="@cert"></fx-control>
                                                 </div>
-                                                <div class="tp-form-group-col">
+                                                <div class="tp-form-group-col block">
                                                     <div class="row">
                                                         <div class="col-xs-8"><label class="tp-label">Complex
                                                             Structuration and
@@ -625,7 +629,7 @@
                                                     <fx-action event="autocomplete-callback">
                                                         <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
                                                     </fx-action>
-                                                    <fx-action event="xforms-value-changed">
+                                                    <fx-action event="value-changed">
                                                         <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
                                                                      value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
                                                         <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
@@ -676,6 +680,7 @@
                                             <section class="tp-row tp-row-input-group">
                                                 <label class="tp-label">Function 1</label>
                                                 <fx-control ref="m[@type = 'radical' and @n = 1]/@function">
+                                                    <select class="widget">
                                                     <option value="V">Verb</option>
                                                     <option value="VAdj">VAdj</option>
                                                     <option value="Part">Part</option>
@@ -685,6 +690,7 @@
                                                     <option value="Adj">Adj</option>
                                                     <option value="Pro">Pron</option>
                                                     <option value="Adv">Adv</option>
+                                                    </select>
                                                 </fx-control>
                                             </section>
                                             <!-- Root 1 rest -->
@@ -719,17 +725,18 @@
                                             <div class="tp-divider"></div>
                                             <h4>Root 2</h4>
                                             <!-- Root 2 constituent -->
-                                            <section class="tp-form-group-col"><label class="tp-label">Constituent
-                                                2</label>
+                                            <section class="tp-form-group-col"><label class="tp-label">Constituent 2</label>
                                                 <fx-control class="hidden" ref="m[@type = 'radical' and @n = 2]">
                                                     <fx-action event="constituent_autocomplete-callback">
                                                         <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
                                                     </fx-action>
                                                     <fx-alert>no whitespace allowed</fx-alert>
                                                 </fx-control>
+<!--
                                                 <input type="hidden" class="tp-input"
                                                        data-function="constituent_autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off">
+-->
                                             </section>
                                             <!-- Root 2 -->
                                             <section class="tp-form-group-col"><label class="tp-label">Root 2</label>
@@ -738,7 +745,7 @@
                                                     <fx-action event="autocomplete-callback">
                                                         <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
                                                     </fx-action>
-                                                    <fx-action event="xforms-value-changed">
+                                                    <fx-action event="value-changed">
                                                         <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
                                                                      value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
                                                         <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
@@ -789,17 +796,17 @@
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Function
                                                 2</label>
                                                 <fx-control ref="m[@type = 'radical' and @n = 2]/@function">
-                                                    {
-
-                                                    <option value="V">Verb</option>
-                                                    <option value="VAdj">VAdj</option>
-                                                    <option value="Part">Part</option>
-                                                    <option value="AgtN">Agt Noun</option>
-                                                    <option value="ActN">Act Noun</option>
-                                                    <option value="N">Noun</option>
-                                                    <option value="Adj">Adj</option>
-                                                    <option value="Pro">Pron</option>
-                                                    <option value="Adv">Adv</option>
+                                                    <select class="widget">
+                                                        <option value="V">Verb</option>
+                                                        <option value="VAdj">VAdj</option>
+                                                        <option value="Part">Part</option>
+                                                        <option value="AgtN">Agt Noun</option>
+                                                        <option value="ActN">Act Noun</option>
+                                                        <option value="N">Noun</option>
+                                                        <option value="Adj">Adj</option>
+                                                        <option value="Pro">Pron</option>
+                                                        <option value="Adv">Adv</option>
+                                                    </select>
                                                 </fx-control>
                                             </section>
                                             <!-- Root 2 rest -->
@@ -1201,7 +1208,7 @@
     <paper-dialog-scrollable>
         <input type="text" name="query"/>
         <div class="results">
-            
+
         </div>
     </paper-dialog-scrollable>
     <div class="buttons">
