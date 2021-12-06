@@ -24,7 +24,26 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.addEventListener('click', this._dispatchIndexChange);
     this.addEventListener('focusin', this._handleFocus);
 
+    let options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    }
+    let observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this);
+
     this.attachShadow({ mode: 'open', delegatesFocus: true });
+  }
+
+  handleIntersect(entries, observer) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // console.log('repeat in view', this);
+        // console.log('repeat in view entry', entry.target);
+        const target = entry.target;
+        target.getOwnerForm().inView.push(target);
+      }
+    });
   }
 
   _handleFocus() {

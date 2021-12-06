@@ -79,11 +79,32 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
+  static isInViewport(el) {
+    let top = el.offsetTop;
+    let left = el.offsetLeft;
+    const width = el.offsetWidth;
+    const height = el.offsetHeight;
+
+    while(el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+        top < (window.pageYOffset + window.innerHeight) &&
+        left < (window.pageXOffset + window.innerWidth) &&
+        (top + height) > window.pageYOffset &&
+        (left + width) > window.pageXOffset
+    );
+  }
+
   static async refreshChildren(startElement) {
     const refreshed = new Promise(resolve => {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
+          if(!Fore.isInViewport(element)) return;
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {

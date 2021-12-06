@@ -6,6 +6,16 @@ import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util';
 
+function isInViewport(element) {
+  const rect = element.getBoundingClientRect();
+  return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
 /**
  * Main class for Fore.Outermost container element for each Fore application.
  *
@@ -35,14 +45,33 @@ export class FxFore extends HTMLElement {
   constructor() {
     super();
     this.model = {};
+    this.inView = [];
     this.addEventListener('model-construct-done', this._handleModelConstructDone);
     this.addEventListener('message', this._displayMessage);
     this.addEventListener('error', this._displayError);
     window.addEventListener('compute-exception', e => {
       console.error('circular dependency: ', e);
     });
+/*
+    window.addEventListener('scroll',()=>{
+      const {scrollHeight,scrollTop,clientHeight} = document.documentElement;
+      if(scrollTop + clientHeight > scrollHeight - 5){
+        setTimeout(function(){
+              document.querySelector('fx-fore').refresh();
+        },2000);
+      }
+    });
+*/
+
+    // window.addEventListener('DOMContentLoaded', handler, false);
+    // window.addEventListener('load', handler, false);
+    // window.addEventListener('scroll', this.refresh, false);
+    // window.addEventListener('resize', this.refresh, false);
+
 
     this.ready = false;
+    this.running = false;
+
 
     this.storedTemplateExpressionByNode = new Map();
 
@@ -179,10 +208,19 @@ export class FxFore extends HTMLElement {
    */
   async refresh() {
     // refresh () {
+
     console.group('### refresh');
     // await this.updateComplete;
 
+
+
+    console.time('refresh');
+    console.time('refresh inView', this.inView);
     Fore.refreshChildren(this);
+    // this.inView.forEach(item => {
+    //   item.refresh();
+    // });
+    console.timeEnd('refresh');
     // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
 
     // ### refresh template expressions
@@ -191,6 +229,9 @@ export class FxFore extends HTMLElement {
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
+    console.log('inView',this.inView);
+    this.inView = [];
+
   }
 
   /**

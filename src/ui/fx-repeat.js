@@ -55,6 +55,16 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.index = 1;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
+    const observer = new window.IntersectionObserver(([entry]) =>{
+      if(entry.isIntersecting){
+        console.log('entering....');
+        entry.target.getOwnerForm().refresh();
+      }
+      console.log('leave....');
+    });
+
+    observer.observe(this);
+
   }
 
   get repeatSize() {

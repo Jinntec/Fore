@@ -27,6 +27,33 @@ class FxControl extends XfAbstractControl {
       : 'blur';
     this.valueProp = this.hasAttribute('value-prop') ? this.getAttribute('value-prop') : 'value';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
+
+    const repeated = this.closest('fx-repeatitem');
+    if(!repeated){
+      let options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      }
+
+      let observer = new IntersectionObserver(this.handleIntersect, options);
+      observer.observe(this);
+      console.log('observing intersection', observer);
+    }
+
+
+/*
+    const observer = new window.IntersectionObserver(([entry]) =>{
+      if(entry.isIntersecting){
+        console.log('entering....');
+      }
+      console.log('leave....');
+    });
+
+    observer.observe(document.body);
+*/
+
+
     const style = `
             :host{
                 display:inline-block;
@@ -77,7 +104,19 @@ class FxControl extends XfAbstractControl {
     });
   }
 
-  setValue(val) {
+  handleIntersect(entries, observer) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // console.log('in view', this);
+        // console.log('in view entry', entry.target);
+        entry.target.getOwnerForm().inView.push(entry.target);
+        console.log('inView', entry.target.getOwnerForm().inView);
+      }
+    });
+  }
+
+
+  set Value(val) {
     const modelitem = this.getModelItem();
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
