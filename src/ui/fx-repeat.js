@@ -189,7 +189,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   async refresh() {
-    console.group('fx-repeat.refresh on', this.id);
+    // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
     this._evalNodeset();
@@ -289,7 +289,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // todo: this is still weak - should handle that better maybe by an explicit slot?
     // this.template = this.firstElementChild;
     this.template = this.querySelector('template');
-    console.log('### init template for repeat ', this.id, this.template);
+    // console.log('### init template for repeat ', this.id, this.template);
 
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);

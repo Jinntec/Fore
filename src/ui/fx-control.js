@@ -56,7 +56,7 @@ class FxControl extends XfAbstractControl {
         `;
 
     this.widget = this.getWidget();
-    console.log('widget ', this.widget);
+    // console.log('widget ', this.widget);
 
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
@@ -162,9 +162,9 @@ class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (nodeset.length) {
-        console.log('nodeset', nodeset);
+        // console.log('nodeset', nodeset);
         Array.from(nodeset).forEach(node => {
-          console.log('#### node', node);
+          // console.log('#### node', node);
           const newEntry = this._createEntry(tmpl);
 
           // ### initialize new entry

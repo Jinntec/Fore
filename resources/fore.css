@@ -83,4 +83,17 @@ fx-repeatitem{
 .vertical label{
     display: block;
 }
-
+fx-group{
+    opacity: 0;
+}
+fx-group.loaded{
+    animation: fadein 0.4s forwards;
+}
+@keyframes fadein {
+    0% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}

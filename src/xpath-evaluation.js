@@ -89,7 +89,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
   }
 
   if (instanceReferences.length === 1) {
-    console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
+    // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
     let instance;
     if (instanceReferences[0] === 'default') {
       const actualForeElement = fxEvaluateXPathToFirstNode(
@@ -106,9 +106,11 @@ function createNamespaceResolver(xpathQuery, formElement) {
     }
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
+/*
       console.log(
         `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
       );
+*/
       const resolveNamespacePrefix = prefix => {
         if (!prefix) {
           return xpathDefaultNamespace;
