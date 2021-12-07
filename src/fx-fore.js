@@ -483,11 +483,15 @@ export class FxFore extends HTMLElement {
   }
 
   registerLazyElement(element){
-    this.intersectionObserver?.observe(element);
+    if(this.intersectionObserver){
+      this.intersectionObserver.observe(element);
+    }
   }
 
   unRegisterLazyElement(element){
-    this.intersectionObserver?.unobserve(element);
+    if(this.intersectionObserver) {
+      this.intersectionObserver.unobserve(element);
+    }
   }
 
   /**
