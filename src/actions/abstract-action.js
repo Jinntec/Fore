@@ -192,7 +192,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       const model = this.getModel();
       model.recalculate();
       model.revalidate();
-      model.parentNode.refresh();
+      model.parentNode.refresh(true);
       this._dispatchActionPerformed();
     }
   }

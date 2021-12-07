@@ -36,8 +36,20 @@ fx-repeat{
     display: block;
 }
 fx-repeatitem{
-    background: #00b8d4;
+    background: rgba(255,255,255,0.5);
+    /*filter: opacity(0.5);*/
+
     display: block;
     padding:2px;
     margin:0.5rem 0;
+}
+fx-repeatitem[repeat-index]{
+    background: rgba(255,255,255,0.85);
+    outline: #1e88e5 solid;
+}
+
+main > section{
+    background:white;
+    padding:1rem;
+    margin:10rem 0;
 }

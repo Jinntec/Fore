@@ -213,7 +213,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
-
+        this.getOwnerForm().unRegisterLazyElement(itemToRemove);
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
       }
@@ -236,12 +236,15 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // ### update nodeset of repeatitems
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
+      this.getOwnerForm().registerLazyElement(item);
+
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
     }
 
-    Fore.refreshChildren(this);
+    Fore.refreshChildren(this,true);
+    // Fore.refreshChildren(this);
     this.setIndex(this.index);
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);

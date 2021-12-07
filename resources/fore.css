@@ -83,11 +83,15 @@ fx-repeatitem{
 .vertical label{
     display: block;
 }
-fx-group{
+[refresh-on-view]{
     opacity: 0;
 }
-fx-group.loaded{
-    animation: fadein 0.4s forwards;
+.loaded{
+    animation: fadein 0.3s forwards;
+}
+/* avoid flicker from nested lazily loaded elements */
+.loaded .loaded{
+    animation: none;
 }
 @keyframes fadein {
     0% {

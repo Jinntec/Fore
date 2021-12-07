@@ -79,15 +79,33 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
-  static async refreshChildren(startElement) {
+  /**
+   * recursively refreshes all UI Elements.
+   *
+   * todo: this could probably made more efficient with significant impact on rendering perf
+   *
+   * @param startElement
+   * @param force
+   * @returns {Promise<unknown>}
+   */
+  static async refreshChildren(startElement,force) {
     const refreshed = new Promise(resolve => {
+      /*
+      if there's an 'refresh-on-view' attribute the element wants to be handled by
+      handleIntersect function that calls the refresh of the respective element and
+      not the global one.
+
+
+       */
+      if(!force && startElement.hasAttribute('refresh-on-view')) return;
+
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
-            Fore.refreshChildren(element);
+            Fore.refreshChildren(element,force);
           }
         });
       }

@@ -43,7 +43,6 @@ export class FxFore extends HTMLElement {
     });
 
     this.ready = false;
-
     this.storedTemplateExpressionByNode = new Map();
 
     const style = `
@@ -163,6 +162,36 @@ export class FxFore extends HTMLElement {
     });
   }
 
+  /**
+   * refreshes the UI by using IntersectionObserver API. This is the handler being called
+   * by the observer whenever elements come into / move out of viewport.
+   * @param entries
+   * @param observer
+   */
+  handleIntersect(entries, observer) {
+    console.time('refreshLazy');
+    entries.forEach((entry) => {
+      const target = entry.target;
+
+      if (entry.isIntersecting) {
+        console.log('in view', entry);
+        // console.log('repeat in view entry', entry.target);
+        // const target = entry.target;
+        // if(target.hasAttribute('refresh-on-view')){
+          target.classList.add('loaded');
+        // }
+        if(typeof target.refresh === "function"){
+          target.refresh(true);
+        }else{
+          Fore.refreshChildren(target,true);
+        }
+      }
+    });
+    console.timeEnd('refreshLazy');
+
+  }
+
+
   evaluateToNodes(xpath, context) {
     return evaluateXPathToNodes(xpath, context, this);
   }
@@ -177,20 +206,22 @@ export class FxFore extends HTMLElement {
    * AVT:
    *
    */
-  async refresh() {
+  async refresh(force) {
     // refresh () {
     console.group('### refresh');
-    // await this.updateComplete;
 
-    Fore.refreshChildren(this);
-    // this.dispatchEvent(new CustomEvent('refresh-done', {detail:'foo'}));
+    console.time('refresh');
+    // ### refresh Fore UI elements
+    Fore.refreshChildren(this,force);
 
     // ### refresh template expressions
     this._updateTemplateExpressions();
+    console.timeEnd('refresh');
 
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
+
   }
 
   /**
@@ -207,7 +238,7 @@ export class FxFore extends HTMLElement {
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    console.log('template expressions found ', tmplExpressions);
+    // console.log('template expressions found ', tmplExpressions);
 
     /*
                 storing expressions and their nodes for re-evaluation
@@ -270,14 +301,14 @@ export class FxFore extends HTMLElement {
         // Templates are special: they use the namespace configuration from the place where they are
         // being defined
         const instanceId = XPathUtil.getInstanceId(naked);
-        console.log('target instance ', instanceId);
+        // console.log('target instance ', instanceId);
         const inst = this.getModel().getInstance(instanceId);
         try {
           const result = evaluateXPathToString(naked, inscope, node, null, inst);
 
           // console.log('result of eval ', result);
           const replaced = expr.replaceAll(match, result);
-          console.log('result of replacing ', replaced);
+          // console.log('result of replacing ', replaced);
 
           if (node.nodeType === Node.ATTRIBUTE_NODE) {
             const parent = node.ownerElement;
@@ -311,16 +342,6 @@ export class FxFore extends HTMLElement {
       return node.textContent;
     }
     return null;
-  }
-
-  _refreshChildren() {
-    const uiElements = this.querySelectorAll('*');
-
-    uiElements.forEach(element => {
-      if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-        element.refresh();
-      }
-    });
   }
 
   _handleModelConstructDone() {
@@ -429,12 +450,44 @@ export class FxFore extends HTMLElement {
     console.log('### _initUI()');
 
     await this._lazyCreateInstance();
+
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.3
+    }
+
+    // if we got elements with 'refresh-on-view' attribute we attach intersection observers
+    // otherwise use 'standard' refresh
+
+    const lazyUIElements = this.querySelectorAll('[refresh-on-view]');
+    if(lazyUIElements.length !== 0){
+      console.time('intersect');
+      // const observer = new IntersectionObserver(this.handleIntersect, options);
+      this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
+      // observer.observe(this);
+      Array.from(lazyUIElements).forEach((element) => {
+        this.intersectionObserver.observe(element);
+      });
+      console.timeEnd('intersect');
+
+    }
     await this.refresh();
+
+
     this.ready = true;
     console.log('### <<<<< dispatching ready >>>>>');
     console.log('########## modelItems: ', this.getModel().modelItems);
     console.log('########## FORE: form fully initialized... ##########');
     this.dispatchEvent(new CustomEvent('ready', {}));
+  }
+
+  registerLazyElement(element){
+    this.intersectionObserver?.observe(element);
+  }
+
+  unRegisterLazyElement(element){
+    this.intersectionObserver?.unobserve(element);
   }
 
   /**
