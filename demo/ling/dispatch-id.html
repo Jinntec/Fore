@@ -3,6 +3,7 @@
     <title>Dispatching results from external query to repeat controls</title><!--
         ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
         -->
+    <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" type="text/css" href="styles.css"/>
 
@@ -33,6 +34,7 @@
                     <section class="form-horizontal">
                         <fx-group ref="//entry">
                             <fx-group>
+                                <div class="tp-row tp-repeat-headline"></div>
                                 <section class="tp-row tp-repeat-add">
                                     <div class="tp-repeat-button-left">
                                         <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
@@ -44,7 +46,6 @@
                                         </div>
                                     </div>
                                 </section>
-                                <div class="tp-row tp-repeat-headline"></div>
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
                                         <fx-group ref="."><!-- gen. characteristic l.1 -->
@@ -60,13 +61,17 @@
                                             <section class="tp-form-group-col"><label class="tp-label">Canonical form</label>
                                                 <fx-output id="base-form" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
                                                     <input type="text" class="widget"/>
+<!--                                                    <fx-message event="edit-morpheme">got edit-morpheme {event('pos')}</fx-message>-->
                                                     <fx-action event="preroot-changed">
                                                         <fx-setvalue ref="m[@type = 'prefix' and @n = 1]/@baseForm" value="event('preroot')"></fx-setvalue>
                                                     </fx-action>
+
                                                 </fx-output>
+<!--                                                <span>{m[@type = 'prefix' and @n = 1]/@baseForm}</span>-->
                                                 <fx-trigger>
                                                     <button class="widget">Edit</button>
                                                     <fx-dispatch name="edit-morpheme" targetid="base-form">
+<!--                                                        <fx-property name="pos" expr="index('r-gramGrp')"></fx-property>-->
                                                         <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
                                                     </fx-dispatch>
                                                 </fx-trigger>
@@ -113,6 +118,7 @@
         <!-- end section segmentation -->
 
         <!-- begin section save -->
+<!--
         <section class="tp-section tp-section-save">
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Save Form</h2>
@@ -139,6 +145,7 @@
                 </div>
             </div>
         </section>
+-->
         <!-- end section save -->
 
     </main>
@@ -150,7 +157,7 @@
     <paper-dialog-scrollable>
         <input type="text" name="query"/>
         <div class="results">
-            
+
         </div>
     </paper-dialog-scrollable>
     <div class="buttons">
@@ -160,7 +167,7 @@
     </div>
 </paper-dialog>
 <!-- Modal Dialog -->
-<script type="module" src="../../index.js"></script>
-<script type="module" src="ling.js"></script>
+<script type="module" src="../../dist/fore-ling.js"></script>
+<script type="module" src="./ling.js"></script>
 </body>
 </html>

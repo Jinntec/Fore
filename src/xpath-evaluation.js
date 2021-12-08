@@ -362,7 +362,7 @@ export function evaluateXPathToNumber(
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
-function resolveId(id, sourceObject, nodeName = null) {
+export function resolveId(id, sourceObject, nodeName = null) {
   const allMatchingTargetObjects = fxEvaluateXPathToNodes(
     'outermost(ancestor-or-self::fx-fore[1]/(descendant::xf-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
     sourceObject,

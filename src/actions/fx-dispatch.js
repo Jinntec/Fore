@@ -1,5 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
+import { evaluateXPath, resolveId } from '../xpath-evaluation.js';
+import {XPathUtil } from '../xpath-util.js'
 
 /**
  * `fx-dispatch`
@@ -89,7 +90,14 @@ export class FxDispatch extends AbstractAction {
 
     // ### when targetid is given dispatch to that if present (throw an error if not) - otherwise dispatch to document
     if (this.targetid) {
-      const target = document.getElementById(this.targetid);
+      // const target = document.getElementById(this.targetid);
+      let target;
+      if(XPathUtil.isRepeated(this)){
+        target = resolveId(this.targetid,this.parentNode,null);
+      } else {
+        target =  document.getElementById(this.targetid);
+      }
+      console.log('target',target);
       if (!target) {
         throw new Error(`targetid ${this.targetid} does not exist in document`);
       }

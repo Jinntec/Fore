@@ -8,12 +8,15 @@ fx-hint {
 
 label {
     padding-right: 1em;
+    white-space: nowrap;
 }
 
 
 .tp-form-group-col {
+    /*
     display: grid;
     grid-template-columns: 1fr 6fr;
+    */
 }
 .tp-form-group-col.block {
     display: block;

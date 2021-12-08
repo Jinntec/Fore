@@ -13,6 +13,10 @@ export class XPathUtil {
     return path != null && (path.startsWith('/') || path.startsWith('instance('));
   }
 
+  static isRepeated(element){
+    return element.parentElement.closest('fx-repeatitem');
+  }
+
   static isSelfReference(ref) {
     return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
   }

@@ -86,4 +86,33 @@ export default [
       terser(),
     ],
   },
+  {
+    input: './demo/ling/custom-build.js',
+    output: [
+      {
+        file: 'dist/fore-ling.js',
+        format: 'es',
+        sourcemap: true,
+      },
+    ],
+    external: moduleName =>
+        // All absolute imports should be regarded as external. Examples are 'fontoxpath',
+        // 'lit-element' or '@polymer/*'
+        !/^(\.\/|\.\.\/)/.test(moduleName),
+
+    plugins: [
+      resolve(),
+      babel({
+        babelrc: false,
+        plugins: [
+          // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
+          // eslint-disable-next-line global-require
+          [require('@babel/plugin-proposal-class-properties'), { loose: true }],
+        ],
+      }),
+      minifyHTML(),
+      terser(),
+    ],
+  },
+
 ];
