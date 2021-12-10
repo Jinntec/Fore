@@ -34,6 +34,22 @@ export class Fore {
     ];
   }
 
+  static createUUID() {
+    // http://www.ietf.org/rfc/rfc4122.txt
+    const s = [];
+    const hexDigits = "0123456789abcdef";
+    for (let i = 0; i < 36; i++) {
+      s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[8] = s[13] = s[18] = s[23] = "-";
+
+    const uuid = s.join("");
+    return uuid;
+  }
+
+
   static get XFORMS_NAMESPACE_URI() {
     // todo: should be centralized somewhere as constant. Exists in several? places
     return 'http://www.w3.org/2002/xforms';
@@ -49,6 +65,7 @@ export class Fore {
       'FX-CONTROL',
       'FX-BUTTON',
       'FX-CONTROL',
+      'FX-CHECKBOX-GROUP',
       'FX-DIALOG',
       'FX-FILENAME',
       'FX-MEDIATYPE',
@@ -56,6 +73,7 @@ export class Fore {
       'FX-HINT',
       'FX-INPUT',
       'FX-ITEMSET',
+      'FX-ITEMS',
       'FX-LABEL',
       'FX-OUTPUT',
       'FX-RANGE',

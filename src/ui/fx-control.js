@@ -1,7 +1,7 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { XPathUtil } from '../xpath-util';
+import { Fore } from '../fore.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -14,7 +14,7 @@ const WIDGETCLASS = 'widget';
  * @customElement
  * @demo demo/index.html
  */
-class FxControl extends XfAbstractControl {
+export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
     this.inited = false;
@@ -97,6 +97,7 @@ class FxControl extends XfAbstractControl {
    * @returns {HTMLElement|*}
    */
   getWidget() {
+    if(this.widget) return this.widget;
     let widget = this.querySelector(`.${WIDGETCLASS}`);
     if (!widget) {
       widget = this.querySelector('input');
@@ -129,31 +130,35 @@ class FxControl extends XfAbstractControl {
     }
   }
 
-  async refresh() {
+  getTemplate(){
+    return this.querySelector('template');
+  }
+
+  async refresh(force) {
+    console.log('fx-control refresh', this);
     super.refresh();
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
-    if (this.widget.hasAttribute('ref')) {
-      const tmpl = this.widget.querySelector('template');
+    const widget = this.getWidget();
+    if (widget.hasAttribute('ref')) {
+      const tmpl = this.querySelector('template');
 
       // ### eval nodeset for list control
-      const ref = this.widget.getAttribute('ref');
-
+      const ref = widget.getAttribute('ref');
       /*
       actually a ref on a select or similar component should point to a different instance
       with an absolute expr e.g. 'instance('theId')/...'
 
       todo: even bail out if ref is not absolute?
        */
-      const instanceId = XPathUtil.getInstanceId(ref);
+      // const instanceId = XPathUtil.getInstanceId(ref);
 
       const inscope = getInScopeContext(this, ref);
-      const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPath(ref, inscope, this);
+      const nodeset = evaluateXPathToNodes(ref, inscope, this);
 
       // ### clear items
-      const { children } = this.widget;
+      const { children } = widget;
       Array.from(children).forEach(child => {
         if (child.nodeName.toLowerCase() !== 'template') {
           child.parentNode.removeChild(child);
@@ -165,21 +170,24 @@ class FxControl extends XfAbstractControl {
         // console.log('nodeset', nodeset);
         Array.from(nodeset).forEach(node => {
           // console.log('#### node', node);
-          const newEntry = this._createEntry(tmpl);
+          const newEntry = this.createEntry(tmpl);
 
           // ### initialize new entry
           // ### set value
-          this._updateEntry(newEntry, node, formElement);
+          this.updateEntry(newEntry, node);
         });
       } else {
-        const newEntry = this._createEntry(tmpl);
-        this._updateEntry(newEntry, nodeset, formElement);
+        const newEntry = this.createEntry(tmpl);
+        this.updateEntry(newEntry, nodeset);
       }
     }
+    Fore.refreshChildren(this,force)
   }
 
-  _updateEntry(newEntry, node, formElement) {
+  updateEntry(newEntry, node) {
     // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
+
+    if(this.widget.nodeName !== 'SELECT') return;
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
@@ -199,7 +207,7 @@ class FxControl extends XfAbstractControl {
     //  ### <<< needs rework
   }
 
-  _createEntry(tmpl) {
+  createEntry(tmpl) {
     const content = tmpl.content.firstElementChild.cloneNode(true);
     const newEntry = document.importNode(content, true);
     // console.log('newEntry ', newEntry);

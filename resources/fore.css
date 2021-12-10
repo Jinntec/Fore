@@ -29,6 +29,9 @@ fx-control, fx-trigger{
     white-space: nowrap;
     position: relative;
 }
+.fx-checkbox{
+    white-space: nowrap;
+}
 fx-hint{
     display: none;
 }

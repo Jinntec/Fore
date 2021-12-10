@@ -145,7 +145,9 @@ export class FxFore extends HTMLElement {
   connectedCallback() {
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
+      console.log('Fore slotchange');
       const children = event.target.assignedElements();
+      console.log('Fore children', children);
       let modelElement = children.find(
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );
@@ -266,11 +268,11 @@ export class FxFore extends HTMLElement {
 
   // eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
-    // console.log('processing template expression ', exprObj);
+    console.log('processing template expression ', exprObj);
 
     const { expr } = exprObj;
     const { node } = exprObj;
-    // console.log('expr ', expr);
+    console.log('expr ', expr);
     this.evaluateTemplateExpression(expr, node, this);
   }
 
@@ -306,7 +308,7 @@ export class FxFore extends HTMLElement {
         try {
           const result = evaluateXPathToString(naked, inscope, node, null, inst);
 
-          // console.log('result of eval ', result);
+          console.log('result of eval ', result);
           const replaced = expr.replaceAll(match, result);
           // console.log('result of replacing ', replaced);
 
