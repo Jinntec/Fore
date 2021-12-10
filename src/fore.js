@@ -65,7 +65,6 @@ export class Fore {
       'FX-CONTROL',
       'FX-BUTTON',
       'FX-CONTROL',
-      'FX-CHECKBOX-GROUP',
       'FX-DIALOG',
       'FX-FILENAME',
       'FX-MEDIATYPE',

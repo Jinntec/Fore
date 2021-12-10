@@ -5,7 +5,10 @@ import FxControl from "./fx-control.js";
 import {Fore} from "../fore.js";
 
 /**
- * todo: review placing of value. should probably work with value attribute and not allow slotted content.
+ * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
+ * within an fx-control element.
+ *
+ * @demo demo/selects3.html
  */
 export class FxItems extends FxControl {
     static get properties() {
@@ -19,39 +22,11 @@ export class FxItems extends FxControl {
 
     constructor() {
         super();
-        // if(!this.shadowRoot){
-        //   this.attachShadow({ mode: 'open' });
-        // }
         this.valueAttr = this.hasAttribute('value') ? this.getAttribute('value') : null;
     }
 
     connectedCallback() {
         super.connectedCallback();
-/*
-        const style = `
-          :host {
-            display: inline-block;
-          }
-        `;
-
-        const html = `
-        <slot></slot>
-        <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
-
-    `;
-
-        this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
-*/
-
-        console.log('setting items value');
-        const parentBind = this.parentNode.closest('[ref]');
-        this.value = parentBind.value;
-        this.setAttribute('value', this.value);
 
         this.addEventListener('click',(e) => {
             const items = this.querySelectorAll('[value]');
@@ -74,7 +49,10 @@ export class FxItems extends FxControl {
                     val += ' ' + item.getAttribute('value');
                 }
             });
-            this.setAttribute('value',val);
+            this.setAttribute('value',val.trim());
+
+            const parentBind = this.parentNode.closest('[ref]');
+            if(!parentBind) return ;
             const setval = this.shadowRoot.getElementById('setvalue');
             const modelitem = parentBind.getModelItem();
             setval.setValue(modelitem, val.trim());
@@ -89,45 +67,17 @@ export class FxItems extends FxControl {
     }
 
 
-    async refresh(force) {
-        super.refresh(force);
-/*
-        console.log('setting items value');
-        const parentBind = this.parentNode.closest('[ref]');
-        this.value = parentBind.value;
-        this.setAttribute('value', this.value);
-*/
-/*
-        this.querySelectorAll('input').forEach((item) => {
-            item.addEventListener('click',(e) => {
-                const items = this.querySelectorAll('[value]');
-
-                const oldVal = this.getAttribute('value');
-
-                let val = '';
-                Array.from(items).forEach(item => {
-                    if(item.checked){
-                        val += item.getAttribute('value');
-                    }
-                });
-                this.setAttribute('value',val);
-                // this.setValue(val);
-            });
-        })
-*/
-
-
-
-    }
-
     getWidget() {
         return this;
     }
 
     async updateWidgetValue(){
         console.log('setting items value');
+
         const parentBind = this.parentNode.closest('[ref]');
-        this.value = parentBind.value;
+        if(parentBind){
+            this.value = parentBind.value;
+        }
         this.setAttribute('value', this.value);
 
     }
@@ -172,24 +122,6 @@ export class FxItems extends FxControl {
         }
     }
 
-/*
-    isRequired() {
-        return null;
-    }
-
-    handleRequired() {
-        return null;
-    }
-
-    isReadonly() {
-        this.readonly = true;
-        return this.readonly;
-    }
-
-    handleReadonly() {
-        return null;
-    }
-*/
 }
 
 customElements.define('fx-items', FxItems);
