@@ -8,6 +8,8 @@ import {Fore} from "../fore.js";
  * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
  * within an fx-control element.
  *
+ *
+ *
  * @demo demo/selects3.html
  */
 export class FxItems extends FxControl {
@@ -34,36 +36,26 @@ export class FxItems extends FxControl {
             let target;
             if(e.target.nodeName === 'LABEL') {
                 target = document.getElementById(e.target.getAttribute('for'));
-                if (target.checked) {
-                    target.checked = false;
-                } else{
-                    target.checked = true;
-                }
+                target.checked = !target.checked;
             }
-
-            const oldVal = this.getAttribute('value');
 
             let val = '';
             Array.from(items).forEach(item => {
                 if(item.checked){
-                    val += ' ' + item.getAttribute('value');
+                    val += ` ${  item.getAttribute('value')}`;
                 }
             });
             this.setAttribute('value',val.trim());
 
+            // ### check for parent control
             const parentBind = this.parentNode.closest('[ref]');
             if(!parentBind) return ;
-            const setval = this.shadowRoot.getElementById('setvalue');
             const modelitem = parentBind.getModelItem();
+            const setval = this.shadowRoot.getElementById('setvalue');
             setval.setValue(modelitem, val.trim());
             setval.actionPerformed();
 
         });
-    }
-
-
-    getTemplate() {
-        return this.querySelector('template');
     }
 
 
@@ -82,30 +74,34 @@ export class FxItems extends FxControl {
 
     }
 
-    createEntry(node, tmpl) {
-        // const content = tmpl.content.firstElementChild.cloneNode(true);
-        const content = this.getTemplate().content.firstElementChild.cloneNode(true);
-        const newEntry = document.importNode(content, true);
-        console.log('newEntry ', newEntry);
 
-        this.appendChild(newEntry);
-        return newEntry;
-    }
-
-
+    /**
+     * Updates an entry by setting the label and the value.
+     *
+     * Will connect label and control with `for` attribute with generated id.
+     *
+     * attention: limitations here: assumes that there's an `label` element plus an element with an `value`
+     * attribute which it will update.
+     *
+     *
+     *
+     * @param newEntry
+     * @param node
+     */
     updateEntry(newEntry, node) {
         console.log('fx-items updateEntry', this.value);
         // super.updateEntry(newEntry,node);
 
-        // ### danger zone - highly specific ###
-        // ### danger zone - highly specific ###
-        // ### danger zone - highly specific ###
+        // ### danger zone - highly specific - assumes knowledge of the template structure ###
+        // ### danger zone - highly specific - assumes knowledge of the template structure ###
+        // ### danger zone - highly specific - assumes knowledge of the template structure ###
+
+
         const label = newEntry.querySelector('label');
         label.textContent = node.textContent;
 
         const id = Fore.createUUID();
         label.setAttribute('for', id);
-
 
         // getting element which has 'value' attr
         const input = newEntry.querySelector('[value]');

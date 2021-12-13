@@ -66,8 +66,6 @@ export default class FxControl extends XfAbstractControl {
           event.preventDefault();
           this.setValue(this.widget[this.valueProp]);
         }
-        // console.log('enter handler ', this.updateEvent);
-        // this.setValue(this.widget[this.valueProp]);
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
@@ -75,6 +73,13 @@ export default class FxControl extends XfAbstractControl {
       console.log('eventlistener ', this.updateEvent);
       this.setValue(this.widget[this.valueProp]);
     });
+
+    const slot = this.shadowRoot.querySelector('slot');
+    slot.addEventListener('slotchange', event => {
+      // console.log('fx-control slotchange');
+      this.template = this.querySelector('template');
+    });
+
   }
 
   setValue(val) {
@@ -142,7 +147,8 @@ export default class FxControl extends XfAbstractControl {
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
     if (widget.hasAttribute('ref')) {
-      const tmpl = this.querySelector('template');
+      const tmpl = this.template;
+      // console.log('fx-control template',tmpl);
 
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
@@ -207,11 +213,10 @@ export default class FxControl extends XfAbstractControl {
     //  ### <<< needs rework
   }
 
-  createEntry(tmpl) {
-    const content = tmpl.content.firstElementChild.cloneNode(true);
+  createEntry() {
+    const content = this.template.content.firstElementChild.cloneNode(true);
     const newEntry = document.importNode(content, true);
-    // console.log('newEntry ', newEntry);
-    this.widget.appendChild(newEntry);
+    this.template.parentNode.appendChild(newEntry);
     return newEntry;
   }
 
