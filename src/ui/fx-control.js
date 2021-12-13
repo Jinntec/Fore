@@ -76,7 +76,6 @@ export default class FxControl extends XfAbstractControl {
 
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      // console.log('fx-control slotchange');
       this.template = this.querySelector('template');
     });
 
@@ -142,6 +141,7 @@ export default class FxControl extends XfAbstractControl {
   async refresh(force) {
     console.log('fx-control refresh', this);
     super.refresh();
+    // console.log('refresh template', this.template);
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
@@ -172,19 +172,21 @@ export default class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      if (nodeset.length) {
-        // console.log('nodeset', nodeset);
-        Array.from(nodeset).forEach(node => {
-          // console.log('#### node', node);
-          const newEntry = this.createEntry(tmpl);
+      if(this.template){
+        if (nodeset.length) {
+          // console.log('nodeset', nodeset);
+          Array.from(nodeset).forEach(node => {
+            // console.log('#### node', node);
+            const newEntry = this.createEntry(tmpl);
 
-          // ### initialize new entry
-          // ### set value
-          this.updateEntry(newEntry, node);
-        });
-      } else {
-        const newEntry = this.createEntry(tmpl);
-        this.updateEntry(newEntry, nodeset);
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
+        } else {
+          const newEntry = this.createEntry(tmpl);
+          this.updateEntry(newEntry, nodeset);
+        }
       }
     }
     Fore.refreshChildren(this,force)

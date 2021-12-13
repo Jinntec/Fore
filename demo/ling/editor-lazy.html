@@ -47,7 +47,7 @@
         <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
         <fx-instance id="fictitious" src="data/xml/fictitious.xml"/>
         <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-        <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml"/>
+        <fx-instance id="i-dialects" src="data/xml/dialects.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0" ></fx-instance>
         <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
 
         <fx-instance id="i-meanings">
@@ -139,6 +139,8 @@
     <header>
         <div class="tp-row">
             <h1 class="tp-column-fullwidth tp-headline">LGPN-Ling Editor</h1>
+            <p>This example uses `refresh-on-view` to lazy load blocks of markup and defer
+            their refreshing until they come into view.</p>
         </div>
     </header>
 
@@ -295,6 +297,7 @@
                 <div class="tp-width-secondary">
                     <fx-group ref="//entry">
                         <fx-group ref="//gramGrp[@type='classification']">
+<!--
                             <div class="tp-row tp-repeat-add">
                                 <fx-label class="tp-form-header">
                                     <h3>Dialects</h3>
@@ -306,26 +309,26 @@
                                             <button>Add</button>
                                             <fx-insert ref="usg"
                                                        origin="instance('i-template')//usg[@type='lang']"/>
-                                            <!--
+                                            &lt;!&ndash;
                                                                                         <script>
                                                                                             clearAndInitAutocompletes();
                                                                                         </script>
-                                            -->
+                                            &ndash;&gt;
                                         </fx-trigger>
                                     </div>
                                 </div>
 
                             </div>
+-->
 
                             <fx-repeat ref="usg[@type='lang']" id="r-dialect">
                                 <template>
-                                    <fx-group ref=".">
+                                    <fx-group>
                                         <div class="tp-row">
-                                            <fx-control class="tp-input -form-control"
-                                                    ref=".">
-                                                <select ref="instance('i-dialects')//option" class="widget">
+                                            <fx-control class="tp-input -form-control" ref=".">
+                                                <select ref="instance('i-dialects')//category" class="widget">
                                                     <template>
-                                                        <option value="{.}">{.}</option>
+                                                        <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
                                                     </template>
                                                 </select>
                                             </fx-control>
@@ -341,17 +344,20 @@
                                                                                             </fx-control>
                                                                                         </div>
                                             -->
+<!--
                                             <div class="tp-form-group-col"><label class="tp-label">Uncertain</label>
                                                 <fx-control ref="@cert" update-event="change" value-prop="checked">
                                                     <input type="checkbox">
                                                     <label>(Check if uncertain)</label>
-                                                    <!--fx-action event="value-changed">
+                                                    &lt;!&ndash;fx-action event="value-changed">
                                                         <fx-setvalue ref="@cert" if=".=true()" value="'low'"/>
                                                         <fx-setvalue ref="@cert" if=".=false()" value="''"/>
-                                                    </fx-action-->
+                                                    </fx-action&ndash;&gt;
                                                 </fx-control>
                                             </div>
+-->
                                         </div>
+<!--
                                         <div class="tp-row tp-repeat-buttons">
                                             <div class="tp-repeat-button-right">
                                                 <div class="tp-button-row tp-delete"><label>Delete dialect</label>
@@ -363,6 +369,7 @@
                                                 </div>
                                             </div>
                                         </div>
+-->
                                     </fx-group>
                                 </template>
                             </fx-repeat>
@@ -377,6 +384,7 @@
         <!-- // end section dialects -->
 
         <!-- begin section name variants -->
+<!--
         <section class="tp-section"  refresh-on-view>
             <div class="tp-row">
                 <div class="tp-width-secondary">
@@ -389,11 +397,11 @@
                                             <button>add</button>
                                             <fx-insert context="//entry" ref="form"
                                                        origin="instance('i-template')//form[@type='variant']"></fx-insert>
-                                            <!--
+                                            &lt;!&ndash;
                                                                                         <script>
                                                                                             clearAndInitAutocompletes();
                                                                                         </script>
-                                            -->
+                                            &ndash;&gt;
                                         </fx-trigger>
                                     </div>
                                 </div>
@@ -472,10 +480,12 @@
                 </div>
             </div>
         </section>
+-->
 
         <!-- // end section name variants -->
 
         <!-- begin section segmentation -->
+<!--
         <section class="tp-section"  refresh-on-view>
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Segmentation and Semantics</h2>
@@ -490,11 +500,11 @@
                                                 <button>add</button>
                                                 <fx-insert context="//entry" ref="gramGrp"
                                                            origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
-                                                <!--
+                                                &lt;!&ndash;
                                                                                                 <script>
                                                                                                     clearAndInitAutocompletes();
                                                                                                 </script>
-                                                -->
+                                                &ndash;&gt;
                                             </fx-trigger>
                                         </div>
                                     </div>
@@ -502,7 +512,7 @@
                                 <div class="tp-row tp-repeat-headline"></div>
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
-                                        <fx-group ref="."><!-- gen. characteristic l.1 -->
+                                        <fx-group ref=".">&lt;!&ndash; gen. characteristic l.1 &ndash;&gt;
                                             <section class="tp-row">
                                                 <div class="tp-form-group-col"><label class="tp-label">Certainty</label>
                                                     <fx-control class="tp-input -form-control" ref="@cert"></fx-control>
@@ -535,7 +545,7 @@
                                             </section>
                                             <div class="tp-divider"></div>
                                             <h4>Preroot</h4>
-                                            <!-- Preroot -->
+                                            &lt;!&ndash; Preroot &ndash;&gt;
                                             <section class="tp-form-group-col"><label
                                                     class="tp-label">Preconstituent</label>
                                                 <fx-control class="hidden" ref="m[@type = 'prefix' and @n = 1]">
@@ -555,7 +565,7 @@
                                                         <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
                                                     </fx-dispatch>
                                                 </fx-trigger>
-                                            <!-- Preroot functions -->
+                                            &lt;!&ndash; Preroot functions &ndash;&gt;
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot
                                                 (prefix)</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
@@ -572,7 +582,7 @@
                                                     </select>
                                                 </fx-control>
                                             </section>
-                                            <!-- Preroot rest -->
+                                            &lt;!&ndash; Preroot rest &ndash;&gt;
                                             <section class="tp-row">
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification</label>
@@ -601,10 +611,10 @@
                                                     </fx-control>
                                                 </div>
                                             </section>
-                                            <!-- Preroot other -->
+                                            &lt;!&ndash; Preroot other &ndash;&gt;
                                             <div class="tp-divider"></div>
                                             <h4>Root 1</h4>
-                                            <!-- Root 1 constituent -->
+                                            &lt;!&ndash; Root 1 constituent &ndash;&gt;
                                             <section class="tp-form-group-col"><label class="tp-label">Constituent
                                                 1</label>
                                                 <fx-control class="hidden" ref="m[@type = 'radical' and @n = 1]">
@@ -616,15 +626,15 @@
                                                 <input type="hidden" class="tp-input"
                                                        data-function="constituent_autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off">
-                                                <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
+                                                &lt;!&ndash; TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary &ndash;&gt;
                                                 <fx-trigger class="hidden constituent_autocomplete-callback">
                                                     <fx-action event="DOMActivate">
                                                         <fx-setvalue ref="" value=""></fx-setvalue>
-<!--                                                        <fx-dispatch name="" targetid=""></fx-dispatch>-->
+&lt;!&ndash;                                                        <fx-dispatch name="" targetid=""></fx-dispatch>&ndash;&gt;
                                                     </fx-action>
                                                 </fx-trigger>
                                             </section>
-                                            <!-- Root 1 -->
+                                            &lt;!&ndash; Root 1 &ndash;&gt;
                                             <section class="tp-form-group-col"><label class="tp-label">Root 1</label>
                                                 <fx-control class="hidden"
                                                             ref="m[@type = 'radical' and @n = 1]/@baseForm">
@@ -641,7 +651,7 @@
                                                 </fx-control>
                                                 <input type="hidden" class="tp-input" data-function="autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off"></section>
-                                            <!-- Root 1  add morpheme -->
+                                            &lt;!&ndash; Root 1  add morpheme &ndash;&gt;
                                             <section class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">
                                                     <div class="tp-button-row tp-add"><label>Add root</label>
@@ -650,17 +660,17 @@
                                                             <fx-action event="DOMActivate">
                                                                 <fx-setvalue ref="instance('i-controller')/morpheme"
                                                                              value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"></fx-setvalue>
-<!--
+&lt;!&ndash;
                                                                 <fx-dispatch name="load-subform-event"
                                                                              targetid="load-subform-group"></fx-dispatch>
--->
+&ndash;&gt;
                                                             </fx-action>
                                                         </fx-trigger>
                                                     </div>
                                                 </div>
                                             </section>
-                                            <!-- Meanings 1 -->
-                                            <!--
+                                            &lt;!&ndash; Meanings 1 &ndash;&gt;
+                                            &lt;!&ndash;
                                                                                         <section class="tp-row tp-row-input-group">
                                                                                             <label class="tp-label">Meanings 1</label>
                                                                                             <div class="col-xs-6">
@@ -677,8 +687,8 @@
                                                                                                 </div>
                                                                                             </div>
                                                                                         </section>
-                                            -->
-                                            <!-- Root 1 functions -->
+                                            &ndash;&gt;
+                                            &lt;!&ndash; Root 1 functions &ndash;&gt;
                                             <section class="tp-row tp-row-input-group">
                                                 <label class="tp-label">Function 1</label>
                                                 <fx-control ref="m[@type = 'radical' and @n = 1]/@function">
@@ -695,7 +705,7 @@
                                                     </select>
                                                 </fx-control>
                                             </section>
-                                            <!-- Root 1 rest -->
+                                            &lt;!&ndash; Root 1 rest &ndash;&gt;
                                             <section class="tp-row">
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification 1</label>
@@ -726,7 +736,7 @@
                                             </section>
                                             <div class="tp-divider"></div>
                                             <h4>Root 2</h4>
-                                            <!-- Root 2 constituent -->
+                                            &lt;!&ndash; Root 2 constituent &ndash;&gt;
                                             <section class="tp-form-group-col"><label class="tp-label">Constituent 2</label>
                                                 <fx-control class="hidden" ref="m[@type = 'radical' and @n = 2]">
                                                     <fx-action event="constituent_autocomplete-callback">
@@ -734,13 +744,13 @@
                                                     </fx-action>
                                                     <fx-alert>no whitespace allowed</fx-alert>
                                                 </fx-control>
-<!--
+&lt;!&ndash;
                                                 <input type="hidden" class="tp-input"
                                                        data-function="constituent_autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off">
--->
+&ndash;&gt;
                                             </section>
-                                            <!-- Root 2 -->
+                                            &lt;!&ndash; Root 2 &ndash;&gt;
                                             <section class="tp-form-group-col"><label class="tp-label">Root 2</label>
                                                 <fx-control class="hidden"
                                                             ref="m[@type = 'radical' and @n = 2]/@baseForm">
@@ -758,7 +768,7 @@
                                                 <input type="hidden" class="tp-input" data-function="autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off">
                                             </section>
-                                            <!-- Root 2 add morpheme -->
+                                            &lt;!&ndash; Root 2 add morpheme &ndash;&gt;
                                             <section class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">
                                                     <div class="tp-button-row tp-add"><label>Add root</label>
@@ -774,8 +784,8 @@
                                                     </div>
                                                 </div>
                                             </section>
-                                            <!-- Meanings 2 -->
-<!--
+                                            &lt;!&ndash; Meanings 2 &ndash;&gt;
+&lt;!&ndash;
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Meanings
                                                 2</label>
                                                 <div class="col-xs-6">
@@ -793,8 +803,8 @@
                                                     </div>
                                                 </div>
                                             </section>
--->
-                                            <!-- Root 2 functions -->
+&ndash;&gt;
+                                            &lt;!&ndash; Root 2 functions &ndash;&gt;
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Function
                                                 2</label>
                                                 <fx-control ref="m[@type = 'radical' and @n = 2]/@function">
@@ -811,7 +821,7 @@
                                                     </select>
                                                 </fx-control>
                                             </section>
-                                            <!-- Root 2 rest -->
+                                            &lt;!&ndash; Root 2 rest &ndash;&gt;
                                             <section class="tp-row">
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification 2</label>
@@ -841,7 +851,7 @@
                                                 </div>
                                             </section>
                                             <h4>Suffixes</h4>
-                                            <!-- Suffixes -->
+                                            &lt;!&ndash; Suffixes &ndash;&gt;
                                             <section class="tp-row">
                                                 <div class="tp-form-group-col"><label class="tp-label">Suffix 4</label>
                                                     <fx-control ref="m[@type = 'suffix' and @n = '4']"><select
@@ -888,7 +898,7 @@
                                                 </div>
                                             </section>
                                             <div class="tp-section-divider"></div>
-                                            <!--- Bibliography -->
+                                            &lt;!&ndash;- Bibliography &ndash;&gt;
                                             <section class="tp-row tp-repeat-headline">
                                                 <h4 class="h3">Lexical Connections</h4>
                                             </section>
@@ -904,11 +914,11 @@
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='source']"></fx-insert>
-<!--
+&lt;!&ndash;
                                                                 <script>
                                                                     clearAndInitAutocompletes();
                                                                 </script>
--->
+&ndash;&gt;
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -968,11 +978,11 @@
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
-<!--
+&lt;!&ndash;
                                                                 <script>
                                                                     clearAndInitAutocompletes();
                                                                 </script>
--->
+&ndash;&gt;
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1037,11 +1047,11 @@
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
-<!--
+&lt;!&ndash;
                                                                 <script>
                                                                     clearAndInitAutocompletes();
                                                                 </script>
--->
+&ndash;&gt;
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1100,11 +1110,11 @@
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
                                                                            origin="instance('i-template')//cit[@type='modern']"></fx-insert>
-<!--
+&lt;!&ndash;
                                                                 <script>
                                                                     clearAndInitAutocompletes();
                                                                 </script>
--->
+&ndash;&gt;
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -1146,9 +1156,9 @@
                                                     </template>
                                                 </fx-repeat>
                                             </fx-group>
-                                            <!--- /Bibliography -->
+                                            &lt;!&ndash;- /Bibliography &ndash;&gt;
                                             <div class="tp-divider"></div>
-                                            <!-- delete segmentation -->
+                                            &lt;!&ndash; delete segmentation &ndash;&gt;
                                             <div class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">
                                                     <div class="tp-button-row tp-delete"><label><b>Delete segmentation
@@ -1166,15 +1176,17 @@
                                     </template>
                                 </fx-repeat>
                             </fx-group>
-                            <!-- // end segmentation -->
+                            &lt;!&ndash; // end segmentation &ndash;&gt;
                         </fx-group>
                     </section>
                 </div>
             </div>
         </section>
+-->
         <!-- end section segmentation -->
 
         <!-- begin section save -->
+<!--
         <section class="tp-section tp-section-save"  refresh-on-view>
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Save Form</h2>
@@ -1199,6 +1211,7 @@
                 </div>
             </div>
         </section>
+-->
         <!-- end section save -->
 
     </main>
