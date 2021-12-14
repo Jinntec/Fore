@@ -15,7 +15,9 @@
                      src="data/segmentation.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
         
-     
+                     <fx-instance id="functions"
+                     src="data/xml/functions.xml"></fx-instance>
+        
 
     </fx-model>
 
@@ -33,6 +35,20 @@
                 <div class="tp-width-secondary">
                     <section class="form-horizontal">
                         <fx-group ref="//entry">
+                            <section class="tp-row tp-row-input-group"><label class="tp-label">Functions taken out of the repeat (but targetting the same part of the instance) </label>
+                                                
+
+                                <fx-control ref="//m[@type='prefix'][@n='1']/@function">
+                                    <fx-items ref="instance('functions')//option" class="widget">
+                                        <template>
+                                            <span class="fx-checkbox">
+                                                <input id="check" name="foo" type="checkbox" value="{@value}">
+                                                <label>{.}</label>
+                                            </span>
+                                        </template>
+                                    </fx-items>
+                                </fx-control>
+                            </section>
                             <fx-group>
                                 <div class="tp-row tp-repeat-headline"></div>
                                 <section class="tp-row tp-repeat-add">
@@ -78,14 +94,17 @@
                                             </section>
                                             <!-- Preroot functions -->
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Functions</label>
-                                                <fx-control ref="m[@type = 'prefix' and @n = 1]/@function">
-                                                    <select class="widget" multiple size="9">
-                                                        <option value="V">Verb</option>
-                                                        <option value="N">Noun</option>
-                                                        <option value="Adj">Adj</option>
-                                                        <option value="Pro">Pron</option>
-                                                        <option value="Adv">Adv</option>
-                                                    </select>
+                                                
+
+                                                <fx-control ref="m[@type='prefix'][@n='1']/@function">
+                                                    <fx-items ref="instance('functions')//option" class="widget">
+                                                        <template>
+                                                            <span class="fx-checkbox">
+                                                                <input id="check" name="foo" type="checkbox" value="{@value}">
+                                                                <label>{.}</label>
+                                                            </span>
+                                                        </template>
+                                                    </fx-items>
                                                 </fx-control>
                                             </section>
                                             

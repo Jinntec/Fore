@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-    <option xml:id="V">Verb</option>
-    <option xml:id="N">Noun</option>
-    <option xml:id="Adj">Adj</option>
-    <option xml:id="Pro">Pro</option>
-    <option xml:id="Adv">Adv</option>
+    <option xml:id="V" value="V">Verb</option>
+    <option xml:id="N" value="N">Noun</option>
+    <option xml:id="Adj" value="Adj">Adj</option>
+    <option xml:id="Pro" value="Pro">Pro</option>
+    <option xml:id="Adv" value="Adv">Adv</option>
 </data>
