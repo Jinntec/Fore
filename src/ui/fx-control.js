@@ -161,7 +161,8 @@ export default class FxControl extends XfAbstractControl {
       // const instanceId = XPathUtil.getInstanceId(ref);
 
       const inscope = getInScopeContext(this, ref);
-      const nodeset = evaluateXPathToNodes(ref, inscope, this);
+      // const nodeset = evaluateXPathToNodes(ref, inscope, this);
+      const nodeset = evaluateXPath(ref, inscope, this);
 
       // ### clear items
       const { children } = widget;

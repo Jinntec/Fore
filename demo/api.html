@@ -164,7 +164,8 @@
         </header>
         <a href="#top" class="up">^</a>
 
-        <fx-repeat id="elements" ref="?tags">
+<!--        <fx-repeat id="elements" ref="?tags"  refresh-on-view>-->
+        <fx-repeat id="elements" ref="?tags" refresh-on-view>
             <template>
                 <h2 id="{?name}" style="transform: translateX(0)">{?name}</h2>
                 <div class="description">{?description}</div>

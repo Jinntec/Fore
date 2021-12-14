@@ -193,7 +193,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     if (!this.inited) this.init();
     this._evalNodeset();
-    console.log('repeat refresh nodeset ', this.nodeset);
+    // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
 
     const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
