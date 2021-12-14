@@ -14,8 +14,14 @@
                     <orth type="lgpn"/>
                     <date notBefore="" notAfter=""/>
                 </form>
+                <re>
+                    <form>
+                        <lbl>son</lbl>
+                        <orth/>
+                    </form>
+                </re>
                 <gramGrp type="classification">
-                    <gram type="fictitious"/>
+                    <gram type="fictitious">fictitious</gram>
                     <gram type="GPR"/>
                     <gram type="sublemma" ana="monosemic"/>
                     <usg type="lang" cert=""/>
