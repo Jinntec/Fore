@@ -75,10 +75,8 @@ export default class FxControl extends XfAbstractControl {
     });
 
     const slot = this.shadowRoot.querySelector('slot');
-    slot.addEventListener('slotchange', event => {
-      this.template = this.querySelector('template');
-    });
-
+    this.template = this.querySelector('template');
+    // console.log('template',this.template);
   }
 
   setValue(val) {
@@ -147,9 +145,6 @@ export default class FxControl extends XfAbstractControl {
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
     if (widget.hasAttribute('ref')) {
-      const tmpl = this.template;
-      // console.log('fx-control template',tmpl);
-
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
       /*
@@ -158,7 +153,6 @@ export default class FxControl extends XfAbstractControl {
 
       todo: even bail out if ref is not absolute?
        */
-      // const instanceId = XPathUtil.getInstanceId(ref);
 
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
@@ -178,14 +172,14 @@ export default class FxControl extends XfAbstractControl {
           // console.log('nodeset', nodeset);
           Array.from(nodeset).forEach(node => {
             // console.log('#### node', node);
-            const newEntry = this.createEntry(tmpl);
+            const newEntry = this.createEntry();
 
             // ### initialize new entry
             // ### set value
             this.updateEntry(newEntry, node);
           });
         } else {
-          const newEntry = this.createEntry(tmpl);
+          const newEntry = this.createEntry();
           this.updateEntry(newEntry, nodeset);
         }
       }

@@ -147,7 +147,7 @@ export class FxFore extends HTMLElement {
     slot.addEventListener('slotchange', event => {
       console.log('Fore slotchange');
       const children = event.target.assignedElements();
-      console.log('Fore children', children);
+      // console.log('Fore children', children);
       let modelElement = children.find(
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );

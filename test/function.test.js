@@ -245,7 +245,7 @@ describe('functions', () => {
     // Second row, second item
     const span = el.querySelectorAll('input')[3 + 1];
     span.focus();
-
+    el.refresh();
     const indices = document.getElementById('indices');
     expect(indices.innerText.replace(/\s/g, '')).to.equal(
       '(2;1)(2;1)(2;1)(2;2)(2;2)(2;2)(2;1)(2;1)(2;1)',

@@ -22,7 +22,8 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.inited = false;
 
     this.addEventListener('click', this._dispatchIndexChange);
-    this.addEventListener('focusin', this._handleFocus);
+    // this.addEventListener('focusin', this._handleFocus);
+    this.addEventListener('focusin', this._dispatchIndexChange);
 
     this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
@@ -30,7 +31,12 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   _handleFocus() {
     this.parentNode.setIndex(this.index);
     // TODO: do this somewhere else, somewhere more central
-    this.closest('fx-fore').refresh();
+
+    /**
+     * todo: resolve - this is problematic as it triggers a lot of unneeded refreshes but it needed
+     * when you want to support activating the right repeatitem when the user tabs through controls.
+     */
+    // this.closest('fx-fore').refresh();
   }
 
   _dispatchIndexChange() {

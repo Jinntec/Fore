@@ -71,7 +71,6 @@ export class Fore {
       'FX-GROUP',
       'FX-HINT',
       'FX-INPUT',
-      'FX-ITEMSET',
       'FX-ITEMS',
       'FX-LABEL',
       'FX-OUTPUT',
