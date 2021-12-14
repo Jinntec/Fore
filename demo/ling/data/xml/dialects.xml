@@ -7,7 +7,12 @@
             <catDesc ana="short" xml:lang="fr"></catDesc>
         </category>
     -->
-    
+    <category xml:id="">
+        <catDesc ana="full" xml:lang="en">-</catDesc>
+        <catDesc ana="short" xml:lang="en">-</catDesc>
+        <catDesc ana="full" xml:lang="fr">-</catDesc>
+        <catDesc ana="short" xml:lang="fr">-</catDesc>
+    </category>
         <category xml:id="aegean">
             <catDesc ana="full" xml:lang="en">Aegean</catDesc>
             <catDesc ana="short" xml:lang="en">Aegean</catDesc>

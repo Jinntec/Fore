@@ -17,7 +17,7 @@
         </form>
     </re>
     <form type="variant" cert="">
-        <gen/>
+        <gen>m</gen>
         <usg cert=""/>
         <orth cert=""/>
     </form>

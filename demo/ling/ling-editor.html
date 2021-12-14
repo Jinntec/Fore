@@ -30,6 +30,9 @@
         <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         <fx-instance id="i-cert" src="data/xml/cert.xml"/>
 
+        <fx-instance xmlns="" id="i-genders" src="data/xml/genders.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+
 <!--  
 
         <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
@@ -284,6 +287,117 @@
         </section>
         <!-- // end section dialects -->
 
+
+        <!-- begin section name variants -->
+        <section class="tp-section">
+            <div class="tp-row">
+                <div class="tp-width-secondary">
+                            <div class="tp-row tp-repeat-add">
+                                <div class="tp-repeat-button-left">
+                                    <div class="tp-button-row tp-add"><label>Add name variant</label>
+                                        <fx-trigger>
+                                            <button>add</button>
+                                            <fx-insert 
+                                                context="//entry" 
+                                                ref="form"
+                                                origin="instance('i-template')//form[@type='variant']"></fx-insert>
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+                            </div>
+                            <fx-repeat ref="//form[@type='variant']" id="r-nameVariant">
+                                <template>
+                                    <div class="tp-row tp-repeat-headline"></div>
+                                    <fx-group ref=".">
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Linking of the form
+                                                is uncertain</label>
+                                                <fx-control ref="@cert">
+                                                    <fx-items ref="instance('i-cert')//option" class="widget">
+                                                        <template>
+                                                            <span class="fx-checkbox">
+                                                                <input id="check" name="option" type="checkbox" value="{@value}">
+                                                                <label>{.}</label>
+                                                            </span>
+                                                        </template>
+                                                    </fx-items>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Form</label>
+                                                <fx-control class="tp-input -form-control" ref="orth"></fx-control>
+                                            </div>
+                                            <div class="tp-form-group-col"><label class="tp-label tp-invisible">Reading
+                                                of the form is
+                                                uncertain</label>
+                                                <fx-control ref="orth/@cert">
+                                                    <fx-items ref="instance('i-cert')//option" class="widget">
+                                                        <template>
+                                                            <span class="fx-checkbox">
+                                                                <input id="check" name="option" type="checkbox" value="{@value}">
+                                                                <label>{.}</label>
+                                                            </span>
+                                                        </template>
+                                                    </fx-items>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Gender</label>
+                                                <fx-control ref="gen">
+                                                    <select ref="instance('i-genders')//category" class="widget">
+                                                    <template>
+                                                        <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
+                                                    </template>
+                                                </select></fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row">
+                                            <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
+                                                <fx-control ref="usg">
+                                                <select ref="instance('i-dialects')//category" class="widget">
+                                                    <template>
+                                                        <option value="{@xml:id}">{catDesc[@ana='full'][@xml:lang='fr']}</option>
+                                                    </template>
+                                                </select>
+                                            </fx-control>
+                                            </div>
+                                            <div class="tp-form-group-col"><label class="tp-label">Dialect is
+                                                uncertain</label>
+                                                <fx-control ref="usg/@cert">
+                                                    <fx-items ref="instance('i-cert')//option" class="widget">
+                                                        <template>
+                                                            <span class="fx-checkbox">
+                                                                <input id="check" name="option" type="checkbox" value="{@value}">
+                                                                <label>{.}</label>
+                                                            </span>
+                                                        </template>
+                                                    </fx-items>
+                                                </fx-control>
+                                            </div>
+                                        </div>
+                                        <div class="tp-row tp-repeat-buttons">
+                                            <div class="tp-repeat-button-right">
+                                                <div class="tp-button-row tp-delete"><label>Delete name variant</label>
+                                                    <fx-trigger>
+                                                        <button>delete</button>
+                                                        <fx-delete
+                                                                nodeset="//form[@type='variant'][index('r-nameVariant')]"></fx-delete>
+                                                    </fx-trigger>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fx-group>
+                                    <div class="tp-section-divider"></div>
+                                </template>
+                            </fx-repeat>
+                        
+                </div>
+            </div>
+        </section>
+
+        <!-- // end section name variants -->
 
 
         <!-- begin section segmentation -->
