@@ -1,0 +1,138 @@
+<html>
+<head>
+    <title>Insert an arbitrary structure</title><!--
+        ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
+        -->
+    <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance id="default" src="data/segmentation.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        
+        <fx-instance id="i-template"
+                     src="data/template.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+        <fx-instance id="i-relations" src="data/xml/relations.xml"/>
+    </fx-model>
+
+    <header>
+        <div class="tp-row">
+            <h1 class="tp-column-fullwidth tp-headline">Sample</h1>
+        </div>
+    </header>
+
+    <main>
+                <!-- begin section general -->
+                <section class="tp-section" >
+                    <div class="tp-row">
+                        <h2 class="tp-width-sidebar">Name in Context</h2>
+                        <div class="tp-width-main">
+
+                            <!-- Name forms: form[@type='lemma'] -->
+                            <fx-group class="form-horizontal" id="general" ref="//entry/form[@type='lemma']">
+                                <div class="tp-form-group-col">
+                                    <label class="tp-label">Greek</label>
+                                    <fx-control class="tp-input -form-control" ref="orth[@type='greek']">
+                                        <fx-hint>Greek</fx-hint>
+                                    </fx-control>
+                                </div>
+                                <div class="tp-form-group-col">
+                                    <label class="tp-label">Latin</label>
+                                    <fx-control class="tp-input -form-control" ref="orth[@type='latin']">
+                                        <fx-hint>Latin</fx-hint>
+                                    </fx-control>
+                                </div>
+                            </fx-group>
+
+                           
+<!-- 
+                            <div class="tp-section-divider"/>
+ -->
+
+                            <div class="tp-row">
+                                <div class="tp-row tp-repeat-headline"></div>
+                                
+                                    
+                                    <div class="tp-repeat-button-left">
+                                        <div class="tp-button-row tp-add"><label>Add significant relative</label>
+                                            <label>Should insert `re` element into `entry`</label>
+                                            <fx-trigger>
+                                                <button>add</button>
+                                                <fx-insert ref="//entry/re"
+                                                           origin="instance('i-template')/re']"></fx-insert>
+                                            </fx-trigger>
+                                        </div>
+                                    </div>
+                                    
+                                
+                                <!--
+                                <div class="tp-row tp-repeat-add">
+                                    <fx-label class="tp-form-header">
+                                        <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
+                                    </fx-label>
+                                   
+                                        <fx-trigger class="-btn -btn-default">
+                                            <button class="input-group-addon">add</button>
+                                            <fx-insert 
+                                                
+                                                ref="re"
+                                                origin="instance('i-template')//re"></fx-insert>
+                                        </fx-trigger>
+                                    
+                                </div>
+        
+                                <fx-group ref="//entry/re">
+                                    <div class="tp-form-group-col">
+                                        <label class="tp-label">Relation</label>
+                                        <fx-control ref="lbl" class="tp-input -form-control">
+                                            <select ref="instance('i-relations')/option" class="widget">
+                                                <template>
+                                                    <option value="{@xml:id}">{.}</option>
+                                                </template>
+                                            </select>
+                                        </fx-control>
+                                    </div>
+        
+                                    <div class="tp-form-group-col">
+                                        <label class="tp-label">Relative name</label>
+                                        <fx-control class="tp-input -form-control" ref="orth">
+                                            <fx-hint>Relative name</fx-hint>
+                                        </fx-control>
+                                    </div>
+        
+                                    <div class="tp-row tp-repeat-buttons">
+                                        <div class="tp-repeat-button-right">
+                                            <div class="tp-button-row tp-delete">
+                                                <fx-trigger class="-btn -btn-default">
+                                                    <button>delete</button>
+                                                   
+                                                    <fx-delete nodeset="//entry//re"/>
+                                                </fx-trigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fx-group>
+                               -->
+                            </div>
+        
+                        </div>
+                    </div>
+                </section>
+                <!-- // end section general -->
+        
+    </main>
+    <pre>
+        {log('default')}
+    </pre>
+</fx-fore>
+
+<!-- Modal Dialog -->
+<script type="module" src="../../dist/fore-ling.js"></script>
+<script type="module" src="./ling.js"></script>
+</body>
+</html>
