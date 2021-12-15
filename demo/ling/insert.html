@@ -17,7 +17,7 @@
                      src="data/template.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
 
-        <fx-instance id="i-relations" src="data/xml/relations.xml"/>
+        <fx-instance id="i-relations" src="data/xml/relations.xml"></fx-instance>
     </fx-model>
 
     <header>
@@ -57,14 +57,14 @@
                             <div class="tp-row">
                                 <div class="tp-row tp-repeat-headline"></div>
                                 
-                                    
+<!--                                <span>{instance('i-template')/re}</span>-->
                                     <div class="tp-repeat-button-left">
                                         <div class="tp-button-row tp-add"><label>Add significant relative</label>
                                             <label>Should insert `re` element into `entry`</label>
                                             <fx-trigger>
                                                 <button>add</button>
-                                                <fx-insert ref="//entry/re"
-                                                           origin="instance('i-template')/re']"></fx-insert>
+                                                <fx-insert context="//entry" ref="//entry/re"
+                                                           origin="instance('i-template')/re"></fx-insert>
                                             </fx-trigger>
                                         </div>
                                     </div>
@@ -132,7 +132,8 @@
 </fx-fore>
 
 <!-- Modal Dialog -->
-<script type="module" src="../../dist/fore-ling.js"></script>
-<script type="module" src="./ling.js"></script>
+<!--<script type="module" src="../../dist/fore-ling.js"></script>-->
+<!--<script type="module" src="./ling.js"></script>-->
+<script type="module" src="../../index.js"></script>
 </body>
 </html>

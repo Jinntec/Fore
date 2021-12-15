@@ -77,7 +77,7 @@ export class FxInsert extends AbstractAction {
   }
 
   perform() {
-    super.perform();
+    // super.perform();
 
     /*
          todo: !!! calling super here does not correctly give the nodeset - it's likely still a bug in ForeElementMixin !!!
