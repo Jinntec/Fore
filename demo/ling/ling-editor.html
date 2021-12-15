@@ -156,21 +156,37 @@
  -->
 
                             <div class="tp-row">
+                                <div class="tp-row tp-repeat-headline"></div>
+                                <section class="tp-row tp-repeat-add">
+                                    <fx-group ref="//entry">
+                                    <div class="tp-repeat-button-left">
+                                        <div class="tp-button-row tp-add"><label>Add significant relative</label>
+                                            <label>Should insert `re` element into `entry`</label>
+                                            <fx-trigger>
+                                                <button>add</button>
+                                                <fx-insert ref="//entry/re"
+                                                           origin="instance('i-template')//re']"></fx-insert>
+                                            </fx-trigger>
+                                        </div>
+                                    </div>
+                                    </fx-group>
+                                </section>
+                                <!--
                                 <div class="tp-row tp-repeat-add">
                                     <fx-label class="tp-form-header">
                                         <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
                                     </fx-label>
-                                    <div class="tp-button-row tp-add">
+                                   
                                         <fx-trigger class="-btn -btn-default">
                                             <button class="input-group-addon">add</button>
                                             <fx-insert 
-                                                context="//entry" 
+                                                
                                                 ref="re"
                                                 origin="instance('i-template')//re"></fx-insert>
                                         </fx-trigger>
-                                    </div>
+                                    
                                 </div>
-        <!--  
+        
                                 <fx-group ref="//entry/re">
                                     <div class="tp-form-group-col">
                                         <label class="tp-label">Relation</label>
@@ -202,7 +218,7 @@
                                         </div>
                                     </div>
                                 </fx-group>
-                                -->
+                               -->
                             </div>
         
                         </div>
