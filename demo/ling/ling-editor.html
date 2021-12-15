@@ -32,6 +32,7 @@
 
         <fx-instance xmlns="" id="i-genders" src="data/xml/genders.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
+        <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
 
 <!--  
 
@@ -424,15 +425,17 @@
                                     <template>
                                         <fx-group ref="."><!-- gen. characteristic l.1 -->
                                             
+                                            <div class="tp-divider"></div>
+
                                             <h4>Lexeme</h4>
                                             <!-- Preroot -->
                                             <section class="tp-form-group-col"><label
-                                                    class="tp-label">Real word form</label>
+                                                    class="tp-label">Preconstituent</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]">
                                                 
                                                 </fx-control>
                                             </section>
-                                            <section class="tp-form-group-col"><label class="tp-label">Canonical form</label>
+                                            <section class="tp-form-group-col"><label class="tp-label">Preroot (base form)</label>
                                                 <fx-output id="base-form" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
                                                     <input type="text" class="widget"/>
 <!--                                                    <fx-message event="edit-morpheme">got edit-morpheme {event('pos')}</fx-message>-->
@@ -449,7 +452,7 @@
                                                 </fx-trigger>
                                             </section>
                                             <!-- Preroot functions -->
-                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Functions</label>
+                                            <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot (functions)</label>
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@function">
                                                     <fx-items ref="instance('functions')//option" class="widget">
                                                         <template>
@@ -461,7 +464,53 @@
                                                     </fx-items>
                                                 </fx-control>
                                             </section>
-                                            
+                                            <!-- Preroot rest: headedness etc -->
+                                            <section class="tp-row">
+                                                <div class="tp-column-3"><label class="tp-label">Headedness
+                                                    classification</label>
+                                                    
+
+                                                    <fx-control ref="m[@type='prefix'][@n='1']/@subtype">
+                                                        <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                            <template>
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                                                                    <label>{.}</label>
+                                                                </span>
+                                                            </template>
+                                                        </fx-items>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Abbreviation
+                                                    marker</label>
+                                                   
+                                                    <fx-control ref="m[@type='prefix'][@n='1']/@ana">
+                                                        <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox" value="Abbr">
+                                                                    <label>Abbr</label>
+                                                                </span>
+                                                        </fx-items>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Class marker</label>
+                                                    
+                                                    <fx-control ref="m[@type='prefix'][@n='1']/@cert">
+                                                        <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox" value="unattested">
+                                                                    <label>*</label>
+                                                                </span>
+                                                        </fx-items>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-column-3"><label class="tp-label">Linked compound</label>
+                                                    <fx-control class="tp-input -form-control"
+                                                                ref="m[@type = 'prefix' and @n = 1]/@corresp">
+                                                        <fx-hint>e.g. linked compound</fx-hint>
+                                                    </fx-control>
+                                                </div>
+                                            </section>
                     
                                             <!-- delete segmentation -->
                                             <div class="tp-row tp-repeat-buttons">
