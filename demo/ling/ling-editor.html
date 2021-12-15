@@ -10,13 +10,17 @@
 <body>
 <fx-fore>
     <fx-model id="model-1">
-        <fx-instance id="default" src="data/default.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        <fx-instance 
+            id="default" 
+            src="data/default.xml" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         
-        <fx-instance id="i-template"
-                     src="data/template.xml"
-                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+        <fx-instance 
+            id="i-template"
+            src="data/template.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
-        <fx-instance id="i-functions" src="data/xml/functions.xml"></fx-instance>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
 
         <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
         <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
@@ -25,10 +29,20 @@
 
         <fx-instance id="i-relations" src="data/xml/relations.xml"/>
 
-        <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        <fx-instance 
+            xmlns="" 
+            id="i-dialects" 
+            src="data/xml/dialects.xml" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+        <fx-instance 
+            xmlns="" 
+            id="i-genders" 
+            src="data/xml/genders.xml" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
         <fx-instance id="i-cert" src="data/xml/cert.xml"/>
 
-        <fx-instance xmlns="" id="i-genders" src="data/xml/genders.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
 
@@ -39,14 +53,6 @@
 
         <fx-instance id="i-classification" src="data/xml/classification.xml"/>
         <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
-
-<!--  
-
-       
-        <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
-        <fx-instance id="i-other" src="data/xml/other.xml"/>
-       
--->
     </fx-model>
 
     <header>
@@ -152,39 +158,21 @@
                             <div class="tp-section-divider"/>
  -->
 
-                            <div class="tp-row">
-                                <div class="tp-row tp-repeat-headline"></div>
-                                <section class="tp-row tp-repeat-add">
-                                    <fx-group ref="//entry">
-                                    <div class="tp-repeat-button-left">
-                                        <div class="tp-button-row tp-add"><label>Add significant relative</label>
-                                            <label>Should insert `re` element into `entry`</label>
-                                            <fx-trigger>
-                                                <button>add</button>
-                                                <fx-insert ref="//entry/re"
-                                                           origin="instance('i-template')//re'"></fx-insert>
-                                            </fx-trigger>
-                                        </div>
-                                    </div>
-                                    </fx-group>
-                                </section>
-                                <!--
+                            <div class="tp-row">                                
                                 <div class="tp-row tp-repeat-add">
                                     <fx-label class="tp-form-header">
                                         <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
                                     </fx-label>
-                                   
-                                        <fx-trigger class="-btn -btn-default">
-                                            <button class="input-group-addon">add</button>
-                                            <fx-insert 
-                                                
-                                                ref="re"
-                                                origin="instance('i-template')//re"></fx-insert>
-                                        </fx-trigger>
-                                    
+                                    <fx-trigger>
+                                        <button>add</button>
+                                        <fx-insert context="//entry/re" ref="//entry/re/form"
+                                                   origin="instance('i-template')/re/form"></fx-insert>
+                                    </fx-trigger>              
                                 </div>
+       
+                                <fx-repeat ref="//entry/re/form" id="r-relations">
+                                    <template>
         
-                                <fx-group ref="//entry/re">
                                     <div class="tp-form-group-col">
                                         <label class="tp-label">Relation</label>
                                         <fx-control ref="lbl" class="tp-input -form-control">
@@ -195,14 +183,12 @@
                                             </select>
                                         </fx-control>
                                     </div>
-        
                                     <div class="tp-form-group-col">
                                         <label class="tp-label">Relative name</label>
                                         <fx-control class="tp-input -form-control" ref="orth">
                                             <fx-hint>Relative name</fx-hint>
                                         </fx-control>
                                     </div>
-        
                                     <div class="tp-row tp-repeat-buttons">
                                         <div class="tp-repeat-button-right">
                                             <div class="tp-button-row tp-delete">
@@ -214,8 +200,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </fx-group>
-                               -->
+                                    </template>
+                                    </fx-repeat>
+                                <!-- </fx-group> -->
+                               
                             </div>
         
                         </div>
