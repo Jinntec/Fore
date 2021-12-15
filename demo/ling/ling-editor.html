@@ -423,7 +423,7 @@
                                 </section>
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
-                                        <fx-group ref="."><!-- gen. characteristic l.1 -->
+                                        <fx-group ref=".">
                                             
                                             <div class="tp-divider"></div>
 
@@ -567,7 +567,263 @@
                                             </section>
                                             <div class="tp-section-divider"></div>
 
-                    
+                                            <!-- Bibliography -->
+
+                                            <section class="tp-row tp-repeat-headline">
+                                                <h4 class="h3">Lexical Connections</h4>
+                                            </section>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Lexical or Lexicographic
+                                                        Significant
+                                                        Sources</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add significant
+                                                            source</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" ref="cit"
+                                                                           origin="instance('i-template')//cit[@type='source']"></fx-insert>
+
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    significant source</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">
+                                                        References in Modern Lexicology and Linguistics
+                                                    </h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add reference</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" ref="cit"
+                                                                           origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='auxiliary']" id="r-cit-auxiliary">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    reference</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='auxiliary'][index('r-cit-auxiliary')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <div class="tp-section-divider"></div>
+                                            <section class="tp-row tp-repeat-headline">
+                                                <h4 class="h3">
+                                                    Onomastics
+                                                </h4>
+                                            </section>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Linked Sources</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add linked
+                                                            source</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" ref="cit"
+                                                                           origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='linguistic']" id="r-cit-linguistic">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Quote</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="quote"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    linked source</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='linguistic'][index('r-cit-linguistic')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+                                            <fx-group>
+                                                <section class="tp-row tp-repeat-add">
+                                                    <h5 class="h4 tp-repeat-headline">Modern References</h5>
+                                                    <div class="tp-repeat-button-left">
+                                                        <div class="tp-button-row tp-add"><label>Add modern
+                                                            reference</label>
+                                                            <fx-trigger>
+                                                                <button>add</button>
+                                                                <fx-insert context="listBibl" ref="cit"
+                                                                           origin="instance('i-template')//cit[@type='modern']"></fx-insert>
+<!--
+                                                                <script>
+                                                                    clearAndInitAutocompletes();
+                                                                </script>
+-->
+                                                            </fx-trigger>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <fx-repeat ref="listBibl/cit[@type='modern']" id="r-cit-modern">
+                                                    <template>
+                                                        <div class="tp-row tp-repeat-headline"></div>
+                                                        <div class="tp-row">
+                                                            <div class="tp-form-group-col"><label class="tp-label">Reference</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Author</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="bibl/author"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label class="tp-label">Details</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="span"></fx-control>
+                                                            </div>
+                                                            <div class="tp-form-group-col"><label
+                                                                    class="tp-label">Link</label>
+                                                                <fx-control class="tp-input -form-control"
+                                                                            ref="ref/@target"></fx-control>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tp-row tp-repeat-buttons">
+                                                            <div class="tp-repeat-button-right">
+                                                                <div class="tp-button-row tp-delete"><label>Delete
+                                                                    modern reference</label>
+                                                                    <fx-trigger>
+                                                                        <button>add</button>
+                                                                        <fx-delete
+                                                                                nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='modern'][index('r-cit-modern')]"></fx-delete>
+                                                                    </fx-trigger>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </fx-repeat>
+                                            </fx-group>
+
+                    <!-- Bibliography -->
                                             <!-- delete segmentation -->
                                             <div class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">
