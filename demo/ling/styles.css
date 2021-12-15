@@ -31,10 +31,7 @@ fieldset > div , fx-group > div{
     grid-template-columns: 1fr 6fr;
 
 }
-fx-group{
-    padding: 1rem;
-    border:thin solid lightgrey;
-}
+
 fx-repeat{
     display: block;
 }
@@ -54,5 +51,5 @@ fx-repeatitem[repeat-index]{
 main > section{
     background:white;
     padding:1rem;
-    margin:10rem 0;
+  
 }
