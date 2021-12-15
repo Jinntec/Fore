@@ -1,8 +1,7 @@
 <html>
 <head>
-    <title>Dispatching results from external query to repeat controls</title><!--
-        ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
-        -->
+    <title>New version of the LGPN-Ling editing form</title>
+
     <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" type="text/css" href="styles.css"/>
@@ -17,13 +16,12 @@
                      src="data/template.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
 
-        <fx-instance id="functions" src="data/xml/functions.xml"></fx-instance>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"></fx-instance>
 
         <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
         <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
         <fx-instance id="i-fictitious" src="data/xml/fictitious.xml"/>
         <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-
 
         <fx-instance id="i-relations" src="data/xml/relations.xml"/>
 
@@ -39,16 +37,15 @@
         <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
         <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
 
+        <fx-instance id="i-classification" src="data/xml/classification.xml"/>
+        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
+
 <!--  
 
-        <fx-instance id="i-classification" src="data/xml/classification.xml"/>
        
         <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
-        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
         <fx-instance id="i-other" src="data/xml/other.xml"/>
-        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
        
-        <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
 -->
     </fx-model>
 
@@ -413,7 +410,6 @@
                 </div>
             </div>
         </section>
-
         <!-- // end section name variants -->
 
 
@@ -437,10 +433,61 @@
                                         </div>
                                     </div>
                                 </section>
+
+
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
                                         <fx-group ref=".">
                                             
+                                            <section class="tp-row">
+                                                <div class="tp-form-group-col">
+                                                    <label class="tp-label">Certainty</label>
+                                                    
+                                                    <fx-control ref="@cert">
+                                                        <fx-items ref="instance('i-cert')//option" class="widget">
+                                                            <template>
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox" value="{.}">
+                                                                    <label>{.}</label>
+                                                                </span>
+                                                            </template>
+                                                        </fx-items>
+                                                    </fx-control>
+                                                </div>
+                                                <div class="tp-form-group-col">
+                                                   <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <label class="tp-label">Complex Structuration and Semantics</label>
+                                                            
+                                                            <fx-control class="tp-input -form-control"
+                                                    ref="@subtype">
+                                                <select ref="instance('i-classification')//option" class="widget">
+                                                    <template>
+                                                        <option value="{@xml:id}">{.}</option>
+                                                    </template>
+                                                </select>
+                                                </fx-control>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <label class="tp-label">Struct. uncertain</label>
+                                                            
+
+                                                            <fx-control ref="@ana">
+                                                                <fx-items ref="instance('i-name-characteristic')//option" class="widget">
+                                                                    <template>
+                                                                        <span class="fx-checkbox">
+                                                                            <input id="check" name="option" type="checkbox" value="{.}">
+                                                                            <label>{.}</label>
+                                                                        </span>
+                                                                    </template>
+                                                                </fx-items>
+                                                            </fx-control>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </section>
+
                                             <div class="tp-divider"></div>
 
                                             <h4>Lexeme</h4>
@@ -462,7 +509,6 @@
                                                 <fx-trigger>
                                                     <button class="widget">Edit</button>
                                                     <fx-dispatch name="edit-morpheme" targetid="base-form">
-<!--                                                        <fx-property name="pos" expr="index('r-gramGrp')"></fx-property>-->
                                                         <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
                                                     </fx-dispatch>
                                                 </fx-trigger>
@@ -470,7 +516,7 @@
                                             <!-- Preroot functions -->
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Preroot (functions)</label>
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@function">
-                                                    <fx-items ref="instance('functions')//option" class="widget">
+                                                    <fx-items ref="instance('i-functions')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{@xml:id}">
