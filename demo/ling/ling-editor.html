@@ -582,7 +582,7 @@
                                                             source</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" ref="cit"
+                                                                <fx-insert ref="listBibl/cit"
                                                                            origin="instance('i-template')//cit[@type='source']"></fx-insert>
 
                                                             </fx-trigger>
@@ -623,7 +623,7 @@
                                                                 <div class="tp-button-row tp-delete"><label>Delete
                                                                     significant source</label>
                                                                     <fx-trigger>
-                                                                        <button>add</button>
+                                                                        <button>delete</button>
                                                                         <fx-delete
                                                                                 nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
                                                                     </fx-trigger>
@@ -642,13 +642,8 @@
                                                         <div class="tp-button-row tp-add"><label>Add reference</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" ref="cit"
+                                                                <fx-insert ref="listBibl/cit"
                                                                            origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
-<!--
-                                                                <script>
-                                                                    clearAndInitAutocompletes();
-                                                                </script>
--->
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -687,7 +682,7 @@
                                                                 <div class="tp-button-row tp-delete"><label>Delete
                                                                     reference</label>
                                                                     <fx-trigger>
-                                                                        <button>add</button>
+                                                                        <button>delete</button>
                                                                         <fx-delete
                                                                                 nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='auxiliary'][index('r-cit-auxiliary')]"></fx-delete>
                                                                     </fx-trigger>
@@ -711,13 +706,8 @@
                                                             source</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" ref="cit"
+                                                                <fx-insert ref="listBibl/cit"
                                                                            origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
-<!--
-                                                                <script>
-                                                                    clearAndInitAutocompletes();
-                                                                </script>
--->
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -756,7 +746,7 @@
                                                                 <div class="tp-button-row tp-delete"><label>Delete
                                                                     linked source</label>
                                                                     <fx-trigger>
-                                                                        <button>add</button>
+                                                                        <button>delete</button>
                                                                         <fx-delete
                                                                                 nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='linguistic'][index('r-cit-linguistic')]"></fx-delete>
                                                                     </fx-trigger>
@@ -774,13 +764,8 @@
                                                             reference</label>
                                                             <fx-trigger>
                                                                 <button>add</button>
-                                                                <fx-insert context="listBibl" ref="cit"
+                                                                <fx-insert ref="listBibl/cit"
                                                                            origin="instance('i-template')//cit[@type='modern']"></fx-insert>
-<!--
-                                                                <script>
-                                                                    clearAndInitAutocompletes();
-                                                                </script>
--->
                                                             </fx-trigger>
                                                         </div>
                                                     </div>
@@ -812,7 +797,7 @@
                                                                 <div class="tp-button-row tp-delete"><label>Delete
                                                                     modern reference</label>
                                                                     <fx-trigger>
-                                                                        <button>add</button>
+                                                                        <button>delete</button>
                                                                         <fx-delete
                                                                                 nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='modern'][index('r-cit-modern')]"></fx-delete>
                                                                     </fx-trigger>
