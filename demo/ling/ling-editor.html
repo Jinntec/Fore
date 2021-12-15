@@ -45,6 +45,14 @@
         <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
         <fx-instance id="i-classification" src="data/xml/classification.xml"/>
         <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
+
+        <fx-instance id="temp">
+            <data>
+                <hypotheses>1</hypotheses>
+            </data>
+        </fx-instance>
+        <fx-bind id="hyp" ref="instance('temp')/hypotheses" calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
+
     </fx-model>
 
     <header>
@@ -54,7 +62,7 @@
     </header>
 
     <main>
-    <!-- begin section general -->
+    <!-- begin section general -->    
         <section class="tp-section" >
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Name in Context</h2>
@@ -393,7 +401,9 @@
         <!-- begin section segmentation -->
         <section class="tp-section">
             <div class="tp-row">
-                <h2 class="tp-width-sidebar">Segmentation and Semantics</h2>
+                <h2 class="tp-width-sidebar">Segmentation and Semantics
+                    (<fx-output id="output" ref="instance('temp')/hypotheses">counting...</fx-output>)
+                </h2>
                 <div class="tp-width-secondary">
                     <section class="form-horizontal">
                         <fx-group ref="//entry">
