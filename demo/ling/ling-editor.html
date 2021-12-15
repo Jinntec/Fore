@@ -21,12 +21,10 @@
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-instance id="i-functions" src="data/xml/functions.xml"/>
-
         <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
         <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
         <fx-instance id="i-fictitious" src="data/xml/fictitious.xml"/>
         <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-
         <fx-instance id="i-relations" src="data/xml/relations.xml"/>
 
         <fx-instance 
@@ -42,178 +40,167 @@
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-instance id="i-cert" src="data/xml/cert.xml"/>
-
-
         <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
-
         <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
         <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"/>
         <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
         <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
-
         <fx-instance id="i-classification" src="data/xml/classification.xml"/>
         <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
     </fx-model>
 
     <header>
         <div class="tp-row">
-            <h1 class="tp-column-fullwidth tp-headline">Segmentation</h1>
+            <h1 class="tp-column-fullwidth tp-headline">New version of the LGPN-Ling editing form</h1>
         </div>
     </header>
 
     <main>
+    
+    <!-- begin section general -->
+        <section class="tp-section" >
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Name in Context</h2>
+                <div class="tp-width-main">
 
-                <!-- begin section general -->
-                <section class="tp-section" >
-                    <div class="tp-row">
-                        <h2 class="tp-width-sidebar">Name in Context</h2>
-                        <div class="tp-width-main">
-
-                            <!-- Name forms: form[@type='lemma'] -->
-                            <fx-group class="form-horizontal" id="general"  ref="//entry/form[@type='lemma']">
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Greek</label>
-                                    <fx-control class="tp-input -form-control" ref="orth[@type='greek']">
-                                        <fx-hint>Greek</fx-hint>
-                                    </fx-control>
-                                </div>
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Latin</label>
-                                    <fx-control class="tp-input -form-control" ref="orth[@type='latin']">
-                                        <fx-hint>Latin</fx-hint>
-                                    </fx-control>
-                                </div>
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">LGPN</label>
-                                    <fx-control class="tp-input -form-control" ref="orth[@type='lgpn']">
-                                        <fx-hint>LGPN variant (if differs)</fx-hint>
-                                    </fx-control>
-                                </div>
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">H-Variant</label>
-                                    <fx-control class="tp-input -form-control"
-                                                ref="orth[@type='h-variant']">
-                                        <fx-hint>Latin variant (with parentheses)</fx-hint>
-                                    </fx-control>
-                                </div>
-                            </fx-group>
-
-                            <!-- Classification: gramGrp[@type='classification'] -->
-                            <fx-group ref="//entry/gramGrp[@type='classification']">
-
-                                <!-- line 1: Classification -->
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Classification</label>
-                                    <fx-control ref="gram[@type='fictitious']">
-                                        <fx-items ref="instance('i-fictitious')//option" class="widget">
-                                            <template>
-                                                <span class="fx-checkbox">
-                                                    <input id="check" name="option" type="checkbox" value="{@value}">
-                                                    <label>{.}</label>
-                                                </span>
-                                            </template>
-                                        </fx-items>
-                                    </fx-control>
-                                </div>
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Classification</label>
-                                    <fx-control ref="gram[@type='GPR']">
-                                        <fx-items ref="instance('i-gpr')//option" class="widget">
-                                            <template>
-                                                <span class="fx-checkbox">
-                                                    <input id="check" name="option" type="checkbox" value="{@value}">
-                                                    <label>{.}</label>
-                                                </span>
-                                            </template>
-                                        </fx-items>
-                                    </fx-control>
-                                </div>
-
-                                <!-- line 2: Sublemma -->
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Sublemma</label>
-                                    <fx-control class="tp-input -form-control"
-                                                ref="gram[@type='sublemma']">
-                                        <select ref="instance('i-sublemma')//option" class="widget">
-                                            <template>
-                                                <option value="{@xml:id}">{.}</option>
-                                            </template>
-                                        </select>
-                                    </fx-control>
-                                </div>
-                                <div class="tp-form-group-col">
-                                    <label class="tp-label">Polysemic</label>
-                                    <fx-control class="tp-input -form-control"
-                                                ref="gram[@ana]/@ana">
-                                        <select ref="instance('i-polysemic')//option" class="widget">
-                                            <template>
-                                                <option value="{@xml:id}">{.}</option>
-                                            </template>
-                                        </select>
-                                    </fx-control>
-                                </div>
-                            </fx-group>
-
-<!-- 
-                            <div class="tp-section-divider"/>
- -->
-
-                            <div class="tp-row">                                
-                                <div class="tp-row tp-repeat-add">
-                                    <fx-label class="tp-form-header">
-                                        <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
-                                    </fx-label>
-                                    <fx-trigger>
-                                        <button>add</button>
-                                        <fx-insert context="//entry/re" ref="//entry/re/form"
-                                                   origin="instance('i-template')/re/form"></fx-insert>
-                                    </fx-trigger>              
-                                </div>
-       
-                                <fx-repeat ref="//entry/re/form" id="r-relations">
-                                    <template>
-        
-                                    <div class="tp-form-group-col">
-                                        <label class="tp-label">Relation</label>
-                                        <fx-control ref="lbl" class="tp-input -form-control">
-                                            <select ref="instance('i-relations')/option" class="widget">
-                                                <template>
-                                                    <option value="{@xml:id}">{.}</option>
-                                                </template>
-                                            </select>
-                                        </fx-control>
-                                    </div>
-                                    <div class="tp-form-group-col">
-                                        <label class="tp-label">Relative name</label>
-                                        <fx-control class="tp-input -form-control" ref="orth">
-                                            <fx-hint>Relative name</fx-hint>
-                                        </fx-control>
-                                    </div>
-                                    <div class="tp-row tp-repeat-buttons">
-                                        <div class="tp-repeat-button-right">
-                                            <div class="tp-button-row tp-delete">
-                                                <fx-trigger class="-btn -btn-default">
-                                                    <button>delete</button>
-                                                   
-                                                    <fx-delete nodeset="//entry//re"/>
-                                                </fx-trigger>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </template>
-                                    </fx-repeat>
-                                <!-- </fx-group> -->
-                               
-                            </div>
-        
+                    <!-- Name forms: form[@type='lemma'] -->
+                    <fx-group class="form-horizontal" id="general"  ref="//entry/form[@type='lemma']">
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Greek</label>
+                            <fx-control class="tp-input -form-control" ref="orth[@type='greek']">
+                                <fx-hint>Greek</fx-hint>
+                            </fx-control>
                         </div>
-                    </div>
-                </section>
-                <!-- // end section general -->
-        
-        
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Latin</label>
+                            <fx-control class="tp-input -form-control" ref="orth[@type='latin']">
+                                <fx-hint>Latin</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">LGPN</label>
+                            <fx-control class="tp-input -form-control" ref="orth[@type='lgpn']">
+                                <fx-hint>LGPN variant (if differs)</fx-hint>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">H-Variant</label>
+                            <fx-control class="tp-input -form-control"
+                                        ref="orth[@type='h-variant']">
+                                <fx-hint>Latin variant (with parentheses)</fx-hint>
+                            </fx-control>
+                        </div>
+                    </fx-group>
 
-        <!-- begin section dialects -->
+                    <!-- Classification: gramGrp[@type='classification'] -->
+                    <fx-group ref="//entry/gramGrp[@type='classification']">
+
+                        <!-- line 1: Classification -->
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Classification</label>
+                            <fx-control ref="gram[@type='fictitious']">
+                                <fx-items ref="instance('i-fictitious')//option" class="widget">
+                                    <template>
+                                        <span class="fx-checkbox">
+                                            <input id="check" name="option" type="checkbox" value="{@value}">
+                                            <label>{.}</label>
+                                        </span>
+                                    </template>
+                                </fx-items>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Classification</label>
+                            <fx-control ref="gram[@type='GPR']">
+                                <fx-items ref="instance('i-gpr')//option" class="widget">
+                                    <template>
+                                        <span class="fx-checkbox">
+                                            <input id="check" name="option" type="checkbox" value="{@value}">
+                                            <label>{.}</label>
+                                        </span>
+                                    </template>
+                                </fx-items>
+                            </fx-control>
+                        </div>
+
+                        <!-- line 2: Sublemma -->
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Sublemma</label>
+                            <fx-control class="tp-input -form-control"
+                                        ref="gram[@type='sublemma']">
+                                <select ref="instance('i-sublemma')//option" class="widget">
+                                    <template>
+                                        <option value="{@xml:id}">{.}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+                        <div class="tp-form-group-col">
+                            <label class="tp-label">Polysemic</label>
+                            <fx-control class="tp-input -form-control"
+                                        ref="gram[@ana]/@ana">
+                                <select ref="instance('i-polysemic')//option" class="widget">
+                                    <template>
+                                        <option value="{@xml:id}">{.}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </div>
+                    </fx-group>
+
+                    <div class="tp-row">                                
+                        <div class="tp-row tp-repeat-add">
+                            <fx-label class="tp-form-header">
+                                <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
+                            </fx-label>
+                            <fx-trigger>
+                                <button>add</button>
+                                <fx-insert context="//entry/re" ref="//entry/re/form"
+                                            origin="instance('i-template')/re/form"></fx-insert>
+                            </fx-trigger>              
+                        </div>
+
+                        <fx-repeat ref="//entry/re/form" id="r-relations">
+                            <template>
+
+                            <div class="tp-form-group-col">
+                                <label class="tp-label">Relation</label>
+                                <fx-control ref="lbl" class="tp-input -form-control">
+                                    <select ref="instance('i-relations')/option" class="widget">
+                                        <template>
+                                            <option value="{@xml:id}">{.}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                            </div>
+                            <div class="tp-form-group-col">
+                                <label class="tp-label">Relative name</label>
+                                <fx-control class="tp-input -form-control" ref="orth">
+                                    <fx-hint>Relative name</fx-hint>
+                                </fx-control>
+                            </div>
+                            <div class="tp-row tp-repeat-buttons">
+                                <div class="tp-repeat-button-right">
+                                    <div class="tp-button-row tp-delete">
+                                        <fx-trigger class="-btn -btn-default">
+                                            <button>delete</button>
+                                            
+                                            <fx-delete nodeset="//entry//re"/>
+                                        </fx-trigger>
+                                    </div>
+                                </div>
+                            </div>
+                            </template>
+                            </fx-repeat>
+                        <!-- </fx-group> -->
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+    <!-- // end section general -->
+        
+    <!-- begin section dialects -->
         <section class="tp-section">
             <div class="tp-row">
                 <div class="tp-width-secondary">
@@ -287,10 +274,10 @@
                 </div>
             </div>
         </section>
-        <!-- // end section dialects -->
+    <!-- // end section dialects -->
 
 
-        <!-- begin section name variants -->
+    <!-- begin section name variants -->
         <section class="tp-section">
             <div class="tp-row">
                 <div class="tp-width-secondary">
@@ -399,7 +386,6 @@
             </div>
         </section>
         <!-- // end section name variants -->
-
 
         <!-- begin section segmentation -->
         <section class="tp-section">
