@@ -201,6 +201,17 @@ export class Fore {
     return fadeOut();
   }
 
+  static dispatch(target, eventName, detail) {
+    const event = new CustomEvent(eventName, {
+      composed: true,
+      bubbles: true,
+      detail,
+    });
+    console.log('firing', event);
+    target.dispatchEvent(event);
+  }
+
+
   /**
    * clear all text nodes and attribute values to get a 'clean' template.
    * @param n
