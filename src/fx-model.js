@@ -83,10 +83,20 @@ export class FxModel extends HTMLElement {
     return mi;
   }
 
+  /**
+   * modelConstruct starts actual processing of the model by
+   *
+   * 1. loading instances if present or constructing one
+   * 2. calling updateModel to run the model update cycle of rebuild, recalculate and revalidate
+   *
+   * @event model-construct-done is fired once all instances have be loaded or after generating instance
+   *
+   */
   modelConstruct() {
     console.log('### <<<<< dispatching model-construct >>>>>');
     this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
 
+    console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
     if (instances.length > 0) {
       console.group('init instances');
@@ -121,6 +131,7 @@ export class FxModel extends HTMLElement {
         }),
       );
     }
+    console.timeEnd('instance-loading');
     this.inited = true;
   }
 
@@ -133,14 +144,16 @@ export class FxModel extends HTMLElement {
    * update action triggering the update cycle
    */
   updateModel() {
+    console.time('updateModel');
     this.rebuild();
     this.recalculate();
     this.revalidate();
+    console.timeEnd('updateModel');
   }
 
   rebuild() {
     console.group('### rebuild');
-
+    console.time('rebuild');
     this.mainGraph = new DepGraph(false);
     this.modelItems = [];
 
@@ -149,6 +162,7 @@ export class FxModel extends HTMLElement {
     binds.forEach(bind => {
       bind.init(this);
     });
+    console.timeEnd('rebuild');
 
     // console.log(`dependencies of a `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}a[1]:required"));
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
@@ -172,6 +186,7 @@ export class FxModel extends HTMLElement {
     console.group('### recalculate');
     console.log('recalculate instances ', this.instances);
 
+    console.time('recalculate');
     const v = this.mainGraph.overallOrder();
     v.forEach(path => {
       const node = this.mainGraph.getNodeData(path);
@@ -198,6 +213,7 @@ export class FxModel extends HTMLElement {
         }
       }
     });
+    console.timeEnd('recalculate');
     console.log(
       `recalculate finished with modelItems ${this.modelItems.length} item(s)`,
       this.modelItems,
@@ -224,6 +240,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     console.group('### revalidate');
 
+    console.time('revalidate');
     let valid = true;
     this.modelItems.forEach(modelItem => {
       // console.log('validating node ', modelItem.node);
@@ -253,6 +270,7 @@ export class FxModel extends HTMLElement {
         }
       }
     });
+    console.timeEnd('revalidate');
     console.log('modelItems after revalidate: ', this.modelItems);
     console.groupEnd();
     return valid;
