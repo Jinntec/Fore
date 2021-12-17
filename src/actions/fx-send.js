@@ -17,7 +17,7 @@ class FxSend extends AbstractAction {
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
-    console.log('connectedCallback ', this);
+    // console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');
   }
 

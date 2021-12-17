@@ -90,7 +90,7 @@ export class FxInsert extends AbstractAction {
 
     // @ts-ignore
     const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    console.log('insert nodeset ', targetSequence);
+    // console.log('insert nodeset ', targetSequence);
 
     // ### obtaining originSequence
     /*
@@ -118,7 +118,7 @@ export class FxInsert extends AbstractAction {
     let index;
 
     const idx = this._getInsertIndex(inscope, targetSequence);
-    console.log('insert index', idx);
+    // console.log('insert index', idx);
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
     if (targetSequence.length === 0) {
@@ -151,7 +151,7 @@ export class FxInsert extends AbstractAction {
 
         insertLocationNode = targetSequence;
         const context = evaluateXPath('count(preceding::*)', targetSequence, this.getOwnerForm());
-        console.log('context', context);
+        // console.log('context', context);
         index = context + 1;
         // index = targetSequence.findIndex(insertLocationNode);
       }
@@ -171,10 +171,10 @@ export class FxInsert extends AbstractAction {
 
     // console.log('insert context item ', insertLocationNode);
     // console.log('parent ', insertLocationNode.parentNode);
-    console.log('instance ', this.getModel().getDefaultContext());
+    // console.log('instance ', this.getModel().getDefaultContext());
 
-    console.log('<<<<<<< at', this.at);
-    console.log('<<<<<<< index', index);
+    // console.log('<<<<<<< at', this.at);
+    // console.log('<<<<<<< index', index);
     // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
       new CustomEvent('insert', {
