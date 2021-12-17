@@ -65,7 +65,7 @@
 
     <main>
         <!-- begin section general -->
-        <section refresh-on-view>
+        <section>
             <h2>Name in Context</h2>
             <!-- Name forms: form[@type='lemma'] -->
             <fx-group id="general" ref="//entry/form[@type='lemma']" class="col-2">
@@ -172,7 +172,7 @@
         <!-- // end section general -->
 
         <!-- begin section dialects -->
-        <section  refresh-on-view>
+        <section >
             <fx-group ref="//entry/gramGrp[@type='classification']">
                 <details id="dialects">
                     <summary>
@@ -189,7 +189,7 @@
                     </fx-trigger>
                     <fx-repeat ref="usg[@type='lang']" id="r-dialect" class="repeat-col-3">
                         <template>
-                            <fx-control class="tp-input -form-control"
+                            <fx-control class="breaking-label"
                                         ref=".">
                                 <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                 <select ref="instance('i-dialects')//category" class="widget">
@@ -198,7 +198,7 @@
                                     </template>
                                 </select>
                             </fx-control>
-                            <fx-control ref="@cert">
+                            <fx-control ref="@cert" class="breaking-label">
                                 <label class="tp-label">(Check if uncertain)</label>
                                 <fx-items ref="instance('i-cert')//option" class="widget">
                                     <template>
@@ -223,7 +223,7 @@
         <!-- // end section dialects -->
 
         <!-- begin section name variants -->
-        <section  refresh-on-view>
+        <section >
             <fx-group>
                 <details>
                     <summary>
@@ -241,7 +241,7 @@
                         <template>
 <!--                            <fx-group ref=".">-->
 <!--                                <div class="c1">-->
-                                    <fx-control ref="@cert" class="one-col">
+                                    <fx-control ref="@cert" class="one-col breaking-label">
                                         <label>Linking of the form
                                             is uncertain</label>
                                         <fx-items ref="instance('i-cert')//option" class="widget">
@@ -284,9 +284,8 @@
                                         </select>
                                     </fx-control>
 <!--                                </div>-->
-<!--
-                                <div class="col-2">
-                                    <fx-control ref="usg">
+<!--                                <div class="col-2">-->
+                                    <fx-control ref="usg" class="one-col">
                                         <label
                                                 class="tp-label">Dialectal/Areal/Bilingual</label>
                                         <select ref="instance('i-dialects')//category" class="widget">
@@ -295,7 +294,7 @@
                                             </template>
                                         </select>
                                     </fx-control>
-                                    <fx-control ref="usg/@cert">
+                                    <fx-control ref="usg/@cert" class="one-col">
                                         <label class="tp-label">Dialect is
                                             uncertain</label>
                                         <fx-items ref="instance('i-cert')//option" class="widget">
@@ -308,8 +307,7 @@
                                             </template>
                                         </fx-items>
                                     </fx-control>
-                                </div>
--->
+<!--                                </div>-->
                                 <fx-trigger>
                                     <button>delete</button>
                                     <fx-delete
@@ -324,7 +322,7 @@
         <!-- // end section name variants -->
 
         <!-- begin section segmentation -->
-        <section class="tp-section"  refresh-on-view>
+        <section class="tp-section" >
                 <h2>Segmentation and Semantics ({count(instance('default')//gramGrp[@type='segmentation'])})</h2>
                     <section class="form-horizontal">
                     <fx-group ref="//entry">
@@ -1129,7 +1127,8 @@
     </div>
 </paper-dialog>
 <!-- Modal Dialog -->
-<script type="module" src="../../dist/fore-ling.js"></script>
+<!--<script type="module" src="../../dist/fore-ling.js"></script>-->
+<script type="module" src="../../index.js"></script>
 <script type="module" src="./ling.js"></script>
 </body>
 </html>

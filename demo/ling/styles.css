@@ -37,7 +37,7 @@ details summary h3{
 
 fx-control{
     display: grid;
-    grid-template-columns: 160px auto;
+    grid-template-columns: 30% auto;
 }
 fx-control label{
     margin-right:1rem;
@@ -50,6 +50,7 @@ fx-control select{
 }
 .breaking-label > label{
     display: block;
+    margin:0;
 }
 
 fx-group{
@@ -69,7 +70,7 @@ fx-repeatitem{
     /*filter: opacity(0.5);*/
 
     display: block;
-    padding:2px;
+    padding:0.5rem;
     margin:0.5rem 0;
 }
 fx-repeatitem[repeat-index]{
@@ -146,14 +147,16 @@ main, header{
 #r-nameVariant fx-repeatitem .one-col{
     grid-column-start: 1;
     grid-column-end: 5;
-    display: block;
+    /*display: block;*/
 }
 .one-col.fx-control{
     display: flex;
 }
+/*
 .one-col label{
     display: inline-block;
 }
+*/
 #r-nameVariant fx-repeatitem .col-one{
     /*
     grid-column-start: 1;
