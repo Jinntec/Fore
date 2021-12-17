@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore Explorer</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+        <link href="../resources/vars.css" rel="stylesheet">
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+        body, fx-fore{
+            border:0;
+            margin:0;
+            padding:0;
+        }
+        .mvc {
+            width: 100%;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--paper-blue-grey-300);
+            /*animation: move-center 2s forwards;*/
+/*
+            left:50%;
+            transform: translateX(-50%);
+*/
+            top:0;
+        }
+        .circle::before{
+            content:attr(label);
+            position: absolute;
+            z-index: 1;
+            font-size: 2rem;
+            transition: 0.3s all;
+        }
+        .circle.part{
+            left:50%;
+            border:thin solid;
+            transform: translateX(-50%);
+            top:100px;
+            opacity: 0;
+            background: var(--paper-blue-grey-300);;
+        }
+        .circle.fore{
+            /*animation: move-down 2s forwards;*/
+            width: 400px;
+            height: 400px;
+            margin:0 auto;
+            left:50%;
+            transform: translateX(-50%);
+            /*animation: grow 2s forwards ;*/
+            transition: all 1s;
+            /*opacity: 1;*/
+            opacity: 1;
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+
+            /*left: 0;*/
+            /*transform:calc(translateX(-50%) -200px);*/
+
+        }
+        .circle.fore:hover{
+            /*animation: grow 2s forwards alternate;*/
+            width: 800px;
+            transition: all 1s;
+            height: 800px;
+            /*opacity: 0.5;*/
+            background: white;
+
+        }
+        .circle.fore:hover img{
+            opacity: 0;
+        }
+        .circle.fore:hover .circle.part{
+            /*animation: grow-in 2s;*/
+            opacity: 0.5;
+            /*top:100px;*/
+            z-index: 2;
+
+
+        }
+        .circle.fore:hover .circle.part:hover{
+            /*animation: grow-in 2s;*/
+            opacity: 1;
+            background: var(--paper-blue-grey-500);;
+            color: white;
+        }
+
+        .circle.fore::before{
+            font-size: 5rem;
+        }
+        .circle.fore img{
+            width: 100%;
+            transform: skew(15deg);
+        }
+        .circle.model{
+            transition: all 1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .circle.model:hover{
+            /*animation-delay:1s;*/
+            width: 400px;
+            height: 400px;
+            transition: all 1s;
+            align-items: start;
+            padding: 5rem;
+
+        }
+        .circle.model:hover .model-part{
+            border-radius: 10px;
+            transition: all 1s;
+            height: 60px;
+        }
+        .circle.model:hover ~ .part{
+            display: none;
+        }
+        /*
+                .circle.model:hover .model-part:nth-child(1){
+                    margin-top: 50px;
+                }
+                .circle.model:hover .model-part:nth-child(2){
+                    margin-top: 100px;
+
+                }
+                .circle.model:hover .model-part:nth-child(3){
+                    margin-top: 150px;
+
+                }
+        */
+
+
+        .circle.ui{
+            animation-delay:2s;
+            left:75%;
+            top:50%;
+        }
+        .circle.action{
+            animation-delay:3s;
+            left:25%;
+            top:50%;
+        }
+
+        .model-part{
+            opacity: 0;
+        }
+
+        @keyframes grow {
+            0% {
+                width:400px;
+                height: 400px;
+            }
+            100%{
+                width:800px;
+                height: 800px;
+
+            }
+        }
+        @keyframes grow-in {
+            0% {
+                transform: scale(0) translateX(-50%);
+            }
+            100%{
+
+                transform: scale(1);
+            }
+        }
+        @keyframes move-center {
+            0% {
+                transform: translateX(0);
+            }
+            100%{
+                transform: translateX(50vw);
+            }
+        }
+        @keyframes move-down {
+            0% {
+                transform: translateY(-500px) translateX(-50%);
+            }
+            100%{
+                transform: translateY(0)  translateX(-50%);
+
+            }
+        }
+        @keyframes border {
+            0% {
+                box-shadow: 60px -60px 0 2px @color, -60px -60px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #E94E3D;
+            }
+            25% {
+                box-shadow: 0 -125px 0 2px @color, -60px -60px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+            }
+            50% {
+                box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, -60px 60px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+            }
+            75% {
+                box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, 0px 125px 0 2px @color, 60px 60px 0 2px @color, 0 0 0 2px #fff;
+            }
+            100% {
+                box-shadow: 0 -125px 0 2px @color, -125px 0px 0 2px @color, 0px 125px 0 2px @color, 120px 40px 0 2px @color, 0 0 0 2px #fff;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+</div>
+<fx-fore>
+    <fx-model>
+        <fx-instance></fx-instance>
+    </fx-model>
+    <div class="mvc">
+        <div class="circle fore">
+            <img src="../resources/images/light7.png">
+            <div class="circle part model" label="Model">
+                <div class="model-part">Instance</div>
+                <div class="model-part">Bind</div>
+                <div class="model-part">Submission</div>
+            </div>
+            <div class="circle part ui" label="UI">
+
+            </div>
+            <div class="circle part action" label="Action">
+
+            </div>
+        </div>
+    </div>
+</fx-fore>
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>
