@@ -47,7 +47,7 @@ export class FxFore extends HTMLElement {
 
     const style = `
             :host {
-                display: block;
+                display: none;
                 height:auto;
                 padding:var(--model-element-padding);
                 font-family:Roboto, sans-serif;
@@ -56,6 +56,14 @@ export class FxFore extends HTMLElement {
             :host ::slotted(fx-model){
                 display:none;
             }
+            :host ::slotted(fx-control){
+              background:red;
+            }
+            :host(.fx-ready){
+                animation: fadein .4s forwards;
+                display:block;
+            }
+
             #modalMessage .dialogActions{
                 text-align:center;
             }
@@ -117,6 +125,14 @@ export class FxFore extends HTMLElement {
             }
             #messageContent{
                 margin-top:40px;
+            }
+            @keyframes fadein {
+              0% {
+                  opacity:0;
+              }
+              100% {
+                  opacity:1;
+              }
             }
         `;
 
@@ -341,7 +357,7 @@ export class FxFore extends HTMLElement {
       return node.value;
     }
     if (node.nodeType === Node.TEXT_NODE) {
-      return node.textContent;
+      return node.textContent.trim();
     }
     return null;
   }
@@ -475,7 +491,8 @@ export class FxFore extends HTMLElement {
 
     }
     await this.refresh();
-
+    // this.style.display='block'
+    this.classList.add('fx-ready')
 
     this.ready = true;
     console.log('### <<<<< dispatching ready >>>>>');

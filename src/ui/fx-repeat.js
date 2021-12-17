@@ -115,15 +115,18 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     });
 
     const style = `
-             .fade-out-bottom {
-                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            }
-            .fade-out-bottom {
-                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            }
-        `;
+      :host{
+        display:none;
+      }
+       .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+      .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+   `;
     const html = `
           <slot name="header"></slot>
           <slot></slot>
@@ -246,6 +249,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     Fore.refreshChildren(this,true);
     // Fore.refreshChildren(this);
     this.setIndex(this.index);
+    this.style.display = 'block';
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
     console.groupEnd();

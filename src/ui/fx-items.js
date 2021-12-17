@@ -64,7 +64,7 @@ export class FxItems extends FxControl {
     }
 
     async updateWidgetValue(){
-        console.log('setting items value');
+        // console.log('setting items value');
 
         const parentBind = this.parentNode.closest('[ref]');
         if(parentBind){
@@ -89,7 +89,7 @@ export class FxItems extends FxControl {
      * @param node
      */
     updateEntry(newEntry, node) {
-        console.log('fx-items updateEntry', this.value);
+        // console.log('fx-items updateEntry', this.value);
         // super.updateEntry(newEntry,node);
 
         // ### danger zone - highly specific - assumes knowledge of the template structure ###

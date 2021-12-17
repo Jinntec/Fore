@@ -137,7 +137,7 @@ export default class FxControl extends XfAbstractControl {
   }
 
   async refresh(force) {
-    console.log('fx-control refresh', this);
+    // console.log('fx-control refresh', this);
     super.refresh();
     // console.log('refresh template', this.template);
     // const {widget} = this;
@@ -184,7 +184,7 @@ export default class FxControl extends XfAbstractControl {
         }
       }
     }
-    Fore.refreshChildren(this,force)
+    Fore.refreshChildren(this,force);
   }
 
   updateEntry(newEntry, node) {

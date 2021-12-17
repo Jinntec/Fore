@@ -38,7 +38,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   refresh(force) {
 
     if(!force && this.hasAttribute('refresh-on-view')) return;
-    console.log('### FxContainer.refresh on : ', this);
+    // console.log('### FxContainer.refresh on : ', this);
 
     if (this.isBound()) {
       this.evalInContext();

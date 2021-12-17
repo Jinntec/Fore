@@ -226,7 +226,7 @@ export const foreElementMixin = superclass =>
         bubbles: true,
         detail,
       });
-      console.log('firing', event);
+      // console.log('firing', event);
       this.dispatchEvent(event);
     }
   };
