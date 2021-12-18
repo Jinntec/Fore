@@ -65,6 +65,7 @@
                     <fruit value="apple">Apple</fruit>
                     <fruit value="orange">Orange</fruit>
                     <fruit value="strawberry">Strawberry</fruit>
+                    <single>val</single>
                 </data>
             </fx-instance>
 
@@ -87,6 +88,17 @@
                     </fx-control>
 
                     <p>Selected value is: {listitem}</p>
+
+                    <fx-control ref="listitem">
+                        <fx-items ref="instance('default')/single" class="widget">
+                            <template>
+                                <span class="fx-checkbox">
+                                    <input id="check" name="fruit" type="checkbox" value="{.}">
+                                    <label>{.}</label>
+                                </span>
+                            </template>
+                        </fx-items>
+                    </fx-control>
 
 <pre>
                 {log('default')}</pre>

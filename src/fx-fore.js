@@ -9,20 +9,30 @@ import { XPathUtil } from './xpath-util';
 /**
  * Main class for Fore.Outermost container element for each Fore application.
  *
- *
- *
  * Root element for Fore. Kicks off initialization and displays messages.
  *
  * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
  *
- * Main responsiblities are initialization of model, update of UI (refresh) and global messaging
+ * Main responsiblities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
+ *
+ *
  *
  * @ts-check
  */
 export class FxFore extends HTMLElement {
   static get properties() {
     return {
+
+      /**
+       * Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being
+       * in viewport.
+       *
+       * this feature is still experimental and should be used with caution and extra testing
+       */
+      lazyRefresh:{
+        type: Boolean
+      },
       model: {
         type: Object,
       },
@@ -32,6 +42,14 @@ export class FxFore extends HTMLElement {
     };
   }
 
+  /**
+   * attaches handlers for
+   *
+   * - `model-construct-done` to trigger the processing of the UI
+   * - `message` - to display a message triggered by an fx-message action
+   * - `error` - to display an error message
+   * - 'compute-exception`  - warn about circular dependencies in graph
+   */
   constructor() {
     super();
     this.model = {};
@@ -159,6 +177,16 @@ export class FxFore extends HTMLElement {
   }
 
   connectedCallback() {
+    this.lazyRefresh = this.hasAttribute('refresh-on-view');
+    if(this.lazyRefresh){
+      const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
+      }
+      this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
+    }
+
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
       console.log('Fore slotchange');
@@ -198,13 +226,19 @@ export class FxFore extends HTMLElement {
         // if(target.hasAttribute('refresh-on-view')){
           target.classList.add('loaded');
         // }
+
+        // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
         if(typeof target.refresh === "function"){
-          target.refresh(true);
+          console.log('refreshing target',target);
+          target.refresh(target,true);
         }else{
+          console.log('refreshing children',target);
           Fore.refreshChildren(target,true);
         }
       }
     });
+    entries[0].target.getOwnerForm().dispatchEvent(new CustomEvent('refresh-done'));
+
     console.timeEnd('refreshLazy');
 
   }
@@ -229,8 +263,11 @@ export class FxFore extends HTMLElement {
     console.group('### refresh');
 
     console.time('refresh');
+
     // ### refresh Fore UI elements
-    Fore.refreshChildren(this,force);
+    console.time('refreshChildren');
+    Fore.refreshChildren(this,true);
+    console.timeEnd('refreshChildren');
 
     // ### refresh template expressions
     this._updateTemplateExpressions();
@@ -362,10 +399,23 @@ export class FxFore extends HTMLElement {
     return null;
   }
 
+  /**
+   * called when `model-construct-done` event is received to
+   * start initing of the UI.
+   *
+   * @private
+   */
   _handleModelConstructDone() {
     this._initUI();
   }
 
+  /**
+   * If there's no instance element found in a fx-model during init it will construct
+   * an instance from UI bindings.
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
   async _lazyCreateInstance() {
     const model = this.querySelector('fx-model');
     if (model.instances.length === 0) {
@@ -464,6 +514,16 @@ export class FxFore extends HTMLElement {
         }
       */
 
+  /**
+   * Start the initialization of the UI by
+   *
+   * 1. checking if a instance needs to be generated
+   * 2. attaching lazy loading intersection observers if `refresh-on-view` attributes are found
+   * 3. doing a full refresh of the UI
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
   async _initUI() {
     console.log('### _initUI()');
 
@@ -475,21 +535,6 @@ export class FxFore extends HTMLElement {
       threshold: 0.3
     }
 
-    // if we got elements with 'refresh-on-view' attribute we attach intersection observers
-    // otherwise use 'standard' refresh
-
-    const lazyUIElements = this.querySelectorAll('[refresh-on-view]');
-    if(lazyUIElements.length !== 0){
-      console.time('intersect');
-      // const observer = new IntersectionObserver(this.handleIntersect, options);
-      this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
-      // observer.observe(this);
-      Array.from(lazyUIElements).forEach((element) => {
-        this.intersectionObserver.observe(element);
-      });
-      console.timeEnd('intersect');
-
-    }
     await this.refresh();
     // this.style.display='block'
     this.classList.add('fx-ready')
@@ -502,6 +547,8 @@ export class FxFore extends HTMLElement {
   }
 
   registerLazyElement(element){
+    console.log('registerLazyElement',element);
+
     if(this.intersectionObserver){
       this.intersectionObserver.observe(element);
     }

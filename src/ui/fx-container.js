@@ -30,6 +30,8 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
             </style>
             ${html}
     `;
+
+    this.getOwnerForm().registerLazyElement(this);
   }
 
   /**

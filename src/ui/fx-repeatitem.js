@@ -58,6 +58,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.shadowRoot.innerHTML = `
             ${html}
         `;
+    this.getOwnerForm().registerLazyElement(this);
   }
 
   disconnectedCallback() {
@@ -78,7 +79,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     return this.getModelItem()[this.index];
   }
 
-  refresh() {
+  refresh(force) {
     // console.log('refresh repeatitem: ',this.nodeset);
     // console.log('refresh repeatitem nodeset: ',this.nodeset);
     this.modelItem = this.getModel().getModelItem(this.nodeset);
@@ -100,7 +101,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     }
 */
 
-    Fore.refreshChildren(this);
+    Fore.refreshChildren(this,force);
   }
 }
 

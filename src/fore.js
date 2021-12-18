@@ -110,11 +110,18 @@ export class Fore {
       if there's an 'refresh-on-view' attribute the element wants to be handled by
       handleIntersect function that calls the refresh of the respective element and
       not the global one.
-
-
        */
-      if(!force && startElement.hasAttribute('refresh-on-view')) return;
+      // if(!force && startElement.hasAttribute('refresh-on-view')) return;
 
+/*  ### attempt with querySelectorAll is even slower than iterating recursively
+
+      const children = startElement.querySelectorAll('[ref]');
+      Array.from(children).forEach(uiElement => {
+        if (Fore.isUiElement(uiElement.nodeName) && typeof uiElement.refresh === 'function') {
+          uiElement.refresh();
+        }
+      });
+*/
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {

@@ -70,7 +70,7 @@ export default class FxControl extends XfAbstractControl {
       this.updateEvent = 'blur'; // needs to be registered too
     }
     this.widget.addEventListener(this.updateEvent, () => {
-      console.log('eventlistener ', this.updateEvent);
+      // console.log('eventlistener ', this.updateEvent);
       this.setValue(this.widget[this.valueProp]);
     });
 
