@@ -13,6 +13,50 @@
     <!--    <link href="../resources/demo.css" rel="stylesheet">-->
 
     <style>
+        .arrow{
+            transform: rotate(270deg);
+            margin-left:-35px;
+            position: absolute;
+        }
+        .arrow span{
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-bottom: 5px solid #F0563A;
+            border-right: 5px solid #F0563A;
+
+            transform: rotate(45deg);
+            margin: -10px;
+            animation: animate 2s;
+        }
+        .arrow.a1{
+            animation-delay: 0.2s;
+            top:0;
+            left:0;
+        }
+        .arrow.a2{
+            animation-delay: 0.4s;
+        }
+        .arrow.a3{
+            animation-delay: 1s;
+        }
+        @keyframes animate {
+            0%{
+                opacity: 0;
+                transform: rotate(45deg) translate(-20px,-20px);
+            }
+            50%{
+                opacity: 1;
+            }
+            75%{
+            }
+            100%{
+                opacity: 0;
+                transform: rotate(45deg) translate(20px,20px);
+                border-bottom: 5px solid #06A8FF;
+                border-right: 5px solid #06A8FF;
+            }
+        }
         body, fx-fore{
             border:0;
             margin:0;
@@ -48,7 +92,7 @@
             content:attr(label);
             position: absolute;
             z-index: 1;
-            font-size: 2rem;
+            font-size: 3rem;
             transition: 0.3s all;
         }
         .circle.part{
@@ -136,6 +180,35 @@
         .circle.model:hover ~ .part{
             display: none;
         }
+
+        .model-part::before{
+            content:attr(label);
+            font-size: 2rem;
+            color: #b2ff59;
+            position: absolute;
+            left: -60px;
+            top:100px;
+            z-index: 3;
+        }
+
+        .instance{
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            display: inline-block;
+            color: black;
+        }
+        .instance.sm{
+            width: 20px;
+            height: 20px;
+        }
+        .instance.xxl{
+            width: 80px;
+            height: 80px;
+        }
+
         /*
                 .circle.model:hover .model-part:nth-child(1){
                     margin-top: 50px;
@@ -163,7 +236,8 @@
         }
 
         .model-part{
-            opacity: 0;
+            /*opacity: 0;*/
+            position: relative;
         }
 
         @keyframes grow {
@@ -234,16 +308,40 @@
         <div class="circle fore">
             <img src="../resources/images/light7.png">
             <div class="circle part model" label="Model">
-                <div class="model-part">Instance</div>
+                <div class="model-part" label="Instances">
+                    Instance
+                    <span style="top:70px;left:-120px;" class="instance xxl">XML</span>
+                        <span style="top:220px;left:-100px;" class="instance xxl">JSON</span>
+                        <span style="left:-50px;top:160px;" class="instance">XML</span>
+                        <span style="left:-90px;top:20px;" class="instance">JSON</span>
+                        <span style="left:20px;top:100px;" class="instance sm">JSON</span>
+                </div>
                 <div class="model-part">Bind</div>
                 <div class="model-part">Submission</div>
+            </div>
+            <div class="arrow a1">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
             <div class="circle part ui" label="UI">
 
             </div>
+            <div class="arrow a2">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
             <div class="circle part action" label="Action">
 
             </div>
+            <div class="arrow a3">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
         </div>
     </div>
 </fx-fore>
