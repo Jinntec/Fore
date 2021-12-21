@@ -74,9 +74,6 @@ export class FxFore extends HTMLElement {
             :host ::slotted(fx-model){
                 display:none;
             }
-            :host ::slotted(fx-control){
-              background:red;
-            }
             :host(.fx-ready){
                 animation: fadein .4s forwards;
                 display:block;
@@ -547,9 +544,9 @@ export class FxFore extends HTMLElement {
   }
 
   registerLazyElement(element){
-    console.log('registerLazyElement',element);
 
     if(this.intersectionObserver){
+      // console.log('registerLazyElement',element);
       this.intersectionObserver.observe(element);
     }
   }
