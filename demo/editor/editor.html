@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <meta charset="utf-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
 
     <title>barebone Fore form</title>
 
 <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
 
-    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../../../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
     <!--    <link href="../resources/demo.css" rel="stylesheet">-->
 
@@ -23,7 +23,6 @@
             /*left:0;*/
             /*top:0;*/
             /*width:200px;*/
-            height:100vh;
             overflow: auto;
         }
         .element-name{
@@ -117,11 +116,13 @@
 <div class="wrapper">
 
     <fx-fore id="editor">
-        <fx-message event="drop" target="fore">got drop</fx-message>
-        <fx-action src="editor/editor.js" event="model-construct-done"></fx-action>
+<!--        <fx-message event="drop" target="fore">got drop</fx-message>-->
+<!--        <fx-action src="editor.js" event="model-construct-done"></fx-action>-->
         <fx-model>
-            <fx-instance id="default" src="editor/template.xml"> </fx-instance>
-            <fx-instance id="elements" src="editor/elements.xml"> </fx-instance>
+            <fx-instance id="default" src="template.xml"></fx-instance>
+
+            <fx-instance id="elements" src="elements.xml"></fx-instance>
+
             <fx-instance id="vars">
                 <data>
                     <current></current>
@@ -136,28 +137,29 @@
 
         </fx-model>
 
-        <fx-group class="elementPanel">
+<!--        <fx-group class="elementPanel">-->
             <h4>Model</h4>
-            <fx-repeat id="elements" ref="instance('elements')/model/*">
+
+            <fx-repeat id="r-elements" ref="instance('elements')/model/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
 
             <h4>UI</h4>
-            <fx-repeat id="elements" ref="instance('elements')/UI/*">
+            <fx-repeat id="r-ui" ref="instance('elements')/UI/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
 
             <h4>Actions</h4>
-            <fx-repeat id="elements" ref="instance('elements')/actions/*">
+            <fx-repeat id="r-actions" ref="instance('elements')/actions/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
-        </fx-group>
+<!--        </fx-group>-->
 
 <!--
         <fx-control ref="instance('vars')/current">
@@ -169,15 +171,18 @@
         </fx-control>
 -->
 
+<!--
 <pre>
 {log('elements')}
 </pre>
+-->
 
     </fx-fore>
 
     <main current>
         <h1>Fore Editor</h1>
 
+<!--
         <fx-fore id="edited">
             <fx-model>
                 <fx-instance draggable="true">
@@ -186,10 +191,11 @@
             </fx-model>
             <fx-group></fx-group>
         </fx-fore>
+-->
     </main>
 </div>
-<script type="module" src="../index.js"></script>
-<script>
+<script type="module" src="../../index.js"></script>
+<!--<script>
     (function () {
         console.log('inited page.....')
         const draggables = document.querySelectorAll('.element-name')
@@ -203,7 +209,7 @@
             });
         });
     })();
-</script>
+</script>-->
 <!--<script src="editor/editor.js"></script>-->
 
 </body>

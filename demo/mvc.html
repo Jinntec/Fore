@@ -17,6 +17,7 @@
             transform: rotate(270deg);
             margin-left:-35px;
             position: absolute;
+            display: none;
         }
         .arrow span{
             display: block;
@@ -189,16 +190,23 @@
             left: -60px;
             top:100px;
             z-index: 3;
+
         }
 
         .instance{
             width: 40px;
             height: 40px;
-            background: white;
+            background: url(../resources/images/data.svg) no-repeat;
             border-radius: 50%;
             position: absolute;
             display: inline-block;
             color: black;
+            border:thin solid;
+            color:white;
+            font-size: 0.8rem;
+        }
+        .instance *{
+            display: none;
         }
         .instance.sm{
             width: 20px;
@@ -233,6 +241,13 @@
             animation-delay:3s;
             left:25%;
             top:50%;
+        }
+
+        .line{
+            display: inline-block;
+            border-bottom: thin solid;
+            height: 3;
+
         }
 
         .model-part{
@@ -299,6 +314,7 @@
 </head>
 <body>
 <div class="wrapper">
+
 </div>
 <fx-fore>
     <fx-model>
@@ -308,16 +324,20 @@
         <div class="circle fore">
             <img src="../resources/images/light7.png">
             <div class="circle part model" label="Model">
-                <div class="model-part" label="Instances">
-                    Instance
-                    <span style="top:70px;left:-120px;" class="instance xxl">XML</span>
-                        <span style="top:220px;left:-100px;" class="instance xxl">JSON</span>
-                        <span style="left:-50px;top:160px;" class="instance">XML</span>
-                        <span style="left:-90px;top:20px;" class="instance">JSON</span>
-                        <span style="left:20px;top:100px;" class="instance sm">JSON</span>
+<!--                <div class="model-part" label="Instances">-->
+                <div class="model-part">
+<!--                    Instance-->
+
+<!--                    <span style="top:70px;left:-120px;" class="instance xxl">-->
+                    <span style="top:70px;left:-120px;" class="instance xxl"></span>
+                    <span class="line line1"></span>
+                    <span style="top:220px;left:-100px;" class="instance xxl">JSON</span>
+                    <span style="left:-50px;top:160px;" class="instance">XML</span>
+                    <span style="left:-90px;top:20px;" class="instance">JSON</span>
+                    <span style="left:20px;top:100px;" class="instance sm">JSON</span>
                 </div>
-                <div class="model-part">Bind</div>
-                <div class="model-part">Submission</div>
+                <div class="model-part"></div>
+                <div class="model-part"></div>
             </div>
             <div class="arrow a1">
                 <span></span>
