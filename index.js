@@ -34,3 +34,5 @@ import './src/actions/fx-refresh.js';
 import './src/actions/fx-confirm.js';
 
 import './src/functions/fx-function.js';
+
+// import '@teipublisher/pb-components/src/pb-components-bundle.js';
