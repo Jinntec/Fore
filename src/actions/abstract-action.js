@@ -193,14 +193,16 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       model.recalculate();
       model.revalidate();
       model.parentNode.refresh(true);
-      this._dispatchActionPerformed();
+      this.dispatchActionPerformed();
     }
   }
 
   /**
-   * @private
+   * dispathes action-performed event
+   *
+   * @event action-performed - whenever an action has been run
    */
-  _dispatchActionPerformed() {
+  dispatchActionPerformed() {
     console.log('action-performed ', this);
     this.dispatchEvent(
       new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),

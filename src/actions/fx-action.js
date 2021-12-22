@@ -46,10 +46,11 @@ export class FxAction extends AbstractAction {
         // action.perform();
         action.execute();
       });
-      this.dispatchActionPerformed()
+      this.dispatchActionPerformed();
       // this.needsUpdate = false;
     }
   }
+
 }
 
 window.customElements.define('fx-action', FxAction);
