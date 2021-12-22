@@ -100,6 +100,8 @@ fx-repeatitem[repeat-index]{
 
 }
 
+
+
 h1{
     margin: 3rem 0;
 }
@@ -180,6 +182,31 @@ section fx-group{
     background: #f3f1ee;
     padding: 0.5rem 1rem;
 
+}
+table{
+    width: 100%;
+    border-collapse:separate;
+    border-spacing:1rem;
+}
+table th{
+    text-align: left;
+}
+table .fx-checkbox{
+    display: inline-block;
+    width: 100%;
+}
+table fx-control{
+    white-space: normal;
+}
+table fx-control {
+    width: 100%;
+}
+table td:nth-child(1){
+    vertical-align: top;
+}
+table fx-control input[type=text]{
+    width: 100px;
+    display: inline-block;
 }
 /*
 .tp-form-group-col {

@@ -395,340 +395,241 @@
 
                                     <div class="tp-divider"></div>
 
-                                    <h3>Lexemes</h3>
+<!--                                    <h3>Lexemes</h3>-->
 
-<!--                                    <h3>Preroot</h3>-->
 
                                     <!-- Preroot -->
 <!--
                                     <section class="tp-form-group-col">
                                     </section>
 -->
-                                    <section class="col-2">
-                                        <fx-control ref="m[@type = 'prefix'][@n = 1]" class="breaking-label">
-                                            <label>Preconstituent</label>
-                                        </fx-control>
-                                        <fx-output id="preroot-base-form"
-                                                   ref="m[@type = 'prefix'][@n = 1]/@baseForm"
-                                                   class="breaking-label">
-                                            <label slot="label" class="tp-label">
-                                                Preroot (base form)
-                                                <fx-trigger>
-                                                    <button class="widget">Edit</button>
-                                                    <fx-dispatch name="edit-morpheme" targetid="preroot-base-form">
-                                                        <fx-property name="current"
-                                                                     expr="m[@type = 'prefix'][@n = 1]/@baseForm"/>
-                                                    </fx-dispatch>
-                                                </fx-trigger>
-                                            </label>
-                                            <input type="text" class="widget"/>
-                                            <fx-action event="preroot-changed">
-                                                <fx-setvalue ref="m[@type = 'prefix'][@n = 1]/@baseForm"
-                                                             value="event('preroot')"/>
-                                            </fx-action>
-                                        </fx-output>
+                                    <section>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Preroot</th>
+                                                    <th>Root 1</th>
+                                                    <th>Root 2</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Preconstituent</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type = 'prefix'][@n = 1]">
+                                                        </fx-control>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <fx-output id="preroot-base-form"
+                                                                   ref="m[@type = 'prefix'][@n = 1]/@baseForm"
+                                                                   class="breaking-label">
+                                                            <label slot="label" class="tp-label">
+                                                                Preroot (base form)
+                                                            </label>
+<!--                                                            <input type="text" class="widget"/>-->
+                                                            <fx-action event="preroot-changed">
+                                                                <fx-set value ref="m[@type = 'prefix'][@n = 1]/@baseForm"
+                                                                             value="event('preroot')"/>
+                                                            </fx-action>
+                                                        </fx-output>
+                                                    </td>
+                                                    <td>
+                                                        <fx-trigger>
+                                                            <button class="widget">Edit</button>
+                                                            <fx-dispatch name="edit-morpheme" targetid="preroot-base-form">
+                                                                <fx-property name="current"
+                                                                             expr="m[@type = 'prefix'][@n = 1]/@baseForm"/>
+                                                            </fx-dispatch>
+                                                        </fx-trigger>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Functions</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='prefix'][@n='1']/@function">
+                                                            <fx-items ref="instance('i-functions')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='1']/@function">
+                                                            <fx-items ref="instance('i-functions')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='2']/@function">
+                                                            <fx-items ref="instance('i-functions')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Headedness classification</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='prefix'][@n='1']/@subtype" class="breaking-label">
+                                                            <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='1']/@subtype">
+                                                            <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='2']/@subtype">
+                                                            <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                                <template>
+                                                                    <span class="fx-checkbox">
+                                                                        <input id="check" name="option" type="checkbox"
+                                                                               value="{@xml:id}">
+                                                                        <label>{.}</label>
+                                                                    </span>
+                                                                </template>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Abbreviation marker</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='prefix'][@n='1']/@ana" class="breaking-label">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="Abbr">
+                                                                    <label>Abbr</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='1']/@ana">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="Abbr">
+                                                                    <label>Abbr</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='2']/@ana">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="Abbr">
+                                                                    <label>Abbr</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Class marker</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='prefix'][@n='1']/@cert" class="breaking-label">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="unattested">
+                                                                    <label>*</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='1']/@cert">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="unattested">
+                                                                    <label>*</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control ref="m[@type='radical'][@n='2']/@cert">
+                                                            <fx-items class="widget">
+                                                                <span class="fx-checkbox">
+                                                                    <input id="check" name="option" type="checkbox"
+                                                                           value="unattested">
+                                                                    <label>*</label>
+                                                                </span>
+                                                            </fx-items>
+                                                        </fx-control>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Linked compound</td>
+                                                    <td>
+                                                        <fx-control ref="m[@type = 'prefix'][@n = 1]/@corresp"
+                                                                    class="breaking-label">
+                                                            <fx-hint>e.g. linked compound</fx-hint>
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control class="tp-input -form-control"
+                                                                    ref="m[@type = 'radical'][@n = 1]/@corresp">
+<!--                                                            <fx-hint>e.g. linked compound</fx-hint>-->
+                                                        </fx-control>
+                                                    </td>
+                                                    <td>
+                                                        <fx-control class="tp-input -form-control"
+                                                                    ref="m[@type = 'radical'][@n = 2]/@corresp">
+<!--                                                            <fx-hint>e.g. linked compound</fx-hint>-->
+                                                        </fx-control>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </section>
-
-                                    <!-- Preroot functions -->
-                                    <section class="col-1">
-                                        <fx-control ref="m[@type='prefix'][@n='1']/@function">
-                                            <label class="tp-label">Functions (preroot)</label>
-                                            <fx-items ref="instance('i-functions')//option" class="widget">
-                                                <template>
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="{@xml:id}">
-                                                        <label>{.}</label>
-                                                    </span>
-                                                </template>
-                                            </fx-items>
-                                        </fx-control>
-                                    </section>
-                                    <section class="col-4">
-                                        <fx-control ref="m[@type='prefix'][@n='1']/@subtype" class="breaking-label">
-                                            <label class="tp-label">Headedness classification</label>
-                                            <fx-items ref="instance('i-headedness')//option" class="widget">
-                                                <template>
-                                                        <span class="fx-checkbox">
-                                                            <input id="check" name="option" type="checkbox"
-                                                                   value="{@xml:id}">
-                                                            <label>{.}</label>
-                                                        </span>
-                                                </template>
-                                            </fx-items>
-                                        </fx-control>
-                                        <fx-control ref="m[@type='prefix'][@n='1']/@ana" class="breaking-label">
-                                            <label class="tp-label">Abbreviation marker</label>
-                                            <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="Abbr">
-                                                        <label>Abbr</label>
-                                                    </span>
-                                            </fx-items>
-                                        </fx-control>
-                                        <fx-control ref="m[@type='prefix'][@n='1']/@cert" class="breaking-label">
-                                            <label class="tp-label">Class marker</label>
-                                            <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="unattested">
-                                                        <label>*</label>
-                                                    </span>
-                                            </fx-items>
-                                        </fx-control>
-
-                                        <fx-control ref="m[@type = 'prefix'][@n = 1]/@corresp"
-                                                    class="breaking-label">
-                                            <label class="tp-label">Linked compound</label>
-                                            <fx-hint>e.g. linked compound</fx-hint>
-                                        </fx-control>
-
-                                    </section>
-
-                                    <!-- Preroot rest: headedness etc -->
-<!--
-                                    <section class="tp-row">
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='prefix'][@n='1']/@subtype">
-                                                <label class="tp-label">Headedness classification</label>
-                                                <fx-items ref="instance('i-headedness')//option" class="widget">
-                                                    <template>
-                                                        <span class="fx-checkbox">
-                                                            <input id="check" name="option" type="checkbox"
-                                                                   value="{@xml:id}">
-                                                            <label>{.}</label>
-                                                        </span>
-                                                    </template>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='prefix'][@n='1']/@ana">
-                                                <label class="tp-label">Abbreviation marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="Abbr">
-                                                        <label>Abbr</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='prefix'][@n='1']/@cert">
-                                                <label class="tp-label">Class marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="unattested">
-                                                        <label>*</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control class="tp-input -form-control"
-                                                        ref="m[@type = 'prefix'][@n = 1]/@corresp">
-                                                <label class="tp-label">Linked compound</label>
-                                                <fx-hint>e.g. linked compound</fx-hint>
-                                            </fx-control>
-                                        </div>
-                                    </section>
--->
-                                    <!-- End Preroot -->
-
-                                    <hr/>
-
-                                    <!-- Root 1 -->
-                                    <h3>Root 1</h3>
-
-                                    <section class="tp-form-group-col">
-                                        <fx-control ref="m[@type = 'radical'][@n = 1]">
-                                            <label class="tp-label">Constituent 1</label>
-                                        </fx-control>
-                                    </section>
-                                    <section class="tp-form-group-col">
-                                        <label class="tp-label">Root 1 (base form)</label>
-                                        <fx-output id="root1-base-form"
-                                                   ref="m[@type = 'radical'][@n = 1]/@baseForm">
-                                            <input type="text" class="widget"/>
-                                            <fx-action event="preroot-changed">
-                                                <fx-setvalue ref="m[@type = 'radical'][@n = 1]/@baseForm"
-                                                             value="event('preroot')"/>
-                                            </fx-action>
-                                        </fx-output>
-                                        <fx-trigger>
-                                            <button class="widget">Edit</button>
-                                            <fx-dispatch name="edit-morpheme" targetid="root1-base-form">
-                                                <fx-property name="current"
-                                                             expr="m[@type = 'radical'][@n = 1]/@baseForm"/>
-                                            </fx-dispatch>
-                                        </fx-trigger>
-                                    </section>
-
-                                    <!-- Root 1 functions -->
-                                    <section class="tp-row tp-row-input-group">
-                                        <fx-control ref="m[@type='radical'][@n='1']/@function">
-                                            <label class="tp-label">Functions 1</label>
-                                            <fx-items ref="instance('i-functions')//option" class="widget">
-                                                <template>
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="{@xml:id}">
-                                                        <label>{.}</label>
-                                                    </span>
-                                                </template>
-                                            </fx-items>
-                                        </fx-control>
-                                    </section>
-
-                                    <!-- Root 1 rest: headedness etc -->
-                                    <section class="tp-row">
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='1']/@subtype">
-                                                <label class="tp-label">Headedness classification</label>
-                                                <fx-items ref="instance('i-headedness')//option" class="widget">
-                                                    <template>
-                                                        <span class="fx-checkbox">
-                                                            <input id="check" name="option" type="checkbox"
-                                                                   value="{@xml:id}">
-                                                            <label>{.}</label>
-                                                        </span>
-                                                    </template>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='1']/@ana">
-                                                <label class="tp-label">Abbreviation marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="Abbr">
-                                                        <label>Abbr</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='1']/@cert">
-                                                <label class="tp-label">Class marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="unattested">
-                                                        <label>*</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control class="tp-input -form-control"
-                                                        ref="m[@type = 'radical'][@n = 1]/@corresp">
-                                                <label class="tp-label">Linked compound</label>
-                                                <fx-hint>e.g. linked compound</fx-hint>
-                                            </fx-control>
-                                        </div>
-                                    </section>
-                                    <!-- End Root 1 -->
-
-
-                                    <hr/>
-
-                                    <!-- Root 2 -->
-                                    <h3>Root 2</h3>
-                                    <section class="tp-form-group-col">
-                                        <fx-control ref="m[@type = 'radical'][@n = 2]">
-                                            <label class="tp-label">Constituent 2</label>
-                                        </fx-control>
-                                    </section>
-                                    <section class="tp-form-group-col">
-                                        <label class="tp-label">Root 2 (base form)</label>
-                                        <fx-output id="root2-base-form"
-                                                   ref="m[@type = 'radical'][@n = 2]/@baseForm">
-                                            <input type="text" class="widget"/>
-                                            <fx-action event="preroot-changed">
-                                                <fx-setvalue ref="m[@type = 'radical'][@n = 2]/@baseForm"
-                                                             value="event('preroot')"/>
-                                            </fx-action>
-                                        </fx-output>
-                                        <fx-trigger>
-                                            <button class="widget">Edit</button>
-                                            <fx-dispatch name="edit-morpheme" targetid="root2-base-form">
-                                                <fx-property name="current"
-                                                             expr="m[@type = 'radical'][@n = 2]/@baseForm"/>
-                                            </fx-dispatch>
-                                        </fx-trigger>
-                                    </section>
-
-                                    <!-- Root 2 functions -->
-                                    <section class="tp-row tp-row-input-group">
-                                        <fx-control ref="m[@type='radical'][@n='2']/@function">
-                                            <label class="tp-label">Functions 2</label>
-                                            <fx-items ref="instance('i-functions')//option" class="widget">
-                                                <template>
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="{@xml:id}">
-                                                        <label>{.}</label>
-                                                    </span>
-                                                </template>
-                                            </fx-items>
-                                        </fx-control>
-                                    </section>
-
-                                    <!-- Root 2 rest: headedness etc -->
-                                    <section class="tp-row">
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='2']/@subtype">
-                                                <label class="tp-label">Headedness classification</label>
-                                                <fx-items ref="instance('i-headedness')//option" class="widget">
-                                                    <template>
-                                                        <span class="fx-checkbox">
-                                                            <input id="check" name="option" type="checkbox"
-                                                                   value="{@xml:id}">
-                                                            <label>{.}</label>
-                                                        </span>
-                                                    </template>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='2']/@ana">
-                                                <label class="tp-label">Abbreviation marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="Abbr">
-                                                        <label>Abbr</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control ref="m[@type='radical'][@n='2']/@cert">
-                                                <label class="tp-label">Class marker</label>
-                                                <fx-items class="widget">
-                                                    <span class="fx-checkbox">
-                                                        <input id="check" name="option" type="checkbox"
-                                                               value="unattested">
-                                                        <label>*</label>
-                                                    </span>
-                                                </fx-items>
-                                            </fx-control>
-                                        </div>
-                                        <div class="tp-column-3">
-                                            <fx-control class="tp-input -form-control"
-                                                        ref="m[@type = 'radical'][@n = 2]/@corresp">
-                                                <label class="tp-label">Linked compound</label>
-                                                <fx-hint>e.g. linked compound</fx-hint>
-                                            </fx-control>
-                                        </div>
-                                    </section>
-                                    <!-- End Root 2 -->
-
-                                    <hr/>
 
                                     <h4>Suffixes</h4>
                                     <!-- Suffixes -->
