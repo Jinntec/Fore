@@ -183,6 +183,14 @@ section fx-group{
     padding: 0.5rem 1rem;
 
 }
+.suffixes{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-gap:0.5rem;
+}
+.suffixes select{
+    width: 130px;
+}
 table{
     width: 100%;
     border-collapse:separate;
