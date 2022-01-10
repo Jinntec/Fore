@@ -28,12 +28,12 @@ describe('control tests', () => {
         </fx-model>
 
         <fx-control id="input1" label="A-label" ref="a">
-          <fx-alert>Constraint not valid</fx-alert>
+          <fx-alert id="alert1">Constraint not valid</fx-alert>
           <fx-hint>must be one character long</fx-hint>
         </fx-control>
 
         <fx-control id="input2" label="B-label" ref="b">
-          <fx-alert id="alert1">Constraint not valid</fx-alert>
+          <fx-alert id="alert2">Constraint not valid</fx-alert>
           <fx-hint>must be one character long</fx-hint>
         </fx-control>
       </fx-fore>
@@ -54,9 +54,10 @@ describe('control tests', () => {
 
     const input2 = document.getElementById('input2');
     const alert2 = input2.firstElementChild;
-    console.log('alert 21 ', alert2);
-    expect(alert1).to.exist;
-    expect(alert2.getAttribute('style')).to.equal('display: none;');
+    console.log('alert 2 ', alert2);
+    expect(alert2).to.exist;
+
+    expect(window.getComputedStyle(alert2, null).display).to.equal('none');
   });
 
   it('keeps on displaying alert as long as modelItem is invalid', async () => {
@@ -139,7 +140,8 @@ describe('control tests', () => {
     expect(input.getWidget().value).to.equal('Aa');
 
     expect(alert1).to.exist;
-    expect(alert1.style.display).to.equal('none');
+    expect(window.getComputedStyle(alert1, null).display).to.equal('none');
+
   });
 
   it('has a control child with value "A"', async () => {
