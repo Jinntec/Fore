@@ -17,6 +17,7 @@ import './src/ui/fx-repeat.js';
 import './src/ui/fx-switch.js';
 import './src/ui/fx-trigger.js';
 import './src/ui/fx-case.js';
+import './src/ui/fx-inspector.js';
 // import './src/ui/fx-checkbox-group.js';
 import './src/ui/fx-items.js';
 
