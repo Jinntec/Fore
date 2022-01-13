@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString, evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -58,16 +58,16 @@ export class FxOutput extends XfAbstractControl {
 
   async refresh() {
     // ### 1. eval 'value' attr
-    // await super.refresh();
+    await super.refresh();
 
+    // ### 2. eval 'ref' attr
+    if (this.ref) {
+      super.refresh();
+    }
     if (this.valueAttr) {
       this.value = this.getValue();
       await this.updateWidgetValue();
       return;
-    }
-    // ### 2. eval 'ref' attr
-    if (this.ref) {
-      super.refresh();
     }
     // ### 3. use inline content which is there anyway
   }
@@ -79,7 +79,12 @@ export class FxOutput extends XfAbstractControl {
       if (this.hasAttribute('html')) {
         return evaluateXPath(this.valueAttr, inscopeContext, this);
       }
-      return evaluateXPathToString(this.valueAttr, inscopeContext, this);
+      // return evaluateXPathToString(this.valueAttr, inscopeContext, this);
+      if(this.isBound()){
+        return evaluateXPathToFirstNode(this.valueAttr, this.nodeset, this).textContent;
+      }
+
+      return evaluateXPathToFirstNode(this.valueAttr, inscopeContext, this).textContent;
     } catch (error) {
       console.error(error);
       this.dispatch('error', { message: error });

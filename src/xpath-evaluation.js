@@ -10,6 +10,7 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
+import {XPathUtil} from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -26,6 +27,84 @@ function setCachedNamespaceResolver(xpath, node, resolver) {
     return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
   }
   return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+}
+function buildTree(tree, data) {
+  if (!data) return;
+  if (data.nodeType === Node.ELEMENT_NODE) {
+    if (data.children) {
+      const details = document.createElement('details');
+      details.setAttribute('data-path', data.nodeName);
+      const summary = document.createElement('summary');
+
+      let display = ` <${data.nodeName}`;
+      Array.from(data.attributes).forEach(attr => {
+        display += ` ${attr.nodeName}="${attr.nodeValue}"`;
+      });
+
+      let contents;
+      if (
+          data.firstChild &&
+          data.firstChild.nodeType === Node.TEXT_NODE &&
+          data.firstChild.data.trim() !== ''
+      ) {
+        // console.log('whoooooooooopp');
+        contents = data.firstChild.nodeValue;
+        display += `>${contents}</${data.nodeName}>`;
+      } else {
+        display += '>';
+      }
+      summary.textContent = display;
+
+      details.appendChild(summary);
+      if (data.childElementCount !== 0) {
+        details.setAttribute('open', 'open');
+      } else {
+        summary.setAttribute('style', 'list-style:none;');
+      }
+      tree.appendChild(details);
+
+      Array.from(data.children).forEach(child => {
+        // if(child.nodeType === Node.ELEMENT_NODE){
+        // child.parentNode.appendChild(buildTree(child));
+        buildTree(details, child);
+        // }
+      });
+    }
+  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
+        //create span for now
+        // const span = document.createElement('span');
+        // span.style.background = 'grey';
+        // span.textContent = data.value;
+        // tree.appendChild(span);
+        tree.setAttribute(data.nodeName,data.value);
+    }else {
+        tree.textContent = data;
+    } */
+
+  // return tree;
+}
+
+function prettifyXml (source){
+  const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString([
+    // describes how we want to modify the XML - indent everything
+    '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+    '  <xsl:strip-space elements="*"/>',
+    '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+    '    <xsl:value-of select="normalize-space(.)"/>',
+    '  </xsl:template>',
+    '  <xsl:template match="node()|@*">',
+    '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+    '  </xsl:template>',
+    '  <xsl:output indent="yes"/>',
+    '</xsl:stylesheet>',
+  ].join('\n'), 'application/xml');
+
+  const xsltProcessor = new XSLTProcessor();
+  xsltProcessor.importStylesheet(xsltDoc);
+  const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+  const resultXml = new XMLSerializer().serializeToString(resultDoc);
+  return resultXml;
 }
 
 const xhtmlNamespaceResolver = prefix => {
@@ -170,6 +249,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
     // TODO: put the full XForms library functions set here
     case 'base64encode':
     case 'boolean-from-string':
+    case 'context':
     case 'current':
     case 'depends':
     case 'event':
@@ -459,6 +539,27 @@ export function resolveId(id, sourceObject, nodeName = null) {
   return null;
 }
 
+
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
+    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+    [],
+    'item()?',
+    (dynamicContext, string) => {
+      const caller = dynamicContext.currentContext;
+      const parent = XPathUtil.getParentBindingElement(caller);
+      // const instance = resolveId('default', caller, 'fx-instance');
+      const p = caller.nodeName;
+      // const p = dynamicContext.domFacade.getParentElement();
+
+      if(parent) return parent;
+      return XPathUtil.getDefaultInstance(caller);
+    },
+);
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -471,68 +572,19 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
     const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
-      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-      return def;
+
+      if(instance.getAttribute('type') === 'json'){
+        console.warn('log() does not work for JSON yet');
+        // return JSON.stringify(instance.getDefaultContext());
+      }else {
+        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+        return prettifyXml(def);
+      }
     }
     return null;
   },
 );
 
-function buildTree(tree, data) {
-  if (!data) return;
-  if (data.nodeType === Node.ELEMENT_NODE) {
-    if (data.children) {
-      const details = document.createElement('details');
-      details.setAttribute('data-path', data.nodeName);
-      const summary = document.createElement('summary');
-
-      let display = ` <${data.nodeName}`;
-      Array.from(data.attributes).forEach(attr => {
-        display += ` ${attr.nodeName}="${attr.nodeValue}"`;
-      });
-
-      let contents;
-      if (
-        data.firstChild &&
-        data.firstChild.nodeType === Node.TEXT_NODE &&
-        data.firstChild.data.trim() !== ''
-      ) {
-        // console.log('whoooooooooopp');
-        contents = data.firstChild.nodeValue;
-        display += `>${contents}</${data.nodeName}>`;
-      } else {
-        display += '>';
-      }
-      summary.textContent = display;
-
-      details.appendChild(summary);
-      if (data.childElementCount !== 0) {
-        details.setAttribute('open', 'open');
-      } else {
-        summary.setAttribute('style', 'list-style:none;');
-      }
-      tree.appendChild(details);
-
-      Array.from(data.children).forEach(child => {
-        // if(child.nodeType === Node.ELEMENT_NODE){
-        // child.parentNode.appendChild(buildTree(child));
-        buildTree(details, child);
-        // }
-      });
-    }
-  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
-        //create span for now
-        // const span = document.createElement('span');
-        // span.style.background = 'grey';
-        // span.textContent = data.value;
-        // tree.appendChild(span);
-        tree.setAttribute(data.nodeName,data.value);
-    }else {
-        tree.textContent = data;
-    } */
-
-  // return tree;
-}
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree' },

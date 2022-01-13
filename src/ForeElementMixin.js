@@ -92,7 +92,7 @@ export const foreElementMixin = superclass =>
       // const inscopeContext = this.getInScopeContext();
       const inscopeContext = getInScopeContext(this, this.ref);
       if (!inscopeContext) {
-        console.warn('no in scopeContext for ', this);
+        console.warn('no inscopeContext for ', this);
         return;
       }
       if (this.ref === '') {
@@ -102,7 +102,7 @@ export const foreElementMixin = superclass =>
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, null);
+            const localResult = evaluateXPathToFirstNode(this.ref, n, this);
             // console.log('local result: ', localResult);
             this.nodeset.push(localResult);
           }
