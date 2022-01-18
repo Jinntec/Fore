@@ -9,15 +9,14 @@ import * as fx from 'fontoxpath';
  */
 
 export class XPathUtil {
-
   static getParentBindingElement(start) {
-/*    if (start.parentNode.host) {
+    /*    if (start.parentNode.host) {
       const { host } = start.parentNode;
       if (host.hasAttribute('ref')) {
         return host;
       }
-    } else*/
-    if (start.parentNode) {
+    } else */
+    if (start.parentNode && start.parentNode.nodeType !== Node.DOCUMENT_NODE) {
       if (start.parentNode.hasAttribute('ref')) {
         return start.parentNode;
       }
@@ -26,12 +25,11 @@ export class XPathUtil {
     return null;
   }
 
-
   static isAbsolutePath(path) {
     return path != null && (path.startsWith('/') || path.startsWith('instance('));
   }
 
-  static isRepeated(element){
+  static isRepeated(element) {
     return element.parentElement.closest('fx-repeatitem');
   }
 
@@ -39,22 +37,22 @@ export class XPathUtil {
     return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
   }
 
-  static getDefaultInstance(boundElement){
+  static getDefaultInstance(boundElement) {
     // const fore = boundElement.closest('fx-fore');
     const fore = XPathUtil.getForeElement(boundElement);
     const defaultInstance = fore.querySelector('fx-instance');
-    if(!defaultInstance){
+    if (!defaultInstance) {
       throw new Error('no default instance present');
     }
     return defaultInstance;
   }
 
-  static getForeElement(start){
-    if(start.nodeName === 'FX-FORE'){
+  static getForeElement(start) {
+    if (start.nodeName === 'FX-FORE') {
       return start;
     }
-    if(start.parentNode){
-      XPathUtil.getForeElement(start.parentNode);
+    if (start.parentNode) {
+      return XPathUtil.getForeElement(start.parentNode);
     }
     throw new Error('no Fore element present');
   }
@@ -70,7 +68,6 @@ export class XPathUtil {
     }
     return 'default';
   }
-
 
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {

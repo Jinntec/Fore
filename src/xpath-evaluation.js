@@ -539,25 +539,24 @@ export function resolveId(id, sourceObject, nodeName = null) {
   return null;
 }
 
-
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
  */
 registerCustomXPathFunction(
-    { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
-    [],
-    'item()?',
-    (dynamicContext, string) => {
-      const caller = dynamicContext.currentContext;
-      const parent = XPathUtil.getParentBindingElement(caller);
-      // const instance = resolveId('default', caller, 'fx-instance');
-      const p = caller.nodeName;
-      // const p = dynamicContext.domFacade.getParentElement();
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  [],
+  'item()?',
+  (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+    const parent = XPathUtil.getParentBindingElement(caller);
+    // const instance = resolveId('default', caller, 'fx-instance');
+    const p = caller.nodeName;
+    // const p = dynamicContext.domFacade.getParentElement();
 
-      if(parent) return parent;
-      return XPathUtil.getDefaultInstance(caller);
-    },
+    if (parent) return parent;
+    return caller.getInScopeContext();
+  },
 );
 
 /**
