@@ -10,7 +10,7 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
-import {XPathUtil} from './xpath-util.js';
+import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -43,9 +43,9 @@ function buildTree(tree, data) {
 
       let contents;
       if (
-          data.firstChild &&
-          data.firstChild.nodeType === Node.TEXT_NODE &&
-          data.firstChild.data.trim() !== ''
+        data.firstChild &&
+        data.firstChild.nodeType === Node.TEXT_NODE &&
+        data.firstChild.data.trim() !== ''
       ) {
         // console.log('whoooooooooopp');
         contents = data.firstChild.nodeValue;
@@ -84,21 +84,24 @@ function buildTree(tree, data) {
   // return tree;
 }
 
-function prettifyXml (source){
+function prettifyXml(source) {
   const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
-  const xsltDoc = new DOMParser().parseFromString([
-    // describes how we want to modify the XML - indent everything
-    '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-    '  <xsl:strip-space elements="*"/>',
-    '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-    '    <xsl:value-of select="normalize-space(.)"/>',
-    '  </xsl:template>',
-    '  <xsl:template match="node()|@*">',
-    '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-    '  </xsl:template>',
-    '  <xsl:output indent="yes"/>',
-    '</xsl:stylesheet>',
-  ].join('\n'), 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString(
+    [
+      // describes how we want to modify the XML - indent everything
+      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+      '  <xsl:strip-space elements="*"/>',
+      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+      '    <xsl:value-of select="normalize-space(.)"/>',
+      '  </xsl:template>',
+      '  <xsl:template match="node()|@*">',
+      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+      '  </xsl:template>',
+      '  <xsl:output indent="yes"/>',
+      '</xsl:stylesheet>',
+    ].join('\n'),
+    'application/xml',
+  );
 
   const xsltProcessor = new XSLTProcessor();
   xsltProcessor.importStylesheet(xsltDoc);
@@ -113,6 +116,9 @@ const xhtmlNamespaceResolver = prefix => {
   }
   return undefined;
 };
+
+// Make namespace resolving use the `instance` element that is related to here
+const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
@@ -133,9 +139,6 @@ function createNamespaceResolver(xpathQuery, formElement) {
   if (cachedResolver) {
     return cachedResolver;
   }
-
-  // Make namespace resolving use the `instance` element that is related to here
-  const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
   const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
   let instanceReferences = fxEvaluateXPathToStrings(
@@ -160,7 +163,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
         ancestorComponent.getAttribute('ref'),
         ancestorComponent,
       );
-      setCachedNamespaceResolver(xpathQuery, formElement);
+      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
       return resolver;
     }
     // Nothing found: let's just assume we're supposed to use the `default` instance
@@ -185,7 +188,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
     }
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-/*
+      /*
       console.log(
         `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
       );
@@ -571,11 +574,10 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
     const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
-
-      if(instance.getAttribute('type') === 'json'){
+      if (instance.getAttribute('type') === 'json') {
         console.warn('log() does not work for JSON yet');
         // return JSON.stringify(instance.getDefaultContext());
-      }else {
+      } else {
         const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
         return prettifyXml(def);
       }
@@ -583,7 +585,6 @@ registerCustomXPathFunction(
     return null;
   },
 );
-
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree' },
