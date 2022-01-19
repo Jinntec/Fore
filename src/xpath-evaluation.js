@@ -609,7 +609,7 @@ registerCustomXPathFunction(
     if (repeat) {
       return repeat.getAttribute('index');
     }
-    return 1;
+    return Number(1);
   },
 );
 
@@ -663,26 +663,26 @@ registerXQueryModule(`
 
 // How to run XQUERY:
 /**
- registerXQueryModule(`
- module namespace my-custom-namespace = "my-custom-uri";
- (:~
- Insert attribute somewhere
- ~:)
- declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
+registerXQueryModule(`
+module namespace my-custom-namespace = "my-custom-uri";
+(:~
+	Insert attribute somewhere
+	~:)
+declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
 	if ($ele/@done) then false() else
 	(insert node
 	attribute done {"true"}
 	into $ele, true())
 };
- `)
- // At some point:
- const contextNode = null;
- const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
+`)
+// At some point:
+const contextNode = null;
+const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
 
- console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
+console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
 
- executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
- */
+executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
+*/
 
 /**
  * @param input as string

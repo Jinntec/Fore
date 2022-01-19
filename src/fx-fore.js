@@ -98,7 +98,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-
+            
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -134,7 +134,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-
+            
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -186,9 +186,7 @@ export class FxFore extends HTMLElement {
 
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      console.log('Fore slotchange');
       const children = event.target.assignedElements();
-      // console.log('Fore children', children);
       let modelElement = children.find(
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );
@@ -273,7 +271,6 @@ export class FxFore extends HTMLElement {
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
-
   }
 
   /**
@@ -290,11 +287,15 @@ export class FxFore extends HTMLElement {
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    // console.log('template expressions found ', tmplExpressions);
+    console.log('template expressions found ', tmplExpressions);
+
+    if (!this.storedTemplateExpressions) {
+      this.storedTemplateExpressions = [];
+    }
 
     /*
-                storing expressions and their nodes for re-evaluation
-             */
+        storing expressions and their nodes for re-evaluation
+         */
     Array.from(tmplExpressions).forEach(node => {
       if (this.storedTemplateExpressionByNode.has(node)) {
         // If the node is already known, do not process it twice
