@@ -1,58 +1,51 @@
 <!-- Copied from https://tdg.docbook.org/tdg/5.2/bibliography.html -->
 <bibliography xmlns="http://docbook.org/ns/docbook">
     <title>A Test Bibliography</title>
-
     <bibliodiv><title>Books</title>
-
         <biblioentry>
             <abbrev>AhoSethiUllman96</abbrev>
             <authorgroup>
-                <author
-                ><personname>
-                    <firstname>Alfred V.</firstname><surname>Aho</surname>
-                </personname></author
-                >
-                <author
-                ><personname>
-                    <firstname>Ravi</firstname><surname>Sethi</surname>
-                </personname></author
-                >
-                <author
-                ><personname>
-                    <firstname>Jeffrey D.</firstname><surname>Ullman</surname>
-                </personname></author
-                >
+                <author>
+                    <personname>
+                        <firstname>Alfred V.</firstname><surname>Aho</surname>
+                    </personname>
+                </author>
+                <author>
+                    <personname>
+                        <firstname>Ravi</firstname><surname>Sethi</surname>
+                    </personname>
+                </author>
+                <author>
+                    <personname>
+                        <firstname>Jeffrey D.</firstname><surname>Ullman</surname>
+                    </personname></author>
             </authorgroup>
-            <copyright
-            ><year>1996</year> <holder>Bell Telephone Laboratories, Inc.</holder></copyright
-            >
-            <editor
-            ><personname>
-                <firstname>James T.</firstname><surname>DeWolf</surname>
-            </personname></editor
-            >
+            <copyright><year>1996</year> <holder>Bell Telephone Laboratories, Inc.</holder></copyright>
+            <editor>
+                <personname>
+                    <firstname>James T.</firstname><surname>DeWolf</surname>
+                </personname>
+            </editor>
             <biblioid class="isbn">0-201-10088-6</biblioid>
             <publisher>
                 <publishername>Addison-Wesley Publishing Company</publishername>
             </publisher>
             <title>Compilers, Principles, Techniques, and Tools</title>
         </biblioentry>
-
         <biblioentry xreflabel="Kites75">
             <authorgroup>
-                <author
-                ><personname>
-                    <firstname>Andrea</firstname><surname>Bahadur</surname>
-                </personname></author
-                >
-                <author
-                ><personname>
-                    <firstname>Mark</firstname><surname>Shwarek</surname>
-                </personname></author
-                >
+                <author>
+                    <personname>
+                        <firstname>Andrea</firstname><surname>Bahadur</surname>
+                    </personname>
+                </author>
+                <author>
+                    <personname>
+                        <firstname>Mark</firstname><surname>Shwarek</surname>
+                    </personname>
+                </author>
             </authorgroup>
-            <copyright
-            ><year>1974</year><year>1975</year>
+            <copyright><year>1974</year><year>1975</year>
                 <holder>Product Development International Holding N. V.</holder>
             </copyright>
             <biblioid class="isbn">0-88459-021-6</biblioid>
@@ -65,7 +58,6 @@
         </biblioentry>
     </bibliodiv>
     <bibliodiv><title>Periodicals</title>
-
         <biblioentry>
             <abbrev>Walsh97</abbrev>
             <biblioset relation="journal">
@@ -74,19 +66,17 @@
                     <publishername>O'Reilly &amp; Associates, Inc.</publishername>
                 </publisher>
                 <biblioid class="issn">1085-2301</biblioid>
-                <editor
-                ><personname>
-                    <firstname>Dan</firstname><surname>Connolly</surname>
-                </personname></editor
-                >
+                <editor>
+                    <personname>
+                        <firstname>Dan</firstname><surname>Connolly</surname>
+                    </personname></editor>
             </biblioset>
             <biblioset relation="article">
                 <title>A Guide to XML</title>
-                <author
-                ><personname>
-                    <surname>Walsh</surname><firstname>Norman</firstname>
-                </personname></author
-                >
+                <author>
+                    <personname>
+                        <surname>Walsh</surname><firstname>Norman</firstname>
+                    </personname></author>
                 <copyright><year>1997</year><holder>ArborText, Inc.</holder></copyright>
                 <pagenums>97-108</pagenums>
             </biblioset>

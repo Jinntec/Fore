@@ -10,6 +10,7 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
+import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -81,7 +82,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
         ancestorComponent.getAttribute('ref'),
         ancestorComponent,
       );
-      setCachedNamespaceResolver(xpathQuery, formElement);
+      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
       return resolver;
     }
     // Nothing found: let's just assume we're supposed to use the `default` instance
@@ -168,6 +169,7 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'context':
     case 'base64encode':
     case 'boolean-from-string':
     case 'current':
@@ -464,6 +466,26 @@ export function resolveId(id, sourceObject, nodeName = null) {
  * @return instance data for given id serialized to string.
  */
 registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  [],
+  'item()?',
+  (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+    const parent = XPathUtil.getParentBindingElement(caller);
+    // const instance = resolveId('default', caller, 'fx-instance');
+    const p = caller.nodeName;
+    // const p = dynamicContext.domFacade.getParentElement();
+
+    if (parent) return parent;
+    return caller.getInScopeContext();
+  },
+);
+
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log' },
   ['xs:string?'],
   'xs:string?',
@@ -471,8 +493,13 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
     const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
+      if (instance.getAttribute('type') === 'json') {
+        console.warn('log() does not work for JSON yet');
+        // return JSON.stringify(instance.getDefaultContext());
+      } else {
       const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-      return def;
+        return prettifyXml(def);
+      }
     }
     return null;
   },
