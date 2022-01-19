@@ -98,6 +98,7 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
+/*
         inscopeContext.forEach(n => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
@@ -107,6 +108,9 @@ export const foreElementMixin = superclass =>
             this.nodeset.push(localResult);
           }
         });
+*/
+        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
+
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
 
