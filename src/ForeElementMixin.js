@@ -102,7 +102,7 @@ export const foreElementMixin = superclass =>
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, null);
+            const localResult = evaluateXPathToFirstNode(this.ref, n, this);
             // console.log('local result: ', localResult);
             this.nodeset.push(localResult);
           }
