@@ -1,3 +1,6 @@
+body{
+    margin-bottom: 33%;
+}
 .add-button{
     position: absolute;
     right:1rem;
@@ -117,6 +120,7 @@ main, header{
     width: 800px;
     margin:0 auto;
     background: white;
+    overflow: auto;
 }
 
 .repeat-header{
