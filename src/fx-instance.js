@@ -168,6 +168,16 @@ export class FxInstance extends HTMLElement {
       .then(response => {
         const responseContentType = response.headers.get('content-type').toLowerCase();
         console.log('********** responseContentType *********', responseContentType);
+        if (responseContentType.startsWith('text/html')) {
+          // const htmlResponse = response.text();
+          // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+          // return response.text();
+          return response.text().then(result => {
+            // console.log('xml ********', result);
+            return new DOMParser().parseFromString(result, 'text/html');
+          });
+
+        }
         if (responseContentType.startsWith('text/plain') || responseContentType.startsWith('text/markdown')) {
           // console.log("********** inside  res plain *********");
           return response.text();
@@ -185,8 +195,12 @@ export class FxInstance extends HTMLElement {
         return 'done';
       })
       .then(data => {
+        if(data.nodeType){
+          this.instanceData = data;
+          console.log('instanceData loaded: ', this.instanceData);
+          return ;
+        }
         this.instanceData = data;
-        console.log('instanceData loaded: ', this.instanceData);
       })
       .catch(error => {
         throw new Error(`failed loading data ${error}`);
