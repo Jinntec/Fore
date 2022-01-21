@@ -10,8 +10,12 @@
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
-
+        .html-out{
+            border:thin solid;
+        }
     </style>
+    <script type="text/javascript" src="../src/drawdown.js"></script>
+
 </head>
 <body>
 <div class="wrapper">
@@ -28,19 +32,50 @@
                             <b>3</b>
                         </data>
                     </fx-instance>
+                    <fx-instance id="html" type="html">
+                        <data>
+                            <h1>fx-action</h1>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="markdown" type="text" src="elements/fx-action.md">
+                        # fx-action
+
+                        ## Description
+
+                        `fx-action` is a container action element that can take other actions
+                        as children and defer their update cycle to the end of the action block.
+
+                        This is useful when you e.g. want to set several values at once without the cost of
+                        each action to be recalculated, revalidated and refreshed.
+
+                        ## Attributes
+
+                        | name | Description |
+                        |------|-------------|
+                        |event | the event name this action is listening to |
+                    </fx-instance>
                 </fx-model>
-<!--
+                <h2>Plain</h2>
+
                 <h2>Outputting a referenced value</h2>
                 <div><fx-output ref="b"></fx-output> ⇒ 2</div>
 
-                <h2>Using the <code>value</code>attribute to evaluate an expression in context</h2>
+                <h3>Using the <code>value</code> attribute to evaluate an expression in context</h3>
                 <div><fx-output value="b"></fx-output> ⇒ 2</div>
 
-                <h2>Using the <code>value</code>attribute to evaluate an expression in context of its <code>ref</code></h2>
+                <h3>Using the <code>value</code> attribute to evaluate an expression in context of its <code>ref</code></h3>
                 <div><fx-output ref="a" value="b"></fx-output> ⇒ 1 </div>
--->
+
+                <h3>Using the <code>context()</code> function to use the parent context</h3>
                  <div><fx-output ref="a" value="context()/b[1]"></fx-output> ⇒ 2 </div>
+
+                <h3>Using <code>value</code> with predicate</h3>
                 <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
+
+                <h2>Mediatypes</h2>
+                <p>HTML taken from an instance</p>
+                <div class="html-out"><fx-output ref="instance('html')" mediatype="html"></fx-output></div>
+
 
             </fx-fore>
         </template>
