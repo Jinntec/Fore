@@ -14,10 +14,33 @@
         <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
-        details{
+        body{
+            margin:0;
+            padding:0;
+            border:0;
         }
-        details.open{
+        details{
+            height: auto;
+        }
+        details[open] summary ~ .details {
+            animation: sweep 0.5s ease-in-out forwards;
+        }
+
+        @keyframes sweep {
+            0%    {opacity: 0; margin-top: -10px}
+            100%  {opacity: 1; margin-top: 0px}
+        }
+
+        details[open]{
             width: 100%;
+            /*transition: height 2s;*/
+            /*
+                        position:fixed;
+                        top:-0.3rem;
+                        left:-0.3rem;
+                        z-index: 5;
+                        overflow: auto;
+            */
         }
         details fx-output{
             background: white;
@@ -81,7 +104,10 @@
         }
         fx-repeatitem{
             /*display: inline-block;*/
-            /*min-width: 33%;*/
+            display: block;
+            /*min-width: 49%;*/
+            width: available;
+            height: fit-content;
         }
 
         .uibtn{
@@ -102,7 +128,7 @@
     <script type="text/javascript" src="../src/drawdown.js"></script>
 </head>
 <body>
-<div class="wrapper">
+<!--<div class="wrapper">-->
 
     <h1>Quick Element Reference</h1>
     <fx-fore>
@@ -130,6 +156,7 @@
                     <element tags="all action" name="fx-message"></element>
                     <element tags="all model" name="fx-model"></element>
                     <element tags="all ui" name="fx-output"></element>
+                    <element tags="all action" name="fx-property"></element>
                     <element tags="all ui" name="fx-repeat"></element>
                     <element tags="all action" name="fx-refresh"></element>
                     <element tags="all action" name="fx-send"></element>
@@ -198,7 +225,7 @@
 
     </fx-fore>
 
-</div>
+<!--</div>-->
 <script type="module" src="../index.js"></script>
 </body>
 </html>
