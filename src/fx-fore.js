@@ -196,7 +196,7 @@ export class FxFore extends HTMLElement {
         modelElement = generatedModel;
       }
       if (!modelElement.inited) {
-        console.log('########## FORE: kick off processing... ##########');
+        console.log(`########## FORE: kick off processing for ... ${window.location.href} ##########`);
         modelElement.modelConstruct();
       }
       this.model = modelElement;

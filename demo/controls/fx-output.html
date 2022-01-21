@@ -6,15 +6,15 @@
 
     <title>The <code>fx-output</code> Element</title>
 
-    <link href="../resources/fore.css" rel="stylesheet">
-    <link href="../resources/demo.css" rel="stylesheet">
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
 
     <style>
         .html-out{
             border:thin solid;
         }
     </style>
-    <script type="text/javascript" src="../src/drawdown.js"></script>
+<!--    <script type="text/javascript" src="../src/drawdown.js"></script>-->
 
 </head>
 <body>
@@ -32,28 +32,15 @@
                             <b>3</b>
                         </data>
                     </fx-instance>
+<!--
                     <fx-instance id="html" type="html">
                         <data>
                             <h1>fx-action</h1>
+                            <p>Some text....</p>
                         </data>
                     </fx-instance>
-                    <fx-instance id="markdown" type="text" src="elements/fx-action.md">
-                        # fx-action
-
-                        ## Description
-
-                        `fx-action` is a container action element that can take other actions
-                        as children and defer their update cycle to the end of the action block.
-
-                        This is useful when you e.g. want to set several values at once without the cost of
-                        each action to be recalculated, revalidated and refreshed.
-
-                        ## Attributes
-
-                        | name | Description |
-                        |------|-------------|
-                        |event | the event name this action is listening to |
-                    </fx-instance>
+-->
+                    <fx-instance id="external" type="html" src="../../doc/actions-overview.html"></fx-instance>
                 </fx-model>
                 <h2>Plain</h2>
 
@@ -74,8 +61,8 @@
 
                 <h2>Mediatypes</h2>
                 <p>HTML taken from an instance</p>
-                <div class="html-out"><fx-output ref="instance('html')" mediatype="html"></fx-output></div>
-
+<!--                <div class="html-out"><fx-output ref="instance('html')" mediatype="html"></fx-output></div>-->
+                <div class="html-out"><fx-output ref="instance('external')//*:body" mediatype="html"></fx-output></div>
 
             </fx-fore>
         </template>
