@@ -189,22 +189,27 @@
         <fx-trigger>
             <button class="all">ALL</button>
             <fx-setvalue ref="tag">all</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="actionbtn">Actions</button>
             <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="commonbtn">Common</button>
             <fx-setvalue ref="tag">common</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="modelbtn">Model</button>
             <fx-setvalue ref="tag">model</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="uibtn">UI</button>
             <fx-setvalue ref="tag">ui</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-repeat id="elements" ref="element[contains(@tags , ../tag)]">
             <template>
