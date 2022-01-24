@@ -20,9 +20,9 @@ Display a message to the user.
 |------|-------------|
 | delay | delay before action is executed in milliseconds. |
 | event | the event name this action is listening to |
-| ifExpr | boolean XPath expression. Action is only executed if this returns true. |
+| if | boolean XPath expression. Action is only executed if this returns true. |
 | target | id reference to element this action attaches to |
-| whileExpr | boolean XPath expression. Action is only executed if `ìfExpr` and `whileExpr` return true. |
+| while | boolean XPath expression. Action is only executed if `ìf` and `while` return true. |
 
 
 ### Examples
