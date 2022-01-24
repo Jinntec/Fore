@@ -175,7 +175,7 @@
                            method="get"
                            url="elements/{instance('default')/current}.md"
                            replace="instance"
-                           into="instance()/element[index('elements')]"></fx-submission>
+                           into="instance()/element[contains(@tags , ../tag)][index('elements')]"></fx-submission>
 
             <fx-function signature="local:markdown($input as xs:string?) as xs:string"
                          type="text/javascript">
@@ -211,8 +211,8 @@
                 <details>
                     <summary class="{@tags}">
                         {@name}
-                        <fx-action event="click">
-                            <fx-setvalue ref="instance('default')/current" value="instance()/element[index('elements')]/@name"></fx-setvalue>
+                        <fx-action event="click" if="string-length(.)=0">
+                            <fx-setvalue ref="instance('default')/current" value="instance()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
                             <fx-send submission="loadMd"></fx-send>
                         </fx-action>
                     </summary>
@@ -222,7 +222,11 @@
                 </details>
             </template>
         </fx-repeat>
-
+<!--
+        <pre>
+            {log('default')}
+        </pre>
+-->
     </fx-fore>
 
 <!--</div>-->
