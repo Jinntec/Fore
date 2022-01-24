@@ -1,5 +1,7 @@
 ## fx-inspector
 
+> experimental !
+
 ### Description
 
 Instance Inspector is a helper element for development which

@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Quick Reference</title>
+    <title>Fore Element Reference</title>
 
 <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
 
@@ -18,6 +18,7 @@
             margin:0;
             padding:0;
             border:0;
+            font-family: sans-serif;
         }
         details{
             height: auto;
@@ -56,7 +57,7 @@
             padding: 1rem;
         }
         summary::after{
-            padding: 0.2rem;
+            padding: 0.2rem 0.4rem;
             border-radius: 0.3rem;
             margin-left: 1rem;
             color: black;
@@ -128,9 +129,9 @@
     <script type="text/javascript" src="../src/drawdown.js"></script>
 </head>
 <body>
-<!--<div class="wrapper">-->
+<div class="wrapper">
 
-    <h1>Quick Element Reference</h1>
+    <h1>Fore Element Reference</h1>
     <fx-fore>
         <fx-model>
             <fx-instance>
@@ -185,7 +186,6 @@
             </fx-function>
         </fx-model>
 
-        <h3>Filter elements/{instance('default')/current}.md</h3>
         <fx-trigger>
             <button class="all">ALL</button>
             <fx-setvalue ref="tag">all</fx-setvalue>
@@ -234,7 +234,7 @@
 -->
     </fx-fore>
 
-<!--</div>-->
+</div>
 <script type="module" src="../index.js"></script>
 </body>
 </html>
