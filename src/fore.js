@@ -84,6 +84,7 @@ export class Fore {
       'FX-TEXTAREA',
       'FX-TRIGGER',
       'FX-UPLOAD',
+      'FX-VAR',
     ];
   }
 

@@ -16,21 +16,24 @@ const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
 
-function prettifyXml (source){
+function prettifyXml(source) {
   const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
-  const xsltDoc = new DOMParser().parseFromString([
-    // describes how we want to modify the XML - indent everything
-    '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-    '  <xsl:strip-space elements="*"/>',
-    '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-    '    <xsl:value-of select="normalize-space(.)"/>',
-    '  </xsl:template>',
-    '  <xsl:template match="node()|@*">',
-    '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-    '  </xsl:template>',
-    '  <xsl:output indent="yes"/>',
-    '</xsl:stylesheet>',
-  ].join('\n'), 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString(
+    [
+      // describes how we want to modify the XML - indent everything
+      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+      '  <xsl:strip-space elements="*"/>',
+      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+      '    <xsl:value-of select="normalize-space(.)"/>',
+      '  </xsl:template>',
+      '  <xsl:template match="node()|@*">',
+      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+      '  </xsl:template>',
+      '  <xsl:output indent="yes"/>',
+      '</xsl:stylesheet>',
+    ].join('\n'),
+    'application/xml',
+  );
 
   const xsltProcessor = new XSLTProcessor();
   xsltProcessor.importStylesheet(xsltDoc);
@@ -130,7 +133,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
     }
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-/*
+      /*
       console.log(
         `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
       );
@@ -215,6 +218,32 @@ function functionNameResolver({ prefix, localName }, _arity) {
 }
 
 /**
+ * Get the variables in scope of the form element. These are the values of the variables that
+ * logically precede the formElement that declares the XPath
+ *
+ * @param  {Node}  formElement  The element that declares the XPath
+ *
+ * @return  {Object}  A key-value mapping of the variables
+ */
+function getVariablesInScope(formElement) {
+  let closestActualFormElement = formElement;
+  while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+    closestActualFormElement = closestActualFormElement.parentNode;
+  }
+
+  if (!closestActualFormElement) {
+    return {};
+  }
+
+  const variables = {};
+  for (const key of closestActualFormElement.inScopeVariables.keys()) {
+    const varElement = closestActualFormElement.inScopeVariables.get(key);
+    variables[key] = varElement.value;
+  }
+  return variables;
+}
+
+/**
  * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
  * type of the output is more predictable.
  *
@@ -224,15 +253,23 @@ function functionNameResolver({ prefix, localName }, _arity) {
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+  const variablesInScope = getVariablesInScope(formElement);
 
-  return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
-    currentContext: { formElement, variables },
-    moduleImports: {
-      xf: XFORMS_NAMESPACE_URI,
+  return fxEvaluateXPath(
+    xpath,
+    contextNode,
+    null,
+    { ...variablesInScope, ...variables },
+    'xs:anyType',
+    {
+      currentContext: { formElement, variables },
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      functionNameResolver,
+      namespaceResolver,
     },
-    functionNameResolver,
-    namespaceResolver,
-  });
+  );
 }
 
 /**
@@ -245,20 +282,15 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToFirstNode(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      currentContext: { formElement },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+  return fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
+    defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    currentContext: { formElement },
+    namespaceResolver,
+  });
 }
 
 /**
@@ -271,20 +303,16 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToNodes(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -297,20 +325,16 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToBoolean(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -332,21 +356,16 @@ export function evaluateXPathToString(
   namespaceReferenceNode = formElement,
 ) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToString(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
+  const variablesInScope = getVariablesInScope(formElement);
 
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -368,20 +387,16 @@ export function evaluateXPathToNumber(
   namespaceReferenceNode = formElement,
 ) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToNumber(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -520,7 +535,7 @@ registerCustomXPathFunction(
         console.warn('log() does not work for JSON yet');
         // return JSON.stringify(instance.getDefaultContext());
       } else {
-      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
         return prettifyXml(def);
       }
     }
