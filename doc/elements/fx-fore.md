@@ -19,6 +19,7 @@ It further provices global messaging via toast messages and a modal dialog.
 
 | Name | Description |
 |------|-------------|
+| compute-exception | dispatched in case the dependency graph is cirular |
 | refresh-done | dispatched after a refresh() run |
 | ready | dispatched after Fore has fully been initialized |
 | error | dispatches error when template expression fails to evaluate |
@@ -26,5 +27,6 @@ It further provices global messaging via toast messages and a modal dialog.
 
  
 ### Examples
+
 
 All Demo files
