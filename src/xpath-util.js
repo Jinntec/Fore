@@ -72,25 +72,20 @@ export class XPathUtil {
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {
     const path = fx.evaluateXPath('path()', node);
+/*
     const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
     if (instanceId !== null && instanceId !== 'default') {
       return `#${instanceId}${XPathUtil.shortenPath(path)}`;
     }
+*/
     return XPathUtil.shortenPath(path);
   }
 
   static shortenPath(path) {
-    const steps = path.split('/');
-    let result = '';
-    for (let i = 2; i < steps.length; i += 1) {
-      const step = steps[i];
-      if (step.indexOf('{}') !== -1) {
-        const q = step.split('{}');
-        result += `/${q[1]}`;
-      } else {
-        result += `/${step}`;
-      }
-    }
-    return result;
+    const tmp = path.replaceAll(/(Q{(.*?)\})/g,'');
+    // cut off leading slash
+    const tmp1 = tmp.substring(1, tmp.length);
+    // ### cut-off root node ref
+    return  tmp1.substring(tmp1.indexOf('/'),tmp.length);
   }
 }
