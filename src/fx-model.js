@@ -170,6 +170,9 @@ export class FxModel extends HTMLElement {
         // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
         console.log(`rebuild mainGraph`, this.mainGraph);
         console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+
+        this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph:this.mainGraph}}));
+
         /*
         console.log(
           `rebuild finished with modelItems ${this.modelItems.length} item(s)`,
