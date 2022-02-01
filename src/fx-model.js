@@ -199,11 +199,10 @@ export class FxModel extends HTMLElement {
             // ### build the subgraph
             this.changed.forEach(modelItem => {
                 this.subgraph.addNode(modelItem.path, modelItem.node);
-                const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
+                // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
                 // this._addSubgraphDependencies(modelItem.path);
                 if (this.mainGraph.hasNode(modelItem.path)) {
                     // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
-                    // const dependents = this.mainGraph.dependantsOf(modelItem.path, false)
 
                     const all = this.mainGraph.dependantsOf(modelItem.path, false);
                     const dependents = all.reverse();
@@ -217,25 +216,12 @@ export class FxModel extends HTMLElement {
                                 const path = dep.substring(0, dep.indexOf(':'));
                                 this.subgraph.addNode(path,val);
                                 this.subgraph.addDependency(path,dep);
-/*
-                                const subdeps = this.mainGraph.directDependantsOf(path);
-                                console.log('subdeps',path, subdeps);
-                                subdeps.forEach(sdep => {
-                                    const spath = dep.substring(0, dep.indexOf(':'));
 
-                                    const sval= this.mainGraph.getNodeData(sdep);
-                                    this.subgraph.addNode(sdep,sval);
-                                    this.subgraph.addDependency(spath,sdep);
-                                    /!*
-
-                                                                        // const spath = dep.substring(0, dep.indexOf(':'));
-
-                                                                        subgraph.addDependency(sdep,path);
-                                    *!/
-                                    console.log('subdep',sdep);
-                                });
-*/
-                                this.subgraph.addDependency(dep,modelItem.path);
+                                const deps = this.mainGraph.dependentsOf(modelItem.path,false);
+                                // if we find the dep to be first in list of dependents we are dependent on ourselves not adding edge to modelItem.path
+                                if(deps.indexOf(dep) !== 0){
+                                    this.subgraph.addDependency(dep,modelItem.path);
+                                }
 
                             }
                             // subgraph.addDependency(dep,modelItem.path);
