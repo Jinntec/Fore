@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Dependency Graph calculation</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+
+    <script
+            type="text/javascript"
+            src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+    <script type="text/javascript" src="graph.js"></script>
+    <style>
+        aside{
+            height: 100%;
+        }
+        body, input {
+            font-size: 1.2rem;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin:0;
+        }
+
+        .invalid input {
+            color: red;
+        }
+
+        fx-control {
+            display: block;
+        }
+
+        label {
+            width: 200px;
+            display: inline-block;
+        }
+
+        .readonly input {
+            opacity: 0.6;
+            background: lightgrey;
+        }
+
+        fx-group {
+            margin-top: 1rem;
+        }
+
+        fx-group div {
+            padding: 1rem 0;
+        }
+
+        .graph {
+            width: 100%;
+            border: thin solid #b0bec5;
+            border-collapse: collapse;
+            background: white;
+            position: relative;
+            height: 50vh;
+
+        }
+        .graph::before{
+            position: absolute;
+            z-index: 1;
+            top:0.5rem;
+            left:1rem;
+        }
+        #graph::before{
+            content:'MainGraph'
+        }
+        main{
+            padding: 0.5rem;
+        }
+
+        #subgraph::before{
+            content:'SubGraph'
+        }
+        demo-snippet [required]:after{
+            content:'';
+        }
+    </style>
+</head>
+<body>
+<!--<div class="wrapper">-->
+    <main>
+    <h1>Subgraph recalculation</h1>
+    <demo-snippet>
+        <template>
+<p>A couple of bindings produce the graph on this page</p>
+<fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+<fx-bind ref="d" calculate="../a + ../b" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+<fx-bind ref="e" calculate="../a + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+
+<fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
+<fx-bind ref="z" calculate="../y + 5"  constraint="number(.) <= 30" readonly="true()"></fx-bind>
+        </template>
+    </demo-snippet>
+    <fx-fore>
+        <!--
+                        <fx-action event="ready">
+                            <fx-update></fx-update>
+                            <fx-refresh></fx-refresh>
+                        </fx-action>
+        -->
+
+        <fx-model>
+            <fx-message event="rebuild-done">rebuild is done</fx-message>
+
+            <fx-instance>
+                <data>
+                    <a>10</a>
+                    <b>10</b>
+                    <c></c>
+                    <d></d>
+                    <e></e>
+                    <x>3</x>
+                    <y>0</y>
+                    <z></z>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+            <fx-bind ref="d" calculate="../a + ../b" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+            <fx-bind ref="e" calculate="../a + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+
+            <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
+<!--            <fx-bind ref="z" calculate="../y + 5"  constraint="number(.) <= 30" readonly="true()"></fx-bind>-->
+
+        </fx-model>
+        <fx-control ref="a" update-event="input">
+            <label>a</label>
+            <input type="number">
+        </fx-control>
+        <fx-control ref="b" update-event="input">
+            <label>b</label>
+            <input type="number">
+        </fx-control>
+
+        <fx-group>
+            <div>some controls depending on the 'a' and 'b' controls</div>
+            <fx-control ref="c">
+                <label>c = a * b <= 100</label>
+            </fx-control>
+            <fx-control ref="d">
+                <label>d = a + b <= 10</label>
+            </fx-control>
+            <fx-control ref="e">
+                <label>e = a + 5 < 10</label>
+            </fx-control>
+        </fx-group>
+
+        <fx-group>
+            <div>Some controls depending on the 'x' node</div>
+            <fx-control ref="x" update-event="input">
+                <label>x</label>
+                <input type="number">
+            </fx-control>
+            <fx-control ref="y">
+                <label>y = ../x + 5.0 <= 10.0</label>
+            </fx-control>
+            <fx-control ref="z">
+                <label>z</label>
+            </fx-control>
+        </fx-group>
+
+        <fx-group>
+            <div>The data:</div>
+            <pre>
+                    {log('default')}
+                </pre>
+        </fx-group>
+    </fx-fore>
+    </main>
+    <aside>
+        <div id="graph" class="graph"></div>
+        <div id="subgraph" class="graph"></div>
+    </aside>
+
+<!--</div>-->
+
+<script type="text/javascript">
+    (function () {
+
+        const model = document.querySelector('fx-model');
+
+        model.addEventListener('rebuild-done', (e) => {
+
+            // console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.maingraph,'graph');
+
+        });
+        model.addEventListener('recalculate-done', (e) => {
+
+            // console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.subgraph,'subgraph');
+
+        });
+
+    })();
+
+</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"
+        integrity="sha512-XHDcSyqhOoO2ocB7sKOCJEkUjw/pQCJViP1ynpy+EGh/LggzrP6U/V3a++LQTnZT7sCQKeHRyWHfhN2afjXjCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+-->
+
+
+</body>
+</html>

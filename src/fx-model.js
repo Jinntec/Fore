@@ -194,30 +194,69 @@ export class FxModel extends HTMLElement {
         console.time('recalculate');
         this.computes = 0;
 
-        const subgraph = new DepGraph(false);
+        this.subgraph = new DepGraph(false);
         if (this.changed.length !== 0) {
             // ### build the subgraph
             this.changed.forEach(modelItem => {
-                subgraph.addNode(modelItem.path, modelItem.node);
+                this.subgraph.addNode(modelItem.path, modelItem.node);
+                const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
+                // this._addSubgraphDependencies(modelItem.path);
                 if (this.mainGraph.hasNode(modelItem.path)) {
-                    const dependents = this.mainGraph.dependentsOf(modelItem.path, false)
-                    dependents.forEach(dep => {
-                        subgraph.addNode(dep, modelItem.node);
-                    });
+                    // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
+                    // const dependents = this.mainGraph.dependantsOf(modelItem.path, false)
+
+                    const all = this.mainGraph.dependantsOf(modelItem.path, false);
+                    const dependents = all.reverse();
+                    if(dependents.length !== 0){
+                        dependents.forEach(dep => {
+                            // const subdep = this.mainGraph.dependentsOf(dep,false);
+                            // subgraph.addDependency(dep, modelItem.path);
+                            const val= this.mainGraph.getNodeData(dep);
+                            this.subgraph.addNode(dep,val);
+                            if(dep.includes(':')){
+                                const path = dep.substring(0, dep.indexOf(':'));
+                                this.subgraph.addNode(path,val);
+                                this.subgraph.addDependency(path,dep);
+/*
+                                const subdeps = this.mainGraph.directDependantsOf(path);
+                                console.log('subdeps',path, subdeps);
+                                subdeps.forEach(sdep => {
+                                    const spath = dep.substring(0, dep.indexOf(':'));
+
+                                    const sval= this.mainGraph.getNodeData(sdep);
+                                    this.subgraph.addNode(sdep,sval);
+                                    this.subgraph.addDependency(spath,sdep);
+                                    /!*
+
+                                                                        // const spath = dep.substring(0, dep.indexOf(':'));
+
+                                                                        subgraph.addDependency(sdep,path);
+                                    *!/
+                                    console.log('subdep',sdep);
+                                });
+*/
+                                this.subgraph.addDependency(dep,modelItem.path);
+
+                            }
+                            // subgraph.addDependency(dep,modelItem.path);
+                        });
+                    }else{
+
+                    }
                 }
             });
 
             // ### compute the subgraph
-            const v = subgraph.overallOrder(false);
-            v.forEach(path => {
+            const ordered = this.subgraph.overallOrder(false);
+            ordered.forEach(path => {
                 if (this.mainGraph.hasNode(path)) {
                     const node = this.mainGraph.getNodeData(path);
                     this.compute(node, path);
                 }
             });
             this.changed = [];
-            this.subGraph = subgraph;
-            console.log('subgraph', subgraph);
+            console.log('subgraph', this.subgraph);
+            this.dispatchEvent(new CustomEvent('recalculate-done', {detail: {subgraph: this.subgraph}}));
         } else {
             const v = this.mainGraph.overallOrder(false);
             v.forEach(path => {
@@ -227,6 +266,7 @@ export class FxModel extends HTMLElement {
 
         }
         console.log(`recalculated ${this.computes} modelItems`);
+
         console.timeEnd('recalculate');
         console.log(
             `recalculate finished with modelItems ${this.modelItems.length} item(s)`,
@@ -235,6 +275,40 @@ export class FxModel extends HTMLElement {
         console.groupEnd();
     }
 
+    _addSubgraphDependencies(path){
+        const dependents = this.mainGraph.directDependantsOf(path)
+
+        const alreadyInGraph = this.subgraph.incomingEdges[path];
+        // const alreadyInGraph = path in this.subgraph;
+        if(dependents.length !== 0 && alreadyInGraph.length === 0){
+
+            dependents.forEach(dep => {
+                // const val= this.mainGraph.getNodeData(dep);
+                // this.subgraph.addNode(dep,val);
+                if(dep.includes(':')){
+                    const subpath = dep.substring(0, dep.indexOf(':'));
+                    // this.subgraph.addNode(subpath,val);
+                    this.subgraph.addDependency(subpath,dep);
+                    this.subgraph.addDependency(dep,path);
+                    /*
+                                        const subdeps = this.mainGraph.directDependantsOf(path);
+                                        console.log('subdeps',path, subdeps);
+                                        subdeps.forEach(sdep => {
+                                            const sval= this.mainGraph.getNodeData(sdep);
+                                            this.subgraph.addNode(sdep,sval);
+                                            console.log('subdep',sdep);
+                                        });
+                    */
+                    if(this.subgraph.incomingEdges[dep] === 0){
+                        this._addSubgraphDependencies(subpath)
+                    }
+
+                }
+            });
+
+        }
+
+    }
 
     /**
      * (re-) computes a modelItem.

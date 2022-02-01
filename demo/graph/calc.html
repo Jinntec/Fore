@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Dependency Graph calculation</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+
+    <script
+            type="text/javascript"
+            src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+    <script type="text/javascript" src="graph.js"></script>
+    <style>
+        aside{
+            height: 100%;
+        }
+        body, input {
+            font-size: 1.2rem;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin:0;
+        }
+
+        .invalid input {
+            color: red;
+        }
+
+        fx-control {
+            display: block;
+        }
+
+        label {
+            width: 200px;
+            display: inline-block;
+        }
+
+        .readonly input {
+            opacity: 0.6;
+            background: lightgrey;
+        }
+
+        fx-group {
+            margin-top: 1rem;
+        }
+
+        fx-group div {
+            padding: 1rem 0;
+        }
+
+        .graph {
+            width: 100%;
+            border: thin solid #b0bec5;
+            border-collapse: collapse;
+            background: white;
+            position: relative;
+            height: 50vh;
+
+        }
+        .graph::before{
+            position: absolute;
+            z-index: 1;
+            top:0.5rem;
+            left:1rem;
+        }
+        #graph::before{
+            content:'MainGraph'
+        }
+        #subgraph::before{
+            content:'SubGraph'
+        }
+        fx-control input{
+            display: inline-block;
+        }
+        fx-control[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+        fx-output{
+            display: block;
+            padding-top: 1rem;
+
+        }
+        label{
+            width: 12rem;
+            display: inline-block;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+<!--<div class="wrapper">-->
+    <main>
+    <h1>Subgraph recalculation</h1>
+
+        <fx-fore>
+
+            <fx-model id="model1">
+                <fx-instance>
+                    <data>
+                        <m1>3</m1>
+                        <m2>0</m2>
+                        <add>0</add>
+                        <sum></sum>
+                    </data>
+                </fx-instance>
+                <fx-bind ref="add" calculate="number(../m2) + 5"></fx-bind>
+                <fx-bind ref="m2" calculate="number(../m1) * 2"></fx-bind>
+                <fx-bind ref="sum" calculate="../add * 2"></fx-bind>
+            </fx-model>
+            <fx-group>
+                <h2>Calculations</h2>
+                <p class="note">Calculated nodes are always readonly!</p>
+                <fx-control ref="m1" update-event="input">
+                    <label>start:</label>
+                    <input type="text">
+                </fx-control>
+
+                <fx-output ref="m2" update-event="input">
+                    <label slot="label">* 2  = </label>
+                </fx-output>
+                <fx-output id="output" ref="add">
+                    <label slot="label">+ 5 = </label>
+                </fx-output>
+
+                <fx-output  ref="sum">
+                    <label slot="label">* 2 =  </label>
+                </fx-output>
+
+
+            </fx-group>
+        </fx-fore>
+    </main>
+    <aside>
+        <div id="graph" class="graph"></div>
+        <div id="subgraph" class="graph"></div>
+    </aside>
+
+<!--</div>-->
+
+<script type="text/javascript">
+    (function () {
+
+        const model = document.querySelector('fx-model');
+
+        model.addEventListener('rebuild-done', (e) => {
+
+            console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.maingraph,'graph');
+
+        });
+        model.addEventListener('recalculate-done', (e) => {
+
+            console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.subgraph,'subgraph');
+
+        });
+
+    })();
+
+</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"
+        integrity="sha512-XHDcSyqhOoO2ocB7sKOCJEkUjw/pQCJViP1ynpy+EGh/LggzrP6U/V3a++LQTnZT7sCQKeHRyWHfhN2afjXjCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+-->
+
+
+</body>
+</html>
