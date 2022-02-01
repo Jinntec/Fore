@@ -113,7 +113,7 @@
 
             <fx-instance>
                 <data>
-                    <a>10</a>
+                    <a>101</a>
                     <b>10</b>
                     <c></c>
                     <d></d>
@@ -121,6 +121,7 @@
                     <x>3</x>
                     <y>0</y>
                     <z></z>
+                    <q>foo</q>
                 </data>
             </fx-instance>
 
@@ -129,7 +130,8 @@
             <fx-bind ref="e" calculate="../a + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
 
             <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
-<!--            <fx-bind ref="z" calculate="../y + 5"  constraint="number(.) <= 30" readonly="true()"></fx-bind>-->
+            <fx-bind ref="z" calculate="../y + 5"  constraint="number(.) <= 30" readonly="false()"></fx-bind>
+            <fx-bind ref="q" readonly="../a > 100"></fx-bind>
 
         </fx-model>
         <fx-control ref="a" update-event="input">
@@ -166,6 +168,11 @@
             <fx-control ref="z">
                 <label>z</label>
             </fx-control>
+
+            <fx-control ref="q">
+                <label>q</label>
+            </fx-control>
+
         </fx-group>
 
         <fx-group>

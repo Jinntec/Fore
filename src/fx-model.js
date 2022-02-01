@@ -261,6 +261,7 @@ export class FxModel extends HTMLElement {
         console.groupEnd();
     }
 
+/*
     _addSubgraphDependencies(path){
         const dependents = this.mainGraph.directDependantsOf(path)
 
@@ -276,7 +277,7 @@ export class FxModel extends HTMLElement {
                     // this.subgraph.addNode(subpath,val);
                     this.subgraph.addDependency(subpath,dep);
                     this.subgraph.addDependency(dep,path);
-                    /*
+                    /!*
                                         const subdeps = this.mainGraph.directDependantsOf(path);
                                         console.log('subdeps',path, subdeps);
                                         subdeps.forEach(sdep => {
@@ -284,7 +285,7 @@ export class FxModel extends HTMLElement {
                                             this.subgraph.addNode(sdep,sval);
                                             console.log('subdep',sdep);
                                         });
-                    */
+                    *!/
                     if(this.subgraph.incomingEdges[dep] === 0){
                         this._addSubgraphDependencies(subpath)
                     }
@@ -295,6 +296,7 @@ export class FxModel extends HTMLElement {
         }
 
     }
+*/
 
     /**
      * (re-) computes a modelItem.
@@ -306,10 +308,23 @@ export class FxModel extends HTMLElement {
         if (modelItem && path.includes(':')) {
             const property = path.split(':')[1];
             if (property) {
+/*
+                if (property === 'readonly') {
+                    // make sure that calculated items are always readonly
+                    if(modelItem.bind['calculate']){
+                        modelItem.readonly =  true;
+                    }else {
+                        const expr = modelItem.bind[property];
+                        const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
+                        modelItem.readonly = compute;
+                    }
+                }
+*/
                 if (property === 'calculate') {
                     const expr = modelItem.bind[property];
                     const compute = evaluateXPath(expr, modelItem.node, this);
                     modelItem.value = compute;
+                    modelItem.readonly =  true; // calculated nodes are always readonly
                 } else if (property !== 'constraint' && property !== 'type') {
                     const expr = modelItem.bind[property];
                     if (expr) {
