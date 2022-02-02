@@ -154,13 +154,14 @@ function renderGraph(graph, targetElement) {
         layout: {
             hierarchical: {
                 sortMethod: 'directed',
-                shakeTowards: 'roots',
+                shakeTowards: 'leaves',
                 treeSpacing: 150,
                 nodeSpacing: 150,
                 levelSeparation: 150,
                 edgeMinimization: true,
                 blockShifting: false,
-                direction: 'DU'
+                direction: 'DU',
+                parentCentralization:true
             }
         },
         edges: {
@@ -169,7 +170,7 @@ function renderGraph(graph, targetElement) {
             length: 150,
         },
         interaction: {
-            zoomView: true
+            zoomView: false
         },
         physics: {
             enabled: false,
