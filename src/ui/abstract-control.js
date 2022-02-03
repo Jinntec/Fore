@@ -26,8 +26,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all modelItem state properties to this control. model -> UI
    */
-  async refresh() {
-    console.log('### AbstractControl.refresh on : ', this);
+  async refresh(force) {
+    // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
 
@@ -67,16 +67,21 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // this.requestUpdate();
       }
     }
+    // Fore.refreshChildren(this,force);
     // await this.updateComplete;
   }
 
+  /**
+   *
+   * @returns {Promise<void>}
+   */
   // eslint-disable-next-line class-methods-use-this
   async updateWidgetValue() {
     throw new Error('You have to implement the method updateWidgetValue!');
   }
 
   handleModelItemProperties() {
-    console.log('form ready', this.getOwnerForm().ready);
+    // console.log('form ready', this.getOwnerForm().ready);
     this.handleRequired();
     this.handleReadonly();
     if (this.getOwnerForm().ready) {

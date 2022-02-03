@@ -1,15 +1,66 @@
 import {
   evaluateXPath as fxEvaluateXPath,
+  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
   evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
   evaluateXPathToNodes as fxEvaluateXPathToNodes,
-  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
-  evaluateXPathToString as fxEvaluateXPathToString,
   evaluateXPathToNumber as fxEvaluateXPathToNumber,
+  evaluateXPathToString as fxEvaluateXPathToString,
+  evaluateXPathToStrings as fxEvaluateXPathToStrings,
+  parseScript,
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
+import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+
+const createdNamespaceResolversByXPathQueryAndNode = new Map();
+
+function prettifyXml(source) {
+  const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString(
+    [
+      // describes how we want to modify the XML - indent everything
+      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+      '  <xsl:strip-space elements="*"/>',
+      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+      '    <xsl:value-of select="normalize-space(.)"/>',
+      '  </xsl:template>',
+      '  <xsl:template match="node()|@*">',
+      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+      '  </xsl:template>',
+      '  <xsl:output indent="yes"/>',
+      '</xsl:stylesheet>',
+    ].join('\n'),
+    'application/xml',
+  );
+
+  const xsltProcessor = new XSLTProcessor();
+  xsltProcessor.importStylesheet(xsltDoc);
+  const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+  const resultXml = new XMLSerializer().serializeToString(resultDoc);
+  return resultXml;
+}
+
+function getCachedNamespaceResolver(xpath, node) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return null;
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
+}
+function setCachedNamespaceResolver(xpath, node, resolver) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+}
+
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
+};
 
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
@@ -25,33 +76,115 @@ const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
  * @param  {Node}  contextElement  The element that is most closely related with the XPath in which this prefix is resolved.
  * @param  {string}   prefix          The prefix to resolve
  */
-function resolveNamespacePrefix(contextElement, prefix) {
-  if (prefix === 'xhtml') {
-    return 'http://www.w3.org/1999/xhtml';
+function createNamespaceResolver(xpathQuery, formElement) {
+  const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
+  if (cachedResolver) {
+    return cachedResolver;
   }
 
-  if (prefix === '') {
-    return (
-      fxEvaluateXPathToString(
-        'ancestor-or-self::*/@xpath-default-namespace[last()]',
-        contextElement,
-      ) || null
+  // Make namespace resolving use the `instance` element that is related to here
+  const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
+
+  const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
+  let instanceReferences = fxEvaluateXPathToStrings(
+    `descendant::xqx:functionCallExpr
+				[xqx:functionName = "instance"]
+				/xqx:arguments
+				/xqx:stringConstantExpr
+				/xqx:value`,
+    xpathAST,
+    null,
+    {},
+    {
+      namespaceResolver: prefix =>
+        prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+    },
+  );
+  if (instanceReferences.length === 0) {
+    // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
+    const ancestorComponent = fxEvaluateXPathToFirstNode('ancestor::*[@ref][1]', formElement);
+    if (ancestorComponent) {
+      const resolver = createNamespaceResolver(
+        ancestorComponent.getAttribute('ref'),
+        ancestorComponent,
+      );
+      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
+      return resolver;
+    }
+    // Nothing found: let's just assume we're supposed to use the `default` instance
+    instanceReferences = ['default'];
+  }
+
+  if (instanceReferences.length === 1) {
+    // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
+    let instance;
+    if (instanceReferences[0] === 'default') {
+      const actualForeElement = fxEvaluateXPathToFirstNode(
+        'ancestor-or-self::fx-fore',
+        formElement,
+        null,
+        null,
+        { namespaceResolver: xhtmlNamespaceResolver },
+      );
+
+      instance = actualForeElement && actualForeElement.querySelector('fx-instance');
+    } else {
+      instance = resolveId(instanceReferences[0], formElement, 'fx-instance');
+    }
+    if (instance && instance.hasAttribute('xpath-default-namespace')) {
+      const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
+      /*
+      console.log(
+        `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
+      );
+*/
+      const resolveNamespacePrefix = prefix => {
+        if (!prefix) {
+          return xpathDefaultNamespace;
+        }
+        return undefined;
+      };
+      setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+      return resolveNamespacePrefix;
+    }
+  }
+  if (instanceReferences.length > 1) {
+    console.warn(
+      `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
     );
   }
 
-  // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
-  // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
-  // attributes. Which they technically ARE NOT!
+  const xpathDefaultNamespace =
+    fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
+    '';
 
-  const result = fxEvaluateXPathToString(
-    'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
-    contextElement,
-    null,
-    { prefix },
-  );
+  const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
+    if (prefix === '') {
+      return xpathDefaultNamespace;
+    }
 
-  console.log('result', result);
-  return result;
+    // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
+    // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
+    // attributes. Which they technically ARE NOT!
+
+    return fxEvaluateXPathToString(
+      'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+      formElement,
+      null,
+      { prefix },
+    );
+  };
+
+  setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+  return resolveNamespacePrefix;
+}
+
+function createNamespaceResolverForNode(query, contextNode, formElement) {
+  if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
+    // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
+    return xhtmlNamespaceResolver;
+  }
+  return createNamespaceResolver(query, formElement);
 }
 
 /**
@@ -62,6 +195,7 @@ function resolveNamespacePrefix(contextElement, prefix) {
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'context':
     case 'base64encode':
     case 'boolean-from-string':
     case 'current':
@@ -92,13 +226,15 @@ function functionNameResolver({ prefix, localName }, _arity) {
  * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+
   return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
     currentContext: { formElement, variables },
     moduleImports: {
       xf: XFORMS_NAMESPACE_URI,
     },
     functionNameResolver,
-    namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+    namespaceResolver,
   });
 }
 
@@ -111,18 +247,19 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
  * @return {Node}  The first node found by the XPath
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToFirstNode(
     xpath,
     contextNode,
     null,
     {},
     {
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
       defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
       currentContext: { formElement },
+      namespaceResolver,
     },
   );
 }
@@ -136,6 +273,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  * @return {Node[]}  All nodes
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToNodes(
     xpath,
     contextNode,
@@ -147,7 +285,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -161,6 +299,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  * @return {boolean}
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToBoolean(
     xpath,
     contextNode,
@@ -172,7 +311,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(formElement, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -195,6 +334,7 @@ export function evaluateXPathToString(
   domFacade = null,
   namespaceReferenceNode = formElement,
 ) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToString(
     xpath,
     contextNode,
@@ -207,7 +347,7 @@ export function evaluateXPathToString(
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+      namespaceResolver,
     },
   );
 }
@@ -230,6 +370,7 @@ export function evaluateXPathToNumber(
   domFacade = null,
   namespaceReferenceNode = formElement,
 ) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
   return fxEvaluateXPathToNumber(
     xpath,
     contextNode,
@@ -241,22 +382,15 @@ export function evaluateXPathToNumber(
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI,
       },
-      namespaceResolver: prefix => resolveNamespacePrefix(namespaceReferenceNode, prefix),
+      namespaceResolver,
     },
   );
 }
 
-const xhtmlNamespaceResolver = prefix => {
-  if (!prefix) {
-    return 'http://www.w3.org/1999/xhtml';
-  }
-  return undefined;
-};
-
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
-function resolveId(id, sourceObject, nodeName = null) {
+export function resolveId(id, sourceObject, nodeName = null) {
   const allMatchingTargetObjects = fxEvaluateXPathToNodes(
     'outermost(ancestor-or-self::fx-fore[1]/(descendant::xf-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
     sourceObject,
@@ -315,40 +449,63 @@ function resolveId(id, sourceObject, nodeName = null) {
     const foundTargetObjects = allMatchingTargetObjects.filter(to =>
       ancestorRepeatItem.contains(to),
     );
-    if (foundTargetObjects.length === 0) {
-      continue;
-    }
-    if (foundTargetObjects.length === 1) {
-      // A single one is found: the target object is directly in a common repeat
-      const targetObject = foundTargetObjects[0];
-      if (nodeName && targetObject.localName !== nodeName) {
-        return null;
+    switch (foundTargetObjects.length) {
+      case 0:
+        // Nothing found: ignore
+        break;
+      case 1: {
+        // A single one is found: the target object is directly in a common repeat
+        const targetObject = foundTargetObjects[0];
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
       }
-      return targetObject;
+      default: {
+        // Multiple target objects are found: they are in a repeat that is not common with the source object
+        // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
+        const targetObject = foundTargetObjects.find(to =>
+          fxEvaluateXPathToNodes(
+            'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+            to,
+            null,
+            {},
+          ),
+        );
+        if (!targetObject) {
+          // Nothing valid found for whatever reason. This might be something dynamic?
+          return null;
+        }
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
     }
-
-    // Multiple target objects are found: they are in a repeat that is not common with the source object
-    // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
-    const targetObject = foundTargetObjects.find(to =>
-      fxEvaluateXPathToNodes(
-        'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
-        to,
-        null,
-        {},
-      ),
-    );
-    if (!targetObject) {
-      // Nothing valid found for whatever reason. This might be something dynamic?
-      return null;
-    }
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
-    return targetObject;
   }
   // We found no target objects in common repeats. The id is unresolvable
   return null;
 }
+
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  [],
+  'item()?',
+  (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+    const parent = XPathUtil.getParentBindingElement(caller);
+    // const instance = resolveId('default', caller, 'fx-instance');
+    const p = caller.nodeName;
+    // const p = dynamicContext.domFacade.getParentElement();
+
+    if (parent) return parent;
+    return caller.getInScopeContext();
+  },
+);
 
 /**
  * @param id as string
@@ -362,8 +519,13 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
     const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
-      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-      return def;
+      if (instance.getAttribute('type') === 'json') {
+        console.warn('log() does not work for JSON yet');
+        // return JSON.stringify(instance.getDefaultContext());
+      } else {
+        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+        return prettifyXml(def);
+      }
     }
     return null;
   },
@@ -500,7 +662,7 @@ registerCustomXPathFunction(
     if (repeat) {
       return repeat.getAttribute('index');
     }
-    return 1;
+    return Number(1);
   },
 );
 
@@ -554,26 +716,26 @@ registerXQueryModule(`
 
 // How to run XQUERY:
 /**
- registerXQueryModule(`
- module namespace my-custom-namespace = "my-custom-uri";
- (:~
- Insert attribute somewhere
- ~:)
- declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
+registerXQueryModule(`
+module namespace my-custom-namespace = "my-custom-uri";
+(:~
+	Insert attribute somewhere
+	~:)
+declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
 	if ($ele/@done) then false() else
 	(insert node
 	attribute done {"true"}
 	into $ele, true())
 };
- `)
- // At some point:
- const contextNode = null;
- const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
+`)
+// At some point:
+const contextNode = null;
+const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
 
- console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
+console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
 
- executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
- */
+executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
+*/
 
 /**
  * @param input as string

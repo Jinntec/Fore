@@ -220,6 +220,31 @@ describe('instance Tests', () => {
     expect(modelItems[0].value).to.equal('hello from file');
   });
 
+  it('uses the correct namespace bindings', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance
+            id="instance-1"
+            xpath-default-namespace="http://www.example.com/"
+            src="base/test/instance-namespace.xml"
+          ></fx-instance>
+        </fx-model>
+
+        <span id="default-span">{greeting}</span>
+        <span id="pointed-span">{instance("instance-1")/greeting}</span>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const defaultSpan = el.querySelector('#default-span');
+    const pointedSpan = el.querySelector('#pointed-span');
+
+    expect(defaultSpan.innerText).to.equal('hello from the file');
+    expect(pointedSpan.innerText).to.equal('hello from the file');
+  });
+
   it('uses correct content-type for xml', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

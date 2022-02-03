@@ -9,7 +9,7 @@ import { getBucketsForNode } from 'fontoxpath';
  */
 export class DependencyNotifyingDomFacade {
   /**
-   * @param  {function(touchedNode: Node): void)} onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
+   * @param  onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
    */
   constructor(onNodeTouched) {
     this._onNodeTouched = onNodeTouched;

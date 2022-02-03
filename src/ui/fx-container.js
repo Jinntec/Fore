@@ -30,18 +30,21 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
             </style>
             ${html}
     `;
+
+    this.getOwnerForm().registerLazyElement(this);
   }
 
   /**
    * (re)apply all state properties to this control.
    */
-  refresh() {
-    console.log('### FxContainer.refresh on : ', this);
+  refresh(force) {
+    if (!force && this.hasAttribute('refresh-on-view')) return;
+    // console.log('### FxContainer.refresh on : ', this);
 
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
-      this.value = this.modelItem.value;
+      // this.value = this.modelItem.value;
     }
 
     // await this.updateComplete;
@@ -50,7 +53,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (this._getForm().ready) {
       this.handleModelItemProperties();
     }
-    Fore.refreshChildren(this);
+    Fore.refreshChildren(this, force);
   }
 
   handleModelItemProperties() {
@@ -78,6 +81,8 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
 
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
+    if (!this.modelItem) return;
+
     if (this.isEnabled() !== this.modelItem.enabled) {
       if (this.modelItem.enabled) {
         this.dispatchEvent(new CustomEvent('enabled', {}));

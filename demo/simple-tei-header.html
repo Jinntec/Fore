@@ -7,7 +7,14 @@
     <title>TEI header editor sample</title>
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <link href="../resources/demo.css" rel="stylesheet"/>
+    <link href="../resources/vars.css" rel="stylesheet"/>
     <style>
+        html{
+            /*--inspector-bg:var(--paper-grey-700);*/
+            /*--inspector-pre-bg:var(--paper-grey-100);*/
+            /*--inspector-color:var(--paper-grey-800);*/
+            /*--inspector-pre-bg:blue;*/
+        }
         body {
             background: var(--paper-light-blue-200);
             color: var(--paper-light-blue-900)
@@ -45,7 +52,7 @@
 
         details[open] {
             /*background: var(--paper-grey-100);*/
-            background-color: rgba(255, 255, 255, 0.5);
+            /*background-color: rgba(255, 255, 255, 0.5);*/
         }
 
         fx-case {
@@ -117,6 +124,12 @@
 
         #langs fx-repeatitem fx-control, #terms fx-repeatitem fx-control {
             width: 2.5rem;
+        }
+        .wrapper{
+            overflow: scroll;
+        }
+        fx-inspector pre{
+            /*max-height:200px;*/
         }
     </style>
 </head>
@@ -301,12 +314,15 @@
             -->
         </fx-group>
 
+<!--
         <details class="log">
             <summary>Data</summary>
             <pre>
 {log('default')}
 </pre>
         </details>
+-->
+        <fx-inspector></fx-inspector>
     </fx-fore>
 
 

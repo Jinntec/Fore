@@ -320,6 +320,15 @@ DepGraph.prototype = {
     }
     throw new Error(`Node does not exist: ${node}`);
   },
+
+  /**
+   * Get an array of nodes that have no dependants (i.e. nothing depends on them).
+   */
+  entryNodes() {
+    const self = this;
+    return Object.keys(this.nodes).filter(node => self.incomingEdges[node].length === 0);
+  },
+
   /**
    * Construct the overall processing order for the dependency graph.
    *

@@ -81,7 +81,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     this.target = this.getAttribute('target');
     if (this.target) {
-      if (this.target === '#document') {
+      if (this.target === '#window') {
+        window.addEventListener(this.event, e => this.execute(e));
+      } else if (this.target === '#document') {
         document.addEventListener(this.event, e => this.execute(e));
       } else {
         this.targetElement = document.getElementById(this.target);
@@ -190,15 +192,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       const model = this.getModel();
       model.recalculate();
       model.revalidate();
-      model.parentNode.refresh();
-      this._dispatchActionPerformed();
+      model.parentNode.refresh(true);
+      this.dispatchActionPerformed();
     }
   }
 
   /**
-   * @private
    */
-  _dispatchActionPerformed() {
+  dispatchActionPerformed() {
     console.log('action-performed ', this);
     this.dispatchEvent(
       new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),

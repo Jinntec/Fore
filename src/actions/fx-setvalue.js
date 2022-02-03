@@ -62,10 +62,8 @@ export default class FxSetvalue extends AbstractAction {
 
     if (item.value !== newVal) {
       item.value = newVal;
-      item.changed = true;
-
+      this.getModel().changed.push(modelItem);
       this.needsUpdate = true;
-
       console.log('setvalue[2] ', item, newVal);
     }
   }

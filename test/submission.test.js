@@ -5,7 +5,7 @@ import * as fx from 'fontoxpath';
 
 import '../index.js';
 
-describe('submissionn tests', () => {
+describe('submission tests', () => {
   it.skip('replaces the default instance with response', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

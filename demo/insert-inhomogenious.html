@@ -6,11 +6,10 @@
 
     <title>Insert into inhomogenious nodeset</title>
 
-    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
 
     <link href="../resources/fore.css" rel="stylesheet">
-    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
-    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
     </style>
@@ -18,28 +17,33 @@
 <body>
 <div class="wrapper">
 
-    <fx-fore>
-        <fx-model>
-            <fx-instance>
-                <data>
-                    <a>a1</a>
-                    <a>a2</a>
-                    <a>a3</a>
-                    <b>b1</b>
-                </data>
-            </fx-instance>
-        </fx-model>
-        ...add UI here...
+    <demo-snippet>
+        <template>
 
-        <fx-trigger>
-            <button>insert a</button>
-            <fx-insert ref="a"></fx-insert>
-        </fx-trigger>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <a>a1</a>
+                            <a>a2</a>
+                            <a>a3</a>
+                            <b>b1</b>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                ...add UI here...
 
-        <pre>
+                <fx-trigger>
+                    <button>insert a</button>
+                    <fx-insert ref="a"></fx-insert>
+                </fx-trigger>
+
+                <pre>
             {log('default')}
         </pre>
-    </fx-fore>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
 </div>
 <script type="module" src="./demo.js"></script>

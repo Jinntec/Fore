@@ -34,6 +34,21 @@ export class Fore {
     ];
   }
 
+  static createUUID() {
+    // http://www.ietf.org/rfc/rfc4122.txt
+    const s = [];
+    const hexDigits = '0123456789abcdef';
+    for (let i = 0; i < 36; i += 1) {
+      s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[14] = '4'; // bits 12-15 of the time_hi_and_version field to 0010
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[8] = s[13] = s[18] = s[23] = '-';
+
+    const uuid = s.join('');
+    return uuid;
+  }
+
   static get XFORMS_NAMESPACE_URI() {
     // todo: should be centralized somewhere as constant. Exists in several? places
     return 'http://www.w3.org/2002/xforms';
@@ -55,7 +70,7 @@ export class Fore {
       'FX-GROUP',
       'FX-HINT',
       'FX-INPUT',
-      'FX-ITEMSET',
+      'FX-ITEMS',
       'FX-LABEL',
       'FX-OUTPUT',
       'FX-RANGE',
@@ -79,15 +94,40 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
-  static async refreshChildren(startElement) {
+  /**
+   * recursively refreshes all UI Elements.
+   *
+   * todo: this could probably made more efficient with significant impact on rendering perf
+   *
+   * @param startElement
+   * @param force
+   * @returns {Promise<unknown>}
+   */
+  static async refreshChildren(startElement, force) {
     const refreshed = new Promise(resolve => {
+      /*
+      if there's an 'refresh-on-view' attribute the element wants to be handled by
+      handleIntersect function that calls the refresh of the respective element and
+      not the global one.
+       */
+      // if(!force && startElement.hasAttribute('refresh-on-view')) return;
+
+      /*  ### attempt with querySelectorAll is even slower than iterating recursively
+
+      const children = startElement.querySelectorAll('[ref]');
+      Array.from(children).forEach(uiElement => {
+        if (Fore.isUiElement(uiElement.nodeName) && typeof uiElement.refresh === 'function') {
+          uiElement.refresh();
+        }
+      });
+*/
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
-            Fore.refreshChildren(element);
+            Fore.refreshChildren(element, force);
           }
         });
       }
@@ -165,6 +205,16 @@ export class Fore {
       return fadeOut.finished;
     };
     return fadeOut();
+  }
+
+  static dispatch(target, eventName, detail) {
+    const event = new CustomEvent(eventName, {
+      composed: true,
+      bubbles: true,
+      detail,
+    });
+    console.log('firing', event);
+    target.dispatchEvent(event);
   }
 
   /**

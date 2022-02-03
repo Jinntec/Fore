@@ -512,6 +512,19 @@ describe('DepGraph', () => {
     expect(cloned.getNodeData('a').a).to.equal(42);
     expect(graph.getNodeData('a') === cloned.getNodeData('a')).to.equal(false);
   });
+
+  it('should find entry nodes', () => {
+    const graph = new DepGraph();
+
+    graph.addNode('a');
+    graph.addNode('b');
+    graph.addNode('c');
+
+    graph.addDependency('a', 'b');
+    graph.addDependency('a', 'c');
+
+    expect(graph.entryNodes()).to.eql(['a']);
+  });
 });
 
 describe('DepGraph Performance', () => {

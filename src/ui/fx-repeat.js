@@ -114,16 +114,27 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('insert catched', nodes, this.index);
     });
 
+    if (this.getOwnerForm().lazyRefresh) {
+      this.mutationObserver = new MutationObserver(mutations => {
+        console.log('mutations', mutations);
+        this.refresh(true);
+      });
+    }
+    this.getOwnerForm().registerLazyElement(this);
+
     const style = `
-             .fade-out-bottom {
-                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            }
-            .fade-out-bottom {
-                -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-                animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            }
-        `;
+      :host{
+        display:none;
+      }
+       .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+      .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+   `;
     const html = `
           <slot name="header"></slot>
           <slot></slot>
@@ -160,6 +171,14 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     const inscope = getInScopeContext(this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
+    // now we got a nodeset and attach MutationObserver to it
+
+    if (this.mutationObserver && inscope.nodeName) {
+      this.mutationObserver.observe(inscope, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     const seq = evaluateXPath(this.ref, inscope, this.getOwnerForm());
     // const seq = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
@@ -188,12 +207,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     throw new Error(`Unexpected result of repeat nodeset: ${seq}`);
   }
 
-  async refresh() {
-    console.group('fx-repeat.refresh on', this.id);
+  async refresh(force) {
+    // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
+    console.time('repeat-refresh', this);
     this._evalNodeset();
-    console.log('repeat refresh nodeset ', this.nodeset);
+    // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
 
     const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
@@ -213,7 +233,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
-
+        this.getOwnerForm().unRegisterLazyElement(itemToRemove);
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
       }
@@ -236,13 +256,24 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // ### update nodeset of repeatitems
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
+      this.getOwnerForm().registerLazyElement(item);
+
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
     }
 
-    Fore.refreshChildren(this);
+    // Fore.refreshChildren(clone,true);
+    const fore = this.getOwnerForm();
+    if (!fore.lazyRefresh || force) {
+      Fore.refreshChildren(this, force);
+    }
+    this.style.display = 'block';
     this.setIndex(this.index);
+    console.timeEnd('repeat-refresh');
+
+    // this.replaceWith(clone);
+
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
     console.groupEnd();
@@ -289,7 +320,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // todo: this is still weak - should handle that better maybe by an explicit slot?
     // this.template = this.firstElementChild;
     this.template = this.querySelector('template');
-    console.log('### init template for repeat ', this.id, this.template);
+    // console.log('### init template for repeat ', this.id, this.template);
 
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);

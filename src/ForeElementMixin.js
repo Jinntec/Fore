@@ -24,12 +24,6 @@ export const foreElementMixin = superclass =>
           type: Object,
         },
         /**
-         * XPath binding expression pointing to bound node
-         */
-        ref: {
-          type: String,
-        },
-        /**
          * The modelitem object associated to the bound node holding the evaluated state.
          */
         modelItem: {
@@ -40,6 +34,12 @@ export const foreElementMixin = superclass =>
          */
         nodeset: {
           type: Object,
+        },
+        /**
+         * XPath binding expression pointing to bound node
+         */
+        ref: {
+          type: String,
         },
       };
     }
@@ -98,26 +98,26 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
+        /*
         inscopeContext.forEach(n => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, null);
+            const localResult = evaluateXPathToFirstNode(this.ref, n, this);
             // console.log('local result: ', localResult);
             this.nodeset.push(localResult);
           }
         });
+*/
+        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
-
-        // todo: code below fails - why?
-        const formElement = this.getOwnerForm();
-        if (inscopeContext.nodeType) {
-          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, formElement);
+        const { nodeType } = inscopeContext;
+        if (nodeType) {
+          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, formElement);
+          this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
         }
-        // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
@@ -226,7 +226,7 @@ export const foreElementMixin = superclass =>
         bubbles: true,
         detail,
       });
-      console.log('firing', event);
+      // console.log('firing', event);
       this.dispatchEvent(event);
     }
   };

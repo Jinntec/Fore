@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Fore API</title>
+    <title>API (Demo)</title>
 
     <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
 
@@ -164,7 +164,8 @@
         </header>
         <a href="#top" class="up">^</a>
 
-        <fx-repeat id="elements" ref="?tags">
+<!--        <fx-repeat id="elements" ref="?tags"  refresh-on-view>-->
+        <fx-repeat id="elements" ref="?tags" refresh-on-view>
             <template>
                 <h2 id="{?name}" style="transform: translateX(0)">{?name}</h2>
                 <div class="description">{?description}</div>

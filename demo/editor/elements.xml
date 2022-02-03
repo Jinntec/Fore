@@ -1,7 +1,9 @@
 <data>
+    <foo>bar</foo>
+
     <model>
-        <fx-instance src=""/>
         <fx-bind readonly="" required="" relevant="" constraint="" calculate="" type=""/>
+        <fx-instance src="foo"/>
         <fx-submission url="" replace=""></fx-submission>
     </model>
     <UI>

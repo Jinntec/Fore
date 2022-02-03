@@ -1,5 +1,7 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import getInScopeContext from '../getInScopeContext.js';
+import { Fore } from '../fore.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -12,7 +14,7 @@ const WIDGETCLASS = 'widget';
  * @customElement
  * @demo demo/index.html
  */
-class FxControl extends XfAbstractControl {
+export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
     this.inited = false;
@@ -54,7 +56,7 @@ class FxControl extends XfAbstractControl {
         `;
 
     this.widget = this.getWidget();
-    console.log('widget ', this.widget);
+    // console.log('widget ', this.widget);
 
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
@@ -64,15 +66,17 @@ class FxControl extends XfAbstractControl {
           event.preventDefault();
           this.setValue(this.widget[this.valueProp]);
         }
-        // console.log('enter handler ', this.updateEvent);
-        // this.setValue(this.widget[this.valueProp]);
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
     this.widget.addEventListener(this.updateEvent, () => {
-      console.log('eventlistener ', this.updateEvent);
+      // console.log('eventlistener ', this.updateEvent);
       this.setValue(this.widget[this.valueProp]);
     });
+
+    const slot = this.shadowRoot.querySelector('slot');
+    this.template = this.querySelector('template');
+    // console.log('template',this.template);
   }
 
   setValue(val) {
@@ -95,6 +99,7 @@ class FxControl extends XfAbstractControl {
    * @returns {HTMLElement|*}
    */
   getWidget() {
+    if (this.widget) return this.widget;
     let widget = this.querySelector(`.${WIDGETCLASS}`);
     if (!widget) {
       widget = this.querySelector('input');
@@ -127,23 +132,34 @@ class FxControl extends XfAbstractControl {
     }
   }
 
-  async refresh() {
+  getTemplate() {
+    return this.querySelector('template');
+  }
+
+  async refresh(force) {
+    // console.log('fx-control refresh', this);
     super.refresh();
+    // console.log('refresh template', this.template);
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
-    // todo: review - seems a bit implicite to draw that 'itemset decision' just from the existence of a 'ref'
-    if (this.widget.hasAttribute('ref')) {
-      const tmpl = this.widget.querySelector('template');
-
+    const widget = this.getWidget();
+    if (widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
-      const ref = this.widget.getAttribute('ref');
-      const inscope = this.getInScopeContext();
-      const formElement = this.closest('fx-fore');
-      const nodeset = evaluateXPath(ref, inscope, formElement);
+      const ref = widget.getAttribute('ref');
+      /*
+      actually a ref on a select or similar component should point to a different instance
+      with an absolute expr e.g. 'instance('theId')/...'
+
+      todo: even bail out if ref is not absolute?
+       */
+
+      const inscope = getInScopeContext(this, ref);
+      // const nodeset = evaluateXPathToNodes(ref, inscope, this);
+      const nodeset = evaluateXPath(ref, inscope, this);
 
       // ### clear items
-      const { children } = this.widget;
+      const { children } = widget;
       Array.from(children).forEach(child => {
         if (child.nodeName.toLowerCase() !== 'template') {
           child.parentNode.removeChild(child);
@@ -151,33 +167,54 @@ class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      Array.from(nodeset).forEach(node => {
-        console.log('#### node', node);
-        const content = tmpl.content.firstElementChild.cloneNode(true);
-        const newEntry = document.importNode(content, true);
-        // console.log('newEntry ', newEntry);
-        this.widget.appendChild(newEntry);
+      if (this.template) {
+        if (nodeset.length) {
+          // console.log('nodeset', nodeset);
+          Array.from(nodeset).forEach(node => {
+            // console.log('#### node', node);
+            const newEntry = this.createEntry();
 
-        // ### initialize new entry
-        // ### set value
-        const valueAttribute = this._getValueAttribute(newEntry);
-        const valueExpr = valueAttribute.value;
-        const cutted = valueExpr.substring(1, valueExpr.length - 1);
-        const evaluated = evaluateXPath(cutted, node, formElement);
-        valueAttribute.value = evaluated;
-
-        if (this.value === evaluated) {
-          newEntry.setAttribute('selected', 'selected');
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
+        } else {
+          const newEntry = this.createEntry();
+          this.updateEntry(newEntry, nodeset);
         }
-
-        // ### set label
-        const optionLabel = newEntry.textContent;
-        const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
-
-        const label = evaluateXPathToString(labelExpr, node, formElement);
-        newEntry.textContent = label;
-      });
+      }
     }
+    Fore.refreshChildren(this, force);
+  }
+
+  updateEntry(newEntry, node) {
+    // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
+
+    if (this.widget.nodeName !== 'SELECT') return;
+    const valueAttribute = this._getValueAttribute(newEntry);
+    const valueExpr = valueAttribute.value;
+    const cutted = valueExpr.substring(1, valueExpr.length - 1);
+    const evaluated = evaluateXPath(cutted, node, newEntry);
+    valueAttribute.value = evaluated;
+
+    if (this.value === evaluated) {
+      newEntry.setAttribute('selected', 'selected');
+    }
+
+    // ### set label
+    const optionLabel = newEntry.textContent;
+    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+
+    const label = evaluateXPathToString(labelExpr, node, newEntry);
+    newEntry.textContent = label;
+    //  ### <<< needs rework
+  }
+
+  createEntry() {
+    const content = this.template.content.firstElementChild.cloneNode(true);
+    const newEntry = document.importNode(content, true);
+    this.template.parentNode.appendChild(newEntry);
+    return newEntry;
   }
 
   // eslint-disable-next-line class-methods-use-this

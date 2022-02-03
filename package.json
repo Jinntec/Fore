@@ -32,6 +32,8 @@
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-dialog": "^3.0.1",
+    "@polymer/paper-dialog-scrollable": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
     "fontoxpath": "^3.20.4",
     "web-component-analyzer": "^1.1.6"
@@ -54,6 +56,7 @@
     "es-dev-server": "^1.57.8",
     "eslint": "^6.1.0",
     "husky": "^1.0.0",
+    "jsdoc": "^3.6.7",
     "lint-staged": "^8.0.0",
     "lit-html": "^1.1.2",
     "mocha": "^7.0.1",
