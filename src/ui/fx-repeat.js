@@ -88,6 +88,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -124,7 +125,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     const style = `
       :host{
-        display:none;
       }
        .fade-out-bottom {
           -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -268,7 +268,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     if (!fore.lazyRefresh || force) {
       Fore.refreshChildren(this, force);
     }
-    this.style.display = 'block';
+    // this.style.display = 'block';
+    // this.style.display = this.display;
     this.setIndex(this.index);
     console.timeEnd('repeat-refresh');
 
