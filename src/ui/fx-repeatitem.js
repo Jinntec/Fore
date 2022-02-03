@@ -91,7 +91,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
       // if(this.hasAttribute('repeat-index')){
       //   Fore.fadeInElement(this);
       // }
-      this.style.display = this.display;
+      // this.style.display = this.display;
     }
 
     /*

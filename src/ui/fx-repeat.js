@@ -268,7 +268,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     if (!fore.lazyRefresh || force) {
       Fore.refreshChildren(this, force);
     }
-    this.style.display = 'block';
+    // this.style.display = 'block';
     this.setIndex(this.index);
     console.timeEnd('repeat-refresh');
 

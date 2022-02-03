@@ -2,6 +2,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
+import strip from '@rollup/plugin-strip';
+
 
 // eslint-disable-next-line no-unused-vars
 const { dependencies } = require('./package.json');
@@ -26,6 +28,7 @@ export default [
           [require('@babel/plugin-proposal-class-properties'), { loose: true }],
         ],
       }),
+      strip(),
       minifyHTML(),
       terser(),
     ],
