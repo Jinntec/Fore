@@ -215,7 +215,6 @@ export class FxModel extends HTMLElement {
                             if(dep.includes(':')){
                                 const path = dep.substring(0, dep.indexOf(':'));
                                 this.subgraph.addNode(path,val);
-                                this.subgraph.addDependency(path,dep);
 
                                 const deps = this.mainGraph.dependentsOf(modelItem.path,false);
                                 // if we find the dep to be first in list of dependents we are dependent on ourselves not adding edge to modelItem.path
