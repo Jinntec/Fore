@@ -96,9 +96,9 @@ export default [
       },
     ],
     external: moduleName =>
-        // All absolute imports should be regarded as external. Examples are 'fontoxpath',
-        // 'lit-element' or '@polymer/*'
-        !/^(\.\/|\.\.\/)/.test(moduleName),
+      // All absolute imports should be regarded as external. Examples are 'fontoxpath',
+      // 'lit-element' or '@polymer/*'
+      !/^(\.\/|\.\.\/)/.test(moduleName),
 
     plugins: [
       resolve(),
@@ -114,5 +114,4 @@ export default [
       terser(),
     ],
   },
-
 ];

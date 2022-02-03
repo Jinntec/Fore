@@ -29,7 +29,7 @@ export class XPathUtil {
     return path != null && (path.startsWith('/') || path.startsWith('instance('));
   }
 
-  static isRepeated(element){
+  static isRepeated(element) {
     return element.parentElement.closest('fx-repeatitem');
   }
 
@@ -72,7 +72,7 @@ export class XPathUtil {
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {
     const path = fx.evaluateXPath('path()', node);
-/*
+    /*
     const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
     if (instanceId !== null && instanceId !== 'default') {
       return `#${instanceId}${XPathUtil.shortenPath(path)}`;
@@ -82,10 +82,10 @@ export class XPathUtil {
   }
 
   static shortenPath(path) {
-    const tmp = path.replaceAll(/(Q{(.*?)\})/g,'');
+    const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
     // cut off leading slash
     const tmp1 = tmp.substring(1, tmp.length);
     // ### cut-off root node ref
-    return  tmp1.substring(tmp1.indexOf('/'),tmp.length);
+    return tmp1.substring(tmp1.indexOf('/'), tmp.length);
   }
 }

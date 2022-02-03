@@ -117,7 +117,7 @@ export class FxInsert extends AbstractAction {
     let insertLocationNode;
     let index;
 
-    const idx = this._getInsertIndex(inscope, targetSequence);
+    // const idx = this._getInsertIndex(inscope, targetSequence);
     // console.log('insert index', idx);
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'

@@ -98,7 +98,7 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
-/*
+        /*
         inscopeContext.forEach(n => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
@@ -110,18 +110,14 @@ export const foreElementMixin = superclass =>
         });
 */
         this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
-
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
-
-        // todo: code below fails - why?
-        const formElement = this.getOwnerForm();
-        if (inscopeContext.nodeType) {
+        const { nodeType } = inscopeContext;
+        if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
           this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
         }
-        // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }

@@ -101,7 +101,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     }
 */
 
-    Fore.refreshChildren(this,force);
+    Fore.refreshChildren(this, force);
   }
 }
 

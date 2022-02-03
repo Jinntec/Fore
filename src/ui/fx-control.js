@@ -99,7 +99,7 @@ export default class FxControl extends XfAbstractControl {
    * @returns {HTMLElement|*}
    */
   getWidget() {
-    if(this.widget) return this.widget;
+    if (this.widget) return this.widget;
     let widget = this.querySelector(`.${WIDGETCLASS}`);
     if (!widget) {
       widget = this.querySelector('input');
@@ -132,7 +132,7 @@ export default class FxControl extends XfAbstractControl {
     }
   }
 
-  getTemplate(){
+  getTemplate() {
     return this.querySelector('template');
   }
 
@@ -167,7 +167,7 @@ export default class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      if(this.template){
+      if (this.template) {
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
           Array.from(nodeset).forEach(node => {
@@ -184,13 +184,13 @@ export default class FxControl extends XfAbstractControl {
         }
       }
     }
-    Fore.refreshChildren(this,force);
+    Fore.refreshChildren(this, force);
   }
 
   updateEntry(newEntry, node) {
     // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
 
-    if(this.widget.nodeName !== 'SELECT') return;
+    if (this.widget.nodeName !== 'SELECT') return;
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);

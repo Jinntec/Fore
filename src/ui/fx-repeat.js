@@ -114,14 +114,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('insert catched', nodes, this.index);
     });
 
-    if(this.getOwnerForm().lazyRefresh){
+    if (this.getOwnerForm().lazyRefresh) {
       this.mutationObserver = new MutationObserver(mutations => {
-        console.log('mutations',mutations);
+        console.log('mutations', mutations);
         this.refresh(true);
       });
     }
     this.getOwnerForm().registerLazyElement(this);
-
 
     const style = `
       :host{
@@ -174,10 +173,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
 
-    if(this.mutationObserver && inscope.nodeName){
-      this.mutationObserver.observe(inscope,{
-        childList:true,
-        subtree:true,
+    if (this.mutationObserver && inscope.nodeName) {
+      this.mutationObserver.observe(inscope, {
+        childList: true,
+        subtree: true,
       });
     }
 
@@ -212,7 +211,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-    console.time('repeat-refresh',this);
+    console.time('repeat-refresh', this);
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
@@ -266,8 +265,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
-    if(!fore.lazyRefresh || force){
-      Fore.refreshChildren(this,force);
+    if (!fore.lazyRefresh || force) {
+      Fore.refreshChildren(this, force);
     }
     this.style.display = 'block';
     this.setIndex(this.index);

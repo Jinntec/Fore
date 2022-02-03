@@ -1,10 +1,7 @@
-
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
  */
 export class FxInspector extends HTMLElement {
-
-
   connectedCallback() {
     const style = `
           :host {
@@ -26,21 +23,22 @@ export class FxInspector extends HTMLElement {
                 ${style}
             </style>
             <slot></slot>
-            ${instances.map((instance,index) => `
-              <details ${index===0?`open`:''}>
+            ${instances
+              .map(
+                (instance, index) => `
+              <details ${index === 0 ? `open` : ''}>
                   <summary>${instance.id}</summary>
                   <pre>{log('${instance.id}')}</pre>
               </details>
-            `).join("")}
+            `,
+              )
+              .join('')}
         `;
 
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
     });
   }
-
-
-
 }
 
 customElements.define('fx-inspector', FxInspector);

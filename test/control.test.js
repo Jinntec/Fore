@@ -141,7 +141,6 @@ describe('control tests', () => {
 
     expect(alert1).to.exist;
     expect(window.getComputedStyle(alert1, null).display).to.equal('none');
-
   });
 
   it('has a control child with value "A"', async () => {

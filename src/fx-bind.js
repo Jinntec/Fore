@@ -195,7 +195,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
         }
 
-        if(!this.calculate){
+        if (!this.calculate) {
           const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
           if (readonlyRefs.length !== 0) {
             this._addDependencies(readonlyRefs, node, path, 'readonly');
