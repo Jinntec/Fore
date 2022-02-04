@@ -148,7 +148,7 @@
                          constraint="number(.) <= 10"
                          readonly="true()"></fx-bind>
 
-                <fx-bind ref="y" calculate="number(../x) + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
+                <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
                 <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
                 <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
             </template>

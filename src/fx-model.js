@@ -41,7 +41,7 @@ export class FxModel extends HTMLElement {
       console.log('model-construct-done fired ', e.detail.model.instances);
     });
 
-    // logging
+    this.skipUpdate = false;
   }
 
   static lazyCreateModelItem(model, ref, node) {
@@ -148,6 +148,7 @@ export class FxModel extends HTMLElement {
   updateModel() {
     console.time('updateModel');
     this.rebuild();
+    if(this.skipUpdate) return;
     this.recalculate();
     this.revalidate();
     console.timeEnd('updateModel');
@@ -161,6 +162,11 @@ export class FxModel extends HTMLElement {
 
     // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
+    if(binds.length === 0 ) {
+      console.log('skipped model update');
+      this.skipUpdate = true;
+      return ;
+    }
     binds.forEach(bind => {
       bind.init(this);
     });
