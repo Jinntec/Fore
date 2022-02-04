@@ -20,6 +20,8 @@ Sorry for being loud - some people complaining not finding demos.
 
 ## [Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
+For latest and greatest please use a local installation. See 'Running demos and docs'
+
 # What it does
 
 Fore lets you write data-driven front-end applications in a declarative way
