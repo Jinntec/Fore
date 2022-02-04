@@ -176,7 +176,9 @@
                            method="get"
                            url="elements/{instance('default')/current}.md"
                            replace="instance"
-                           into="instance()/element[contains(@tags , ../tag)][index('elements')]"></fx-submission>
+                           into="instance()/element[contains(@tags , ../tag)][index('elements')]">
+                <fx-message event="submit-error" level="modal">File not found</fx-message>
+            </fx-submission>
 
             <fx-function signature="local:markdown($input as xs:string?) as xs:string"
                          type="text/javascript">
@@ -227,11 +229,6 @@
                 </details>
             </template>
         </fx-repeat>
-<!--
-        <pre>
-            {log('default')}
-        </pre>
--->
     </fx-fore>
 
 </div>
