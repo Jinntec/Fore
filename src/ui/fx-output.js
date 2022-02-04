@@ -24,7 +24,6 @@ export class FxOutput extends XfAbstractControl {
 
   connectedCallback() {
     const style = `
-          @import 'fx-output-styles.css';
           :host {
             display: inline-block;
           }
