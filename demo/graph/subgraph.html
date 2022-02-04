@@ -24,7 +24,6 @@
             width:100vw;
             margin:0;
             padding:0;
-            overflow:hidden;
 
         }
 
@@ -149,9 +148,9 @@
                          constraint="number(.) <= 10"
                          readonly="true()"></fx-bind>
 
-                <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
-                <fx-bind ref="z" calculate="../y + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
-                <fx-bind ref="q" readonly="../a > 100"></fx-bind>
+                <fx-bind ref="y" calculate="number(../x) + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
+                <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
             </template>
         </demo-snippet>
 
@@ -188,13 +187,13 @@
                         </data>
                     </fx-instance>
 
-                    <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                    <fx-bind ref="d" calculate="../a + ../b" constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                    <fx-bind ref="e" calculate="../a + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+                    <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                    <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                    <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
 
-                    <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
-                    <fx-bind ref="z" calculate="../y + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
-                    <fx-bind ref="q" readonly="../a > 100"></fx-bind>
+                    <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+                    <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                    <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
 
                 </fx-model>
                 <fx-control ref="a" update-event="input">
