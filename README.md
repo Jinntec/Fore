@@ -14,7 +14,11 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec)](https://twitter.com/JinnForeTec) 
 
-## [Demos](https://jinntec.github.io/Fore)
+## [Demos Demos Demos Demos Demos](https://jinntec.github.io/Fore)
+
+Sorry for being loud - some people complaining not finding demos.
+
+## [Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
 # What it does
 
