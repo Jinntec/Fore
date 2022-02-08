@@ -248,6 +248,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         newItem.appendChild(clonedTemplate);
         this.appendChild(newItem);
 
+        this._initVariables(newItem);
+
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
       }
@@ -353,8 +355,21 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.applyIndex(repeatItem);
       }
 
-      repeatItem.setInScopeVariables(this.inScopeVariables);
+      this._initVariables(repeatItem);
     });
+  }
+
+  _initVariables(newRepeatItem) {
+    const inScopeVariables = new Map(this.inScopeVariables);
+    newRepeatItem.setInScopeVariables(inScopeVariables);
+    (function registerVariables(node) {
+      for (const child of node.children) {
+        if ('setInScopeVariables' in child) {
+          child.setInScopeVariables(inScopeVariables);
+        }
+        registerVariables(child);
+      }
+    })(newRepeatItem);
   }
 
   _clone() {

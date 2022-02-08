@@ -1,6 +1,7 @@
 import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import { foreElementMixin } from './ForeElementMixin.js';
+import getInScopeContext from './getInScopeContext.js';
 
 /**
  * @ts-check
@@ -21,7 +22,9 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
   }
 
   refresh() {
-    this.value = evaluateXPath(this.valueQuery, null, this, this.precedingVariables);
+    const inscope = getInScopeContext(this, this.valueQuery);
+
+    this.value = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
   }
 
   setInScopeVariables(inScopeVariables) {
