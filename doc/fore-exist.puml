@@ -1,0 +1,61 @@
+@startuml
+
+== Submission ==
+
+actor user
+user -> Fore:triggers submit
+Fore -> App:referer
+note right of App
+referer header must be set by Fore as it's not consistently
+delivered by browsers. Alternatively an x-header can be defined
+to avoid proxy issues.
+end note
+note right: submit()
+
+App -> Middleware:referer
+Middleware -> ValidatorGenerator:generate-validator()
+note right of Middleware
+XQueryX-generated from referer's fx-bind elements.
+Simple caching should be in place to avoid
+repeated generation.
+end note
+ValidatorGenerator -> Middleware
+
+Middleware -> Validator
+
+note right of Middleware
+actual validation
+end note
+Validator -> Middleware
+
+activate Middleware
+Middleware -> App: if valid: call endpoint with valid data
+Middleware -> Fore: return status 200
+
+Middleware -> Fore: if invalid: return invalid data and stop processing
+deactivate
+note right of Middleware
+if validation fails due to evaluation of bindings
+we just need to return the data for reference. Should be a XML
+response that wraps the data and allows for an additional message.
+e.g.
+<validator>
+    <error-message>....</error-message>
+    <data>[the processed data]</data>
+</validator>
+end note
+
+Fore -> user: display alerts
+note right of Fore
+Fore handles display of alerts on its behalf. There's no
+need to return error info for bindings from server as they use the same
+source. So, the client knows about those and just uses the error
+response to display it's alerts.
+
+If server-side validation breaks while client did validate true
+the request was somehow tampered in between.
+
+If however the server does additional validation like XML Schema
+it should be able to return a message.
+end note
+@enduml
