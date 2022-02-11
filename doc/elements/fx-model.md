@@ -18,11 +18,17 @@ No Attributes
 
 ### Events
 
-| Name | Description |
+| Name | Description | 
 |------|-------------|
-| model-construct | dispatched when starting to initialize the model |
-| model-construct-done | dispatched when model has initialized. Instance have been loaded and first model update has taken place. |
-
+| model-construct | dispatched when starting to initialize the model | 
+| model-construct-done | dispatched when model has initialized. Instance have been loaded and first model update has taken place. | 
+| rebuild-done | dispatched when model has run `rebuild`.  details: `maingraph` - the mainGraph | 
+| | `maingraph` - the mainGraph | 
+| recalculate-done | dispatched when model has run `recalculate` | 
+| | `subgraph` - the subgraph for changed nodes |
+| | `computes` - the number of computes |
 ### Examples
 
-All examples
+* [Recalculation](../demo/graph/subgraph.html)
+* all examples
+

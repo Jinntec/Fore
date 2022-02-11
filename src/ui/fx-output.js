@@ -24,7 +24,6 @@ export class FxOutput extends XfAbstractControl {
 
   connectedCallback() {
     const style = `
-          @import 'fx-output-styles.css';
           :host {
             display: inline-block;
           }
@@ -61,7 +60,7 @@ export class FxOutput extends XfAbstractControl {
     // this.widget = this.shadowRoot.querySelector('#widget');
     // this.widget = this.getWidget();
     // console.log('widget ', this.widget);
-    this.mediatype = this.hasAttribute('mediatype')?this.getAttribute('mediatype'):null;
+    this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
 
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
@@ -105,24 +104,24 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    console.log('updateWidgetValue')
+    console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
 
-    if(this.mediatype === 'markdown'){
+    if (this.mediatype === 'markdown') {
       const md = markdown(this.nodeset);
       this.innerHtml = md;
     }
 
     if (this.mediatype === 'html') {
       if (this.modelItem.node) {
-/*
+        /*
         valueWrapper.innerHTML = this.modelItem.node.outerHTML;
         return;
 */
 
         const node = this.modelItem.node;
 
-        if(node.nodeType){
+        if (node.nodeType) {
           // const mainSlot = this.shadowRoot.querySelector('#main');
           // valueWrapper.appendChild(node);
 

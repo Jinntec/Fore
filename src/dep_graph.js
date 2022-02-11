@@ -324,11 +324,9 @@ DepGraph.prototype = {
   /**
    * Get an array of nodes that have no dependants (i.e. nothing depends on them).
    */
-  entryNodes () {
+  entryNodes() {
     const self = this;
-    return Object.keys(this.nodes).filter((node) => {
-      return self.incomingEdges[node].length === 0;
-    });
+    return Object.keys(this.nodes).filter(node => self.incomingEdges[node].length === 0);
   },
 
   /**

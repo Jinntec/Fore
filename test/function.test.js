@@ -1,4 +1,4 @@
-import {html, oneEvent, fixtureSync, expect, elementUpdated} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -241,7 +241,7 @@ describe('functions', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
-    el.style.display = "block";
+    el.style.display = 'block';
     // Second row, second item
     const span = el.querySelectorAll('input')[3 + 1];
     span.focus();

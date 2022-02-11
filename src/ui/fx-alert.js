@@ -1,7 +1,6 @@
 import AbstractControl from './abstract-control.js';
 
 export class FxAlert extends AbstractControl {
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -28,7 +27,6 @@ export class FxAlert extends AbstractControl {
         </style>
         ${html}
     `;
-
   }
 
   async updateWidgetValue() {

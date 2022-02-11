@@ -27,7 +27,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     this.instance = this.hasAttribute('instance') ? this.getAttribute('instance') : null;
 
     /** if present will determine XPath where to insert a response into when mode is 'replace' */
-    this.into = this.hasAttribute('into')? this.getAttribute('into'):null;
+    this.into = this.hasAttribute('into') ? this.getAttribute('into') : null;
 
     /** http method */
     this.method = this.hasAttribute('method') ? this.getAttribute('method') : 'get';
@@ -182,7 +182,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     const contentType = response.headers.get('content-type').toLowerCase();
-    if (contentType.startsWith('text/plain') || contentType.startsWith('text/html') || contentType.startsWith('text/markdown')) {
+    if (
+      contentType.startsWith('text/plain') ||
+      contentType.startsWith('text/html') ||
+      contentType.startsWith('text/markdown')
+    ) {
       const text = await response.text();
       this._handleResponse(text);
     } else if (contentType.startsWith('application/json')) {
@@ -268,14 +272,22 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const targetInstance = this._getTargetInstance();
       if (targetInstance) {
         if (this.targetref) {
-          const theTarget = evaluateXPath(this.targetref, targetInstance.instanceData.firstElementChild, this);
+          const theTarget = evaluateXPath(
+            this.targetref,
+            targetInstance.instanceData.firstElementChild,
+            this,
+          );
           console.log('theTarget', theTarget);
           const clone = data.firstElementChild;
           const parent = theTarget.parentNode;
           parent.replaceChild(clone, theTarget);
           console.log('finally ', parent);
-        } else if(this.into){
-          const theTarget = evaluateXPath(this.into, targetInstance.instanceData.firstElementChild, this);
+        } else if (this.into) {
+          const theTarget = evaluateXPath(
+            this.into,
+            targetInstance.instanceData.firstElementChild,
+            this,
+          );
           console.log('theTarget', theTarget);
           theTarget.innerHTML = data;
         } else {

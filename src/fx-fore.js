@@ -4,7 +4,7 @@ import './fx-model.js';
 import '@jinntec/jinn-toast';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
-import { XPathUtil } from './xpath-util';
+import { XPathUtil } from './xpath-util.js';
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -242,7 +242,15 @@ export class FxFore extends HTMLElement {
     return evaluateXPathToNodes(xpath, context, this);
   }
 
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    /*
+    this.removeEventListener('model-construct-done', this._handleModelConstructDone);
+    this.removeEventListener('message', this._displayMessage);
+    this.removeEventListener('error', this._displayError);
+    this.storedTemplateExpressionByNode=null;
+    this.shadowRoot = undefined;
+*/
+  }
 
   /**
    * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
@@ -258,6 +266,25 @@ export class FxFore extends HTMLElement {
 
     console.time('refresh');
 
+    /*
+    const changedModelItems = this.getModel().changed;
+    const graph = this.getModel().mainGraph;
+    let doRefresh = true;
+    changedModelItems.forEach(item => {
+      if(graph.hasNode(item.path)) {
+        const deps = graph.dependentsOf(item.path, false);
+        if (deps.length === 0) {
+          doRefresh=false;
+        }
+      }
+    });
+    this.getModel().changed = [];
+
+    if (!doRefresh) {
+      this.dispatchEvent(new CustomEvent('refresh-done'));
+      return ;
+    }
+*/
     // ### refresh Fore UI elements
     console.time('refreshChildren');
     Fore.refreshChildren(this, true);

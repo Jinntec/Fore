@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Instance Generator</title>
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+    <style>
+        textarea {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Instance data generator</h1>
+    <p>To customize the data to be generated edit 'template.xml' file alongside this page.</p>
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <counter>0</counter>
+                    <n>10</n>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="generated">
+                <data>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="template" src="template.xml">
+                <!--<fx-instance id="template">
+                    <data>
+                        <item>
+                            <foo/>
+                            <bar></bar>
+                        </item>
+                    </data>-->
+            </fx-instance>
+            <!--
+                        <fx-function signature="local:now() as xs:dateTime" type="text/javascript">
+                            return Date.now();
+                        </fx-function>
+            -->
+        </fx-model>
+        <fx-group id="group">
+            <fx-control ref="n">
+                <label>Number of items</label>
+            </fx-control>
+            <fx-trigger>
+                <button>Generate</button>
+
+                <fx-setvalue ref="counter">0</fx-setvalue>
+                <fx-action id="trigger" while="counter < number(n)">
+                    <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
+                    <fx-insert origin="instance('template')/item"
+                               ref="instance('generated')/item"></fx-insert>
+                </fx-action>
+
+            </fx-trigger>
+        </fx-group>
+        <!--
+                <fx-message
+                            event="action-performed"
+                            target="group"
+                            phase="capture"><fx-output value="event('target')"></fx-output></fx-message>
+        -->
+
+        <p>Total:{count(instance('generated')/*)}</p>
+        <p>Count:{counter} of {n}</p>
+        <h2>Generated instance data</h2>
+        <textarea>
+                {log('generated')}
+                </textarea>
+
+    </fx-fore>
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
