@@ -353,6 +353,42 @@ export function evaluateXPathToString(
 }
 
 /**
+ * Evaluate an XPath to a set of strings
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @return {string}
+ */
+export function evaluateXPathToStrings(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+  return fxEvaluateXPathToStrings(
+    xpath,
+    contextNode,
+    domFacade,
+    {},
+
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
+}
+
+/**
  * Evaluate an XPath to a number
  *
  * @param  {string}     xpath             The XPath to run
@@ -496,6 +532,7 @@ registerCustomXPathFunction(
   [],
   'item()?',
   (dynamicContext, string) => {
+    debugger;
     const caller = dynamicContext.currentContext.formElement;
     const parent = XPathUtil.getParentBindingElement(caller);
     // const instance = resolveId('default', caller, 'fx-instance');

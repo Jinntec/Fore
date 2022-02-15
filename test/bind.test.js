@@ -365,6 +365,30 @@ describe('bind Tests', () => {
     expect(output.value).to.equal('11');
   });
 
+  it('uses the correct context for the context function', async () => {
+    debugger;
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a><b>b in a</b></a>
+              <b>b in root</b>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-group>
+          <fx-output id="output" ref="a" value="b"></fx-output>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+
+    const output = el.querySelector('#output');
+    expect(output.value).to.equal('b in a');
+  });
+
   it('can resolve calculates in bind in the correct order: attributes', async () => {
     const el = await fixture(html`
       <fx-fore>
