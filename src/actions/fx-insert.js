@@ -86,7 +86,7 @@ export class FxInsert extends AbstractAction {
         */
 
     // ### obtaining targetSequence
-    const inscope = getInScopeContext(this, this.ref);
+    const inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
 
     // @ts-ignore
     const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());

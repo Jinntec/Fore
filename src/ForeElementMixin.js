@@ -90,7 +90,7 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
-      const inscopeContext = getInScopeContext(this, this.ref);
+      const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
       if (!inscopeContext) {
         console.warn('no in scopeContext for ', this);
         return;
@@ -217,7 +217,7 @@ export const foreElementMixin = superclass =>
     }
 
     getInScopeContext() {
-      return getInScopeContext(this, this.ref);
+      return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     }
 
     dispatch(eventName, detail) {

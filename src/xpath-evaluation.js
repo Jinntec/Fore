@@ -353,6 +353,42 @@ export function evaluateXPathToString(
 }
 
 /**
+ * Evaluate an XPath to a set of strings
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @return {string}
+ */
+export function evaluateXPathToStrings(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+  return fxEvaluateXPathToStrings(
+    xpath,
+    contextNode,
+    domFacade,
+    {},
+
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
+}
+
+/**
  * Evaluate an XPath to a number
  *
  * @param  {string}     xpath             The XPath to run
@@ -487,6 +523,31 @@ export function resolveId(id, sourceObject, nodeName = null) {
   return null;
 }
 
+const contextFunction = (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+  if (string) {
+    const instance = resolveId(string, caller);
+    if (instance) {
+      if (instance.nodeName === 'FX-REPEAT') {
+        const { nodeset } = instance;
+        for (let parent = caller; parent; parent = parent.parentNode) {
+          if (parent.parentNode === instance) {
+            const offset = Array.from(parent.parentNode.children).indexOf(parent);
+            return nodeset[offset];
+          }
+        }
+      }
+      return instance.nodeset;
+    }
+  }
+    const parent = XPathUtil.getParentBindingElement(caller);
+    const p = caller.nodeName;
+    // const p = dynamicContext.domFacade.getParentElement();
+
+    if (parent) return parent;
+    return caller.getInScopeContext();
+};
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -495,16 +556,18 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
   [],
   'item()?',
-  (dynamicContext, string) => {
-    const caller = dynamicContext.currentContext.formElement;
-    const parent = XPathUtil.getParentBindingElement(caller);
-    // const instance = resolveId('default', caller, 'fx-instance');
-    const p = caller.nodeName;
-    // const p = dynamicContext.domFacade.getParentElement();
+  contextFunction,
+);
 
-    if (parent) return parent;
-    return caller.getInScopeContext();
-  },
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  ['xs:string'],
+  'item()?',
+  contextFunction,
 );
 
 /**

@@ -168,7 +168,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    */
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
-    const inscope = getInScopeContext(this, this.ref);
+    const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it

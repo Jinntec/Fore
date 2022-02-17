@@ -7,6 +7,7 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import getInScopeContext from './getInScopeContext.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -321,7 +322,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * overwrites
    */
   _evalInContext() {
-    const inscopeContext = this.getInScopeContext();
+    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
 
     // reset nodeset
     this.nodeset = [];
