@@ -64,7 +64,7 @@ export class FxFore extends HTMLElement {
 
     const style = `
             :host {
-                display: none;
+                // display: none;
                 height:auto;
                 padding:var(--model-element-padding);
                 font-family:Roboto, sans-serif;
