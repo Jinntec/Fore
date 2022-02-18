@@ -105,10 +105,13 @@ export class FxItems extends FxControl {
     const cutted = expr.substring(1, expr.length - 1);
     const evaluated = evaluateXPath(cutted, node, newEntry);
 
-    const valAttr = this.getAttribute('value');
+    // adding space around value to allow matching of 'words'
+    const spaced = ` ${evaluated} `;
+
+    const valAttr = ` ${this.getAttribute('value')} `;
     input.value = evaluated;
     input.setAttribute('id', id);
-    if (valAttr.indexOf(input.value) !== -1) {
+    if (valAttr.indexOf(spaced) !== -1) {
       input.checked = true;
     }
   }
