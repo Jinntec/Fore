@@ -2,10 +2,18 @@ import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 import { XPathUtil } from './xpath-util.js';
 
-function _getParentElement(node) {
+function _getElement(node) {
   if (node.nodeType === Node.ATTRIBUTE_NODE) {
+    // The context of an attribute is the ref of the element it's defined on
     return node.ownerElement;
   }
+
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    // The context of a query should be the element having a ref
+    return node;
+  }
+
+  // For text nodes, just start looking from the parent element
   return node.parentNode;
 }
 
@@ -31,14 +39,14 @@ function _getInitialContext(node, ref) {
     const instanceId = XPathUtil.getInstanceId(ref);
     return model.getInstance(instanceId).getDefaultContext();
   }
-  if (model.getDefaultInstance() !== null) {
+  if (model.getDefaultInstance() !== null && model.inited) {
     return model.getDefaultInstance().getDefaultContext();
   }
   return [];
 }
 
 export default function getInScopeContext(node, ref) {
-  const parentElement = _getParentElement(node);
+  const parentElement = _getElement(node);
   /*
   if(parentElement.nodeName.toUpperCase() === 'FX-REPEATITEM'){
     return parentElement.nodeset;
@@ -50,10 +58,23 @@ export default function getInScopeContext(node, ref) {
     return repeatItem.nodeset;
   }
 
-  if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('context')) {
-    const initialContext = _getInitialContext(node.parentNode, ref);
-    const contextAttr = node.getAttribute('context');
+  if (node.nodeType === Node.ATTRIBUTE_NODE && node.nodeName === 'ref') {
+    // Note: do not consider the ref of the owner element since it should not be used to define the
+    // context
+    if (node.ownerElement.hasAttribute('context')) {
+      const initialContext = _getInitialContext(node.ownerElement.parentNode, ref);
+      const contextAttr = node.ownerElement.getAttribute('context');
     return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
   }
+
+    // Never resolve the context from a ref itself!
+    return _getInitialContext(parentElement.parentNode, ref);
+  }
+
+  // if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('context')) {
+  //   const initialContext = _getInitialContext(node.parentNode, ref);
+  //   const contextAttr = node.getAttribute('context');
+  //   return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
+  // }
   return _getInitialContext(parentElement, ref);
 }

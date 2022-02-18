@@ -13,6 +13,7 @@
             animation: fadeInAnimation ease 1s;
             animation-iteration-count: 1;
             animation-fill-mode: forwards;
+            font-family: sans-serif;
         }
         @keyframes fadeInAnimation {
             0% {
@@ -23,14 +24,23 @@
             }
         }
         .logo{
-            width: 100vw;
-            margin: 0 auto;
-            position: absolute;
-            left: -5%;
-            top: 30vh;
-            transform:translateY(-50%) rotate(-30deg);
-            opacity: 0.08;
-            z-index: 0;
+            width: 300px;
+            margin:0 auto;
+        }
+        a.reference{
+            color: var(--paper-blue-grey-900);
+            font-size: 1.4rem;
+            display: block;
+        }
+        .header{
+            background: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-top:0.5rem;
+        }
+        section{
+            margin:1rem;
         }
     </style>
 
@@ -38,8 +48,11 @@
 <body>
     <div class="wrapper demos topic">
 
-        <h1>Demos and Docs</h1>
-        <h3><a href="../demo/api.html" target="_blank">Fore API</a></h3>
+
+        <div class="header">
+            <img class="logo" src="../resources/images/light7.png">
+            <a class="reference" href="reference.html">Fore Element Reference</a>
+        </div>
         <section>
             <h2>Basic</h2>
             <h3><a href="../demo/01-hi.html" target="_blank">Get started</a></h3>
@@ -53,7 +66,7 @@
         <section>
             <h2>Model</h2>
             <h3><a href="../demo/recalculate.html" target="_blank">One depends the other</a></h3>
-            <h3><a href="../demo/simple-calc.html" target="_blank">Calculare</a></h3>
+            <h3><a href="../demo/simple-calc.html" target="_blank">Calculate</a></h3>
             <h3><a href="../demo/revalidate.html" target="_blank">Validation and Alerts</a></h3>
             <h3><a href="../demo/calc-order.html" target="_blank">Calculation Order</a></h3>
             <h3><a href="../demo/submission2.html" target="_blank">On a submission...</a></h3>
@@ -65,13 +78,14 @@
         </section>
         <section>
             <h2>UI Controls</h2>
-            <h3><a href="../demo/fx-control.html" target="_blank">fx-control - one Control to bind 'em all</a></h3>
-            <h3><a href="../demo/selects2.html" target="_blank">Selects (1)</a></h3>
-            <h3><a href="../demo/selects.html" target="_blank">Selects (2)</a></h3>
-            <h3><a href="../demo/selects3.html" target="_blank">Select Multiple</a></h3>
-            <h3><a href="../demo/trigger.html" target="_blank">Trigger</a></h3>
-            <h3><a href="../demo/avt.html" target="_blank">Template Expressions (1)</a></h3>
-            <h3><a href="../demo/css.html" target="_blank">Template Expressions (2)</a></h3>
+            <h4><a href="../demo/fx-control.html" target="_blank">fx-control - one Control to bind 'em all</a></h4>
+            <h4><a href="../demo/controls/fx-output.html" target="_blank">fx-output</a></h4>
+            <h4><a href="../demo/selects2.html" target="_blank">Selects (1)</a></h4>
+            <h4><a href="../demo/selects.html" target="_blank">Selects (2)</a></h4>
+            <h4><a href="../demo/selects3.html" target="_blank">Select Multiple</a></h4>
+            <h4><a href="../demo/trigger.html" target="_blank">Trigger</a></h4>
+            <h4><a href="../demo/avt.html" target="_blank">Template Expressions (1)</a></h4>
+            <h4><a href="../demo/css.html" target="_blank">Template Expressions (2)</a></h4>
         </section>
         <section>
             <h2>UI Container</h2>
@@ -95,11 +109,14 @@
             <h3><a href="../demo/fx-dispatch.html" target="_blank">fx-dispatch action</a></h3>
             <h3><a href="../demo/insert.html" target="_blank">The insert action</a></h3>
             <h3><a href="../demo/insert2.html" target="_blank">more inserts - using context</a></h3>
+            <h3><a href="../demo/insert-inhomogenious.html.html" target="_blank">inserting in inhomogenious nodeset</a></h3>
 
         </section>
 
         <section>
             <h2>Functions</h2>
+
+            <h3><a href="../demo/functions/fn-context.html" target="_blank">context()</a></h3>
             <h3><a href="../demo/functions.html" target="_blank">Custom Functions</a></h3>
         </section>
 
@@ -110,20 +127,18 @@
 
         <section>
             <h2>Other examples</h2>
+            <h3><a href="../demo/api.html" target="_blank">API Demo</a></h3>
             <h3><a href="../demo/todo2.html" target="_blank">Todo</a></h3>
             <h3><a href="../demo/project.html" target="_blank">a Kanban board with checklists</a></h3>
             <h3><a href="../demo/simple-tei-header.html" target="_blank">editing a basic TEI header</a></h3>
             <h3><a href="../demo/fx-control-build.html" target="_blank">running a bundled version</a></h3>
-<!--            <h3><a href="../demo/editor.html" target="_blank">Fore editor</a></h3>-->
+<!--        <h3><a href="../demo/editor.html" target="_blank">Fore editor</a></h3>-->
             <h3><a href="../demo/docbook-bibliography.html" target="_blank">DocBook Bibliography - editing namespaced XML</a></h3>
             <h3><a href="../demo/randomizer.html" target="_blank">Randomizing CSS properties</a></h3>
             <h3><a href="../demo/auth.html" target="_blank">a simple login</a></h3>
+            <h3><a href="../demo/graph/subgraph.html" target="_blank">Subgraph recalculation</a></h3>
+            <h3><a href="../demo/instance-generator/instance-generator.html" target="_blank">Instance Data generator</a></h3>
 
-
-            <h3><a href="../demo/ling/editor.html" target="_blank">Ling editor</a></h3>
-            <h3><a href="../demo/ling/editor-lazy.html" target="_blank">Lazy Ling editor</a></h3>
-            <h3><a href="../demo/ling/dispatch-id.html" target="_blank">dispatch with id in repeat</a></h3>
-            <h3><a href="../demo/ling/ns-test.html" target="_blank">namespace test</a></h3>
         </section>
 
 <!--        <h3><a href="../demo/auth.html" target="_blank">URLEncoded Submission</a></h3>-->

@@ -81,9 +81,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     this.target = this.getAttribute('target');
     if (this.target) {
-      if (this.target === '#window'){
+      if (this.target === '#window') {
         window.addEventListener(this.event, e => this.execute(e));
-      }else if (this.target === '#document') {
+      } else if (this.target === '#document') {
         document.addEventListener(this.event, e => this.execute(e));
       } else {
         this.targetElement = document.getElementById(this.target);

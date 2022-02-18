@@ -9,7 +9,7 @@ import { getBucketsForNode } from 'fontoxpath';
  */
 export class DependencyNotifyingDomFacade {
   /**
-   * @param  {function(touchedNode: Node): void)} onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
+   * @param  onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
    */
   constructor(onNodeTouched) {
     this._onNodeTouched = onNodeTouched;
@@ -45,13 +45,21 @@ export class DependencyNotifyingDomFacade {
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
   // eslint-disable-next-line class-methods-use-this
+/*
   getChildNodes(node, bucket) {
     const matchingNodes = Array.from(node.childNodes).filter(
       childNode => !bucket || getBucketsForNode(childNode).includes(bucket),
     );
     return matchingNodes;
   }
+*/
 
+  getChildNodes(node, bucket) {
+    const matchingNodes = Array.from(node.childNodes).filter(
+        childNode => !bucket || getBucketsForNode(childNode).includes(bucket));
+    matchingNodes.forEach(matchingNode => this._onNodeTouched(matchingNode));
+    return matchingNodes;
+  }
   /**
    * Get the data of this node.
    *

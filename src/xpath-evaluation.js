@@ -10,10 +10,37 @@ import {
   registerCustomXPathFunction,
   registerXQueryModule,
 } from 'fontoxpath';
+import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
+
+function prettifyXml(source) {
+  const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString(
+    [
+      // describes how we want to modify the XML - indent everything
+      '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+      '  <xsl:strip-space elements="*"/>',
+      '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+      '    <xsl:value-of select="normalize-space(.)"/>',
+      '  </xsl:template>',
+      '  <xsl:template match="node()|@*">',
+      '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+      '  </xsl:template>',
+      '  <xsl:output indent="yes"/>',
+      '</xsl:stylesheet>',
+    ].join('\n'),
+    'application/xml',
+  );
+
+  const xsltProcessor = new XSLTProcessor();
+  xsltProcessor.importStylesheet(xsltDoc);
+  const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+  const resultXml = new XMLSerializer().serializeToString(resultDoc);
+  return resultXml;
+}
 
 function getCachedNamespaceResolver(xpath, node) {
   if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
@@ -81,7 +108,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
         ancestorComponent.getAttribute('ref'),
         ancestorComponent,
       );
-      setCachedNamespaceResolver(xpathQuery, formElement);
+      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
       return resolver;
     }
     // Nothing found: let's just assume we're supposed to use the `default` instance
@@ -106,7 +133,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
     }
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-/*
+      /*
       console.log(
         `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
       );
@@ -168,6 +195,7 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
     // TODO: put the full XForms library functions set here
+    case 'context':
     case 'base64encode':
     case 'boolean-from-string':
     case 'current':
@@ -325,6 +353,42 @@ export function evaluateXPathToString(
 }
 
 /**
+ * Evaluate an XPath to a set of strings
+ *
+ * @param  {string}     xpath             The XPath to run
+ * @param  {Node}       contextNode       The start of the XPath
+ * @param  {Node}       formElement       The form element associated to the XPath
+ * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @return {string}
+ */
+export function evaluateXPathToStrings(
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
+) {
+  const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+  return fxEvaluateXPathToStrings(
+    xpath,
+    contextNode,
+    domFacade,
+    {},
+
+    {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    },
+  );
+}
+
+/**
  * Evaluate an XPath to a number
  *
  * @param  {string}     xpath             The XPath to run
@@ -459,6 +523,53 @@ export function resolveId(id, sourceObject, nodeName = null) {
   return null;
 }
 
+const contextFunction = (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+  if (string) {
+    const instance = resolveId(string, caller);
+    if (instance) {
+      if (instance.nodeName === 'FX-REPEAT') {
+        const { nodeset } = instance;
+        for (let parent = caller; parent; parent = parent.parentNode) {
+          if (parent.parentNode === instance) {
+            const offset = Array.from(parent.parentNode.children).indexOf(parent);
+            return nodeset[offset];
+          }
+        }
+      }
+      return instance.nodeset;
+    }
+  }
+    const parent = XPathUtil.getParentBindingElement(caller);
+    const p = caller.nodeName;
+    // const p = dynamicContext.domFacade.getParentElement();
+
+    if (parent) return parent;
+    return caller.getInScopeContext();
+};
+
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  [],
+  'item()?',
+  contextFunction,
+);
+
+/**
+ * @param id as string
+ * @return instance data for given id serialized to string.
+ */
+registerCustomXPathFunction(
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  ['xs:string'],
+  'item()?',
+  contextFunction,
+);
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -471,8 +582,13 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
     const instance = resolveId(string, formElement, 'fx-instance');
     if (instance) {
-      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-      return def;
+      if (instance.getAttribute('type') === 'json') {
+        console.warn('log() does not work for JSON yet');
+        // return JSON.stringify(instance.getDefaultContext());
+      } else {
+        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+        return prettifyXml(def);
+      }
     }
     return null;
   },
@@ -609,7 +725,7 @@ registerCustomXPathFunction(
     if (repeat) {
       return repeat.getAttribute('index');
     }
-    return 1;
+    return Number(1);
   },
 );
 
@@ -663,26 +779,26 @@ registerXQueryModule(`
 
 // How to run XQUERY:
 /**
- registerXQueryModule(`
- module namespace my-custom-namespace = "my-custom-uri";
- (:~
- Insert attribute somewhere
- ~:)
- declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
+registerXQueryModule(`
+module namespace my-custom-namespace = "my-custom-uri";
+(:~
+	Insert attribute somewhere
+	~:)
+declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
 	if ($ele/@done) then false() else
 	(insert node
 	attribute done {"true"}
 	into $ele, true())
 };
- `)
- // At some point:
- const contextNode = null;
- const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
+`)
+// At some point:
+const contextNode = null;
+const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
 
- console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
+console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
 
- executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
- */
+executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
+*/
 
 /**
  * @param input as string

@@ -67,11 +67,11 @@ describe('fx-output Tests', () => {
         <fx-model>
           <fx-instance>
             <data>
-              <div style="color:white;background:#333;padding:1rem;">hey there</div>
+              <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
             </data>
           </fx-instance>
         </fx-model>
-        <fx-output ref="div" html>
+        <fx-output ref="div" mediatype="html">
           <label slot="label">Output bound node as HTML: </label>
         </fx-output>
       </fx-fore>
@@ -83,13 +83,12 @@ describe('fx-output Tests', () => {
     expect(control.value).to.equal('hey there');
     expect(control.getModelItem().value).to.equal('hey there');
     const label = control.querySelector('label');
+    //label exists in lightDOM
     expect(label).to.exist;
     expect(label.textContent).to.equal('Output bound node as HTML: ');
 
-    const content = control.shadowRoot.querySelector('span');
-    expect(content.textContent).to.equal('hey there');
-
-    const div = content.querySelector('div');
+    const div = control.querySelector('div');
+    // div exists in lightDOM
     expect(div).to.exist;
     expect(div.getAttribute('style')).to.equal('color:white;background:#333;padding:1rem;');
     expect(div.textContent).to.equal('hey there');
@@ -105,7 +104,7 @@ describe('fx-output Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        <fx-output ref="div" html>
+        <fx-output ref="div" mediatype="html">
           <label slot="label">Output bound node as HTML: </label>
         </fx-output>
       </fx-fore>
@@ -120,10 +119,7 @@ describe('fx-output Tests', () => {
     expect(label).to.exist;
     expect(label.textContent).to.equal('Output bound node as HTML: ');
 
-    const content = control.shadowRoot.querySelector('span');
-    expect(content.textContent).to.equal('hey there');
-
-    const div = content.querySelector('div');
+    const div = control.querySelector('div');
     expect(div).to.exist;
     expect(div.getAttribute('style')).to.equal('color:white;background:#333;padding:1rem;');
     expect(div.textContent).to.equal('hey there');

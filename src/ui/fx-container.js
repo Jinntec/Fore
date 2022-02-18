@@ -38,8 +38,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
    * (re)apply all state properties to this control.
    */
   refresh(force) {
-
-    if(!force && this.hasAttribute('refresh-on-view')) return;
+    if (!force && this.hasAttribute('refresh-on-view')) return;
     // console.log('### FxContainer.refresh on : ', this);
 
     if (this.isBound()) {
@@ -54,7 +53,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (this._getForm().ready) {
       this.handleModelItemProperties();
     }
-    Fore.refreshChildren(this,force);
+    Fore.refreshChildren(this, force);
   }
 
   handleModelItemProperties() {
@@ -82,7 +81,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
 
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
-    if(!this.modelItem) return ;
+    if (!this.modelItem) return;
 
     if (this.isEnabled() !== this.modelItem.enabled) {
       if (this.modelItem.enabled) {

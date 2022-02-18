@@ -88,6 +88,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -114,18 +115,16 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('insert catched', nodes, this.index);
     });
 
-    if(this.getOwnerForm().lazyRefresh){
+    if (this.getOwnerForm().lazyRefresh) {
       this.mutationObserver = new MutationObserver(mutations => {
-        console.log('mutations',mutations);
+        console.log('mutations', mutations);
         this.refresh(true);
       });
     }
     this.getOwnerForm().registerLazyElement(this);
 
-
     const style = `
       :host{
-        display:none;
       }
        .fade-out-bottom {
           -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -169,15 +168,15 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    */
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
-    const inscope = getInScopeContext(this, this.ref);
+    const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
 
-    if(this.mutationObserver && inscope.nodeName){
-      this.mutationObserver.observe(inscope,{
-        childList:true,
-        subtree:true,
+    if (this.mutationObserver && inscope.nodeName) {
+      this.mutationObserver.observe(inscope, {
+        childList: true,
+        subtree: true,
       });
     }
 
@@ -212,7 +211,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-    console.time('repeat-refresh',this);
+    console.time('repeat-refresh', this);
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
@@ -266,10 +265,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
-    if(!fore.lazyRefresh || force){
-      Fore.refreshChildren(this,force);
+    if (!fore.lazyRefresh || force) {
+      Fore.refreshChildren(this, force);
     }
-    this.style.display = 'block';
+    // this.style.display = 'block';
+    // this.style.display = this.display;
     this.setIndex(this.index);
     console.timeEnd('repeat-refresh');
 

@@ -168,7 +168,19 @@ export class FxInstance extends HTMLElement {
       .then(response => {
         const responseContentType = response.headers.get('content-type').toLowerCase();
         console.log('********** responseContentType *********', responseContentType);
-        if (responseContentType.startsWith('text/plain')) {
+        if (responseContentType.startsWith('text/html')) {
+          // const htmlResponse = response.text();
+          // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+          // return response.text();
+          return response.text().then(result =>
+            // console.log('xml ********', result);
+            new DOMParser().parseFromString(result, 'text/html'),
+          );
+        }
+        if (
+          responseContentType.startsWith('text/plain') ||
+          responseContentType.startsWith('text/markdown')
+        ) {
           // console.log("********** inside  res plain *********");
           return response.text();
         }
@@ -177,16 +189,20 @@ export class FxInstance extends HTMLElement {
           return response.json();
         }
         if (responseContentType.startsWith('application/xml')) {
-          return response.text().then(result => {
+          return response.text().then(result =>
             // console.log('xml ********', result);
-            return new DOMParser().parseFromString(result, 'application/xml');
-          });
+            new DOMParser().parseFromString(result, 'application/xml'),
+          );
         }
         return 'done';
       })
       .then(data => {
+        if (data.nodeType) {
+          this.instanceData = data;
+          console.log('instanceData loaded: ', this.instanceData);
+          return;
+        }
         this.instanceData = data;
-        console.log('instanceData loaded: ', this.instanceData);
       })
       .catch(error => {
         throw new Error(`failed loading data ${error}`);
@@ -219,6 +235,10 @@ export class FxInstance extends HTMLElement {
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
       this.instanceData = JSON.parse(this.textContent);
+    } else if (this.type === 'html') {
+      this.instanceData = this.firstElementChild.children;
+    } else if (this.type === 'text') {
+      this.instanceData = this.textContent;
     } else {
       console.warn('unknow type for data ', this.type);
     }

@@ -7,6 +7,7 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import getInScopeContext from './getInScopeContext.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -182,12 +183,11 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.bindType === 'xml') {
       this.nodeset.forEach(node => {
         const path = XPathUtil.getPath(node);
+        this.model.mainGraph.addNode(path, node);
 
         if (this.calculate) {
           this.model.mainGraph.addNode(`${path}:calculate`, node);
           // Calculated values are a dependency of the model item.
-          // Make `model1` depend on `model1:calculate`
-          this.model.mainGraph.addNode(path, node);
           this.model.mainGraph.addDependency(path, `${path}:calculate`);
         }
 
@@ -196,11 +196,13 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this._addDependencies(calculateRefs, node, path, 'calculate');
         }
 
-        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
-        if (readonlyRefs.length !== 0) {
-          this._addDependencies(readonlyRefs, node, path, 'readonly');
-        } else if (this.readonly) {
-          this.model.mainGraph.addNode(`${path}:readonly`, node);
+        if (!this.calculate) {
+          const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+          if (readonlyRefs.length !== 0) {
+            this._addDependencies(readonlyRefs, node, path, 'readonly');
+          } else if (this.readonly) {
+            this.model.mainGraph.addNode(`${path}:readonly`, node);
+          }
         }
 
         // const requiredRefs = this.requiredReferences;
@@ -320,7 +322,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * overwrites
    */
   _evalInContext() {
-    const inscopeContext = this.getInScopeContext();
+    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
 
     // reset nodeset
     this.nodeset = [];

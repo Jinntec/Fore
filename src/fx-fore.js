@@ -4,7 +4,7 @@ import './fx-model.js';
 import '@jinntec/jinn-toast';
 import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
-import { XPathUtil } from './xpath-util';
+import { XPathUtil } from './xpath-util.js';
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -23,15 +23,14 @@ import { XPathUtil } from './xpath-util';
 export class FxFore extends HTMLElement {
   static get properties() {
     return {
-
       /**
        * Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being
        * in viewport.
        *
        * this feature is still experimental and should be used with caution and extra testing
        */
-      lazyRefresh:{
-        type: Boolean
+      lazyRefresh: {
+        type: Boolean,
       },
       model: {
         type: Object,
@@ -98,7 +97,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-
+            
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -134,7 +133,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-
+            
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -175,20 +174,18 @@ export class FxFore extends HTMLElement {
 
   connectedCallback() {
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
-    if(this.lazyRefresh){
+    if (this.lazyRefresh) {
       const options = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.3
-      }
+        threshold: 0.3,
+      };
       this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
     }
 
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      console.log('Fore slotchange');
       const children = event.target.assignedElements();
-      // console.log('Fore children', children);
       let modelElement = children.find(
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );
@@ -198,7 +195,9 @@ export class FxFore extends HTMLElement {
         modelElement = generatedModel;
       }
       if (!modelElement.inited) {
-        console.log('########## FORE: kick off processing... ##########');
+        console.log(
+          `########## FORE: kick off processing for ... ${window.location.href} ##########`,
+        );
         modelElement.modelConstruct();
       }
       this.model = modelElement;
@@ -213,39 +212,45 @@ export class FxFore extends HTMLElement {
    */
   handleIntersect(entries, observer) {
     console.time('refreshLazy');
-    entries.forEach((entry) => {
-      const target = entry.target;
+    entries.forEach(entry => {
+      const { target } = entry;
 
       if (entry.isIntersecting) {
         console.log('in view', entry);
         // console.log('repeat in view entry', entry.target);
         // const target = entry.target;
         // if(target.hasAttribute('refresh-on-view')){
-          target.classList.add('loaded');
+        target.classList.add('loaded');
         // }
 
         // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
-        if(typeof target.refresh === "function"){
-          console.log('refreshing target',target);
-          target.refresh(target,true);
-        }else{
-          console.log('refreshing children',target);
-          Fore.refreshChildren(target,true);
+        if (typeof target.refresh === 'function') {
+          console.log('refreshing target', target);
+          target.refresh(target, true);
+        } else {
+          console.log('refreshing children', target);
+          Fore.refreshChildren(target, true);
         }
       }
     });
     entries[0].target.getOwnerForm().dispatchEvent(new CustomEvent('refresh-done'));
 
     console.timeEnd('refreshLazy');
-
   }
-
 
   evaluateToNodes(xpath, context) {
     return evaluateXPathToNodes(xpath, context, this);
   }
 
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    /*
+    this.removeEventListener('model-construct-done', this._handleModelConstructDone);
+    this.removeEventListener('message', this._displayMessage);
+    this.removeEventListener('error', this._displayError);
+    this.storedTemplateExpressionByNode=null;
+    this.shadowRoot = undefined;
+*/
+  }
 
   /**
    * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
@@ -261,9 +266,28 @@ export class FxFore extends HTMLElement {
 
     console.time('refresh');
 
+    /*
+    const changedModelItems = this.getModel().changed;
+    const graph = this.getModel().mainGraph;
+    let doRefresh = true;
+    changedModelItems.forEach(item => {
+      if(graph.hasNode(item.path)) {
+        const deps = graph.dependentsOf(item.path, false);
+        if (deps.length === 0) {
+          doRefresh=false;
+        }
+      }
+    });
+    this.getModel().changed = [];
+
+    if (!doRefresh) {
+      this.dispatchEvent(new CustomEvent('refresh-done'));
+      return ;
+    }
+*/
     // ### refresh Fore UI elements
     console.time('refreshChildren');
-    Fore.refreshChildren(this,true);
+    Fore.refreshChildren(this, true);
     console.timeEnd('refreshChildren');
 
     // ### refresh template expressions
@@ -273,7 +297,6 @@ export class FxFore extends HTMLElement {
     console.groupEnd();
     console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
-
   }
 
   /**
@@ -290,11 +313,15 @@ export class FxFore extends HTMLElement {
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    // console.log('template expressions found ', tmplExpressions);
+    console.log('template expressions found ', tmplExpressions);
+
+    if (!this.storedTemplateExpressions) {
+      this.storedTemplateExpressions = [];
+    }
 
     /*
-                storing expressions and their nodes for re-evaluation
-             */
+        storing expressions and their nodes for re-evaluation
+         */
     Array.from(tmplExpressions).forEach(node => {
       if (this.storedTemplateExpressionByNode.has(node)) {
         // If the node is already known, do not process it twice
@@ -529,12 +556,12 @@ export class FxFore extends HTMLElement {
     const options = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.3
-    }
+      threshold: 0.3,
+    };
 
     await this.refresh();
     // this.style.display='block'
-    this.classList.add('fx-ready')
+    this.classList.add('fx-ready');
 
     this.ready = true;
     console.log('### <<<<< dispatching ready >>>>>');
@@ -543,16 +570,15 @@ export class FxFore extends HTMLElement {
     this.dispatchEvent(new CustomEvent('ready', {}));
   }
 
-  registerLazyElement(element){
-
-    if(this.intersectionObserver){
+  registerLazyElement(element) {
+    if (this.intersectionObserver) {
       // console.log('registerLazyElement',element);
       this.intersectionObserver.observe(element);
     }
   }
 
-  unRegisterLazyElement(element){
-    if(this.intersectionObserver) {
+  unRegisterLazyElement(element) {
+    if (this.intersectionObserver) {
       this.intersectionObserver.unobserve(element);
     }
   }

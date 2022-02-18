@@ -16,11 +16,13 @@ export class FxModel extends HTMLElement {
     this.instances = [];
     this.modelItems = [];
     this.defaultContext = {};
+    this.changed = [];
 
     // this.mainGraph = new DepGraph(false);
     this.inited = false;
     this.modelConstructed = false;
     this.attachShadow({ mode: 'open' });
+    this.computes = 0;
   }
 
   get formElement() {
@@ -39,7 +41,7 @@ export class FxModel extends HTMLElement {
       console.log('model-construct-done fired ', e.detail.model.instances);
     });
 
-    // logging
+    this.skipUpdate = false;
   }
 
   static lazyCreateModelItem(model, ref, node) {
@@ -146,6 +148,7 @@ export class FxModel extends HTMLElement {
   updateModel() {
     console.time('updateModel');
     this.rebuild();
+    if(this.skipUpdate) return;
     this.recalculate();
     this.revalidate();
     console.timeEnd('updateModel');
@@ -159,6 +162,11 @@ export class FxModel extends HTMLElement {
 
     // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
+    if(binds.length === 0 ) {
+      console.log('skipped model update');
+      this.skipUpdate = true;
+      return ;
+    }
     binds.forEach(bind => {
       bind.init(this);
     });
@@ -168,12 +176,15 @@ export class FxModel extends HTMLElement {
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
     console.log(`rebuild mainGraph`, this.mainGraph);
     console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+
+    this.dispatchEvent(new CustomEvent('rebuild-done', { detail: { maingraph: this.mainGraph } }));
+
     /*
-    console.log(
-      `rebuild finished with modelItems ${this.modelItems.length} item(s)`,
-      this.modelItems,
-    );
-*/
+        console.log(
+          `rebuild finished with modelItems ${this.modelItems.length} item(s)`,
+          this.modelItems,
+        );
+    */
     console.groupEnd();
   }
 
@@ -187,38 +198,150 @@ export class FxModel extends HTMLElement {
     console.log('recalculate instances ', this.instances);
 
     console.time('recalculate');
-    const v = this.mainGraph.overallOrder();
-    v.forEach(path => {
-      const node = this.mainGraph.getNodeData(path);
-      const modelItem = this.getModelItem(node);
+    this.computes = 0;
 
-      if (modelItem && path.includes(':')) {
-        const property = path.split(':')[1];
-        if (property) {
-          if (property === 'calculate') {
-            const expr = modelItem.bind[property];
-            const compute = evaluateXPath(expr, modelItem.node, this);
-            modelItem.value = compute;
-          } else if (property !== 'constraint' && property !== 'type') {
-            const expr = modelItem.bind[property];
-            if (expr) {
-              const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-              modelItem[property] = compute;
-              console.log(
-                `recalculating path ${path} - Expr:'${expr}' computed`,
-                modelItem[property],
-              );
-            }
+    this.subgraph = new DepGraph(false);
+    if (this.changed.length !== 0) {
+      // ### build the subgraph
+      this.changed.forEach(modelItem => {
+        this.subgraph.addNode(modelItem.path, modelItem.node);
+        // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
+        // this._addSubgraphDependencies(modelItem.path);
+        if (this.mainGraph.hasNode(modelItem.path)) {
+          // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
+
+          const all = this.mainGraph.dependantsOf(modelItem.path, false);
+          const dependents = all.reverse();
+          if (dependents.length !== 0) {
+            dependents.forEach(dep => {
+              // const subdep = this.mainGraph.dependentsOf(dep,false);
+              // subgraph.addDependency(dep, modelItem.path);
+              const val = this.mainGraph.getNodeData(dep);
+              this.subgraph.addNode(dep, val);
+              if (dep.includes(':')) {
+                const path = dep.substring(0, dep.indexOf(':'));
+                this.subgraph.addNode(path, val);
+
+                const deps = this.mainGraph.dependentsOf(modelItem.path, false);
+                // if we find the dep to be first in list of dependents we are dependent on ourselves not adding edge to modelItem.path
+                if (deps.indexOf(dep) !== 0) {
+                  this.subgraph.addDependency(dep, modelItem.path);
+                }
+              }
+              // subgraph.addDependency(dep,modelItem.path);
+            });
           }
         }
-      }
-    });
+      });
+
+      // ### compute the subgraph
+      const ordered = this.subgraph.overallOrder(false);
+      ordered.forEach(path => {
+        if (this.mainGraph.hasNode(path)) {
+          const node = this.mainGraph.getNodeData(path);
+          this.compute(node, path);
+        }
+      });
+      this.changed = [];
+      console.log('subgraph', this.subgraph);
+      this.dispatchEvent(
+        new CustomEvent('recalculate-done', { detail: { subgraph: this.subgraph } }),
+      );
+    } else {
+      const v = this.mainGraph.overallOrder(false);
+      v.forEach(path => {
+        const node = this.mainGraph.getNodeData(path);
+        this.compute(node, path);
+      });
+    }
+    console.log(`recalculated ${this.computes} modelItems`);
+
     console.timeEnd('recalculate');
     console.log(
       `recalculate finished with modelItems ${this.modelItems.length} item(s)`,
       this.modelItems,
     );
     console.groupEnd();
+  }
+
+  /*
+    _addSubgraphDependencies(path){
+        const dependents = this.mainGraph.directDependantsOf(path)
+
+        const alreadyInGraph = this.subgraph.incomingEdges[path];
+        // const alreadyInGraph = path in this.subgraph;
+        if(dependents.length !== 0 && alreadyInGraph.length === 0){
+
+            dependents.forEach(dep => {
+                // const val= this.mainGraph.getNodeData(dep);
+                // this.subgraph.addNode(dep,val);
+                if(dep.includes(':')){
+                    const subpath = dep.substring(0, dep.indexOf(':'));
+                    // this.subgraph.addNode(subpath,val);
+                    this.subgraph.addDependency(subpath,dep);
+                    this.subgraph.addDependency(dep,path);
+                    /!*
+                                        const subdeps = this.mainGraph.directDependantsOf(path);
+                                        console.log('subdeps',path, subdeps);
+                                        subdeps.forEach(sdep => {
+                                            const sval= this.mainGraph.getNodeData(sdep);
+                                            this.subgraph.addNode(sdep,sval);
+                                            console.log('subdep',sdep);
+                                        });
+                    *!/
+                    if(this.subgraph.incomingEdges[dep] === 0){
+                        this._addSubgraphDependencies(subpath)
+                    }
+
+                }
+            });
+
+        }
+
+    }
+*/
+
+  /**
+   * (re-) computes a modelItem.
+   * @param node - the node the modelItem is attached to
+   * @param path - the canonical XPath of the node
+   */
+  compute(node, path) {
+    const modelItem = this.getModelItem(node);
+    if (modelItem && path.includes(':')) {
+      const property = path.split(':')[1];
+      if (property) {
+        /*
+                if (property === 'readonly') {
+                    // make sure that calculated items are always readonly
+                    if(modelItem.bind['calculate']){
+                        modelItem.readonly =  true;
+                    }else {
+                        const expr = modelItem.bind[property];
+                        const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
+                        modelItem.readonly = compute;
+                    }
+                }
+*/
+        if (property === 'calculate') {
+          const expr = modelItem.bind[property];
+          const compute = evaluateXPath(expr, modelItem.node, this);
+          modelItem.value = compute;
+          modelItem.readonly = true; // calculated nodes are always readonly
+        } else if (property !== 'constraint' && property !== 'type') {
+          const expr = modelItem.bind[property];
+          if (expr) {
+            const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
+            modelItem[property] = compute;
+            console.log(
+              `recalculating path ${path} - Expr:'${expr}' computed`,
+              modelItem[property],
+            );
+          }
+        }
+      }
+      this.computes += 1;
+    }
   }
 
   /**
@@ -248,9 +371,9 @@ export class FxModel extends HTMLElement {
       const { bind } = modelItem;
       if (bind) {
         /*
-        todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
-          created lazily.
-        */
+                todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
+                  created lazily.
+                */
         if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
           const constraint = bind.getAttribute('constraint');
           if (constraint) {

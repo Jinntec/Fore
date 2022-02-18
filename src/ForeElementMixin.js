@@ -90,7 +90,7 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
-      const inscopeContext = getInScopeContext(this, this.ref);
+      const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
       if (!inscopeContext) {
         console.warn('no in scopeContext for ', this);
         return;
@@ -98,26 +98,26 @@ export const foreElementMixin = superclass =>
       if (this.ref === '') {
         this.nodeset = inscopeContext;
       } else if (Array.isArray(inscopeContext)) {
+        /*
         inscopeContext.forEach(n => {
           if (XPathUtil.isSelfReference(this.ref)) {
             this.nodeset = inscopeContext;
           } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, null);
+            const localResult = evaluateXPathToFirstNode(this.ref, n, this);
             // console.log('local result: ', localResult);
             this.nodeset.push(localResult);
           }
         });
+*/
+        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
-
-        // todo: code below fails - why?
-        const formElement = this.getOwnerForm();
-        if (inscopeContext.nodeType) {
+        const { nodeType } = inscopeContext;
+        if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
           this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
         }
-        // this.nodeset = evaluateXPath(this.ref,inscopeContext,formElement)
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
@@ -217,7 +217,7 @@ export const foreElementMixin = superclass =>
     }
 
     getInScopeContext() {
-      return getInScopeContext(this, this.ref);
+      return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     }
 
     dispatch(eventName, detail) {

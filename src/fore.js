@@ -37,18 +37,17 @@ export class Fore {
   static createUUID() {
     // http://www.ietf.org/rfc/rfc4122.txt
     const s = [];
-    const hexDigits = "0123456789abcdef";
-    for (let i = 0; i < 36; i++) {
+    const hexDigits = '0123456789abcdef';
+    for (let i = 0; i < 36; i += 1) {
       s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
     }
-    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-    s[8] = s[13] = s[18] = s[23] = "-";
+    s[14] = '4'; // bits 12-15 of the time_hi_and_version field to 0010
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[8] = s[13] = s[18] = s[23] = '-';
 
-    const uuid = s.join("");
+    const uuid = s.join('');
     return uuid;
   }
-
 
   static get XFORMS_NAMESPACE_URI() {
     // todo: should be centralized somewhere as constant. Exists in several? places
@@ -104,7 +103,7 @@ export class Fore {
    * @param force
    * @returns {Promise<unknown>}
    */
-  static async refreshChildren(startElement,force) {
+  static async refreshChildren(startElement, force) {
     const refreshed = new Promise(resolve => {
       /*
       if there's an 'refresh-on-view' attribute the element wants to be handled by
@@ -113,7 +112,7 @@ export class Fore {
        */
       // if(!force && startElement.hasAttribute('refresh-on-view')) return;
 
-/*  ### attempt with querySelectorAll is even slower than iterating recursively
+      /*  ### attempt with querySelectorAll is even slower than iterating recursively
 
       const children = startElement.querySelectorAll('[ref]');
       Array.from(children).forEach(uiElement => {
@@ -128,7 +127,7 @@ export class Fore {
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
-            Fore.refreshChildren(element,force);
+            Fore.refreshChildren(element, force);
           }
         });
       }
@@ -217,7 +216,6 @@ export class Fore {
     console.log('firing', event);
     target.dispatchEvent(event);
   }
-
 
   /**
    * clear all text nodes and attribute values to get a 'clean' template.

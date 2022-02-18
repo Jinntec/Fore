@@ -1,0 +1,243 @@
+<!doctype html>
+<!--suppress ALL -->
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore Element Reference</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+        <link href="../resources/vars.css" rel="stylesheet">
+        <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            border:0;
+            font-family: sans-serif;
+        }
+        details{
+            height: auto;
+        }
+        details[open] summary ~ .details {
+            animation: sweep 0.5s ease-in-out forwards;
+        }
+
+        @keyframes sweep {
+            0%    {opacity: 0; margin-top: -10px}
+            100%  {opacity: 1; margin-top: 0px}
+        }
+
+        details[open]{
+            width: 100%;
+            /*transition: height 2s;*/
+            /*
+                        position:fixed;
+                        top:-0.3rem;
+                        left:-0.3rem;
+                        z-index: 5;
+                        overflow: auto;
+            */
+        }
+        details fx-output{
+            background: white;
+            padding: 1rem;
+            border-radius: 0.3rem;
+        }
+        details, summary{
+            padding: 0.3rem;
+            font-size: 1.2rem;
+        }
+        summary{
+            background: ghostwhite;
+            padding: 1rem;
+        }
+        summary::after{
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
+            margin-left: 1rem;
+            color: black;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            float: right;
+        }
+        .model::after{
+            background: var(--paper-teal-500);
+            content:'model';
+        }
+        .action::after{
+            background: var(--paper-amber-500);
+            content:'action';
+        }
+        .common::after{
+            background: var(--paper-grey-500);
+            content:'common';
+        }
+        .ui::after{
+            background: var(--paper-light-blue-500);
+            content:'ui';
+        }
+        button{
+            color: var(--paper-grey-900);
+            padding: 0.5rem;
+            border-radius: 0.3rem;
+
+        }
+        button.all{
+            margin-right: 1rem;
+        }
+        .actionbtn{
+            background: var(--paper-amber-500);
+        }
+        .modelbtn{
+            background: var(--paper-teal-500);
+        }
+
+        .commonbtn{
+            background: var(--paper-grey-500);
+        }
+        fx-output{
+            display: block;
+        }
+        fx-repeatitem{
+            /*display: inline-block;*/
+            display: block;
+            /*min-width: 49%;*/
+            width: available;
+            height: fit-content;
+        }
+
+        .uibtn{
+            background: var(--paper-light-blue-500);
+        }
+
+        .attrName{
+            font-family: monospace;
+        }
+        table, tbody{
+            width: 100%;
+        }
+        table tbody th{
+            text-align: left !important;
+        }
+        .wrapper{
+            margin-top:1rem;
+        }
+
+    </style>
+    <script type="text/javascript" src="../src/drawdown.js"></script>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Fore Element Reference</h1>
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <element tags="all action" name="fx-action"></element>
+                    <element tags="all common" name="fx-alert"></element>
+                    <element tags="all action" name="fx-append"></element>
+                    <element tags="all model" name="fx-bind"></element>
+                    <element tags="all ui" name="fx-case"></element>
+                    <element tags="all action" name="fx-confirm"></element>
+                    <element tags="all ui" name="fx-control"></element>
+                    <element tags="all action" name="fx-delete"></element>
+                    <element tags="all action" name="fx-dispatch"></element>
+                    <element tags="all common" name="fx-fore"></element>
+                    <element tags="all model" name="fx-function"></element>
+                    <element tags="all ui" name="fx-group"></element>
+                    <element tags="all model" name="fx-header"></element>
+                    <element tags="all ui" name="fx-hint"></element>
+                    <element tags="all action" name="fx-insert"></element>
+                    <element tags="all common" name="fx-inspector"></element>
+                    <element tags="all model" name="fx-instance"></element>
+                    <element tags="all ui" name="fx-items"></element>
+                    <element tags="all action" name="fx-message"></element>
+                    <element tags="all model" name="fx-model"></element>
+                    <element tags="all ui" name="fx-output"></element>
+                    <element tags="all action" name="fx-property"></element>
+                    <element tags="all ui" name="fx-repeat"></element>
+                    <element tags="all action" name="fx-refresh"></element>
+                    <element tags="all action" name="fx-send"></element>
+                    <element tags="all action" name="fx-setvalue"></element>
+                    <element tags="all model" name="fx-submission"></element>
+                    <element tags="all ui" name="fx-switch"></element>
+                    <element tags="all action" name="fx-toggle"></element>
+                    <element tags="all ui" name="fx-trigger"></element>
+                    <element tags="all action" name="fx-update"></element>
+                    <tag></tag>
+                    <current></current>
+                </data>
+            </fx-instance>
+            <fx-instance id="markdown" type="text" src="elements/fx-action.md"></fx-instance>
+            <fx-submission id="loadMd"
+                           method="get"
+                           url="elements/{instance('default')/current}.md"
+                           replace="instance"
+                           into="instance()/element[contains(@tags , ../tag)][index('elements')]"></fx-submission>
+
+            <fx-function signature="local:markdown($input as xs:string?) as xs:string"
+                         type="text/javascript">
+                const source = $input;
+                const converted = markdown(source);
+                return converted;
+            </fx-function>
+        </fx-model>
+
+        <fx-trigger>
+            <button class="all">ALL</button>
+            <fx-setvalue ref="tag">all</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+        <fx-trigger>
+            <button class="actionbtn">Actions</button>
+            <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+        <fx-trigger>
+            <button class="commonbtn">Common</button>
+            <fx-setvalue ref="tag">common</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+        <fx-trigger>
+            <button class="modelbtn">Model</button>
+            <fx-setvalue ref="tag">model</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+        <fx-trigger>
+            <button class="uibtn">UI</button>
+            <fx-setvalue ref="tag">ui</fx-setvalue>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+        <fx-repeat id="elements" ref="element[contains(@tags , ../tag)]">
+            <template>
+                <details>
+                    <summary class="{@tags}">
+                        {@name}
+                        <fx-action event="click" if="string-length(.)=0">
+                            <fx-setvalue ref="instance('default')/current" value="instance()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
+                            <fx-send submission="loadMd"></fx-send>
+                        </fx-action>
+                    </summary>
+                    <div class="details">
+                        <fx-output id="source" value="local:markdown(./text())" mediatype="markdown"></fx-output>
+                    </div>
+                </details>
+            </template>
+        </fx-repeat>
+<!--
+        <pre>
+            {log('default')}
+        </pre>
+-->
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>
