@@ -524,7 +524,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
 }
 
 const contextFunction = (dynamicContext, string) => {
-    const caller = dynamicContext.currentContext.formElement;
+  const caller = dynamicContext.currentContext.formElement;
   if (string) {
     const instance = resolveId(string, caller);
     if (instance) {
@@ -540,12 +540,12 @@ const contextFunction = (dynamicContext, string) => {
       return instance.nodeset;
     }
   }
-    const parent = XPathUtil.getParentBindingElement(caller);
-    const p = caller.nodeName;
-    // const p = dynamicContext.domFacade.getParentElement();
+  const parent = XPathUtil.getParentBindingElement(caller);
+  const p = caller.nodeName;
+  // const p = dynamicContext.domFacade.getParentElement();
 
-    if (parent) return parent;
-    return caller.getInScopeContext();
+  if (parent) return parent;
+  return caller.getInScopeContext();
 };
 
 /**
