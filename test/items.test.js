@@ -101,10 +101,10 @@ describe('fx-items tests', () => {
           <fx-model id="model-1">
             <fx-instance 
               id="default" 
-              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              src="/base/test/ling-checkboxes.xml" 
               xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
               
-            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
           </fx-model>
           <fx-control ref="//m/@function" update-event="input">
               <fx-items ref="instance('i-functions')//option" class="widget">
@@ -147,10 +147,10 @@ describe('fx-items tests', () => {
           <fx-model id="model-1">
             <fx-instance 
               id="default" 
-              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              src="/base/test/ling-checkboxes.xml" 
               xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
               
-            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
           </fx-model>
           <fx-control ref="//m/@function" update-event="input">
               <fx-items ref="instance('i-functions')//option" class="widget">
@@ -195,10 +195,10 @@ describe('fx-items tests', () => {
           <fx-model id="model-1">
             <fx-instance 
               id="default" 
-              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              src="/base/test/ling-checkboxes.xml" 
               xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
               
-            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
           </fx-model>
           <fx-control ref="//m/@function" update-event="input">
               <fx-items ref="instance('i-functions')//option" class="widget">
