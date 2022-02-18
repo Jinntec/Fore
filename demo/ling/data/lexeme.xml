@@ -1,0 +1,9 @@
+<category baseForm="αγατ" xmlns="http://www.tei-c.org/ns/1.0">
+    <meanings>
+        <meaning label="gold">
+            <translation xml:lang="en">gold</translation>
+            <translation xml:lang="fr">or</translation>
+        </meaning>
+    </meanings>
+    <catDesc>αγατ(ο)</catDesc>
+</category>

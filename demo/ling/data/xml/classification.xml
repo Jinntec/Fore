@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <option xml:id="ltXY">&lt;XY</option>
+    <option xml:id="ltYX">&lt;YX</option>
+    <option xml:id="gtXY">&gt;XY</option>
+    <option xml:id="gtYX">&gt;YX</option>
+    <option xml:id="slashYX">/YX</option>
+    <option xml:id="clausal">Clausal</option>
+    <option xml:id="conversion">Conver.</option>
+    <option xml:id="deadj">Deadj.</option>
+    <option xml:id="deadv">Deadv.</option>
+    <option xml:id="deloc">Deloc.</option>
+    <option xml:id="denom">Denom.</option>
+    <option xml:id="dev">Deverb.</option>
+    <option xml:id="phrasal">Phrasal</option>
+</data>

@@ -1,0 +1,347 @@
+<taxonomy xmlns="http://www.tei-c.org/ns/1.0" xml:id="dialects">
+    <!--
+        <category xml:id="">
+            <catDesc ana="full" xml:lang="en"></catDesc>
+            <catDesc ana="short" xml:lang="en"></catDesc>
+            <catDesc ana="full" xml:lang="fr"></catDesc>
+            <catDesc ana="short" xml:lang="fr"></catDesc>
+        </category>
+    -->
+    <category xml:id="">
+        <catDesc ana="full" xml:lang="en">-</catDesc>
+        <catDesc ana="short" xml:lang="en">-</catDesc>
+        <catDesc ana="full" xml:lang="fr">-</catDesc>
+        <catDesc ana="short" xml:lang="fr">-</catDesc>
+    </category>
+        <category xml:id="aegean">
+            <catDesc ana="full" xml:lang="en">Aegean</catDesc>
+            <catDesc ana="short" xml:lang="en">Aegean</catDesc>
+            <catDesc ana="full" xml:lang="fr">Aegean</catDesc>
+            <catDesc ana="short" xml:lang="fr">Aegean</catDesc>
+        </category>
+        <category xml:id="asia-minor">
+            <catDesc ana="full" xml:lang="en">Asia Minor</catDesc>
+            <catDesc ana="short" xml:lang="en">A.M.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Asie Mineure</catDesc>
+            <catDesc ana="short" xml:lang="fr">A.M</catDesc>
+        </category>
+        <category xml:id="arabia">
+            <catDesc ana="full" xml:lang="en">Arabia</catDesc>
+            <catDesc ana="short" xml:lang="en">Arab.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Arabia</catDesc>
+            <catDesc ana="short" xml:lang="fr">Arab.</catDesc>
+        </category>
+        <category xml:id="arcadian">
+            <catDesc ana="full" xml:lang="en">Arcadian</catDesc>
+            <catDesc ana="short" xml:lang="en">Arcadian</catDesc>
+            <catDesc ana="full" xml:lang="fr">arcadien</catDesc>
+            <catDesc ana="short" xml:lang="fr">arcadien</catDesc>
+        </category>
+        <category xml:id="attic">
+            <catDesc ana="full" xml:lang="en">Attic</catDesc>
+            <catDesc ana="short" xml:lang="en">Attic</catDesc>
+            <catDesc ana="full" xml:lang="fr">attique</catDesc>
+            <catDesc ana="short" xml:lang="fr">attique</catDesc>
+        </category>
+        <category xml:id="boeotian">
+            <catDesc ana="full" xml:lang="en">Boeotian</catDesc>
+            <catDesc ana="short" xml:lang="en">Boeotian</catDesc>
+            <catDesc ana="full" xml:lang="fr">béotien</catDesc>
+            <catDesc ana="short" xml:lang="fr">béotien</catDesc>
+        </category>
+        <category xml:id="greece-central">
+            <catDesc ana="full" xml:lang="en">Central Greece</catDesc>
+            <catDesc ana="short" xml:lang="en">Centr. Gr.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Grèce centrale</catDesc>
+            <catDesc ana="short" xml:lang="fr">Centr. Gr.</catDesc>
+        </category>
+        <category xml:id="cretan">
+            <catDesc ana="full" xml:lang="en">Cretan</catDesc>
+            <catDesc ana="short" xml:lang="en">Cretan</catDesc>
+            <catDesc ana="full" xml:lang="fr">crétois</catDesc>
+            <catDesc ana="short" xml:lang="fr">crétois</catDesc>
+        </category>
+        <category xml:id="cypriot">
+            <catDesc ana="full" xml:lang="en">Cypriot</catDesc>
+            <catDesc ana="short" xml:lang="en">Cypriot</catDesc>
+            <catDesc ana="full" xml:lang="fr">chypriote</catDesc>
+            <catDesc ana="short" xml:lang="fr">chypriote</catDesc>
+        </category>
+        <category xml:id="cyrenaica">
+            <catDesc ana="full" xml:lang="en">Cyrenaica</catDesc>
+            <catDesc ana="short" xml:lang="en">Cyren.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Cyrenaica</catDesc>
+            <catDesc ana="short" xml:lang="fr">Cyren.</catDesc>
+        </category>
+        <category xml:id="cyrenean">
+            <catDesc ana="full" xml:lang="en">Theraian</catDesc>
+            <catDesc ana="short" xml:lang="en">Theraian</catDesc>
+            <catDesc ana="full" xml:lang="fr">théréen</catDesc>
+            <catDesc ana="short" xml:lang="fr">théréen</catDesc>
+        </category>
+        <category xml:id="doric">
+            <catDesc ana="full" xml:lang="en">Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien</catDesc>
+        </category>
+        <category xml:id="doric-micrasiatic">
+            <catDesc ana="full" xml:lang="en">Eastern Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">Eastern Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien d'Asie Mineure</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien micras.</catDesc>
+        </category>
+        <category xml:id="doric-northwest">
+            <catDesc ana="full" xml:lang="en">North-West Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">N.-W. Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien du Nord-Ouest</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien n.-o.</catDesc>
+        </category>
+        <category xml:id="doric-west">
+            <catDesc ana="full" xml:lang="en">West Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">W. Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien occidental</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien ouest</catDesc>
+        </category>
+        <category xml:id="doric-north">
+            <catDesc ana="full" xml:lang="en">North Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">N. Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien septentrional</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien nord</catDesc>
+        </category>
+        <category xml:id="doric-south">
+            <catDesc ana="full" xml:lang="en">South Doric</catDesc>
+            <catDesc ana="short" xml:lang="en">S. Doric</catDesc>
+            <catDesc ana="full" xml:lang="fr">dorien méridional</catDesc>
+            <catDesc ana="short" xml:lang="fr">dorien sud</catDesc>
+        </category>
+        <category xml:id="aeolic-micrasiatic">
+            <catDesc ana="full" xml:lang="en">Eastern Aeolic</catDesc>
+            <catDesc ana="short" xml:lang="en">Eastern Aeolic</catDesc>
+            <catDesc ana="full" xml:lang="fr">éolien d'Asie Mineure</catDesc>
+            <catDesc ana="short" xml:lang="fr">éolien micras.</catDesc>
+        </category>
+        <category xml:id="egypt">
+            <catDesc ana="full" xml:lang="en">Egypt</catDesc>
+            <catDesc ana="short" xml:lang="en">Egypt.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Egypt</catDesc>
+            <catDesc ana="short" xml:lang="fr">Egypt.</catDesc>
+        </category>
+        <category xml:id="euboean">
+            <catDesc ana="full" xml:lang="en">Euboean</catDesc>
+            <catDesc ana="short" xml:lang="en">Euboean</catDesc>
+            <catDesc ana="full" xml:lang="fr">eubéen</catDesc>
+            <catDesc ana="short" xml:lang="fr">eubéen</catDesc>
+        </category>
+        <category xml:id="ionic">
+            <catDesc ana="full" xml:lang="en">Ionic</catDesc>
+            <catDesc ana="short" xml:lang="en">Ionic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien</catDesc>
+        </category>
+        <category xml:id="ionic-attic">
+            <catDesc ana="full" xml:lang="en">Ionic-Attic</catDesc>
+            <catDesc ana="short" xml:lang="en">Ionic-Attic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien-attique</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien-attique</catDesc>
+        </category>
+        <category xml:id="ionic-cycladic">
+            <catDesc ana="full" xml:lang="en">Cycladic Ionic</catDesc>
+            <catDesc ana="short" xml:lang="en">Cyclad. Ionic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien des Cyclades</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien cyclad.</catDesc>
+        </category>
+        <category xml:id="ionic-micrasiatic">
+            <catDesc ana="full" xml:lang="en">Eastern Ionic</catDesc>
+            <catDesc ana="short" xml:lang="en">Eastern Ionic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien d'Asie Mineure</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien micras.</catDesc>
+        </category>
+        <category xml:id="ionic-north">
+            <catDesc ana="full" xml:lang="en">North Ionic</catDesc>
+            <catDesc ana="short" xml:lang="en">N. Ionic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien septentrional</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien nord</catDesc>
+        </category>
+        <category xml:id="ionic-west">
+            <catDesc ana="full" xml:lang="en">West Ionic</catDesc>
+            <catDesc ana="short" xml:lang="en">W. Ionic</catDesc>
+            <catDesc ana="full" xml:lang="fr">ionien occidental</catDesc>
+            <catDesc ana="short" xml:lang="fr">ionien ouest</catDesc>
+        </category>
+        <category xml:id="koinai">
+            <catDesc ana="full" xml:lang="en">Koinai</catDesc>
+            <catDesc ana="short" xml:lang="en">Koinai</catDesc>
+            <catDesc ana="full" xml:lang="fr">koinai</catDesc>
+            <catDesc ana="short" xml:lang="fr">koinai</catDesc>
+        </category>
+        <category xml:id="macedonian">
+            <catDesc ana="full" xml:lang="en">Macedonian</catDesc>
+            <catDesc ana="short" xml:lang="en">Macedonian</catDesc>
+            <catDesc ana="full" xml:lang="fr">macédonien</catDesc>
+            <catDesc ana="short" xml:lang="fr">macédonien</catDesc>
+        </category>
+        <category xml:id="non-ionic-attic">
+            <catDesc ana="full" xml:lang="en">Non Ionic-Attic</catDesc>
+            <catDesc ana="short" xml:lang="en">Non Ion.-Att.</catDesc>
+            <catDesc ana="full" xml:lang="fr">non ionien-attique</catDesc>
+            <catDesc ana="short" xml:lang="fr">non ion.-att.</catDesc>
+        </category>
+        <category xml:id="pamphylian">
+            <catDesc ana="full" xml:lang="en">Pamphylian</catDesc>
+            <catDesc ana="short" xml:lang="en">Pamphylian</catDesc>
+            <catDesc ana="full" xml:lang="fr">pamphylien</catDesc>
+            <catDesc ana="short" xml:lang="fr">pamphylien</catDesc>
+        </category>
+        <category xml:id="panhellenic">
+            <catDesc ana="full" xml:lang="en">Panhellenic</catDesc>
+            <catDesc ana="short" xml:lang="en">Panhellen.</catDesc>
+            <catDesc ana="full" xml:lang="fr">panhellénique</catDesc>
+            <catDesc ana="short" xml:lang="fr">panhellén.</catDesc>
+        </category>
+        <category xml:id="palestine">
+            <catDesc ana="full" xml:lang="en">Palestine</catDesc>
+            <catDesc ana="short" xml:lang="en">Palest.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Palestine</catDesc>
+            <catDesc ana="short" xml:lang="fr">Palest.</catDesc>
+        </category>
+        <category xml:id="peloponnese">
+            <catDesc ana="full" xml:lang="en">Peloponnese</catDesc>
+            <catDesc ana="short" xml:lang="en">Pelop.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Péloponnèse</catDesc>
+            <catDesc ana="short" xml:lang="fr">Pelop.</catDesc>
+        </category>
+        <category xml:id="syria">
+            <catDesc ana="full" xml:lang="en">Syria</catDesc>
+            <catDesc ana="short" xml:lang="en">Syr.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Syria</catDesc>
+            <catDesc ana="short" xml:lang="fr">Syr.</catDesc>
+        </category>
+        <category xml:id="thessalian">
+            <catDesc ana="full" xml:lang="en">Thessalian</catDesc>
+            <catDesc ana="short" xml:lang="en">Thessalian</catDesc>
+            <catDesc ana="full" xml:lang="fr">thessalien</catDesc>
+            <catDesc ana="short" xml:lang="fr">thessalien</catDesc>
+        </category>
+        <category xml:id="thrace-north-black-sea">
+            <catDesc ana="full" xml:lang="en">Thrace, North Black Sea</catDesc>
+            <catDesc ana="short" xml:lang="en">Thr. N. Black Sea</catDesc>
+            <catDesc ana="full" xml:lang="fr">Thrace, Nord de la Mer noire</catDesc>
+            <catDesc ana="short" xml:lang="fr">Thr. N. Black Sea</catDesc>
+        </category>
+    
+    
+    
+        <category xml:id="greece-west">
+            <catDesc ana="full" xml:lang="en">West Greece</catDesc>
+            <catDesc ana="short" xml:lang="en">W. Gr.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Grèce occidentale</catDesc>
+            <catDesc ana="short" xml:lang="fr">W. Gr.</catDesc>
+        </category>
+        <category xml:id="graeco-anatolian">
+            <catDesc ana="full" xml:lang="en">Graeco-Anatolian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Anat.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-anatolien</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr-anat.</catDesc>
+        </category>
+        <category xml:id="graeco-celtic">
+            <catDesc ana="full" xml:lang="en">Greco-Celtic</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Celt.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Gréco-celtique</catDesc>
+            <catDesc ana="short" xml:lang="fr">Gr.-Celt.</catDesc>
+        </category>
+        <category xml:id="graeco-egyptian">
+            <catDesc ana="full" xml:lang="en">Graeco-Egyptian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Egypt.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-égyptien</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-égypt.</catDesc>
+        </category>
+        <category xml:id="graeco-etruscan">
+            <catDesc ana="full" xml:lang="en">Graeco-Etruscan</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Etrusc.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-étrusque</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-étr.</catDesc>
+        </category>
+        <category xml:id="graeco-illyrian">
+            <catDesc ana="full" xml:lang="en">Greco-Illyrian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Illyr.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Gréco-illyrien</catDesc>
+            <catDesc ana="short" xml:lang="fr">Gr.-Illyr.</catDesc>
+        </category>
+        <category xml:id="graeco-iranian">
+            <catDesc ana="full" xml:lang="en">Greco-Iranian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Iran.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-iranien</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-iran.</catDesc>
+        </category>
+       <category xml:id="graeco-italic">
+            <catDesc ana="full" xml:lang="en">Greco-Italic</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Ital.</catDesc>
+            <catDesc ana="full" xml:lang="fr">Gréco-italique</catDesc>
+            <catDesc ana="short" xml:lang="fr">Gr.-Ital.</catDesc>
+        </category>
+        <category xml:id="latin">
+            <catDesc ana="full" xml:lang="en">Graeco-Latin</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Lat.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-latin</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-lat.</catDesc>
+        </category>
+        <category xml:id="graeco-phrygian">
+            <catDesc ana="full" xml:lang="en">Graeco-Phrygian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Phryg.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-phrygien</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-phryg.</catDesc>
+        </category>
+        <category xml:id="graeco-semitic">
+            <catDesc ana="full" xml:lang="en">Graeco-Semitic</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Sem.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-sémitique</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-sém.</catDesc>
+        </category>
+        <category xml:id="graeco-thracian">
+            <catDesc ana="full" xml:lang="en">Graeco-Thracian</catDesc>
+            <catDesc ana="short" xml:lang="en">Gr.-Thrac.</catDesc>
+            <catDesc ana="full" xml:lang="fr">gréco-thrace</catDesc>
+            <catDesc ana="short" xml:lang="fr">gr.-thr.</catDesc>
+        </category>
+        <!--
+        <category xml:id="indigenous">
+            <catDesc ana="full" xml:lang="en">Indigenous</catDesc>
+            <catDesc ana="short" xml:lang="en">Indigenous</catDesc>
+            <catDesc ana="full" xml:lang="fr">Indigène</catDesc>
+            <catDesc ana="short" xml:lang="fr">Indigène</catDesc>
+        </category>
+        -->
+        <category xml:id="greek">
+            <catDesc ana="full" xml:lang="en">Greek</catDesc>
+            <catDesc ana="short" xml:lang="en">Greek</catDesc>
+            <catDesc ana="full" xml:lang="fr">grec</catDesc>
+            <catDesc ana="short" xml:lang="fr">grec</catDesc>
+        </category>
+        <category xml:id="interlinguistic">
+            <catDesc ana="full" xml:lang="en">Interlinguistic</catDesc>
+            <catDesc ana="short" xml:lang="en">Interlinguistic</catDesc>
+            <catDesc ana="full" xml:lang="fr">Interling.</catDesc>
+            <catDesc ana="short" xml:lang="fr">Interling.</catDesc>
+        </category>
+        <category xml:id="lallname">
+            <catDesc ana="full" xml:lang="en">Lallname</catDesc>
+            <catDesc ana="short" xml:lang="en">Lallname</catDesc>
+            <catDesc ana="full" xml:lang="fr">Lallname</catDesc>
+            <catDesc ana="short" xml:lang="fr">Lallname</catDesc>
+        </category>
+        <!--
+        <category xml:id="unknown">
+            <catDesc ana="full" xml:lang="en">?</catDesc>
+            <catDesc ana="short" xml:lang="en">?</catDesc>
+            <catDesc ana="full" xml:lang="fr">?</catDesc>
+            <catDesc ana="short" xml:lang="fr">?</catDesc>
+        </category>
+        -->
+        <category xml:id="etc">
+            <catDesc ana="full" xml:lang="en">multiareal</catDesc>
+            <catDesc ana="short" xml:lang="en">multiareal</catDesc>
+            <catDesc ana="full" xml:lang="fr">multiareal</catDesc>
+            <catDesc ana="short" xml:lang="fr">multiareal</catDesc>
+        </category>
+    </taxonomy>
