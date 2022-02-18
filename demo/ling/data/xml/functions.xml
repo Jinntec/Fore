@@ -1,7 +1,13 @@
 <data>
     <option xml:id="V">Verb</option>
+    <option xml:id="VAdj">VAdj</option>
+    <option xml:id="Part">Part</option>
+    <option xml:id="AgtNoun">AgtN</option>
+    <option xml:id="ActNoun">ActN</option>
     <option xml:id="N">Noun</option>
+    <option xml:id="PropN">Proper Noun</option>
     <option xml:id="Adj">Adj</option>
+    <option xml:id="PropAdj">Proper Adj</option>
     <option xml:id="Pro">Pro</option>
     <option xml:id="Adv">Adv</option>
 </data>
