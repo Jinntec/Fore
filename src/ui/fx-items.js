@@ -1,6 +1,6 @@
-import XfAbstractControl from './abstract-control.js';
+// import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
-import getInScopeContext from '../getInScopeContext.js';
+// import getInScopeContext from '../getInScopeContext.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 
@@ -36,7 +36,7 @@ export class FxItems extends FxControl {
       let target;
       if (e.target.nodeName === 'LABEL') {
         target = document.getElementById(e.target.getAttribute('for'));
-        target.checked = !target.checked;
+          target.checked = !target.checked;
       }
 
       let val = '';
@@ -105,10 +105,13 @@ export class FxItems extends FxControl {
     const cutted = expr.substring(1, expr.length - 1);
     const evaluated = evaluateXPath(cutted, node, newEntry);
 
-    const valAttr = this.getAttribute('value');
+    // adding space around value to allow matching of 'words'
+    const spaced = ` ${evaluated} `;
+
+    const valAttr = ` ${this.getAttribute('value')} `;
     input.value = evaluated;
     input.setAttribute('id', id);
-    if (valAttr.indexOf(input.value) !== -1) {
+    if (valAttr.indexOf(spaced) !== -1) {
       input.checked = true;
     }
   }

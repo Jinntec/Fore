@@ -94,4 +94,147 @@ describe('fx-items tests', () => {
     expect(checkboxes[1].checked).to.be.true;
     expect(checkboxes[2].checked).to.be.true;
   });
+
+  it('displays expected values', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+          <fx-model id="model-1">
+            <fx-instance 
+              id="default" 
+              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+              
+            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+          </fx-model>
+          <fx-control ref="//m/@function" update-event="input">
+              <fx-items ref="instance('i-functions')//option" class="widget">
+                  <template>
+                      <span class="fx-checkbox">
+                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                          <label>{.}</label>
+                      </span>
+                  </template>
+              </fx-items>
+          </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const checkboxes = el.querySelectorAll('input');
+
+    expect(checkboxes.length).to.equal(11);
+    expect(checkboxes[0].checked).to.be.false;
+    expect(checkboxes[1].checked).to.be.true;
+    expect(checkboxes[2].checked).to.be.false;
+    expect(checkboxes[3].checked).to.be.true;
+    expect(checkboxes[4].checked).to.be.true;
+    expect(checkboxes[5].checked).to.be.false;
+    expect(checkboxes[6].checked).to.be.true;
+    expect(checkboxes[7].checked).to.be.false;
+    expect(checkboxes[8].checked).to.be.false;
+    expect(checkboxes[9].checked).to.be.false;
+    expect(checkboxes[10].checked).to.be.false;
+
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('VAdj AgtNoun ActNoun PropN');
+    expect(control.modelItem.value).to.equal('VAdj AgtNoun ActNoun PropN');
+  });
+
+  it('updates value when item is changed', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+          <fx-model id="model-1">
+            <fx-instance 
+              id="default" 
+              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+              
+            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+          </fx-model>
+          <fx-control ref="//m/@function" update-event="input">
+              <fx-items ref="instance('i-functions')//option" class="widget">
+                  <template>
+                      <span class="fx-checkbox">
+                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                          <label>{.}</label>
+                      </span>
+                  </template>
+              </fx-items>
+          </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const checkboxes = el.querySelectorAll('input');
+
+    checkboxes[1].click();
+
+    expect(checkboxes.length).to.equal(11);
+    expect(checkboxes[0].checked).to.be.false;
+    expect(checkboxes[1].checked).to.be.false;
+    expect(checkboxes[2].checked).to.be.false;
+    expect(checkboxes[3].checked).to.be.true;
+    expect(checkboxes[4].checked).to.be.true;
+    expect(checkboxes[5].checked).to.be.false;
+    expect(checkboxes[6].checked).to.be.true;
+    expect(checkboxes[7].checked).to.be.false;
+    expect(checkboxes[8].checked).to.be.false;
+    expect(checkboxes[9].checked).to.be.false;
+    expect(checkboxes[10].checked).to.be.false;
+
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('AgtNoun ActNoun PropN');
+    expect(control.modelItem.value).to.equal('AgtNoun ActNoun PropN');
+  });
+
+  it('works when checkbox label is clicked', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+          <fx-model id="model-1">
+            <fx-instance 
+              id="default" 
+              src="/base/demo/ling/data/ling-checkboxes.xml" 
+              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+              
+            <fx-instance id="i-functions" src="/base/demo/ling/data/xml/functions.xml"/>
+          </fx-model>
+          <fx-control ref="//m/@function" update-event="input">
+              <fx-items ref="instance('i-functions')//option" class="widget">
+                  <template>
+                      <span class="fx-checkbox">
+                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                          <label>{.}</label>
+                      </span>
+                  </template>
+              </fx-items>
+          </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const labels = el.querySelectorAll('label');
+
+    labels[2].click();
+
+    const checkboxes = el.querySelectorAll('input');
+    expect(checkboxes.length).to.equal(11);
+    expect(checkboxes[0].checked).to.be.false;
+    expect(checkboxes[1].checked).to.be.true;
+    expect(checkboxes[2].checked).to.be.true;
+    expect(checkboxes[3].checked).to.be.true;
+    expect(checkboxes[4].checked).to.be.true;
+    expect(checkboxes[5].checked).to.be.false;
+    expect(checkboxes[6].checked).to.be.true;
+    expect(checkboxes[7].checked).to.be.false;
+    expect(checkboxes[8].checked).to.be.false;
+    expect(checkboxes[9].checked).to.be.false;
+    expect(checkboxes[10].checked).to.be.false;
+
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('VAdj Part AgtNoun ActNoun PropN');
+    expect(control.modelItem.value).to.equal('VAdj Part AgtNoun ActNoun PropN');
+  });
 });
