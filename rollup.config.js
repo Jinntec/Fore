@@ -12,7 +12,31 @@ export default [
     input: './index.js',
     output: [
       {
-        file: 'dist/fore-all.js',
+        file: 'dist/fore-ling.js',
+        format: 'es',
+        sourcemap: true,
+      },
+    ],
+    plugins: [
+      resolve(),
+      babel({
+        babelrc: false,
+        plugins: [
+          // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
+          // TODO: reconsider whether that is a good idea.
+          // eslint-disable-next-line global-require
+          [require('@babel/plugin-proposal-class-properties'), { loose: true }],
+        ],
+      }),
+      minifyHTML(),
+      terser(),
+    ],
+  },
+  {
+    input: './index.js',
+    output: [
+      {
+        file: 'dist/fore-ling.min.js',
         format: 'es',
         sourcemap: true,
       },
@@ -32,29 +56,5 @@ export default [
       minifyHTML(),
       terser(),
     ],
-  },
-  {
-    input: './demo/ling/custom-build.js',
-    output: [
-      {
-        file: 'dist/fore-debug.js',
-        format: 'es',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      resolve(),
-      babel({
-        babelrc: false,
-        plugins: [
-          // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
-          // TODO: reconsider whether that is a good idea.
-          // eslint-disable-next-line global-require
-          [require('@babel/plugin-proposal-class-properties'), { loose: true }],
-        ],
-      }),
-      minifyHTML(),
-      terser(),
-    ],
-  },
+  }
 ];
