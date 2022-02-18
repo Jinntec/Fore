@@ -1,0 +1,99 @@
+<html>
+<head>
+    <title>New version of the LGPN-Ling editing form</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance 
+            id="default" 
+            src="data/ling-checkboxes.xml" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
+    </fx-model>
+
+    <header>
+        <h1 class="tp-column-fullwidth tp-headline">Problem with multiple checkboxes</h1>
+    </header>
+
+    <main>
+    <!-- begin section general -->    
+        <section class="tp-section" >
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Functions checkboxes</h2>
+                <div class="tp-width-main">
+                        <fx-control ref="//m/@function">
+                            <fx-items ref="instance('i-functions')//option" class="widget">
+                                <template>
+                                    <span class="fx-checkbox">
+                                        <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                                        <label>{.}</label>
+                                    </span>
+                                </template>
+                            </fx-items>
+                        </fx-control>
+                    
+                </div>
+            </div>
+        </section>
+    <!-- // end section general -->
+        
+       
+
+        <!-- begin section save -->
+<!--
+        <section class="tp-section tp-section-save">
+            <div class="tp-row">
+                <h2 class="tp-width-sidebar">Save Form</h2>
+                <div class="tp-width-main">
+                    <fieldset class="form-horizontal">
+                        <div class="tp-row tp-repeat-buttons">
+                            <div class="tp-repeat-button-left">
+                                <div class="tp-button-row tp-add"><label><b>Save form</b></label>
+                                    <fx-submit class="-btn -btn-default" submission="s-save-data"></fx-submit>
+                                </div>
+                            </div>
+                            <div class="tp-repeat-button-right">
+                                <div class="tp-button-row tp-delete">
+                                    <label>
+                                        <span><b>Cancel form</b></span>
+                                    </label>
+                                    <div class="tp-button-cancel">
+                                        <button class="btn btn-default"><i class="glyphicon glyphicon-log-out"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+-->
+        <!-- end section save -->
+
+    </main>
+    <pre>
+        {log('default')}
+    </pre>
+</fx-fore>
+<paper-dialog id="morpheme-dialog">
+    <paper-dialog-scrollable>
+        <input type="text" name="query"/>
+        <div class="results">
+
+        </div>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+        <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+            <pb-i18n key="dialogs.close">Close</pb-i18n>
+        </paper-button>
+    </div>
+</paper-dialog>
+<!-- Modal Dialog -->
+<script type="module" src="../../dist/fore-debug.js"></script>
+<script type="module" src="./ling.js"></script>
+</body>
+</html>
