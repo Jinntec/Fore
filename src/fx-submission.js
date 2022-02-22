@@ -81,6 +81,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const valid = model.revalidate();
       if (!valid) {
         console.log('validation failed. Bubmission stopped');
+        // ### allow alerts to pop up
+        this.getModel().parentNode.refresh();
         return;
       }
     }
