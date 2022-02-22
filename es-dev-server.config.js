@@ -5,6 +5,13 @@ module.exports = {
   appIndex: './index.html',
   plugins: [
     {
+      transform(context) {
+        context.response.set('Access-Control-Allow-Origin', 'http://localhost:8080');
+        return {
+          body: context.body
+        };
+      },
+
       serve(context) {
         console.log('context path ', context);
         if (context.originalUrl === '/login') {
@@ -63,6 +70,7 @@ module.exports = {
         return null;
       },
     },
+
   ],
   moduleDirs: ['node_modules', 'web_modules'],
 };
