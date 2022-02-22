@@ -1,19 +1,5 @@
 
 export class FxDialog extends HTMLElement {
-  static get styles() {
-    return `
-      :host {
-        display: none;
-        height: auto;
-        font-size: 0.8em;
-        font-weight: 400;
-        font-style: italic;
-      }
-      .show{
-        display:block;
-      }
-    `;
-  }
 
   static get properties() {
     return {
@@ -27,7 +13,19 @@ export class FxDialog extends HTMLElement {
   }
 
   connectedCallback(){
-    this.render();
+    const style = `
+      :host {
+        display: none;
+        height: 100vh;
+        width:100vw;
+        position:fixed;
+        left:0;
+        top:0;
+        right:0;
+        bottom:0;
+      }
+    `;
+    this.shadowRoot.innerHTML = this.render(style);
     this.id = this.getAttribute('id');
 
     // const dialog = document.getElementById(this.id);
@@ -40,21 +38,12 @@ export class FxDialog extends HTMLElement {
     }
   }
 
-  render() {
+  render(styles) {
     return `
       <style>
-          ${FxDialog.styles}
+          ${styles}
       </style>
-      <div id="modalMessage" class="overlay">
-          <div class="popup">
-             <h2></h2>
-              <a class="close" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
-              <div id="messageContent">
-                    <slot></slot>
-              </div>
-          </div>
-      </div>
-
+      <slot></slot>
     `;
   }
 

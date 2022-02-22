@@ -9,10 +9,21 @@
 <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link href="../../resources/fore.css" rel="stylesheet">
-    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
-    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+        <link href="../../resources/vars.css" rel="stylesheet">
+        <link href="../../resources/demo.css" rel="stylesheet">
 
     <style>
+        fx-control{
+            display: block;
+            margin-top:3rem;
+        }
+/*
+        fx-dialog{
+            width:500px;
+            height: 400px;
+            left:50%;
+        }
+*/
     </style>
 </head>
 <body>
@@ -20,17 +31,34 @@
 
     <fx-fore>
         <fx-model>
-            <fx-instance></fx-instance>
+            <fx-instance>
+                <data>
+                    <foo>bar</foo>
+                </data>
+            </fx-instance>
         </fx-model>
 
         <fx-trigger>
             <button>open dialog</button>
+            <fx-show dialog="dialog"></fx-show>
         </fx-trigger>
 
-        <fx-dialog>
-            <h3>Here's some dialog content</h3>
-            <p>....some more....</p>
+        <fx-control ref="foo">
+            <label>just foo not to be clickable when dialog is open</label>
+        </fx-control>
 
+
+        <fx-dialog id="dialog">
+            <div class="dialog-content">
+
+                <a class="close-dialog" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
+                <h3>Here's some dialog content</h3>
+                <p>....some more....</p>
+                <fx-trigger class="action">
+                    <button>close</button>
+                    <fx-hide dialog="dialog"></fx-hide>
+                </fx-trigger>
+            </div>
         </fx-dialog>
     </fx-fore>
 
