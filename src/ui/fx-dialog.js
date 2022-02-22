@@ -30,12 +30,13 @@ export class FxDialog extends HTMLElement {
 
     // const dialog = document.getElementById(this.id);
 
-    const closeBtn = this.shadowRoot.querySelector('.close');
+    const closeBtn = this.querySelector('.close-dialog');
     if(closeBtn){
       closeBtn.addEventListener('click', (e) => {
         document.getElementById(this.id).classList.remove('show');
       });
     }
+    this.focus();
   }
 
   render(styles) {

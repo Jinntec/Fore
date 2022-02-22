@@ -106,7 +106,8 @@ fx-dialog.show{
     min-height: 200px;
     border-radius: 0.5rem;
     /*opacity: 0.3;*/
-    background:rgba(255,255,255,0.4);
+    background:rgba(0,0,0,0.5);
+    z-index: 10;
 }
 fx-dialog.show .dialog-content{
     padding: 1rem;
@@ -123,8 +124,8 @@ fx-dialog.show .dialog-content{
 }
 fx-dialog a.close-dialog{
     position: absolute;
-    right: 1rem;
-    top:1rem;
+    right: 0.4rem;
+    top:0.2rem;
     color:var(--paper-grey-900);
     text-decoration: none;
     font-size:1.2rem;

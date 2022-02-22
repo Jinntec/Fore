@@ -6,8 +6,6 @@
 
     <title>fx-dialog</title>
 
-<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
-
     <link href="../../resources/fore.css" rel="stylesheet">
         <link href="../../resources/vars.css" rel="stylesheet">
         <link href="../../resources/demo.css" rel="stylesheet">
@@ -17,19 +15,18 @@
             display: block;
             margin-top:3rem;
         }
-/*
-        fx-dialog{
-            width:500px;
-            height: 400px;
-            left:50%;
-        }
-*/
     </style>
 </head>
 <body>
 <div class="wrapper">
+    <h1>fx-dialog</h1>
 
-    <fx-fore>
+<!--
+    <demo-snippet>
+        <template>
+-->
+
+        <fx-fore>
         <fx-model>
             <fx-instance>
                 <data>
@@ -43,15 +40,15 @@
             <fx-show dialog="dialog"></fx-show>
         </fx-trigger>
 
+            <demo-snippet>
+                <template>
         <fx-control ref="foo">
             <label>just foo not to be clickable when dialog is open</label>
         </fx-control>
 
-
         <fx-dialog id="dialog">
             <div class="dialog-content">
-
-                <a class="close-dialog" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
+                <a class="close-dialog" href="#" autofocus>&times;</a>
                 <h3>Here's some dialog content</h3>
                 <p>....some more....</p>
                 <fx-trigger class="action">
@@ -60,9 +57,15 @@
                 </fx-trigger>
             </div>
         </fx-dialog>
+    </template>
+</demo-snippet>
     </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
 
 </div>
-<script type="module" src="../../index.js"></script>
+<script type="module" src="../demo.js"></script>
 </body>
 </html>
