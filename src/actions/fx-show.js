@@ -16,7 +16,7 @@ export class FxShow extends FxAction {
   }
 
   perform() {
-    document.getElementById(this.dialog).classList.add('show');
+    document.getElementById(this.dialog).open();
   }
 }
 

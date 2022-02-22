@@ -16,7 +16,7 @@ export class FxHide extends FxAction {
   }
 
   perform() {
-    document.getElementById(this.dialog).classList.remove('show');
+    document.getElementById(this.dialog).hide();
   }
 }
 
