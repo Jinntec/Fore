@@ -52,6 +52,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
         this.value = this.modelItem.value;
+
+        this.getOwnerForm().registerForNode(this.modelItem.node,this);
+
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;
         await this.updateWidgetValue();

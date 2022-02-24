@@ -242,6 +242,8 @@ export class FxModel extends HTMLElement {
           this.compute(node, path);
         }
       });
+      const toRefresh = [...this.changed];
+      this.formElement.toRefresh = toRefresh;
       this.changed = [];
       console.log('subgraph', this.subgraph);
       this.dispatchEvent(
@@ -380,6 +382,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
+            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!compute) valid = false;
             // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
             if (!this.modelConstructed) {

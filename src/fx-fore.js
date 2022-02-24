@@ -170,6 +170,11 @@ export class FxFore extends HTMLElement {
             </style>
             ${html}
         `;
+
+    this.toRefresh = [];
+    this.nodeControls = [];
+    this.initialRun = true;
+
   }
 
   connectedCallback() {
@@ -211,6 +216,28 @@ export class FxFore extends HTMLElement {
       }
       this.model = modelElement;
     });
+  }
+
+  registerForNode(node, control){
+    // const targetNode = this.nodeControls.includes(node);
+
+    const found = this.nodeControls.find(n => n.node === node );
+    if(!found){
+      //add an entry
+      const controls = [];
+      controls.push(control);
+      this.nodeControls.push({node:node,controls:controls});
+      return;
+    }
+
+    found.controls.push(control);
+  }
+
+  addToRefresh(modelItem){
+    const found = this.toRefresh.find(mi => mi.path === modelItem.path );
+    if(!found){
+      this.toRefresh.push(modelItem);
+    }
   }
 
   /**
@@ -342,11 +369,35 @@ export class FxFore extends HTMLElement {
 */
     // ### refresh Fore UI elements
     console.time('refreshChildren');
-    Fore.refreshChildren(this, true);
-    console.timeEnd('refreshChildren');
+    console.log('toRefresh',this.toRefresh);
 
-    // ### refresh template expressions
-    this._updateTemplateExpressions();
+    if(!this.initialRun && this.toRefresh.length !== 0){
+      let needsRefresh = false;
+      this.toRefresh.forEach(modelItem => {
+        // check if modelItem has dependants
+        const controlsToRefresh = this.nodeControls.find(n => n.node === modelItem.node);
+        const ctrls = controlsToRefresh.controls;
+        ctrls.forEach(ctrl => {
+            ctrl.refresh();
+        });
+        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+        if(deps.length !== 0){
+          needsRefresh = true;
+        }
+      });
+
+      if(!needsRefresh){
+        console.log('skipping refresh - no dependants');
+      }
+    }else{
+      Fore.refreshChildren(this, true);
+      console.timeEnd('refreshChildren');
+
+      // ### refresh template expressions
+      this._updateTemplateExpressions();
+    }
+
+
     console.timeEnd('refresh');
 
     console.groupEnd();
@@ -619,6 +670,7 @@ export class FxFore extends HTMLElement {
     this.classList.add('fx-ready');
 
     this.ready = true;
+    this.initialRun = false;
     console.log('### <<<<< dispatching ready >>>>>');
     console.log('########## modelItems: ', this.getModel().modelItems);
     console.log('########## FORE: form fully initialized... ##########');
