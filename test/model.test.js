@@ -234,6 +234,8 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+
 
     // there are 15 nodes in mainGraph
     // const graphCount = model.mainGraph.overallOrder(false);
@@ -303,6 +305,7 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
     const changed = model.computes;
     expect(changed).to.equal(3);
@@ -376,6 +379,7 @@ describe('model tests', () => {
     await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     // console.log('modelitems ', model.modelItems);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
     const changed = model.computes;
     expect(changed).to.equal(2);
@@ -450,6 +454,8 @@ describe('model tests', () => {
 
     const changed = model.computes;
     expect(changed).to.equal(1);
+
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
     const subgraph = model.subgraph;
     expect(subgraph).to.exist;
