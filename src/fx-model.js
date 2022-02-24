@@ -157,7 +157,7 @@ export class FxModel extends HTMLElement {
   rebuild() {
     console.group('### rebuild');
     console.time('rebuild');
-    this.mainGraph = new DepGraph(false);
+    this.mainGraph = new DepGraph(false); //do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
 
     // trigger recursive initialization of the fx-bind elements
@@ -167,6 +167,7 @@ export class FxModel extends HTMLElement {
       this.skipUpdate = true;
       return ;
     }
+
     binds.forEach(bind => {
       bind.init(this);
     });
