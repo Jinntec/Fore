@@ -14,6 +14,7 @@ It further provices global messaging via toast messages and a modal dialog.
 | Name | Description |
 |------|-------------|
 | refresh-on-view | experimental: marker attribute to only refresh the UI in the current viewport |
+| src | relative Url pointing to Html file containing an `fx-fore` element. This will be extracted from document and replaces the current `fx-fore` element. |
 
 ### Events
 

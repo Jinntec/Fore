@@ -183,6 +183,12 @@ export class FxFore extends HTMLElement {
       this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
     }
 
+    this.src = this.hasAttribute('src')? this.getAttribute('src'):null;
+    if(this.src){
+      this._loadFromSrc();
+      return ;
+    }
+
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', event => {
       const children = event.target.assignedElements();
@@ -198,10 +204,59 @@ export class FxFore extends HTMLElement {
         console.log(
           `########## FORE: kick off processing for ... ${window.location.href} ##########`,
         );
+        if(this.src){
+          console.log('########## FORE: loaded from ... ', this.src, '##########');
+        }
         modelElement.modelConstruct();
       }
       this.model = modelElement;
     });
+  }
+
+  /**
+   * loads a Fore from an URL given by `src`.
+   *
+   * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
+   * @private
+   */
+  _loadFromSrc() {
+    console.log('########## loading Fore from ',this.src ,'##########');
+    fetch(this.src, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    })
+        .then(response => {
+          const responseContentType = response.headers.get('content-type').toLowerCase();
+          console.log('********** responseContentType *********', responseContentType);
+          if (responseContentType.startsWith('text/html')) {
+            // const htmlResponse = response.text();
+            // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+            // return response.text();
+            return response.text().then(result =>
+                // console.log('xml ********', result);
+                new DOMParser().parseFromString(result, 'text/html'),
+            );
+          }
+          return 'done';
+        })
+        .then(data => {
+          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+          const theFore = data.querySelector('fx-fore');
+
+          // console.log('thefore', theFore)
+          if(!theFore){
+            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+          }
+          theFore.setAttribute('from-src', this.src);
+          this.replaceWith(theFore);
+        })
+        .catch(error => {
+          this.dispatchEvent(new CustomEvent('error',{detail:{message: `'${this.src}' not found or does not contain Fore element.`}}));
+        });
   }
 
   /**
