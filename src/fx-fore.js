@@ -174,7 +174,7 @@ export class FxFore extends HTMLElement {
     this.toRefresh = [];
     this.nodeControls = [];
     this.initialRun = true;
-
+    this.someInstanceDataStructureChanged = false;
   }
 
   connectedCallback() {
@@ -216,12 +216,16 @@ export class FxFore extends HTMLElement {
       }
       this.model = modelElement;
     });
+    this.addEventListener('path-mutated', (e) =>{
+      console.log('path-mutated event received', e.detail.path, e.detail.nodeset, e.detail.index);
+      this.someInstanceDataStructureChanged = true;
+    });
   }
 
   registerForNode(node, control){
     // const targetNode = this.nodeControls.includes(node);
 
-    const found = this.nodeControls.find(n => n.node === node );
+    const found = this.nodeControls.find(n => n === node );
     if(!found){
       //add an entry
       const controls = [];
@@ -348,55 +352,50 @@ export class FxFore extends HTMLElement {
 
     console.time('refresh');
 
-    /*
-    const changedModelItems = this.getModel().changed;
-    const graph = this.getModel().mainGraph;
-    let doRefresh = true;
-    changedModelItems.forEach(item => {
-      if(graph.hasNode(item.path)) {
-        const deps = graph.dependentsOf(item.path, false);
-        if (deps.length === 0) {
-          doRefresh=false;
-        }
-      }
-    });
-    this.getModel().changed = [];
-
-    if (!doRefresh) {
-      this.dispatchEvent(new CustomEvent('refresh-done'));
-      return ;
-    }
-*/
     // ### refresh Fore UI elements
     console.time('refreshChildren');
     console.log('toRefresh',this.toRefresh);
 
+
     if(!this.initialRun && this.toRefresh.length !== 0){
       let needsRefresh = false;
+
       this.toRefresh.forEach(modelItem => {
         // check if modelItem has dependants
         const controlsToRefresh = this.nodeControls.find(n => n.node === modelItem.node);
-        const ctrls = controlsToRefresh.controls;
-        ctrls.forEach(ctrl => {
+        console.log('controlsToRefresh',controlsToRefresh);
+        if(controlsToRefresh){
+          const ctrls = controlsToRefresh.controls;
+          ctrls.forEach(ctrl => {
             ctrl.refresh();
-        });
-        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-        if(deps.length !== 0){
-          needsRefresh = true;
+          });
         }
-      });
+/*
+        const mainGraph = this.getModel().mainGraph;
+        if(mainGraph && mainGraph.hasNode(modelItem.path)){
 
+          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+          if(deps.length !== 0){
+            console.log('dependants', deps);
+            needsRefresh = true;
+          }
+        }
+*/
+      });
+      this.toRefresh = [];
       if(!needsRefresh){
         console.log('skipping refresh - no dependants');
       }
     }else{
       Fore.refreshChildren(this, true);
       console.timeEnd('refreshChildren');
-
-      // ### refresh template expressions
-      this._updateTemplateExpressions();
     }
 
+    // ### refresh template expressions
+    if(this.initialRun || this.someInstanceDataStructureChanged){
+      this._updateTemplateExpressions();
+      this.someInstanceDataStructureChanged = false; //reset
+    }
 
     console.timeEnd('refresh');
 
@@ -425,6 +424,8 @@ export class FxFore extends HTMLElement {
       this.storedTemplateExpressions = [];
     }
 
+    console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
+
     /*
         storing expressions and their nodes for re-evaluation
          */
@@ -435,6 +436,7 @@ export class FxFore extends HTMLElement {
       }
       const expr = this._getTemplateExpression(node);
 
+      // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       this.storedTemplateExpressionByNode.set(node, expr);
     });
 

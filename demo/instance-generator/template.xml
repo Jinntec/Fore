@@ -1,6 +1,3 @@
 <data>
-    <item>
-        <foo/>
-        <bar></bar>
-    </item>
+    <item prop1="true" prop2="false" prop3="true" prop4="false" prop5="false"></item>
 </data>

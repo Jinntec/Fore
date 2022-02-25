@@ -195,7 +195,7 @@ export class FxModel extends HTMLElement {
    */
   recalculate() {
     console.group('### recalculate');
-    console.log('recalculate instances ', this.instances);
+    console.log('changed nodes ', this.changed);
 
     console.time('recalculate');
     this.computes = 0;
