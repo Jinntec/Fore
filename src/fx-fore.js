@@ -217,7 +217,7 @@ export class FxFore extends HTMLElement {
       this.model = modelElement;
     });
     this.addEventListener('path-mutated', (e) =>{
-      console.log('path-mutated event received', e.detail.path, e.detail.nodeset, e.detail.index);
+      console.log('path-mutated event received', e.detail.path, e.detail.index);
       this.someInstanceDataStructureChanged = true;
     });
   }
@@ -396,6 +396,7 @@ export class FxFore extends HTMLElement {
       this._updateTemplateExpressions();
       this.someInstanceDataStructureChanged = false; //reset
     }
+    this._processTemplateExpressions();
 
     console.timeEnd('refresh');
 
@@ -439,19 +440,23 @@ export class FxFore extends HTMLElement {
       // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       this.storedTemplateExpressionByNode.set(node, expr);
     });
+    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
     // TODO: Should we clean up nodes that existed but are now gone?
+    this._processTemplateExpressions();
+
+  }
+
+  _processTemplateExpressions() {
     for (const node of this.storedTemplateExpressionByNode.keys()) {
       this._processTemplateExpression({
         node,
         expr: this.storedTemplateExpressionByNode.get(node),
       });
     }
-
-    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+// eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
     // console.log('processing template expression ', exprObj);
 

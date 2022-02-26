@@ -120,15 +120,16 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.mutationObserver = new MutationObserver(mutations => {
         console.log('mutations', mutations);
 
-/* todo
         if(mutations[0].type === "childList"){
-          const nodes = mutations[0].addedNodes[0];
-          const path = XPathUtil.getPath(nodes);
-          console.log('path mutated',path);
-          this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+          const added = mutations[0].addedNodes[0];
+          if(added){
+            const path = XPathUtil.getPath(added);
+            console.log('path mutated',path);
+            // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+            this.dispatch('path-mutated',{'path':path,'index': this.index});
+          }
+
         }
-*/
-        this.refresh(true);
       });
     // }
     this.getOwnerForm().registerLazyElement(this);
