@@ -97,7 +97,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-            
+
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -133,7 +133,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-            
+
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -607,6 +607,18 @@ export class FxFore extends HTMLElement {
     console.log('### _initUI()');
 
     await this._lazyCreateInstance();
+
+    console.log('registering variables!');
+    const variables = new Map();
+    (function registerVariables(node) {
+      for (const child of node.children) {
+        if ('setInScopeVariables' in child) {
+          child.setInScopeVariables(variables);
+        }
+        registerVariables(child);
+      }
+    })(this);
+    console.log('Found variables:', variables);
 
     const options = {
       root: null,

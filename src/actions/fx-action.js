@@ -41,7 +41,11 @@ export class FxAction extends AbstractAction {
       script.src = this.src;
       this.appendChild(script);
     } else {
-      Array.from(children).forEach(action => {
+      Array.from(children).forEach(actionOrVar => {
+        if (actionOrVar.localName === 'fx-var') {
+          return;
+        }
+        const action = actionOrVar;
         action.detail = this.detail;
         // action.perform();
         action.execute();

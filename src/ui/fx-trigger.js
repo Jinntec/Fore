@@ -80,6 +80,9 @@ export class FxTrigger extends XfAbstractControl {
       repeatedItem.click();
     }
 
+    // Update all child variables, but only once
+    this.querySelectorAll('fx-var').forEach(variableElement => variableElement.refresh());
+
     const forLoop = async () => {
       for (let i = 0; i < this.children.length; i += 1) {
         const child = this.children[i];
