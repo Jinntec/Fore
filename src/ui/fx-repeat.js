@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
+import {XPathUtil} from "../xpath-util";
 
 /**
  * `fx-repeat`
@@ -115,13 +116,24 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('insert catched', nodes, this.index);
     });
 
-    if (this.getOwnerForm().lazyRefresh) {
+    // if (this.getOwnerForm().lazyRefresh) {
       this.mutationObserver = new MutationObserver(mutations => {
         console.log('mutations', mutations);
-        this.refresh(true);
+
+        if(mutations[0].type === "childList"){
+          const added = mutations[0].addedNodes[0];
+          if(added){
+            const path = XPathUtil.getPath(added);
+            console.log('path mutated',path);
+            // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+            this.dispatch('path-mutated',{'path':path,'index': this.index});
+          }
+
+        }
       });
-    }
+    // }
     this.getOwnerForm().registerLazyElement(this);
+
 
     const style = `
       :host{

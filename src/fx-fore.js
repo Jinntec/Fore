@@ -170,6 +170,10 @@ export class FxFore extends HTMLElement {
             </style>
             ${html}
         `;
+
+    this.toRefresh = [];
+    this.initialRun = true;
+    this.someInstanceDataStructureChanged = false;
   }
 
   connectedCallback() {
@@ -211,6 +215,18 @@ export class FxFore extends HTMLElement {
       }
       this.model = modelElement;
     });
+    this.addEventListener('path-mutated', (e) =>{
+      console.log('path-mutated event received', e.detail.path, e.detail.index);
+      this.someInstanceDataStructureChanged = true;
+    });
+  }
+
+
+  addToRefresh(modelItem){
+    const found = this.toRefresh.find(mi => mi.path === modelItem.path );
+    if(!found){
+      this.toRefresh.push(modelItem);
+    }
   }
 
   /**
@@ -321,32 +337,56 @@ export class FxFore extends HTMLElement {
 
     console.time('refresh');
 
-    /*
-    const changedModelItems = this.getModel().changed;
-    const graph = this.getModel().mainGraph;
-    let doRefresh = true;
-    changedModelItems.forEach(item => {
-      if(graph.hasNode(item.path)) {
-        const deps = graph.dependentsOf(item.path, false);
-        if (deps.length === 0) {
-          doRefresh=false;
-        }
-      }
-    });
-    this.getModel().changed = [];
-
-    if (!doRefresh) {
-      this.dispatchEvent(new CustomEvent('refresh-done'));
-      return ;
-    }
-*/
     // ### refresh Fore UI elements
     console.time('refreshChildren');
-    Fore.refreshChildren(this, true);
-    console.timeEnd('refreshChildren');
+    console.log('toRefresh',this.toRefresh);
+
+    if(!this.initialRun && this.toRefresh.length !== 0){
+      let needsRefresh = false;
+
+      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
+      this.toRefresh.forEach(modelItem => {
+        // check if modelItem has boundControls - if so, call refresh() for each of them
+        const controlsToRefresh = modelItem.boundControls;
+        if(controlsToRefresh){
+          controlsToRefresh.forEach(ctrl => {
+            ctrl.refresh();
+          });
+        }
+
+        // ### check if other controls depend on current modelItem
+        const mainGraph = this.getModel().mainGraph;
+        if(mainGraph && mainGraph.hasNode(modelItem.path)){
+          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+          // ### iterate dependant modelItems and refresh all their boundControls
+          if(deps.length !== 0){
+            deps.forEach(dep => {
+              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
+              const basePath = XPathUtil.getBasePath(dep);
+              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
+              // ### refresh all boundControls
+              modelItemOfDep.boundControls.forEach(control =>{control.refresh()});
+            });
+            needsRefresh = true;
+          }
+        }
+      });
+      this.toRefresh = [];
+      if(!needsRefresh){
+        console.log('skipping refresh - no dependants');
+      }
+    }else{
+      Fore.refreshChildren(this, true);
+      console.timeEnd('refreshChildren');
+    }
 
     // ### refresh template expressions
-    this._updateTemplateExpressions();
+    if(this.initialRun || this.someInstanceDataStructureChanged){
+      this._updateTemplateExpressions();
+      this.someInstanceDataStructureChanged = false; //reset
+    }
+    this._processTemplateExpressions();
+
     console.timeEnd('refresh');
 
     console.groupEnd();
@@ -374,6 +414,8 @@ export class FxFore extends HTMLElement {
       this.storedTemplateExpressions = [];
     }
 
+    console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
+
     /*
         storing expressions and their nodes for re-evaluation
          */
@@ -384,21 +426,26 @@ export class FxFore extends HTMLElement {
       }
       const expr = this._getTemplateExpression(node);
 
+      // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       this.storedTemplateExpressionByNode.set(node, expr);
     });
+    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
     // TODO: Should we clean up nodes that existed but are now gone?
+    this._processTemplateExpressions();
+
+  }
+
+  _processTemplateExpressions() {
     for (const node of this.storedTemplateExpressionByNode.keys()) {
       this._processTemplateExpression({
         node,
         expr: this.storedTemplateExpressionByNode.get(node),
       });
     }
-
-    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+// eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
     // console.log('processing template expression ', exprObj);
 
@@ -619,6 +666,7 @@ export class FxFore extends HTMLElement {
     this.classList.add('fx-ready');
 
     this.ready = true;
+    this.initialRun = false;
     console.log('### <<<<< dispatching ready >>>>>');
     console.log('########## modelItems: ', this.getModel().modelItems);
     console.log('########## FORE: form fully initialized... ##########');

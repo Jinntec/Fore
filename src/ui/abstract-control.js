@@ -31,7 +31,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     const currentVal = this.value;
 
-    // if(this.repeated) return ;
+    // if(this.repeated) return
     if (this.isNotBound()) return;
 
     // await this.updateComplete;
@@ -52,6 +52,14 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
         this.value = this.modelItem.value;
+
+        /*
+        this is another case that highlights the fact that an init() function might make sense in general.
+         */
+        if(!this.modelItem.boundControls.includes(this)){
+          this.modelItem.boundControls.push(this);
+        }
+
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;
         await this.updateWidgetValue();
