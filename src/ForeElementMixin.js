@@ -41,6 +41,9 @@ export const foreElementMixin = superclass =>
         ref: {
           type: String,
         },
+        inScopeVariables: {
+          type: Map,
+        },
       };
     }
 
@@ -50,6 +53,7 @@ export const foreElementMixin = superclass =>
       this.model = null;
       this.modelItem = {};
       this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
+      this.inScopeVariables = null;
     }
 
     getModel() {
@@ -218,6 +222,10 @@ export const foreElementMixin = superclass =>
 
     getInScopeContext() {
       return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+    }
+
+    setInScopeVariables(inScopeVariables) {
+      this.inScopeVariables = inScopeVariables;
     }
 
     dispatch(eventName, detail) {

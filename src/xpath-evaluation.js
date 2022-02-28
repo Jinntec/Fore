@@ -218,6 +218,32 @@ function functionNameResolver({ prefix, localName }, _arity) {
 }
 
 /**
+ * Get the variables in scope of the form element. These are the values of the variables that
+ * logically precede the formElement that declares the XPath
+ *
+ * @param  {Node}  formElement  The element that declares the XPath
+ *
+ * @return  {Object}  A key-value mapping of the variables
+ */
+function getVariablesInScope(formElement) {
+  let closestActualFormElement = formElement;
+  while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+    closestActualFormElement = closestActualFormElement.parentNode;
+  }
+
+  if (!closestActualFormElement) {
+    return {};
+  }
+
+  const variables = {};
+  for (const key of closestActualFormElement.inScopeVariables.keys()) {
+    const varElement = closestActualFormElement.inScopeVariables.get(key);
+    variables[key] = varElement.value;
+  }
+  return variables;
+}
+
+/**
  * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
  * type of the output is more predictable.
  *
@@ -227,15 +253,23 @@ function functionNameResolver({ prefix, localName }, _arity) {
  */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+  const variablesInScope = getVariablesInScope(formElement);
 
-  return fxEvaluateXPath(xpath, contextNode, null, variables, 'xs:anyType', {
-    currentContext: { formElement, variables },
-    moduleImports: {
-      xf: XFORMS_NAMESPACE_URI,
+  return fxEvaluateXPath(
+    xpath,
+    contextNode,
+    null,
+    { ...variablesInScope, ...variables },
+    'xs:anyType',
+    {
+      currentContext: { formElement, variables },
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      functionNameResolver,
+      namespaceResolver,
     },
-    functionNameResolver,
-    namespaceResolver,
-  });
+  );
 }
 
 /**
@@ -248,20 +282,15 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToFirstNode(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      currentContext: { formElement },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+  return fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
+    defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    currentContext: { formElement },
+    namespaceResolver,
+  });
 }
 
 /**
@@ -274,20 +303,16 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToNodes(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -300,20 +325,16 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToBoolean(
-    xpath,
-    contextNode,
-    null,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -335,21 +356,16 @@ export function evaluateXPathToString(
   namespaceReferenceNode = formElement,
 ) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToString(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
+  const variablesInScope = getVariablesInScope(formElement);
 
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**
@@ -407,20 +423,16 @@ export function evaluateXPathToNumber(
   namespaceReferenceNode = formElement,
 ) {
   const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-  return fxEvaluateXPathToNumber(
-    xpath,
-    contextNode,
-    domFacade,
-    {},
-    {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
-      },
-      namespaceResolver,
+  const variablesInScope = getVariablesInScope(formElement);
+
+  return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
+    currentContext: { formElement },
+    functionNameResolver,
+    moduleImports: {
+      xf: XFORMS_NAMESPACE_URI,
     },
-  );
+    namespaceResolver,
+  });
 }
 
 /**

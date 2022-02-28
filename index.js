@@ -5,6 +5,7 @@ import './src/fx-instance.js';
 import './src/fx-model.js';
 import './src/fx-submission.js';
 import './src/fx-header.js';
+import './src/fx-var.js';
 
 // ui classes
 import './src/ui/fx-alert.js';
