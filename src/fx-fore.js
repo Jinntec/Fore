@@ -172,7 +172,6 @@ export class FxFore extends HTMLElement {
         `;
 
     this.toRefresh = [];
-    this.nodeControls = [];
     this.initialRun = true;
     this.someInstanceDataStructureChanged = false;
   }
@@ -222,20 +221,6 @@ export class FxFore extends HTMLElement {
     });
   }
 
-  registerForNode(node, control){
-    // const targetNode = this.nodeControls.includes(node);
-
-    const found = this.nodeControls.find(n => n === node );
-    if(!found){
-      //add an entry
-      const controls = [];
-      controls.push(control);
-      this.nodeControls.push({node:node,controls:controls});
-      return;
-    }
-
-    found.controls.push(control);
-  }
 
   addToRefresh(modelItem){
     const found = this.toRefresh.find(mi => mi.path === modelItem.path );
@@ -356,31 +341,35 @@ export class FxFore extends HTMLElement {
     console.time('refreshChildren');
     console.log('toRefresh',this.toRefresh);
 
-
     if(!this.initialRun && this.toRefresh.length !== 0){
       let needsRefresh = false;
 
+      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
       this.toRefresh.forEach(modelItem => {
-        // check if modelItem has dependants
-        const controlsToRefresh = this.nodeControls.find(n => n.node === modelItem.node);
-        console.log('controlsToRefresh',controlsToRefresh);
+        // check if modelItem has boundControls - if so, call refresh() for each of them
+        const controlsToRefresh = modelItem.boundControls;
         if(controlsToRefresh){
-          const ctrls = controlsToRefresh.controls;
-          ctrls.forEach(ctrl => {
+          controlsToRefresh.forEach(ctrl => {
             ctrl.refresh();
           });
         }
-/*
+
+        // ### check if other controls depend on current modelItem
         const mainGraph = this.getModel().mainGraph;
         if(mainGraph && mainGraph.hasNode(modelItem.path)){
-
           const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+          // ### iterate dependant modelItems and refresh all their boundControls
           if(deps.length !== 0){
-            console.log('dependants', deps);
+            deps.forEach(dep => {
+              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
+              const basePath = XPathUtil.getBasePath(dep);
+              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
+              // ### refresh all boundControls
+              modelItemOfDep.boundControls.forEach(control =>{control.refresh()});
+            });
             needsRefresh = true;
           }
         }
-*/
       });
       this.toRefresh = [];
       if(!needsRefresh){
