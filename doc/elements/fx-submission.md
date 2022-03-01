@@ -21,6 +21,7 @@ Send and receive data.
 |  | 'redirect' - use response as redirect url. | |
 |  | 'none' - response will be ignored. | |
 | serialization | 'none' or 'xml' at this point | xml |
+| targetref | XPath pointing to target node when `replace="instance" | |
 
 ### Events
 | Name | Description | 
