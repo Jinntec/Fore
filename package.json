@@ -19,9 +19,7 @@
   },
   "files": [
     "index.js",
-    "resources/fore.css",
-    "resources/vars.css",
-    "resources/toastify.css",
+    "resources/fore-styles.css",
     "src/**/*",
     "dist/fore.js",
     "dist/fore-all.js"
