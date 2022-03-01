@@ -13,6 +13,7 @@ export class Fore {
     return [
       'FX-DELETE',
       'FX-DISPATCH',
+      'FX-HIDE',
       'FX-INSERT',
       'FX-LOAD',
       'FX-MESSAGE',
@@ -29,6 +30,7 @@ export class Fore {
       'FX-SETFOCUS',
       'FX-SETINDEX',
       'FX-SETVALUE',
+      'FX-SHOW',
       'FX-TOGGLE',
       'FX-UPDATE',
     ];
