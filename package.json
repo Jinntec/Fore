@@ -21,8 +21,8 @@
     "index.js",
     "resources/fore-styles.css",
     "src/**/*",
-    "dist/fore.js",
-    "dist/fore-all.js"
+    "dist/fore-all.js",
+    "dist/fore-debug.js"
   ],
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.2",
