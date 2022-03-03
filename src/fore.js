@@ -190,13 +190,15 @@ export class Fore {
     return fadeIn();
   }
 
-  static fadeOutElement(element) {
-    const duration = 2600;
+  static fadeOutElement(element, duration) {
+    // const duration = duration;
     let fadeOut = () => {
+
       // Stop all current animations
       if (element.getAnimations) {
         element.getAnimations().map(anim => anim.finish());
       }
+
 
       // Play the animation with the newly specified duration
       fadeOut = element.animate(

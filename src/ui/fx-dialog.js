@@ -1,3 +1,4 @@
+import {Fore} from '../fore.js';
 export class FxDialog extends HTMLElement {
 
     static get properties() {
@@ -14,7 +15,7 @@ export class FxDialog extends HTMLElement {
     connectedCallback() {
         const style = `
           :host {
-            display: none;
+            display:none;
             height: 100vh;
             width:100vw;
             position:fixed;
@@ -22,7 +23,9 @@ export class FxDialog extends HTMLElement {
             top:0;
             right:0;
             bottom:0;
+            transition:opacity 0.4s linear;
           }
+
         `;
 
         this.shadowRoot.innerHTML = this.render(style);
@@ -36,6 +39,11 @@ export class FxDialog extends HTMLElement {
                 document.getElementById(this.id).classList.remove('show');
             });
         }
+
+        this.addEventListener('transitionend',()=>{
+            console.log('transitionend');
+            // this.style.display = 'none';
+        });
 
         this.focus();
     }
@@ -59,7 +67,8 @@ export class FxDialog extends HTMLElement {
         this.classList.add('show');
     }
 
-    hide(){
+    async hide(){
+        await Fore.fadeOutElement(this,400);
         this.classList.remove('show');
     }
 

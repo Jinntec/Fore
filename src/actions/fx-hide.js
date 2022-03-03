@@ -1,4 +1,5 @@
 import { FxAction } from './fx-action.js';
+import {AbstractAction} from "./abstract-action";
 
 /**
  * `fx-hide`
@@ -7,7 +8,7 @@ import { FxAction } from './fx-action.js';
  * @customElement
  * @demo demo/project.html
  */
-export class FxHide extends FxAction {
+export class FxHide extends AbstractAction {
   connectedCallback() {
     this.dialog = this.getAttribute('dialog');
     if(!this.dialog){
