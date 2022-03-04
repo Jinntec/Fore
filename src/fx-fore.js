@@ -152,6 +152,7 @@ export class FxFore extends HTMLElement {
 
     const html = `
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
+           <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom"></jinn-toast>
            <slot></slot>
            <div id="modalMessage" class="overlay">
@@ -728,9 +729,9 @@ export class FxFore extends HTMLElement {
       this.shadowRoot.getElementById('messageContent').innerText = msg;
       // this.shadowRoot.getElementById('modalMessage').open();
       this.shadowRoot.getElementById('modalMessage').classList.add('show');
-    } else if (level === 'modeless') {
+    } else if (level === 'sticky') {
       // const notification = this.$.modeless;
-      this.shadowRoot.querySelector('#message').showToast(msg);
+      this.shadowRoot.querySelector('#sticky').showToast(msg);
     } else {
       const toast = this.shadowRoot.querySelector('#message');
       toast.showToast(msg);

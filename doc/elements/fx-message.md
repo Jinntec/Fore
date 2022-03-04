@@ -10,8 +10,8 @@ Display a message to the user.
 |------|-------------| ------ |
 | level | 'modal', 'modeless' or 'ephemeral' | ephemeral |
 | | 'modal' - modal dialog window | |
-| | 'modeless' - sticky popup message  | |
-| | 'ephemeral' - auto-closing popup message  | |
+| | 'sticky' - sticky popup message  | |
+| | 'ephemeral' - auto-closing popup message  | default |
 | value | XPath expression which resolves to message | |
 
 ### Action Attributes
@@ -27,6 +27,7 @@ Display a message to the user.
 
 ### Examples
 
+* [fx-message](../demo/fx-message.html)
 * [actions](../demo/actions.html)
 * [Binding](../demo/binding.html)
 * [the delay attribute](../demo/delay.html)

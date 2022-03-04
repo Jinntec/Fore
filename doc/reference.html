@@ -173,6 +173,7 @@
                     <element tags="all action" name="fx-toggle"></element>
                     <element tags="all ui" name="fx-trigger"></element>
                     <element tags="all action" name="fx-update"></element>
+                    <element tags="all common" name="fx-var"></element>
                     <tag></tag>
                     <current></current>
                 </data>
@@ -182,7 +183,9 @@
                            method="get"
                            url="elements/{instance('default')/current}.md"
                            replace="instance"
-                           into="instance()/element[contains(@tags , ../tag)][index('elements')]"></fx-submission>
+                           into="instance()/element[contains(@tags , ../tag)][index('elements')]">
+                <fx-message event="submit-error" value="instance('default')/current || '.md cannot be loaded'"></fx-message>
+            </fx-submission>
 
             <fx-function signature="local:markdown($input as xs:string?) as xs:string"
                          type="text/javascript">
@@ -195,28 +198,34 @@
         <fx-trigger>
             <button class="all">ALL</button>
             <fx-setvalue ref="tag">all</fx-setvalue>
-            <fx-action src="closeDetails.js"></fx-action>
-        </fx-trigger>
-        <fx-trigger>
-            <button class="actionbtn">Actions</button>
-            <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="commonbtn">Common</button>
             <fx-setvalue ref="tag">common</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="modelbtn">Model</button>
             <fx-setvalue ref="tag">model</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="uibtn">UI</button>
             <fx-setvalue ref="tag">ui</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
+        <fx-trigger>
+            <button class="actionbtn">Actions</button>
+            <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-refresh></fx-refresh>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+
         <fx-repeat id="elements" ref="element[contains(@tags , ../tag)]">
             <template>
                 <details>
