@@ -13,6 +13,7 @@ export class Fore {
     return [
       'FX-DELETE',
       'FX-DISPATCH',
+      'FX-HIDE',
       'FX-INSERT',
       'FX-LOAD',
       'FX-MESSAGE',
@@ -29,6 +30,7 @@ export class Fore {
       'FX-SETFOCUS',
       'FX-SETINDEX',
       'FX-SETVALUE',
+      'FX-SHOW',
       'FX-TOGGLE',
       'FX-UPDATE',
     ];
@@ -83,6 +85,7 @@ export class Fore {
       'FX-TEXTAREA',
       'FX-TRIGGER',
       'FX-UPLOAD',
+      'FX-VAR',
     ];
   }
 
@@ -187,13 +190,15 @@ export class Fore {
     return fadeIn();
   }
 
-  static fadeOutElement(element) {
-    const duration = 2600;
+  static fadeOutElement(element, duration) {
+    // const duration = duration;
     let fadeOut = () => {
+
       // Stop all current animations
       if (element.getAnimations) {
         element.getAnimations().map(anim => anim.finish());
       }
+
 
       // Play the animation with the newly specified duration
       fadeOut = element.animate(

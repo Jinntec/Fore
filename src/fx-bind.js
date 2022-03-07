@@ -230,12 +230,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
   }
 
-  _addNode(path, node) {
-    if (!this.model.mainGraph.hasNode(path)) {
-      this.model.mainGraph.addNode(path, { node });
-    }
-  }
-
   /**
    * Add the dependencies of this bind
    *
@@ -246,6 +240,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * @param  {string}  property The property with this dependency
    */
   _addDependencies(refs, node, path, property) {
+    // console.log('_addDependencies',path);
     const nodeHash = `${path}:${property}`;
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
@@ -253,11 +248,15 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       }
       refs.forEach(ref => {
         const otherPath = XPathUtil.getPath(ref);
+        // console.log('otherPath', otherPath)
 
-        if (!this.model.mainGraph.hasNode(otherPath)) {
-          this.model.mainGraph.addNode(otherPath, ref);
+        // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
+        if(!otherPath.endsWith('text()[1]')){
+          if (!this.model.mainGraph.hasNode(otherPath)) {
+            this.model.mainGraph.addNode(otherPath, ref);
+          }
+          this.model.mainGraph.addDependency(nodeHash, otherPath);
         }
-        this.model.mainGraph.addDependency(nodeHash, otherPath);
       });
     } else {
       this.model.mainGraph.addNode(nodeHash, node);
@@ -510,6 +509,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
    *
    * @return {Node[]}  The nodes that are referenced by the XPath
+   *
+   * todo: DependencyNotifyingDomFacade reports back too much in some cases like 'a[1]' and 'a[1]/text[1]'
    */
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {

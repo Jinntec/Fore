@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Variables</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        pre {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            width: 100vw;
+            z-index: 5;
+            padding: 1rem 0 0;
+        }
+
+        pre:before {
+            content: 'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top: -21px;
+            left: 0;
+            color: var(--paper-grey-800);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Variables</h1>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+              <data>
+				<target>boolean-value</target>
+                    <boolean-value required="true">false</boolean-value>
+                    <numeric-value required="false">42</numeric-value>
+                </data>
+            </fx-instance>
+
+        </fx-model>
+
+		<fx-var name="foo" value='(: This is a LONG XPath! :)
+								  let $i := instance()
+								  return
+								  if ($i/target = "boolean-value") then
+								  $i/boolean-value
+								  else
+								  $i/numeric-value'></fx-var>
+		<fx-var name="bar" value='$foo/@required => fn:trace()' ></fx-var>
+
+        <fx-group>
+          <h2>Reusing data</h2>
+		  <fx-var value="'a value'" name="my-variable"></fx-var>
+		  <p>Variables can occur anywhere. They are invisible, they can contain simple values like "{$my-variable}"</p>
+		  <fx-var value="instance()/boolean-value" name="my-boolean"></fx-var>
+		  <p>They can also point to an instance, like this: {$my-boolean}</p>
+
+		  <p>Or they can be used in a bind in a model! {$foo}</p>
+		  <label>Target boolean-value or numeric-value: {$bar} <fx-control ref="target"><input></fx-control></label>
+		  <fx-bind ref="$foo" required="$bar" ><fx-control ref="$foo"><input></fx-control></fx-bind>
+        </fx-group>
+
+    </fx-fore>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

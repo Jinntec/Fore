@@ -30,6 +30,7 @@ export class ModelItem {
     this.bind = bind;
     this.changed = false;
     this.alerts = [];
+    this.boundControls = [];
     // this.value = this._getValue();
   }
 

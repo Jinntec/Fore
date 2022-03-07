@@ -88,4 +88,9 @@ export class XPathUtil {
     // ### cut-off root node ref
     return tmp1.substring(tmp1.indexOf('/'), tmp.length);
   }
+
+  static getBasePath(dep) {
+    const split = dep.split(':');
+    return split[0];
+  }
 }

@@ -18,6 +18,9 @@
 
 Sorry for being loud - some people complaining not finding demos.
 
+> ATTENTION: Demos are out of sync with latest release. If you want latest and greatest checkout your local copy please. Demos will be updated
+> for final release.
+
 ## [Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
 For latest and greatest please use a local installation. See 'Running demos and docs'

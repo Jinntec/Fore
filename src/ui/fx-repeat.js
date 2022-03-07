@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
+import {XPathUtil} from "../xpath-util";
 
 /**
  * `fx-repeat`
@@ -115,13 +116,24 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       console.log('insert catched', nodes, this.index);
     });
 
-    if (this.getOwnerForm().lazyRefresh) {
+    // if (this.getOwnerForm().lazyRefresh) {
       this.mutationObserver = new MutationObserver(mutations => {
         console.log('mutations', mutations);
-        this.refresh(true);
+
+        if(mutations[0].type === "childList"){
+          const added = mutations[0].addedNodes[0];
+          if(added){
+            const path = XPathUtil.getPath(added);
+            console.log('path mutated',path);
+            // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+            this.dispatch('path-mutated',{'path':path,'index': this.index});
+          }
+
+        }
       });
-    }
+    // }
     this.getOwnerForm().registerLazyElement(this);
+
 
     const style = `
       :host{
@@ -248,6 +260,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         newItem.appendChild(clonedTemplate);
         this.appendChild(newItem);
 
+        this._initVariables(newItem);
+
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
       }
@@ -353,7 +367,22 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
+
+      this._initVariables(repeatItem);
     });
+  }
+
+  _initVariables(newRepeatItem) {
+    const inScopeVariables = new Map(this.inScopeVariables);
+    newRepeatItem.setInScopeVariables(inScopeVariables);
+    (function registerVariables(node) {
+      for (const child of node.children) {
+        if ('setInScopeVariables' in child) {
+          child.setInScopeVariables(inScopeVariables);
+        }
+        registerVariables(child);
+      }
+    })(newRepeatItem);
   }
 
   _clone() {
@@ -367,6 +396,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     Array.from(this.children).forEach(item => {
       item.removeAttribute('repeat-index');
     });
+  }
+
+  setInScopeVariables(inScopeVariables) {
+    // Repeats are interesting: the variables should be scoped per repeat item, they should not be
+    // able to see the variables in adjacent repeat items!
+    this.inScopeVariables = new Map(inScopeVariables);
   }
 }
 

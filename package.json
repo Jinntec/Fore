@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "1.0.0-2",
+  "version": "1.0.0-4",
   "description": "Fore - Forms for the Web",
   "module": "./index.js",
   "publishConfig": {
@@ -23,8 +23,8 @@
     "resources/vars.css",
     "resources/toastify.css",
     "src/**/*",
-    "dist/fore.js",
-    "dist/fore-all.js"
+    "dist/fore-all.js",
+    "dist/fore-debug.js"
   ],
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.2",

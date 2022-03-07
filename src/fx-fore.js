@@ -64,7 +64,7 @@ export class FxFore extends HTMLElement {
 
     const style = `
             :host {
-                display: none;
+                // display: none;
                 height:auto;
                 padding:var(--model-element-padding);
                 font-family:Roboto, sans-serif;
@@ -97,7 +97,7 @@ export class FxFore extends HTMLElement {
               visibility: visible;
               opacity: 1;
             }
-            
+
             .popup {
               margin: 70px auto;
               background: #fff;
@@ -133,7 +133,7 @@ export class FxFore extends HTMLElement {
             .popup .close:focus{
                 outline:none;
             }
-            
+
             .popup .close:hover {
                 color: #06D85F;
             }
@@ -152,6 +152,7 @@ export class FxFore extends HTMLElement {
 
     const html = `
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
+           <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom"></jinn-toast>
            <slot></slot>
            <div id="modalMessage" class="overlay">
@@ -170,6 +171,10 @@ export class FxFore extends HTMLElement {
             </style>
             ${html}
         `;
+
+    this.toRefresh = [];
+    this.initialRun = true;
+    this.someInstanceDataStructureChanged = false;
   }
 
   connectedCallback() {
@@ -181,6 +186,12 @@ export class FxFore extends HTMLElement {
         threshold: 0.3,
       };
       this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
+    }
+
+    this.src = this.hasAttribute('src')? this.getAttribute('src'):null;
+    if(this.src){
+      this._loadFromSrc();
+      return ;
     }
 
     const slot = this.shadowRoot.querySelector('slot');
@@ -198,10 +209,71 @@ export class FxFore extends HTMLElement {
         console.log(
           `########## FORE: kick off processing for ... ${window.location.href} ##########`,
         );
+        if(this.src){
+          console.log('########## FORE: loaded from ... ', this.src, '##########');
+        }
         modelElement.modelConstruct();
       }
       this.model = modelElement;
     });
+    this.addEventListener('path-mutated', (e) =>{
+      console.log('path-mutated event received', e.detail.path, e.detail.index);
+      this.someInstanceDataStructureChanged = true;
+    });
+  }
+
+
+  addToRefresh(modelItem){
+    const found = this.toRefresh.find(mi => mi.path === modelItem.path );
+    if(!found){
+      this.toRefresh.push(modelItem);
+    }
+  }
+
+  /**
+   * loads a Fore from an URL given by `src`.
+   *
+   * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
+   * @private
+   */
+  _loadFromSrc() {
+    console.log('########## loading Fore from ',this.src ,'##########');
+    fetch(this.src, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    })
+        .then(response => {
+          const responseContentType = response.headers.get('content-type').toLowerCase();
+          console.log('********** responseContentType *********', responseContentType);
+          if (responseContentType.startsWith('text/html')) {
+            // const htmlResponse = response.text();
+            // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+            // return response.text();
+            return response.text().then(result =>
+                // console.log('xml ********', result);
+                new DOMParser().parseFromString(result, 'text/html'),
+            );
+          }
+          return 'done';
+        })
+        .then(data => {
+          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+          const theFore = data.querySelector('fx-fore');
+
+          // console.log('thefore', theFore)
+          if(!theFore){
+            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+          }
+          theFore.setAttribute('from-src', this.src);
+          this.replaceWith(theFore);
+        })
+        .catch(error => {
+          this.dispatchEvent(new CustomEvent('error',{detail:{message: `'${this.src}' not found or does not contain Fore element.`}}));
+        });
   }
 
   /**
@@ -266,32 +338,56 @@ export class FxFore extends HTMLElement {
 
     console.time('refresh');
 
-    /*
-    const changedModelItems = this.getModel().changed;
-    const graph = this.getModel().mainGraph;
-    let doRefresh = true;
-    changedModelItems.forEach(item => {
-      if(graph.hasNode(item.path)) {
-        const deps = graph.dependentsOf(item.path, false);
-        if (deps.length === 0) {
-          doRefresh=false;
-        }
-      }
-    });
-    this.getModel().changed = [];
-
-    if (!doRefresh) {
-      this.dispatchEvent(new CustomEvent('refresh-done'));
-      return ;
-    }
-*/
     // ### refresh Fore UI elements
     console.time('refreshChildren');
-    Fore.refreshChildren(this, true);
-    console.timeEnd('refreshChildren');
+    console.log('toRefresh',this.toRefresh);
+
+    if(!this.initialRun && this.toRefresh.length !== 0){
+      let needsRefresh = false;
+
+      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
+      this.toRefresh.forEach(modelItem => {
+        // check if modelItem has boundControls - if so, call refresh() for each of them
+        const controlsToRefresh = modelItem.boundControls;
+        if(controlsToRefresh){
+          controlsToRefresh.forEach(ctrl => {
+            ctrl.refresh();
+          });
+        }
+
+        // ### check if other controls depend on current modelItem
+        const mainGraph = this.getModel().mainGraph;
+        if(mainGraph && mainGraph.hasNode(modelItem.path)){
+          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+          // ### iterate dependant modelItems and refresh all their boundControls
+          if(deps.length !== 0){
+            deps.forEach(dep => {
+              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
+              const basePath = XPathUtil.getBasePath(dep);
+              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
+              // ### refresh all boundControls
+              modelItemOfDep.boundControls.forEach(control =>{control.refresh()});
+            });
+            needsRefresh = true;
+          }
+        }
+      });
+      this.toRefresh = [];
+      if(!needsRefresh){
+        console.log('skipping refresh - no dependants');
+      }
+    }else{
+      Fore.refreshChildren(this, true);
+      console.timeEnd('refreshChildren');
+    }
 
     // ### refresh template expressions
-    this._updateTemplateExpressions();
+    if(this.initialRun || this.someInstanceDataStructureChanged){
+      this._updateTemplateExpressions();
+      this.someInstanceDataStructureChanged = false; //reset
+    }
+    this._processTemplateExpressions();
+
     console.timeEnd('refresh');
 
     console.groupEnd();
@@ -319,6 +415,8 @@ export class FxFore extends HTMLElement {
       this.storedTemplateExpressions = [];
     }
 
+    console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
+
     /*
         storing expressions and their nodes for re-evaluation
          */
@@ -329,21 +427,26 @@ export class FxFore extends HTMLElement {
       }
       const expr = this._getTemplateExpression(node);
 
+      // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       this.storedTemplateExpressionByNode.set(node, expr);
     });
+    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
     // TODO: Should we clean up nodes that existed but are now gone?
+    this._processTemplateExpressions();
+
+  }
+
+  _processTemplateExpressions() {
     for (const node of this.storedTemplateExpressionByNode.keys()) {
       this._processTemplateExpression({
         node,
         expr: this.storedTemplateExpressionByNode.get(node),
       });
     }
-
-    console.log('stored template expressions ', this.storedTemplateExpressionByNode);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+// eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
     // console.log('processing template expression ', exprObj);
 
@@ -553,6 +656,18 @@ export class FxFore extends HTMLElement {
 
     await this._lazyCreateInstance();
 
+    console.log('registering variables!');
+    const variables = new Map();
+    (function registerVariables(node) {
+      for (const child of node.children) {
+        if ('setInScopeVariables' in child) {
+          child.setInScopeVariables(variables);
+        }
+        registerVariables(child);
+      }
+    })(this);
+    console.log('Found variables:', variables);
+
     const options = {
       root: null,
       rootMargin: '0px',
@@ -564,6 +679,7 @@ export class FxFore extends HTMLElement {
     this.classList.add('fx-ready');
 
     this.ready = true;
+    this.initialRun = false;
     console.log('### <<<<< dispatching ready >>>>>');
     console.log('########## modelItems: ', this.getModel().modelItems);
     console.log('########## FORE: form fully initialized... ##########');
@@ -613,9 +729,9 @@ export class FxFore extends HTMLElement {
       this.shadowRoot.getElementById('messageContent').innerText = msg;
       // this.shadowRoot.getElementById('modalMessage').open();
       this.shadowRoot.getElementById('modalMessage').classList.add('show');
-    } else if (level === 'modeless') {
+    } else if (level === 'sticky') {
       // const notification = this.$.modeless;
-      this.shadowRoot.querySelector('#message').showToast(msg);
+      this.shadowRoot.querySelector('#sticky').showToast(msg);
     } else {
       const toast = this.shadowRoot.querySelector('#message');
       toast.showToast(msg);

@@ -69,9 +69,12 @@
                 </fx-model>
 
                 <fx-trigger>
-                    <button>Start</button>
-                    <fx-action while="counter < 10">
-                        <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
+                  <button>Start</button>
+				  <fx-var name="steps" value="1"/>
+				  <fx-var name="max" value="10"/>
+
+                    <fx-action while="counter < $max">
+                        <fx-setvalue ref="counter" value=".+$steps"></fx-setvalue>
                         <fx-update></fx-update>
                         <fx-refresh></fx-refresh>
                         <fx-message>{counter}</fx-message>

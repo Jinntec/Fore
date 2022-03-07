@@ -124,7 +124,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     // First check if 'if' condition is true - otherwise exist right away
-    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm())) {
+    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, this.nodeset, this)) {
       return;
     }
 
@@ -139,7 +139,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
           return;
         }
 
-        if (!evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm())) {
+        if (!evaluateXPathToBoolean(this.whileExpr, this.nodeset, this)) {
           // Done with iterating
           return;
         }

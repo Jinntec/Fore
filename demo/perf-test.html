@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>invoice</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        body, .wrapper{
+            margin:0 auto;
+            padding:0;
+        }
+        .wrapper{
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+        fx-repeatitem{
+            display: block;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="perf-data.xml"></fx-instance>
+
+<!--
+            <fx-function
+                    signature="local:uuid() as xs:string"
+                    type="text/javascript">
+                return Fore.createUUID();
+            </fx-function>
+-->
+
+        </fx-model>
+
+        <fx-trigger>
+            <button>insert one</button>
+            <fx-insert ref="item" at="1"></fx-insert>
+            <fx-setvalue ref="item[2]/@prop1">true</fx-setvalue>
+        </fx-trigger>
+        <fx-repeat ref="item">
+            <template>
+
+                <fx-control ref="./@prop1" value-prop="checked" update-event="input">
+                    <label>{@prop1}</label>
+                    <input type="checkbox">
+                </fx-control>
+                <fx-control ref="@prop2" value-prop="checked" update-event="input">
+<!--                    <label>prop2</label>-->
+                    <input type="checkbox">
+                </fx-control>
+                <fx-control ref="@prop3" value-prop="checked" update-event="input">
+<!--                    <label>pro31</label>-->
+                    <input type="checkbox">
+                </fx-control>
+                <fx-control ref="@prop4" value-prop="checked" update-event="input">
+<!--                    <label>prop4</label>-->
+                    <input type="checkbox">
+                </fx-control>
+                <fx-control ref="@prop5" value-prop="checked" update-event="input">
+<!--                    <label>prop5</label>-->
+                    <input type="checkbox">
+                </fx-control>
+            </template>
+        </fx-repeat>
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

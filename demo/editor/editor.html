@@ -66,7 +66,7 @@
             height: 100%;
             background: whitesmoke;
         }
-        main *{
+        main {
             width:100%;
             background: orange;
             display: block;
@@ -79,26 +79,34 @@
             height: 100vh;
             margin:0;
             display: grid;
-            grid-template-columns: 200px auto;
+            grid-template-columns: 200px auto 200px;
         }
         main fx-fore{
+            position: relative;
+        }
+        main fx-model, main #ui{
+            background:white;
+            border:thin solid;
+            margin:1rem 0;
             position: relative;
         }
         main fx-fore fx-model *{
             margin-left: 1rem;
         }
+/*
         main fx-fore fx-instance{
             display:block;
-            height:30px;
             width: 100%;
             background: lightblue;
             vertical-align: center;
         }
+*/
         main fx-model{
-            background: rgba(255,255,255,0.8);
             min-height : 200px;
+            height: auto;
             width: 100%;
             display: block;
+            overflow: auto;
         }
         main fx-model:before{
             content:'Model';
@@ -110,16 +118,51 @@
         main fx-instance:before{
             content: "Instance: '" attr(id) "'";
         }
+        #ui {
+            min-height : 200px;
+        }
+/*
+        #ui::before{
+            content:'View';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+*/
+
+        main fx-bind,
+        main fx-instance,
+        main fx-submission,
+        main fx-function
+        {
+            display:block;
+            width: 100%;
+            padding:1rem;
+            border:thin solid;
+            border-bottom-left-radius: 1rem;
+        }
+/*
+        #ui::before {
+            content:'View';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+*/
+
     </style>
 </head>
 <body>
 <div class="wrapper">
 
-    <fx-fore id="editor">
+    <fx-fore id="components">
+        <fx-action src="editor.js" event="ready"></fx-action>
 <!--        <fx-message event="drop" target="fore">got drop</fx-message>-->
 <!--        <fx-action src="editor.js" event="model-construct-done"></fx-action>-->
         <fx-model>
-            <fx-instance id="default" src="template.xml"></fx-instance>
+            <fx-instance id="editor" src="template.xml"></fx-instance>
 
             <fx-instance id="elements" src="elements.xml"></fx-instance>
 
@@ -179,20 +222,59 @@
 
     </fx-fore>
 
+
     <main current>
         <h1>Fore Editor</h1>
 
-<!--
         <fx-fore id="edited">
-            <fx-model>
-                <fx-instance draggable="true">
-                    <data></data>
+            <fx-model id="targetModel" class="droppable">
+                <fx-instance id="default"></fx-instance>
+            </fx-model>
+            <fx-group id="ui" class="droppable"></fx-group>
+        </fx-fore>
+    </main>
+    <aside>
+        <h2>Properties</h2>
+        <fx-fore id="attributes">
+            <fx-action target="#document"
+                       event="selectElement">
+                <fx-message></fx-message>
+<!--                <fx-setvalue ref="instance('propvars')/currentElement" value="event('current')"></fx-setvalue>-->
+<!--                <fx-insert ref="instance('attributes')" origin="event('current')"></fx-insert>-->
+            </fx-action>
+            <fx-model id="targetModel">
+                <fx-instance id="attributes">
+                    <data>
+                        <fx-instance id="foo" src="bar"></fx-instance>
+<!--
+                        <attribute name="id"></attribute>
+                        <attribute name="src"></attribute>
+                        <attribute name="type"></attribute>
+-->
+                    </data>
+                </fx-instance>
+                <fx-instance id="propvars">
+                    <data>
+                        <currentElement>
+
+                        </currentElement>
+                    </data>
                 </fx-instance>
             </fx-model>
-            <fx-group></fx-group>
+            <fx-group id="ui">
+                <fx-repeat ref="instance('attributes')//@*">
+                    <template>
+                        <fx-control ref=".">
+                            <label>{.}</label>
+                        </fx-control>
+                    </template>
+                </fx-repeat>
+            </fx-group>
+            <code>
+                {log('propvars')}
+            </code>
         </fx-fore>
--->
-    </main>
+    </aside>
 </div>
 <script type="module" src="../../index.js"></script>
 <!--<script>
@@ -210,7 +292,7 @@
         });
     })();
 </script>-->
-<!--<script src="editor/editor.js"></script>-->
+<!--<script src="./editor.js"></script>-->
 
 </body>
 </html>

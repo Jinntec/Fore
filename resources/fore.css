@@ -99,6 +99,52 @@ fx-inspector summary{
     padding: 0;
 }
 
+/* ### FX-DIALOG STYLES ### */
+/* ### FX-DIALOG STYLES ### */
+/* ### FX-DIALOG STYLES ### */
+fx-dialog{
+    display: none;
+    opacity: 0;
+    transition: opacity 1s linear;
+}
+fx-dialog.show{
+    display: block;
+    min-height: 200px;
+    border-radius: 0.5rem;
+    opacity: 1;
+    background:rgba(0,0,0,0.5);
+    z-index: 10;
+    transition: opacity 2s linear;
+}
+
+fx-dialog.show .dialog-content{
+    padding: 1rem;
+    width:fit-content;
+    height:fit-content;
+    border:thin solid;
+    border-radius: 0.3rem;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform:translateX(-50%) translateY(-50%);
+    background: white;
+
+}
+fx-dialog a.close-dialog{
+    position: absolute;
+    right: 0.4rem;
+    top:0.2rem;
+    color:var(--paper-grey-900);
+    text-decoration: none;
+    font-size:1.2rem;
+}
+fx-dialog .action{
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+
 
 /*
 .visible {

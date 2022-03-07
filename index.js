@@ -11,6 +11,7 @@ import './src/fx-instance.js';
 import './src/fx-model.js';
 import './src/fx-submission.js';
 import './src/fx-header.js';
+import './src/fx-var.js';
 
 // ui classes
 import './src/ui/fx-alert.js';
@@ -24,8 +25,10 @@ import './src/ui/fx-switch.js';
 import './src/ui/fx-trigger.js';
 import './src/ui/fx-case.js';
 import './src/ui/fx-inspector.js';
-// import './src/ui/fx-checkbox-group.js';
+import './src/ui/fx-dialog.js';
 import './src/ui/fx-items.js';
+
+// import './src/ui/fx-checkbox-group.js';
 
 // action classes
 import './src/actions/fx-append.js';
@@ -39,6 +42,8 @@ import './src/actions/fx-dispatch.js';
 import './src/actions/fx-update.js';
 import './src/actions/fx-refresh.js';
 import './src/actions/fx-confirm.js';
+import './src/actions/fx-show.js';
+import './src/actions/fx-hide.js';
 
 import './src/functions/fx-function.js';
 
