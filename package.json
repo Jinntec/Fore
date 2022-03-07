@@ -19,7 +19,9 @@
   },
   "files": [
     "index.js",
-    "resources/fore-styles.css",
+    "resources/fore.css",
+    "resources/vars.css",
+    "resources/toastify.css",
     "src/**/*",
     "dist/fore-all.js",
     "dist/fore-debug.js"
