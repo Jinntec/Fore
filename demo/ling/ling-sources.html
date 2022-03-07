@@ -43,12 +43,12 @@
                     (<fx-output id="output" ref="instance('temp')/hypotheses">counting...</fx-output>)
                 </h2>
                 <div class="tp-width-secondary">
-                    <section>
+<!--                    <section>
                         <div class="tp-repeat-button-left">
                             <div class="tp-button-row tp-add"><label>Add source in a non-repeat context</label>
                                 <fx-trigger>
                                     <button>add</button>
-                                    <fx-insert ref="//entry/listBibl/cit" context="//entry/listBibl"
+                                    <fx-insert context="//entry/gramGrp/listBibl"
                                         origin="instance('i-template')//cit[@type='source']"></fx-insert>
                                 </fx-trigger>
                             </div>
@@ -87,22 +87,29 @@
                             </template>
                         </fx-repeat>
                     </section>
-
+-->
                     <section class="form-horizontal">
-                        <fx-group ref="//entry">
+<!--                        <fx-group ref="//entry">-->
+                        <fx-group>
                             <section class="tp-row tp-repeat-add">
                                 <div class="tp-repeat-button-left">
                                     <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
                                         <fx-trigger>
                                             <button>add</button>
+                                            <!--  prepending a gramGrp -->
+<!--
+                                            <fx-insert context="//entry"
+                                                       origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+-->
+                                            <!--  appending a gramGrp -->
                                             <fx-insert context="//entry" ref="gramGrp"
-                                                        origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                                                        origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
                                         </fx-trigger>
                                     </div>
                                 </div>
                             </section>
 
-                            <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
+                            <fx-repeat ref="//entry/gramGrp[@type='segmentation']" id="r-gramGrp">
                                 <template>
                                     <details>
                                         <summary><h3>Segmentation hypothesis</h3></summary>
@@ -114,7 +121,8 @@
                                                         source</label>
                                                         <fx-trigger>
                                                             <button>add</button>
-                                                            <fx-insert ref="listBibl/cit" context="listBibl"
+                                                            <!-- ### appending to listBibl - by specifying ref it is appended instead of prepended -->
+                                                            <fx-insert context="listBibl" ref="cit"
                                                                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
                                                         </fx-trigger>
                                                     </div>
@@ -161,7 +169,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </details>
+<!--                                    </details>-->
                                 </template>
                             </fx-repeat>
                         </fx-group>
@@ -209,7 +217,8 @@
 </fx-fore>
 
 <!-- Modal Dialog -->
-<script type="module" src="../../dist/fore-ling.js"></script>
+<!--<script type="module" src="../../dist/fore-ling.js"></script>-->
+<script type="module" src="../../index.js"></script>
 <!--<script type="module" src="../../index.js"></script>-->
 <script type="module" src="./ling.js"></script>
 </body>
