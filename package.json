@@ -27,7 +27,7 @@
     "dist/fore-debug.js"
   ],
   "dependencies": {
-    "@jinntec/jinn-toast": "^1.0.2",
+    "@jinntec/jinn-toast": "^1.0.3",
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/paper-button": "^3.0.1",
