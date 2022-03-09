@@ -2,11 +2,13 @@ import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 import { XPathUtil } from './xpath-util.js';
 
+
 function _getElement(node) {
-  if (node.nodeType === Node.ATTRIBUTE_NODE) {
+  if (node && node.nodeType && node.nodeType === Node.ATTRIBUTE_NODE) {
     // The context of an attribute is the ref of the element it's defined on
     return node.ownerElement;
   }
+
 
   if (node.nodeType === Node.ELEMENT_NODE) {
     // The context of a query should be the element having a ref
@@ -55,9 +57,23 @@ export default function getInScopeContext(node, ref) {
 
   const repeatItem = parentElement.closest('fx-repeatitem');
   if (repeatItem) {
+    if(node.nodeName === 'context'){
+      return evaluateXPathToFirstNode(ref, repeatItem.nodeset, _getForeContext(parentElement));
+    }
     return repeatItem.nodeset;
   }
 
+  if (parentElement.hasAttribute('context')) {
+    const initialContext = _getInitialContext(node.ownerElement.parentNode, ref);
+    const contextAttr = node.ownerElement.getAttribute('context');
+    return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
+  }
+
+  if (node.nodeType === Node.ATTRIBUTE_NODE && node.nodeName === 'context') {
+    const initialContext = _getInitialContext(node.ownerElement.parentNode, ref);
+    const contextAttr = node.ownerElement.getAttribute('context');
+    return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
+  }
   if (node.nodeType === Node.ATTRIBUTE_NODE && node.nodeName === 'ref') {
     // Note: do not consider the ref of the owner element since it should not be used to define the
     // context

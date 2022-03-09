@@ -198,6 +198,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   /**
+   * dispathes action-performed event
+   *
+   * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
     console.log('action-performed ', this);

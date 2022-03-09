@@ -85,11 +85,30 @@ export class FxInsert extends AbstractAction {
         console.log('this.nodeset', this.nodeset);
         */
 
+    let inscope;
+    // ### 'context' attribute takes precedence over 'ref'
+    let targetSequence;
+    if(this.hasAttribute('context')){
+      inscope = getInScopeContext(this.getAttributeNode('context'), this.getAttribute('context'));
+      targetSequence = evaluateXPathToNodes(this.getAttribute('context'), inscope, this.getOwnerForm());
+    }
+
+    if(this.hasAttribute('ref')){
+      if(inscope){
+        targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+      }else{
+        inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
+        targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+      }
+    }
     // ### obtaining targetSequence
-    const inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
+    // const inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
+    // inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
+    // const inscope = getInScopeContext(this, this.ref);
 
     // @ts-ignore
-    const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+    // const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+    // targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
     // console.log('insert nodeset ', targetSequence);
 
     // ### obtaining originSequence

@@ -54,6 +54,7 @@ export class FxAction extends AbstractAction {
       // this.needsUpdate = false;
     }
   }
+
 }
 
 window.customElements.define('fx-action', FxAction);

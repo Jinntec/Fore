@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>New version of the LGPN-Ling editing form</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance
+                id="default"
+                src="data/ling-sources.xml"
+                xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+        <fx-instance
+                id="i-template"
+                src="data/template.xml"
+                xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+    </fx-model>
+    <fx-group ref="//entry">
+        <fx-trigger>
+            <button>add</button>
+            <fx-insert context="//entry"
+                       origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+        </fx-trigger>
+        <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
+            <template>
+                <h3>Segmentation hypothesis</h3>
+                <section class="tp-row tp-repeat-add">
+                    <h5 class="h4 tp-repeat-headline">Sources</h5>
+                    <div class="tp-repeat-button-left">
+                        <div class="tp-button-row tp-add"><label>Add significant
+                            source</label>
+                            <fx-trigger>
+                                <button>add</button>
+                                <fx-insert context="listBibl"
+                                           origin="instance('i-template')//cit[@type='source']"
+                                            ></fx-insert>
+                            </fx-trigger>
+                        </div>
+                    </div>
+                </section>
+
+                <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                    <template>
+                        <fx-control ref="ref"></fx-control>
+                        <fx-trigger>
+                            <button>delete</button>
+                            <fx-delete
+                                    nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
+                <label><b>Delete segmentation
+                    hypothesis</b></label>
+                <fx-trigger>
+                    <button>Delete</button>
+                    <fx-delete
+                            nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                </fx-trigger>
+            </template>
+        </fx-repeat>
+    </fx-group>
+    <pre>
+        {log('default')}
+    </pre>
+
+</fx-fore>
+
+<!-- Modal Dialog -->
+<!--<script type="module" src="../../dist/fore-ling.js"></script>-->
+<script type="module" src="../../index.js"></script>
+<!--<script type="module" src="../../index.js"></script>-->
+<script type="module" src="./ling.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+<head>
+    <title>New version of the LGPN-Ling editing form</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/fore.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <style>
+        header{
+            width: auto;
+        }
+        fx-control{
+            display: block;
+            white-space: normal;
+        }
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-model id="model-1">
+        <fx-instance 
+            id="default" 
+            src="data/ling-checkboxes.xml" 
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
+    </fx-model>
+
+    <header>
+        <h1 class="tp-column-fullwidth tp-headline">Problem with multiple checkboxes</h1>
+    </header>
+
+<!--    <main>-->
+    <!-- begin section general -->    
+    <fx-control ref="//m/@function" update-event="input">
+        <fx-items ref="instance('i-functions')//option" class="widget">
+            <template>
+                <span class="fx-checkbox">
+                    <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                    <label>{.}</label>
+                </span>
+            </template>
+        </fx-items>
+    </fx-control>
+                    
+    <!-- // end section general -->
+        
+       
+
+<!--    </main>-->
+    <pre>
+        {log('default')}
+    </pre>
+</fx-fore>
+
+<!-- Modal Dialog -->
+<!--<script type="module" src="../../index.js"></script>-->
+<script type="module" src="../../dist/fore-ling.js"></script>
+<script type="module" src="./ling.js"></script>
+</body>
+</html>
