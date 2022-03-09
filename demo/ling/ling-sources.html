@@ -97,13 +97,13 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <!--  prepending a gramGrp -->
-<!--
                                             <fx-insert context="//entry"
-                                                       origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
--->
+                                                       origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
                                             <!--  appending a gramGrp -->
+<!--
                                             <fx-insert context="//entry" ref="gramGrp"
                                                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+-->
                                         </fx-trigger>
                                     </div>
                                 </div>
@@ -122,8 +122,12 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <!-- ### appending to listBibl - by specifying ref it is appended instead of prepended -->
+                                                            <fx-insert context="listBibl"
+                                                                origin="instance('i-template')//cit[@type='source']"></fx-insert>
+<!--
                                                             <fx-insert context="listBibl" ref="cit"
                                                                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
+-->
                                                         </fx-trigger>
                                                     </div>
                                                 </div>
@@ -144,7 +148,7 @@
                                                                 <fx-trigger>
                                                                     <button>delete</button>
                                                                     <fx-delete
-                                                                            nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
+                                                                            ref="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
                                                                 </fx-trigger>
                                                             </div>
                                                         </div>
@@ -164,7 +168,7 @@
                                                     <fx-trigger>
                                                         <button>Delete</button>
                                                         <fx-delete
-                                                            nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                                                            ref="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
                                                     </fx-trigger>
                                                 </div>
                                             </div>

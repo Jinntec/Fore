@@ -348,7 +348,8 @@ describe('insert Tests', () => {
 
         <fx-trigger>
           <button>insert at end</button>
-          <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>
+<!--          <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>-->
+          <fx-insert context="list" origin="../blank/a"></fx-insert>
         </fx-trigger>
       </fx-fore>
     `);
@@ -409,7 +410,7 @@ describe('insert Tests', () => {
     expect(item.textContent).to.equal('b1');
   });
 
-  it('inserts into nested repeat with just "context" attribute', async () => {
+  it('inserts into outer repeat with "context", "ref" and "origin" attribute', async () => {
     const el = await fixtureSync(html`
     <fx-fore>
       <fx-model id="model-1">
@@ -430,10 +431,10 @@ describe('insert Tests', () => {
   
       </fx-model>
       <fx-group ref="//entry">
-          <fx-trigger>
+          <fx-trigger id="addGrp">
               <button>add</button>
               <fx-insert context="//entry" ref="gramGrp"
-                         origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
           </fx-trigger>
           <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
               <template>
@@ -443,7 +444,7 @@ describe('insert Tests', () => {
                       <div class="tp-repeat-button-left">
                           <div class="tp-button-row tp-add"><label>Add significant
                               source</label>
-                              <fx-trigger>
+                              <fx-trigger class="addBibl">
                                   <button>add</button>
                                   <fx-insert context="listBibl"
                                              origin="instance('i-template')//cit[@type='source']"></fx-insert>
@@ -476,29 +477,88 @@ describe('insert Tests', () => {
       </fx-fore>
     `);
     await oneEvent(el, 'refresh-done');
-    const trigger = el.querySelector('fx-trigger');
+    const trigger = el.querySelector('#addGrp');
     trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
+    // el.getModel().updateModel();
+    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type="segmentation"])', inst, null, {});
+    expect(item).to.be.true;
+  });
 
-/*
-    let item = fx.evaluateXPath('//a[1]', inst, null, {});
-    expect(item.textContent).to.equal('a1');
-    item = fx.evaluateXPath('//a[2]', inst, null, {});
-    expect(item.textContent).to.equal('a2');
+  it('inserts into inner repeat with "context" and "origin" attribute', async () => {
+    const el = await fixtureSync(html`
+    <fx-fore>
+        <fx-action event="ready">
+           <fx-insert context="//listBibl"
+                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
+        </fx-action>
 
-    item = fx.evaluateXPath('//a[3]', inst, null, {});
-    expect(item.textContent).to.equal('a3');
-    item = fx.evaluateXPath('//a[4]', inst, null, {});
-    expect(item.textContent).to.equal('');
-    item = fx.evaluateXPath('//!*[4]', inst, null, {});
-    expect(item.textContent).to.equal('');
+      <fx-model id="model-1">
+          <fx-instance
+                  id="default"
+                  src="/base/test/ling-sources-nested.xml"
+                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+  
+          <fx-instance
+                  id="i-template"
+                  src="/base/test/template.xml"
+                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+          <fx-instance id="temp">
+              <data>
+                  <hypotheses>1</hypotheses>
+              </data>
+          </fx-instance>
+      </fx-model>
+      <fx-group ref="//entry">
+          <fx-trigger id="addGrp">
+              <button>add</button>
+              <fx-insert context="//entry" ref="gramGrp"
+                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+          </fx-trigger>
+          <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
+              <template>
+                  <h3>Segmentation hypothesis</h3>
+                  <section class="tp-row tp-repeat-add">
+                      <h5 class="h4 tp-repeat-headline">Sources</h5>
+                      <div class="tp-repeat-button-left">
+                          <div class="tp-button-row tp-add"><label>Add significant
+                              source</label>
+                          </div>
+                      </div>
+                  </section>
+  
+                  <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                      <template>
+                          <fx-control ref="ref"></fx-control>
+                          <fx-trigger>
+                              <button>delete</button>
+                              <fx-delete
+                                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
+                          </fx-trigger>
+                      </template>
+                  </fx-repeat>
+  
+                  <label><b>Delete segmentation
+                      hypothesis</b></label>
+                  <fx-trigger>
+                      <button>Delete</button>
+                      <fx-delete
+                              nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                  </fx-trigger>
+              </template>
+          </fx-repeat>
+        </fx-group>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'ready');
 
-    item = fx.evaluateXPath('//!*[5]', inst, null, {});
-    expect(item.textContent).to.equal('b1');
-    item = fx.evaluateXPath('//b[1]', inst, null, {});
-    expect(item.textContent).to.equal('b1');
-*/
+    const inst = el.getModel().getDefaultContext();
+    console.log('instance after insert', inst);
+    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type=\'segmentation\'])', inst, null, {});
+    expect(item).to.be.true;
+    item = fx.evaluateXPathToBoolean('exists(//listBibl/cit)', inst, null, {});
+    expect(item).to.be.true;
   });
 });

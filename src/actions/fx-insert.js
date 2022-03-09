@@ -101,35 +101,6 @@ export class FxInsert extends AbstractAction {
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
       }
     }
-    // ### obtaining targetSequence
-    // const inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
-    // inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
-    // const inscope = getInScopeContext(this, this.ref);
-
-    // @ts-ignore
-    // const targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    // targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    // console.log('insert nodeset ', targetSequence);
-
-    // ### obtaining originSequence
-    /*
-        let originSequence;
-        if (this.origin) {
-            // ### if there's an origin attribute use it
-            const originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
-            if(Array.isArray(originTarget) && originTarget.length === 0){
-                console.warn('invalid origin for this insert action - ignoring...', this);
-                return;
-            }
-            originSequence = originTarget.cloneNode(true);
-        } else if (targetSequence) {
-            // ### use last item of targetSequence
-            originSequence = this._cloneTargetSequence(targetSequence);
-            if(originSequence && !this.keepValues){
-                this._clear(originSequence);
-            }
-        }
-*/
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
     if (!originSequenceClone) return; // if no origin back out without effect
 
@@ -146,13 +117,10 @@ export class FxInsert extends AbstractAction {
       index = 1;
       console.log('appended', inscope);
     } else {
-      // todo: eval 'at'
 
-      /*
-            insert at position given by 'at' or use the last item in the targetSequence
-             */
-      // if (this.at) {
+      /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
+        // todo: eval 'at'
         // index = this.at;
         // insertLocationNode = targetSequence[this.at - 1];
 
@@ -184,7 +152,12 @@ export class FxInsert extends AbstractAction {
         // insertLocationNode.parentNode.append(originSequence);
         // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
-        insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
+        if(this.hasAttribute('context')){
+          index += 1;
+          insertLocationNode.appendChild(originSequenceClone);
+        }else{
+          insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
+        }
       }
     }
 
@@ -192,8 +165,8 @@ export class FxInsert extends AbstractAction {
     // console.log('parent ', insertLocationNode.parentNode);
     // console.log('instance ', this.getModel().getDefaultContext());
 
-    // console.log('<<<<<<< at', this.at);
-    // console.log('<<<<<<< index', index);
+    console.log('<<<<<<< at', this.at);
+    console.log('<<<<<<< index', index);
     // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
       new CustomEvent('insert', {

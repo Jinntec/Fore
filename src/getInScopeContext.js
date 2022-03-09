@@ -58,7 +58,7 @@ export default function getInScopeContext(node, ref) {
   const repeatItem = parentElement.closest('fx-repeatitem');
   if (repeatItem) {
     if(node.nodeName === 'context'){
-      return evaluateXPathToFirstNode(ref, repeatItem.nodeset, _getForeContext(parentElement));
+      return evaluateXPathToFirstNode(node.nodeValue, repeatItem.nodeset, _getForeContext(parentElement));
     }
     return repeatItem.nodeset;
   }

@@ -94,10 +94,19 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
-      const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+      let inscopeContext;
+      if(this.hasAttribute('context')){
+        inscopeContext = getInScopeContext(this.getAttributeNode('context') || this, this.context);
+      }
+      if(this.hasAttribute('ref')){
+        inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+      }
       if (!inscopeContext) {
+        // ### always fall back to default context with there's neither a 'context' or 'ref' present
+        inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
         console.warn('no in scopeContext for ', this);
-        return;
+        console.warn('using default context ', this);
+        // return;
       }
       if (this.ref === '') {
         this.nodeset = inscopeContext;

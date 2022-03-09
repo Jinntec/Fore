@@ -70,7 +70,6 @@ describe('submission tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-
     sm.evalInContext();
     const result = sm.selectRelevant();
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
