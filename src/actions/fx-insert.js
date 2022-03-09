@@ -152,9 +152,13 @@ export class FxInsert extends AbstractAction {
         // insertLocationNode.parentNode.append(originSequence);
         // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
-        if(this.hasAttribute('context')){
-          index += 1;
-          insertLocationNode.appendChild(originSequenceClone);
+        if(this.hasAttribute('context') && this.hasAttribute('ref')){
+          // index=1;
+          inscope.append(originSequenceClone);
+        }else if(this.hasAttribute('context')){
+          const contextAttr = this.getAttribute('context');
+          index=1;
+          insertLocationNode.prepend(originSequenceClone);
         }else{
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
         }
@@ -169,12 +173,13 @@ export class FxInsert extends AbstractAction {
     console.log('<<<<<<< index', index);
     // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
-      new CustomEvent('insert', {
+      // new CustomEvent('insert', {
+      new CustomEvent('index-changed', {
         composed: true,
         bubbles: true,
         detail: {
           insertedNodes: originSequenceClone,
-          position: index,
+          index,
         },
       }),
     );

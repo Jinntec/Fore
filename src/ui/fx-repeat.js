@@ -100,21 +100,23 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
-    this.addEventListener('index-changed', e => {
+    document.addEventListener('index-changed', e => {
       e.stopPropagation();
       if (!e.target === this) return;
       console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
       const { index } = e.detail;
-      this.index = index;
+      this.index = Number(index);
       this.applyIndex(this.children[index - 1]);
     });
+/*
     document.addEventListener('insert', e => {
       const nodes = e.detail.insertedNodes;
       this.index = e.detail.position;
       console.log('insert catched', nodes, this.index);
     });
+*/
 
     // if (this.getOwnerForm().lazyRefresh) {
       this.mutationObserver = new MutationObserver(mutations => {
@@ -126,7 +128,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             const path = XPathUtil.getPath(added);
             console.log('path mutated',path);
             // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
-            this.dispatch('path-mutated',{'path':path,'index': this.index});
+            // this.index = index;
+            // const prev = mutations[0].previousSibling.previousElementSibling;
+            // const index = prev.index();
+            // this.applyIndex(this.index -1);
+
+            this.dispatch('path-mutated',{path:path,index: this.index});
           }
 
         }

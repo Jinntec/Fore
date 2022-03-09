@@ -43,67 +43,28 @@
                     (<fx-output id="output" ref="instance('temp')/hypotheses">counting...</fx-output>)
                 </h2>
                 <div class="tp-width-secondary">
-<!--                    <section>
-                        <div class="tp-repeat-button-left">
-                            <div class="tp-button-row tp-add"><label>Add source in a non-repeat context</label>
-                                <fx-trigger>
-                                    <button>add</button>
-                                    <fx-insert context="//entry/gramGrp/listBibl"
-                                        origin="instance('i-template')//cit[@type='source']"></fx-insert>
-                                </fx-trigger>
-                            </div>
-                        </div>
-                        <fx-repeat ref="//entry/listBibl/cit[@type='source']" id="r-entry-source">
-                            <template>                                                    
-                                <div class="tp-row">
-                                    <div class="tp-form-group-col"><label
-                                            class="tp-label">Quote</label>
-                                        <fx-control class="tp-input -form-control"
-                                                    ref="quote"></fx-control>
-                                    </div>
-                                </div>
-                                <div class="tp-row">
-                                    <div class="tp-form-group-col"><label class="tp-label">Title</label>
-                                        <fx-control class="tp-input -form-control"
-                                                    ref="ref"></fx-control>
-                                    </div>
-                                    <div class="tp-form-group-col"><label class="tp-label">Author</label>
-                                        <fx-control class="tp-input -form-control"
-                                                    ref="bibl/author"></fx-control>
-                                    </div>
-                                </div>
-                                <div class="tp-row tp-repeat-buttons">
-                                    <div class="tp-repeat-button-right">
-                                        <div class="tp-button-row tp-delete"><label>Delete
-                                            source</label>
-                                            <fx-trigger>
-                                                <button>delete</button>
-                                                <fx-delete
-                                                        nodeset="//entry/listBibl/cit[@type='source'][index('r-entry-source')]"></fx-delete>
-                                            </fx-trigger>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </fx-repeat>
-                    </section>
--->
                     <section class="form-horizontal">
 <!--                        <fx-group ref="//entry">-->
                         <fx-group>
-                            <section class="tp-row tp-repeat-add">
+                            <section>
                                 <div class="tp-repeat-button-left">
                                     <div class="tp-button-row tp-add"><label>Add segmentation hypothesis</label>
                                         <fx-trigger>
-                                            <button>add</button>
+                                            <button>add with 'context'</button>
                                             <!--  prepending a gramGrp -->
                                             <fx-insert context="//entry"
                                                        origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
-                                            <!--  appending a gramGrp -->
+                                        </fx-trigger>
+                                        <fx-trigger>
+                                            <button>add with 'context' and 'ref'</button>
+                                            <!--  prepending a gramGrp -->
 <!--
+                                            <fx-insert context="//entry"
+                                                       origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+-->
+                                            <!--  appending a gramGrp -->
                                             <fx-insert context="//entry" ref="gramGrp"
                                                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
--->
                                         </fx-trigger>
                                     </div>
                                 </div>
@@ -111,8 +72,10 @@
 
                             <fx-repeat ref="//entry/gramGrp[@type='segmentation']" id="r-gramGrp">
                                 <template>
+<!--
                                     <details>
                                         <summary><h3>Segmentation hypothesis</h3></summary>
+-->
                                         <!-- Bibliography -->
                                             <section class="tp-row tp-repeat-add">
                                                 <h5 class="h4 tp-repeat-headline">Sources</h5>
@@ -122,12 +85,12 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <!-- ### appending to listBibl - by specifying ref it is appended instead of prepended -->
+<!--
                                                             <fx-insert context="listBibl"
                                                                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
-<!--
+-->
                                                             <fx-insert context="listBibl" ref="cit"
                                                                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
--->
                                                         </fx-trigger>
                                                     </div>
                                                 </div>
