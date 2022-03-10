@@ -128,7 +128,16 @@ export default class FxControl extends XfAbstractControl {
       if (!widget) {
         widget = this;
       }
-      widget.value = this.value;
+      if(this.hasAttribute('as')){
+        const as = this.getAttribute('as');
+        if(as === 'text'){
+          const serializer = new XMLSerializer();
+          const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset))
+          widget.value = pretty;
+        }
+      }else{
+        widget.value = this.value;
+      }
     }
   }
 
