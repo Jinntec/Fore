@@ -57,16 +57,27 @@ export class XPathUtil {
     throw new Error('no Fore element present');
   }
 
-  // todo: this will need more work to look upward for instance() expr.
+  /**
+   * returns the instance id from a complete XPath using `instance()` function.
+   *
+   * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
+   *
+   * Otherwise instance id is extracted from function and returned. If all fails null is returned.
+   * @param ref
+   * @returns {string}
+   */
   static getInstanceId(ref) {
     if (!ref) {
+      return 'default';
+    }
+    if (ref.startsWith('instance()')) {
       return 'default';
     }
     if (ref.startsWith('instance(')) {
       const result = ref.substring(ref.indexOf('(') + 1);
       return result.substring(1, result.indexOf(')') - 1);
     }
-    return 'default';
+    return null;
   }
 
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
