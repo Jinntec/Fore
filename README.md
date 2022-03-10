@@ -6,7 +6,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/jinntec/fore)
 
 
-
+[Fore Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
 ![logo](resources/images/light-200.png)
 
@@ -16,21 +16,22 @@
 
 ## [Demos Demos Demos Demos Demos](https://jinntec.github.io/Fore)
 
-Sorry for being loud - some people complaining not finding demos.
+^^^ Sorry for being loud - some people complaining not finding demos. ^^^
 
 > ATTENTION: Demos are out of sync with latest release. If you want latest and greatest checkout your local copy please. Demos will be updated
 > for final release.
-
-## [Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
 For latest and greatest please use a local installation. See 'Running demos and docs'
 
 # What it does
 
 Fore lets you write data-driven front-end applications in a declarative way
-just using HTML5 and JavaScript (ES6). 
+just using HTML5 Web Components. 
 
 ![todo](resources/images/todo-screen.png)
+
+[Source code](https://github.com/Jinntec/Fore/blob/960e093fadfbc96eb8514721fb7b53462567f1ec/demo/todo2.html) for above example just uses 53 lines of HTML.
+
 The use cases range from simple to complex forms to full single page
 applications. It can be used standalone or in conjunction with other web 
 components or frameworks. 
@@ -38,6 +39,21 @@ components or frameworks.
 By using the bare metal of the browser
 platform, Fore integrates well with any other library you might want to use in
 conjunction with it.
+
+## Features
+
+* implemented as vanilla web components in ES6
+* fully descriptive - just HTML5
+* MVC architecture 
+* state engine with dependency tracking for optimized updating
+* lifecycle with detailed state events
+* descriptive actions for data mutations (setvalue, insert, delete)
+* multiple XML (or JSON) data instances
+* group, repeat, dialog + switch container components
+* generic UI control to bind any kind of control 
+* bound template expressions
+* powerful XPath/XQuery 3.1 support in the browser
+* Submission module declaratively wrapping the fetch API
 
 
 ## An xformish framework in Web Components
@@ -57,19 +73,6 @@ XQuery 3.1 support.
 Being as close as possible to the web platform standards available in browsers natively, Fore combines well with any other 
 JS framework or component library.
 
-
-## Features
-
-* MVC architecture 
-* state engine with dependency tracking
-* fully descriptive
-* lifecycle with detailed state events
-* multiple XML (or JSON) data instances
-* group, repeat + switch container components
-* generic UI control to bind any kind of component 
-* bound template expressions
-* powerful XPath/XQuery 3.1 support in the browser
-* Submission module declaratively wrapping the fetch API
 
 ## Framework-agnostic
 
@@ -106,13 +109,19 @@ customize the wiring of the widget you use.
 
 More examples are found in the demos (see running)
 
+
 ## Documentation
 
-Currently the demos are the documentation (see 'demo' folder). All files listed on the demo.html page are expected to work
-and serve the purpose of documentation. The intend is to have at least one demo
-for each feature and show how to use it with an example.
+### Element Reference
+
+The [Element Reference](https://jinntec.github.io/Fore/doc/reference.html) lists all exsting Fore elements (Web Components) in categories and documents their attributes. For each element one or more demos are linked
+to see the element in action.
+
+### Demos
+The demos are considered a major resource when it comes to learn how to use the featues (see 'demo' folder). All files listed on the demo.html page are expected to work and hopefully show the way to features and solutions. 
 
 Some of them also offer some explanations and should give you an idea of building your own.
+
 
 ## Development and Contributions
 
