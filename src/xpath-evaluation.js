@@ -212,9 +212,11 @@ function getVariablesInScope(formElement) {
   }
 
   const variables = {};
-  for (const key of closestActualFormElement.inScopeVariables.keys()) {
-    const varElement = closestActualFormElement.inScopeVariables.get(key);
-    variables[key] = varElement.value;
+  if(closestActualFormElement.inScopeVariables){
+    for (const key of closestActualFormElement.inScopeVariables.keys()) {
+      const varElement = closestActualFormElement.inScopeVariables.get(key);
+      variables[key] = varElement.value;
+    }
   }
   return variables;
 }
