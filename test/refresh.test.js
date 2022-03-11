@@ -165,4 +165,55 @@ describe('refresh Tests', () => {
 
   });
 
+  it('refreshes bound fx-switch when page changes', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+          <fx-model>
+              <fx-instance>
+                  <data>
+                      <page>page2</page>
+                  </data>
+              </fx-instance>
+          </fx-model>
+  
+          <fx-trigger id="changePage">
+            <button>change</button>
+            <fx-setvalue ref="page">page3</fx-setvalue>
+          </fx-trigger>
+  
+          <fx-switch class="second" ref="page">
+              <fx-case id="page1" name="page1">
+                  <h2>Page1</h2>
+              </fx-case>
+              <fx-case id="page2" name="page2">
+                  <h2>Page 2</h2>
+              </fx-case>
+              <fx-case id="page3" name="page3">
+                  <h2>Page 3</h2>
+              </fx-case>
+          </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sw = el.querySelector('fx-switch');
+    expect(sw.modelItem.value).to.equal('page2');
+
+    const b = el.querySelector('#changePage');
+    b.performActions();
+
+    expect(sw.modelItem.value).to.equal('page3');
+    expect(sw.modelItem.boundControls).to.exist;
+    expect(sw.modelItem.boundControls.length).to.equal(1);
+
+    const page1 = el.querySelector('#page1');
+    expect(page1.classList.contains('selected-case')).to.be.false;
+    const page2 = el.querySelector('#page2');
+    expect(page2.classList.contains('selected-case')).to.be.false;
+    const page3 = el.querySelector('#page3');
+    expect(page3.classList.contains('selected-case')).to.be.true;
+
+  });
+
 });

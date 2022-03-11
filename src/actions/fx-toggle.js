@@ -17,7 +17,8 @@ class FxToggle extends FxAction {
     }
 
 */
-  execute() {
+  perform() {
+    super.perform();
     console.log('### fx-toggle.execute ');
     if (this.case) {
       const ownerForm = this.getOwnerForm();

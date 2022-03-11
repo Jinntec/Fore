@@ -677,6 +677,7 @@ export class FxFore extends HTMLElement {
     await this.refresh();
     // this.style.display='block'
     this.classList.add('fx-ready');
+    document.body.classList.add('fx-ready');
 
     this.ready = true;
     this.initialRun = false;

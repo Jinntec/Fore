@@ -14,6 +14,15 @@ html{
     pointer-events: none;
     cursor: default;
 }
+fx-fore{
+    opacity: 0;
+}
+fx-fore.fx-ready{
+    opacity: 1;
+}
+fx-group, fx-switch, fx-repeat, fx-dialog{
+    display: block;
+}
 fx-trigger a[disabled] {
     color:lightgrey;
 }
