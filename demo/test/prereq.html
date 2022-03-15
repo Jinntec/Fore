@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>DOA eXist Configuration</title>
+    <link rel="stylesheet" href="../../resources/css/fore.css"/>
+<!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance id="default">
+            <data>
+                <prerequisite name="targetServer" description="checking target server...">checking</prerequisite>
+                <prerequisite name="github" description="checking github...">checking</prerequisite>
+                <prerequisite name="airtable" description="checking airtable...">checking</prerequisite>
+                <prerequisite name="filesystem" description="checking the filesystem...">checking</prerequisite>
+                <prerequisite name="tuttle" description="checking Tuttle...">checking</prerequisite>
+                <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking
+                </prerequisite>
+            </data>
+        </fx-instance>
+
+<!--        <fx-bind ref="prerequisite[5]" calculate="//prerequisite[1]"></fx-bind>-->
+    </fx-model>
+
+    <fx-output ref="//prerequisite[5]" label="calculated value">
+
+    </fx-output>
+</fx-fore>
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="../../index.js"/>
+</body>
+</html>
