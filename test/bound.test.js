@@ -118,7 +118,7 @@ describe('fx-control tests', () => {
                             <label slot="label">with onblur handler</label>
                             <input id="input1" name="value" value="">
                         </fx-control>
-                
+
                     </fx-group>
                     <fx-setvalue event="refresh-done" ref="item"">foo</fx-setvalue>
                 </fx-fore>
@@ -194,45 +194,45 @@ describe('fx-control tests', () => {
     expect(bound.style.display).to.equal('none');
   });
 
-  /*
-    it('is initialized', async () => {
-        const el =  (
-            await fixture(html`
-                <fx-fore>
-                    <fx-model id="model1">
-                        <fx-instance>
-                            <data>
-                                <item>foobar</item>
-                                <checked>true</checked>
-                            </data>
-                            <fx-bind ref="item"></fx-bind>
-                            <fx-bind ref="checked"></fx-bind>
-                        </fx-instance>
-                    </fx-model>
-                    <fx-group>
-                        <fx-control id="input1" ref="item" update-event="blur" value-prop="value">
-                            <label slot="label">with onblur handler</label>
-                            <input name="value" value="">
-                        </fx-control>
+  it('Correctly handles lone checkboxes', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <item>foobar</item>
+              <result></result>
+            </data>
+            <fx-bind ref="item"></fx-bind>
+          </fx-instance>
+        </fx-model>
+        <fx-group>
+          <span id="result">{result}</span>
+          <fx-control id="input1" ref="result" update-event="blur">
+            <fx-items ref="instance('default')/item">
+              <template>
+                <span id="checkbox">
+                  <label slot="label">{.}</label> <input name="value" value="{.}" />
+                </span>
+              </template>
+            </fx-items>
+          </fx-control>
+        </fx-group>
+      </fx-fore>
+    `);
 
-                        <fx-control id="input2" ref="item" update-event="input">
-                            <label slot="label">with incremental handler</label>
-                            <input name="value" value="">
-                        </fx-control>
+    await elementUpdated(el);
 
-                        <fx-control id="input3" ref="checked" update-event="input" value-prop="checked">
-                            <label slot="label">with incremental handler</label>
-                            <input name="value" type="checkbox">
-                        </fx-control>
-                    </fx-group>
-                </fx-fore>
-            `)
-        );
+    const checkbox = el.querySelector('#checkbox input');
+    checkbox.checked = true;
+    checkbox.blur();
 
-        await elementUpdated(el);
+    const resultSpan = el.querySelector('#result');
 
-        expect(bind).to.exist;
+    expect(resultSpan.innerText).to.equal('foobar');
+    checkbox.checked = false;
+    checkbox.blur();
 
-    });
-*/
+    expect(resultSpan.innerText).to.equal('');
+  });
 });
