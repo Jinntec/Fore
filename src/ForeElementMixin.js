@@ -7,6 +7,11 @@ import {
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * Mixin containing all general functions that are shared by all Fore element classes.
+ * @param superclass
+ * @returns {{readonly properties: {ref: {type: StringConstructor}, context: {type: ObjectConstructor}, nodeset: {type: ObjectConstructor}, model: {type: ObjectConstructor}, inScopeVariables: {type: MapConstructor}, modelItem: {type: ObjectConstructor}}, new(): ForeElementMixin, context: null, model: null, modelItem: {}, ref: *|string, inScopeVariables: null, nodeset: *, prototype: ForeElementMixin}}
+ */
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
