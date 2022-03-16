@@ -1,4 +1,4 @@
-<!doctype html>
+x<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -60,37 +60,41 @@
         <fx-model>
             <fx-instance>
               <data>
-				<target>boolean-value</target>
-                    <boolean-value required="true">false</boolean-value>
-                    <numeric-value required="false">42</numeric-value>
+				    <requirement kind="functional">It should work</requirement>
+				    <requirement kind="performance">It should be fast</requirement>
+				    <requirement kind="performance">It should be incredibly fast</requirement>
+				    <requirement kind="functional">It should not be broken</requirement>
+                    <filter>functional</filter>
                 </data>
             </fx-instance>
 
         </fx-model>
 
-		<fx-var name="foo" value='(: This is a LONG XPath! :)
-								  let $i := instance()
-								  return
-								  if ($i/target = "boolean-value") then
-								  $i/boolean-value
-								  else
-								  $i/numeric-value'></fx-var>
-		<fx-var name="bar" value='$foo/@required => fn:trace()' ></fx-var>
-
+		<fx-var name="requirements" value='(: This is a LONG XPath! :)
+										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
         <fx-group>
           <h2>Reusing data</h2>
 		  <fx-var value="'a value'" name="my-variable"></fx-var>
 		  <p>Variables can occur anywhere. They are invisible, they can contain simple values like "{$my-variable}"</p>
-		  <fx-var value="instance()/boolean-value" name="my-boolean"></fx-var>
-		  <p>They can also point to an instance, like this: {$my-boolean}</p>
+		  <fx-var value="instance()/filter" name="filter"></fx-var>
+		  <p>They can also point to an instance, like this: {$filter}</p>
 
-		  <p>Or they can be used in a bind in a model! {$foo}</p>
-		  <label>Target boolean-value or numeric-value: {$bar} <fx-control ref="target"><input></fx-control></label>
-		  <fx-bind ref="$foo" required="$bar" ><fx-control ref="$foo"><input></fx-control></fx-bind>
+		  <label>Current filter: {filter} - <fx-control ref="$filter"><input></fx-control></label>
+		  <p>There are {count(array:flatten($requirements))} requirements!</p>
+          <fx-repeat ref="$requirements">
+            <template>
+			  <p>Requirement: {@kind} {.}</p>
+			</template>
+		  </fx-repeat>
+
+		  <h3>All requirements:</h3>
+		  <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
+            <template>
+			  <p>Requirement: {@kind} {.}</p>
+			</template>
+		  </fx-repeat>
         </fx-group>
-
     </fx-fore>
-
 </div>
 
 
