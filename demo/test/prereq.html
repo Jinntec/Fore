@@ -13,20 +13,20 @@
     <fx-model>
         <fx-instance id="default">
             <data>
-                <prerequisite name="targetServer" description="checking target server...">checking</prerequisite>
-                <prerequisite name="github" description="checking github...">checking</prerequisite>
-                <prerequisite name="airtable" description="checking airtable...">checking</prerequisite>
-                <prerequisite name="filesystem" description="checking the filesystem...">checking</prerequisite>
-                <prerequisite name="tuttle" description="checking Tuttle...">checking</prerequisite>
-                <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking
+                <prerequisite name="targetServer" description="checking target server...">checking 1</prerequisite>
+                <prerequisite name="github" description="checking github...">checking 2</prerequisite>
+                <prerequisite name="airtable" description="checking airtable...">checking 3</prerequisite>
+                <prerequisite name="filesystem" description="checking the filesystem...">checking 4</prerequisite>
+                <prerequisite name="tuttle" description="checking Tuttle...">checking 5</prerequisite>
+                <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking 6
                 </prerequisite>
             </data>
         </fx-instance>
 
-<!--        <fx-bind ref="prerequisite[5]" calculate="//prerequisite[1]"></fx-bind>-->
+       <fx-bind ref="prerequisite[5]" calculate="/descendant::prerequisite[1]"></fx-bind>
     </fx-model>
 
-    <fx-output ref="//prerequisite[5]" label="calculated value">
+    <fx-output ref="/descendant::prerequisite[5]" label="calculated value">
 
     </fx-output>
 </fx-fore>

@@ -251,7 +251,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         // console.log('otherPath', otherPath)
 
         // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
-        if(!otherPath.endsWith('text()[1]')){
+        if (!otherPath.endsWith('text()[1]')) {
           if (!this.model.mainGraph.hasNode(otherPath)) {
             this.model.mainGraph.addNode(otherPath, ref);
           }
@@ -335,7 +335,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
-            const localResult = evaluateXPathToNodes(this.ref, n, this.getOwnerForm());
+            const localResult = evaluateXPathToNodes(this.ref, n, this);
             localResult.forEach(item => {
               this.nodeset.push(item);
             });
@@ -351,7 +351,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     } else {
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this.getOwnerForm());
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else {
         this.nodeset = this.ref;
       }
@@ -517,7 +517,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       const touchedNodes = new Set();
       const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
       this.nodeset.forEach(node => {
-        evaluateXPathToString(propertyExpr, node, this.getOwnerForm(), domFacade);
+        evaluateXPathToString(propertyExpr, node, this, domFacade);
       });
 
       return Array.from(touchedNodes.values());
