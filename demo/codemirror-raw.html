@@ -3,7 +3,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
     <!-- Optional theme -->
     <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"-->
@@ -18,9 +18,8 @@
 
 
     <title>TEI header editor sample</title>
-    <!--script src="../demo/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script-->
 
-    <!--link href="./assets/css/demo.css" rel="stylesheet"/-->
+    <link rel="stylesheet"  href="../resources/demo.css" />
     <style>
         fx-control{
             width: 100%;
@@ -29,58 +28,51 @@
     </style>
 
 </head>
-<body unresolved="unresolved">
+<!--<body unresolved="unresolved">-->
+<body>
 <div class="container">
     <!--tabs-->
 
+    <div class="wrapper">
 
-    <fx-fore>
-        <fx-model>
-            <fx-instance src="header.xml"
-                         ></fx-instance>
-<!--            <fx-instance id="config" src="models/config.xml"></fx-instance>-->
-<!--            <fx-instance id="templates" src="models/templates.xml"></fx-instance>-->
-            <!--fx-instance id="summary" src="models/header.xml"></fx-instance-->
+        <h1>Codemirror Demo</h1>
+        <fx-fore>
+            <fx-model>
+                <fx-instance src="codemirror-test.xml"></fx-instance>
+            </fx-model>
+            <fx-group ref=".">
+                <!--        <fx-group>-->
+                <div id="meta">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <fx-control ref="teiHeader//titleStmt/title" update-event="input">
+                            <input type="text" class="form-control" name="title"/>
+                        </fx-control>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary">Summary</label>
+                        <fx-var name="summary" value="./teiHeader//sourceDesc/msDesc/msContents/summary"></fx-var>
+                        <!--                    <fx-control ref="./teiHeader//sourceDesc/msDesc/msContents/summary" as="text">-->
+                        <fx-control ref="$summary" as="text">
+                            <textarea  readonly="readonly" id="summary" name="summary" class="form-control txtArea widget" rows="8"></textarea>
+                            <!--                        <fx-message event="value-changed">value changed</fx-message>-->
+                        </fx-control>
+                    </div>
 
-            <fx-instance id="result">
-                <data></data>
-            </fx-instance>
-
-            <fx-submission id="save"
-                           url="/echo"
-                           method="post"
-                           replace="all"></fx-submission>
-        </fx-model>
-        <fx-group ref=".">
-<!--        <fx-group>-->
-            <div id="meta">
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <fx-control ref="teiHeader//titleStmt/title" update-event="input">
-                        <input type="text" class="form-control" name="title"/>
-                    </fx-control>
                 </div>
-                <div class="form-group">
-                    <label for="summary">Summary</label>
-                    <fx-var name="summary" value="./teiHeader//sourceDesc/msDesc/msContents/summary"></fx-var>
-                    <!-- text/html, img/png, binary...   -->
-                    <fx-control ref="./teiHeader//sourceDesc/msDesc/msContents/summary" update-event="blur" as="text">
-                        <textarea id="summary" name="summary" class="form-control txtArea widget" rows="8"></textarea>
-                        <fx-message event="value-changed">value changed</fx-message>
-                    </fx-control>
-                </div>
+            </fx-group>
 
-            </div>
-        </fx-group>
+            <!--
+                    <details class="log">
+                        <summary>Data</summary>
+                        <pre>
+                            {log('default')}
+                        </pre>
+                    </details>
+            -->
 
-        <details class="log">
-            <summary>Data</summary>
-            <pre>
-				{log('default')}
-			</pre>
-        </details>
-
-    </fx-fore>
+        </fx-fore>
+    </div>
 
     <!-- CM works outside Fore
     <textarea class="txtArea">Lore Ipsum dolor sit amet<br>ciao</textarea>
@@ -158,6 +150,13 @@
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
             });
+            // console.log('editor', editor);
+            editor.on('change', (e) => {
+                const doc = e.doc.getValue();
+                // console.log('it fired', editor.getTextArea().parentNode);
+                // getting the fx-control the textarea is in and calling setValue on it with codemirror doc
+                editor.getTextArea().parentNode.setValue(doc);
+            });
 
         });
 
@@ -169,7 +168,7 @@
 </script>
 <!--Fore-->
 <!--<script type="module" version="1.0.0-4"  src="./assets/js/fore-all.js"></script>-->
-<script type="module" version="1.0.0-4"  src="../../index.js"></script>
+<script type="module" version="1.0.0-4"  src="../index.js"></script>
 <!--script type="module" version="1.0.0-4"  src="./assets/js/fore-debug.js"></script-->
 </body>
 </html>
