@@ -1,0 +1,175 @@
+<html lang="en" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"-->
+
+    <!--CM CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--plugin-->
+    <!--hint-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/hint/show-hint.min.css" integrity="sha512-JXFElbziuv4j0FL5AETNmDK8CH7lRqLc693SoxkC8FmOvBtTw40LQyIqZdJGq7jw2VvibaglBjeerBV8/oUuWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--fold-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldgutter.min.css" integrity="sha512-pTOrfhyIX7aznY8SbLE39RDst1gnMg78Uv5ksdKVsgNXnMEwgEeHm2nuvocJvafaEMsPOEwFiH1z3Ahj4AMMVA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <title>TEI header editor sample</title>
+    <!--script src="../demo/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script-->
+
+    <!--link href="./assets/css/demo.css" rel="stylesheet"/-->
+    <style>
+        fx-control{
+            width: 100%;
+            margin: 0;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="container">
+    <!--tabs-->
+
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="header.xml"
+                         ></fx-instance>
+<!--            <fx-instance id="config" src="models/config.xml"></fx-instance>-->
+<!--            <fx-instance id="templates" src="models/templates.xml"></fx-instance>-->
+            <!--fx-instance id="summary" src="models/header.xml"></fx-instance-->
+
+            <fx-instance id="result">
+                <data></data>
+            </fx-instance>
+
+            <fx-submission id="save"
+                           url="/echo"
+                           method="post"
+                           replace="all"></fx-submission>
+        </fx-model>
+        <fx-group ref=".">
+<!--        <fx-group>-->
+            <div id="meta">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <fx-control ref="teiHeader//titleStmt/title" update-event="input">
+                        <input type="text" class="form-control" name="title"/>
+                    </fx-control>
+                </div>
+                <div class="form-group">
+                    <label for="summary">Summary</label>
+                    <fx-var name="summary" value="./teiHeader//sourceDesc/msDesc/msContents/summary"></fx-var>
+                    <!-- text/html, img/png, binary...   -->
+                    <fx-control ref="./teiHeader//sourceDesc/msDesc/msContents/summary" update-event="blur" as="text">
+                        <textarea id="summary" name="summary" class="form-control txtArea widget" rows="8"></textarea>
+                        <fx-message event="value-changed">value changed</fx-message>
+                    </fx-control>
+                </div>
+
+            </div>
+        </fx-group>
+
+        <details class="log">
+            <summary>Data</summary>
+            <pre>
+				{log('default')}
+			</pre>
+        </details>
+
+    </fx-fore>
+
+    <!-- CM works outside Fore
+    <textarea class="txtArea">Lore Ipsum dolor sit amet<br>ciao</textarea>
+    -->
+
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<!--jQuery-->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<!--Bootstrap-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+<!--codeMirror-->
+
+<!-- Here we use codemirror directly -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js" integrity="sha512-xwrAU5yhWwdTvvmMNheFn9IyuDbl/Kyghz2J3wQRDR8tyNmT8ZIYOd0V3iPYY/g4XdNPy0n/g0NvqGu9f0fPJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--XML Editor-->
+<!--mode-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/xml/xml.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--plugins-->
+<!--active line-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/selection/active-line.js" integrity="sha512-NDH3UbGarb7xbvOnt/w/NQaNt4vZUSFTDv2o1OH49e+kqeZMXGwmb3KotiPeof9goY5Mmv9Qtzk+YuvIw2Qa/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--hint-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/hint/show-hint.min.js" integrity="sha512-DY/iJ6BsJJab04pJuFNE74hHYVdtGnSHGKw244mO7ph59rli7ZHtBg84KJlHU1dSkqKSpWETQsvnnmh5yI2JiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/hint/xml-hint.min.js" integrity="sha512-jaO7lNvO17S36AS12QDV4ftX6Bh3MP5JRpxMnejS0ue9QxRa7mH/qHiO46RPJbM+sqLAp7uBfdDqtDilFBt6Ow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--fold-->
+<!--script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldcode.js" crossorigin="anonymous" referrerpolicy="no-referrer"/-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldcode.js" integrity="sha512-BcjlXmoGJllxAAHqg9owF+hGE8pz4nGGsIwleKQ2Od23qHK1FbEhEeF0H0rRWNTIWVMW57VCnhng/A5UBQQQQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldgutter.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/brace-fold.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/xml-fold.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/indent-fold.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/comment-fold.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script type="text/javascript">
+    //FUNCTIONS FOR CODEMIRROR XML - DO NOT TOUCH
+    function completeAfter(cm, pred) {
+        var cur = cm.getCursor();
+        if (!pred || pred()) setTimeout(function() {
+            if (!cm.state.completionActive)
+                cm.showHint({completeSingle: false});
+        }, 100);
+        return CodeMirror.Pass;
+    }
+
+    function completeIfAfterLt(cm) {
+        return completeAfter(cm, function() {
+            var cur = cm.getCursor();
+            return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
+        });
+    }
+
+    function completeIfInTag(cm) {
+        return completeAfter(cm, function() {
+            var tok = cm.getTokenAt(cm.getCursor());
+            if (tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
+            var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state;
+            return inner.tagName;
+        });
+    }
+
+
+    const f = document.querySelector('fx-fore');
+    const li = f.addEventListener('ready', (e) => {
+        $('body').find('.txtArea').each(function(index, myeditor) {
+            var editor = CodeMirror.fromTextArea(myeditor, {
+                mode: 'application/xml',
+                lineNumbers: true,
+                lineWrapping: true,
+                cursorBlinkRate: 1000,
+                styleActiveLine: true,
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+
+        });
+
+
+    });
+
+
+
+</script>
+<!--Fore-->
+<!--<script type="module" version="1.0.0-4"  src="./assets/js/fore-all.js"></script>-->
+<script type="module" version="1.0.0-4"  src="../../index.js"></script>
+<!--script type="module" version="1.0.0-4"  src="./assets/js/fore-debug.js"></script-->
+</body>
+</html>
