@@ -157,7 +157,7 @@ Include the following snippet at end of body:
 
 Run
 
-```npm install @jintec/fore```
+```npm install @jinntec/fore```
 
 in your project to install it.
 
