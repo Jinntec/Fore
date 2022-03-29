@@ -1,5 +1,6 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import getInScopeContext from '../getInScopeContext.js';
 
 async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
@@ -124,7 +125,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     // First check if 'if' condition is true - otherwise exist right away
-    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, this.nodeset, this)) {
+    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
       return;
     }
 
@@ -139,7 +140,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
           return;
         }
 
-        if (!evaluateXPathToBoolean(this.whileExpr, this.nodeset, this)) {
+        if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
           // Done with iterating
           return;
         }
