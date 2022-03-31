@@ -1,22 +1,24 @@
-import { FxAction } from './fx-action.js';
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-toggle`
  *
  */
-class FxToggle extends FxAction {
+class FxToggle extends AbstractAction {
+
+/*
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
+*/
   connectedCallback() {
+    super.connectedCallback();
     if (this.hasAttribute('case')) {
       this.case = this.getAttribute('case');
     }
   }
 
-  /*
-    disconnectedCallback() {
-        super.disconnectedCallback();
-    }
-
-*/
   perform() {
     super.perform();
     console.log('### fx-toggle.execute ');
@@ -26,7 +28,10 @@ class FxToggle extends FxAction {
       const fxSwitch = caseElement.parentNode;
       fxSwitch.toggle(caseElement);
     }
+    // this.needsUpdate = true;
+
   }
+
 }
 
 window.customElements.define('fx-toggle', FxToggle);

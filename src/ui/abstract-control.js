@@ -1,6 +1,7 @@
 import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
+import { Fore } from '../fore.js';
 
 /**
  * `AbstractControl` -
@@ -68,15 +69,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
-          // console.log('dispatching value-changed for ', this);
-          // console.log('value-changed path ', this.modelItem.path);
-          this.dispatch('value-changed', { path: this.modelItem.path });
+          Fore.dispatch(this,'value-changed', { path: this.modelItem.path });
         }
-        // this.requestUpdate();
       }
     }
-    // Fore.refreshChildren(this,force);
-    // await this.updateComplete;
   }
 
   /**

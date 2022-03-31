@@ -130,4 +130,46 @@ describe('fx-switch Tests', () => {
     expect(cases[1].classList.contains('selected-case')).to.be.false;
     expect(cases[2].classList.contains('selected-case')).to.be.true;
   });
+
+  it('toggles on event', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <page>page3</page>
+              <foo></foo>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-control ref="page" update-event="change">
+          <label>select page</label>
+          <fx-toggle case="page3" event="value-changed"></fx-toggle>
+        </fx-control>
+
+        <fx-switch ref="page">
+          <fx-case name="page1">
+            <h2>Page1</h2>
+          </fx-case>
+          <fx-case name="page2">
+            <h2>Page 2</h2>
+          </fx-case>
+          <fx-case id="page3" name="page3">
+            <h2>Page 3</h2>
+          </fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    const control = el.querySelector('fx-control');
+    control.setValue('bar');
+
+    await oneEvent(el, 'refresh-done');
+
+    const cases = el.querySelectorAll('fx-case');
+    expect(cases[0].classList.contains('selected-case')).to.be.false;
+    expect(cases[1].classList.contains('selected-case')).to.be.false;
+    expect(cases[2].classList.contains('selected-case')).to.be.true;
+  });
 });
