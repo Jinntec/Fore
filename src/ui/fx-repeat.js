@@ -269,6 +269,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
+        this.getOwnerForm().someInstanceDataStructureChanged = true;
       }
     }
 
