@@ -2,10 +2,13 @@
 @import 'vars.css';
 
 html{
-    --inspector-bg:var(--paper-grey-500);
+    --inspector-bg:var(--paper-grey-300);
     --inspector-pre-bg:var(--paper-grey-100);
     --inspector-color:var(--paper-grey-800);
     --inspector-instance-height:200px;
+    --inspector-handle-bg: var(--paper-blue-500);
+    --inspector-handle-width: 30px;
+
 }
 [unresolved]{
     display: none;
@@ -68,45 +71,6 @@ fx-repeatitem{
 }
 
 /* fx-inspector styles */
-fx-inspector{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    width: 100%;
-    background: var(--inspector-bg);
-    color: white;
-    max-height: 33%;
-    overflow: scroll;
-    border-top:3px solid black;
-    opacity: 0.9;
-}
-fx-inspector::before{
-    content:'Instance Inspector';
-    font-style:italic;
-    position:absolute;
-    top:0;
-    right: 0.3rem;
-    z-index: 10;
-    font-size: 0.8rem;
-}
-fx-inspector details{
-    padding: 1rem;
-}
-fx-inspector pre{
-    background: var(--inspector-pre-bg);
-    border-radius: 0.5rem;
-    padding: 0.3rem;
-    max-height: var(--inspector-instance-height);
-    /*overflow: scroll;*/
-}
-fx-inspector details{
-    overflow: auto;
-    margin:0;
-}
-fx-inspector summary{
-    padding: 0;
-}
 
 /* ### FX-DIALOG STYLES ### */
 /* ### FX-DIALOG STYLES ### */

@@ -16,6 +16,11 @@ code{
     white-space: nowrap;
     padding:0 0.3rem;
 }
+/*
+demo-snippet .code-container{
+    position:absolute;
+}
+*/
 h1, h2, h3, h4{
     /*color:var(--paper-orange-900);*/
     color:var(--paper-blue-grey-500);
@@ -50,6 +55,7 @@ p{
     max-width: 800px;
     margin:0 auto;
     padding:1rem;
+    position: relative;
 }
 
 .redline{

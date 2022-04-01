@@ -181,6 +181,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
+    let item = this.modelItem.node;
+    if(Array.isArray(item) && item.length === 0){
+      this._dispatchEvent('nonrelevant');
+      this.style.display = 'none';
+      return ;
+    }
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
