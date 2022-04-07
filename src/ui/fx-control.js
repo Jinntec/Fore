@@ -22,6 +22,47 @@ export default class FxControl extends XfAbstractControl {
   }
 
   connectedCallback() {
+    this.url = this.hasAttribute('url') ? this._getValueAttribute('url'):null;
+/*
+    if (this.url) {
+      const subForm = this.ownerDocument.querySelector(this.url);
+      if(!subForm){
+        Fore.dispatch(this,'link-error',{message:`${this.url} cannot be resolved.`})
+      }
+      this.subForm = this.shadowRoot.appendChild(this.ownerDocument.createElement('fx-fore'));
+      this.subForm.appendChild(subForm.content.cloneNode(true));
+
+      /!*
+      * this would be an alternative to using a `return` action and maybe an even better one
+      * as it does not require a Fore to be explicitly for being embedded.
+      *!/
+      this.subForm.addEventListener(this.updateEvent, () => {
+        console.log('NEW VALUE~!!!!!!');
+      });
+
+      const ref = this.getAttribute('initial');
+      // ### todo: just for now but intial might be different from ref
+      this.ref = ref;
+      this.evalInContext();
+      const referencedThing = Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
+      // Assume this is an element!
+
+      // TODO: use actual setters
+      const fxInstance = this.subForm.getModel().querySelector('fx-instance');
+      fxInstance.innerHTML = referencedThing.outerHTML;
+^
+      this.addEventListener(this.updateEvent, () => {
+        const newContext = getInScopeContext(fxInstance, '');
+        this.setValue(newContext.cloneNode(true));
+      });
+
+      // Add a div to contain the setvalue component
+      const div = this.shadowRoot.appendChild(document.createElement('div'));
+      div.innerHTML = `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`;
+      return;
+    }
+*/
+
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
       : 'blur';
@@ -153,6 +194,19 @@ export default class FxControl extends XfAbstractControl {
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
+    this._handleBoundWidget(widget);
+    Fore.refreshChildren(this, force);
+  }
+
+  /**
+   * If the widget itself has a `ref` it binds to another nodeset to provide some
+   * dynamic items to be created from a template usually. Examples are dynamic select option lists
+   * or a set of checkboxes.
+   *
+   * @param widget the widget to handle
+   * @private
+   */
+  _handleBoundWidget(widget) {
     if (widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
@@ -193,7 +247,6 @@ export default class FxControl extends XfAbstractControl {
         }
       }
     }
-    Fore.refreshChildren(this, force);
   }
 
   updateEntry(newEntry, node) {
