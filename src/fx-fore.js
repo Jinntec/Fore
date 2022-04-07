@@ -682,10 +682,17 @@ export class FxFore extends HTMLElement {
 
     this.ready = true;
     this.initialRun = false;
-    console.log('### <<<<< dispatching ready >>>>>');
-    console.log('########## modelItems: ', this.getModel().modelItems);
-    console.log('########## FORE: form fully initialized... ##########');
-    this.dispatchEvent(new CustomEvent('ready', {}));
+    console.log('### >>>>> dispatching ready >>>>>', this);
+    console.log('modelItems: ',this.getModel().modelItems);
+    console.log('### <<<<< FORE: form fully initialized...', this);
+    // this.dispatchEvent(new CustomEvent('ready', {}));
+
+    this.dispatchEvent(new CustomEvent('ready', {
+      composed: true,
+      bubbles: false,
+      detail: {},
+    }));
+
   }
 
   registerLazyElement(element) {

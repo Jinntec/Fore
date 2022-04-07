@@ -2,6 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
+import {Relevance} from "../src/relevance.js";
 
 import '../index.js';
 
@@ -78,7 +79,8 @@ describe('submission tests', () => {
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
     sm.evalInContext();
-    const result = sm.selectRelevant('xml');
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -125,7 +127,8 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant('xml');
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -163,7 +166,8 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant('xml');
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant( sm,'xml');
     const vehicle = fx.evaluateXPathToBoolean('exists(vehicle/text())', result, null, {});
     expect(vehicle).to.be.false;
 
@@ -197,7 +201,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle/text()', result, null, {});
     // expect(vehicle).to.be.true;
     expect(vehicle).to.be.empty;

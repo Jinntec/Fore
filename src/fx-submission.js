@@ -1,4 +1,5 @@
 import { Fore } from './fore.js';
+import { Relevance} from "./relevance.js";
 import { foreElementMixin } from './ForeElementMixin.js';
 import { evaluateXPathToString, evaluateXPath } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
@@ -129,7 +130,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     if (this.serialization === 'none') {
       serialized = undefined;
     } else {
-      const relevant = this.selectRelevant(instance.type);
+      // const relevant = this.selectRelevant(instance.type);
+      const relevant = Relevance.selectRelevant(this,instance.type);
       serialized = this._serialize(instance.type, relevant);
     }
 
@@ -335,6 +337,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
    *
    * @returns {*}
    */
+/*
   selectRelevant(type) {
     console.log('selectRelevant' ,type)
     switch (type){
@@ -345,8 +348,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         return this.nodeset;
     }
   }
+*/
 
   // todo: support for 'empty'
+/*
   _relevantXmlNodes() {
     // ### no relevance selection - current nodeset is used 'as-is'
     if (this.nonrelevant === 'keep') {
@@ -365,7 +370,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
     return this._filterRelevant(this.nodeset, root);
   }
+*/
 
+/*
   _filterRelevant(node, result) {
     const { childNodes } = node;
     Array.from(childNodes).forEach(n => {
@@ -390,7 +397,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     });
     return result;
   }
+*/
 
+/*
   _isRelevant(node) {
     const mi = this.getModel().getModelItem(node);
     if (!mi || mi.relevant) {
@@ -398,6 +407,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
     return false;
   }
+*/
 
   _handleError() {
     this.dispatch('submit-error', {});
