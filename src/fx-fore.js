@@ -59,6 +59,20 @@ export class FxFore extends HTMLElement {
       console.error('circular dependency: ', e);
     });
 
+/*
+    this.addEventListener('ready', (e) =>{
+      console.log('e', e);
+      console.log('eventPhase', e.eventPhase);
+      console.log('cancelable', e.cancelable);
+      console.log('target', e.target);
+      console.log('composed', e.composedPath());
+      e.preventDefault();
+      e.stopPropagation();
+
+      // e.stopImmediatePropagation();
+    });
+*/
+
     this.ready = false;
     this.storedTemplateExpressionByNode = new Map();
 
@@ -391,7 +405,7 @@ export class FxFore extends HTMLElement {
     console.timeEnd('refresh');
 
     console.groupEnd();
-    console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
+    // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     this.dispatchEvent(new CustomEvent('refresh-done'));
   }
 
@@ -409,7 +423,7 @@ export class FxFore extends HTMLElement {
       "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    console.log('template expressions found ', tmplExpressions);
+    // console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
       this.storedTemplateExpressions = [];
@@ -657,7 +671,7 @@ export class FxFore extends HTMLElement {
 
     await this._lazyCreateInstance();
 
-    console.log('registering variables!');
+    // console.log('registering variables!');
     const variables = new Map();
     (function registerVariables(node) {
       for (const child of node.children) {
@@ -688,8 +702,9 @@ export class FxFore extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('ready', {}));
 
     this.dispatchEvent(new CustomEvent('ready', {
-      composed: true,
-      bubbles: false,
+      composed: false,
+      bubbles: true,
+      cancelable:true,
       detail: {},
     }));
 

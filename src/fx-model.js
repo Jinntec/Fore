@@ -38,7 +38,7 @@ export class FxModel extends HTMLElement {
     this.addEventListener('model-construct-done', e => {
       this.modelConstructed = true;
       // console.log('model-construct-done fired ', this.modelConstructed);
-      console.log('model-construct-done fired ', e.detail.model.instances);
+      // console.log('model-construct-done fired ', e.detail.model.instances);
     });
 
     this.skipUpdate = false;
@@ -95,7 +95,7 @@ export class FxModel extends HTMLElement {
    *
    */
   modelConstruct() {
-    console.log('### <<<<< dispatching model-construct >>>>>');
+    // console.log('### <<<<< dispatching model-construct >>>>>');
     this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
 
     console.time('instance-loading');
@@ -109,11 +109,11 @@ export class FxModel extends HTMLElement {
 
       Promise.all(promises).then(() => {
         this.instances = Array.from(instances);
-        console.log('_modelConstruct this.instances ', this.instances);
+        // console.log('_modelConstruct this.instances ', this.instances);
         this.updateModel();
         this.inited = true;
 
-        console.log('### <<<<< dispatching model-construct-done >>>>>');
+        // console.log('### <<<<< dispatching model-construct-done >>>>>');
         this.dispatchEvent(
           new CustomEvent('model-construct-done', {
             composed: true,
@@ -163,7 +163,7 @@ export class FxModel extends HTMLElement {
     // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if(binds.length === 0 ) {
-      console.log('skipped model update');
+      // console.log('skipped model update');
       this.skipUpdate = true;
       return ;
     }

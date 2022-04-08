@@ -109,8 +109,8 @@ export const foreElementMixin = superclass =>
       if (!inscopeContext) {
         // ### always fall back to default context with there's neither a 'context' or 'ref' present
         inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
-        console.warn('no in scopeContext for ', this);
-        console.warn('using default context ', this);
+        // console.warn('no in scopeContext for ', this);
+        // console.warn('using default context ', this);
         // return;
       }
       if (this.ref === '') {

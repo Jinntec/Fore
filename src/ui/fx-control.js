@@ -22,46 +22,8 @@ export default class FxControl extends XfAbstractControl {
   }
 
   connectedCallback() {
-    this.url = this.hasAttribute('url') ? this._getValueAttribute('url'):null;
-/*
-    if (this.url) {
-      const subForm = this.ownerDocument.querySelector(this.url);
-      if(!subForm){
-        Fore.dispatch(this,'link-error',{message:`${this.url} cannot be resolved.`})
-      }
-      this.subForm = this.shadowRoot.appendChild(this.ownerDocument.createElement('fx-fore'));
-      this.subForm.appendChild(subForm.content.cloneNode(true));
-
-      /!*
-      * this would be an alternative to using a `return` action and maybe an even better one
-      * as it does not require a Fore to be explicitly for being embedded.
-      *!/
-      this.subForm.addEventListener(this.updateEvent, () => {
-        console.log('NEW VALUE~!!!!!!');
-      });
-
-      const ref = this.getAttribute('initial');
-      // ### todo: just for now but intial might be different from ref
-      this.ref = ref;
-      this.evalInContext();
-      const referencedThing = Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
-      // Assume this is an element!
-
-      // TODO: use actual setters
-      const fxInstance = this.subForm.getModel().querySelector('fx-instance');
-      fxInstance.innerHTML = referencedThing.outerHTML;
-^
-      this.addEventListener(this.updateEvent, () => {
-        const newContext = getInScopeContext(fxInstance, '');
-        this.setValue(newContext.cloneNode(true));
-      });
-
-      // Add a div to contain the setvalue component
-      const div = this.shadowRoot.appendChild(document.createElement('div'));
-      div.innerHTML = `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`;
-      return;
-    }
-*/
+    this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
+    this.loaded=false;
 
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
@@ -74,21 +36,6 @@ export default class FxControl extends XfAbstractControl {
             }
         `;
 
-    /*
-        const controlHtml = `
-            <slot></slot>
-            <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
-        `;
-*/
-
-    /*
-        this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${controlHtml}
-        `
-*/
     this.shadowRoot.innerHTML = `
             <style>
                 ${style}
@@ -158,36 +105,85 @@ export default class FxControl extends XfAbstractControl {
   // todo: check again
   async updateWidgetValue() {
     // this.widget[this.valueProp] = this.value;
+
+    let { widget } = this;
+    if (!widget) {
+      widget = this;
+    }
+    // ### value is bound to checkbox
     if (this.valueProp === 'checked') {
       if (this.value === 'true') {
-        this.widget.checked = true;
+        widget.checked = true;
       } else {
-        this.widget.checked = false;
+        widget.checked = false;
       }
-    } else {
-      let { widget } = this;
-      if (!widget) {
-        widget = this;
-      }
-      if(this.hasAttribute('as')){
-        const as = this.getAttribute('as');
-        if(as === 'text'){
-          const serializer = new XMLSerializer();
-          const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset))
-          widget.value = pretty;
-        }
-      }else{
-        widget.value = this.value;
-      }
+      return;
     }
+
+    // ### when there's an `as=text` attribute serialize nodeset to prettified string
+    if(this.hasAttribute('as')){
+      const as = this.getAttribute('as');
+      if(as === 'text'){
+        const serializer = new XMLSerializer();
+        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset))
+        widget.value = pretty;
+      }
+      return;
+    }
+
+    if(this.url && !this.loaded){
+      this._loadForeFromUrl();
+      this.loaded=true;
+      return;
+    }
+    widget.value = this.value;
   }
 
+  _loadForeFromUrl() {
+    console.log('########## loading Fore from ',this.src ,'##########');
+    fetch(this.url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    })
+        .then(response => {
+          const responseContentType = response.headers.get('content-type').toLowerCase();
+          console.log('********** responseContentType *********', responseContentType);
+          if (responseContentType.startsWith('text/html')) {
+            return response.text().then(result =>
+                // console.log('xml ********', result);
+                new DOMParser().parseFromString(result, 'text/html'),
+            );
+          }
+          return 'done';
+        })
+        .then(data => {
+          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+          const theFore = data.querySelector('fx-fore');
+          // console.log('thefore', theFore)
+          if(!theFore){
+            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+          }
+          theFore.classList.add('widget'); // is the new widget
+          const dummy = this.querySelector('input');
+          dummy.replaceWith(theFore);
+          // this.shadowRoot.appendChild(theFore);
+          this.dispatchEvent(new CustomEvent('loaded',{}));
+        })
+        .catch(error => {
+          console.log('error',error);
+          this.getOwnerForm().dispatchEvent(new CustomEvent('error',{detail:{message:`${this.url} not found`}}));
+        });
+  }
   getTemplate() {
     return this.querySelector('template');
   }
 
   async refresh(force) {
-    console.log('fx-control refresh', this);
+    // console.log('fx-control refresh', this);
     super.refresh();
     // console.log('refresh template', this.template);
     // const {widget} = this;
@@ -207,7 +203,7 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   _handleBoundWidget(widget) {
-    if (widget.hasAttribute('ref')) {
+    if (widget && widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
       /*

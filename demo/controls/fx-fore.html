@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using Fore as control</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+        }
+
+        fx-group {
+        }
+
+        fx-fore fx-fore {
+            background: lightsteelblue;
+            border: thin solid steelblue;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Email message using Fore as control</h1>
+
+    <!--
+        <template id="email">
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <email></email>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-control ref="email">
+                    <label>From</label>
+                    <fx-return event="value-changed"></fx-return>
+                </fx-control>
+            </fx-fore>
+        </template>
+    -->
+
+    <fx-fore>
+        <fx-message event="ready">outer fore ready</fx-message>
+
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <from></from>
+                    <to></to>
+                    <subject></subject>
+                    <message></message>
+                </data>
+            </fx-instance>
+<!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
+
+        </fx-model>
+
+        <fx-group>
+            <fx-control ref="from"
+                        url="email.html"
+                        initial="from">
+                <label>From</label>
+            </fx-control>
+            <fx-control ref="to"
+                        url="email.html"
+                        initial="to">
+                <label>To</label>
+            </fx-control>
+            <fx-control ref="subject">
+                <label>Subject</label>
+            </fx-control>
+            <fx-control ref="message">
+                <label>Message</label>
+                <textarea class="widget" rows="10"></textarea>
+            </fx-control>
+        </fx-group>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

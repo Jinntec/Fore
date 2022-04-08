@@ -127,7 +127,11 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
+          if(element.nodeName.toUpperCase() === 'FX-FORE'){
+            resolve('done');
+          }
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            // console.log('refreshing ',element);
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
             Fore.refreshChildren(element, force);
@@ -248,6 +252,44 @@ export class Fore {
     return resultXml;
   }
 
+  static async loadForeFromUrl(hostElement,url) {
+    console.log('########## loading Fore from ',this.src ,'##########');
+    await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    })
+        .then(response => {
+          const responseContentType = response.headers.get('content-type').toLowerCase();
+          console.log('********** responseContentType *********', responseContentType);
+          if (responseContentType.startsWith('text/html')) {
+            return response.text().then(result =>
+                // console.log('xml ********', result);
+                new DOMParser().parseFromString(result, 'text/html'),
+            );
+          }
+          return 'done';
+        })
+        .then(data => {
+          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+          const theFore = data.querySelector('fx-fore');
+          // console.log('thefore', theFore)
+          if(!theFore){
+            hostElement.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+          }
+          hostElement.appendChild(theFore);
+          theFore.classList.add('widget');
+          // return theFore;
+          // theFore.setAttribute('from-src', this.src);
+          // this.replaceWith(theFore);
+        })
+        .catch(error => {
+          hostElement.dispatchEvent(new CustomEvent('error',{detail:{'error':error, message: `'${url}' not found or does not contain Fore element.`}}));
+        });
+  }
 
   /**
    * clear all text nodes and attribute values to get a 'clean' template.
