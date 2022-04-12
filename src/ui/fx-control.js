@@ -22,8 +22,10 @@ export default class FxControl extends XfAbstractControl {
   }
 
   connectedCallback() {
+    this.initial = this.hasAttribute('initial')?this.getAttribute('initial'):null;
     this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
     this.loaded=false;
+    this.initialNode = null;
 
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
@@ -62,11 +64,31 @@ export default class FxControl extends XfAbstractControl {
       this.setValue(this.widget[this.valueProp]);
     });
 
+/*
     const slot = this.shadowRoot.querySelector('slot');
-    this.template = this.querySelector('template');
+    slot.addEventListener('slotchange', event => {
+      const children = event.target.assignedElements();
+      if(this.initialNode === null) return;
+
+      console.log('slotchanged for control', children);
+      const fore = children.filter(node => node.nodeName === 'FX-FORE');
+      console.log('fore',fore);
+      if(fore.length !== 0){
+        const defaultInstance = fore[0].querySelector('fx-instance');
+        console.log('inner instance', defaultInstance);
+        defaultInstance.setInstanceData(this.initialNode);
+      }
+    });
+*/
+      this.template = this.querySelector('template');
     // console.log('template',this.template);
   }
 
+  /**
+   * updates the model with a new value by executing it's `<fx-setvalue>` action.
+   *
+   * @param val the new value to be set
+   */
   setValue(val) {
     const modelitem = this.getModelItem();
     const setval = this.shadowRoot.getElementById('setvalue');
@@ -83,6 +105,12 @@ export default class FxControl extends XfAbstractControl {
   }
 
   /**
+   * The widget is the actual control being used in the UI e.g. a native input control or any
+   * other component that presents a control that can be interacted with.
+   *
+   * This function returns the widget by querying the children of this control for an element
+   * with `class="widget"`. If that cannot be found it searches for an native `input` of any type.
+   * If either cannot be found a `<input type="text">` is created.
    *
    * @returns {HTMLElement|*}
    */
@@ -102,7 +130,14 @@ export default class FxControl extends XfAbstractControl {
     return widget;
   }
 
-  // todo: check again
+  /**
+   * updates the widget from the modelItem value. During refresh the a control
+   * evaluates it's binding expression to determine the bound node. The bound node corresponds
+   * to a modelItem which acts a the state object of a node. The modelItem determines the value
+   * and the state of the node and set the `value` property of this class.
+   *
+   * @returns {Promise<void>}
+   */
   async updateWidgetValue() {
     // this.widget[this.valueProp] = this.value;
 
@@ -131,14 +166,45 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 
+    // ### when there's a url Fore is used as widget and will be loaded from external file
+    if(this.url && !this.loaded){
+      // ### evaluate initial data if necessary
+      if(this.initial){
+        this.initialNode = evaluateXPath(this.initial, this.nodeset, this);
+        console.log('initialNodes',this.initialNode);
+      }
+
+      // ### load the markup from Url
+      this._loadForeFromUrl();
+      this.loaded=true;
+
+
+      // ### replace default instance of embedded Fore with initial nodes
+      // const innerInstance = this.querySelector('fx-instance');
+      // console.log('innerInstance',innerInstance);
+      return;
+    }
+
+/*
     if(this.url && !this.loaded){
       this._loadForeFromUrl();
       this.loaded=true;
       return;
     }
+*/
     widget.value = this.value;
   }
 
+  /**
+   * loads an external Fore from an HTML file given by `url` attribute.
+   *
+   * Will look for the `<fx-fore>` element within the returned HTML file and return that element.
+   *
+   * If that cannot be found an error is dispatched.
+   *
+   * todo: dispatch link error
+   * @private
+   */
   _loadForeFromUrl() {
     console.log('########## loading Fore from ',this.src ,'##########');
     fetch(this.url, {
@@ -164,13 +230,21 @@ export default class FxControl extends XfAbstractControl {
           // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
           const theFore = data.querySelector('fx-fore');
           // console.log('thefore', theFore)
-          if(!theFore){
-            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
-          }
           theFore.classList.add('widget'); // is the new widget
           const dummy = this.querySelector('input');
           dummy.replaceWith(theFore);
-          // this.shadowRoot.appendChild(theFore);
+
+          theFore.addEventListener('ready',(e)=>{
+            console.log('subcomponent ready',e.target);
+            const defaultInst = theFore.querySelector('fx-instance');
+            console.log('defaultInst',defaultInst);
+            defaultInst.setInstanceData(this.initialNode);
+            console.log('new data',defaultInst.getInstanceData());
+          },{once:true});
+
+          if(!theFore){
+            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+          }
           this.dispatchEvent(new CustomEvent('loaded',{}));
         })
         .catch(error => {

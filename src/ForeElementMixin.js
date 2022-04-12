@@ -243,6 +243,7 @@ export const foreElementMixin = superclass =>
     }
 
     dispatch(eventName, detail) {
+      // console.log('dispatching',eventName,detail);
       const event = new CustomEvent(eventName, {
         composed: true,
         bubbles: true,

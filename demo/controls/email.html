@@ -5,6 +5,7 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
     <title>Email Address</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
 
     <style>
         body, .wrapper {
@@ -23,7 +24,7 @@
 <div class="wrapper">
 
     <fx-fore>
-<!--        <fx-message event="ready">subcomponent ready</fx-message>-->
+        <fx-message event="ready">subcomponent ready</fx-message>
         <fx-model>
             <fx-instance>
                 <data>
@@ -34,6 +35,10 @@
         <fx-control ref="email">
 <!--            <label>From</label>-->
         </fx-control>
+        <fx-trigger>
+            <button>message me</button>
+            <fx-message>Hey from subcomponent</fx-message>
+        </fx-trigger>
     </fx-fore>
 
 

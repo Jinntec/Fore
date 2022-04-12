@@ -59,19 +59,6 @@ export class FxFore extends HTMLElement {
       console.error('circular dependency: ', e);
     });
 
-/*
-    this.addEventListener('ready', (e) =>{
-      console.log('e', e);
-      console.log('eventPhase', e.eventPhase);
-      console.log('cancelable', e.cancelable);
-      console.log('target', e.target);
-      console.log('composed', e.composedPath());
-      e.preventDefault();
-      e.stopPropagation();
-
-      // e.stopImmediatePropagation();
-    });
-*/
 
     this.ready = false;
     this.storedTemplateExpressionByNode = new Map();
@@ -192,6 +179,26 @@ export class FxFore extends HTMLElement {
   }
 
   connectedCallback() {
+/*
+    document.addEventListener('ready', (e) =>{
+      if(e.target !== this){
+        // e.preventDefault();
+        console.log('>>> e', e);
+        console.log('event this', this);
+        // console.log('event eventPhase', e.eventPhase);
+        // console.log('event cancelable', e.cancelable);
+        console.log('event target', e.target);
+        console.log('event composed', e.composedPath());
+        console.log('<<< event stopping');
+        e.stopPropagation();
+      }else{
+        console.log('event proceed', this);
+      }
+      // e.stopImmediatePropagation();
+    },true);
+*/
+
+
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
       const options = {
@@ -702,7 +709,7 @@ export class FxFore extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('ready', {}));
 
     this.dispatchEvent(new CustomEvent('ready', {
-      composed: false,
+      composed: true,
       bubbles: true,
       cancelable:true,
       detail: {},
@@ -732,6 +739,7 @@ export class FxFore extends HTMLElement {
   }
 
   _displayMessage(e) {
+    // console.log('_displayMessage',e);
     const { level } = e.detail;
     const msg = e.detail.message;
     this._showMessage(level, msg);

@@ -62,7 +62,7 @@
         <fx-model>
             <fx-instance>
                 <data>
-                    <from></from>
+                    <from>John.Doe@nowhere.com</from>
                     <to></to>
                     <subject></subject>
                     <message></message>
@@ -75,9 +75,10 @@
         <fx-group>
             <fx-control ref="from"
                         url="email.html"
-                        initial="from">
+                        initial=".">
                 <label>From</label>
             </fx-control>
+<!--
             <fx-control ref="to"
                         url="email.html"
                         initial="to">
@@ -90,7 +91,9 @@
                 <label>Message</label>
                 <textarea class="widget" rows="10"></textarea>
             </fx-control>
+-->
         </fx-group>
+        <fx-inspector></fx-inspector>
     </fx-fore>
 
 
