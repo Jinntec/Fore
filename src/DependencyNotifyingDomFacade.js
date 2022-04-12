@@ -45,15 +45,6 @@ export class DependencyNotifyingDomFacade {
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
   // eslint-disable-next-line class-methods-use-this
-  /*
-  getChildNodes(node, bucket) {
-    const matchingNodes = Array.from(node.childNodes).filter(
-      childNode => !bucket || getBucketsForNode(childNode).includes(bucket),
-    );
-    return matchingNodes;
-  }
-*/
-
   getChildNodes(node, bucket) {
     const matchingNodes = Array.from(node.childNodes).filter(
       childNode => !bucket || getBucketsForNode(childNode).includes(bucket),
@@ -87,7 +78,7 @@ export class DependencyNotifyingDomFacade {
   getFirstChild(node, bucket) {
     for (const child of node.childNodes) {
       if (!bucket || getBucketsForNode(child).includes(bucket)) {
-        this._onNodeTouched(node);
+        this._onNodeTouched(child);
         return child;
       }
     }
@@ -122,12 +113,13 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getNextSibling(node, bucket) {
-    for (let { nextSibling } = node; nextSibling; nextSibling = nextSibling.nextSibling) {
-      if (!getBucketsForNode(nextSibling).includes(bucket)) {
+    for (let sibling = node.nextSibling; sibling; sibling = sibling.nextSibling) {
+      if (!getBucketsForNode(sibling).includes(bucket)) {
         // eslint-disable-next-line no-continue
         continue;
       }
-      return nextSibling;
+      this._onNodeTouched(sibling);
+      return sibling;
     }
     return null;
   }
