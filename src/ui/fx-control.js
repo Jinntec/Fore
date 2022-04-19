@@ -291,6 +291,9 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
+      // ### bail out when nodeset is empty
+      if(Array.isArray(nodeset) && nodeset.length === 0) return;
+
       // ### clear items
       const { children } = widget;
       Array.from(children).forEach(child => {
