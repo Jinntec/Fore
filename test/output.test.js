@@ -124,4 +124,28 @@ describe('fx-output Tests', () => {
     expect(div.getAttribute('style')).to.equal('color:white;background:#333;padding:1rem;');
     expect(div.textContent).to.equal('hey there');
   });
+
+  it('uses context attribute', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <a><b>1</b></a>
+                            <b>2</b>
+                            <b>3</b>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <div><fx-output context="a" value="b"></fx-output> ⇒ 1 </div>
+            </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const control = el.querySelector('fx-output');
+    expect(control.value).to.equal('1');
+    // expect(control.getModelItem().value).to.equal('1');
+    const label = control.querySelector('label');
+  });
 });

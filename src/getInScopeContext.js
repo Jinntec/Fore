@@ -69,8 +69,8 @@ export default function getInScopeContext(node, ref) {
   }
 
   if (parentElement.hasAttribute('context')) {
-    const initialContext = _getInitialContext(node.ownerElement.parentNode, ref);
-    const contextAttr = node.ownerElement.getAttribute('context');
+    const initialContext = _getInitialContext(parentElement.parentNode, ref);
+    const contextAttr = parentElement.getAttribute('context');
     return evaluateXPathToFirstNode(contextAttr, initialContext, _getForeContext(parentElement));
   }
 
