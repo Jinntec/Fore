@@ -54,11 +54,11 @@ export class ModelItem {
     console.log('modelitem.setvalue newVal', newVal);
 
     if (newVal.nodeType === Node.DOCUMENT_NODE) {
-      // this.node.replaceWith(newVal.firstElementChild);
-      this.node.appendChild(newVal.firstElementChild);
+      this.node.replaceWith(newVal.firstElementChild);
+      // this.node.appendChild(newVal.firstElementChild);
     } else if (newVal.nodeType === Node.ELEMENT_NODE) {
-      // this.node.replaceWith(newVal);
-      this.node.appendChild(newVal);
+      this.node.replaceWith(newVal);
+      // this.node.appendChild(newVal);
     } else if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
     } else {

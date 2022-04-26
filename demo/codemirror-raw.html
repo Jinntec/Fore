@@ -69,6 +69,7 @@
                         </pre>
                     </details>
 
+            <fx-inspector></fx-inspector>
         </fx-fore>
     </div>
 
@@ -150,9 +151,9 @@
             });
             // console.log('editor', editor);
             editor.on('change', (e) => {
-                const doc = e.doc.getValue();
-                // console.log('it fired', editor.getTextArea().parentNode);
-                // getting the fx-control the textarea is in and calling setValue on it with codemirror doc
+                const docString = e.doc.getValue();
+                const doc = new DOMParser().parseFromString(docString, 'application/xml');
+                // getting the fx-control the textarea is in and calling setValue on it with first elemenent child of codemirror doc.
                 editor.getTextArea().parentNode.setValue(doc);
             });
 
