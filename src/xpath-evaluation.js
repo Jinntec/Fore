@@ -749,6 +749,8 @@ registerCustomXPathFunction(
   ['xs:string?'],
   'item()?',
   (dynamicContext, arg) => {
+    if(!dynamicContext.currentContext.variables) return [];
+    if(!arg) return [];
     const payload = dynamicContext.currentContext.variables[arg];
     if (payload.nodeType) {
       console.log('got some node as js object');
