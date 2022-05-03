@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>pb-page example</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        body, .wrapper{
+            margin:0;
+            padding:0;
+        }
+        .wrapper{
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <page>
+                    <endpoint>http://localhost:8080/exist/apps/tei-publisher</endpoint>
+                    <feature name="highlight2">.tei-foreign,pb-highlight,pb-popover</feature>
+                    <feature name="norm2">.choice,.choice-alternate,br</feature>
+                </page>
+            </fx-instance>
+        </fx-model>
+        <pb-page endpoint="{endpoint}">
+            <fx-message event="ex2">
+                <fx-output value="event('odd')"></fx-output>
+            </fx-message>
+            <pb-document id="document2" path="test/cortes_to_dantiscus.xml" odd="dantiscus"></pb-document>
+            <div class="toolbar">
+                <pb-toggle-feature name="{feature[1]/@name}" selector="{feature[1]}"
+                                   action="disable" default="off" emit="ex2" subscribe="ex2">Plain Reading View</pb-toggle-feature>
+                <pb-toggle-feature name="{feature[2]/@name}" selector="{feature[2]}" emit="ex2" subscribe="ex2">
+                    Normalized View</pb-toggle-feature>
+<!--
+                <pb-toggle-feature name="highlight2" selector=".tei-foreign,pb-highlight,pb-popover"
+                                   action="disable" default="off" emit="ex2" subscribe="ex2">Plain Reading View</pb-toggle-feature>
+                <pb-toggle-feature name="norm2" selector=".choice,.choice-alternate,br" emit="ex2" subscribe="ex2">
+                    Normalized View</pb-toggle-feature>
+-->
+
+                <fx-trigger>
+                    <paper-icon-button icon="icons:chevron-left"></paper-icon-button>
+                    <fx-dispatch event="pb-navigate">
+                        <fx-property name="direction" value="backward"></fx-property>
+                    </fx-dispatch>
+                </fx-trigger>
+
+                <!-- Navigate to previous page -->
+                <pb-navigation direction="backward" keyboard="left" emit="ex2" subscribe="ex2">
+                    <paper-icon-button icon="icons:chevron-left"></paper-icon-button>
+                </pb-navigation>
+                <!-- Navigate to next page -->
+                <pb-navigation direction="forward" keyboard="right" emit="ex2" subscribe="ex2">
+                    <paper-icon-button icon="icons:chevron-right"></paper-icon-button>
+                </pb-navigation>
+            </div>
+            <main>
+                <pb-view id="view2" src="document2" xpath="//text[@type='source']" emit="ex2" subscribe="ex2">
+                </pb-view>
+            </main>
+        </pb-page>
+    </fx-fore>
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
