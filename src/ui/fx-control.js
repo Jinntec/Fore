@@ -14,6 +14,14 @@ const WIDGETCLASS = 'widget';
  * @customElement
  * @demo demo/index.html
  */
+
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
@@ -26,6 +34,7 @@ export default class FxControl extends XfAbstractControl {
     this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
     this.loaded=false;
     this.initialNode = null;
+    this.debounceDelay=this.hasAttribute('debounce')?this.getAttribute('debounce'):null;
 
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
@@ -59,10 +68,18 @@ export default class FxControl extends XfAbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
-    this.widget.addEventListener(this.updateEvent, () => {
-      // console.log('eventlistener ', this.updateEvent);
-      this.setValue(this.widget[this.valueProp]);
-    });
+    if(this.debounceDelay){
+      this.widget.addEventListener(this.updateEvent, debounce(() => {
+        console.log('eventlistener ', this.updateEvent);
+        this.setValue(this.widget[this.valueProp]);
+      },this.debounceDelay));
+    }else{
+      this.widget.addEventListener(this.updateEvent,() => {
+        console.log('eventlistener ', this.updateEvent);
+        this.setValue(this.widget[this.valueProp]);
+      });
+    }
+
 
 /*
     const slot = this.shadowRoot.querySelector('slot');
@@ -82,6 +99,15 @@ export default class FxControl extends XfAbstractControl {
 */
       this.template = this.querySelector('template');
     // console.log('template',this.template);
+  }
+
+  _debounce(func, timeout = 300){
+    let timer;
+    return (...args) => {
+      const context=this;
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(context, args); }, timeout);
+    };
   }
 
   /**
