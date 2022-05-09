@@ -33,6 +33,7 @@ export class FxItems extends FxControl {
 
       let target;
       if (e.target.nodeName === 'LABEL') {
+        // todo: review - this likely breaks with nested Fore
         target = document.getElementById(e.target.getAttribute('for'));
         target.checked = !target.checked;
       }
