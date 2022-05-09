@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+
+
+    <style>
+        /*
+                @font-face {
+                    font-family: "Kimberley";
+                    src: url(../../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
+                }
+        */
+
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+            font-family: "Kimberley";
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1rem;
+            margin-bottom: 2rem;
+            border: thin solid var(--paper-grey-300);
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 200px auto;
+            /*width: fit-content;*/
+
+            grid-gap: 0.3rem;
+            margin: 0.5rem 0;
+
+        }
+
+        fx-control input {
+            width: 200px;
+        }
+
+        fx-control textarea {
+            width: 95%;
+            display: inline-block;
+        }
+
+        .group {
+            border: thin solid var(--paper-grey-300);
+            margin-bottom: 1rem;
+        }
+
+        fx-control label {
+            justify-self: end;
+        }
+
+        .green {
+            background: green;
+        }
+
+        .orange {
+            background: orange;
+        }
+
+        .yellow {
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        </fx-model>
+        <h1>Codemirror Test</h1>
+        <fx-control ref=".//text/body" value-prop="xml" update-event="update">
+            <label>Leiden+ Editor</label>
+            <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+        </fx-control>
+        <fx-inspector></fx-inspector>
+    </fx-fore>
+
+</div>
+<script type="module" src="../../index.js"/>
+</body>
+</html>

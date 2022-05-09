@@ -23,6 +23,7 @@
             margin:0;
         }
 
+
         @keyframes fadeInAnimation {
             0% {
                 opacity: 0;
@@ -207,7 +208,7 @@
     <div class="header">
         <img class="logo" src="../resources/images/light7.png">
         <!--            <div class="version">{instance('package')?version}</div>-->
-        <h1>writing user-interfaces in plain HTML</h1>
+        <h1>writing applications in plain HTML</h1>
     </div>
 
     <main>
@@ -232,6 +233,17 @@
                 <p>Load, process and submit multiple data sources in XML, JSON and other formats.</p>
             </div>
 
+        </section>
+
+        <section class="2-col">
+            <h2>Just pure tags</h2>
+            <demo-snippet>
+                <template>
+                    <fx-fore>
+                        <fx-output ref="greeting">Hello Universe</fx-output>
+                    </fx-fore>
+                </template>
+            </demo-snippet>
         </section>
     </main>
 

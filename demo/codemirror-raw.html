@@ -25,6 +25,9 @@
             width: 100%;
             margin: 0;
         }
+        fx-inspector{
+            z-index: 10;
+        }
     </style>
 
 </head>
@@ -53,8 +56,9 @@
                         <label for="summary">Summary</label>
                         <fx-var name="summary" value="./teiHeader//sourceDesc/msDesc/msContents/summary"></fx-var>
                         <!--                    <fx-control ref="./teiHeader//sourceDesc/msDesc/msContents/summary" as="text">-->
-                        <fx-control ref="$summary" as="text">
-                            <textarea  readonly="readonly" id="summary" name="summary" class="form-control txtArea widget" rows="8"></textarea>
+                        <fx-control ref="$summary" as="text" update-event="">
+                            <jinn-codemirror class="widget"></jinn-codemirror>
+<!--                            <textarea  readonly="readonly" id="summary" name="summary" class="form-control txtArea widget" rows="8"></textarea>-->
                             <!--                        <fx-message event="value-changed">value changed</fx-message>-->
                         </fx-control>
                     </div>
