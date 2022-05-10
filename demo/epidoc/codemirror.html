@@ -94,17 +94,25 @@
             <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         </fx-model>
         <h1>Codemirror Test</h1>
-        <fx-control ref=".//text/body" update-event="update" as="node">
+        <fx-control ref=".//text/body/ab" update-event="update" as="node">
             <label>Leiden+ Editor</label>
-            <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
-            <fx-action event="update">
-<!--                <fx-message value="event('serialized')"></fx-message>-->
-                <fx-insert context="."
-                           origin="event('serialized')"
-                           ></fx-insert>
-            </fx-action>
+            <jinn-codemirror mode="xml" class="widget">
+                <template></template>
+            </jinn-codemirror>
+            <fx-message event="update">updated</fx-message>
         </fx-control>
-        <fx-inspector></fx-inspector>
+<!--
+        <fx-trigger>
+            <button>refresh</button>
+            <fx-refresh></fx-refresh>
+        </fx-trigger>
+        <fx-trigger>
+            <button>insert codemirror</button>
+            <fx-insert context=".//text/body" origin="//templ/ab"></fx-insert>
+            <fx-refresh></fx-refresh>
+        </fx-trigger>
+-->
+        <fx-inspector open></fx-inspector>
     </fx-fore>
 
 </div>

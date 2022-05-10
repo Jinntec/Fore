@@ -81,23 +81,8 @@ export default class FxControl extends XfAbstractControl {
     }
 
 
-/*
     const slot = this.shadowRoot.querySelector('slot');
-    slot.addEventListener('slotchange', event => {
-      const children = event.target.assignedElements();
-      if(this.initialNode === null) return;
-
-      console.log('slotchanged for control', children);
-      const fore = children.filter(node => node.nodeName === 'FX-FORE');
-      console.log('fore',fore);
-      if(fore.length !== 0){
-        const defaultInstance = fore[0].querySelector('fx-instance');
-        console.log('inner instance', defaultInstance);
-        defaultInstance.setInstanceData(this.initialNode);
-      }
-    });
-*/
-      this.template = this.querySelector('template');
+    this.template = this.querySelector('template');
     // console.log('template',this.template);
   }
 
@@ -118,14 +103,14 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
 
     const modelitem = this.getModelItem();
-
     if(this.getAttribute('as') === 'node'){
-/*
-      const insertAction = this.shadowRoot.getElementById('insert');
-      // todo : preset insert attrs
-      insertAction.perform();
-      insertAction.actionPerformed();
-*/
+      const widgetValue = this.getWidget().value;
+      const replace = this.shadowRoot.getElementById('replace');
+      replace.replace(this.nodeset, this.getWidget().value)
+      if(widgetValue && widgetValue !== modelitem.value){
+        modelitem.value = widgetValue;
+        replace.actionPerformed();
+      }
       return;
     }
     const setval = this.shadowRoot.getElementById('setvalue');
@@ -137,7 +122,10 @@ export default class FxControl extends XfAbstractControl {
     return `
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
-            <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
+            ${this.hasAttribute('as') && this.getAttribute('as') === 'node' ? 
+              `<fx-replace id="replace" ref=".">` :
+              `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`}
+            
         `;
   }
 
@@ -192,14 +180,29 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 
-    // ### when there's an `as=text` attribute serialize nodeset to prettified string
     if(this.hasAttribute('as')){
       const as = this.getAttribute('as');
+
+      // ### when there's an `as=text` attribute serialize nodeset to prettified string
       if(as === 'text'){
         const serializer = new XMLSerializer();
         const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset))
         widget.value = pretty;
       }
+      if(as === 'node' && this.nodeset !== widget.value){
+
+        const oldVal = this.nodeset.innerHTML;
+        if(widget.value){
+          if(this.oldVal !== this.widget.value){
+            console.log('changed');
+            return ;
+          }
+        }
+
+        widget.value = this.nodeset.cloneNode(true);
+        console.log('passed value to widget',widget.value);
+      }
+
       return;
     }
 
@@ -229,7 +232,9 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 */
-    widget.value = this.value;
+    if(widget.value !== this.value){
+      widget.value = this.value;
+    }
   }
 
   /**

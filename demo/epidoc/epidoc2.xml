@@ -111,9 +111,10 @@
     </facsimile>
     <text>
         <body>
-<!--
-            <p>foo</p>
--->
+            <ab>aaa</ab>
         </body>
+        <templ>
+            <ab></ab>
+        </templ>
     </text>
 </TEI>

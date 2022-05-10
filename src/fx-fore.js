@@ -357,6 +357,8 @@ export class FxFore extends HTMLElement {
     // refresh () {
     console.group('### refresh');
 
+
+
     console.time('refresh');
 
     // ### refresh Fore UI elements

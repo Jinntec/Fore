@@ -37,6 +37,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     // await this.updateComplete;
     // await this.getWidget();
+    this.oldVal = this.nodeset?this.nodeset:null;
     this.evalInContext();
 
     if (this.isBound()) {
@@ -52,7 +53,15 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
-        this.value = this.modelItem.value;
+        if(this.hasAttribute('as') && this.getAttribute('as') === 'node'){
+          console.log('as', this.nodeset);
+          this.modelItem.value=this.nodeset;
+          this.value = this.modelItem.value;
+        }else{
+          this.value = this.modelItem.value;
+        }
+
+        // console.log('value of widget',this.value);
 
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
