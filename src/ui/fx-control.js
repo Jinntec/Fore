@@ -116,7 +116,18 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+
     const modelitem = this.getModelItem();
+
+    if(this.getAttribute('as') === 'node'){
+/*
+      const insertAction = this.shadowRoot.getElementById('insert');
+      // todo : preset insert attrs
+      insertAction.perform();
+      insertAction.actionPerformed();
+*/
+      return;
+    }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
     setval.actionPerformed();

@@ -118,6 +118,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing e phase', e.eventPhase);
     if (e && e.detail) {
       this.detail = e.detail;
+      console.log('#### detail',e.detail)
     }
     this.needsUpdate = false;
 

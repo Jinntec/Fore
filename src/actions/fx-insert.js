@@ -47,7 +47,12 @@ export class FxInsert extends AbstractAction {
       // ### if there's an origin attribute use it
       let originTarget;
       try {
-        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
+
+        // const inScopeVariables = new Map(this.detail);
+        this.setInScopeVariables(this.detail);
+
+
+        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
         if (Array.isArray(originTarget) && originTarget.length === 0) {
           console.warn('invalid origin for this insert action - ignoring...', this);
           originSequenceClone = null;

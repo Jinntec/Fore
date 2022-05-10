@@ -111,9 +111,9 @@
     </facsimile>
     <text>
         <body>
-            <div type="edition" xml:space="preserve"><ab><lb n="1"/>
-                Aufanis <lb n="2"/>sanctis <lb n="3"/><expan><abbr>T</abbr><ex>itus</ex></expan> <expan><abbr>Fl</abbr><ex>avius</ex></expan> Severus <lb n="4"/>b<expan><ex>ene</ex><abbr>f</abbr><ex>iciarius</ex></expan> co<expan><ex>n</ex><abbr>s</abbr><ex>ularis</ex></expan> <lb n="5"/>et Successi<lb break="no" n="6"/>nia Tita pro <lb n="7"/>se et suis <expan><abbr>v</abbr><ex>otum</ex></expan> <expan><abbr>s</abbr><ex>olverunt</ex></expan> <expan><abbr>l</abbr><ex>ibentes</ex></expan> <expan><abbr>m</abbr><ex>erito</ex></expan> <lb n="8"/><expan><abbr>Imp</abbr><ex>eratore</ex></expan> Antonino II <lb n="9"/><del rend="erasure">et Geta <expan><abbr>Caes</abbr><ex>are</ex></expan></del> co<expan><ex>n</ex><abbr>s</abbr><ex>ulibus</ex></expan>
-            </ab></div>
+<!--
+            <p>foo</p>
+-->
         </body>
     </text>
 </TEI>
