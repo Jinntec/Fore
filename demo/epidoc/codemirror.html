@@ -94,7 +94,7 @@
             <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         </fx-model>
         <h1>Codemirror Test</h1>
-        <fx-control ref=".//text/body/ab" update-event="update" as="node">
+        <fx-control ref=".//text/body/*[1]" update-event="update" as="node">
             <label>Leiden+ Editor</label>
             <jinn-codemirror mode="xml" class="widget">
                 <template></template>
