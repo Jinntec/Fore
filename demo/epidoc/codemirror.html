@@ -43,11 +43,7 @@
         }
 
         fx-control {
-            display: grid;
-            grid-template-columns: 200px auto;
-            /*width: fit-content;*/
-
-            grid-gap: 0.3rem;
+            display: block;
             margin: 0.5rem 0;
 
         }
@@ -84,36 +80,38 @@
     </style>
 
     <script type="module" src="./jinn-codemirror.js"></script>
-    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../demo.js"></script>
 
 </head>
 <body>
 <div class="wrapper">
-    <fx-fore>
-        <fx-model>
-            <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-        </fx-model>
-        <h1>Codemirror Test</h1>
-        <fx-control ref=".//text/body/*[1]" update-event="update" as="node">
-            <label>EpiDoc Editor</label>
-            <jinn-codemirror mode="xml" class="widget">
-                <template></template>
-            </jinn-codemirror>
-            <fx-message event="update">updated</fx-message>
-        </fx-control>
-<!--
-        <fx-trigger>
-            <button>refresh</button>
-            <fx-refresh></fx-refresh>
-        </fx-trigger>
-        <fx-trigger>
-            <button>insert codemirror</button>
-            <fx-insert context=".//text/body" origin="//templ/ab"></fx-insert>
-            <fx-refresh></fx-refresh>
-        </fx-trigger>
--->
-        <fx-inspector open></fx-inspector>
-    </fx-fore>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+                </fx-model>
+                <h1>Codemirror Test</h1>
+                <fx-control ref=".//text/body/*[1]" update-event="input" debounce="500" as="node">
+                    <label>EpiDoc Editor</label>
+                    <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+                    <fx-message event="update">updated</fx-message>
+                </fx-control>
+                <!--
+                        <fx-trigger>
+                            <button>refresh</button>
+                            <fx-refresh></fx-refresh>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button>insert codemirror</button>
+                            <fx-insert context=".//text/body" origin="//templ/ab"></fx-insert>
+                            <fx-refresh></fx-refresh>
+                        </fx-trigger>
+                -->
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
 </div>
 </body>

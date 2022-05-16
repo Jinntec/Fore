@@ -23,6 +23,13 @@
             margin:0;
         }
 
+        .left-col{
+
+        }
+
+        demo-snippet{
+            overflow: auto;
+        }
 
         @keyframes fadeInAnimation {
             0% {
@@ -108,7 +115,7 @@
 
         }
 
-        main {
+        .teaser {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             justify-items: center;
@@ -145,7 +152,11 @@
             z-index: 1;
             opacity: 0.4;
         }
-
+        .samples{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap:1rem;
+        }
         .wrapper {
             max-width: 1260px;
             z-index: 5;
@@ -212,31 +223,33 @@
     </div>
 
     <main>
-        <section>
-            <div>
-                <h2>Declarative - just plain HTML</h2>
-                <p>No Code or Low Code - you can write
-                complete interfaces without any scripting.
-                </p>
-            </div>
+        <section class="teaser">
+            <section>
+                <div>
+                    <h2>Declarative - just plain HTML</h2>
+                    <p>No Code or Low Code - you can write
+                        complete interfaces without any scripting.
+                    </p>
+                </div>
+            </section>
+            <section>
+                <div>
+                    <h2>built with Web Components</h2>
+                    <p>Fore extends HTML with Web Components for processing and displaying your data.</p>
+                </div>
+            </section>
+            <section>
+                <div>
+                    <h2>Data-driven</h2>
+                    <p>Load, process and submit multiple data sources in XML, JSON and other formats.</p>
+                </div>
+            </section>
         </section>
-        <section>
-            <div>
-                <h2>built with Web Components</h2>
-                <p>Fore extends HTML with Web Components for processing and displaying your data.</p>
 
+        <section class="samples">
+            <div class="col-left">
+                <h2>Just pure tags</h2>
             </div>
-        </section>
-        <section>
-            <div>
-                <h2>Data-driven</h2>
-                <p>Load, process and submit multiple data sources in XML, JSON and other formats.</p>
-            </div>
-
-        </section>
-
-        <section class="2-col">
-            <h2>Just pure tags</h2>
             <demo-snippet>
                 <template>
                     <fx-fore>
