@@ -98,6 +98,9 @@ export default class FxControl extends XfAbstractControl {
   /**
    * updates the model with a new value by executing it's `<fx-setvalue>` action.
    *
+   * In case the `as='node'` is given the bound node is replaced with the widgets' value with is
+   * expected to be a node again.
+   *
    * @param val the new value to be set
    */
   setValue(val) {

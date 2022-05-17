@@ -48,9 +48,10 @@ export class FxInsert extends AbstractAction {
       let originTarget;
       try {
 
-        // const inScopeVariables = new Map(this.detail);
+        /*
+        todo: discuss where to pass vars from event.detail into function context
+         */
         this.setInScopeVariables(this.detail);
-
 
         // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
         originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());

@@ -4,7 +4,7 @@ import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath, evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 
 /**
- * `fx-replace` - teplaces the node referred to with 'ref' with node referred to with 'with' attribute.
+ * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.
  *
  * @customElement
  */
@@ -40,16 +40,15 @@ export default class FxReplace extends AbstractAction {
     const target = evaluateXPath(this.with, this.nodeset, this);
     if(!target) return;
 
-/*
-    const cloned = target.cloneNode(true);
-    this.nodeset.replaceWith(cloned);
-    this.needsUpdate = true;
-*/
     this.replace(this.nodeset,target)
   }
 
   replace(toReplace,replaceWith){
     if(!toReplace || !replaceWith) return; // bail out silently
+    if(!toReplace.nodeName || !replaceWith.nodeName) {
+      console.warn('fx-replace: one argument is not a node');
+      return;
+    }
 
     const cloned = replaceWith.cloneNode(true);
     toReplace.replaceWith(cloned);
