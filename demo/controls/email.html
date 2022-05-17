@@ -23,22 +23,27 @@
 <body>
 <div class="wrapper">
 
-    <fx-fore>
+    <fx-fore load-css="inner.css">
         <fx-message event="ready">subcomponent ready</fx-message>
         <fx-model>
-            <fx-instance>
+            <fx-message event="model-construct-done">subcomponent model ready</fx-message>
+
+            <fx-instance id="email">
                 <data>
                     <email>default</email>
                 </data>
             </fx-instance>
         </fx-model>
-        <fx-control ref="email">
-<!--            <label>From</label>-->
+        <fx-control ref="instance('email')/email" update-event="input">
+            <label>Email</label>
+            <fx-return ref="." event="value-changed"></fx-return>
         </fx-control>
         <fx-trigger>
-            <button>message me</button>
-            <fx-message>Hey from subcomponent</fx-message>
+            <button>message and refresh me</button>
+            <fx-message>Hey my address is {email}</fx-message>
+            <fx-refresh></fx-refresh>
         </fx-trigger>
+        <fx-inspector open></fx-inspector>
     </fx-fore>
 
 

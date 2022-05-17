@@ -22,14 +22,36 @@
         fx-control {
             display: grid;
             grid-template-columns: 1fr 2fr;
+            grid-gap:1rem;
+        }
+
+        input{
+            padding: 0.3rem;
         }
 
         fx-group {
+            width:max-content;
         }
 
         fx-fore fx-fore {
             background: lightsteelblue;
             border: thin solid steelblue;
+            height:200px;
+        }
+
+        label{
+            justify-self:end;
+        }
+        fx-fore fx-fore label{
+            display: none;
+        }
+        fx-inspector{
+            position: absolute;
+            height: 99%;
+        }
+        .wrapper{
+            padding: 2rem;
+            background: white;
         }
     </style>
 </head>
@@ -37,33 +59,26 @@
 <div class="wrapper">
 
     <h1>Email message using Fore as control</h1>
+    <p>The areas in blue are loaded from another nested `fx-fore` element that is used as a widget
+    in the outer Fore.</p>
 
-    <!--
-        <template id="email">
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <email></email>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-control ref="email">
-                    <label>From</label>
-                    <fx-return event="value-changed"></fx-return>
-                </fx-control>
-            </fx-fore>
-        </template>
-    -->
-
+    <p class="note">
+        The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
+        attached the nested Fore to the shadowDOM and is not reachable from the outside.
+    </p>
     <fx-fore>
         <fx-message event="ready">outer fore ready</fx-message>
 
         <fx-model>
+            <fx-message event="model-construct-done">Outer model ready</fx-message>
             <fx-instance>
                 <data>
-                    <from>John.Doe@nowhere.com</from>
-                    <to></to>
+                    <from>
+                        <email>John.Doe@nowhere.com</email>
+                    </from>
+                    <to>
+                        <email>Jane.Doe@nowhere.com</email>
+                    </to>
                     <subject></subject>
                     <message></message>
                 </data>
@@ -73,17 +88,23 @@
         </fx-model>
 
         <fx-group>
-            <fx-control ref="from"
+<!--
+            <fx-control ref="from/email">
+                <label>from inline</label>
+            </fx-control>
+-->
+            <fx-control ref="from/email"
                         url="email.html"
                         initial=".">
                 <label>From</label>
             </fx-control>
-<!--
-            <fx-control ref="to"
+            <fx-control ref="to/email"
                         url="email.html"
-                        initial="to">
+                        initial="."
+                        shadow>
                 <label>To</label>
             </fx-control>
+            <!--
             <fx-control ref="subject">
                 <label>Subject</label>
             </fx-control>
@@ -93,7 +114,7 @@
             </fx-control>
 -->
         </fx-group>
-        <fx-inspector></fx-inspector>
+        <fx-inspector open></fx-inspector>
     </fx-fore>
 
 

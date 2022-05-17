@@ -29,6 +29,10 @@ export class FxAlert extends AbstractControl {
     `;
   }
 
+  getWidget() {
+    return this;
+  }
+
   async updateWidgetValue() {
     console.log('alert update', this);
     this.innerHTML = this.value;
