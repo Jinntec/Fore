@@ -63,6 +63,25 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // console.log('value of widget',this.value);
 
+
+        /*
+        * todo: find out on which foreign modelitems we might be dependant on when no binds are used.
+        *
+        * e.g. filter expr on 'ref' 'instance('countries')//country[@continent = instance('default')/continent]'
+        *
+        * the country node is dependant on instance('default')/continent here (foreign node).
+        *
+        * possible approach:
+        * - pipe ref expression through DependencyNotifyingDomFacade to get referred nodes.
+        * - lookup modelItems of referred nodes
+        * - add ourselves to boundControls of foreign modelItem -> this control will then get refreshed when the foreign modelItem is changed.
+        */
+
+        // const touched = FxBind.getReferencesForRef(this.ref,Array.from(this.nodeset));
+        // console.log('touched',touched);
+
+
+
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
          */
@@ -109,7 +128,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   _dispatchEvent(event) {
     if (this.getOwnerForm().ready) {
-      this.dispatch(event, {});
+      Fore.dispatch(this,event, {});
     }
   }
 

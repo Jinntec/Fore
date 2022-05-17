@@ -287,13 +287,13 @@ export class FxFore extends HTMLElement {
 
           // console.log('thefore', theFore)
           if(!theFore){
-            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+            Fore.dispatchEvent(this,'error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}});
           }
           theFore.setAttribute('from-src', this.src);
           this.replaceWith(theFore);
         })
         .catch(error => {
-          this.dispatchEvent(new CustomEvent('error',{detail:{message: `'${this.src}' not found or does not contain Fore element.`}}));
+          Fore.dispatch(this,'error',{message: `'${this.src}' not found or does not contain Fore element.`});
         });
   }
 
@@ -677,7 +677,7 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     console.log('### _initUI()');
-
+    if(!this.initialRun) return;
     await this._lazyCreateInstance();
 
     // console.log('registering variables!');
@@ -708,15 +708,7 @@ export class FxFore extends HTMLElement {
     console.log('### >>>>> dispatching ready >>>>>', this);
     console.log('modelItems: ',this.getModel().modelItems);
     console.log('### <<<<< FORE: form fully initialized...', this);
-    // this.dispatchEvent(new CustomEvent('ready', {}));
-
-    this.dispatchEvent(new CustomEvent('ready', {
-      composed: true,
-      bubbles: true,
-      cancelable:true,
-      detail: {},
-    }));
-
+    Fore.dispatch(this,'ready',{});
   }
 
   registerLazyElement(element) {
@@ -745,6 +737,7 @@ export class FxFore extends HTMLElement {
     const { level } = e.detail;
     const msg = e.detail.message;
     this._showMessage(level, msg);
+    e.stopPropagation();
   }
 
   _displayError(e) {

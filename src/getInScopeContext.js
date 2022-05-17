@@ -33,6 +33,8 @@ function _getInitialContext(node, ref) {
   const parentBind = node.closest('[ref]');
   const localFore = node.closest('fx-fore');
 
+  const model = _getModelInContext(node);
+
   if (parentBind !== null) {
     /*
     make sure that the closest ref belongs to the same fx-fore element
@@ -41,9 +43,10 @@ function _getInitialContext(node, ref) {
     if(localFore === parentBindFore){
       return parentBind.nodeset;
     }
+    return model.getDefaultInstance().getDefaultContext();
+
   }
 
-  const model = _getModelInContext(node);
   if (XPathUtil.isAbsolutePath(ref)) {
     const instanceId = XPathUtil.getInstanceId(ref);
     if(instanceId){

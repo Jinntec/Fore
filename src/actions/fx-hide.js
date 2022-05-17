@@ -1,5 +1,5 @@
-import { FxAction } from './fx-action.js';
-import {AbstractAction} from "./abstract-action";
+import {Fore} from '../fore.js';
+import {AbstractAction} from "./abstract-action.js";
 
 /**
  * `fx-hide`
@@ -12,7 +12,7 @@ export class FxHide extends AbstractAction {
   connectedCallback() {
     this.dialog = this.getAttribute('dialog');
     if(!this.dialog){
-      this.dispatch('error',{message:'dialog does not exist'})
+      Fore.dispatch(this,'error',{message:'dialog does not exist'})
     }
   }
 

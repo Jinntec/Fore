@@ -1,3 +1,4 @@
+import {Fore} from './fore.js';
 import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import { foreElementMixin } from './ForeElementMixin.js';
@@ -30,7 +31,7 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {
       console.error(`The variable ${this.name} is declared more than once`);
-      this.dispatch('xforms-binding-error');
+      Fore.dispatch(this,'xforms-binding-error',{});
       return;
     }
     inScopeVariables.set(this.name, this);

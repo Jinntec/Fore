@@ -1,6 +1,7 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
+import {Fore} from '../fore.js';
 
 async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
@@ -208,9 +209,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   dispatchActionPerformed() {
     console.log('action-performed ', this);
-    this.dispatchEvent(
-      new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
-    );
+    Fore.dispatch(this,'action-performed',{})
   }
 }
 

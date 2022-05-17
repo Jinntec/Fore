@@ -1,3 +1,4 @@
+import {Fore} from '../fore.js';
 import { FxAction } from './fx-action.js';
 
 /**
@@ -11,7 +12,7 @@ export class FxShow extends FxAction {
   connectedCallback() {
     this.dialog = this.getAttribute('dialog');
     if(!this.dialog){
-      this.dispatch('error',{message:'dialog does not exist'})
+      Fore.dispatch(this,'error',{message:'dialog does not exist'})
     }
   }
 

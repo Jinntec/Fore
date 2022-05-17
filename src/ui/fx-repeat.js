@@ -133,7 +133,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
           // const index = prev.index();
           // this.applyIndex(this.index -1);
 
-          this.dispatch('path-mutated', { path, index: this.index });
+          Fore.dispatch(this,'path-mutated', { path, index: this.index });
         }
       }
     });

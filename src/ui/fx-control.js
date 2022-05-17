@@ -80,6 +80,32 @@ export default class FxControl extends XfAbstractControl {
       });
     }
 
+    this.addEventListener('return', e => {
+      console.log('catched return action on ', this);
+      console.log('return detail', e.detail);
+
+      console.log('return triggered on ', this);
+      console.log('this.ref', this.ref);
+      console.log('current outer instance', this.getInstance());
+
+      console.log(
+          '???? why ???? current nodeset should point to the node of the outer control',
+          e.currentTarget.nodeset,
+      );
+      console.log(
+          '???? why ???? current nodeset should point to the node of the outer control',
+          this.nodeset,
+      );
+      const newNodes = e.detail.nodeset;
+      console.log('new nodeset', newNodes);
+      console.log('currentTarget', e.currentTarget);
+      console.log('target', e.target);
+
+      e.stopPropagation();
+
+      this._replaceNode(newNodes);
+    });
+
 
     const slot = this.shadowRoot.querySelector('slot');
     this.template = this.querySelector('template');
@@ -119,6 +145,12 @@ export default class FxControl extends XfAbstractControl {
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
     setval.actionPerformed();
+  }
+
+  _replaceNode(node) {
+    // Note: clone the node while replacing to prevent the instances to leak through
+    this.modelItem.node.replaceWith(node.cloneNode(true));
+    this.getOwnerForm().refresh();
   }
 
   renderHTML(ref) {
@@ -189,7 +221,7 @@ export default class FxControl extends XfAbstractControl {
       // ### when there's an `as=text` attribute serialize nodeset to prettified string
       if(as === 'text'){
         const serializer = new XMLSerializer();
-        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset))
+        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset));
         widget.value = pretty;
       }
       if(as === 'node' && this.nodeset !== widget.value){
@@ -218,7 +250,7 @@ export default class FxControl extends XfAbstractControl {
       }
 
       // ### load the markup from Url
-      this._loadForeFromUrl();
+      await this._loadForeFromUrl();
       this.loaded=true;
 
 
@@ -250,53 +282,79 @@ export default class FxControl extends XfAbstractControl {
    * todo: dispatch link error
    * @private
    */
-  _loadForeFromUrl() {
+  async _loadForeFromUrl() {
     console.log('########## loading Fore from ',this.src ,'##########');
-    fetch(this.url, {
+    try {
+      const response = await fetch(this.url, {
       method: 'GET',
       mode: 'cors',
       credentials: 'include',
       headers: {
         'Content-Type': 'text/html',
       },
-    })
-        .then(response => {
+      });
           const responseContentType = response.headers.get('content-type').toLowerCase();
           console.log('********** responseContentType *********', responseContentType);
+      let data;
           if (responseContentType.startsWith('text/html')) {
-            return response.text().then(result =>
+        data = await response.text().then(result =>
                 // console.log('xml ********', result);
                 new DOMParser().parseFromString(result, 'text/html'),
             );
+      } else {
+        data = 'done';
           }
-          return 'done';
-        })
-        .then(data => {
           // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
           const theFore = data.querySelector('fx-fore');
           // console.log('thefore', theFore)
           theFore.classList.add('widget'); // is the new widget
           const dummy = this.querySelector('input');
+      if(this.hasAttribute('shadow')){
+        dummy.parentNode.removeChild(dummy);
+        this.shadowRoot.appendChild(theFore);
+      }else{
           dummy.replaceWith(theFore);
+      }
 
-          theFore.addEventListener('ready',(e)=>{
+      console.log(`########## loaded fore as component ##### ${this.url}`);
+      theFore.addEventListener(
+        'model-construct-done',
+        e => {
             console.log('subcomponent ready',e.target);
             const defaultInst = theFore.querySelector('fx-instance');
             console.log('defaultInst',defaultInst);
-            defaultInst.setInstanceData(this.initialNode);
+          const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+          // Note: Clone the input to prevent the inner fore from editing the outer node
+          doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+          // defaultinst.setInstanceData(this.initialNode);
+          defaultInst.setInstanceData(doc);
             console.log('new data',defaultInst.getInstanceData());
-          },{once:true});
+          // theFore.getModel().modelConstruct();
+          theFore.getModel().updateModel();
+          theFore.refresh();
+        },
+        { once: true },
+      );
 
           if(!theFore){
-            this.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+        this.dispatchEvent(
+          new CustomEvent('error', {
+            detail: {
+              message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
+            },
+          }),
+        );
           }
-          this.dispatchEvent(new CustomEvent('loaded',{}));
-        })
-        .catch(error => {
+      console.log('loaded');
+      this.dispatchEvent(new CustomEvent('loaded', { detail: { fore: theFore } }));
+    } catch (error) {
           console.log('error',error);
-          this.getOwnerForm().dispatchEvent(new CustomEvent('error',{detail:{message:`${this.url} not found`}}));
-        });
+      this.getOwnerForm().dispatchEvent(
+        new CustomEvent('error', { detail: { message: `${this.url} not found` } }),
+      );
   }
+  }
+
   getTemplate() {
     return this.querySelector('template');
   }

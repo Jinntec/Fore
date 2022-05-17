@@ -218,7 +218,7 @@ export class Fore {
 
   static dispatch(target, eventName, detail) {
     const event = new CustomEvent(eventName, {
-      composed: true,
+            composed: false,
       bubbles: true,
       detail,
     });
@@ -278,7 +278,15 @@ export class Fore {
           const theFore = data.querySelector('fx-fore');
           // console.log('thefore', theFore)
           if(!theFore){
-            hostElement.dispatchEvent(new CustomEvent('error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}}));
+                    hostElement.dispatchEvent(
+                        new CustomEvent('error', {
+                            composed: false,
+                            bubbles: true,
+                            detail: {
+                                message: 'cyclic graph',
+                            },
+                        })
+                    );
           }
           hostElement.appendChild(theFore);
           theFore.classList.add('widget');
@@ -287,7 +295,14 @@ export class Fore {
           // this.replaceWith(theFore);
         })
         .catch(error => {
-          hostElement.dispatchEvent(new CustomEvent('error',{detail:{'error':error, message: `'${url}' not found or does not contain Fore element.`}}));
+                hostElement.dispatchEvent(new CustomEvent('error', {
+                    composed:false,
+                    bubbles:true,
+                    detail: {
+                        'error': error,
+                        message: `'${url}' not found or does not contain Fore element.`
+                    }
+                }));
         });
   }
 

@@ -1,5 +1,6 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
+import { Fore } from './fore.js';
 import {
   evaluateXPath,
   evaluateXPathToFirstNode,
@@ -225,7 +226,7 @@ export const foreElementMixin = superclass =>
           return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
         } catch (error) {
           console.error(error);
-          this.dispatch('error', { message: error });
+          Fore.dispatch(this,'error',{message:error});
         }
       }
       if (this.textContent) {
@@ -240,16 +241,5 @@ export const foreElementMixin = superclass =>
 
     setInScopeVariables(inScopeVariables) {
       this.inScopeVariables = inScopeVariables;
-    }
-
-    dispatch(eventName, detail) {
-      // console.log('dispatching',eventName,detail);
-      const event = new CustomEvent(eventName, {
-        composed: true,
-        bubbles: true,
-        detail,
-      });
-      // console.log('firing', event);
-      this.dispatchEvent(event);
     }
   };

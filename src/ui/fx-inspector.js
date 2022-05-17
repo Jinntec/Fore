@@ -74,8 +74,9 @@ export class FxInspector extends HTMLElement {
           }
         `;
 
-        const fore = document.querySelector('fx-fore');
-        const instances = Array.from(document.querySelectorAll('fx-instance'));
+        // const fore = document.querySelector('fx-fore');
+        const fore = this.closest('fx-fore');
+        const instances = Array.from(fore.querySelectorAll('fx-instance'));
 
         // fore.addEventListener('ready', (e) => {
             this.render(style);
@@ -90,7 +91,8 @@ export class FxInspector extends HTMLElement {
         console.log('update');
         const pre = this.shadowRoot.querySelectorAll('pre');
         console.log('pre',pre);
-        const fore = document.querySelector('fx-fore');
+        // const fore = document.querySelector('fx-fore');
+        const fore = this.closest('fx-fore');
 
         Array.from(pre).forEach(pre => {
             console.log('pre',pre.getAttribute('id'));
@@ -106,7 +108,9 @@ export class FxInspector extends HTMLElement {
 
     }
     render(style) {
-        const instances = Array.from(document.querySelectorAll('fx-instance'));
+        const fore = this.closest('fx-fore');
+        // const instances = Array.from(this.shadowRoot.querySelectorAll('fx-instance'));
+        const instances = Array.from(fore.querySelectorAll('fx-instance'));
         this.shadowRoot.innerHTML = `
             <style>
                 ${style}

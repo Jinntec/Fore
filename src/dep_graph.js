@@ -80,7 +80,7 @@ function createDFS(edges, leavesOnly, result, circular) {
           currentPath.push(node);
           window.dispatchEvent(
             new CustomEvent('compute-exception', {
-              composed: true,
+              composed: false,
               bubbles: true,
               detail: {
                 path: currentPath,
