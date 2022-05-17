@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Clock</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <style>
+        .brand{
+            position:absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            top:30px;
+            left:50%;
+            transform:translateX(-50%);
+            background: gold;
+            overflow: hidden;
+            opacity: 0.8;
+            border:thin inset darkgoldenrod;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-style: italic;
+            font-weight:900;
+            color:darkgoldenrod;
+        }
+
+        .circle{
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            z-index: -1;
+            background: conic-gradient(gold, darkgoldenrod);
+            border-radius: 50%;
+            transition:all 0.9s;
+        }
+
+        .clock{
+            width: 200px;
+            height: 200px;
+            background: transparent;
+            border-radius: 50%;
+            position: relative;
+            margin:0 auto;
+            border:thin solid darkgoldenrod;
+
+            border:0.0625em solid #444;
+            border-radius:50%;
+            box-shadow:
+                    inset 0.125em 0.25em 0.5em #0005,
+                    -0.25em -0.5em 0.5em #FFFC,
+                    0 0 0.0625em 0.5em #777,
+                    0 0 0.0625em 0.5625em #000,
+                    0.125em 0.25em 0.5em 0.5em #0004;
+        }
+        .clock {
+            color: white;
+        }
+        .clock::before{
+            position: absolute;
+            content:'12';
+            left: 50%;
+            transform: translateX(-50%);
+            /*color: white;*/
+        }
+        .clock::after{
+            position: absolute;
+            bottom:0;
+            content:'6';
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .clock span{
+            position: absolute;
+            z-index: 10;
+            top:50%;
+            left:3px;
+            transform: translateY(-50%);
+            background: black;
+        }
+        .clock span::before{
+            display: inline-block;
+            position: absolute;
+        }
+
+        .clock .three-nine{
+            width: 100%;
+        }
+        .clock .three-nine::before{
+            position: absolute;
+            content:'3';
+            right: 3px;
+            top:-9px;
+        }
+
+        .clock .three-nine::after{
+            position: absolute;
+            content:'9';
+            top:-9px;
+        }
+
+/*
+        .clock .tick{
+            width: 100%;
+            display: inline-block;
+            height: 2px;
+        }
+
+        .clock .ticks1{
+            transform: rotate(30deg);
+        }
+
+        .clock .ticks1::before{
+            position: absolute;
+            content:' ';
+            background: black;
+            width: 1.5rem;
+        }
+        .clock .ticks2{
+            transform: rotate(60deg);
+        }
+*/
+/*
+        .tick + .tick{
+            transform:rotate(90deg);
+        }
+*/
+
+
+
+        .display-time{
+            position: absolute;
+            left:50%;
+            top:65%;
+            transform:translateX(-50%);
+            padding: 0.2rem;
+            font-weight: 300;
+            font-size: 1.4rem;
+        }
+        .hour,.minute {
+            position: absolute;
+            width: 6px;
+            top: 0;
+            left: 49%;
+            transform-origin: bottom;
+            border-radius: 50%;
+            transition:all 1s;
+            box-shadow: 0px 0px 10px 2px white;
+            z-index: 4;
+        }
+        .hour{
+            height: 60px;
+            background: #333;
+            top:40px;
+            z-index: 5;
+        }
+        .minute{
+            height: 80px;
+            background: black;
+            width: 6px;
+            top:20px;
+        }
+
+/*
+        .circle::before{
+            position: absolute;
+            content:attr(data-secs);
+            transform: rotate(0deg);
+            left:50%;
+            top:2rem;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 50%;
+        }
+*/
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-action while="true()" event="ready" delay="1000">
+                    <fx-setvalue ref="time" value="local:now()" ></fx-setvalue>
+                </fx-action>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <time></time>
+                            <hour></hour>
+                            <minute></minute>
+                            <second></second>
+                            <offset></offset>
+                        </data>
+                    </fx-instance>
+
+<!--                    <fx-bind ref="offset" calculate="if( number(../minute) < 15 ) then 0 else 10"></fx-bind>-->
+<!--                    <fx-bind ref="hour" calculate="number(substring(../time,1,2)) * 30 + number(../offset)"></fx-bind>-->
+                    <fx-bind ref="hour" calculate="number(substring(../time,1,2)) * 30"></fx-bind>
+                    <fx-bind ref="minute" calculate="number(substring(../time,4,2)) * 6"></fx-bind>
+                    <fx-bind ref="second" calculate="number(substring(../time,7,2)) * 6"></fx-bind>
+
+                    <fx-function signature="local:now() as xs:string" type="text/javascript">
+                        return new Date().toLocaleTimeString();
+                    </fx-function>
+                </fx-model>
+                <div>{time}</div>
+                <div class="clock">
+                    <div class="brand">Fore</div>
+                    <span class="three-nine"></span>
+<!--
+                    <span class="tick ticks1"></span>
+                    <span class="tick ticks2"></span>
+-->
+                    <div class="display-time">{substring(time,1,5)}</div>
+                    <div style="transform:rotate({hour}deg);" class="hour"></div>
+                    <div style="transform:rotate({minute}deg);" class="minute"></div>
+                    <div class="circle" style="transform:rotate({second}deg);" data-secs="{substring(time,7,2)}"></div>
+                </div>
+<!--                <fx-inspector open></fx-inspector>-->
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

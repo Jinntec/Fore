@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath, evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 
 /**
  * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.
@@ -37,7 +37,7 @@ export default class FxReplace extends AbstractAction {
     if(!this.nodeset){
       return;
     }
-    const target = evaluateXPath(this.with, this.nodeset, this);
+    const target = evaluateXPathToFirstNode(this.with, this.nodeset, this);
     if(!target) return;
 
     this.replace(this.nodeset,target)
@@ -50,8 +50,15 @@ export default class FxReplace extends AbstractAction {
       return;
     }
 
-    const cloned = replaceWith.cloneNode(true);
-    toReplace.replaceWith(cloned);
+    if(toReplace.nodeType === Node.ATTRIBUTE_NODE){
+      const {ownerElement} = toReplace;
+      ownerElement.setAttribute(replaceWith.nodeName,replaceWith.textContent);
+      ownerElement.removeAttribute(toReplace.nodeName);
+      console.log('owner', ownerElement);
+    }else if(toReplace.nodeType === Node.ELEMENT_NODE){
+      const cloned = replaceWith.cloneNode(true);
+      toReplace.replaceWith(cloned);
+    }
     this.needsUpdate = true;
   }
 
