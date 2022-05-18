@@ -51,7 +51,7 @@
         fx-repeatitem > div {
             display: block;
             display: grid;
-            grid-template-columns: 10% auto 25% 10%;
+            grid-template-columns: 10% auto 30% 10%;
             align-items: center;
             grid-gap:0.5rem;
         }
@@ -158,8 +158,8 @@
             <fx-model id="record">
                 <fx-instance>
                     <data>
-                        <task complete="false" due="2021-11-04">Pick up Milk</task>
-                        <task complete="false" due="2021-11-15">Make tutorial part 1</task>
+                        <task complete="false" due="2022-06-05">Make tutorial part 1</task>
+                        <task complete="false" due="2022-06-15">Pick up Milk</task>
                         <template>
                             <task complete="false" due="">new task</task>
                         </template>
@@ -167,7 +167,7 @@
                         <showclosed>false</showclosed>
                     </data>
                 </fx-instance>
-                <fx-bind ref="task" relevant="./@complete='false' or ../showclosed='true'">
+                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
 
@@ -207,11 +207,10 @@
                     </div>
                 </template>
             </fx-repeat>
-            <fx-control ref="showclosed" value-prop="checked" update-event="input">
+            <fx-control id="switch" ref="showclosed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
                 <input id="showcompleted" type="checkbox" class="widget">
             </fx-control>
-
         </fx-fore>
     </div>
 <script type="module" src="./demo.js"></script>

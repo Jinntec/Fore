@@ -73,16 +73,20 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.inited = true;
   }
 
+/*
   getModelItem() {
     super.getModelItem();
     // console.log('modelItem in repeatitem ', this.getModelItem()[this.index]);
     return this.getModelItem()[this.index];
   }
+*/
 
   refresh(force) {
-    // console.log('refresh repeatitem: ',this.nodeset);
-    // console.log('refresh repeatitem nodeset: ',this.nodeset);
-    this.modelItem = this.getModel().getModelItem(this.nodeset);
+    this.modelItem = this.getModelItem();
+    // ### register ourselves as boundControl
+    if(!this.modelItem.boundControls.includes(this)){
+      this.modelItem.boundControls.push(this);
+    }
 
     if (this.modelItem && !this.modelItem.relevant) {
       // await Fore.fadeOutElement(this)

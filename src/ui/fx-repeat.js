@@ -4,7 +4,7 @@ import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { XPathUtil } from '../xpath-util';
+import { XPathUtil } from '../xpath-util.js';
 
 /**
  * `fx-repeat`
@@ -18,6 +18,8 @@ import { XPathUtil } from '../xpath-util';
  *
  * @customElement
  * @demo demo/todo.html
+ *
+ * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
 export class FxRepeat extends foreElementMixin(HTMLElement) {
   static get properties() {

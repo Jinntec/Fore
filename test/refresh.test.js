@@ -216,4 +216,107 @@ describe('refresh Tests', () => {
 
   });
 
+  it('registers fx-repeat items in modelitem', async () => {
+    const el = await fixtureSync(html`
+        <fx-fore id="todo">
+            <fx-model id="record">
+                <fx-instance>
+                    <data>
+                        <task complete="false" due="2021-11-04">Pick up Milk</task>
+                        <task complete="false" due="2021-11-15">Make tutorial part 1</task>
+                        <template>
+                            <task complete="false" due="">new task</task>
+                        </template>
+                        <count>1</count>
+                        <showclosed>false</showclosed>
+                    </data>
+                </fx-instance>
+                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'">
+                    <fx-bind ref="./text()" required="true()"></fx-bind>
+                </fx-bind>
+
+            </fx-model>
+
+            <h1>Todo</h1>
+            <fx-trigger class="btn add">
+                <button>+</button>
+                <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+            </fx-trigger>
+
+            <div class="info">
+                You have {count(instance()/task[@complete='true'])} completed tasks
+            </div>
+
+            <div class="info open">
+                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+            </div>
+
+            <div class="info big">
+                {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+            </div>
+            <fx-repeat id="task" ref="task">
+                <template>
+                    <div>
+                        <fx-control ref="@complete" value-prop="checked" update-event="input">
+                            <input class="widget" type="checkbox">
+                        </fx-control>
+                        <fx-control class="{@complete} task" id="task" ref="."></fx-control>
+                        <fx-control ref="@due">
+                            <input type="date">
+                        </fx-control>
+                        <fx-trigger class="btn delete">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </div>
+                </template>
+            </fx-repeat>
+            <fx-control id="switch" ref="showclosed" value-prop="checked" update-event="input">
+                <label for="showcompleted">show completed</label>
+                <input id="showcompleted" type="checkbox" class="widget">
+            </fx-control>
+            <trigger>
+                <button>refresh</button>
+                <fx-refresh></fx-refresh>
+            </trigger>
+
+        </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const items = el.querySelectorAll('fx-repeatitem');
+    expect(items[0]).to.exist;
+    expect(items[0].modelItem).to.exist;
+    expect(items[0].modelItem.boundControls).to.exist;
+    expect(items[0].modelItem.boundControls.length).to.equal(2);
+    expect(items[0].modelItem.boundControls.includes(items[0]));
+
+
+    expect(items[1]).to.exist;
+    expect(items[1].modelItem).to.exist;
+    expect(items[1].modelItem.boundControls).to.exist;
+    expect(items[0].modelItem.boundControls.length).to.equal(2);
+    expect(items[0].modelItem.boundControls.includes(items[0]));
+
+    const task = el.querySelectorAll('.task');
+    expect(task[0].modelItem.boundControls.includes(task));
+    expect(task[1].modelItem.boundControls.includes(task));
+
+
+/*
+    const b = el.querySelector('#changePage');
+    b.performActions();
+
+
+    const page1 = el.querySelector('#page1');
+    expect(page1.classList.contains('selected-case')).to.be.false;
+    const page2 = el.querySelector('#page2');
+    expect(page2.classList.contains('selected-case')).to.be.false;
+    const page3 = el.querySelector('#page3');
+    expect(page3.classList.contains('selected-case')).to.be.true;
+*/
+
+  });
+
 });
