@@ -71,7 +71,7 @@ Polymer({
         border-bottom: 1px solid #e0e0e0;
         background-color: white;
         margin: 0;
-        padding: 20px;
+        /*padding: 20px;*/
         @apply --demo-snippet-demo;
       }
 

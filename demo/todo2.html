@@ -7,150 +7,10 @@
     <title>todo</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-
-    <style>
-        .header {
-            display: grid;
-            grid-template-columns: 200px 120px 50px 20px;
-            grid-column-gap: 10px;
-        }
-
-        .required:after{
-            content:'*';
-            color:red;
-            margin-left:-4pt;
-        }
-
-        [label=add] {
-            background: #29B6F6;
-        }
-
-        fx-fore{
-            position: relative;
-        }
-        input{
-            background: rgba(255,255,255,0.3);
-            border:none;
-            padding: 0.3rem;
-            border-radius: 0.2rem;
-        }
-
-        [unresolved] {
-            display: none;
-        }
-
-        fx-repeat {
-            display: block;
-            height: auto;
-        }
-        fx-repeatitem{
-            display: block;
-            padding: 1rem;
-
-        }
-        fx-repeatitem > div {
-            display: block;
-            display: grid;
-            grid-template-columns: 10% auto 30% 10%;
-            align-items: center;
-            grid-gap:0.5rem;
-        }
-        fx-control {
-            display: inline-block;
-            padding: 0 6px;
-            white-space: nowrap;
-        }
-        fx-trigger{
-            display: inline-block;
-        }
-        .info{
-            font-size: 1.2rem;
-        }
-        .info.big{
-            font-size:1.4rem;
-            padding: 0.5rem 0;
-            color:var(--paper-green-500)
-        }
-        .info.open{
-            color:var(--paper-orange-500);
-        }
-        input[type=text]{
-            width: 100%;
-            font-size: 0.9rem;
-            font-weight: 300;
-            color:var(--paper-grey-900);
-            font-size: 1.2rem;
-        }
-        input[type=checkbox]{
-            font-size: 1.4rem;
-        }
-
-        .btn button{
-            border-radius: 50%;
-            border: 1px solid var(--paper-grey-500);
-            font-size: 1rem;
-            width: 32px;
-            height: 32px;
-        }
-        .btn button:hover{
-            background: rgba(255,255,255,0.5);
-        }
-
-        .add{
-            position: absolute;
-            top: 24px;
-            left: 80px;
-        }
-        [repeat-index] {
-            border-radius: 10px;
-            /*box-shadow: rgb(0 0 0 / 10%) 1px 1px 14px;*/
-            border: 1px solid var(--paper-grey-300);
-            background: rgba(255,255,255,0.5);
-        }
-        [repeat-index] input{
-            color:black;
-            font-weight: 500;
-        }
-        #task input{
-            text-decoration:none;
-            opacity: 1;
-            transition: all 1s;
-        }
-        #task .true input{
-            text-decoration:line-through;
-            opacity: 0.4;
-            color:green;
-        }
-        .wrapper{
-            max-width: 800px;
-            margin:0 auto;
-            padding:1rem;
-        }
-        .wrapper{
-            height:auto;
-            max-width:800px;
-            margin: 0 auto;
-            opacity: 0.95;
-            position: relative;
-            min-height:80vh;
-            display: flex;
-            flex-direction: column;
-            padding: 0.5rem;
-        }
-
-        .hidden {
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s 2s, opacity 2s linear;
-        }
-        .visible {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 2s linear;
-        }
+    <link rel="stylesheet" href="todo.css">
+    <script type="module" src="./demo.js"></script>
 
 
-    </style>
 </head>
 <body unresolved="unresolved">
     <div class="wrapper">
@@ -173,11 +33,12 @@
 
             </fx-model>
 
-            <h1>Todo</h1>
-            <fx-trigger class="btn add">
-                <button>+</button>
-                <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
-            </fx-trigger>
+            <h1>Todo
+                <fx-trigger class="btn add">
+                    <button>+</button>
+                    <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+                </fx-trigger>
+            </h1>
 
             <div class="info">
                 You have {count(instance()/task[@complete='true'])} completed tasks
@@ -213,7 +74,6 @@
             </fx-control>
         </fx-fore>
     </div>
-<script type="module" src="./demo.js"></script>
 
 </body>
 </html>

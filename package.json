@@ -24,7 +24,8 @@
     "resources/toastify.css",
     "src/**/*",
     "dist/fore-all.js",
-    "dist/fore-debug.js"
+    "dist/fore-debug.js",
+    "!.DS_Store"
   ],
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.3",

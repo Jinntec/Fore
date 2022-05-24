@@ -6,178 +6,44 @@
 
     <title>Fore</title>
 
+    <!--    <link rel="stylesheet" href="../demo/todo.css">-->
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="../resources/demo.css">
+    <link rel="stylesheet" href="../demo/clock.css">
+    <link rel="stylesheet" href="../resources/home.css">
+
 
     <style>
-        @font-face {
-            font-family: "Kimberley";
-            src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
-        }
 
-        body {
-            animation: fadeInAnimation ease 1s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
-            font-family: Kimberley, Montserrat, sans-serif;
-            margin:0;
-        }
-
-        .left-col{
-
-        }
-
-        demo-snippet{
-            overflow: auto;
-        }
-
-        @keyframes fadeInAnimation {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .logo {
-            width: 300px;
-            margin: 0 auto;
-            filter:contrast(2.5) brightness(1.2) drop-shadow(1px 2px 1px lightgrey);
-        }
-
-        a.reference {
-            color: var(--paper-blue-grey-900);
-            font-size: 1.4rem;
-            display: block;
-        }
-
-        .github-corner{
-            position:absolute;
-            right:0;
-            top:0;
-            z-index:10;
-            fill:#9e9e9e;
-        }
-        .github-corner:hover{
-            fill: var(--paper-grey-900);
-        }
-        .github-corner:hover .octo-arm{
-            animation:octocat-wave 560ms ease-in-out;
-        }
-
-        @keyframes octocat-wave {
-            0%,
-            100% {
-                transform: rotate(0)
-            }
-            20%, 60% {
-                transform: rotate(-25deg)
-            }
-            40%, 80% {
-                transform: rotate(10deg)
-            }
-        }
-
-        @media (max-width: 500px) {
-            .github-corner:hover .octo-arm {
-                animation: none
-            }
-
-            .github-corner .octo-arm {
-                animation: octocat-wave 560ms ease-in-out
-            }
-        }
-
-        h1{
-            /*color:var(--paper-cyan-500);*/
-            color:var(--paper-cyan-900);
-            color:var(--paper-grey-900);
-        }
-
-        h2,h3{
-            /*color:var(--paper-cyan-900);*/
-            color:var(--paper-grey-900);
-        }
-        .header {
-            /*background: rgba(255, 255, 255, 0.95);*/
-            /*background: rgba(255, 255, 255, 0.4);*/
-            background: transparent;
-            text-align: center;
-            padding: 2rem;
-            border-radius: 1rem;
-            margin-top: 0.5rem;
-            /*opacity: 0.5;*/
-
-            /*border: 2px rgba(255,255,255,0.4) solid;*/
-            /*border-bottom: 2px rgba(40,40,40,0.35) solid;*/
-            /*border-right: 2px rgba(40,40,40,0.35) solid;*/
-
-        }
-
-        .teaser {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            justify-items: center;
-            grid-gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        p {
-            /*color: white;*/
-            color:var(--paper-grey-900);
-
-        }
-
-        section {
-            /*background: rgba(255, 255, 255, 0.5);*/
-            width: 100%;
-            border-radius: 1rem;
-        }
-
-        section > div {
-            padding: 1rem;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            right: 0;
-            bottom: 0;
-            margin: 0;
-            padding: 0;
-            z-index: 1;
-            opacity: 0.4;
-        }
-        .samples{
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            grid-gap:1rem;
-        }
-        .wrapper {
-            max-width: 1260px;
-            z-index: 5;
-            /*background: rgba(100, 100, 100, 0.1);*/
-            background: transparent;
-            /*background: white;*/
-            padding: 0 1rem;
-            border-radius:0;
-            border-bottom-left-radius: 1rem;
-            border-bottom-right-radius: 1rem;
-        }
-        .two{
-
-        }
     </style>
 
 </head>
-<!--151513-->
 <body>
-<a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Tuttle on GitHub" aria-label="Visit Tuttle on GitHub" target="_blank">
-    <svg width="80" height="80" viewBox="0 0 250 250" style="color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+<a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
+   aria-label="Visit Tuttle on GitHub" target="_blank">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+
+<header>
+<!--    <div class="background" style="background: rgb(255, 255, 255);"><canvas class="canvas canvas-particles" width="1192" height="580" style="width: 100%; height: 100%;"></canvas></div>-->
+    <img class="logo fore" src="../resources/images/light7.png">
+    <!--            <div class="version">{instance('package')?version}</div>-->
+    <h1>Declarative user interfaces in plain HTML</h1>
+
+    <a href="#" role="button" class="action btn">Get Started</a>
+    <nav>
+        <a href="demos.html">Demos</a>
+        <a href="../doc/reference.html">Documentation</a>
+        <!--        <a href="https://github.com/Jinntec/Fore/discussions" target="_blank">Community</a>-->
+    </nav>
+</header>
 <div class="wrapper demos topic">
 
     <fx-fore>
@@ -210,7 +76,7 @@
                 randomColorArray.push(characters[randomIndex])
                 }
                 const hexCol = `#${randomColorArray.join("")}`;
-                return hex2rgba(hexCol,0.5);
+                return hex2rgba(hexCol,0.9);
 
             </fx-function>
 
@@ -219,19 +85,21 @@
         <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>
         <fx-action event="ready" src="setBg.js"></fx-action>
     </fx-fore>
-    <div class="header">
-        <img class="logo" src="../resources/images/light7.png">
-        <!--            <div class="version">{instance('package')?version}</div>-->
-        <h1>writing applications in plain HTML</h1>
-    </div>
+    <!--
+        <div class="header">
+            <img class="logo" src="../resources/images/light7.png">
+            &lt;!&ndash;            <div class="version">{instance('package')?version}</div>&ndash;&gt;
+            <h1>Declarative user interfaces in plain HTML</h1>
+        </div>
+    -->
 
     <main>
-        <section class="teaser">
+        <section class="three-col teaser">
             <section>
                 <div>
-                    <h2>Declarative - just plain HTML</h2>
-                    <p>No Code or Low Code - you can write
-                        complete interfaces without any scripting.
+                    <h2>No Code or Low Code</h2>
+                    <p>Write
+                        complete interfaces without (or minimal) scripting.
                     </p>
                 </div>
             </section>
@@ -251,30 +119,148 @@
 
         <section class="samples">
             <div class="col-left">
-                <h2>Just pure tags</h2>
+                <h3>Just pure tags</h3>
+                <p>
+                    Build fully interactive user interfaces from pure markup with data-binding.
+                </p>
+                <p>From simple to very complex.</p>
             </div>
             <demo-snippet>
                 <template>
                     <fx-fore>
-                        <fx-output ref="greeting">Hello Universe</fx-output>
+                        <fx-model>
+                            <fx-instance type="json">
+                                {"greeting":"Hello Universe"}
+                            </fx-instance>
+                        </fx-model>
+                        <h2>{?greeting}</h2>
                     </fx-fore>
                 </template>
             </demo-snippet>
         </section>
 
-        <section class="two">
+        <section class="samples two">
+            <div class="col-left">
+                <h3>A clock</h3>
+                <p>The <em>model</em> holds structured data in one or more <em>instances</em>. </p>
+                <p><em>Bindings</em> apply calculations (or constraints) to the data.</p>
+                <p>Predefined <em>Actions</em> mutate, load or send data, interact with the user or trigger events.</p>
+                <p>NoCode is fine most of the time but still you can define your own custom
+                    functions to reach out to some script.</p>
+                <p>The <em>state engine</em> tracks dependencies and updates the user interface
+                    as needed while dispatching lifecycle and state events to hook in.</p>
+                <p>When initialized the 'ready' event will start an endless loop that updates the time
+                    with a delay 1000ms. It does by calling a custom JavaScript function.</p>
+                <p>The bindings will recalculate their values
+                and the UI will update the template expressions - the ones in curly brackets.</p>
+            </div>
             <demo-snippet>
                 <template>
                     <fx-fore>
-                        <fx-output ref="greeting">Hello Universe</fx-output>
+                        <fx-action while="true()" event="ready" delay="1000">
+                            <fx-setvalue ref="time" value="local:now()"></fx-setvalue>
+                        </fx-action>
+                        <fx-model>
+                            <fx-instance>
+                                <data>
+                                    <time></time>
+                                    <hour></hour>
+                                    <minute></minute>
+                                    <second></second>
+                                </data>
+                            </fx-instance>
+
+                            <fx-bind ref="hour" calculate="number(substring(../time,1,2)) * 30"></fx-bind>
+                            <fx-bind ref="minute" calculate="number(substring(../time,4,2)) * 6"></fx-bind>
+                            <fx-bind ref="second" calculate="number(substring(../time,7,2)) * 6"></fx-bind>
+
+                            <fx-function signature="local:now() as xs:string" type="text/javascript">
+                                return new Date().toLocaleTimeString();
+                            </fx-function>
+                        </fx-model>
+                        <div class="clock">
+                            <div class="brand">Fore</div>
+                            <span class="three-nine"></span>
+                            <div class="display-time">{substring(time,1,5)}</div>
+                            <div style="transform:rotate({hour}deg);" class="hour"></div>
+                            <div style="transform:rotate({minute}deg);" class="minute"></div>
+                            <div class="circle" style="transform:rotate({second}deg);"
+                                 data-secs="{substring(time,7,2)}"></div>
+                        </div>
                     </fx-fore>
                 </template>
             </demo-snippet>
+        </section>
+        <h2 class="outer">More features</h2>
+        <section class="three-col">
+            <div class="feature">
+                <h3>group, repeat or switch</h3>
+                <p>Repeating (even nested) sections of the Ui or switching between views is no problem
+                with the respective Fore elements.</p>
+            </div>
+            <div class="feature">
+                <h3>Generic Control</h3>
+                <p>Use either native or third-party components acting as controls within Fore.
+                </p>
+            </div>
+            <div class="feature">
+                <h3>MVC Architecture</h3>
+                <p>Fore elements fall into 3 categories: model, user-interface and action elements that act
+                together in a defined lifecycle.</p>
+            </div>
+            <div class="feature">
+                <h3>Constraints</h3>
+                <p>With bindings data nodes can be constrained or be calculated from other data. Flexible alert
+                messages can be logged to the user.</p>
+            </div>
+            <div class="feature">
+                <h3>Dependency Tracking</h3>
+                <p>Fore keeps tracks of the dependencies that might exist between data nodes.</p>
+            </div>
+            <div class="feature">
+                <h3>XPath/XQuery 3.1 support</h3>
+                <p>With fontoXPath Fore uses a powerful expression language to address either XML and/or JSON.</p>
+            </div>
+            <div class="feature">
+                <h3>Submissions</h3>
+                <p>A submission can load data from or send them to a URL. </p>
+                <p>Responses can be handled depending on
+                    returned data and trigger further actions.</p>
+            </div>
+            <div class="feature">
+                <h3>Framework agnostic</h3>
+                <p>Fore is pure vanilla ES6 and not dependent on a specific framework.</p>
+            </div>
         </section>
     </main>
 
 
 </div>
+<footer>
+    <div class="wrapper three-col">
+        <div>
+            <h4>Fore is brought to you by</h4>
+            <a href="https://jinntec.de" target="_blank"><img class="logo jinntec"
+                                                              src="../resources/images/jinntec-bw.svg"></a>
+            <div>For professional support contact us at</div>
+            <div>info@jinntec.de</div>
+        </div>
+        <div>
+            <h4>Links</h4>
+            <ul>
+                <li><a href="https://twitter.com/JinnForeTec" target="_blank">Twitter</a></li>
+                <li><a href="https://twitter.com/JinnForeTec" target="_blank">Github</a></li>
+                <li><a href="https://github.com/Jinntec/Fore/discussions" target="_blank">Discussions</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>this page is powered by</h4>
+            <img class="logo" src="../resources/images/light7.png"/>
+
+        </div>
+    </div>
+</footer>
+
 <script type="module" src="../demo/demo.js"></script>
 
 </body>

@@ -68,7 +68,6 @@ export class FxFore extends HTMLElement {
                 // display: none;
                 height:auto;
                 padding:var(--model-element-padding);
-                font-family:Roboto, sans-serif;
                 color:var(--paper-grey-900);
             }
             :host ::slotted(fx-model){
