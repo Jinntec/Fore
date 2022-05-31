@@ -8,6 +8,7 @@ import strip from '@rollup/plugin-strip';
 const { dependencies } = require('./package.json');
 
 export default [
+/*
   {
     input: './index.js',
     output: [
@@ -19,13 +20,13 @@ export default [
     ],
     external: moduleName =>
       // All absolute imports should be regarded as external. Examples are 'fontoxpath',
-      // 'lit-element' or '@polymer/*'
+      // 'lit-element' or '@polymer/!*'
       !/^(\.\/|\.\.\/)/.test(moduleName),
     plugins: [
       resolve(),
       babel({
         babelrc: false,
-        exclude: 'node_modules/**',
+        exclude: 'node_modules/!**',
         plugins: [
           // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
           // TODO: reconsider whether that is a good idea.
@@ -37,11 +38,12 @@ export default [
       terser(),
     ],
   },
+*/
   {
     input: './index.js',
     output: [
       {
-        file: 'dist/fore-all.js',
+        file: 'dist/fore.js',
         format: 'es',
         sourcemap: true,
       },
@@ -66,7 +68,7 @@ export default [
     input: './index.js',
     output: [
       {
-        file: 'dist/fore-debug.js',
+        file: 'dist/fore-dev.js',
         format: 'es',
         sourcemap: true,
       },

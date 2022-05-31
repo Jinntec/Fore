@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>A simple output</title>
+    <title>Get started</title>
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link href="../resources/demo.css" rel="stylesheet">
@@ -30,8 +30,28 @@
     <noscript>Scripting is disabled - Sorry, can't process this page.</noscript>
 
 
-    <h1>A simple output</h1>
+    <h1>Get started</h1>
 
+    <h2>Step 1 - Setting up the page</h2>
+    <demo-snippet>
+        <template>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+                    <title>template</title>
+                    <link href="../resources/fore.css" rel="stylesheet">
+                </head>
+                <body>
+                    <script type="module" src="../index.js"></script>
+                </body>
+            </html>
+        </template>
+    </demo-snippet>
+
+    <p>Let's jump right into the simplest possible example...</p>
+    <p>In lazy mode you don't even need to write a model. This is for the 'small and quick' use cases where
+    you don't need much logic or constraints.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -40,15 +60,23 @@
         </template>
     </demo-snippet>
 
+
+
+
+
+
+
+
+
     <p>
         Besides the <code>fx-fore</code> element we have a <code>fx-output</code> here
-         which - well - outputs a data node.
+         which - well - outputs a referenced data node.
     </p>
 
     <p>Note the <code>ref</code> attribute. <code>ref</code> stands for 'reference' and is a pointer
     to some data node. Currently Fore supports XML and JSON as its data formats. </p>
 
-    <h3>What is happening here?</h3>
+    <h2>What is happening here?</h2>
     <p>When the page is loaded the Fore element will start initialization. If it does not find a <code>fx-model</code>
     one will get generated with a default instance.</p>
     <p>Fore will look for elements having a <code>ref</code> and create data nodes using the value of the
@@ -57,7 +85,6 @@
 
     <p>This is what is auto-generated for you:</p>
 
-<!--
     <demo-snippet>
         <template>
             <fx-fore>
@@ -72,7 +99,6 @@
             </fx-fore>
         </template>
     </demo-snippet>
--->
 <!--
     <fx-output ref="greeting">
         <label slot="label">Hi - </label>
@@ -83,7 +109,30 @@
     is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
     as you like.</p>
 
+    <h2>Nesting refs</h2>
+    <p>References can nested and Fore will create the respective hierarchy.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-group ref="planet">
+                    <fx-output ref="greeting">Hello Earth</fx-output>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
+    <p>Guess how the instance looks like now? Here it is </p>
+    <demo-snippet>
+        <template>
+            <fx-instance>
+                <data>
+                    <planet>
+                        <greeting>Hello Earth</greeting>
+                    </planet>
+                </data>
+            </fx-instance>
+        </template>
+    </demo-snippet>
     <div class="nav-buttons">
         <a class="redline next" href="./02-refs.html">next</a>
     </div>

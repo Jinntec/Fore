@@ -23,8 +23,8 @@
     "resources/vars.css",
     "resources/toastify.css",
     "src/**/*",
-    "dist/fore-all.js",
-    "dist/fore-debug.js",
+    "dist/fore.js",
+    "dist/fore-dev.js",
     "!.DS_Store"
   ],
   "dependencies": {

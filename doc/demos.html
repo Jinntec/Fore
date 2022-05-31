@@ -91,13 +91,14 @@
     <img class="logo fore" src="../resources/images/light7.png">
     <!--            <div class="version">{instance('package')?version}</div>-->
     <div class="mission">Declarative user interfaces in plain HTML</div>
-    <a href="#" role="button" class="action btn">Get Started</a>
+    <a href="https://jinntec.github.io/fore-docs/getstarted/" target="_blank" role="button" class="action btn">Get Started</a>
     <nav>
         <a href="index.html">Home</a>
-        <a href="../doc/reference.html">Documentation</a>
+        <a href="https://jinntec.github.io/fore-docs/" target="_blank">Documentation</a>
     </nav>
 </header>
 <div class="wrapper demos topic">
+    <p class="style-hint">If you don't like the colors just <a href="demos.html">reload</a> the page.</p>
 
     <fx-fore>
         <fx-model>
@@ -137,119 +138,298 @@
         </fx-model>
         <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>
         <fx-action event="ready" src="setBg.js"></fx-action>
-        <h2>Demos</h2>
+        <h1>Demos</h1>
         <p>The demos are a vital part of the Fore documentation. They range from simple to advanced examples
         and are a premier resource for learning Fore. If you are looking for the element reference or like
         to learn more about the inner workings please refer to the documentation.</p>
-        <div class="header">
-            <a class="reference" href="reference.html">Fore Element Reference</a>
-        </div>
         <fx-output id="version" ref="instance('package')?version">
             <label slot="label">Fore Version:</label>
         </fx-output>
-        <section>
-            <h2>Basic</h2>
-            <h3><a href="../demo/01-hi.html" target="_blank">Get started</a></h3>
-            <h3><a href="../demo/02-refs.html" target="_blank">ref what?</a></h3>
-            <h3><a href="../demo/03-instances.html" target="_blank">What an instance can do</a></h3>
-            <h3><a href="../demo/04-instances.html?param1=foo&param2=bar" target="_blank">Instance super powers</a></h3>
-            <h3><a href="../demo/binding.html" target="_blank">Bindings are forever</a></h3>
-            <h3><a href="../demo/binding-nested.html" target="_blank">Bindings - they nest!</a></h3>
-            <h3><a href="../demo/unbound.html" target="_blank">Unbound, unbound, unbound...</a></h3>
+        <h2>Basic</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/getstarted.html" target="_blank">Get started</a></h3>
+                <p>setting up Fore and Hello Universe</p>
+            </div>
+            <div>
+                <h3><a href="../demo/01-hi.html" target="_blank">A simple output</a></h3>
+                <p>Using a ref to lazily create a data node.</p>
+            </div>
+            <div>
+                <h3><a href="../demo/02-refs.html" target="_blank">ref what?</a></h3>
+                <p>Introducing binding expressions</p>
+            </div>
+            <div>
+                <h3><a href="../demo/03-instances.html" target="_blank">What an instance can do</a></h3>
+                <p>Using one or more <code>fx-instance</code> elements</p>
+            </div>
+            <div>
+                <h3><a href="../demo/04-instances.html?param1=foo&param2=bar" target="_blank">Instance super powers</a></h3>
+                <p>loading an <code>fx-instance</code>, JSON instances and creating a instance from queryString</p>
+            </div>
+            <div>
+                <h3><a href="../demo/binding.html" target="_blank">Bindings are forever</a></h3>
+                <p><code>fx-bind</code> elements and ModelItems explained</p>
+            </div>
+            <div>
+                <h3><a href="../demo/binding-nested.html" target="_blank">Bindings - they nest!</a></h3>
+                <p>Nesting bindings and Scoped Resolution</p>
+            </div>
+            <div>
+                <h3><a href="../demo/unbound.html" target="_blank">Unbound, unbound, unbound...</a></h3>
+                <p>Controls don't show if their binding node does not exist.</p>
+            </div>
         </section>
-        <section>
-            <h2>Model</h2>
-            <h3><a href="../demo/recalculate.html" target="_blank">One depends the other</a></h3>
-            <h3><a href="../demo/simple-calc.html" target="_blank">Calculate</a></h3>
-            <h3><a href="../demo/revalidate.html" target="_blank">Validation and Alerts</a></h3>
-            <h3><a href="../demo/calc-order.html" target="_blank">Calculation Order</a></h3>
-            <h3><a href="../demo/submission2.html" target="_blank">On a submission...</a></h3>
-            <h3><a href="../demo/submission1.html" target="_blank">more submissions</a></h3>
-            <h3><a href="../demo/submission3.html" target="_blank">submission chaining</a></h3>
-            <h3><a href="../demo/submission4.html" target="_blank">Submission with Template Expressions</a></h3>
-            <h3><a href="../demo/submission-relevance.html" target="_blank">Submission & Relevance</a></h3>
-            <h3><a href="../demo/submission-json.html" target="_blank">Submission of JSON</a></h3>
-            <h3><a href="../demo/targetref.html" target="_blank">partial submission and replacement</a></h3>
+        <h2>Model</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/recalculate.html" target="_blank">One depends the other</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/simple-calc.html" target="_blank">Calculate</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/revalidate.html" target="_blank">Validation and Alerts</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/calc-order.html" target="_blank">Calculation Order</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/submission2.html" target="_blank">On a submission...</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/submission1.html" target="_blank">more submissions</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/submission3.html" target="_blank">submission chaining</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/submission4.html" target="_blank">Submission with Template Expressions</a></h3>
+            </div>
+            <div>
+                <h3><a href="../demo/submission-relevance.html" target="_blank">Submission & Relevance</a></h3>
+            </div>
+            <div>
+                <h3><a href="../demo/submission-json.html" target="_blank">Submission of JSON</a></h3>
+            </div>
+            <div>
+                <h3><a href="../demo/targetref.html" target="_blank">partial submission and replacement</a></h3>
+            </div>
         </section>
-        <section>
-            <h2>UI Controls</h2>
-            <h4><a href="../demo/fx-control.html" target="_blank">fx-control - one Control to bind 'em all</a></h4>
-            <h4><a href="../demo/controls/fx-output.html" target="_blank">fx-output</a></h4>
-            <h4><a href="../demo/selects2.html" target="_blank">Selects (1)</a></h4>
-            <h4><a href="../demo/selects.html" target="_blank">Selects (2)</a></h4>
-            <h4><a href="../demo/selects3.html" target="_blank">Select Multiple</a></h4>
-            <h4><a href="../demo/trigger.html" target="_blank">Trigger</a></h4>
-            <h4><a href="../demo/avt.html" target="_blank">Template Expressions (1)</a></h4>
-            <h4><a href="../demo/css.html" target="_blank">Template Expressions (2)</a></h4>
+        <h2>UI Controls</h2>
+        <section class="three-col">
+            <div><h3><a href="../demo/fx-control.html" target="_blank">fx-control - one Control to bind 'em all</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/controls/fx-output.html" target="_blank">fx-output</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/selects2.html" target="_blank">Selects (1)</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/selects.html" target="_blank">Selects (2)</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/selects3.html" target="_blank">Select Multiple</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/trigger.html" target="_blank">Trigger</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/avt.html" target="_blank">Template Expressions (1)</a></h3>
+                <p></p>
+            </div>
+            <div><h3><a href="../demo/css.html" target="_blank">Template Expressions (2)</a></h3>
+                <p></p>
+            </div>
         </section>
-        <section>
-            <h2>UI Container</h2>
-            <h3><a href="../demo/todo.html" target="_blank">Simple Repeat</a></h3>
-            <h3><a href="../demo/nested-todo.html" target="_blank">Nested Repeat</a></h3>
-            <h3><a href="../demo/switch.html" target="_blank">Switch</a></h3>
-            <h3><a href="../demo/repeat-in-switch.html" target="_blank">Repeats in Switch</a></h3>
-            <h3><a href="../demo/repeat-atomic.html" target="_blank">repeat atomic values</a></h3>
-            <h4><a href="../demo/controls/fx-dialog.html" target="_blank">Modal Dialog</a></h4>
+        <h2>UI Container</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/todo.html" target="_blank">Simple Repeat</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/nested-todo.html" target="_blank">Nested Repeat</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/switch.html" target="_blank">Switch</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/repeat-in-switch.html" target="_blank">Repeats in Switch</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/repeat-atomic.html" target="_blank">repeat atomic values</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/controls/fx-dialog.html" target="_blank">Modal Dialog</a></h3>
+                <p></p>
+            </div>
         </section>
 
-        <section>
-            <h2>Actions and Events</h2>
-            <h3><a href="../demo/if.html" target="_blank">The <code>if</code> attribute</a></h3>
-            <h3><a href="../demo/while.html" target="_blank">The <code>while</code> attribute</a></h3>
-            <h3><a href="../demo/delay.html" target="_blank">The <code>delay</code> attribute</a></h3>
-            <h3><a href="../demo/events.html" target="_blank">handling events</a></h3>
-            <h3><a href="../demo/events2.html" target="_blank">passing params with events</a></h3>
-            <h3><a href="../demo/hello-fonto.html" target="_blank">and... Action</a></h3>
-            <h3><a href="../demo/actions.html" target="_blank">Action Extras</a></h3>
-            <h3><a href="../demo/script-actions.html" target="_blank">Action calling JavaScript</a></h3>
-            <h3><a href="../demo/fx-dispatch.html" target="_blank">fx-dispatch action</a></h3>
-            <h3><a href="../demo/insert.html" target="_blank">The insert action</a></h3>
-            <h3><a href="../demo/insert2.html" target="_blank">more inserts - using context</a></h3>
-            <h3><a href="../demo/insert-inhomogenious.html" target="_blank">inserting in inhomogenious nodeset</a></h3>
-            <h3><a href="../demo/fx-replace.html" target="_blank">replace action</a></h3>
+        <h2>Actions and Events</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/if.html" target="_blank">The <code>if</code> attribute</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/while.html" target="_blank">The <code>while</code> attribute</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/delay.html" target="_blank">The <code>delay</code> attribute</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/events.html" target="_blank">handling events</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/events2.html" target="_blank">passing params with events</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/hello-fonto.html" target="_blank">and... Action</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/actions.html" target="_blank">Action Extras</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/script-actions.html" target="_blank">Action calling JavaScript</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/fx-dispatch.html" target="_blank">fx-dispatch action</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/insert.html" target="_blank">The insert action</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/insert2.html" target="_blank">more inserts - using context</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/insert-inhomogenious.html" target="_blank">inserting in inhomogenious nodeset</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/fx-replace.html" target="_blank">replace action</a></h3>
+                <p></p>
+            </div>
 
         </section>
 
-        <section>
-            <h2>Functions</h2>
-
-            <h3><a href="../demo/functions/fn-context.html" target="_blank">context()</a></h3>
-            <h3><a href="../demo/functions.html" target="_blank">Custom Functions</a></h3>
+        <h2>Functions</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/functions/fn-context.html" target="_blank">context()</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/functions.html" target="_blank">Custom Functions</a></h3>
+                <p></p>
+            </div>
         </section>
 
-        <section>
-            <h2>JSON</h2>
-            <h3><a href="../demo/hello-json.html" target="_blank">binding JSON</a></h3>
+        <h2>JSON</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/hello-json.html" target="_blank">binding JSON</a></h3>
+                <p></p>
+            </div>
         </section>
 
 
-        <section>
-            <h2>By element</h2>
-            <h3><a href="../demo/controls/fx-dialog.html" target="_blank">the `fx-dialog` element</a></h3>
-            <h3><a href="../demo/fx-message.html" target="_blank">the `fx-message` element</a></h3>
-            <h3><a href="../demo/controls/fx-output.html" target="_blank">the `fx-output` element</a></h3>
+        <h2>By element</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/controls/fx-dialog.html" target="_blank">the `fx-dialog` element</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/fx-message.html" target="_blank">the `fx-message` element</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/controls/fx-output.html" target="_blank">the `fx-output` element</a></h3>
+                <p></p>
+            </div>
         </section>
-        <section>
-            <h2>Other examples</h2>
-            <h3><a href="../demo/api.html" target="_blank">API Demo</a></h3>
-            <h3><a href="../demo/todo2.html" target="_blank">Todo</a></h3>
-            <h3><a href="../demo/project.html" target="_blank">a Kanban board with checklists</a></h3>
-            <h3><a href="../demo/simple-tei-header.html" target="_blank">editing a basic TEI header</a></h3>
-            <h3><a href="../demo/fx-control-build.html" target="_blank">running a bundled version</a></h3>
-            <!--        <h3><a href="../demo/editor.html" target="_blank">Fore editor</a></h3>-->
-            <h3><a href="../demo/docbook-bibliography.html" target="_blank">DocBook Bibliography - editing namespaced
-                XML</a></h3>
-            <h3><a href="../demo/randomizer.html" target="_blank">Randomizing CSS properties</a></h3>
-            <h3><a href="../demo/auth.html" target="_blank">a simple login</a></h3>
-            <h3><a href="../demo/graph/subgraph.html" target="_blank">Subgraph recalculation</a></h3>
-            <h3><a href="../demo/variables.html" target="_blank">Variables</a></h3>
-            <h3><a href="../demo/instance-generator/instance-generator.html" target="_blank">Instance Data generator</a>
-            </h3>
-            <h3><a href="../demo/external-fore.html" target="_blank">loading external Fore page</a></h3>
 
-            <h3><a href="../demo/controls/fx-fore.html" target="_blank">Fore as widget</a></h3>
-            <h3><a href="../demo/clock2.html" target="_blank">Clock</a></h3>
-
+        <h2>Other examples</h2>
+        <section class="three-col">
+            <div>
+                <h3><a href="../demo/api.html" target="_blank">API Demo</a></h3>
+                <p>Uses a large, generated API JSON file to display Fore API</p>
+            </div>
+            <div>
+                <h3><a href="../demo/todo2.html" target="_blank">Todo</a></h3>
+                <p>A little todo application</p>
+            </div>
+            <div>
+                <h3><a href="../demo/project.html" target="_blank">a Kanban board with checklists</a></h3>
+                <p>a Kanban board with nested <code>fx-repeat</code> elements and a bit of dynamic CSS</p>
+            </div>
+            <div>
+                <h3><a href="../demo/simple-tei-header.html" target="_blank">editing a basic TEI header</a></h3>
+                <p>A basic TEI header editor with <code>fx-repeat</code> and <code>fx-switch</code> elements.</p>
+            </div>
+            <div>
+                <h3><a href="../demo/fx-control-build.html" target="_blank">running a bundled version</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/docbook-bibliography.html" target="_blank">DocBook Bibliography - editing namespaced XML</a></h3>
+                <p>Editing namespaced XML</p>
+            </div>
+            <div>
+                <h3><a href="../demo/randomizer.html" target="_blank">Randomizing CSS properties</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/auth.html" target="_blank">a simple login</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/graph/subgraph.html" target="_blank">Subgraph recalculation</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/variables.html" target="_blank">Variables</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/instance-generator/instance-generator.html" target="_blank">Instance Data generator</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/external-fore.html" target="_blank">loading external Fore page</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/controls/fx-fore.html" target="_blank">Fore as widget</a></h3>
+                <p></p>
+            </div>
+            <div>
+                <h3><a href="../demo/clock2.html" target="_blank">Clock</a></h3>
+                <p></p>
+            </div>
         </section>
 
         <!--        <h3><a href="../demo/auth.html" target="_blank">URLEncoded Submission</a></h3>-->
