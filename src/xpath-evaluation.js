@@ -212,7 +212,7 @@ function getVariablesInScope(formElement) {
   }
 
   const variables = {};
-  if(closestActualFormElement.inScopeVariables && closestActualFormElement.inScopeVariables.hasOwnProperty('keys')){
+  if(closestActualFormElement.inScopeVariables){
     for (const key of closestActualFormElement.inScopeVariables.keys()) {
       const varElement = closestActualFormElement.inScopeVariables.get(key);
       variables[key] = varElement.value;
