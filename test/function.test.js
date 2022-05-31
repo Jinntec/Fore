@@ -1,4 +1,4 @@
-import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -63,6 +63,24 @@ describe('functions', () => {
             </fx-function>
           </fx-model>
           <label>{local:hello-world()}</label>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'refresh-done');
+
+      const label = el.querySelector('label');
+      expect(label.innerText).to.equal('Hello World');
+    });
+
+    it('can define a simple function without any prefix', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model>
+            <fx-function signature="hello-world() as xs:string" override="no" type="text/xpath">
+              ("Hello", "World") =&gt; string-join(" ")
+            </fx-function>
+          </fx-model>
+          <label>{hello-world()}</label>
         </fx-fore>
       `);
 
