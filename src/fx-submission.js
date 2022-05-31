@@ -1,5 +1,5 @@
 import { Fore } from './fore.js';
-import { Relevance} from "./relevance.js";
+import { Relevance } from './relevance.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import { evaluateXPathToString, evaluateXPath } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
@@ -132,7 +132,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       serialized = undefined;
     } else {
       // const relevant = this.selectRelevant(instance.type);
-      const relevant = Relevance.selectRelevant(this,instance.type);
+      const relevant = Relevance.selectRelevant(this, instance.type);
       serialized = this._serialize(instance.type, relevant);
     }
 
@@ -222,9 +222,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const serializer = new XMLSerializer();
       return serializer.serializeToString(relevantNodes);
     }
-    if(instanceType === 'json'){
-                // console.warn('JSON serialization is not yet supported')
-        return JSON.stringify(relevantNodes);
+    if (instanceType === 'json') {
+      // console.warn('JSON serialization is not yet supported')
+      return JSON.stringify(relevantNodes);
     }
     throw new Error('unknown instance type ', instanceType);
   }
@@ -279,8 +279,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   _handleResponse(data) {
     console.log('_handleResponse ', data);
 
-
-/*
+    /*
     // ### responses need to be handled depending on their type.
     if(this.type === 'json'){
 
@@ -291,7 +290,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const targetInstance = this._getTargetInstance();
       if (targetInstance) {
         if (this.targetref) {
-          const theTarget = evaluateXPath(
+          const [theTarget] = evaluateXPath(
             this.targetref,
             targetInstance.instanceData.firstElementChild,
             this,
@@ -302,7 +301,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
           parent.replaceChild(clone, theTarget);
           console.log('finally ', parent);
         } else if (this.into) {
-          const theTarget = evaluateXPath(
+          const [theTarget] = evaluateXPath(
             this.into,
             targetInstance.instanceData.firstElementChild,
             this,
@@ -342,7 +341,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
    *
    * @returns {*}
    */
-/*
+  /*
   selectRelevant(type) {
     console.log('selectRelevant' ,type)
     switch (type){
@@ -356,7 +355,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 */
 
   // todo: support for 'empty'
-/*
+  /*
   _relevantXmlNodes() {
     // ### no relevance selection - current nodeset is used 'as-is'
     if (this.nonrelevant === 'keep') {
@@ -377,7 +376,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 */
 
-/*
+  /*
   _filterRelevant(node, result) {
     const { childNodes } = node;
     Array.from(childNodes).forEach(n => {
@@ -404,7 +403,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 */
 
-/*
+  /*
   _isRelevant(node) {
     const mi = this.getModel().getModelItem(node);
     if (!mi || mi.relevant) {

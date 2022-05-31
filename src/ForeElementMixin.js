@@ -101,15 +101,17 @@ export const foreElementMixin = superclass =>
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
       let inscopeContext;
-      if(this.hasAttribute('context')){
+      if (this.hasAttribute('context')) {
         inscopeContext = getInScopeContext(this.getAttributeNode('context') || this, this.context);
       }
-      if(this.hasAttribute('ref')){
+      if (this.hasAttribute('ref')) {
         inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
       }
       if (!inscopeContext) {
         // ### always fall back to default context with there's neither a 'context' or 'ref' present
-        inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
+        inscopeContext = this.getModel()
+          .getDefaultInstance()
+          .getDefaultContext();
         // console.warn('no in scopeContext for ', this);
         // console.warn('using default context ', this);
         // return;
@@ -135,7 +137,7 @@ export const foreElementMixin = superclass =>
         if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
+          [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
         }
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);

@@ -1,5 +1,9 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import {
+  evaluateXPath,
+  evaluateXPathToString,
+  evaluateXPathToFirstNode,
+} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 
@@ -15,11 +19,13 @@ const WIDGETCLASS = 'widget';
  * @demo demo/index.html
  */
 
-function debounce(func, timeout = 300){
+function debounce(func, timeout = 300) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
   };
 }
 export default class FxControl extends XfAbstractControl {
@@ -30,11 +36,11 @@ export default class FxControl extends XfAbstractControl {
   }
 
   connectedCallback() {
-    this.initial = this.hasAttribute('initial')?this.getAttribute('initial'):null;
-    this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
-    this.loaded=false;
+    this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
+    this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
+    this.loaded = false;
     this.initialNode = null;
-    this.debounceDelay=this.hasAttribute('debounce')?this.getAttribute('debounce'):null;
+    this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
 
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
@@ -68,13 +74,16 @@ export default class FxControl extends XfAbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
-    if(this.debounceDelay){
-      this.widget.addEventListener(this.updateEvent, debounce(() => {
-        console.log('eventlistener ', this.updateEvent);
-        this.setValue(this.widget[this.valueProp]);
-      },this.debounceDelay));
-    }else{
-      this.widget.addEventListener(this.updateEvent,() => {
+    if (this.debounceDelay) {
+      this.widget.addEventListener(
+        this.updateEvent,
+        debounce(() => {
+          console.log('eventlistener ', this.updateEvent);
+          this.setValue(this.widget[this.valueProp]);
+        }, this.debounceDelay),
+      );
+    } else {
+      this.widget.addEventListener(this.updateEvent, () => {
         console.log('eventlistener ', this.updateEvent);
         this.setValue(this.widget[this.valueProp]);
       });
@@ -89,12 +98,12 @@ export default class FxControl extends XfAbstractControl {
       console.log('current outer instance', this.getInstance());
 
       console.log(
-          '???? why ???? current nodeset should point to the node of the outer control',
-          e.currentTarget.nodeset,
+        '???? why ???? current nodeset should point to the node of the outer control',
+        e.currentTarget.nodeset,
       );
       console.log(
-          '???? why ???? current nodeset should point to the node of the outer control',
-          this.nodeset,
+        '???? why ???? current nodeset should point to the node of the outer control',
+        this.nodeset,
       );
       const newNodes = e.detail.nodeset;
       console.log('new nodeset', newNodes);
@@ -106,18 +115,19 @@ export default class FxControl extends XfAbstractControl {
       this._replaceNode(newNodes);
     });
 
-
     const slot = this.shadowRoot.querySelector('slot');
     this.template = this.querySelector('template');
     // console.log('template',this.template);
   }
 
-  _debounce(func, timeout = 300){
+  _debounce(func, timeout = 300) {
     let timer;
     return (...args) => {
-      const context=this;
+      const context = this;
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(context, args); }, timeout);
+      timer = setTimeout(() => {
+        func.apply(context, args);
+      }, timeout);
     };
   }
 
@@ -130,13 +140,12 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
-
     const modelitem = this.getModelItem();
-    if(this.getAttribute('as') === 'node'){
+    if (this.getAttribute('as') === 'node') {
       const widgetValue = this.getWidget().value;
       const replace = this.shadowRoot.getElementById('replace');
-      replace.replace(this.nodeset, this.getWidget().value)
-      if(widgetValue && widgetValue !== modelitem.value){
+      replace.replace(this.nodeset, this.getWidget().value);
+      if (widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;
         replace.actionPerformed();
       }
@@ -157,10 +166,12 @@ export default class FxControl extends XfAbstractControl {
     return `
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
-            ${this.hasAttribute('as') && this.getAttribute('as') === 'node' ? 
-              `<fx-replace id="replace" ref=".">` :
-              `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`}
-            
+            ${
+              this.hasAttribute('as') && this.getAttribute('as') === 'node'
+                ? `<fx-replace id="replace" ref=".">`
+                : `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`
+            }
+
         `;
   }
 
@@ -215,44 +226,42 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 
-    if(this.hasAttribute('as')){
+    if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');
 
       // ### when there's an `as=text` attribute serialize nodeset to prettified string
-      if(as === 'text'){
+      if (as === 'text') {
         const serializer = new XMLSerializer();
         const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset));
         widget.value = pretty;
       }
-      if(as === 'node' && this.nodeset !== widget.value){
-
+      if (as === 'node' && this.nodeset !== widget.value) {
         const oldVal = this.nodeset.innerHTML;
-        if(widget.value){
-          if(this.oldVal !== this.widget.value){
+        if (widget.value) {
+          if (this.oldVal !== this.widget.value) {
             console.log('changed');
-            return ;
+            return;
           }
         }
 
         widget.value = this.nodeset.cloneNode(true);
-        console.log('passed value to widget',widget.value);
+        console.log('passed value to widget', widget.value);
       }
 
       return;
     }
 
     // ### when there's a url Fore is used as widget and will be loaded from external file
-    if(this.url && !this.loaded){
+    if (this.url && !this.loaded) {
       // ### evaluate initial data if necessary
-      if(this.initial){
-        this.initialNode = evaluateXPath(this.initial, this.nodeset, this);
-        console.log('initialNodes',this.initialNode);
+      if (this.initial) {
+        this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
+        console.log('initialNodes', this.initialNode);
       }
 
       // ### load the markup from Url
       await this._loadForeFromUrl();
-      this.loaded=true;
-
+      this.loaded = true;
 
       // ### replace default instance of embedded Fore with initial nodes
       // const innerInstance = this.querySelector('fx-instance');
@@ -260,14 +269,14 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 
-/*
+    /*
     if(this.url && !this.loaded){
       this._loadForeFromUrl();
       this.loaded=true;
       return;
     }
 */
-    if(widget.value !== this.value){
+    if (widget.value !== this.value) {
       widget.value = this.value;
     }
   }
@@ -283,52 +292,52 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   async _loadForeFromUrl() {
-    console.log('########## loading Fore from ',this.src ,'##########');
+    console.log('########## loading Fore from ', this.src, '##########');
     try {
       const response = await fetch(this.url, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'text/html',
-      },
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'text/html',
+        },
       });
-          const responseContentType = response.headers.get('content-type').toLowerCase();
-          console.log('********** responseContentType *********', responseContentType);
+      const responseContentType = response.headers.get('content-type').toLowerCase();
+      console.log('********** responseContentType *********', responseContentType);
       let data;
-          if (responseContentType.startsWith('text/html')) {
+      if (responseContentType.startsWith('text/html')) {
         data = await response.text().then(result =>
-                // console.log('xml ********', result);
-                new DOMParser().parseFromString(result, 'text/html'),
-            );
+          // console.log('xml ********', result);
+          new DOMParser().parseFromString(result, 'text/html'),
+        );
       } else {
         data = 'done';
-          }
-          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
-          const theFore = data.querySelector('fx-fore');
-          // console.log('thefore', theFore)
-          theFore.classList.add('widget'); // is the new widget
-          const dummy = this.querySelector('input');
-      if(this.hasAttribute('shadow')){
+      }
+      // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+      const theFore = data.querySelector('fx-fore');
+      // console.log('thefore', theFore)
+      theFore.classList.add('widget'); // is the new widget
+      const dummy = this.querySelector('input');
+      if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
         this.shadowRoot.appendChild(theFore);
-      }else{
-          dummy.replaceWith(theFore);
+      } else {
+        dummy.replaceWith(theFore);
       }
 
       console.log(`########## loaded fore as component ##### ${this.url}`);
       theFore.addEventListener(
         'model-construct-done',
         e => {
-            console.log('subcomponent ready',e.target);
-            const defaultInst = theFore.querySelector('fx-instance');
-            console.log('defaultInst',defaultInst);
+          console.log('subcomponent ready', e.target);
+          const defaultInst = theFore.querySelector('fx-instance');
+          console.log('defaultInst', defaultInst);
           const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
           // Note: Clone the input to prevent the inner fore from editing the outer node
           doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
           // defaultinst.setInstanceData(this.initialNode);
           defaultInst.setInstanceData(doc);
-            console.log('new data',defaultInst.getInstanceData());
+          console.log('new data', defaultInst.getInstanceData());
           // theFore.getModel().modelConstruct();
           theFore.getModel().updateModel();
           theFore.refresh();
@@ -336,7 +345,7 @@ export default class FxControl extends XfAbstractControl {
         { once: true },
       );
 
-          if(!theFore){
+      if (!theFore) {
         this.dispatchEvent(
           new CustomEvent('error', {
             detail: {
@@ -344,15 +353,15 @@ export default class FxControl extends XfAbstractControl {
             },
           }),
         );
-          }
+      }
       console.log('loaded');
       this.dispatchEvent(new CustomEvent('loaded', { detail: { fore: theFore } }));
     } catch (error) {
-          console.log('error',error);
+      console.log('error', error);
       this.getOwnerForm().dispatchEvent(
         new CustomEvent('error', { detail: { message: `${this.url} not found` } }),
       );
-  }
+    }
   }
 
   getTemplate() {
@@ -395,7 +404,7 @@ export default class FxControl extends XfAbstractControl {
       const nodeset = evaluateXPath(ref, inscope, this);
 
       // ### bail out when nodeset is empty
-      if(Array.isArray(nodeset) && nodeset.length === 0) return;
+      if (nodeset.length === 0) return;
 
       // ### clear items
       const { children } = widget;
@@ -407,20 +416,14 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
-        if (nodeset.length) {
-          // console.log('nodeset', nodeset);
-          Array.from(nodeset).forEach(node => {
-            // console.log('#### node', node);
-            const newEntry = this.createEntry();
-
-            // ### initialize new entry
-            // ### set value
-            this.updateEntry(newEntry, node);
-          });
-        } else {
+        nodeset.forEach(node => {
+          // console.log('#### node', node);
           const newEntry = this.createEntry();
-          this.updateEntry(newEntry, nodeset);
-        }
+
+          // ### initialize new entry
+          // ### set value
+          this.updateEntry(newEntry, node);
+        });
       }
     }
   }
@@ -432,7 +435,7 @@ export default class FxControl extends XfAbstractControl {
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPath(cutted, node, newEntry);
+    const evaluated = [evaluateXPath(cutted, node, newEntry)];
     valueAttribute.value = evaluated;
 
     if (this.value === evaluated) {
