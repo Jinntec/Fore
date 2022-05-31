@@ -30,6 +30,9 @@ body {
 demo-snippet{
     overflow: auto;
 }
+demo-snippet h2{
+    color: black;
+}
 em{
     font-weight: 900;
     /*text-decoration: underline;*/
@@ -163,6 +166,9 @@ header{
     width: 300px;
     filter:contrast(2.5) brightness(1.2) drop-shadow(1px 2px 1px lightgrey);
 
+}
+.logo.jinntec{
+    margin:0.3rem 0;
 }
 .mission{
     /*color:var(--paper-grey-900);*/

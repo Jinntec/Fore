@@ -57,8 +57,8 @@
             <fx-trigger>
                 <button>Generate</button>
 
-                <fx-setvalue ref="counter">0</fx-setvalue>
-                <fx-action id="trigger" while="counter < number(n)">
+<!--                <fx-setvalue ref="counter">0</fx-setvalue>-->
+                <fx-action id="trigger" while="number(counter) < number(n)">
                     <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
                     <fx-insert origin="instance('template')/item"
                                ref="instance('generated')/item"></fx-insert>
@@ -78,7 +78,7 @@
         <h2>Generated instance data</h2>
         <textarea>
                 {log('generated')}
-                </textarea>
+        </textarea>
 
     </fx-fore>
 
