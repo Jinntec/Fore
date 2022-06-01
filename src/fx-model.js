@@ -38,10 +38,10 @@ export class FxModel extends HTMLElement {
     this.addEventListener('model-construct-done', e => {
       this.modelConstructed = true;
       // console.log('model-construct-done fired ', this.modelConstructed);
-      console.log('model-construct-done fired ', e.detail.model.instances);
+      // console.log('model-construct-done fired ', e.detail.model.instances);
     });
 
-    // logging
+    this.skipUpdate = false;
   }
 
   static lazyCreateModelItem(model, ref, node) {
@@ -95,8 +95,15 @@ export class FxModel extends HTMLElement {
    *
    */
   modelConstruct() {
-    console.log('### <<<<< dispatching model-construct >>>>>');
-    this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
+    // console.log('### <<<<< dispatching model-construct >>>>>');
+    // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
+    this.dispatchEvent(
+      new CustomEvent('model-construct', {
+        composed: false,
+        bubbles: true,
+        detail: { model: this },
+      }),
+    );
 
     console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
@@ -109,14 +116,14 @@ export class FxModel extends HTMLElement {
 
       Promise.all(promises).then(() => {
         this.instances = Array.from(instances);
-        console.log('_modelConstruct this.instances ', this.instances);
+        // console.log('_modelConstruct this.instances ', this.instances);
         this.updateModel();
         this.inited = true;
 
-        console.log('### <<<<< dispatching model-construct-done >>>>>');
+        // console.log('### <<<<< dispatching model-construct-done >>>>>');
         this.dispatchEvent(
           new CustomEvent('model-construct-done', {
-            composed: true,
+            composed: false,
             bubbles: true,
             detail: { model: this },
           }),
@@ -127,7 +134,7 @@ export class FxModel extends HTMLElement {
       // ### if there's no instance one will created
       this.dispatchEvent(
         new CustomEvent('model-construct-done', {
-          composed: true,
+          composed: false,
           bubbles: true,
           detail: { model: this },
         }),
@@ -146,25 +153,32 @@ export class FxModel extends HTMLElement {
    * update action triggering the update cycle
    */
   updateModel() {
-    console.time('updateModel');
+    // console.time('updateModel');
     this.rebuild();
+    if (this.skipUpdate) return;
     this.recalculate();
     this.revalidate();
-    console.timeEnd('updateModel');
+    // console.timeEnd('updateModel');
   }
 
   rebuild() {
     console.group('### rebuild');
     console.time('rebuild');
-    this.mainGraph = new DepGraph(false);
+    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
 
     // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
+    if (binds.length === 0) {
+      // console.log('skipped model update');
+      this.skipUpdate = true;
+      return;
+    }
+
     binds.forEach(bind => {
       bind.init(this);
     });
-    console.timeEnd('rebuild');
+    // console.timeEnd('rebuild');
 
     // console.log(`dependencies of a `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}a[1]:required"));
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
@@ -189,7 +203,7 @@ export class FxModel extends HTMLElement {
    */
   recalculate() {
     console.group('### recalculate');
-    console.log('recalculate instances ', this.instances);
+    console.log('changed nodes ', this.changed);
 
     console.time('recalculate');
     this.computes = 0;
@@ -236,6 +250,8 @@ export class FxModel extends HTMLElement {
           this.compute(node, path);
         }
       });
+      const toRefresh = [...this.changed];
+      this.formElement.toRefresh = toRefresh;
       this.changed = [];
       console.log('subgraph', this.subgraph);
       this.dispatchEvent(
@@ -374,6 +390,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
+            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!compute) valid = false;
             // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
             if (!this.modelConstructed) {

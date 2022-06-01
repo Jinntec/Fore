@@ -80,7 +80,7 @@ function createDFS(edges, leavesOnly, result, circular) {
           currentPath.push(node);
           window.dispatchEvent(
             new CustomEvent('compute-exception', {
-              composed: true,
+              composed: false,
               bubbles: true,
               detail: {
                 path: currentPath,
@@ -91,7 +91,9 @@ function createDFS(edges, leavesOnly, result, circular) {
           // return;
           // console.log('‘circular path: ' + currentPath);
           // throw new DepGraphCycleError(currentPath);
-          // throw new Error(currentPath);
+
+          // Stop all processing. This form is broken and we should not break the browser
+          throw new Error(`Cyclic at ${currentPath}`);
         }
 
         inCurrentPath[node] = true;

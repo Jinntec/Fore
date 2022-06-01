@@ -1,4 +1,5 @@
 import { Fore } from './fore.js';
+import { Relevance } from './relevance.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import { evaluateXPathToString, evaluateXPath } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
@@ -66,7 +67,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   async submit() {
-    await this.dispatch('submit', { submission: this });
+    await Fore.dispatch(this,'submit', { submission: this });
     this._submit();
   }
 
@@ -81,6 +82,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const valid = model.revalidate();
       if (!valid) {
         console.log('validation failed. Bubmission stopped');
+        // ### allow alerts to pop up
+        // this.dispatch('submit-error', {});
+        Fore.dispatch(this,'submit-error',{});
+        this.getModel().parentNode.refresh();
         return;
       }
     }
@@ -114,24 +119,20 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   /**
    * sends the data after evaluating
    *
-   * todo: can send only XML at the moment
    * @private
    */
   async _serializeAndSend() {
     const resolvedUrl = this._evaluateAttributeTemplateExpression(this.url, this);
 
     const instance = this.getInstance();
-    if (instance.type !== 'xml') {
-      console.error('JSON serialization is not supported yet');
-      return;
-    }
+    console.log('instance type', instance.type);
 
-    // let serialized = serializer.serializeToString(this.nodeset);
     let serialized;
     if (this.serialization === 'none') {
       serialized = undefined;
     } else {
-      const relevant = this.selectRelevant();
+      // const relevant = this.selectRelevant(instance.type);
+      const relevant = Relevance.selectRelevant(this, instance.type);
       serialized = this._serialize(instance.type, relevant);
     }
 
@@ -143,16 +144,16 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     // console.log('submitting data',serialized);
 
     if (resolvedUrl === '#echo') {
-      let doc;
-      if (serialized) {
-        doc = new DOMParser().parseFromString(serialized, 'application/xml');
-      } else {
-        doc = undefined;
+      let data = null;
+      if (serialized && instance.type === 'xml') {
+        data = new DOMParser().parseFromString(serialized, 'application/xml');
       }
-      // const doc = new DOMParser().parseFromString(serialized, 'application/xml');
-      // const newDoc = doc.replaceChild(relevant, doc.firstElementChild);
-      this._handleResponse(doc);
-      this.dispatch('submit-done', {});
+      if (serialized && instance.type === 'json') {
+        data = JSON.parse(serialized);
+      }
+      this._handleResponse(data);
+      // this.dispatch('submit-done', {});
+      Fore.dispatch(this,'submit-done',{});
       return;
     }
     // ### setting headers
@@ -165,7 +166,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     if (!this.methods.includes(this.method.toLowerCase())) {
-      this.dispatch('error', { message: `Unknown method ${this.method}` });
+      // this.dispatch('error', { message: `Unknown method ${this.method}` });
+      Fore.dispatch(this,'error',{ message: `Unknown method ${this.method}` })
       return;
     }
     const response = await fetch(resolvedUrl, {
@@ -177,7 +179,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     });
 
     if (!response.ok || response.status > 400) {
-      this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+      // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+      Fore.dispatch(this,'submit-error',{ message: `Error while submitting ${this.id}` });
       return;
     }
 
@@ -201,7 +204,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       this._handleResponse(blob);
     }
 
-    this.dispatch('submit-done', {});
+    // this.dispatch('submit-done', {});
+    Fore.dispatch(this,'submit-done',{});
   }
 
   _serialize(instanceType, relevantNodes) {
@@ -218,11 +222,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const serializer = new XMLSerializer();
       return serializer.serializeToString(relevantNodes);
     }
-    /*
-            if(instanceType === 'json'){
-                console.warn('JSON serialization is not yet supported')
-            }
-    */
+    if (instanceType === 'json') {
+      // console.warn('JSON serialization is not yet supported')
+      return JSON.stringify(relevantNodes);
+    }
     throw new Error('unknown instance type ', instanceType);
   }
 
@@ -266,13 +269,28 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     return targetInstance;
   }
 
+  /**
+   * handles replacement of instance data from response data.
+   *
+   * Please note that data might be
+   * @param data
+   * @private
+   */
   _handleResponse(data) {
     console.log('_handleResponse ', data);
+
+    /*
+    // ### responses need to be handled depending on their type.
+    if(this.type === 'json'){
+
+    }
+*/
+
     if (this.replace === 'instance') {
       const targetInstance = this._getTargetInstance();
       if (targetInstance) {
         if (this.targetref) {
-          const theTarget = evaluateXPath(
+          const [theTarget] = evaluateXPath(
             this.targetref,
             targetInstance.instanceData.firstElementChild,
             this,
@@ -283,7 +301,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
           parent.replaceChild(clone, theTarget);
           console.log('finally ', parent);
         } else if (this.into) {
-          const theTarget = evaluateXPath(
+          const [theTarget] = evaluateXPath(
             this.into,
             targetInstance.instanceData.firstElementChild,
             this,
@@ -293,6 +311,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         } else {
           const instanceData = data;
           targetInstance.instanceData = instanceData;
+          console.log('### replaced instance ', this.getModel().instances);
           console.log('### replaced instance ', targetInstance.instanceData);
         }
 
@@ -315,26 +334,29 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     if (this.replace === 'redirect') {
       window.location.href = data;
     }
-
-    /*
-                const event = new CustomEvent('submit-done', {
-                    composed: true,
-                    bubbles: true,
-                    detail: {},
-                });
-                console.log('firing',event);
-                this.dispatchEvent(event);
-        */
-    // this.dispatch('submit-done', {});
   }
 
   /**
    * select relevant nodes
    *
-   * todo: support for 'empty'
    * @returns {*}
    */
-  selectRelevant() {
+  /*
+  selectRelevant(type) {
+    console.log('selectRelevant' ,type)
+    switch (type){
+      case 'xml':
+        return this._relevantXmlNodes();
+      default:
+        console.warn(`relevance selection not supported for type:${this.type}`);
+        return this.nodeset;
+    }
+  }
+*/
+
+  // todo: support for 'empty'
+  /*
+  _relevantXmlNodes() {
     // ### no relevance selection - current nodeset is used 'as-is'
     if (this.nonrelevant === 'keep') {
       return this.nodeset;
@@ -350,10 +372,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     if (this.nodeset.children.length === 0 && this._isRelevant(this.nodeset)) {
       return this.nodeset;
     }
-    const result = this._filterRelevant(this.nodeset, root);
-    return result;
+    return this._filterRelevant(this.nodeset, root);
   }
+*/
 
+  /*
   _filterRelevant(node, result) {
     const { childNodes } = node;
     Array.from(childNodes).forEach(n => {
@@ -378,7 +401,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     });
     return result;
   }
+*/
 
+  /*
   _isRelevant(node) {
     const mi = this.getModel().getModelItem(node);
     if (!mi || mi.relevant) {
@@ -386,9 +411,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
     return false;
   }
+*/
 
   _handleError() {
-    this.dispatch('submit-error', {});
+    // this.dispatch('submit-error', {});
+    Fore.dispatch(this,'submit-error',{});
     /*
                 console.log('ERRRORRRRR');
                 this.dispatchEvent(

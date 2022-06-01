@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>invoice</title>
+
+    <style>
+        body, .wrapper{
+            margin:0;
+            padding:0;
+        }
+        .wrapper{
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="default">
+                <data>
+                    <prerequisite name="targetServer" description="checking target server...">checking</prerequisite>
+                    <prerequisite name="github" description="checking github...">checking</prerequisite>
+                    <prerequisite name="airtable" description="checking airtable...">checking</prerequisite>
+                    <prerequisite name="filesystem" description="checking the filesystem...">checking</prerequisite>
+                    <prerequisite name="tuttle" description="checking Tuttle...">checking</prerequisite>
+                    <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking</prerequisite>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="prerequisite[5]" calculate="context()/prerequisite[1]"></fx-bind>
+<!--            <fx-bind ref="prerequisite[5]" calculate="'foo'"></fx-bind>-->
+
+        </fx-model>
+
+        <fx-output ref="//prerequisite[5]" label="calculated value">
+
+        </fx-output>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

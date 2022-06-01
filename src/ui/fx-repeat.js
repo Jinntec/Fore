@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
+import { XPathUtil } from '../xpath-util.js';
 
 /**
  * `fx-repeat`
@@ -17,6 +18,8 @@ import getInScopeContext from '../getInScopeContext.js';
  *
  * @customElement
  * @demo demo/todo.html
+ *
+ * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
 export class FxRepeat extends foreElementMixin(HTMLElement) {
   static get properties() {
@@ -88,6 +91,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -98,33 +102,48 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
-    this.addEventListener('index-changed', e => {
+    document.addEventListener('index-changed', e => {
       e.stopPropagation();
       if (!e.target === this) return;
       console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
       const { index } = e.detail;
-      this.index = index;
+      this.index = Number(index);
       this.applyIndex(this.children[index - 1]);
     });
+    /*
     document.addEventListener('insert', e => {
       const nodes = e.detail.insertedNodes;
       this.index = e.detail.position;
       console.log('insert catched', nodes, this.index);
     });
+*/
 
-    if (this.getOwnerForm().lazyRefresh) {
-      this.mutationObserver = new MutationObserver(mutations => {
-        console.log('mutations', mutations);
-        this.refresh(true);
-      });
-    }
+    // if (this.getOwnerForm().lazyRefresh) {
+    this.mutationObserver = new MutationObserver(mutations => {
+      console.log('mutations', mutations);
+
+      if (mutations[0].type === 'childList') {
+        const added = mutations[0].addedNodes[0];
+        if (added) {
+          const path = XPathUtil.getPath(added);
+          console.log('path mutated', path);
+          // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+          // this.index = index;
+          // const prev = mutations[0].previousSibling.previousElementSibling;
+          // const index = prev.index();
+          // this.applyIndex(this.index -1);
+
+          Fore.dispatch(this,'path-mutated', { path, index: this.index });
+        }
+      }
+    });
+    // }
     this.getOwnerForm().registerLazyElement(this);
 
     const style = `
       :host{
-        display:none;
       }
        .fade-out-bottom {
           -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -168,7 +187,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
    */
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
-    const inscope = getInScopeContext(this, this.ref);
+    const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
@@ -180,31 +199,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       });
     }
 
-    const seq = evaluateXPath(this.ref, inscope, this.getOwnerForm());
-    // const seq = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    if (seq === null) {
-      // Empty sequence
-      this.nodeset = [];
-      return;
-    }
-
-    if (typeof seq === 'object') {
-      // Either a node or an array
-      if ('nodeType' in seq) {
-        // Node
-        this.nodeset = [seq];
-        return;
-      }
-
-      // if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
-      if (Array.isArray(seq)) {
-        // multiple Nodes or maps
-        this.nodeset = seq;
-        return;
-      }
-    }
-
-    throw new Error(`Unexpected result of repeat nodeset: ${seq}`);
+    this.nodeset = evaluateXPath(this.ref, inscope, this);
   }
 
   async refresh(force) {
@@ -248,8 +243,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         newItem.appendChild(clonedTemplate);
         this.appendChild(newItem);
 
+        this._initVariables(newItem);
+
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
+        this.getOwnerForm().someInstanceDataStructureChanged = true;
       }
     }
 
@@ -269,6 +267,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       Fore.refreshChildren(this, force);
     }
     // this.style.display = 'block';
+    // this.style.display = this.display;
     this.setIndex(this.index);
     console.timeEnd('repeat-refresh');
 
@@ -352,7 +351,22 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
+
+      this._initVariables(repeatItem);
     });
+  }
+
+  _initVariables(newRepeatItem) {
+    const inScopeVariables = new Map(this.inScopeVariables);
+    newRepeatItem.setInScopeVariables(inScopeVariables);
+    (function registerVariables(node) {
+      for (const child of node.children) {
+        if ('setInScopeVariables' in child) {
+          child.setInScopeVariables(inScopeVariables);
+        }
+        registerVariables(child);
+      }
+    })(newRepeatItem);
   }
 
   _clone() {
@@ -366,6 +380,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     Array.from(this.children).forEach(item => {
       item.removeAttribute('repeat-index');
     });
+  }
+
+  setInScopeVariables(inScopeVariables) {
+    // Repeats are interesting: the variables should be scoped per repeat item, they should not be
+    // able to see the variables in adjacent repeat items!
+    this.inScopeVariables = new Map(inScopeVariables);
   }
 }
 

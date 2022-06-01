@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/odd/p5odds.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/odd/p5odds.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!-- Start license statement: do not remove 
+    
+EpiDoc Schema
+Copyright (c) 2008-2014 by all contributors listed in <titleStmt>, below.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Information about the EpiDoc community can be obtained via 
+http://epidoc.sf.net.
+
+End license statement: do not remove -->
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en" xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>EpiDoc schema</title>
+                <author xml:id="GB">Gabriel Bodard</author>
+                <author xml:id="TE">Tom Elliott</author>
+                <author xml:id="ML">Marion Lamé</author>
+                <author xml:id="PL">Pietro Liuzzo</author>
+                <author xml:id="EMo">Emmanuelle Morlock</author>
+                <author xml:id="EM">Elli Mylonas</author>
+                <author xml:id="SS">Simona Stoyanova</author>
+                <author xml:id="CT">Charlotte Tupman</author>
+                <author xml:id="SV">Scott Vanderbilt</author>
+                <author xml:id="PY">Polina Yordanova</author>
+                <author xml:id="SJD">Scott DiGiulio</author>
+                <author xml:id="HC">Hugh Cayless</author>
+                <author xml:id="IV">Irene Vagionakis</author>
+	     <author xml:id="MF">Martina Filosa</author>
+            </titleStmt>
+            <publicationStmt>
+                <p>Released under GNU GPL 3.0</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p>created electronically</p>
+            </sourceDesc>
+        </fileDesc>
+        <revisionDesc>
+            <change who="#MF" when="2021-11-18">release 9.3: Aligned schema with TEI v. 4.3.0</change>
+            <change who="#IV" when="2020-10-13">release 9.2: Aligned schema with TEI v. 4.1.0</change>
+            <change who="#SV" when="2020-09-14">aligned schema with TEI v. 4.1.0 in anticipation of release 9.2</change>
+            <change who="#SV" when="2020-09-14">added suggested values for biblScope[@unit] (as per FR #129)</change>
+            <change who="#GB" when="2020-02-18">added or normalised few desc elements on attributes under tei:hi and tei:place</change>
+            <change who="#HC" when="2020-02-17">added schema refs, and added dates/languages etc. to several elements throughout ODD</change>
+            <change who="#GB" when="2020-01-20">added "undefined" as a permissible value of gap/@reason</change>
+            <change who="#SV" when="2019-10-25">Backed out addition of att.canonical to `date` since TEI v. 3.6.0 renders that change redundant</change>
+            <change who="#GB" when="2019-10-18">added new values to origDate/@evidence, as per discussion on Markup</change>
+            <change who="#GB" when="2019-10-16">added dictionaries module, with elements form, gen and lang (as per FR #134)</change>
+            <change who="#GB" when="2019-07-12">fixing bug in ODD to allow tei:teiCorpus as root element</change>
+            <change who="#HC" when="2019-07-11">Corrected TEI subset URI to use HTTPS</change>
+            <change who="#GB" when="2018-11-21">temporarily added att.canonical to `date` (pending next TEI release)</change>
+            <change who="#HC" when="2018-09-18">switched datatype references to Pure ODD syntax</change>
+            <change who="#GB" when="2018-03-13">removed customisation of tei:m (should have been deleted 2 years ago)</change>
+            <change who="#SJD" when="2017-12-12">release 9.0: Aligned schema with TEI v. 3.2.0</change>
+            <change who="#GB" when="2017-12-04">added schematron to tei:div to prevent nesting of non-alike divs</change>
+            <change who="#CT" when="2017-12-04">added description of the EpiDoc usage of unclear</change>
+            <change who="#PY" when="2017-03-14">release 8.23: Aligned schema with TEI v. 3.1.0</change>
+            <change who="#EM" when="2016-08-03">release 8.22: Aligned schema with TEI v. 3.0.0</change>
+            <change who="#GB" when="2015-10-21">Removed temporary customization of tei:m (from next
+                release will inherit from TEI)</change>
+            <change who="#GB" when="2015-06-19">release 8.21: Aligned schema with TEI v. 2.8.0</change>
+            <change who="#GB" when="2015-06-16">added temporary customization of tei:m to allow
+                model.hiLike content</change>
+            <change who="#GB" when="2015-06-15">temporarily reversed omission of "accMat additions
+                catchwords heraldry secFol signatures stamp watermark" (from msdescription), and
+                "metamark retrace" (from transcr)</change>
+            <change who="#GB" when="2015-06-03">removing customization of altIdentifier (see
+                2014-02-10) now fixed in TEI</change>
+            <change who="#GB" when="2015-06-03">stopped omitting "charProp localName mapping
+                unicodeName value" from gaiji (requested by IOSPE)</change>
+            <change who="#GB" when="2015-05-29">omitted "accMat additions catchwords heraldry secFol
+                signatures stamp watermark" (from msdescription), "appInfo" (from header), and
+                "metamark retrace" (from transcr).</change>
+            <change who="#PL" when="2014-12-02">release 8.20: Aligned schema with TEI v. 2.7.0</change>
+            <change who="#CT" when="2014-07-31">release 8.19: Aligned schema with TEI v. 2.6.0</change>
+            <change who="#EMo" when="2014-07-18">fixed TEI errors in ODD (msdescription; unclear ->
+                core; datatype in lb/@break)</change>
+            <change who="#GB" when="2014-05-29">stopped omitting fw from trancr (as per
+                https://sourceforge.net/p/epidoc/feature-requests/67/)</change>
+            <change who="#GB" when="2014-03-04">stopped omitting s from Analysis (requested by
+                Perseus)</change>
+            <change who="#GB" when="2014-03-03">stopped omitting charDecl, glyph, glyphName from
+                Gaiji (requested by DASI), and phr from Analysis (requested by Coptic
+                Scriptorium)</change>
+            <change who="#GB" when="2014-02-24">stopped omitting variantEncoding from textcrit
+                module (as per request from IGLouvre)</change>
+            <change who="#SS" when="2014-02-13">release 8.18: Aligned schema with TEI v.
+                2.6.0</change>
+            <change who="#GB" when="2014-02-10">temporarily adding att.global to altIdentifier (to
+                fix problem with TEI 2.6.0)</change>
+            <change who="#SS" when="2013-12-05">added the value 'stacked' in hi @rend</change>
+            <change who="#SS" when="2013-10-09">stopped omitting anchor from the linking
+                module</change>
+            <change who="#SV" when="2013-08-08">release 8.17: Aligned schema with TEI v.
+                2.5.0</change>
+            <change who="#GB" when="2013-01-28">release 8.16: Aligned schema with TEI v.
+                2.3.0</change>
+            <change who="#GB" when="2013-01-28">removed temp customization of space (fixed in TEI
+                2.3.0)</change>
+            <change who="#GB" when="2012-11-29">suppressed schematron constraint on
+                att.datable.custom</change>
+            <change who="#GB" when="2012-11-29">improved schematron constraints for gap, date; added
+                constraints for space</change>
+            <change who="#GB" when="2012-11-21">stopped omitting birth and death</change>
+            <change who="#GB" when="2012-11-07">change TEI namespace to tei: to match Schematron
+                declaration</change>
+            <change who="#GB" when="2012-11-05">release 8.15: Aligned schema with TEI v.
+                2.2.0</change>
+            <change who="#GB" when="2012-11-05">added comments explaining ODD customizations
+                below</change>
+            <change who="#GB" when="2012-11-05">temporarily added certLike to space to patch a TEI
+                bug</change>
+            <change who="#GB" when="2012-11-05">removed customization of person and place, now
+                catered for by TEI 2.2.0</change>
+            <change who="#GB" when="2012-10-31">added schematron constraints for @when-custom,
+                abbreviations, and gaps added corpus model (but omitted everything except particDesc
+                and settingDesc)</change>
+            <change who="#GB" when="2012-10-08">removed description/history/figure and
+                underline-supraline, following deprecation 2 years ago</change>
+            <change who="#GB" when="2012-10-05">switched to using @except on moduleRef instead of
+                @mode="delete" on elementSpec</change>
+            <change who="#GB" when="2012-09-26">Stopped omitting damage</change>
+            <change who="#GB" when="2012-09-20">Added spoken module; deleted all elements from that
+                module</change>
+            <change who="#GB" when="2012-09-07">stopped omitting relation</change>
+            <change who="#GB" when="2012-08-13">stopped omitting floruit and state</change>
+            <change who="#GB" when="2012-07-09">stopped omitting join; added idno to content of
+                person and place</change>
+            <change who="#GB" when="2012-01-11">added "inverted" and "small" to suggested values for
+                hi[@rend]</change>
+            <change who="#GB" when="2012-01-11">removed customization of provenance, origPlace,
+                msItem</change>
+            <change who="#SV" when="2012-01-09">stop omitting location</change>
+            <change who="#GB" when="2011-09-26">added att.responsibility to provenance (temporary
+                fix)</change>
+            <change who="#GB" when="2011-09-25">removed modification of lb/@type and added vocab
+                control for lb/@break</change>
+            <change who="#GB" when="2011-09-24">added att.typed to provenance and origPlace
+                (temporary fix)</change>
+            <change who="#GB" when="2011-09-14">added type to origPlace (temporary fix); made
+                msItem/@class repeatable (temporary fix)</change>
+            <change who="#SV" when="2011-03-03">stop omitting tags: bloc, country, district,
+                rdgGrp</change>
+            <change who="#GB" when="2011-01-20">stopped excluding tei:offset</change>
+            <change who="#GB" when="2010-10-14">deprecated description and history; changed values
+                of @evidence</change>
+            <change who="#GB" when="2010-08-10">deprecated hi/@rend='supraline-underline'</change>
+            <change who="#GB" when="2010-07-05">made hi/@rend optional, repeatable (x5)</change>
+            <change who="#TE" when="2010-05-14">added xincludes for 3 example components in
+                guidelines</change>
+            <change who="#GB" when="2010-06-10">stopped omitting event and listEvent</change>
+            <change who="#GB" when="2010-02-01">tweaked some descriptions; reversed high and
+                low</change>
+            <change who="#GB" when="2009-09-24">created new valList for @unit; added valList for
+                @extent</change>
+            <change who="#EM" when="2009-09-17">undid deleted analysis elements: interp,
+                interpGrp</change>
+            <change who="#GB" when="2009-08-11">changed 'worddiv' to 'inWord'</change>
+            <change who="#ML" when="2009-07-12">stop omitting few tags: orgName element</change>
+            <change who="#GB" when="2009-06-10">removed dummy 'precision' element</change>
+            <change who="#GB" when="2008-11-20">Created bare ODD from Roma</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <front>
+            <divGen type="toc"/>
+        </front>
+        <body>
+            <p>EpiDoc TEI Customization starts with modules tei, core, textstructure and header</p>
+            <schemaSpec ident="tei-epidoc" docLang="en" prefix="tei_" start="TEI teiCorpus" xml:lang="en"
+                source="https://www.tei-c.org/Vault/P5/4.3.0/xml/tei/odd/p5subset.xml">
+
+                <!--       MODULES USED BY THE EPIDOC SCHEMA       -->
+                <moduleRef key="core"/>
+                <moduleRef key="tei"/>
+                <moduleRef key="header" except="appInfo"/>
+                <moduleRef key="textstructure"
+                    except="argument byline closer div1 div2 div3 div4 div5 div6 div7 imprimatur
+                    opener postscript salute signed titlePage titlePart trailer"/>
+                <moduleRef key="transcr" except="damageSpan restore"/>
+                <moduleRef key="verse" except="caesura metDecl metSym rhyme"/>
+                <moduleRef key="analysis" except="cl span spanGrp"/>
+                <moduleRef key="certainty" except="respons"/>
+                <moduleRef key="gaiji" except="char charName unicodeName"/>
+                <moduleRef key="linking" except="alt altGrp joinGrp timeline when"/>
+                <moduleRef key="msdescription"/>
+                <moduleRef key="namesdates"
+                    except="affiliation age climate education faith geoFeat langKnowledge
+                    langKnown nameLink nationality occupation population relationGrp residence sex socecStatus terrain trait"/>
+                <moduleRef key="textcrit"
+                    except="lacunaEnd lacunaStart listWit witDetail witEnd witStart witness"/>
+                <moduleRef key="figures" except="formula"/>
+                <moduleRef key="spoken"
+                    except="broadcast equipment incident kinesic pause recording recordingStmt
+                    scriptStmt shift u vocal writing"/>
+                <moduleRef key="corpus"
+                    except="activity channel constitution derivation domain factuality interaction locale
+                    preparedness purpose setting textDesc"/>
+                <moduleRef key="dictionaries" except="case colloc def dictScrap entry
+                    entryFree etym gram gramGrp hom hyph iType lbl mood number oRef orth pRef
+                    per pos pron re sense stress subc superEntry syll tns usg xr"/>
+
+                <!--        CHANGED ELEMENT SPECS        -->
+                <elementSpec ident="add" module="core" mode="change">
+                    <attList>
+                        <!-- constraining values of add/@place -->
+                        <attDef ident="place" mode="replace">
+                            <valList type="closed">
+                                <valItem ident="above">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added above the line</desc>
+                                </valItem>
+                                <valItem ident="below">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added below the line</desc>
+                                </valItem>
+                                <valItem ident="bottom">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added at bottom of page or monument</desc>
+                                </valItem>
+                                <valItem ident="inline">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added at the same level of the text, e.g. between existing characters</desc>
+                                </valItem>
+                                <valItem ident="interlinear">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added between two lines of text</desc>
+                                </valItem>
+                                <valItem ident="left">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added to left of main text</desc>
+                                </valItem>
+                                <valItem ident="margin">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added in margin of document, i.e. outside of delineated text area</desc>
+                                </valItem>
+                                <valItem ident="mixed">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added in more that one location, encoded as a single addition</desc>
+                                </valItem>
+                                <valItem ident="opposite">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added on facing page/surface</desc>
+                                </valItem>
+                                <valItem ident="overleaf">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added over the page or on reverse of leaf or surface</desc>
+                                </valItem>
+                                <valItem ident="overstrike">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added directly over existing text, e.g. as erasure or correction</desc>
+                                </valItem>
+                                <valItem ident="right">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added to right of main text</desc>
+                                </valItem>
+                                <valItem ident="top">
+                                    <desc xml:lang="en" versionDate="2020-02-18">content added at top of page or monument</desc>
+                                </valItem>
+                                <valItem ident="unspecified">
+                                    <desc xml:lang="en" versionDate="2020-02-18">location of addition not specified or not known</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <!-- suggested attribute values for biblScope/@unit -->
+                <elementSpec ident="biblScope" module="core" mode="change">
+                    <attList>
+                        <attDef ident="unit" mode="replace" usage="opt">
+                            <datatype maxOccurs="6">
+                                <dataRef key="teidata.word"/>
+                            </datatype>
+                            <valList type="semi">
+                                <!-- includes TEI suggested values (as of v.4.1.0) -->
+                                <valItem ident="appendix">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies an appendix.</desc>
+                                </valItem>
+                                <valItem ident="book">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a book number.</desc>
+                                </valItem>
+                                <valItem ident="chapter">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a chapter indication (number and/or title)</desc>
+                                </valItem>
+                                <valItem ident="column">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies a column.</desc>
+                                </valItem>
+                                <valItem ident="database-id">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains an identifier from a database.</desc>
+                                </valItem>
+                                <valItem ident="entry">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies an entry number or label in a list of entries.</desc>
+                                </valItem>
+                                <valItem ident="fascicle">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies a fascicle.</desc>
+                                </valItem>
+                                <valItem ident="figure">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a numbered figure or other illustration.</desc>
+                                </valItem>
+                                <valItem ident="folio">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a folio number, e.g., from a manuscript.</desc>
+                                </valItem>
+                                <valItem ident="issue">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains an issue number, or volume and issue numbers.</desc>
+                                </valItem>
+                                <valItem ident="item">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies an item.</desc>
+                                </valItem>
+                                <valItem ident="line">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a line number or line range.</desc>
+                                </valItem>
+                                <valItem ident="note">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies a note.</desc>
+                                </valItem>
+                                <valItem ident="page">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a page number or page range.</desc>
+                                </valItem>
+                                <valItem ident="part">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies a part of a book or collection.</desc>
+                                </valItem>
+                                <valItem ident="plate">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a plate.</desc>
+                                </valItem>
+                                <valItem ident="section">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a section reference.</desc>
+                                </valItem>
+                                <valItem ident="verse">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element identifies a verse.</desc>
+                                </valItem>
+                                <valItem ident="volume">
+                                    <desc xml:lang="en" versionDate="2020-09-14">the element contains a volume number.</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <!-- constraining values of div/@type -->
+                <elementSpec ident="div" module="textstructure" mode="change">
+                    <constraintSpec scheme="schematron" ident="div">
+                        <constraint>
+                            <sch:rule context="tei:div">
+                                <sch:report test="@type != 'textpart' and parent::tei:div and @type!=parent::tei:div/@type">
+                                    Divs other than @type=textpart may not nest in divs of different @type
+                                </sch:report>
+                            </sch:rule>
+                        </constraint>
+                    </constraintSpec>
+                    <attList>
+                        <attDef ident="type" mode="replace" usage="req">
+                            <valList type="closed">
+                                <valItem ident="apparatus">
+                                    <desc xml:lang="en" versionDate="2020-02-17">to contain apparatus criticus or textual notes</desc>
+                                </valItem>
+                                <valItem ident="bibliography">
+                                    <desc xml:lang="en" versionDate="2020-02-17">to contain iographical information, previous publications, etc.</desc>
+                                </valItem>
+                                <valItem ident="commentary">
+                                    <desc xml:lang="en" versionDate="2020-02-17">to contain all editorial commentary, historical/prosopographical discussion, etc.</desc>
+                                </valItem>
+                                <valItem ident="edition">
+                                    <desc xml:lang="en" versionDate="2020-02-17">to contain the text of the edition itself; may include multiple text-parts</desc>
+                                </valItem>
+                                <valItem ident="textpart">
+                                    <desc xml:lang="en" versionDate="2020-02-17">used to divide a div[type=edition] into multiple parts (fragments, columns, faces, etc.)</desc>
+                                </valItem>
+                                <valItem ident="translation">
+                                    <desc xml:lang="en" versionDate="2020-02-17">to contain a translation of the text into one or more modern languages</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <elementSpec ident="ex" module="transcr" mode="change">
+                    <!-- testing for <ex> outside of <expan> -->
+                    <constraintSpec scheme="schematron" ident="ex">
+                        <constraint>
+                            <sch:rule context="tei:ex">
+                                <sch:report test="not(ancestor::tei:expan)">ex should only appear inside expan</sch:report>
+                                <sch:report test="parent::tei:abbr">ex should not be a child of abbr</sch:report>
+                            </sch:rule>
+                        </constraint>
+                    </constraintSpec>
+                </elementSpec>
+
+                <elementSpec ident="expan" module="transcr" mode="change">
+                    <!-- testing for <expan> with no descendant <ex> -->
+                    <constraintSpec scheme="schematron" ident="expan">
+                        <constraint>
+                            <sch:rule context="tei:expan">
+                                <sch:report test="not(descendant::tei:ex)">expan should contain ex</sch:report>
+                            </sch:rule>
+                        </constraint>
+                    </constraintSpec>
+                </elementSpec>
+
+                <elementSpec ident="gap" module="core" mode="change">
+                    <!-- testing for <gap> with both quantity/extent, no unit, or contained in supplied -->
+                    <constraintSpec ident="gap" scheme="schematron">
+                        <constraint>
+                            <sch:rule context="tei:gap">
+                                <sch:report test="@quantity and @extent">gap may have @quantity (a figure) or @extent (a descriptive text value) but not both</sch:report>
+                                <sch:report test="@quantity and not(@unit)">If gap has @quantity then @unit is required</sch:report>
+                                <sch:report test="not(@reason='ellipsis') and ancestor::tei:supplied[not(@reason='undefined')]">gap may not appear within supplied text</sch:report>
+                            </sch:rule>
+                        </constraint>
+                    </constraintSpec>
+                    <!-- constraining values of gap/@reason -->
+                    <attList>
+                        <attDef ident="reason" mode="replace" usage="req">
+                            <valList type="closed">
+                                <valItem ident="lost">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text completely lost from the surface and unrecoverable</desc>
+                                </valItem>
+                                <valItem ident="illegible">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Traces of text remains on the surface but cannot be interpreted</desc>
+                                </valItem>
+                                <valItem ident="omitted">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text erroneously omitted from the surface by the scribe/cutter</desc>
+                                </valItem>
+                                <valItem ident="ellipsis">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text omitted from the edition by the editor, for whatever reason (brevity, context, language, etc.)</desc>
+                                </valItem>
+                                <valItem ident="undefined">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text omitted from the edition by the editor without specification of current state of this text (NB this should not be possible with valid Leiden Conventions)</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                        <!-- removing gap/@dur (not needed in EpiDoc) -->
+                        <attDef ident="dur" mode="delete"/>
+                    </attList>
+                </elementSpec>
+
+                <!-- suggesting but not constraining values of hi/@rend -->
+                <elementSpec ident="hi" module="core" mode="change">
+                    <attList>
+                        <attDef ident="rend" mode="replace" usage="req">
+                            <datatype maxOccurs="5">
+                                <dataRef key="teidata.word"/>
+                            </datatype>
+                            <valList type="semi">
+                                <valItem ident="acute">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient acute (oxia, tonos) diacritic</desc>
+                                </valItem>
+                                <valItem ident="apex">
+                                    <desc xml:lang="en" versionDate="2020-02-18">apex or long vowel mark</desc>
+                                </valItem>
+                                <valItem ident="asper">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient asper (rough breathing) diacritic</desc>
+                                </valItem>
+                                <valItem ident="circumflex">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient circumflex (perispomeni) diacritic</desc>
+                                </valItem>
+                                <valItem ident="diaeresis">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient diaeresis</desc>
+                                </valItem>
+                                <valItem ident="grave">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient grave (varia) diacritic</desc>
+                                </valItem>
+                                <valItem ident="intraline">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters scored or struck through at the mid-line level</desc>
+                                </valItem>
+                                <valItem ident="inverted">
+                                    <desc xml:lang="en" versionDate="2020-02-17">character(s) inverted or rotated with respect to the rest of the text</desc>
+                                </valItem>
+                                <valItem ident="italic">
+                                    <desc xml:lang="en" versionDate="2020-02-18">characters italicised or slanted</desc>
+                                </valItem>
+                                <valItem ident="lenis">
+                                    <desc xml:lang="en" versionDate="2020-02-17">ancient lenis (smooth breathing) diacritic</desc>
+                                </valItem>
+                                <valItem ident="ligature">
+                                    <desc xml:lang="en" versionDate="2020-02-17">two (or more) letters ligatured, monogrammed, or therwise joined</desc>
+                                </valItem>
+                                <valItem ident="normal">
+                                    <desc xml:lang="en" versionDate="2020-02-18">characters written in normal form (e.g. in otherwise highlighted or unusual span of text</desc>
+                                </valItem>
+                                <valItem ident="reversed">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters reversed (backward-facing) with respect to the rest of the line of text</desc>
+                                </valItem>
+                                <valItem ident="sling-above">
+                                    <desc xml:lang="en" versionDate="2020-02-18">characters written with or joined by "sling" above text</desc>
+                                </valItem>
+                                <valItem ident="sling-below">
+                                    <desc xml:lang="en" versionDate="2020-02-18">characters written with or joined by "sling" below text </desc>
+                                </valItem>
+                                <valItem ident="small">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters smaller than those around them</desc>
+                                </valItem>
+                                <valItem ident="stacked">
+                                    <desc xml:lang="en" versionDate="2020-02-17">a character written directly above another character (as opposed to superscript)</desc>
+                                </valItem>
+                                <valItem ident="subscript">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters written lower than the surrounding text</desc>
+                                </valItem>
+                                <valItem ident="superscript">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters written higher than the surrounding text</desc>
+                                </valItem>
+                                <valItem ident="supraline">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters written with a supralinear line above (e.g. for abbreviation or numerals)</desc>
+                                </valItem>
+                                <valItem ident="tall">
+                                    <desc xml:lang="en" versionDate="2020-02-17">characters taller than those around, e.g. I-longa</desc>
+                                </valItem>
+                                <valItem ident="underline">
+                                    <desc xml:lang="en" versionDate="2020-02-17">text written with solid line beneath</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <!-- change definition of <lb> to "line beginning" -->
+                <elementSpec ident="lb" mode="change" module="core">
+                    <gloss xml:lang="en" versionDate="2020-02-17">line-beginning</gloss>
+                    <desc xml:lang="en" versionDate="2020-02-17">marks the start of each line of the transcribed text, including the first</desc>
+                    <!-- offer value "no" for lb/@break -->
+                    <attList>
+                        <attDef ident="break" mode="replace" usage="opt">
+                            <datatype>
+                                <dataRef key="teidata.enumerated"/>
+                            </datatype>
+                            <valList type="semi">
+                                <valItem ident="no">
+                                    <desc xml:lang="en" versionDate="2020-02-17">this line-beginning should not be taken as a word-break, i.e. word would be hyphenated in a printed text</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <!-- suggested attribute values for origDate/@evidence -->
+                <elementSpec ident="origDate" module="msdescription" mode="change">
+                    <attList>
+                        <attDef ident="evidence" mode="replace" usage="opt">
+                            <datatype maxOccurs="6">
+                                <dataRef key="teidata.word"/>
+                            </datatype>
+                            <valList type="semi">
+                                <valItem ident="archaeological-context">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Dated by the archaeolgical context, stratigraphy or associated finds</desc>
+                                </valItem>
+                                <valItem ident="internal-date">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Dated by explicit internal date</desc>
+                                </valItem>
+                                <valItem ident="lettering">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text dated palaeographically</desc>
+                                </valItem>
+                                <valItem ident="material-context">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Dated by the material, iconographic or other physical context of the object itself</desc>
+                                </valItem>
+                                <valItem ident="nomenclature">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text dated by nomenclature or onomastics</desc>
+                                </valItem>
+                                <valItem ident="office">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text dated by an office or rank, e.g. the reign of an emperor or other ruler</desc>
+                                </valItem>
+                                <valItem ident="prosopography">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text dated by known persons named or implied within it</desc>
+                                </valItem>
+                                <valItem ident="textual-context">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Dated via textual or linguistic context (other than explicit date or titles)</desc>
+                                </valItem>
+                                <valItem ident="titulature">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Dated by the use of official titles</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <elementSpec ident="space" module="transcr" mode="change">
+                    <!-- testing for <space> with both quantity/extent or no unit -->
+                    <constraintSpec ident="space" scheme="schematron">
+                        <constraint>
+                            <sch:rule context="tei:space">
+                                <sch:report test="@quantity and @extent">space may have @quantity (a
+                                    figure) or @extent (a descriptive text value) but not
+                                    both</sch:report>
+                                <sch:report test="@quantity and not(@unit)">If space has @quantity
+                                    then @unit is required</sch:report>
+                            </sch:rule>
+                        </constraint>
+                    </constraintSpec>
+                </elementSpec>
+
+                <elementSpec ident="supplied" module="transcr" mode="change">
+                    <attList>
+                        <!-- suggested attribute list for supplied/@evidence -->
+                        <attDef ident="evidence" mode="replace" usage="opt">
+                            <datatype maxOccurs="1">
+                                <dataRef key="teidata.word"/>
+                            </datatype>
+                            <valList type="semi">
+                                <valItem ident="parallel">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Characters supplied from a parallel version of this text, absent from this one</desc>
+                                </valItem>
+                                <valItem ident="previouseditor">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Characters visible to a previous editor, now lost/unclear due to damage</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                        <!-- constrained attribute list for supplied/@reason -->
+                        <attDef ident="reason" mode="replace" usage="req">
+                            <valList type="closed">
+                                <valItem ident="lost">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Restoration of text completely lost from the
+                                        surface</desc>
+                                </valItem>
+                                <valItem ident="omitted">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Supplement of text erroneously omitted from the surface by the scribe/cutter</desc>
+                                </valItem>
+                                <valItem ident="subaudible">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Editorial supplement of words subaudible to the native reader</desc>
+                                </valItem>
+                                <valItem ident="explanation">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Editorial explanation of oblique text in original</desc>
+                                </valItem>
+                                <valItem ident="undefined">
+                                    <desc xml:lang="en" versionDate="2020-02-17">Text restored (e.g. from earlier witness or alternate copy) without specification of current state of this text</desc>
+                                </valItem>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </elementSpec>
+
+                <!-- modifying <unclear> because in EpiDoc it should not contain anything but text and <g/> -->
+                <elementSpec ident="unclear" module="core" mode="change">
+                    <desc xml:lang="en" versionDate="2020-02-17">Character that cannot be identified unambiguously outside of its context. May contain character data and <gi>g</gi> only.</desc>
+                    <content>
+                        <macroRef key="macro.xtext"/>
+                    </content>
+                </elementSpec>
+
+                <!--       CHANGING ATTRIBUTE CLASSES         -->
+
+                <!--<classSpec type="atts" ident="att.datable.custom" mode="change">
+                    <constraintSpec scheme="schematron" ident="datable.custom">
+                         <constraint>
+                             <sch:rule context="tei:*[contains(@datingMethod,'julian')]">
+                                 <sch:report test="@when-custom[not(matches(.,'-?(\d{4})(-\d{2}(-\d{2})?)?'))]">
+                                     in Julian dating method @when-custom must be a date in the form [-]YYYY[-MM[-DD]]</sch:report>
+                                 <sch:report test="@notBefore-custom[not(matches(.,'-?(\d{4})(-\d{2}(-\d{2})?)?'))]">
+                                     in Julian dating method @notBefore-custom must be a date in the form [-]YYYY[-MM[-DD]]</sch:report>
+                                 <sch:report test="@notAfter-custom[not(matches(.,'-?(\d{4})(-\d{2}(-\d{2})?)?'))]">
+                                     in Julian dating method @notAfter-custom must be a date in the form [-]YYYY[-MM[-DD]]</sch:report>
+                             </sch:rule>
+                         </constraint>
+                     </constraintSpec>
+                </classSpec>-->
+
+                <classSpec type="atts" ident="att.dimensions" mode="change">
+                    <attList>
+                        <attDef ident="precision" mode="replace">
+                            <valList type="closed">
+                                <valItem ident="low"/>
+                                <valItem ident="medium"/>
+                                <valItem ident="high"/>
+                            </valList>
+                        </attDef>
+                        <attDef ident="unit" mode="change">
+                            <valList type="semi" mode="replace">
+                                <valItem ident="character"/>
+                                <valItem ident="line"/>
+                                <valItem ident="metre"/>
+                                <valItem ident="cm"/>
+                                <valItem ident="mm"/>
+                            </valList>
+                        </attDef>
+                        <attDef ident="extent" mode="change">
+                            <valList type="semi" mode="replace">
+                                <valItem ident="unknown"/>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </classSpec>
+
+                <classSpec type="atts" ident="att.responsibility" mode="change">
+                    <attList>
+                        <attDef ident="cert" mode="replace">
+                            <valList type="closed">
+                                <valItem ident="low"/>
+                                <valItem ident="high"/>
+                            </valList>
+                        </attDef>
+                    </attList>
+                </classSpec>
+            </schemaSpec>
+        </body>
+    </text>
+</TEI>

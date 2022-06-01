@@ -7,6 +7,7 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import getInScopeContext from './getInScopeContext.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -184,6 +185,17 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         const path = XPathUtil.getPath(node);
         this.model.mainGraph.addNode(path, node);
 
+        /* ### catching references in the 'ref' itself...
+        todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
+        in current implementation.
+
+        General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
+          where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
+
+
+        */
+        // const foreignRefs = this.getReferences(this.ref);
+
         if (this.calculate) {
           this.model.mainGraph.addNode(`${path}:calculate`, node);
           // Calculated values are a dependency of the model item.
@@ -229,12 +241,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
   }
 
-  _addNode(path, node) {
-    if (!this.model.mainGraph.hasNode(path)) {
-      this.model.mainGraph.addNode(path, { node });
-    }
-  }
-
   /**
    * Add the dependencies of this bind
    *
@@ -245,6 +251,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * @param  {string}  property The property with this dependency
    */
   _addDependencies(refs, node, path, property) {
+    // console.log('_addDependencies',path);
     const nodeHash = `${path}:${property}`;
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
@@ -252,11 +259,15 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       }
       refs.forEach(ref => {
         const otherPath = XPathUtil.getPath(ref);
+        // console.log('otherPath', otherPath)
 
-        if (!this.model.mainGraph.hasNode(otherPath)) {
-          this.model.mainGraph.addNode(otherPath, ref);
+        // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
+        if (!otherPath.endsWith('text()[1]')) {
+          if (!this.model.mainGraph.hasNode(otherPath)) {
+            this.model.mainGraph.addNode(otherPath, ref);
+          }
+          this.model.mainGraph.addDependency(nodeHash, otherPath);
         }
-        this.model.mainGraph.addDependency(nodeHash, otherPath);
       });
     } else {
       this.model.mainGraph.addNode(nodeHash, node);
@@ -321,7 +332,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * overwrites
    */
   _evalInContext() {
-    const inscopeContext = this.getInScopeContext();
+    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
 
     // reset nodeset
     this.nodeset = [];
@@ -335,7 +346,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
-            const localResult = evaluateXPathToNodes(this.ref, n, this.getOwnerForm());
+            const localResult = evaluateXPathToNodes(this.ref, n, this);
             localResult.forEach(item => {
               this.nodeset.push(item);
             });
@@ -351,7 +362,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     } else {
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this.getOwnerForm());
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else {
         this.nodeset = this.ref;
       }
@@ -380,6 +391,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
   }
 
+/*
   static lazyCreateModelitems(model, ref, nodeset) {
     if (Array.isArray(nodeset)) {
       Array.from(nodeset).forEach(n => {
@@ -389,6 +401,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       FxBind.lazyCreateModelItem(model, ref, nodeset);
     }
   }
+*/
 
   /*
     static lazyCreateModelItem(model,ref,node){
@@ -509,19 +522,39 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
    *
    * @return {Node[]}  The nodes that are referenced by the XPath
+   *
+   * todo: DependencyNotifyingDomFacade reports back too much in some cases like 'a[1]' and 'a[1]/text[1]'
    */
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
+      return this.getReferences(propertyExpr);
+    }
+    return [];
+  }
+
+  getReferences(propertyExpr) {
       const touchedNodes = new Set();
       const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
       this.nodeset.forEach(node => {
-        evaluateXPathToString(propertyExpr, node, this.getOwnerForm(), domFacade);
+        evaluateXPathToString(propertyExpr, node, this, domFacade);
       });
+    return Array.from(touchedNodes.values());
+  }
+
+  /*
+    static getReferencesForRef(ref,nodeset){
+      if (ref && nodeset) {
+        const touchedNodes = new Set();
+        const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
+        nodeset.forEach(node => {
+          evaluateXPathToString(ref, node, this, domFacade);
+        });
 
       return Array.from(touchedNodes.values());
     }
     return [];
   }
+  */
 
   _initBooleanModelItemProperty(property, node) {
     // evaluate expression to boolean

@@ -124,6 +124,9 @@
         table tbody th{
             text-align: left !important;
         }
+        .wrapper{
+            margin-top:1rem;
+        }
 
     </style>
     <script type="text/javascript" src="../src/drawdown.js"></script>
@@ -143,12 +146,14 @@
                     <element tags="all ui" name="fx-case"></element>
                     <element tags="all action" name="fx-confirm"></element>
                     <element tags="all ui" name="fx-control"></element>
+                    <element tags="all ui" name="fx-dialog"></element>
                     <element tags="all action" name="fx-delete"></element>
                     <element tags="all action" name="fx-dispatch"></element>
                     <element tags="all common" name="fx-fore"></element>
                     <element tags="all model" name="fx-function"></element>
                     <element tags="all ui" name="fx-group"></element>
                     <element tags="all model" name="fx-header"></element>
+                    <element tags="all action" name="fx-hide"></element>
                     <element tags="all ui" name="fx-hint"></element>
                     <element tags="all action" name="fx-insert"></element>
                     <element tags="all common" name="fx-inspector"></element>
@@ -160,13 +165,16 @@
                     <element tags="all action" name="fx-property"></element>
                     <element tags="all ui" name="fx-repeat"></element>
                     <element tags="all action" name="fx-refresh"></element>
+                    <element tags="all action" name="fx-replace"></element>
                     <element tags="all action" name="fx-send"></element>
                     <element tags="all action" name="fx-setvalue"></element>
+                    <element tags="all action" name="fx-show"></element>
                     <element tags="all model" name="fx-submission"></element>
                     <element tags="all ui" name="fx-switch"></element>
                     <element tags="all action" name="fx-toggle"></element>
                     <element tags="all ui" name="fx-trigger"></element>
                     <element tags="all action" name="fx-update"></element>
+                    <element tags="all common" name="fx-var"></element>
                     <tag></tag>
                     <current></current>
                 </data>
@@ -177,7 +185,7 @@
                            url="elements/{instance('default')/current}.md"
                            replace="instance"
                            into="instance()/element[contains(@tags , ../tag)][index('elements')]">
-                <fx-message event="submit-error" level="modal">File not found</fx-message>
+                <fx-message event="submit-error" value="instance('default')/current || '.md cannot be loaded'"></fx-message>
             </fx-submission>
 
             <fx-function signature="local:markdown($input as xs:string?) as xs:string"
@@ -191,34 +199,41 @@
         <fx-trigger>
             <button class="all">ALL</button>
             <fx-setvalue ref="tag">all</fx-setvalue>
-            <fx-action src="closeDetails.js"></fx-action>
-        </fx-trigger>
-        <fx-trigger>
-            <button class="actionbtn">Actions</button>
-            <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="commonbtn">Common</button>
             <fx-setvalue ref="tag">common</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="modelbtn">Model</button>
             <fx-setvalue ref="tag">model</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
         <fx-trigger>
             <button class="uibtn">UI</button>
             <fx-setvalue ref="tag">ui</fx-setvalue>
+            <fx-refresh></fx-refresh>
             <fx-action src="closeDetails.js"></fx-action>
         </fx-trigger>
+        <fx-trigger>
+            <button class="actionbtn">Actions</button>
+            <fx-setvalue ref="tag">action</fx-setvalue>
+            <fx-refresh></fx-refresh>
+            <fx-action src="closeDetails.js"></fx-action>
+        </fx-trigger>
+
         <fx-repeat id="elements" ref="element[contains(@tags , ../tag)]">
             <template>
                 <details>
                     <summary class="{@tags}">
                         {@name}
-                        <fx-action event="click" if="string-length(.)=0">
+						  <fx-action event="click" if="string-length(.)=0">
+                            <fx-message>clicked {.}</fx-message>
                             <fx-setvalue ref="instance('default')/current" value="instance()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
                             <fx-send submission="loadMd"></fx-send>
                         </fx-action>
@@ -229,9 +244,12 @@
                 </details>
             </template>
         </fx-repeat>
+        <pre>
+            {log('default')}
+        </pre>
     </fx-fore>
 
 </div>
-<script type="module" src="../demo/demo.js"></script>
+<script type="module" src="../index.js"></script>
 </body>
 </html>

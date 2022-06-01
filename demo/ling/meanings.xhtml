@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:TEI="http://www.tei-c.org/ns/1.0" xmlns:bfc="http://betterform.sourceforge.net/xforms/controls" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <title>LGPN</title><!--
+        ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
+        -->
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css"/>
+    <link href="resources/js/vendor/select2/select2.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="xforms">
+    <div style="display:none">
+        <xf:model id="model-morpheme">
+            <xf:instance id="i-default">
+                <category xmlns="http://www.tei-c.org/ns/1.0" baseForm="">
+                    <catDesc/>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                </category>
+            </xf:instance>
+            <xf:instance id="i-template">
+                <category xmlns="http://www.tei-c.org/ns/1.0" baseForm="">
+                    <catDesc/>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                    <meaning label="">
+                        <translation xml:lang="en"/>
+                        <translation xml:lang="fr"/>
+                    </meaning>
+                </category>
+            </xf:instance>
+            <xf:instance id="i-global-variables">
+                <global-variables xmlns="" number-of-meaning-being-reloaded="0"/>
+            </xf:instance>
+            <xf:submission id="s-load-morpheme" method="get" replace="instance" ref="instance('i-default')" validate="false" resource="modules/loadMorpheme.xql?id={bf:appContext('morpheme')}">
+                <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been loaded.</xf:message>
+                <xf:message ev:event="xforms-submit-error">Failed to load data.</xf:message>
+            </xf:submission><!--                    <xf:submission id="s-save-morpheme" method="put" replace="none" ref="instance('i-default')" resource="haka.xml">-->
+            <xf:submission id="s-save-morpheme" method="post" replace="none" ref="instance('i-default')" resource="modules/saveMorpheme.xql">
+                <xf:action ev:event="xforms-submit"><!--                        <xf:setvalue ref="instance('i-default')//TEI:category/@baseForm" value="instance('i-default')//TEI:category/@baseForm"/> -->
+                    <xf:message ev:event="xforms-submit-done" level="ephemeral">Saving...</xf:message>
+                </xf:action>
+                <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been saved.</xf:message>
+                <xf:message ev:event="xforms-submit-error">Failed to save data</xf:message>
+            </xf:submission>
+            <xf:submission id="s-load-trans" method="post" replace="instance" validate="false" resource="modules/load-root-translations.xql" ref="instance('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]" targetref="instance('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]"/>
+            <xf:action ev:event="xforms-ready">
+                <xf:send submission="s-load-morpheme" if="bf:appContext('morpheme') != ''"/>
+                <script>
+                    clearAndInitAutocompletes();
+                </script>
+            </xf:action>
+        </xf:model>
+    </div>
+    <div>
+        <fieldset id="segment">
+            <legend>
+                LGPN-Ling Lexemes and Meanings Sub-Form
+            </legend>
+            <div class="row">
+                <div class="col-xs-4">
+                    <xf:input class="input-group input-group-lg -form-control" ref="//TEI:category/@baseForm">
+                        <xf:label class="input-group-addon">label</xf:label>
+                        <xf:hint>hαβρρ</xf:hint>
+                    </xf:input>
+                </div>
+                <div class="col-xs-4">
+                    <xf:input class="input-group input-group-lg -form-control" ref="//TEI:category/TEI:catDesc">
+                        <xf:label class="input-group-addon">root</xf:label>
+                        <xf:hint>(h)αβρ</xf:hint>
+                    </xf:input>
+                </div>
+            </div><!--
+                    <div>
+                        <div class="col-xs-8">
+                            <xf:select ref="//TEI:category/TEI:catDesc/@ana" appearance="full" incremental="true">
+                                <xf:label/>
+                                <xf:item>
+                                    <xf:label>Verb</xf:label>
+                                    <xf:value>V</xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label>Noun</xf:label>
+                                    <xf:value>N</xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label>Adjective</xf:label>
+                                    <xf:value>Adj</xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label>Pronoun</xf:label>
+                                    <xf:value>Pro</xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label>Adverb</xf:label>
+                                    <xf:value>Adv</xf:value>
+                                </xf:item>
+                            </xf:select>
+                        </div>
+                    </div>
+                    -->
+            <div class="tp-divider"/>
+
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="hidden" ref="TEI:meaning[1]/@label">
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-tag"/> label</xf:label>
+                            <xf:hint>meaning</xf:hint>
+                            <xf:action ev:event="ontology_autocomplete-callback">
+                                <xf:setvalue ref="." value="event('termValue')"/>
+                            </xf:action>
+                            <xf:action ev:event="xforms-value-changed">
+                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="1"/>
+                                <xf:send submission="s-load-trans"/>
+                            </xf:action>
+                        </xf:input>
+                        <input type="hidden" class="tp-input" data-function="ontology_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                    </div>
+                </div>
+
+                <!--
+                <div class="col-xs-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-plus"/> new meaning
+                </span>
+                        <input type="checkbox" name="new1" class="form-control" id="new1"/>
+                    </div>
+                </div>
+                -->
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[1]/TEI:translation[@xml:lang='en']">
+                            <xf:hint>English translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> en</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[1]/TEI:translation[@xml:lang='fr']">
+                            <xf:hint>French translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> fr</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="hidden" ref="TEI:meaning[2]/@label">
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-tag"/> label</xf:label>
+                            <xf:hint>meaning</xf:hint>
+                            <xf:action ev:event="ontology_autocomplete-callback">
+                                <xf:setvalue ref="." value="event('termValue')"/>
+                            </xf:action>
+                            <xf:action ev:event="xforms-value-changed">
+                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="2"/>
+                                <xf:send submission="s-load-trans"/>
+                            </xf:action>
+                        </xf:input>
+                        <input type="hidden" class="tp-input" data-function="ontology_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                    </div>
+                </div>
+
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[2]/TEI:translation[@xml:lang='en']">
+                            <xf:hint>English translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> en</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[2]/TEI:translation[@xml:lang='fr']">
+                            <xf:hint>French translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> fr</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="hidden" ref="TEI:meaning[3]/@label">
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-tag"/> label</xf:label>
+                            <xf:hint>meaning</xf:hint>
+                            <xf:action ev:event="ontology_autocomplete-callback">
+                                <xf:setvalue ref="." value="event('termValue')"/>
+                            </xf:action>
+                            <xf:action ev:event="xforms-value-changed">
+                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="3"/>
+                                <xf:send submission="s-load-trans"/>
+                            </xf:action>
+                        </xf:input>
+                        <input type="hidden" class="tp-input" data-function="ontology_autocomplete" placeholder="Type to search ..." autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="col-xs-1"/>
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[3]/TEI:translation[@xml:lang='en']">
+                            <xf:hint>English translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> en</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group input-group-sm">
+                        <xf:input class="input-group -form-control" ref="TEI:meaning[3]/TEI:translation[@xml:lang='fr']">
+                            <xf:hint>French translation</xf:hint>
+                            <xf:label class="input-group-addon">
+                                <span class="glyphicon glyphicon-flag"/> fr</xf:label>
+                        </xf:input>
+                    </div>
+                </div>
+            </div>
+
+            <section class="tp-section tp-section-save">
+                <div class="tp-row">
+                    <h4>Save Form</h4>
+                    <div class="tp-width-main">
+                        <fieldset class="form-horizontal">
+
+                            <div class="tp-row tp-repeat-buttons">
+                                <div class="tp-repeat-button-left">
+                                    <div class="tp-button-row tp-add">
+                                        <label>Save form</label>
+                                        <xf:submit class="-btn -btn-default" submission="s-save-morpheme">
+                                            <xf:label class="input-group-addon">
+                                                <i class="glyphicon glyphicon-save"/>
+                                            </xf:label>
+                                        </xf:submit>
+                                    </div>
+                                </div>
+
+                                <div class="tp-repeat-button-right">
+                                    <div class="tp-button-row tp-delete">
+                                        <label>
+                                            <span>Cancel form</span>
+                                        </label>
+                                        <div class="tp-button-cancel">
+                                            <xf:trigger class="-btn -btn-default">
+                                                <xf:label class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-trash"/>
+                                                </xf:label>
+                                                <script ev:event="DOMActivate" type="text/javascript">dijit.byId("meanings").hide()</script>
+                                            </xf:trigger>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </section>
+        </fieldset>
+    </div>
+</div>
+<script type="text/javascript" src="resources/js/vendor/jquery.min.js"/>
+<script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
+<script type="text/javascript" src="resources/js/vendor/bootstrap.min.js"/>
+<script src="$shared/resources/scripts/jquery/jquery-ui.min.js" type="text/javascript" charset="utf-8"/>
+<script type="text/javascript" src="resources/js/vendor/select2/select2.js"/>
+<script type="text/javascript" src="resources/js/select2/select2.js"/>
+</body>
+</html>

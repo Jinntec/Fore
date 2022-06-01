@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-message</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .sticky-message{
+            background: red;
+            color:white;
+
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>fx-message</h1>
+
+     <p>There are 3 types of messages:</p>
+     <ul>
+         <li>By default firing an fx-message action displays a auto-closing toast message.</li>
+         <li>With `level="sticky"` the toast will become sticky (not closing) while displaying a close icon.</li>
+         <li>`level="modal" displays a modal message.</li>
+     </ul>
+
+    <p>Also refer to the <a href="controls/fx-dialog.html">fx-dialog</a> if more complex
+    messages are wanted, styled content or button logic is required.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-trigger>
+                    <button>Default</button>
+                    <fx-message>Default Message</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>sticky</button>
+                    <fx-message level="sticky">Modeless Message</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>modal</button>
+                    <fx-message level="modal">Modal Message</fx-message>
+                </fx-trigger>
+            </fx-fore>        </template>
+    </demo-snippet>
+
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

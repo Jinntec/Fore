@@ -1,0 +1,241 @@
+.add-button{
+    position: absolute;
+    right:1rem;
+    top:0;
+}
+
+details{
+    position: relative;
+}
+details summary ~ *{
+    visibility: hidden;
+}
+details[open] summary ~ * {
+    visibility: visible;
+}
+details .add-button{
+    top:1rem;
+}
+details summary{
+    white-space: nowrap;
+    position: relative;
+}
+details summary *{
+    display: inline-block;
+}
+
+
+/*
+details summary ~ .add-button{
+
+}
+*/
+
+details summary h3{
+    display: inline-block;
+}
+
+fx-control{
+    display: grid;
+    grid-template-columns: 30% auto;
+}
+fx-control label{
+    margin-right:1rem;
+}
+fx-control select{
+    width: fit-content;
+}
+.breaking-label{
+    display: block;
+}
+.breaking-label > label{
+    display: block;
+    margin:0;
+}
+
+fx-group{
+}
+fx-hint {
+    display: none;
+}
+fx-items{
+    display: inline-block;
+    width: fit-content;
+}
+fx-repeat{
+    display: block;
+}
+fx-repeatitem{
+    background: rgba(255,255,255,0.5);
+    /*filter: opacity(0.5);*/
+
+    display: block;
+    padding:0.5rem;
+    margin:0.5rem 0;
+}
+fx-repeatitem[repeat-index]{
+    background: rgba(255,255,255,0.85);
+    outline: #1e88e5 solid;
+}
+
+.col-1{
+    display: block;
+}
+.col-1 fx-control{
+    grid-template-columns: min-content auto;
+}
+.col-2{
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    /*grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));*/
+    grid-gap:1rem;
+}
+.col-3{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+.col-4{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+
+}
+
+
+
+h1{
+    margin: 3rem 0;
+}
+
+.tp-delete button {
+    color: red;
+}
+
+label {
+    padding-right: 1em;
+    white-space: nowrap;
+}
+
+main, header{
+    width: 800px;
+    margin:0 auto;
+    background: white;
+}
+
+.repeat-header{
+    position:relative;
+    width: 100%;
+}
+
+.repeat-col-3 fx-repeatitem{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap:1rem;
+    padding: 0.5rem;
+}
+.repeat-col-3 fx-repeatitem fx-trigger{
+    justify-self: end;
+    color:red;
+}
+#r-nameVariant fx-repeatitem{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /*grid-template-rows: repeat(5, 1fr);*/
+    grid-gap:1rem;
+}
+#r-nameVariant fx-repeatitem .c1{
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+#r-nameVariant fx-repeatitem .one-col{
+    grid-column-start: 1;
+    grid-column-end: 5;
+    /*display: block;*/
+}
+.one-col.fx-control{
+    display: flex;
+}
+/*
+.one-col label{
+    display: inline-block;
+}
+*/
+#r-nameVariant fx-repeatitem .col-one{
+    /*
+    grid-column-start: 1;
+    grid-column-end: 3;
+    */
+}
+#r-nameVariant fx-repeatitem .col-two{
+    grid-column-start: 3;
+    grid-column-end: 5;
+}
+
+
+
+section{
+    width: 100%;
+    position: relative;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+section fx-group{
+    background: #f3f1ee;
+    padding: 0.5rem 1rem;
+
+}
+.suffixes{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-gap:0.5rem;
+}
+.suffixes select{
+    width: 130px;
+}
+table{
+    width: 100%;
+    border-collapse:separate;
+    border-spacing:1rem;
+}
+table th{
+    text-align: left;
+}
+table .fx-checkbox{
+    display: inline-block;
+    width: 100%;
+}
+table fx-control{
+    white-space: normal;
+}
+table fx-control {
+    width: 100%;
+}
+table td:nth-child(1){
+    vertical-align: top;
+}
+table fx-control input[type=text]{
+    width: 100px;
+    display: inline-block;
+}
+/*
+.tp-form-group-col {
+    !*
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    *!
+}
+.tp-form-group-col.block {
+    display: block;
+}
+
+.tp-form-group-col .row > div{
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+}
+fieldset > div , fx-group > div{
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+
+}
+*/
+
+

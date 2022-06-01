@@ -1,5 +1,10 @@
 @import 'vars.css';
 @import 'fore.css';
+@font-face {
+    font-family: "Kimberley";
+    src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
+}
+
 a, a:link, a:visited {
     color:ghostwhite;
     font-weight: 300;
@@ -8,7 +13,8 @@ a, a:link, a:visited {
 
 body{
     padding:0;
-    font-family:'Roboto','Noto', 'sans-serif';
+    /*font-family:'Roboto','Noto', 'sans-serif';*/
+    font-family:"Kimberley", "Montserrat", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
     /*background: var(--paper-blue-grey-200);*/
 }
 code{
@@ -16,13 +22,38 @@ code{
     white-space: nowrap;
     padding:0 0.3rem;
 }
-h1, h2, h3, h4{
-    /*color:var(--paper-orange-900);*/
-    color:var(--paper-blue-grey-500);
+.demos .three-col div{
+    background: rgba(40,40,40,0.3);
+    border-radius: 0.3rem;
 }
+demo-snippet .code-container{
+    background: white;
+}
+
+.demos h1{
+    /*color:var(--paper-grey-700);*/
+    color:white;
+}
+h2, h3, h4{
+    /*color:var(--paper-orange-900);*/
+    /*color:var(--paper-blue-grey-500);*/
+    color:var(--paper-grey-900);
+    /*font-family: "Work Sans", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;*/
+}
+.demos h2{
+    margin-top:2rem;
+}
+.demos h3{
+    font-size: 1.2rem;
+}
+.demos p{
+    font-size: 1rem;
+}
+/*
 h2{
     color:white;
 }
+*/
 #modalMessage{
     background:orange;
 }
@@ -50,6 +81,7 @@ p{
     max-width: 800px;
     margin:0 auto;
     padding:1rem;
+    position: relative;
 }
 
 .redline{
@@ -85,7 +117,10 @@ p{
     height:auto;
     max-width:800px;
     margin: 0 auto;
-    background: var(--paper-blue-grey-200);
+    /*background: var(--paper-blue-grey-200);*/
+    /*background: var(--paper-amber-300);*/
+    /*background: ghostwhite;*/
+    background: rgba(40,40,40,0.3);
     opacity: 0.95;
     position: relative;
     min-height:80vh;

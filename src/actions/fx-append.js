@@ -77,7 +77,7 @@ class FxAppend extends AbstractAction {
     super.actionPerformed();
     // const repeat = document.getElementById(this.repeat);
     // repeat.setIndex(repeat.nodeset.length);
-    this.dispatch();
+    this._dispatch();
   }
 
   /**
@@ -117,7 +117,7 @@ class FxAppend extends AbstractAction {
    *
    * The target repeat is a child of the same repeat-item as the append action.
    */
-  dispatch() {
+  _dispatch() {
     let targetRepeat;
     if (Fore.isRepeated(this)) {
       console.log('append repeated ', this.repeatContext);
@@ -126,13 +126,7 @@ class FxAppend extends AbstractAction {
       targetRepeat = document.getElementById(this.repeat);
     }
     console.log('dispatching index change ', targetRepeat.nodeset.length);
-    targetRepeat.dispatchEvent(
-      new CustomEvent('index-changed', {
-        composed: true,
-        bubbles: true,
-        detail: { index: targetRepeat.nodeset.length },
-      }),
-    );
+    Fore.dispatch(targetRepeat,'index-changed',{ index: targetRepeat.nodeset.length })
   }
 
   /**

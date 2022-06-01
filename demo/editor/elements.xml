@@ -3,7 +3,7 @@
 
     <model>
         <fx-bind readonly="" required="" relevant="" constraint="" calculate="" type=""/>
-        <fx-instance src="foo"/>
+        <fx-instance></fx-instance>
         <fx-submission url="" replace=""></fx-submission>
     </model>
     <UI>

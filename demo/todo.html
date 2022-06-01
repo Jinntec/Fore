@@ -176,7 +176,7 @@
                 </div>
                 <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
                     <template>
-                        <fx-control id="task" ref="."></fx-control>
+                        <fx-control id="task" class="{@complete}" ref="."></fx-control>
                         <fx-control ref="@due">
                             <input class="widget" type="date">
                         </fx-control>

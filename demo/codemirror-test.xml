@@ -1,0 +1,105 @@
+<TEI>
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>A title 2</title>
+                <author>Leone Ostiense</author>
+                <author>Pietro Diacono</author>
+                <respStmt>
+                    <resp>revision by</resp>
+                    <name>John Doe</name>
+                </respStmt>
+                <respStmt>
+                    <resp>mark-up by</resp>
+                    <name>Janet Doe</name>
+                </respStmt>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Name of the institution publishing the electronic version</publisher>
+                <date when="2021-06-03"/>
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution
+                        ShareAlike 3.0 License
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <listBibl>
+                    <bibl type="source">ASN, Sommaria, Partium 19, f. 1r</bibl>
+                    <bibl type="tradition">Tradition source 1</bibl>
+                    <bibl type="tradition">Tradition source 2</bibl>
+                    <bibl type="edition">Edition source 1</bibl>
+                    <bibl type="edition">Edition source 2</bibl>
+                    <bibl type="edition">Edition source 3</bibl>
+                    <bibl type="bibliography">bibliography source 1</bibl>
+                    <bibl type="bibliography">bibliography source 3</bibl>
+                </listBibl>
+                <msDesc>
+                    <msIdentifier>
+                        <idno>ASN, Partium 19, f. 1r</idno>
+                    </msIdentifier>
+                    <msContents>
+                        <summary>
+                            <p>La<ref target="#N8aa6b77md" type="integer"/> Sommaria ordina a ARenzo d'Afflxitto, commissario in Terra di Lavoroche provveda l'assegnazione di sale<ref target="#Nr7u15js9z" type="alpha"/> arretrato alle<ref target="#Nnj0ujyuts" type="integer"/> università di <geogName>Sessa</geogName> e del terziere<ref target="#N3h4v9k0da" type="integer"/> di Toraldo, a condizione che queste versino i<ref target="#N3swc45ukv" type="alpha"/> residui dei pagamenti fiscali dovuti.</p>
+                            <p>lorem ipsum</p>
+                            <span type="notes">
+                                <note xml:id="N8aa6b77md" type="integer">Nota numerica</note>
+                                <note xml:id="Nnj0ujyuts" type="integer">Nota Numerica 2</note>
+                                <note xml:id="N3swc45ukv" type="alpha">Nota Alfabetica 1</note>
+                                <note xml:id="Nr7u15js9z" type="alpha">Nota Alfabetica 2</note>
+                                <note xml:id="N3h4v9k0da" type="integer">Una nota numerica 3 per esempio</note>
+                            </span>
+                        </summary>
+                    </msContents>
+                    <physDesc>
+                        <objectDesc form="model_letter">
+                            <p>lorem ipsum</p>
+                        </objectDesc>
+                    </physDesc>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+            <langUsage>
+                <language ident="de"/>
+            </langUsage>
+            <textClass>
+                <keywords>
+                    <term>XML</term>
+                    <term>TEI</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+        <revisionDesc>
+            <change when="2021-05-31T09:04:25+02:00">teiHeader was automatically produced from the database</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <docDate>
+                <date>1482-02-06</date>
+            </docDate>
+            <div type="protocollo"><p>P(ro) <orgName key="Università di Sessa" role="esponente">universitate Suessa</orgName></p>
+                <span type="notes"/>
+            </div>
+            <div type="testo">
+                <p>Perch(é) (e metto una note qui) la uni(versi)tà de <placeName key="Sessa Aurunca">Sessa</placeName> nce have facto exponer(e) ch(e) deve haver(e) lo sale de Natale proxime passato<ref target="#N59g3cuzdr" type="integer"/> et la università de lo <placeName key="Terziere di Toraldo">terciero de Toralto</placeName> lo sal(e) anni XIII<span rend="uppercase">e</span> et lo sal(e) de augosto XIIII<span rend="uppercase">e</span> et de Natal(e) XV ind. et ch(e) p(er) vui no(n)<ref target="#N979ap9w3m" type="alpha"/> è stato provisto li sia assignato, sopre de che havuto recurso ad questa Camera ve decimo et p(er) tenor(e) et della p(rese)nte conmandamo che havuti p(er) vui tucti li residui in li quali dicte uni(versita)te se trovano esser(e) debitrice per causa de li pagamenti fiscali subito providate far(e) assignar(e) ad ep(s)e uni(versita)te om(n)e q(uan)titate<ref target="#Nb11gzyt80" type="integer"/> de sale che dicte uni(versita)te restano ad haver(e), no(n) fando lo contrario p(er) quanto havite cara la gratia<ref target="#Njdetqclto" type="alpha"/> del s(igno)re Re et in la pena de unc(e) L<span rend="uppercase">ta</span> non volite incorrer(e).</p>
+                <span type="notes">
+                    <note xml:id="N59g3cuzdr" type="integer">Add numerico note here numer 1</note>
+                    <note xml:id="N979ap9w3m" type="alpha">questa è una <hi rend="itelic">not</hi> testuale</note>
+                    <note xml:id="Nb11gzyt80" type="integer">Numerico note here</note>
+                    <note xml:id="Njdetqclto" type="alpha">An other text note in document</note>
+                </span>
+            </div>
+            <div type="escatocollo">
+                <p>Dat(a) <placeName key="Napoli">Neapoli</placeName> in eadem<ref target="#Nkpn9ger3v" type="alpha"/> Camera<ref target="#N3fjrrq72v" type="integer"/> Sum(ma)rie die VI<span rend="uppercase">o</span> feb(rua)rii<ref target="#N2yp8ve3hx" type="alpha"/> 1482<ref target="#Nm27uya9mp" type="integer"/>.</p>
+                <span type="notes">
+                    <note xml:id="N3fjrrq72v" type="integer">escatocollo</note>
+                    <note xml:id="N2yp8ve3hx" type="alpha">Testuale in ecatocollo B</note>
+                    <note xml:id="Nkpn9ger3v" type="alpha">testuale in escatocollo A</note>
+                    <note xml:id="Nm27uya9mp" type="integer">Un anno è un nuoero intero</note>
+                </span>
+            </div>
+        </body>
+    </text>
+</TEI>

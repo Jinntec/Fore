@@ -6,7 +6,6 @@
 
     <title>Project Task planner</title>
 
-    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
 
     <link href="../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
@@ -216,7 +215,7 @@
                     <fx-control ref="@name"></fx-control>
                     <fx-trigger class="iconbtn addProject" title="add card">
                         <button>+</button>
-                        <fx-insert context="project" ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
+                        <fx-insert ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
                     </fx-trigger>
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>

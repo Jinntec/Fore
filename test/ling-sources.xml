@@ -1,0 +1,14 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <text>
+        <body>
+            <entry xml:id="uuid-0001">
+<!--
+                <gramGrp type="segmentation">
+                    <listBibl>
+                    </listBibl>
+                </gramGrp>
+-->
+            </entry>
+        </body>
+    </text>
+</TEI>

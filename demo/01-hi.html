@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Get started</title>
+    <title>A simple output</title>
 
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <link href="../resources/demo.css" rel="stylesheet">
@@ -18,33 +18,20 @@
             display: none;
         }
 */
+        noscript{
+            padding: 1rem;
+            background: orange;
+            font-size: 2rem;
+        }
     </style>
 </head>
 <body>
 <div class="wrapper">
+    <noscript>Scripting is disabled - Sorry, can't process this page.</noscript>
 
-    <h1>Get started</h1>
 
-    <p>Fore is a fully declarative state engine with an MVC architecture that is implemented as a set of
-        <a href="https://www.webcomponents.org/">Web Components</a>. Even complex, data-driven applications
-    can be implemented without writing any JavaScript code.</p>
+    <h1>A simple output</h1>
 
-    <p class="note">This documentation follows the principle of 'example over theory'. By studying the demos
-    you'll learn about the inner workings step-by-step and see what can be done.</p>
-
-    <h2>The very basics</h2>
-    <ul>
-        <li>All Fore elements use the prefix 'fx-'</li>
-        <li>Each Fore application will have an <code>fx-fore</code>element</li>
-        <li>All other elements are always children of a <code>fx-fore</code>element</li>
-        <li>A Fore application has one model</li>
-        <li>A model has at least one instance (data container) but may have any number of them.</li>
-    </ul>
-
-    <h2>Lazy greeting</h2>
-    <p>Let's jump right into the simplest possible example...</p>
-    <p>In lazy mode you don't even need to write a model. This is for the 'small and quick' use cases where
-    you don't need much logic or constraints.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -55,7 +42,7 @@
 
     <p>
         Besides the <code>fx-fore</code> element we have a <code>fx-output</code> here
-         which - well - outputs a referenced data node.
+         which - well - outputs a data node.
     </p>
 
     <p>Note the <code>ref</code> attribute. <code>ref</code> stands for 'reference' and is a pointer
@@ -70,6 +57,7 @@
 
     <p>This is what is auto-generated for you:</p>
 
+<!--
     <demo-snippet>
         <template>
             <fx-fore>
@@ -84,6 +72,7 @@
             </fx-fore>
         </template>
     </demo-snippet>
+-->
 <!--
     <fx-output ref="greeting">
         <label slot="label">Hi - </label>
@@ -94,30 +83,7 @@
     is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
     as you like.</p>
 
-    <h2>Nesting refs</h2>
-    <p>References can nested and Fore will create the respective hierarchy.</p>
-    <demo-snippet>
-        <template>
-            <fx-fore>
-                <fx-group ref="planet">
-                    <fx-output ref="greeting">Hello Earth</fx-output>
-                </fx-group>
-            </fx-fore>
-        </template>
-    </demo-snippet>
 
-    <p>Guess how the instance looks like now? Here it is </p>
-    <demo-snippet>
-        <template>
-            <fx-instance>
-                <data>
-                    <planet>
-                        <greeting>Hello Earth</greeting>
-                    </planet>
-                </data>
-            </fx-instance>
-        </template>
-    </demo-snippet>
     <div class="nav-buttons">
         <a class="redline next" href="./02-refs.html">next</a>
     </div>

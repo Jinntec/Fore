@@ -1,0 +1,27 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <revisionDesc>
+            <listChange>a change</listChange>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <entry xml:id="uuid-0001">
+                <listBibl></listBibl>
+
+                <gramGrp type="segmentation">
+                    <listBibl>
+                        <cit type="source">
+                            <quote/>
+                            <bibl>
+                              <author/>
+                            </bibl>
+                            <ref target=""/>
+                            <span/>
+                          </cit>
+                    </listBibl>
+                </gramGrp>
+            </entry>
+        </body>
+    </text>
+</TEI>

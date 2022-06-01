@@ -1,5 +1,7 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import getInScopeContext from '../getInScopeContext.js';
+import {Fore} from '../fore.js';
 
 async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
@@ -112,9 +114,12 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
-    console.log('executing', this);
+    // console.log('executing', this);
+    // console.log('executing e', e);
+    // console.log('executing e phase', e.eventPhase);
     if (e && e.detail) {
       this.detail = e.detail;
+      console.log('#### detail',e.detail)
     }
     this.needsUpdate = false;
 
@@ -124,7 +129,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     // First check if 'if' condition is true - otherwise exist right away
-    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, this.nodeset, this.getOwnerForm())) {
+    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
       return;
     }
 
@@ -139,7 +144,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
           return;
         }
 
-        if (!evaluateXPathToBoolean(this.whileExpr, this.nodeset, this.getOwnerForm())) {
+        if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
           // Done with iterating
           return;
         }
@@ -198,12 +203,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   /**
+   * dispathes action-performed event
+   *
+   * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
     console.log('action-performed ', this);
-    this.dispatchEvent(
-      new CustomEvent('action-performed', { composed: true, bubbles: true, detail: {} }),
-    );
+    Fore.dispatch(this,'action-performed',{})
   }
 }
 

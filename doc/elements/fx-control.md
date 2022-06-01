@@ -11,6 +11,7 @@ a data node in the model with the help of a `ref` attribute.
 | Name | Description | Default |
 |------|-------------| -------- |
 | context | XPath reference pointing to parent context | incopeContext |
+| debounce | optional numeric value in milliseconds to delay input events | - |
 | label | optional label | - |
 | ***ref*** | XPath reference pointing to the bound node | - |
 | updateEvent | optional event name when to trigger updating of bound node. | blur |

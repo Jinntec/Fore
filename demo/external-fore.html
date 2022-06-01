@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>load external Fore</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+        <link href="../resources/vars.css" rel="stylesheet">
+        <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        h2,fx-output{
+            color:black;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>loads Fore from another file</h1>
+    <p>Note: this will fetch the `fx-fore` element from the external file. It does not
+    include any styles that might be applied in that file. (maybe something for later).</p>
+    <demo-snippet>
+        <template>
+            <fx-fore src="body.html"></fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

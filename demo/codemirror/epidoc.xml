@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Votive inscription from Bonna &amp;ndash; Bonn (Germania inferior)</title>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the Creative Commons Attribution-ShareAlike 4.0 license.
+                    </licence>
+                </availability>
+            <idno type="localID">HD025278</idno><idno type="URI">https://edh.ub.uni-heidelberg.de/edh/inschrift/HD025278</idno></publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <repository>Bonn, Rhein. Landesmus.</repository>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <objectType ref="https://www.eagle-network.eu/voc/objtyp/lod/29">altar</objectType>
+                                    <material ref="http://www.eagle-network.eu/voc/material/lod/75">Sandstein</material>
+                                    <dimensions unit="cm">
+                                        <height>(75)</height>
+                                    </dimensions>
+                                    <rs type="deccoration" ref="http://www.eagle-network.eu/voc/decor/lod/2000">yes</rs>
+                                </support>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>description of text field/campus</layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc><ab/></handDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <origPlace>
+                                <placeName type="province">Germania inferior</placeName>
+                                <placeName type="ancient" ref="https://pleiades.stoa.org/places/108818">Bonna</placeName>
+                            </origPlace>
+                            <origDate>
+                                <origDate when-custom="0205" datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">205 AD</origDate>
+                            </origDate>
+                        </origin>
+                        <provenance type="found" when="1929">
+                            <placeName type="country" ref="https://www.geonames.org/2921044">Germany</placeName>
+                            <placeName type="modern" ref="http://www.geonames.org/2946447">Bonn</placeName>
+                            <placeName type="findspot"/>
+                            <placeName type="region">Nordrhein-Westfalen</placeName>
+                        </provenance>
+                    </history>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+             <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>             
+        <profileDesc>
+            <langUsage>
+                <language ident="en">English</language>
+                <language ident="de">Deutsch</language>
+                <language ident="lat">Latin</language>
+            </langUsage>
+            <textClass>
+                <keywords>
+                    <term ref="http://www.eagle-network.eu/voc/typeins/lod/372">votive inscription</term>
+                </keywords>
+            </textClass>
+            <particDesc>
+                <p>
+                    <listPerson>
+                        <person xml:id="HD025278_1" sex="M">
+                            <persName>
+                                <name type="praenomen">T.</name>
+                                <name type="nomen">Flavius*</name>
+                                <name type="cognomen">Severus</name>
+                            </persName>
+                        </person>
+                        <person xml:id="HD025278_2" sex="W">
+                            <persName>
+                                <name type="nomen">Successinia</name>
+                                <name type="cognomen">Tita</name>
+                            </persName>
+                        </person>
+                        <person xml:id="HD025278_3" sex="M">
+                            <persName>
+                                <name type="cognomen">Antoninus</name>
+                            </persName>
+                        </person>
+                        <person xml:id="HD025278_4" sex="M">
+                            <persName>
+                                <name type="cognomen">Geta++</name>
+                            </persName>
+                        </person>
+                    </listPerson>
+                </p>
+            </particDesc>
+        </profileDesc>
+        <revisionDesc><change when="2020-02-06" who="Feraudi">checked with photo</change></revisionDesc>
+    </teiHeader>
+    <facsimile>
+        <graphic xml:id="F019130" url="https://heidicon.ub.uni-heidelberg.de/api/v1/objects/uuid/4be588f6-8087-4bfb-afdd-9f5a719c2b3c/file/id/779202/file_version/name/small"/>
+        <graphic xml:id="F019131" url="https://heidicon.ub.uni-heidelberg.de/api/v1/objects/uuid/0e1f7e86-a499-42d4-9019-9c6f999dbd7b/file/id/779203/file_version/name/small"/>
+        <graphic xml:id="F019132" url="https://heidicon.ub.uni-heidelberg.de/api/v1/objects/uuid/95bb5eac-5acd-4cec-b6cd-bf9987556156/file/id/779204/file_version/name/small"/>
+        <graphic xml:id="F019133" url="https://heidicon.ub.uni-heidelberg.de/api/v1/objects/uuid/84ae70c7-e553-4cef-b8aa-d9f82445c4a6/file/id/779205/file_version/name/small"/>
+    </facsimile>
+    <text>
+        <body>
+            <div type="edition" xml:space="preserve"><head>Text</head><ab><lb n="1"/>
+                Aufanis <lb n="2"/>sanctis <lb n="3"/><expan><abbr>T</abbr><ex>itus</ex></expan> <expan><abbr>Fl</abbr><ex>avius</ex></expan> Severus <lb n="4"/>b<expan><ex>ene</ex><abbr>f</abbr><ex>iciarius</ex></expan> co<expan><ex>n</ex><abbr>s</abbr><ex>ularis</ex></expan> <lb n="5"/>et Successi<lb break="no" n="6"/>nia Tita pro <lb n="7"/>se et suis <expan><abbr>v</abbr><ex>otum</ex></expan> <expan><abbr>s</abbr><ex>olverunt</ex></expan> <expan><abbr>l</abbr><ex>ibentes</ex></expan> <expan><abbr>m</abbr><ex>erito</ex></expan> <lb n="8"/><expan><abbr>Imp</abbr><ex>eratore</ex></expan> Antonino II <lb n="9"/><del rend="erasure">et Geta <expan><abbr>Caes</abbr><ex>are</ex></expan></del> co<expan><ex>n</ex><abbr>s</abbr><ex>ulibus</ex></expan>
+            </ab></div>
+            <div type="commentary">
+                <p/>
+            </div>
+            <div type="bibliography">
+                <listBibl><bibl>AE 1931, 0016.</bibl><bibl>H. Lehner, BJ 135, 1930, 9, Nr. 14; Zeichnung. - AE 1931.</bibl><bibl>H. Nesselhauf, BRGK 27, 1937, 96, Nr. 157.</bibl><bibl>A.G. Garman, The cult of the matronae in the Roman Rhineland. Historical evaluation of the archaeological evidence (Lewiston 2008) 103, Nr. 78.</bibl><bibl>E. Schallmayer - K. Eibl - J. Ott - G. Preuß - E. Wittkopf, Der römische Weihebezirk von Osterburken 1. Corpus der griechischen und lateinischen Beneficiarier-Inschriften des Römischen Reiches (Stuttgart 1990) 54, Nr. 51.</bibl><bibl/></listBibl>
+            </div>
+        </body>
+    </text>
+</TEI>

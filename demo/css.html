@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>lazy modelItem creation during UI init</title>
+    <title>dynamic CSS</title>
 
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
@@ -20,6 +20,21 @@
             width: 300px;
         }
 
+        .foo{
+            background: var(--paper-deep-orange-500);
+            padding: 1rem;
+            margin:1rem 0;
+        }
+        .foo.bar{
+            transition: all 1s;
+            background: var(--paper-blue-900);
+            color:white;
+            border-radius: 1rem;
+            padding: 2rem;
+            font-size:1.4rem;
+        }
+
+
     </style>
 </head>
 <body unresolved="unresolved">
@@ -31,13 +46,14 @@
                 <fx-model>
                     <fx-instance>
                         <data>
-                            <class></class>
+                            <css></css>
                             <rotate>0</rotate>
                             <transform></transform>
                             <string></string>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="transform" calculate="string-length(../string) * 100"></fx-bind>
+                    <fx-bind ref="css"></fx-bind>
+                    <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
                 </fx-model>
                 <fx-group>
 
@@ -47,6 +63,7 @@
                     <p>Change the range control and see what happens.</p>
                     <fx-control ref="rotate" update-event="change">
                         <input type="range" step="10" min="0" max="360"/>
+                        <fx-setvalue event="value-changed" ref="../css">bar</fx-setvalue>
                     </fx-control>
                     <p></p>
                     transform:<fx-output ref="transform"></fx-output>
@@ -54,6 +71,10 @@
                     <fx-control ref="string" update-event="input" style="transform:translate({../transform}px);">
                         <label>lets move - type something</label>
                     </fx-control>
+                    <div class="foo {css}">
+                        This div gets a class added when the range control is changed.
+                    </div>
+
                 </fx-group>
             </fx-fore>
         </template>

@@ -1,5 +1,6 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
+import { Fore } from './fore.js';
 import {
   evaluateXPath,
   evaluateXPathToFirstNode,
@@ -7,6 +8,11 @@ import {
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * Mixin containing all general functions that are shared by all Fore element classes.
+ * @param superclass
+ * @returns {{readonly properties: {ref: {type: StringConstructor}, context: {type: ObjectConstructor}, nodeset: {type: ObjectConstructor}, model: {type: ObjectConstructor}, inScopeVariables: {type: MapConstructor}, modelItem: {type: ObjectConstructor}}, new(): ForeElementMixin, context: null, model: null, modelItem: {}, ref: *|string, inScopeVariables: null, nodeset: *, prototype: ForeElementMixin}}
+ */
 export const foreElementMixin = superclass =>
   class ForeElementMixin extends superclass {
     static get properties() {
@@ -41,6 +47,9 @@ export const foreElementMixin = superclass =>
         ref: {
           type: String,
         },
+        inScopeVariables: {
+          type: Map,
+        },
       };
     }
 
@@ -50,6 +59,7 @@ export const foreElementMixin = superclass =>
       this.model = null;
       this.modelItem = {};
       this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
+      this.inScopeVariables = null;
     }
 
     getModel() {
@@ -90,10 +100,21 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
-      const inscopeContext = getInScopeContext(this, this.ref);
+      let inscopeContext;
+      if (this.hasAttribute('context')) {
+        inscopeContext = getInScopeContext(this.getAttributeNode('context') || this, this.context);
+      }
+      if (this.hasAttribute('ref')) {
+        inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+      }
       if (!inscopeContext) {
-        console.warn('no in scopeContext for ', this);
-        return;
+        // ### always fall back to default context with there's neither a 'context' or 'ref' present
+        inscopeContext = this.getModel()
+          .getDefaultInstance()
+          .getDefaultContext();
+        // console.warn('no in scopeContext for ', this);
+        // console.warn('using default context ', this);
+        // return;
       }
       if (this.ref === '') {
         this.nodeset = inscopeContext;
@@ -116,7 +137,7 @@ export const foreElementMixin = superclass =>
         if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
-          this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
+          [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
         }
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
@@ -207,7 +228,7 @@ export const foreElementMixin = superclass =>
           return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
         } catch (error) {
           console.error(error);
-          this.dispatch('error', { message: error });
+          Fore.dispatch(this,'error',{message:error});
         }
       }
       if (this.textContent) {
@@ -217,16 +238,10 @@ export const foreElementMixin = superclass =>
     }
 
     getInScopeContext() {
-      return getInScopeContext(this, this.ref);
+      return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     }
 
-    dispatch(eventName, detail) {
-      const event = new CustomEvent(eventName, {
-        composed: true,
-        bubbles: true,
-        detail,
-      });
-      // console.log('firing', event);
-      this.dispatchEvent(event);
+    setInScopeVariables(inScopeVariables) {
+      this.inScopeVariables = inScopeVariables;
     }
   };

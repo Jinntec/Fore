@@ -24,7 +24,6 @@
             width:100vw;
             margin:0;
             padding:0;
-            overflow:hidden;
 
         }
 
@@ -74,7 +73,7 @@
             background: var(--paper-blue-grey-50);
             position: relative;
             height: calc((100vh - 300px) / 2);
-
+            min-height: 500px;
 
         }
 
@@ -95,7 +94,7 @@
         main {
             /*padding: 0.5rem;*/
              display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 2fr 1fr;
             width:100vw;
             overflow:hidden;
         }
@@ -103,7 +102,7 @@
 
 
         #subgraph::before {
-            content: 'SubGraph'
+            content: 'flattened SubGraph'
         }
 
         demo-snippet{
@@ -136,27 +135,23 @@
         <demo-snippet>
             <template>
                 <p>A couple of bindings produce the graph on this page</p>
-                <fx-bind ref="c"
-                         calculate="../a * ../b"
-                         constraint="number(.) <= 100"
-                         readonly="true()"></fx-bind>
-                <fx-bind ref="d"
-                         calculate="../a + ../b"
-                         constraint="number(.) <= 20"
-                         readonly="true()"></fx-bind>
-                <fx-bind ref="e"
-                         calculate="../a + 5"
-                         constraint="number(.) <= 10"
-                         readonly="true()"></fx-bind>
+                <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
 
-                <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
-                <fx-bind ref="z" calculate="../y + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
-                <fx-bind ref="q" readonly="../a > 100"></fx-bind>
+                <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+                <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
             </template>
         </demo-snippet>
 
     </div>
     <main>
+        <div class="graphs">
+            <div id="graph" class="graph graph1"></div>
+            <div id="subgraph" class="graph graph2"></div>
+        </div>
+
         <div class="fore">
             <h1>Recalculation</h1>
             <p>To determine the right order of calculations Fore uses a dependency graph.</p>
@@ -188,13 +183,13 @@
                         </data>
                     </fx-instance>
 
-                    <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                    <fx-bind ref="d" calculate="../a + ../b" constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                    <fx-bind ref="e" calculate="../a + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+                    <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                    <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                    <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
 
-                    <fx-bind ref="y" calculate="../x + 5" required=". <= 10" relevant="../a <= 12"></fx-bind>
-                    <fx-bind ref="z" calculate="../y + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
-                    <fx-bind ref="q" readonly="../a > 100"></fx-bind>
+                    <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+                    <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                    <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
 
                 </fx-model>
                 <fx-control ref="a" update-event="input">
@@ -245,10 +240,6 @@
                 </pre>
                 </fx-group>
             </fx-fore>
-        </div>
-        <div class="graphs">
-            <div id="graph" class="graph graph1"></div>
-            <div id="subgraph" class="graph graph2"></div>
         </div>
     </main>
 

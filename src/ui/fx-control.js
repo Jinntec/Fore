@@ -1,5 +1,9 @@
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import {
+  evaluateXPath,
+  evaluateXPathToString,
+  evaluateXPathToFirstNode,
+} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 
@@ -14,6 +18,16 @@ const WIDGETCLASS = 'widget';
  * @customElement
  * @demo demo/index.html
  */
+
+function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+}
 export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
@@ -22,6 +36,12 @@ export default class FxControl extends XfAbstractControl {
   }
 
   connectedCallback() {
+    this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
+    this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
+    this.loaded = false;
+    this.initialNode = null;
+    this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
+
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
       : 'blur';
@@ -33,21 +53,6 @@ export default class FxControl extends XfAbstractControl {
             }
         `;
 
-    /*
-        const controlHtml = `
-            <slot></slot>
-            <fx-setvalue id="setvalue" ref="${this.ref}"></fx-setvalue>
-        `;
-*/
-
-    /*
-        this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${controlHtml}
-        `
-*/
     this.shadowRoot.innerHTML = `
             <style>
                 ${style}
@@ -69,9 +74,45 @@ export default class FxControl extends XfAbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
-    this.widget.addEventListener(this.updateEvent, () => {
-      // console.log('eventlistener ', this.updateEvent);
-      this.setValue(this.widget[this.valueProp]);
+    if (this.debounceDelay) {
+      this.widget.addEventListener(
+        this.updateEvent,
+        debounce(() => {
+          console.log('eventlistener ', this.updateEvent);
+          this.setValue(this.widget[this.valueProp]);
+        }, this.debounceDelay),
+      );
+    } else {
+      this.widget.addEventListener(this.updateEvent, () => {
+        console.log('eventlistener ', this.updateEvent);
+        this.setValue(this.widget[this.valueProp]);
+      });
+    }
+
+    this.addEventListener('return', e => {
+      console.log('catched return action on ', this);
+      console.log('return detail', e.detail);
+
+      console.log('return triggered on ', this);
+      console.log('this.ref', this.ref);
+      console.log('current outer instance', this.getInstance());
+
+      console.log(
+        '???? why ???? current nodeset should point to the node of the outer control',
+        e.currentTarget.nodeset,
+      );
+      console.log(
+        '???? why ???? current nodeset should point to the node of the outer control',
+        this.nodeset,
+      );
+      const newNodes = e.detail.nodeset;
+      console.log('new nodeset', newNodes);
+      console.log('currentTarget', e.currentTarget);
+      console.log('target', e.target);
+
+      e.stopPropagation();
+
+      this._replaceNode(newNodes);
     });
 
     const slot = this.shadowRoot.querySelector('slot');
@@ -79,22 +120,71 @@ export default class FxControl extends XfAbstractControl {
     // console.log('template',this.template);
   }
 
+  _debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      const context = this;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(context, args);
+      }, timeout);
+    };
+  }
+
+  /**
+   * updates the model with a new value by executing it's `<fx-setvalue>` action.
+   *
+   * In case the `as='node'` is given the bound node is replaced with the widgets' value with is
+   * expected to be a node again.
+   *
+   * @param val the new value to be set
+   */
   setValue(val) {
     const modelitem = this.getModelItem();
+
+    if(modelitem?.readonly) return; // do nothing when modelItem is readonly
+
+    if(this.getAttribute('as') === 'node'){
+      const widgetValue = this.getWidget().value;
+      const replace = this.shadowRoot.getElementById('replace');
+      replace.replace(this.nodeset, this.getWidget().value);
+      if (widgetValue && widgetValue !== modelitem.value) {
+        modelitem.value = widgetValue;
+        replace.actionPerformed();
+      }
+      return;
+    }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
     setval.actionPerformed();
+  }
+
+  _replaceNode(node) {
+    // Note: clone the node while replacing to prevent the instances to leak through
+    this.modelItem.node.replaceWith(node.cloneNode(true));
+    this.getOwnerForm().refresh();
   }
 
   renderHTML(ref) {
     return `
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
-            <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
+            ${
+              this.hasAttribute('as') && this.getAttribute('as') === 'node'
+                ? `<fx-replace id="replace" ref=".">`
+                : `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`
+            }
+
         `;
   }
 
   /**
+   * The widget is the actual control being used in the UI e.g. a native input control or any
+   * other component that presents a control that can be interacted with.
+   *
+   * This function returns the widget by querying the children of this control for an element
+   * with `class="widget"`. If that cannot be found it searches for an native `input` of any type.
+   * If either cannot be found a `<input type="text">` is created.
    *
    * @returns {HTMLElement|*}
    */
@@ -114,21 +204,166 @@ export default class FxControl extends XfAbstractControl {
     return widget;
   }
 
-  // todo: check again
+  /**
+   * updates the widget from the modelItem value. During refresh the a control
+   * evaluates it's binding expression to determine the bound node. The bound node corresponds
+   * to a modelItem which acts a the state object of a node. The modelItem determines the value
+   * and the state of the node and set the `value` property of this class.
+   *
+   * @returns {Promise<void>}
+   */
   async updateWidgetValue() {
     // this.widget[this.valueProp] = this.value;
+
+    let { widget } = this;
+    if (!widget) {
+      widget = this;
+    }
+    // ### value is bound to checkbox
     if (this.valueProp === 'checked') {
       if (this.value === 'true') {
-        this.widget.checked = true;
+        widget.checked = true;
       } else {
-        this.widget.checked = false;
+        widget.checked = false;
       }
-    } else {
-      let { widget } = this;
-      if (!widget) {
-        widget = this;
+      return;
+    }
+
+    if (this.hasAttribute('as')) {
+      const as = this.getAttribute('as');
+
+      // ### when there's an `as=text` attribute serialize nodeset to prettified string
+      if (as === 'text') {
+        const serializer = new XMLSerializer();
+        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset));
+        widget.value = pretty;
       }
+      if (as === 'node' && this.nodeset !== widget.value) {
+        const oldVal = this.nodeset.innerHTML;
+        if (widget.value) {
+          if (this.oldVal !== this.widget.value) {
+            console.log('changed');
+            return;
+          }
+        }
+
+        widget.value = this.nodeset.cloneNode(true);
+        console.log('passed value to widget', widget.value);
+      }
+
+      return;
+    }
+
+    // ### when there's a url Fore is used as widget and will be loaded from external file
+    if (this.url && !this.loaded) {
+      // ### evaluate initial data if necessary
+      if (this.initial) {
+        this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
+        console.log('initialNodes', this.initialNode);
+      }
+
+      // ### load the markup from Url
+      await this._loadForeFromUrl();
+      this.loaded = true;
+
+      // ### replace default instance of embedded Fore with initial nodes
+      // const innerInstance = this.querySelector('fx-instance');
+      // console.log('innerInstance',innerInstance);
+      return;
+    }
+
+    /*
+    if(this.url && !this.loaded){
+      this._loadForeFromUrl();
+      this.loaded=true;
+      return;
+    }
+*/
+    if (widget.value !== this.value) {
       widget.value = this.value;
+    }
+  }
+
+  /**
+   * loads an external Fore from an HTML file given by `url` attribute.
+   *
+   * Will look for the `<fx-fore>` element within the returned HTML file and return that element.
+   *
+   * If that cannot be found an error is dispatched.
+   *
+   * todo: dispatch link error
+   * @private
+   */
+  async _loadForeFromUrl() {
+    console.log('########## loading Fore from ', this.src, '##########');
+    try {
+      const response = await fetch(this.url, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      });
+      const responseContentType = response.headers.get('content-type').toLowerCase();
+      console.log('********** responseContentType *********', responseContentType);
+      let data;
+      if (responseContentType.startsWith('text/html')) {
+        data = await response.text().then(result =>
+          // console.log('xml ********', result);
+          new DOMParser().parseFromString(result, 'text/html'),
+        );
+      } else {
+        data = 'done';
+      }
+      // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+      const theFore = data.querySelector('fx-fore');
+      // console.log('thefore', theFore)
+      theFore.classList.add('widget'); // is the new widget
+      const dummy = this.querySelector('input');
+      if (this.hasAttribute('shadow')) {
+        dummy.parentNode.removeChild(dummy);
+        this.shadowRoot.appendChild(theFore);
+      } else {
+        dummy.replaceWith(theFore);
+      }
+
+      console.log(`########## loaded fore as component ##### ${this.url}`);
+      theFore.addEventListener(
+        'model-construct-done',
+        e => {
+          console.log('subcomponent ready', e.target);
+          const defaultInst = theFore.querySelector('fx-instance');
+          console.log('defaultInst', defaultInst);
+          const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+          // Note: Clone the input to prevent the inner fore from editing the outer node
+          doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+          // defaultinst.setInstanceData(this.initialNode);
+          defaultInst.setInstanceData(doc);
+          console.log('new data', defaultInst.getInstanceData());
+          // theFore.getModel().modelConstruct();
+          theFore.getModel().updateModel();
+          theFore.refresh();
+        },
+        { once: true },
+      );
+
+      if (!theFore) {
+        this.dispatchEvent(
+          new CustomEvent('error', {
+            detail: {
+              message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
+            },
+          }),
+        );
+      }
+      console.log('loaded');
+      this.dispatchEvent(new CustomEvent('loaded', { detail: { fore: theFore } }));
+    } catch (error) {
+      console.log('error', error);
+      this.getOwnerForm().dispatchEvent(
+        new CustomEvent('error', { detail: { message: `${this.url} not found` } }),
+      );
     }
   }
 
@@ -144,7 +379,20 @@ export default class FxControl extends XfAbstractControl {
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
-    if (widget.hasAttribute('ref')) {
+    this._handleBoundWidget(widget);
+    Fore.refreshChildren(this, force);
+  }
+
+  /**
+   * If the widget itself has a `ref` it binds to another nodeset to provide some
+   * dynamic items to be created from a template usually. Examples are dynamic select option lists
+   * or a set of checkboxes.
+   *
+   * @param widget the widget to handle
+   * @private
+   */
+  _handleBoundWidget(widget) {
+    if (widget && widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
       /*
@@ -158,6 +406,9 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
+      // ### bail out when nodeset is empty
+      if (nodeset.length === 0) return;
+
       // ### clear items
       const { children } = widget;
       Array.from(children).forEach(child => {
@@ -168,23 +419,16 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
-        if (nodeset.length) {
-          // console.log('nodeset', nodeset);
-          Array.from(nodeset).forEach(node => {
-            // console.log('#### node', node);
-            const newEntry = this.createEntry();
-
-            // ### initialize new entry
-            // ### set value
-            this.updateEntry(newEntry, node);
-          });
-        } else {
+        nodeset.forEach(node => {
+          // console.log('#### node', node);
           const newEntry = this.createEntry();
-          this.updateEntry(newEntry, nodeset);
-        }
+
+          // ### initialize new entry
+          // ### set value
+          this.updateEntry(newEntry, node);
+        });
       }
     }
-    Fore.refreshChildren(this, force);
   }
 
   updateEntry(newEntry, node) {
@@ -194,7 +438,7 @@ export default class FxControl extends XfAbstractControl {
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPath(cutted, node, newEntry);
+    const evaluated = [evaluateXPath(cutted, node, newEntry)];
     valueAttribute.value = evaluated;
 
     if (this.value === evaluated) {

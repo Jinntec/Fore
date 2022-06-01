@@ -2,6 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
+import {Relevance} from "../src/relevance.js";
 
 import '../index.js';
 
@@ -9,6 +10,7 @@ describe('submission tests', () => {
   it.skip('replaces the default instance with response', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
+        <fx-send submission="submission" event="ready"></fx-send>
         <fx-model>
           <fx-instance>
             <data>
@@ -20,7 +22,7 @@ describe('submission tests', () => {
           <fx-submission
             id="submission"
             url="/base/test/answer.xml"
-            method="POST"
+            method="get"
             replace="instance"
             instance="default"
           >
@@ -29,20 +31,26 @@ describe('submission tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
-    const sm = el.querySelector('#submission');
-    expect(sm).to.exist;
-    sm.submit();
+    // const sm = el.querySelector('#submission');
+    // expect(sm).to.exist;
+    // sm.submit();
+    // await oneEvent(el, 'refresh-done');
 
+    // const sub = el.querySelector('#submission');
+    // await oneEvent(sub, 'submit-done');
     const inst = el.querySelector('fx-instance');
     expect(inst).to.exist;
     expect(inst.instanceData).to.exist;
     console.log('ljsldkjflsfjkd', inst.instanceData);
 
+    const sub = el.querySelector('#submission');
+    await oneEvent(sub, 'submit-done');
+
     const answer = fx.evaluateXPathToString('//theAnswer/text()', inst.instanceData, null, {});
     expect(answer).to.exist;
     console.log('ljsldkjflsfjkd', answer);
-    expect(answer.innerHTML).to.equal(42);
+    // expect(answer.innerHTML).to.equal(42);
+    expect(inst.instanceData).to.equal(42);
   });
 
   it('selects relevant nodes', async () => {
@@ -70,9 +78,9 @@ describe('submission tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-
     sm.evalInContext();
-    const result = sm.selectRelevant();
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -119,7 +127,8 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant();
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -157,7 +166,8 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant();
+    // const result = sm.selectRelevant('xml');
+    const result = Relevance.selectRelevant( sm,'xml');
     const vehicle = fx.evaluateXPathToBoolean('exists(vehicle/text())', result, null, {});
     expect(vehicle).to.be.false;
 
@@ -191,7 +201,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = sm.selectRelevant();
+    const result = Relevance.selectRelevant(sm,'xml');
     const vehicle = fx.evaluateXPath('vehicle/text()', result, null, {});
     // expect(vehicle).to.be.true;
     expect(vehicle).to.be.empty;
@@ -287,5 +297,57 @@ describe('submission tests', () => {
     await oneEvent(sm, 'submit-done');
 
     expect(inst[1].instanceData.firstElementChild.firstElementChild.textContent).to.equal('suv');
+  });
+
+  it('submits and replaces json ', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance type="json">
+                        {
+                            "foo":"bar"
+                        }
+                    </fx-instance>
+                    <fx-instance id="response" type="json">{}</fx-instance>
+
+                    <fx-submission id="submission"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="instance"
+                                   instance="response">
+                        <fx-message event="submit-done">JSON Data have been submitted - replacing instance</fx-message>
+                    </fx-submission>
+                </fx-model>
+                <fx-group collapse="true">
+                    <h1>Submission of JSON data</h1>
+                    <fx-trigger>
+                        <button>replace instance with json</button>
+                        <fx-send submission="submission"></fx-send>
+                    </fx-trigger>
+                    <fx-output ref="instance()?foo">
+                        <label slot="label">instance()?foo =</label>
+                    </fx-output>
+                    <fx-output id="out" ref="instance('response')?foo">
+                        <label slot="label">This message comes from replaced instance:</label>
+                    </fx-output>
+                </fx-group>
+            </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#submission');
+    expect(sm).to.exist;
+    sm.submit();
+
+    const inst = el.querySelectorAll('fx-instance');
+    expect(inst[1]).to.exist;
+    expect(inst[1].instanceData).to.exist;
+    await oneEvent(sm, 'submit-done');
+
+    expect(inst[1].instanceData.foo).to.equal('bar');
+
+    const out = el.querySelector('#out');
+    expect(out.value).to.equal('bar');
   });
 });

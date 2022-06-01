@@ -234,6 +234,8 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+
 
     // there are 15 nodes in mainGraph
     // const graphCount = model.mainGraph.overallOrder(false);
@@ -303,6 +305,7 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
     const changed = model.computes;
     expect(changed).to.equal(3);
@@ -376,6 +379,7 @@ describe('model tests', () => {
     await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     // console.log('modelitems ', model.modelItems);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
     const changed = model.computes;
     expect(changed).to.equal(2);
@@ -386,6 +390,7 @@ describe('model tests', () => {
     const dControl = el.querySelector('#d');
     expect(dControl.getModelItem().value).to.equal('21');
   });
+
   it('recalcuates only the changed "x" subgraph of modelItems', async () => {
     const el = await fixtureSync(html`
             <fx-fore>
@@ -450,6 +455,8 @@ describe('model tests', () => {
     const changed = model.computes;
     expect(changed).to.equal(1);
 
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+
     const subgraph = model.subgraph;
     expect(subgraph).to.exist;
 
@@ -458,5 +465,65 @@ describe('model tests', () => {
 
     const yControl = el.querySelector('#y');
     expect(yControl.getModelItem().value).to.equal('11');
+  });
+
+  it('recalcuates node "string"', async () => {
+    const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <css></css>
+                            <rotate>0</rotate>
+                            <transform></transform>
+                            <string></string>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="css"></fx-bind>
+                    <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
+                </fx-model>
+                <fx-group>
+
+                    <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
+                        Dynamic CSS
+                    </h1>
+                    <p>Change the range control and see what happens.</p>
+                    <fx-control ref="rotate" update-event="change">
+                        <input type="range" step="10" min="0" max="360"/>
+                        <fx-setvalue event="value-changed" ref="../css">bar</fx-setvalue>
+                    </fx-control>
+                    <p></p>
+                    transform:<fx-output ref="transform"></fx-output>
+                    <p></p>
+                    <fx-control id="transform" ref="string" update-event="input" style="transform:translate({../transform}px);">
+                        <label>lets move - type something</label>
+                    </fx-control>
+                    <div class="foo {css}">
+                        This div gets a class added when the range control is changed.
+                    </div>
+
+                </fx-group>
+            </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    const model = el.querySelector('fx-model');
+    expect(model.mainGraph.nodes).to.exist;
+    expect(Object.keys(model.mainGraph.nodes)).to.exist;
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(4);
+
+    const control = el.querySelector('#transform');
+    expect(control).to.exist;
+    expect(control.getAttribute('style')).to.equal('transform:translate(0px);');
+    control.setValue(10);
+    // control.blur();
+    expect(control.modelItem.value).to.equal('10');
+
+
+    expect(control.getAttribute('style')).to.equal('transform:translate(20px);');
+
+
+
+
   });
 });

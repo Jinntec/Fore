@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using jinn-codemirror to edit TEI markup</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
+
+
+<!--
+    <style>
+        body, .wrapper {
+            font-family: "Kimberley";
+        }
+
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1rem;
+            margin-bottom: 2rem;
+            border: thin solid var(&#45;&#45;paper-grey-300);
+        }
+
+        fx-control {
+            display: block;
+            margin: 0.5rem 0;
+
+        }
+
+        fx-control input {
+            width: 200px;
+        }
+
+        fx-control textarea {
+            width: 95%;
+            display: inline-block;
+        }
+
+        .group {
+            border: thin solid var(&#45;&#45;paper-grey-300);
+            margin-bottom: 1rem;
+        }
+
+        fx-control label {
+            justify-self: end;
+        }
+
+        .green {
+            background: green;
+        }
+
+        .orange {
+            background: orange;
+        }
+
+        .yellow {
+            background: yellow;
+        }
+    </style>
+-->
+
+    <script type="module" src="./jinn-codemirror.js"></script>
+    <script type="module" src="../demo.js"></script>
+
+</head>
+<body>
+<div class="wrapper">
+    <h1>Using <code>jinn-codemirror</code> to edit TEI</h1>
+    <p><code>jinn-codemirror</code> is a web component wrapping codemirror.</p>
+    <p>Using it as control allows to edit a specific node in the data.</p>
+    <p>In this example the <code>debounce</code> attribute is used to limit
+        event firing. Not every single keystroke is firing but they are 'summarized in chunks for the given
+        timespan in milliseconds.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                </fx-model>
+                <fx-control ref="//publicationStmt" update-event="update" debounce="300" as="node">
+                    <label>publicationStmt</label>
+                    <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+                </fx-control>
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
+import {Fore} from '../fore.js';
 import XfAbstractControl from './abstract-control.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToStrings } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 // import {markdown} from '../drawdown.js';
 
@@ -24,7 +25,6 @@ export class FxOutput extends XfAbstractControl {
 
   connectedCallback() {
     const style = `
-          @import 'fx-output-styles.css';
           :host {
             display: inline-block;
           }
@@ -69,19 +69,16 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async refresh() {
-    // ### 1. eval 'value' attr
-    // await super.refresh();
+    // Resolve the ref first. The ref will set the `nodeset` which is important for the 'context'
+    if (this.ref) {
+      await super.refresh();
+    }
 
+    // ### 2. Eval the value
     if (this.valueAttr) {
       this.value = this.getValue();
       await this.updateWidgetValue();
-      return;
     }
-    // ### 2. eval 'ref' attr
-    if (this.ref) {
-      super.refresh();
-    }
-    // ### 3. use inline content which is there anyway
   }
 
   getValue() {
@@ -89,12 +86,13 @@ export class FxOutput extends XfAbstractControl {
     try {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
       if (this.hasAttribute('html')) {
-        return evaluateXPath(this.valueAttr, inscopeContext, this);
+        return evaluateXPath(this.valueAttr, inscopeContext, this)[0];
       }
-      return evaluateXPathToString(this.valueAttr, inscopeContext, this);
+
+      return evaluateXPathToStrings(this.valueAttr, inscopeContext, this)[0];
     } catch (error) {
       console.error(error);
-      this.dispatch('error', { message: error });
+      Fore.dispatch(this,'error', { message: error });
     }
     return null;
   }
@@ -120,7 +118,7 @@ export class FxOutput extends XfAbstractControl {
         return;
 */
 
-        const node = this.modelItem.node;
+        const { node } = this.modelItem;
 
         if (node.nodeType) {
           // const mainSlot = this.shadowRoot.querySelector('#main');
