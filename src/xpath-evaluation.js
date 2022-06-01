@@ -212,7 +212,7 @@ function getVariablesInScope(formElement) {
   }
 
   const variables = {};
-  if(closestActualFormElement.inScopeVariables){
+  if (closestActualFormElement.inScopeVariables) {
     for (const key of closestActualFormElement.inScopeVariables.keys()) {
       const varElement = closestActualFormElement.inScopeVariables.get(key);
       variables[key] = varElement.value;
@@ -238,7 +238,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
     contextNode,
     null,
     { ...variablesInScope, ...variables },
-    'xs:anyType',
+    fxEvaluateXPath.ALL_RESULTS_TYPE,
     {
       currentContext: { formElement, variables },
       moduleImports: {

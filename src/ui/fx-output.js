@@ -86,7 +86,7 @@ export class FxOutput extends XfAbstractControl {
     try {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
       if (this.hasAttribute('html')) {
-        return evaluateXPath(this.valueAttr, inscopeContext, this);
+        return evaluateXPath(this.valueAttr, inscopeContext, this)[0];
       }
 
       return evaluateXPathToStrings(this.valueAttr, inscopeContext, this)[0];

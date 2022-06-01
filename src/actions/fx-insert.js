@@ -95,15 +95,19 @@ export class FxInsert extends AbstractAction {
     let inscope;
     // ### 'context' attribute takes precedence over 'ref'
     let targetSequence;
-    if(this.hasAttribute('context')){
+    if (this.hasAttribute('context')) {
       inscope = getInScopeContext(this.getAttributeNode('context'), this.getAttribute('context'));
-      targetSequence = evaluateXPathToNodes(this.getAttribute('context'), inscope, this.getOwnerForm());
+      targetSequence = evaluateXPathToNodes(
+        this.getAttribute('context'),
+        inscope,
+        this.getOwnerForm(),
+      );
     }
 
-    if(this.hasAttribute('ref')){
-      if(inscope){
+    if (this.hasAttribute('ref')) {
+      if (inscope) {
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-      }else{
+      } else {
         inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
       }
@@ -124,7 +128,6 @@ export class FxInsert extends AbstractAction {
       index = 1;
       console.log('appended', inscope);
     } else {
-
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
         // todo: eval 'at'
@@ -144,7 +147,11 @@ export class FxInsert extends AbstractAction {
         index = 1;
 
         insertLocationNode = targetSequence;
-        const context = evaluateXPath('count(preceding::*)', targetSequence, this.getOwnerForm());
+        const context = evaluateXPathToNumber(
+          'count(preceding::*)',
+          targetSequence,
+          this.getOwnerForm(),
+        );
         // console.log('context', context);
         index = context + 1;
         // index = targetSequence.findIndex(insertLocationNode);
@@ -159,14 +166,14 @@ export class FxInsert extends AbstractAction {
         // insertLocationNode.parentNode.append(originSequence);
         // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
-        if(this.hasAttribute('context') && this.hasAttribute('ref')){
+        if (this.hasAttribute('context') && this.hasAttribute('ref')) {
           // index=1;
           inscope.append(originSequenceClone);
-        }else if(this.hasAttribute('context')){
+        } else if (this.hasAttribute('context')) {
           const contextAttr = this.getAttribute('context');
-          index=1;
+          index = 1;
           insertLocationNode.prepend(originSequenceClone);
-        }else{
+        } else {
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
         }
       }

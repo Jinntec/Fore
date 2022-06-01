@@ -97,12 +97,13 @@ export class FxModel extends HTMLElement {
   modelConstruct() {
     // console.log('### <<<<< dispatching model-construct >>>>>');
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-    this.dispatchEvent(new CustomEvent('model-construct', {
-      composed: false,
-      bubbles: true,
-      detail: { model: this },
-    }),
-  );
+    this.dispatchEvent(
+      new CustomEvent('model-construct', {
+        composed: false,
+        bubbles: true,
+        detail: { model: this },
+      }),
+    );
 
     console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
@@ -154,7 +155,7 @@ export class FxModel extends HTMLElement {
   updateModel() {
     // console.time('updateModel');
     this.rebuild();
-    if(this.skipUpdate) return;
+    if (this.skipUpdate) return;
     this.recalculate();
     this.revalidate();
     // console.timeEnd('updateModel');
@@ -162,16 +163,16 @@ export class FxModel extends HTMLElement {
 
   rebuild() {
     console.group('### rebuild');
-    // console.time('rebuild');
-    this.mainGraph = new DepGraph(false); //do: should be moved down below binds.length check but causes errors in tests.
+    console.time('rebuild');
+    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
 
     // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
-    if(binds.length === 0 ) {
+    if (binds.length === 0) {
       // console.log('skipped model update');
       this.skipUpdate = true;
-      return ;
+      return;
     }
 
     binds.forEach(bind => {

@@ -199,31 +199,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       });
     }
 
-    const seq = evaluateXPath(this.ref, inscope, this);
-    // const seq = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
-    if (seq === null) {
-      // Empty sequence
-      this.nodeset = [];
-      return;
-    }
-
-    if (typeof seq === 'object') {
-      // Either a node or an array
-      if ('nodeType' in seq) {
-        // Node
-        this.nodeset = [seq];
-        return;
-      }
-
-      // if (Array.isArray(seq) && seq.every(item => typeof item === 'object')) {
-      if (Array.isArray(seq)) {
-        // multiple Nodes or maps
-        this.nodeset = seq;
-        return;
-      }
-    }
-
-    throw new Error(`Unexpected result of repeat nodeset: ${seq}`);
+    this.nodeset = evaluateXPath(this.ref, inscope, this);
   }
 
   async refresh(force) {

@@ -82,7 +82,7 @@ export class XPathUtil {
 
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {
-    const path = fx.evaluateXPath('path()', node);
+    const path = fx.evaluateXPathToString('path()', node);
     /*
     const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
     if (instanceId !== null && instanceId !== 'default') {
