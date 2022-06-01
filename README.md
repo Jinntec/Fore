@@ -6,24 +6,20 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/jinntec/fore)
 
 
-[Fore Element Reference](https://jinntec.github.io/Fore/doc/reference.html)
-
 ![logo](resources/images/light-200.png)
 
 >'situated in front of something else' - Merriam Webster
 
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec)](https://twitter.com/JinnForeTec) 
 
-## [Demos Demos Demos Demos Demos](https://jinntec.github.io/Fore)
+[Homepage](https://jinntec.github.io/fore)
 
-^^^ Sorry for being loud - some people complaining not finding demos. ^^^
+[Documentation](https://jinntec.github.io/fore-docs/)
 
-> ATTENTION: Demos are out of sync with latest release. If you want latest and greatest checkout your local copy please. Demos will be updated
-> for final release.
+[Element Quick Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
-For latest and greatest please use a local installation. See 'Running demos and docs'
 
-# What it does
+# Declarative user interfaces in plain HTML
 
 Fore lets you write data-driven front-end applications in a declarative way
 just using HTML5 Web Components. 
@@ -64,8 +60,7 @@ Standard but applies those to the world of HTML5 Web Components.
 Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
 ochestrate and interact with them by binding their properties to data instances.
 
-Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. Accessing and mutating JSON data with declarative
-actions makes JSON processing even easier than in native JavaScript.
+Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. 
 
 Through the wonderful [fontoXPath library](https://github.com/FontoXML/fontoxpath) Fore is able to process XML in the client with XPath 3.1 and 
 XQuery 3.1 support.
@@ -108,19 +103,6 @@ customize the wiring of the widget you use.
 ```
 
 More examples are found in the demos (see running)
-
-
-## Documentation
-
-### Element Reference
-
-The [Element Reference](https://jinntec.github.io/Fore/doc/reference.html) lists all exsting Fore elements (Web Components) in categories and documents their attributes. For each element one or more demos are linked
-to see the element in action.
-
-### Demos
-The demos are considered a major resource when it comes to learn how to use the featues (see 'demo' folder). All files listed on the demo.html page are expected to work and hopefully show the way to features and solutions. 
-
-Some of them also offer some explanations and should give you an idea of building your own.
 
 
 ## Development and Contributions
