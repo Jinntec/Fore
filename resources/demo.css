@@ -26,11 +26,9 @@ code{
     background: rgba(40,40,40,0.3);
     border-radius: 0.3rem;
 }
-/*
 demo-snippet .code-container{
-    position:absolute;
+    background: white;
 }
-*/
 
 .demos h1{
     /*color:var(--paper-grey-700);*/
@@ -76,7 +74,7 @@ h2{
     font-size: 1rem;
 }
 p{
-    /*font-size:1.4rem;*/
+    font-size:1.4rem;
     font-weight: 300;
 }
 .wrapper{
@@ -120,7 +118,9 @@ p{
     max-width:800px;
     margin: 0 auto;
     /*background: var(--paper-blue-grey-200);*/
-    background: var(--paper-blue-grey-100);
+    /*background: var(--paper-amber-300);*/
+    /*background: ghostwhite;*/
+    background: rgba(40,40,40,0.3);
     opacity: 0.95;
     position: relative;
     min-height:80vh;

@@ -77,7 +77,7 @@
                 randomColorArray.push(characters[randomIndex])
                 }
                 const hexCol = `#${randomColorArray.join("")}`;
-                return hex2rgba(hexCol,0.9);
+                return hex2rgba(hexCol,0.8);
 
             </fx-function>
 
@@ -160,6 +160,8 @@
                     <fx-fore>
                         <fx-action while="true()" event="ready" delay="1000">
                             <fx-setvalue ref="time" value="local:now()"></fx-setvalue>
+                            <fx-update></fx-update>
+                            <fx-refresh></fx-refresh>
                         </fx-action>
                         <fx-model>
                             <fx-instance>

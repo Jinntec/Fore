@@ -428,7 +428,7 @@ describe('action Tests', () => {
             <div>
               <fx-trigger>
                 <button>Count to {@max}</button>
-                <fx-action while=". lt number(@max)">
+                <fx-action while="number(.) lt number(@max)">
                   <fx-setvalue id="setval" ref="." value=".+1"></fx-setvalue>
                 </fx-action>
               </fx-trigger>
@@ -445,14 +445,18 @@ describe('action Tests', () => {
     firstTrigger.performActions();
 
     const firstSetval = firstDiv.querySelector('#setval');
+    await oneEvent(el, 'refresh-done');
 
+/*
     for (let i = 0; i < 10; ++i) {
       await oneEvent(firstSetval, 'action-performed');
     }
+*/
 
     const firstControl = firstDiv.querySelector('fx-output');
     expect(firstControl.value).to.equal('10');
 
+/*
     const secondTrigger = secondDiv.querySelector('fx-trigger');
     secondTrigger.performActions();
 
@@ -461,6 +465,52 @@ describe('action Tests', () => {
     for (let i = 0; i < 10; ++i) {
       await oneEvent(secondSetval, 'action-performed');
     }
+
+    const secondControl = secondDiv.querySelector('fx-output');
+    expect(secondControl.value).to.equal('15');
+*/
+  });
+  it('executes while condition is true, using inscopecontext - part 2', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <counter max="10">0</counter>
+              <counter max="15">5</counter>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat ref="counter">
+          <template>
+            <div>
+              <fx-trigger>
+                <button>Count to {@max}</button>
+                <fx-action while="number(.) lt number(@max)">
+                  <fx-setvalue id="setval" ref="." value=".+1"></fx-setvalue>
+                </fx-action>
+              </fx-trigger>
+              <fx-output ref="."></fx-output>
+            </div>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const [firstDiv, secondDiv] = el.querySelectorAll('div');
+
+    const secondTrigger = secondDiv.querySelector('fx-trigger');
+    secondTrigger.performActions();
+
+    const secondSetval = secondDiv.querySelector('#setval');
+    await oneEvent(el, 'refresh-done');
+
+/*
+    for (let i = 0; i < 10; ++i) {
+      await oneEvent(secondSetval, 'action-performed');
+    }
+*/
 
     const secondControl = secondDiv.querySelector('fx-output');
     expect(secondControl.value).to.equal('15');

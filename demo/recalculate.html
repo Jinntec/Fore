@@ -59,6 +59,15 @@
                         Recalculation
                     </h1>
 
+
+
+                    <p>There are several constraints in place here. You can play with the values to see the effects</p>
+                    <ul>
+                        <li>'a' will be readonly if 'b' is longer than 1</li>
+                        <li>'a' will be required if 'b' has a value of 'B'</li>
+                        <li>'b' is required only if 'c' has the value 'C'</li>
+                        <li>'c' is relevant only if 'b' has the value 'B'</li>
+                    </ul>
                     <div class="display">
                         <fx-output id="output" ref="a">
                             <label slot="label">a:</label>
