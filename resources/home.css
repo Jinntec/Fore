@@ -77,13 +77,14 @@ footer h4{
     color: black;
 }
 
-/*
 .logo {
+    /*
     width: 300px;
     margin: 0 auto;
     filter:contrast(2.5) brightness(1.2) drop-shadow(1px 2px 1px lightgrey);
+    */
+    margin:0.5rem 0;
 }
-*/
 
 a.reference {
     color: var(--paper-blue-grey-900);
@@ -241,6 +242,9 @@ section > div {
 }
 .style-hint{
     text-align: center;
+}
+.subline{
+    font-size: 0.9rem;
 }
 
 .teaser-text{
