@@ -6,7 +6,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/jinntec/fore)
 
 
-![logo](resources/images/light-200.png)
+<img src="resources/images/light7.png" width="400">
 
 >'situated in front of something else' - Merriam Webster
 
