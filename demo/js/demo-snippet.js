@@ -9,14 +9,14 @@ part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
 */
 
-import '@polymer/polymer/polymer-legacy.js';
-import '@polymer/marked-element/marked-element.js';
-import '@polymer/prism-element/prism-highlighter.js';
-import '@polymer/prism-element/prism-theme-default.js';
+import 'https://cdn.jsdelivr.net/npm/@polymer/polymer/polymer-legacy.js';
+import 'https://cdn.jsdelivr.net/npm/@polymer/marked-element/marked-element.js';
+import 'https://cdn.jsdelivr.net/npm/@polymer/prism-element/prism-highlighter.js';
+import 'https://cdn.jsdelivr.net/npm/@polymer/prism-element/prism-theme-default.js';
 
-import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import {Polymer} from   'https://cdn.jsdelivr.net/npm/@polymer/polymer/lib/legacy/polymer-fn.js';
+import {dom} from       'https://cdn.jsdelivr.net/npm/@polymer/polymer/lib/legacy/polymer.dom.js';
+import {html} from      'https://cdn.jsdelivr.net/npm/@polymer/polymer/lib/utils/html-tag.js';
 
 /**
 `demo-snippet` is a helper element that displays the source of a code snippet
