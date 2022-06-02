@@ -16,7 +16,10 @@ import { XPathUtil } from './xpath-util.js';
  *
  * Main responsiblities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
  *
- *
+ * @event compute-exception - dispatched in case the dependency graph is cirular
+ * @event refresh-done - dispatched after a refresh() run
+ * @event ready - dispatched after Fore has fully been initialized
+ * @event error - dispatches error when template expression fails to evaluate
  *
  * @ts-check
  */
