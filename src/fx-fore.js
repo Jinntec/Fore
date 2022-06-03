@@ -765,4 +765,6 @@ export class FxFore extends HTMLElement {
   }
 }
 
-customElements.define('fx-fore', FxFore);
+if (!customElements.get('fx-fore')) {
+  customElements.define('fx-fore', FxFore);
+}

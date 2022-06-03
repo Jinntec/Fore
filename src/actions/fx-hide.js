@@ -21,4 +21,6 @@ export class FxHide extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-hide', FxHide);
+if (!customElements.get('fx-hide')) {
+  window.customElements.define('fx-hide', FxHide);
+}

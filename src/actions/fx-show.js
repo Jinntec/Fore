@@ -21,4 +21,6 @@ export class FxShow extends FxAction {
   }
 }
 
-window.customElements.define('fx-show', FxShow);
+if (!customElements.get('fx-show')) {
+  window.customElements.define('fx-show', FxShow);
+}

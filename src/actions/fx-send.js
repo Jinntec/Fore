@@ -45,4 +45,6 @@ class FxSend extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-send', FxSend);
+if (!customElements.get('fx-send')) {
+  window.customElements.define('fx-send', FxSend);
+}

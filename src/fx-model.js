@@ -452,5 +452,6 @@ export class FxModel extends HTMLElement {
     return result;
   }
 }
-
-customElements.define('fx-model', FxModel);
+if (!customElements.get('fx-model')) {
+  customElements.define('fx-model', FxModel);
+}

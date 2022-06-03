@@ -19,4 +19,6 @@ export class FxConfirm extends FxAction {
   }
 }
 
-window.customElements.define('fx-confirm', FxConfirm);
+if (!customElements.get('fx-confirm')) {
+  window.customElements.define('fx-confirm', FxConfirm);
+}

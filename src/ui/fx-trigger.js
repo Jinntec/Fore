@@ -110,4 +110,6 @@ export class FxTrigger extends XfAbstractControl {
       */
 }
 
-customElements.define('fx-trigger', FxTrigger);
+if (!customElements.get('fx-trigger')) {
+  customElements.define('fx-trigger', FxTrigger);
+}

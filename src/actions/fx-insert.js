@@ -246,4 +246,6 @@ export class FxInsert extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-insert', FxInsert);
+if (!customElements.get('fx-insert')) {
+  window.customElements.define('fx-insert', FxInsert);
+}

@@ -286,5 +286,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     })();
   }
 }
-
-window.customElements.define('fx-abstract-control', AbstractControl);
+if (!customElements.get('fx-abstract-control')) {
+  window.customElements.define('fx-abstract-control', AbstractControl);
+}

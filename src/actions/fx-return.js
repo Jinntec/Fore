@@ -36,4 +36,6 @@ export class FxReturn extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-return', FxReturn);
+if (!customElements.get('fx-return')) {
+  window.customElements.define('fx-return', FxReturn);
+}

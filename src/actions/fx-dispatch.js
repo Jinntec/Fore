@@ -121,4 +121,6 @@ export class FxDispatch extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-dispatch', FxDispatch);
+if (!customElements.get('fx-dispatch')) {
+  window.customElements.define('fx-dispatch', FxDispatch);
+}

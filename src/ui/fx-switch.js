@@ -74,4 +74,6 @@ class FxSwitch extends FxContainer {
   }
 }
 
-window.customElements.define('fx-switch', FxSwitch);
+if (!customElements.get('fx-switch')) {
+  window.customElements.define('fx-switch', FxSwitch);
+}

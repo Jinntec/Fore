@@ -116,4 +116,6 @@ export class FxItems extends FxControl {
   }
 }
 
-customElements.define('fx-items', FxItems);
+if (!customElements.get('fx-items')) {
+  customElements.define('fx-items', FxItems);
+}

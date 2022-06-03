@@ -45,4 +45,7 @@ export class FxHint extends XfAbstractControl {
   }
 */
 }
-customElements.define('fx-hint', FxHint);
+
+if (!customElements.get('fx-hint')) {
+  customElements.define('fx-hint', FxHint);
+}

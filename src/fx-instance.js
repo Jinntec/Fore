@@ -263,4 +263,6 @@ export class FxInstance extends HTMLElement {
     console.log('_handleResponse ', loader.lastError);
   }
 }
-customElements.define('fx-instance', FxInstance);
+if (!customElements.get('fx-instance')) {
+  customElements.define('fx-instance', FxInstance);
+}

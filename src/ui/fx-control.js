@@ -474,5 +474,6 @@ export default class FxControl extends XfAbstractControl {
     return result;
   }
 }
-
-window.customElements.define('fx-control', FxControl);
+if (!customElements.get('fx-control')) {
+  window.customElements.define('fx-control', FxControl);
+}

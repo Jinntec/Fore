@@ -38,4 +38,6 @@ export class FxAlert extends AbstractControl {
     this.innerHTML = this.value;
   }
 }
-customElements.define('fx-alert', FxAlert);
+if (!customElements.get('fx-alert')) {
+  customElements.define('fx-alert', FxAlert);
+}

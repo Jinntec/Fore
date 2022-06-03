@@ -64,4 +64,6 @@ export default class FxReplace extends AbstractAction {
 
 }
 
-window.customElements.define('fx-replace', FxReplace);
+if (!customElements.get('fx-replace')) {
+  window.customElements.define('fx-replace', FxReplace);
+}
