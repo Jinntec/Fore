@@ -71,7 +71,7 @@ Polymer({
         border-bottom: 1px solid #e0e0e0;
         background-color: white;
         margin: 0;
-        /*padding: 20px;*/
+        padding: 20px;
         @apply --demo-snippet-demo;
       }
 
@@ -82,8 +82,8 @@ Polymer({
         overflow: auto;
         position: relative;
         padding: 0 20px;
-        @apply --demo-snippet-code;
         z-index: -1;
+        @apply --demo-snippet-code;
       }
 
       .code {
