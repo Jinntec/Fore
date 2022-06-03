@@ -1,5 +1,4 @@
-import { FxAction } from './fx-action.js';
-import {AbstractAction} from "./abstract-action";
+import {AbstractAction} from "./abstract-action.js";
 
 /**
  * `fx-return`
