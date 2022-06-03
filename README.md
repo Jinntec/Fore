@@ -12,7 +12,7 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec)](https://twitter.com/JinnForeTec) 
 
-[Homepage](https://jinntec.github.io/fore) | 
+[Homepage](https://jinntec.github.io/Fore/) | 
 [Documentation](https://jinntec.github.io/fore-docs/) |
 [Element Quick Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
