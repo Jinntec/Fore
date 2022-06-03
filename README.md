@@ -14,7 +14,6 @@
 
 [Homepage](https://jinntec.github.io/Fore/) | 
 [Documentation](https://jinntec.github.io/fore-docs/) |
-[Element Quick Reference](https://jinntec.github.io/Fore/doc/reference.html)
 
 
 # Declarative user interfaces in plain HTML
