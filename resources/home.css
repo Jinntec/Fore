@@ -26,7 +26,11 @@ body {
 .left-col{
 
 }
-
+/*
+#demos header{
+    height: 200px;
+}
+*/
 demo-snippet{
     overflow: auto;
 }
@@ -159,7 +163,10 @@ header{
     /*background: url(../resources/images/cool-background.png) no-repeat ;*/
 
 }
-
+.learn{
+    margin-left:1rem;
+    font-size: 1.4rem;
+}
 .logo{
     width: 120px;
 }
@@ -279,6 +286,13 @@ ul a, ul a:link, ul a:visited{
 }
 ul li{
     padding-bottom: 1rem;
+}
+
+[href="#"]{
+    background: rgba(255,255,255,0.5);
+    border-radius: 0.2rem;
+    text-decoration: none;
+
 }
 @media (max-width: 500px) {
     .github-corner:hover .octo-arm {
