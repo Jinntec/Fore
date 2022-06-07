@@ -438,7 +438,7 @@ export default class FxControl extends XfAbstractControl {
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = [evaluateXPath(cutted, node, newEntry)];
+    const evaluated = evaluateXPathToString(cutted, node, newEntry);
     valueAttribute.value = evaluated;
 
     if (this.value === evaluated) {
