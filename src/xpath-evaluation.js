@@ -12,6 +12,7 @@ import {
 } from 'fontoxpath';
 import { Fore } from './fore.js';
 
+import { globallyDeclaredFunctionLocalNames } from './functions/fx-function.js';
 import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
@@ -183,7 +184,12 @@ function functionNameResolver({ prefix, localName }, _arity) {
     case 'logtree':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
-      if (prefix === '' || prefix === 'fn') {
+      if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
+        // The function has been declared without a prefix and is called here without a prefix.
+        // Just make this work. It is the developer-friendly way
+        return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
+      }
+      if (prefix === 'fn') {
         return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
       }
       if (prefix === 'local') {
@@ -749,8 +755,8 @@ registerCustomXPathFunction(
   ['xs:string?'],
   'item()?',
   (dynamicContext, arg) => {
-    if(!dynamicContext.currentContext.variables) return [];
-    if(!arg) return [];
+    if (!dynamicContext.currentContext.variables) return [];
+    if (!arg) return [];
     const payload = dynamicContext.currentContext.variables[arg];
     if (payload.nodeType) {
       console.log('got some node as js object');
