@@ -2,6 +2,8 @@ import { registerCustomXPathFunction } from 'fontoxpath';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 
+export const globallyDeclaredFunctionLocalNames = [];
+
 /**
  * Allows to extend a form with local custom functions.
  *
@@ -41,9 +43,15 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
 
     // TODO: lookup prefix
     const functionIdentifier =
-      prefix === 'local'
+      prefix === 'local' || !prefix
         ? { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName }
         : `${prefix}:${localName}`;
+
+    // Make the function available globally w/o a prefix. See the functionNameResolver for for how
+    // this is picked up
+    if (!prefix) {
+      globallyDeclaredFunctionLocalNames.push(localName);
+    }
 
     const paramParts = params
       ? params.split(',').map(param => {
