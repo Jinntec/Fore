@@ -12,7 +12,6 @@ import {
 } from 'fontoxpath';
 import { Fore } from './fore.js';
 
-import { globallyDeclaredFunctionLocalNames } from './functions/fx-function.js';
 import { XPathUtil } from './xpath-util.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
@@ -163,6 +162,10 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
   }
   return createNamespaceResolver(query, formElement);
 }
+
+// A global registry of function names that are declared in Fore by a developer using the
+// `fx-function` element. These should be available without providing a prefix as well
+export const globallyDeclaredFunctionLocalNames = [];
 
 /**
  * Implementation of the functionNameResolver passed to FontoXPath to
