@@ -13,7 +13,7 @@ export class FxInspector extends HTMLElement {
     connectedCallback() {
         const style = `
           :host {
-            position:fixed;
+            position:absolute;
             display: block;
             width:var(--inspector-handle-width);
             background:var(--inspector-bg);
