@@ -62,10 +62,18 @@ export default class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
     // console.log('widget ', this.widget);
+    let listenOn = this.widget // default: usually listening on widget
 
+    if(this.hasAttribute('listen-on')){
+      const q = this.getAttribute('listen-on');
+      const target = this.querySelector(q);
+      if(target){
+        listenOn = target;
+      }
+    }
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
-      this.widget.addEventListener('keyup', event => {
+      listenOn.addEventListener('keyup', event => {
         if (event.keyCode === 13) {
           // Cancel the default action, if needed
           event.preventDefault();
@@ -75,7 +83,7 @@ export default class FxControl extends XfAbstractControl {
       this.updateEvent = 'blur'; // needs to be registered too
     }
     if (this.debounceDelay) {
-      this.widget.addEventListener(
+      listenOn.addEventListener(
         this.updateEvent,
         debounce(() => {
           console.log('eventlistener ', this.updateEvent);
@@ -83,7 +91,7 @@ export default class FxControl extends XfAbstractControl {
         }, this.debounceDelay),
       );
     } else {
-      this.widget.addEventListener(this.updateEvent, () => {
+      listenOn.addEventListener(this.updateEvent, () => {
         console.log('eventlistener ', this.updateEvent);
         this.setValue(this.widget[this.valueProp]);
       });

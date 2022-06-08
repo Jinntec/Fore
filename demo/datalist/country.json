@@ -1,0 +1,242 @@
+[
+  {
+    "name": "ad",
+    "value": "Andorra"
+  },
+  {
+    "name": "al",
+    "value": "Albania"
+  },
+  {
+    "name": "am",
+    "value": "Armenia"
+  },
+  {
+    "name": "at",
+    "value": "Austria"
+  },
+  {
+    "name": "az",
+    "value": "Azerbaijan"
+  },
+  {
+    "name": "ba",
+    "value": "Bosnia and Herzegovina"
+  },
+  {
+    "name": "be",
+    "value": "Belgium"
+  },
+  {
+    "name": "bg",
+    "value": "Bulgaria"
+  },
+  {
+    "name": "ch",
+    "value": "Switzerland"
+  },
+  {
+    "name": "cy",
+    "value": "Cyprus"
+  },
+  {
+    "name": "cz",
+    "value": "Czech Republic"
+  },
+  {
+    "name": "de",
+    "value": "Germany"
+  },
+  {
+    "name": "dk",
+    "value": "Denmark"
+  },
+  {
+    "name": "dz",
+    "value": "Algeria"
+  },
+  {
+    "name": "eg",
+    "value": "Egypt"
+  },
+  {
+    "name": "es",
+    "value": "Spain"
+  },
+  {
+    "name": "fr",
+    "value": "France"
+  },
+  {
+    "name": "gb",
+    "value": "United Kingdom"
+  },
+  {
+    "name": "ge",
+    "value": "Georgia"
+  },
+  {
+    "name": "gi",
+    "value": "Gibraltar"
+  },
+  {
+    "name": "gr",
+    "value": "Greece"
+  },
+  {
+    "name": "hr",
+    "value": "Croatia"
+  },
+  {
+    "name": "hu",
+    "value": "Hungary"
+  },
+  {
+    "name": "il",
+    "value": "Israel"
+  },
+  {
+    "name": "iq",
+    "value": "Iraq"
+  },
+  {
+    "name": "it",
+    "value": "Italy"
+  },
+  {
+    "name": "jo",
+    "value": "Jordan"
+  },
+  {
+    "name": "kg",
+    "value": "Kyrgyzstan"
+  },
+  {
+    "name": "kz",
+    "value": "Kazakhstan"
+  },
+  {
+    "name": "lb",
+    "value": "Lebanon"
+  },
+  {
+    "name": "li",
+    "value": "Liechtenstein"
+  },
+  {
+    "name": "lu",
+    "value": "Luxembourg"
+  },
+  {
+    "name": "ly",
+    "value": "Libyan Arab Jamahiriya"
+  },
+  {
+    "name": "ma",
+    "value": "Morocco"
+  },
+  {
+    "name": "mc",
+    "value": "Monaco"
+  },
+  {
+    "name": "md",
+    "value": "Moldova"
+  },
+  {
+    "name": "me",
+    "value": "Montenegro"
+  },
+  {
+    "name": "mk",
+    "value": "Macedonia"
+  },
+  {
+    "name": "mt",
+    "value": "Malta"
+  },
+  {
+    "name": "nl",
+    "value": "Netherlands"
+  },
+  {
+    "name": "pl",
+    "value": "Poland"
+  },
+  {
+    "name": "pt",
+    "value": "Portugal"
+  },
+  {
+    "name": "rks",
+    "value": "Kosovo"
+  },
+  {
+    "name": "ro",
+    "value": "Romania"
+  },
+  {
+    "name": "rs",
+    "value": "Serbia"
+  },
+  {
+    "name": "ru",
+    "value": "Russia"
+  },
+  {
+    "name": "sa",
+    "value": "Saudi Arabia"
+  },
+  {
+    "name": "sd",
+    "value": "Sudan"
+  },
+  {
+    "name": "se",
+    "value": "Sweden"
+  },
+  {
+    "name": "si",
+    "value": "Slovenia"
+  },
+  {
+    "name": "sk",
+    "value": "Slovakia"
+  },
+  {
+    "name": "sm",
+    "value": "San Marino"
+  },
+  {
+    "name": "sy",
+    "value": "Syrian Arab Republic"
+  },
+  {
+    "name": "tj",
+    "value": "Tajikistan"
+  },
+  {
+    "name": "tn",
+    "value": "Tunisia"
+  },
+  {
+    "name": "tr",
+    "value": "Turkey"
+  },
+  {
+    "name": "ua",
+    "value": "Ukraine"
+  },
+  {
+    "name": "uz",
+    "value": "Uzbekistan"
+  },
+  {
+    "name": "va",
+    "value": "Vatican City State"
+  },
+  {
+    "name": "ye",
+    "value": "Yemen"
+  }
+]
