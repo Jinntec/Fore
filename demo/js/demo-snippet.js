@@ -87,10 +87,9 @@ Polymer({
       }
 
       .code {
-        padding: 20px;
         margin: 0;
         background-color: var(--google-grey-100);
-        font-size: 13px;
+        font-size: 10px;
         overflow: auto;
         @apply --demo-snippet-code;
         
@@ -121,7 +120,7 @@ Polymer({
       <marked-element markdown="[[_markdown]]" id="marked">
          <div class="code" slot="markdown-html" id="code"></div>
       </marked-element>
-      <button id="copyButton" title="copy to clipboard" on-tap="_copyToClipboard">Copy</button>
+<!--      <button id="copyButton" title="copy to clipboard" on-tap="_copyToClipboard">Copy</button>-->
     </div>
 `,
 

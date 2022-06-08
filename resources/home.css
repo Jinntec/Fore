@@ -29,6 +29,7 @@ body {
 
 demo-snippet{
     overflow: auto;
+    height:fit-content;
 }
 demo-snippet h2{
     color: black;

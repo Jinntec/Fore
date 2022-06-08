@@ -177,10 +177,10 @@
                             <fx-bind ref="minute" calculate="number(substring(../time,4,2)) * 6"></fx-bind>
                             <fx-bind ref="second" calculate="number(substring(../time,7,2)) * 6"></fx-bind>
 
-							<fx-function signature="local:now() as xs:string" type="text/javascript">
-							  const now = new Date();
-							  return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-							</fx-function>
+                            <fx-function signature="local:now() as xs:string" type="text/javascript">
+                              const now = new Date();
+                              return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                            </fx-function>
                         </fx-model>
                         <div class="clock">
                             <div class="brand">Fore</div>
