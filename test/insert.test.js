@@ -412,7 +412,7 @@ describe('insert Tests', () => {
 
         <fx-trigger>
           <button>insert at end</button>
-<!--          <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>-->
+          <!--          <fx-insert context="list" ref="a" origin="../blank/a"></fx-insert>-->
           <fx-insert context="list" origin="../blank/a"></fx-insert>
         </fx-trigger>
       </fx-fore>
@@ -476,66 +476,73 @@ describe('insert Tests', () => {
 
   it('inserts into outer repeat with "context", "ref" and "origin" attribute', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
-      <fx-model id="model-1">
+      <fx-fore>
+        <fx-model id="model-1">
           <fx-instance
-                  id="default"
-                  src="/base/test/ling-sources.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-  
+            id="default"
+            src="/base/test/ling-sources.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
+
           <fx-instance
-                  id="i-template"
-                  src="/base/test/template.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            id="i-template"
+            src="/base/test/template.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
           <fx-instance id="temp">
-              <data>
-                  <hypotheses>1</hypotheses>
-              </data>
+            <data>
+              <hypotheses>1</hypotheses>
+            </data>
           </fx-instance>
-  
-      </fx-model>
-      <fx-group ref="//entry">
+        </fx-model>
+        <fx-group ref="//entry">
           <fx-trigger id="addGrp">
-              <button>add</button>
-              <fx-insert context="//entry" ref="gramGrp"
-                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+            <button>add</button>
+            <fx-insert
+              context="//entry"
+              ref="gramGrp"
+              origin="instance('i-template')//gramGrp[@type='segmentation']"
+            ></fx-insert>
           </fx-trigger>
           <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
-              <template>
-                  <h3>Segmentation hypothesis</h3>
-                  <section class="tp-row tp-repeat-add">
-                      <h5 class="h4 tp-repeat-headline">Sources</h5>
-                      <div class="tp-repeat-button-left">
-                          <div class="tp-button-row tp-add"><label>Add significant
-                              source</label>
-                              <fx-trigger class="addBibl">
-                                  <button>add</button>
-                                  <fx-insert context="listBibl"
-                                             origin="instance('i-template')//cit[@type='source']"></fx-insert>
-                              </fx-trigger>
-                          </div>
-                      </div>
-                  </section>
-  
-                  <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                      <template>
-                          <fx-control ref="ref"></fx-control>
-                          <fx-trigger>
-                              <button>delete</button>
-                              <fx-delete
-                                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
-                          </fx-trigger>
-                      </template>
-                  </fx-repeat>
-  
-                  <label><b>Delete segmentation
-                      hypothesis</b></label>
+            <template>
+              <h3>Segmentation hypothesis</h3>
+              <section class="tp-row tp-repeat-add">
+                <h5 class="h4 tp-repeat-headline">Sources</h5>
+                <div class="tp-repeat-button-left">
+                  <div class="tp-button-row tp-add">
+                    <label>Add significant source</label>
+                    <fx-trigger class="addBibl">
+                      <button>add</button>
+                      <fx-insert
+                        context="listBibl"
+                        origin="instance('i-template')//cit[@type='source']"
+                      ></fx-insert>
+                    </fx-trigger>
+                  </div>
+                </div>
+              </section>
+
+              <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                <template>
+                  <fx-control ref="ref"></fx-control>
                   <fx-trigger>
-                      <button>Delete</button>
-                      <fx-delete
-                              nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                    <button>delete</button>
+                    <fx-delete
+                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"
+                    ></fx-delete>
                   </fx-trigger>
-              </template>
+                </template>
+              </fx-repeat>
+
+              <label><b>Delete segmentation hypothesis</b></label>
+              <fx-trigger>
+                <button>Delete</button>
+                <fx-delete
+                  nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"
+                ></fx-delete>
+              </fx-trigger>
+            </template>
           </fx-repeat>
         </fx-group>
       </fx-fore>
@@ -547,7 +554,12 @@ describe('insert Tests', () => {
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
     // el.getModel().updateModel();
-    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type="segmentation"])', inst, null, {});
+    const item = fx.evaluateXPathToBoolean(
+      'exists(//gramGrp[@type="segmentation"])',
+      inst,
+      null,
+      {},
+    );
     expect(item).to.be.true;
 
     el.refresh();
@@ -557,66 +569,72 @@ describe('insert Tests', () => {
 
   it('inserts into outer repeat with "context" and "origin" attribute', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
-      <fx-model id="model-1">
+      <fx-fore>
+        <fx-model id="model-1">
           <fx-instance
-                  id="default"
-                  src="/base/test/ling-sources.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-  
+            id="default"
+            src="/base/test/ling-sources.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
+
           <fx-instance
-                  id="i-template"
-                  src="/base/test/template.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            id="i-template"
+            src="/base/test/template.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
           <fx-instance id="temp">
-              <data>
-                  <hypotheses>1</hypotheses>
-              </data>
+            <data>
+              <hypotheses>1</hypotheses>
+            </data>
           </fx-instance>
-  
-      </fx-model>
-      <fx-group ref="//entry">
+        </fx-model>
+        <fx-group ref="//entry">
           <fx-trigger id="addGrp">
-              <button>add</button>
-              <fx-insert context="//entry"
-                         origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+            <button>add</button>
+            <fx-insert
+              context="//entry"
+              origin="instance('i-template')//gramGrp[@type='segmentation']"
+            ></fx-insert>
           </fx-trigger>
           <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
-              <template>
-                  <h3>Segmentation hypothesis</h3>
-                  <section class="tp-row tp-repeat-add">
-                      <h5 class="h4 tp-repeat-headline">Sources</h5>
-                      <div class="tp-repeat-button-left">
-                          <div class="tp-button-row tp-add"><label>Add significant
-                              source</label>
-                              <fx-trigger class="addBibl">
-                                  <button>add</button>
-                                  <fx-insert context="listBibl"
-                                             origin="instance('i-template')//cit[@type='source']"></fx-insert>
-                              </fx-trigger>
-                          </div>
-                      </div>
-                  </section>
-  
-                  <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                      <template>
-                          <fx-control ref="ref"></fx-control>
-                          <fx-trigger>
-                              <button>delete</button>
-                              <fx-delete
-                                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
-                          </fx-trigger>
-                      </template>
-                  </fx-repeat>
-  
-                  <label><b>Delete segmentation
-                      hypothesis</b></label>
+            <template>
+              <h3>Segmentation hypothesis</h3>
+              <section class="tp-row tp-repeat-add">
+                <h5 class="h4 tp-repeat-headline">Sources</h5>
+                <div class="tp-repeat-button-left">
+                  <div class="tp-button-row tp-add">
+                    <label>Add significant source</label>
+                    <fx-trigger class="addBibl">
+                      <button>add</button>
+                      <fx-insert
+                        context="listBibl"
+                        origin="instance('i-template')//cit[@type='source']"
+                      ></fx-insert>
+                    </fx-trigger>
+                  </div>
+                </div>
+              </section>
+
+              <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                <template>
+                  <fx-control ref="ref"></fx-control>
                   <fx-trigger>
-                      <button>Delete</button>
-                      <fx-delete
-                              nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                    <button>delete</button>
+                    <fx-delete
+                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"
+                    ></fx-delete>
                   </fx-trigger>
-              </template>
+                </template>
+              </fx-repeat>
+
+              <label><b>Delete segmentation hypothesis</b></label>
+              <fx-trigger>
+                <button>Delete</button>
+                <fx-delete
+                  nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"
+                ></fx-delete>
+              </fx-trigger>
+            </template>
           </fx-repeat>
         </fx-group>
       </fx-fore>
@@ -628,69 +646,76 @@ describe('insert Tests', () => {
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
     // el.getModel().updateModel();
-    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type="segmentation"])', inst, null, {});
+    const item = fx.evaluateXPathToBoolean(
+      'exists(//gramGrp[@type="segmentation"])',
+      inst,
+      null,
+      {},
+    );
     expect(item).to.be.true;
     const outer = el.querySelector('#r-gramGrp');
     expect(outer.index).to.equal('1');
-
   });
 
   it('inserts into inner repeat with "context" and "origin" attribute', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
+      <fx-fore>
         <fx-action event="ready">
-           <fx-insert context="//listBibl"
-                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
+          <fx-insert
+            context="//listBibl"
+            origin="instance('i-template')//cit[@type='source']"
+          ></fx-insert>
         </fx-action>
 
-      <fx-model id="model-1">
+        <fx-model id="model-1">
           <fx-instance
-                  id="default"
-                  src="/base/test/ling-sources-nested.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-  
+            id="default"
+            src="/base/test/ling-sources-nested.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
+
           <fx-instance
-                  id="i-template"
-                  src="/base/test/template.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            id="i-template"
+            src="/base/test/template.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
           <fx-instance id="temp">
-              <data>
-                  <hypotheses>1</hypotheses>
-              </data>
+            <data>
+              <hypotheses>1</hypotheses>
+            </data>
           </fx-instance>
-      </fx-model>
-      <fx-group ref="//entry">
+        </fx-model>
+        <fx-group ref="//entry">
           <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
-              <template>
-                  <h3>Segmentation hypothesis</h3>
-                  <section class="tp-row tp-repeat-add">
-                      <h5 class="h4 tp-repeat-headline">Sources</h5>
-                      <div class="tp-repeat-button-left">
-                          <div class="tp-button-row tp-add"><label>Add significant
-                              source</label>
-                          </div>
-                      </div>
-                  </section>
-  
-                  <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                      <template>
-                          <fx-control ref="ref"></fx-control>
-                          <fx-trigger>
-                              <button>delete</button>
-                              <fx-delete
-                                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
-                          </fx-trigger>
-                      </template>
-                  </fx-repeat>
-  
-                  <label><b>Delete segmentation
-                      hypothesis</b></label>
+            <template>
+              <h3>Segmentation hypothesis</h3>
+              <section class="tp-row tp-repeat-add">
+                <h5 class="h4 tp-repeat-headline">Sources</h5>
+                <div class="tp-repeat-button-left">
+                  <div class="tp-button-row tp-add"><label>Add significant source</label></div>
+                </div>
+              </section>
+
+              <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                <template>
+                  <fx-control ref="ref"></fx-control>
                   <fx-trigger>
-                      <button>Delete</button>
-                      <fx-delete
-                              nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                    <button>delete</button>
+                    <fx-delete
+                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"
+                    ></fx-delete>
                   </fx-trigger>
-              </template>
+                </template>
+              </fx-repeat>
+
+              <label><b>Delete segmentation hypothesis</b></label>
+              <fx-trigger>
+                <button>Delete</button>
+                <fx-delete
+                  nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"
+                ></fx-delete>
+              </fx-trigger>
+            </template>
           </fx-repeat>
         </fx-group>
       </fx-fore>
@@ -699,71 +724,74 @@ describe('insert Tests', () => {
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
-    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type=\'segmentation\'])', inst, null, {});
+    let item = fx.evaluateXPathToBoolean("exists(//gramGrp[@type='segmentation'])", inst, null, {});
     expect(item).to.be.true;
     item = fx.evaluateXPathToBoolean('exists(//listBibl/cit)', inst, null, {});
     expect(item).to.be.true;
     const outer = el.querySelector('#r-gramGrp');
     expect(outer.index).to.equal('1');
-
   });
 
   it('inserts into inner repeat with "context", "ref" and "origin" attribute', async () => {
     const el = await fixtureSync(html`
-    <fx-fore>
+      <fx-fore>
         <fx-action event="ready">
-           <fx-insert context="//listBibl" ref="cit"
-                 origin="instance('i-template')//cit[@type='source']"></fx-insert>
+          <fx-insert
+            context="//listBibl"
+            ref="cit"
+            origin="instance('i-template')//cit[@type='source']"
+          ></fx-insert>
         </fx-action>
 
-      <fx-model id="model-1">
+        <fx-model id="model-1">
           <fx-instance
-                  id="default"
-                  src="/base/test/ling-sources-nested.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-  
+            id="default"
+            src="/base/test/ling-sources-nested.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
+
           <fx-instance
-                  id="i-template"
-                  src="/base/test/template.xml"
-                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            id="i-template"
+            src="/base/test/template.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
           <fx-instance id="temp">
-              <data>
-                  <hypotheses>1</hypotheses>
-              </data>
+            <data>
+              <hypotheses>1</hypotheses>
+            </data>
           </fx-instance>
-      </fx-model>
-      <fx-group ref="//entry">
+        </fx-model>
+        <fx-group ref="//entry">
           <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
-              <template>
-                  <h3>Segmentation hypothesis</h3>
-                  <section class="tp-row tp-repeat-add">
-                      <h5 class="h4 tp-repeat-headline">Sources</h5>
-                      <div class="tp-repeat-button-left">
-                          <div class="tp-button-row tp-add"><label>Add significant
-                              source</label>
-                          </div>
-                      </div>
-                  </section>
-  
-                  <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                      <template>
-                          <fx-control ref="ref"></fx-control>
-                          <fx-trigger>
-                              <button>delete</button>
-                              <fx-delete
-                                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"></fx-delete>
-                          </fx-trigger>
-                      </template>
-                  </fx-repeat>
-  
-                  <label><b>Delete segmentation
-                      hypothesis</b></label>
+            <template>
+              <h3>Segmentation hypothesis</h3>
+              <section class="tp-row tp-repeat-add">
+                <h5 class="h4 tp-repeat-headline">Sources</h5>
+                <div class="tp-repeat-button-left">
+                  <div class="tp-button-row tp-add"><label>Add significant source</label></div>
+                </div>
+              </section>
+
+              <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
+                <template>
+                  <fx-control ref="ref"></fx-control>
                   <fx-trigger>
-                      <button>Delete</button>
-                      <fx-delete
-                              nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"></fx-delete>
+                    <button>delete</button>
+                    <fx-delete
+                      nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]/listBibl/cit[@type='source'][index('r-cit-source')]"
+                    ></fx-delete>
                   </fx-trigger>
-              </template>
+                </template>
+              </fx-repeat>
+
+              <label><b>Delete segmentation hypothesis</b></label>
+              <fx-trigger>
+                <button>Delete</button>
+                <fx-delete
+                  nodeset="//gramGrp[@type='segmentation'][index('r-gramGrp')]"
+                ></fx-delete>
+              </fx-trigger>
+            </template>
           </fx-repeat>
         </fx-group>
       </fx-fore>
@@ -772,7 +800,7 @@ describe('insert Tests', () => {
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
-    let item = fx.evaluateXPathToBoolean('exists(//gramGrp[@type=\'segmentation\'])', inst, null, {});
+    let item = fx.evaluateXPathToBoolean("exists(//gramGrp[@type='segmentation'])", inst, null, {});
     expect(item).to.be.true;
     item = fx.evaluateXPathToBoolean('exists(//listBibl/cit)', inst, null, {});
     expect(item).to.be.true;

@@ -127,7 +127,7 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
-          if(element.nodeName.toUpperCase() === 'FX-FORE'){
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
             resolve('done');
           }
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
@@ -197,12 +197,10 @@ export class Fore {
   static fadeOutElement(element, duration) {
     // const duration = duration;
     let fadeOut = () => {
-
       // Stop all current animations
       if (element.getAnimations) {
         element.getAnimations().map(anim => anim.finish());
       }
-
 
       // Play the animation with the newly specified duration
       fadeOut = element.animate(
@@ -218,7 +216,7 @@ export class Fore {
 
   static dispatch(target, eventName, detail) {
     const event = new CustomEvent(eventName, {
-            composed: false,
+      composed: false,
       bubbles: true,
       detail,
     });
@@ -229,20 +227,20 @@ export class Fore {
   static prettifyXml(source) {
     const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
     const xsltDoc = new DOMParser().parseFromString(
-        [
-          // describes how we want to modify the XML - indent everything
-          '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-          '  <xsl:strip-space elements="*"/>',
-          '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-          '    <xsl:value-of select="normalize-space(.)"/>',
-          '  </xsl:template>',
-          '  <xsl:template match="node()|@*">',
-          '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-          '  </xsl:template>',
-          '  <xsl:output indent="yes"/>',
-          '</xsl:stylesheet>',
-        ].join('\n'),
-        'application/xml',
+      [
+        // describes how we want to modify the XML - indent everything
+        '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+        '  <xsl:strip-space elements="*"/>',
+        '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+        '    <xsl:value-of select="normalize-space(.)"/>',
+        '  </xsl:template>',
+        '  <xsl:template match="node()|@*">',
+        '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+        '  </xsl:template>',
+        '  <xsl:output indent="yes"/>',
+        '</xsl:stylesheet>',
+      ].join('\n'),
+      'application/xml',
     );
 
     const xsltProcessor = new XSLTProcessor();
@@ -252,8 +250,8 @@ export class Fore {
     return resultXml;
   }
 
-  static async loadForeFromUrl(hostElement,url) {
-    console.log('########## loading Fore from ',this.src ,'##########');
+  static async loadForeFromUrl(hostElement, url) {
+    console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -262,48 +260,50 @@ export class Fore {
         'Content-Type': 'text/html',
       },
     })
-        .then(response => {
-          const responseContentType = response.headers.get('content-type').toLowerCase();
-          console.log('********** responseContentType *********', responseContentType);
-          if (responseContentType.startsWith('text/html')) {
-            return response.text().then(result =>
-                // console.log('xml ********', result);
-                new DOMParser().parseFromString(result, 'text/html'),
-            );
-          }
-          return 'done';
-        })
-        .then(data => {
-          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
-          const theFore = data.querySelector('fx-fore');
-          // console.log('thefore', theFore)
-          if(!theFore){
-                    hostElement.dispatchEvent(
-                        new CustomEvent('error', {
-                            composed: false,
-                            bubbles: true,
-                            detail: {
-                                message: 'cyclic graph',
-                            },
-                        })
-                    );
-          }
-          hostElement.appendChild(theFore);
-          theFore.classList.add('widget');
-          // return theFore;
-          // theFore.setAttribute('from-src', this.src);
-          // this.replaceWith(theFore);
-        })
-        .catch(error => {
-                hostElement.dispatchEvent(new CustomEvent('error', {
-                    composed:false,
-                    bubbles:true,
-                    detail: {
-                        'error': error,
-                        message: `'${url}' not found or does not contain Fore element.`
-                    }
-                }));
-        });
+      .then(response => {
+        const responseContentType = response.headers.get('content-type').toLowerCase();
+        console.log('********** responseContentType *********', responseContentType);
+        if (responseContentType.startsWith('text/html')) {
+          return response.text().then(result =>
+            // console.log('xml ********', result);
+            new DOMParser().parseFromString(result, 'text/html'),
+          );
+        }
+        return 'done';
+      })
+      .then(data => {
+        // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+        const theFore = data.querySelector('fx-fore');
+        // console.log('thefore', theFore)
+        if (!theFore) {
+          hostElement.dispatchEvent(
+            new CustomEvent('error', {
+              composed: false,
+              bubbles: true,
+              detail: {
+                message: 'cyclic graph',
+              },
+            }),
+          );
+        }
+        hostElement.appendChild(theFore);
+        theFore.classList.add('widget');
+        // return theFore;
+        // theFore.setAttribute('from-src', this.src);
+        // this.replaceWith(theFore);
+      })
+      .catch(error => {
+        hostElement.dispatchEvent(
+          new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+              error: error,
+              message: `'${url}' not found or does not contain Fore element.`,
+            },
+          }),
+        );
+      });
   }
 
   /**

@@ -1,17 +1,16 @@
-import {Fore} from "../fore.js";
-
+import { Fore } from '../fore.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
  */
 export class FxInspector extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    connectedCallback() {
-        const style = `
+  connectedCallback() {
+    const style = `
           :host {
             position:absolute;
             display: block;
@@ -74,51 +73,45 @@ export class FxInspector extends HTMLElement {
           }
         `;
 
-        // const fore = document.querySelector('fx-fore');
-        const fore = this.closest('fx-fore');
-        const instances = Array.from(fore.querySelectorAll('fx-instance'));
+    const fore = this.closest('fx-fore');
 
-        // fore.addEventListener('ready', (e) => {
-            this.render(style);
-        // });
-        fore.addEventListener('refresh-done', (e) => {
-            this.update();
-        });
+    // fore.addEventListener('ready', (e) => {
+    this.render(style);
+    // });
+    fore.addEventListener('refresh-done', () => {
+      this.update();
+    });
+  }
 
-    }
+  update() {
+    console.log('update');
+    const pre = this.shadowRoot.querySelectorAll('pre');
+    console.log('pre', pre);
+    const fore = this.closest('fx-fore');
 
-    update(){
-        console.log('update');
-        const pre = this.shadowRoot.querySelectorAll('pre');
-        console.log('pre',pre);
-        // const fore = document.querySelector('fx-fore');
-        const fore = this.closest('fx-fore');
+    Array.from(pre).forEach(element => {
+      const inst = fore.getModel().getInstance(element.getAttribute('id'));
+      if (inst.type === 'xml') {
+        element.innerText = this.serializeDOM(inst.instanceData);
+      }
+      if (inst.type === 'json') {
+        element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
+      }
+    });
+  }
 
-        Array.from(pre).forEach(pre => {
-            console.log('pre',pre.getAttribute('id'));
-            const inst = fore.getModel().getInstance(pre.getAttribute('id'));
-            if(inst.type === 'xml'){
-                pre.innerText = this.serializeDOM(inst.instanceData);
-            }
-            if(inst.type === 'json'){
-                pre.innerText = JSON.stringify(inst.instanceData, undefined, 2)
-            }
-        });
-
-
-    }
-    render(style) {
-        const fore = this.closest('fx-fore');
-        // const instances = Array.from(this.shadowRoot.querySelectorAll('fx-instance'));
-        const instances = Array.from(fore.querySelectorAll('fx-instance'));
-        this.shadowRoot.innerHTML = `
+  render(style) {
+    const fore = this.closest('fx-fore');
+    const instances = Array.from(fore.querySelectorAll('fx-instance'));
+    this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             <div class="main">
             <slot></slot>
             <span class="handle"></span>
-                ${instances.map((instance, index) => `
+                ${instances.map(
+                  (instance, index) => `
                   <details open>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
@@ -127,53 +120,24 @@ export class FxInspector extends HTMLElement {
                 )}
             </div>
         `;
-/*
-        this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            <div class="main">
-            <slot></slot>
-            <span class="handle"></span>
-                ${instances.map((instance, index) => `
-                  <details open>
-                      <summary>${instance.id}</summary>
-                      ${instance.type === 'xml' ?
-                        `<pre>${this.serializeDOM(instance.instanceData)}</pre>` : ""}
 
-                      ${instance.type === 'json' ?
-                        `<pre>${JSON.stringify(instance.instanceData, undefined, 2)}</pre>` : ''}
-                  </details>
-                `,
-                )}
-            </div>
-        `;
-*/
+    const handle = this.shadowRoot.querySelector('.handle');
+    handle.addEventListener('click', e => {
+      console.log('toggling');
+      const { target } = e;
+      if (this.hasAttribute('open')) {
+        this.removeAttribute('open');
+      } else {
+        this.setAttribute('open', 'open');
+      }
+    });
+  }
 
-        const handle = this.shadowRoot.querySelector('.handle');
-        handle.addEventListener('click',(e)=>{
-            console.log('toggling');
-            const {target} = e;
-            if(this.hasAttribute('open')){
-                this.removeAttribute('open');
-            }else{
-                this.setAttribute('open','open');
-            }
-        });
-
-    }
-
-
-    serializeDOM(data){
-        console.log('serializeDOM',data);
-        const ser = new XMLSerializer().serializeToString(data);
-        // console.log('ser', ser);
-        return Fore.prettifyXml(ser);
-        // return "<foo>bar</foo>";
-        // return {log('${id}')}`;
-        // return data;
-    }
-
+  serializeDOM(data) {
+    console.log('serializeDOM', data);
+    const ser = new XMLSerializer().serializeToString(data);
+    return Fore.prettifyXml(ser);
+  }
 }
 
 customElements.define('fx-inspector', FxInspector);

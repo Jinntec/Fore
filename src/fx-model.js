@@ -35,11 +35,11 @@ export class FxModel extends HTMLElement {
             <slot></slot>
         `;
 
-    this.addEventListener('model-construct-done', e => {
+    this.addEventListener('model-construct-done', () => {
       this.modelConstructed = true;
       // console.log('model-construct-done fired ', this.modelConstructed);
       // console.log('model-construct-done fired ', e.detail.model.instances);
-    });
+    },{ once: true });
 
     this.skipUpdate = false;
   }

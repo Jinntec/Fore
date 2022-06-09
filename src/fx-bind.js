@@ -32,98 +32,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   static TYPE_DEFAULT = 'xs:string';
 
-  /*
-    static get styles() {
-        return css`
-            :host {
-                display: none;
-            }
-        `;
-    }
-*/
-
-  /*
-    static get properties() {
-        return {
-            ...super.properties,
-
-            /!**
-             * allows to calculate a value. This value will become readonly.
-             *!/
-            calculate: {
-                type: String
-            },
-            contextNode:{
-                type:Object
-            },
-            /!**
-             * arbitrary XPath resolving to xs:boolean - defaults to 'true()'
-             *!/
-            constraint: {
-                type: String
-            },
-            /!**
-             * id of this bind
-             *!/
-            id:{
-                type:String
-            },
-            /!**
-             * the nodeset the bind is referring to by it's binding expression (ref attribute)
-             *!/
-            nodeset: {
-                type: Array
-            },
-            /!**
-             * the owning model of this bind
-             *!/
-            model:{
-                type:Object
-            },
-            /!**
-             * XPath statement resolving to xs:boolean to switch between readonly and readwrite mode - defaults to 'false()'
-             *!/
-            readonly: {
-                type: String
-            },
-            /!**
-             * the XPath binding expression of this bind
-             *!/
-            ref: {
-                type: String
-            },
-            /!**
-             * XPath statement resolving to xs:boolean to switch between relevant and non-relevant mode - defaults to 'true()'
-             *!/
-            relevant: {
-                type: String
-            },
-            /!**
-             * XPath statement resolving to xs:boolean to switch between required and optional - defaults to 'false'.
-             *!/
-            required: {
-                type: String
-            },
-            /!**
-             * XPath statement
-             *!/
-            type: {
-                type: String
-            }
-        };
-    }
-*/
-
   constructor() {
     super();
-    // this.id='';
-    // this.ref = '';
-    // this.readonly = 'false()';
-    // this.required = 'false()';
-    // this.relevant = 'true()';
-    // this.constraint = 'true()';
-    // this.type = 'xs:string';
-    // this.calculate = '';
     this.nodeset = [];
     this.model = {};
     this.contextNode = {};
@@ -164,20 +74,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     // ### process child bindings
     this._processChildren(model);
   }
-
-  /*
-    //todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
-    static getPath(node){
-        let path = fx.evaluateXPath('path()',node);
-        const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
-        if(instanceId !== 'default'){
-            return '#' + instanceId + FxBind.shortenPath(path);
-        }else {
-            return FxBind.shortenPath(path);
-        }
-
-    }
-*/
 
   _buildBindGraph() {
     if (this.bindType === 'xml') {
@@ -282,14 +178,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     });
   }
 
-  /*
-    render() {
-        return html`
-             <slot></slot>
-        `;
-    }
-*/
-
   getAlert() {
     if (this.hasAttribute('alert')) {
       return this.getAttribute('alert');
@@ -300,33 +188,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
     return null;
   }
-
-  /*
-        firstUpdated(_changedProperties) {
-            super.firstUpdated(_changedProperties);
-        }
-    */
-
-  /*
-  namespaceResolver(prefix) {
-    // TODO: Do proper namespace resolving. Look at the ancestry / namespacesInScope of the declaration
-
-    /!**
-     * for (let ancestor = this; ancestor; ancestor = ancestor.parentNode) {
-     * 	if (ancestor.getAttribute(`xmlns:${prefix}`)) {
-     *   // Return value
-     *  }
-     * }
-     *!/
-
-    // console.log('namespaceResolver  prefix', prefix);
-    const ns = {
-      xhtml: 'http://www.w3.org/1999/xhtml',
-      // ''    : Fore.XFORMS_NAMESPACE_URI
-    };
-    return ns[prefix] || null;
-  }
-*/
 
   /**
    * overwrites
@@ -372,11 +233,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _createModelItems() {
     // console.log('#### ', thi+s.nodeset);
 
-    /*
-                if(XPathUtil.isSelfReference(this.ref)){
-                    return;
-                }
-        */
     if (Array.isArray(this.nodeset)) {
       // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
@@ -390,56 +246,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this._createModelItem(this.nodeset);
     }
   }
-
-/*
-  static lazyCreateModelitems(model, ref, nodeset) {
-    if (Array.isArray(nodeset)) {
-      Array.from(nodeset).forEach(n => {
-        FxBind.lazyCreateModelItem(model, ref, n);
-      });
-    } else {
-      FxBind.lazyCreateModelItem(model, ref, nodeset);
-    }
-  }
-*/
-
-  /*
-    static lazyCreateModelItem(model,ref,node){
-        console.log('lazyCreateModelItem ', node);
-
-        let mItem = {};
-        let targetNode = {};
-        if(node === null) return null;
-        if(node.nodeType === node.TEXT_NODE){
-            // const parent = node.parentNode;
-            // console.log('PARENT ', parent);
-            targetNode = node.parentNode;
-        }else {
-            targetNode = node;
-        }
-
-        // const path = fx.evaluateXPath('path()',node);
-        const path = FxBind.getPath(node);
-
-        // const path = Fore.evaluateXPath ('path()', node, this, Fore.namespaceResolver) ;
-
-        // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-        const mi = new ModelItem(path,
-            ref,
-            FxBind.READONLY_DEFAULT,
-            FxBind.RELEVANT_DEFAULT,
-            FxBind.REQUIRED_DEFAULT,
-            FxBind.CONSTRAINT_DEFAULT,
-            FxBind.TYPE_DEFAULT,
-            targetNode,
-            this);
-
-
-        // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-        model.registerModelItem(mi);
-        return mi;
-    }
-*/
 
   /**
    * creates a ModelItem for given instance node.
@@ -533,11 +339,11 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   }
 
   getReferences(propertyExpr) {
-      const touchedNodes = new Set();
-      const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
-      this.nodeset.forEach(node => {
-        evaluateXPathToString(propertyExpr, node, this, domFacade);
-      });
+    const touchedNodes = new Set();
+    const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
+    this.nodeset.forEach(node => {
+      evaluateXPathToString(propertyExpr, node, this, domFacade);
+    });
     return Array.from(touchedNodes.values());
   }
 

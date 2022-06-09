@@ -2,13 +2,11 @@ import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 import { XPathUtil } from './xpath-util.js';
 
-
 function _getElement(node) {
   if (node && node.nodeType && node.nodeType === Node.ATTRIBUTE_NODE) {
     // The context of an attribute is the ref of the element it's defined on
     return node.ownerElement;
   }
-
 
   if (node.nodeType === Node.ELEMENT_NODE) {
     // The context of a query should be the element having a ref
@@ -40,16 +38,15 @@ function _getInitialContext(node, ref) {
     make sure that the closest ref belongs to the same fx-fore element
     */
     const parentBindFore = parentBind.closest('fx-fore');
-    if(localFore === parentBindFore){
+    if (localFore === parentBindFore) {
       return parentBind.nodeset;
     }
     return model.getDefaultInstance().getDefaultContext();
-
   }
 
   if (XPathUtil.isAbsolutePath(ref)) {
     const instanceId = XPathUtil.getInstanceId(ref);
-    if(instanceId){
+    if (instanceId) {
       return model.getInstance(instanceId).getDefaultContext();
     }
     return model.getDefaultInstance().getDefaultContext();
@@ -65,8 +62,12 @@ export default function getInScopeContext(node, ref) {
 
   const repeatItem = parentElement.closest('fx-repeatitem');
   if (repeatItem) {
-    if(node.nodeName === 'context'){
-      return evaluateXPathToFirstNode(node.nodeValue, repeatItem.nodeset, _getForeContext(parentElement));
+    if (node.nodeName === 'context') {
+      return evaluateXPathToFirstNode(
+        node.nodeValue,
+        repeatItem.nodeset,
+        _getForeContext(parentElement),
+      );
     }
     return repeatItem.nodeset;
   }

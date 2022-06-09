@@ -62,7 +62,6 @@ export class FxFore extends HTMLElement {
       console.error('circular dependency: ', e);
     });
 
-
     this.ready = false;
     this.storedTemplateExpressionByNode = new Map();
 
@@ -181,7 +180,7 @@ export class FxFore extends HTMLElement {
   }
 
   connectedCallback() {
-/*
+    /*
     document.addEventListener('ready', (e) =>{
       if(e.target !== this){
         // e.preventDefault();
@@ -200,7 +199,6 @@ export class FxFore extends HTMLElement {
     },true);
 */
 
-
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
       const options = {
@@ -211,10 +209,10 @@ export class FxFore extends HTMLElement {
       this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
     }
 
-    this.src = this.hasAttribute('src')? this.getAttribute('src'):null;
-    if(this.src){
+    this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
+    if (this.src) {
       this._loadFromSrc();
-      return ;
+      return;
     }
 
     const slot = this.shadowRoot.querySelector('slot');
@@ -232,23 +230,22 @@ export class FxFore extends HTMLElement {
         console.log(
           `########## FORE: kick off processing for ... ${window.location.href} ##########`,
         );
-        if(this.src){
+        if (this.src) {
           console.log('########## FORE: loaded from ... ', this.src, '##########');
         }
         modelElement.modelConstruct();
       }
       this.model = modelElement;
     });
-    this.addEventListener('path-mutated', (e) =>{
+    this.addEventListener('path-mutated', e => {
       console.log('path-mutated event received', e.detail.path, e.detail.index);
       this.someInstanceDataStructureChanged = true;
     });
   }
 
-
-  addToRefresh(modelItem){
-    const found = this.toRefresh.find(mi => mi.path === modelItem.path );
-    if(!found){
+  addToRefresh(modelItem) {
+    const found = this.toRefresh.find(mi => mi.path === modelItem.path);
+    if (!found) {
       this.toRefresh.push(modelItem);
     }
   }
@@ -260,7 +257,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _loadFromSrc() {
-    console.log('########## loading Fore from ',this.src ,'##########');
+    console.log('########## loading Fore from ', this.src, '##########');
     fetch(this.src, {
       method: 'GET',
       mode: 'cors',
@@ -269,34 +266,40 @@ export class FxFore extends HTMLElement {
         'Content-Type': 'text/html',
       },
     })
-        .then(response => {
-          const responseContentType = response.headers.get('content-type').toLowerCase();
-          console.log('********** responseContentType *********', responseContentType);
-          if (responseContentType.startsWith('text/html')) {
-            // const htmlResponse = response.text();
-            // return new DOMParser().parseFromString(htmlResponse, 'text/html');
-            // return response.text();
-            return response.text().then(result =>
-                // console.log('xml ********', result);
-                new DOMParser().parseFromString(result, 'text/html'),
-            );
-          }
-          return 'done';
-        })
-        .then(data => {
-          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
-          const theFore = data.querySelector('fx-fore');
+      .then(response => {
+        const responseContentType = response.headers.get('content-type').toLowerCase();
+        console.log('********** responseContentType *********', responseContentType);
+        if (responseContentType.startsWith('text/html')) {
+          // const htmlResponse = response.text();
+          // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+          // return response.text();
+          return response.text().then(result =>
+            // console.log('xml ********', result);
+            new DOMParser().parseFromString(result, 'text/html'),
+          );
+        }
+        return 'done';
+      })
+      .then(data => {
+        // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+        const theFore = data.querySelector('fx-fore');
 
-          // console.log('thefore', theFore)
-          if(!theFore){
-            Fore.dispatchEvent(this,'error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}});
-          }
-          theFore.setAttribute('from-src', this.src);
-          this.replaceWith(theFore);
-        })
-        .catch(error => {
-          Fore.dispatch(this,'error',{message: `'${this.src}' not found or does not contain Fore element.`});
+        // console.log('thefore', theFore)
+        if (!theFore) {
+          Fore.dispatchEvent(this, 'error', {
+            detail: {
+              message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
+            },
+          });
+        }
+        theFore.setAttribute('from-src', this.src);
+        this.replaceWith(theFore);
+      })
+      .catch(error => {
+        Fore.dispatch(this, 'error', {
+          message: `'${this.src}' not found or does not contain Fore element.`,
         });
+      });
   }
 
   /**
@@ -359,57 +362,57 @@ export class FxFore extends HTMLElement {
     // refresh () {
     console.group('### refresh');
 
-
-
     console.time('refresh');
 
     // ### refresh Fore UI elements
     console.time('refreshChildren');
-    console.log('toRefresh',this.toRefresh);
+    console.log('toRefresh', this.toRefresh);
 
-    if(!this.initialRun && this.toRefresh.length !== 0){
+    if (!this.initialRun && this.toRefresh.length !== 0) {
       let needsRefresh = false;
 
       // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
       this.toRefresh.forEach(modelItem => {
         // check if modelItem has boundControls - if so, call refresh() for each of them
         const controlsToRefresh = modelItem.boundControls;
-        if(controlsToRefresh){
+        if (controlsToRefresh) {
           controlsToRefresh.forEach(ctrl => {
             ctrl.refresh();
           });
         }
 
         // ### check if other controls depend on current modelItem
-        const mainGraph = this.getModel().mainGraph;
-        if(mainGraph && mainGraph.hasNode(modelItem.path)){
+        const { mainGraph } = this.getModel();
+        if (mainGraph && mainGraph.hasNode(modelItem.path)) {
           const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
           // ### iterate dependant modelItems and refresh all their boundControls
-          if(deps.length !== 0){
+          if (deps.length !== 0) {
             deps.forEach(dep => {
               // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
               const basePath = XPathUtil.getBasePath(dep);
               const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
               // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach(control =>{control.refresh()});
+              modelItemOfDep.boundControls.forEach(control => {
+                control.refresh();
+              });
             });
             needsRefresh = true;
           }
         }
       });
       this.toRefresh = [];
-      if(!needsRefresh){
+      if (!needsRefresh) {
         console.log('skipping refresh - no dependants');
       }
-    }else{
+    } else {
       Fore.refreshChildren(this, true);
       console.timeEnd('refreshChildren');
     }
 
     // ### refresh template expressions
-    if(this.initialRun || this.someInstanceDataStructureChanged){
+    if (this.initialRun || this.someInstanceDataStructureChanged) {
       this._updateTemplateExpressions();
-      this.someInstanceDataStructureChanged = false; //reset
+      this.someInstanceDataStructureChanged = false; // reset
     }
     this._processTemplateExpressions();
 
@@ -459,7 +462,6 @@ export class FxFore extends HTMLElement {
 
     // TODO: Should we clean up nodes that existed but are now gone?
     this._processTemplateExpressions();
-
   }
 
   _processTemplateExpressions() {
@@ -471,7 +473,7 @@ export class FxFore extends HTMLElement {
     }
   }
 
-// eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
   _processTemplateExpression(exprObj) {
     // console.log('processing template expression ', exprObj);
 
@@ -679,7 +681,7 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     console.log('### _initUI()');
-    if(!this.initialRun) return;
+    if (!this.initialRun) return;
     await this._lazyCreateInstance();
 
     // console.log('registering variables!');
@@ -694,11 +696,13 @@ export class FxFore extends HTMLElement {
     })(this);
     console.log('Found variables:', variables);
 
+/*
     const options = {
       root: null,
       rootMargin: '0px',
       threshold: 0.3,
     };
+*/
 
     await this.refresh();
     // this.style.display='block'
@@ -708,9 +712,9 @@ export class FxFore extends HTMLElement {
     this.ready = true;
     this.initialRun = false;
     console.log('### >>>>> dispatching ready >>>>>', this);
-    console.log('modelItems: ',this.getModel().modelItems);
+    console.log('modelItems: ', this.getModel().modelItems);
     console.log('### <<<<< FORE: form fully initialized...', this);
-    Fore.dispatch(this,'ready',{});
+    Fore.dispatch(this, 'ready', {});
   }
 
   registerLazyElement(element) {

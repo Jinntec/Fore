@@ -1,7 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {
-  evaluateXPath,
   evaluateXPathToNodes,
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
@@ -47,7 +46,6 @@ export class FxInsert extends AbstractAction {
       // ### if there's an origin attribute use it
       let originTarget;
       try {
-
         /*
         todo: discuss where to pass vars from event.detail into function context
          */
@@ -170,7 +168,6 @@ export class FxInsert extends AbstractAction {
           // index=1;
           inscope.append(originSequenceClone);
         } else if (this.hasAttribute('context')) {
-          const contextAttr = this.getAttribute('context');
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
         } else {

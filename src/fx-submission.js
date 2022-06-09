@@ -67,7 +67,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   async submit() {
-    await Fore.dispatch(this,'submit', { submission: this });
+    await Fore.dispatch(this, 'submit', { submission: this });
     this._submit();
   }
 
@@ -84,7 +84,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         console.log('validation failed. Bubmission stopped');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
-        Fore.dispatch(this,'submit-error',{});
+        Fore.dispatch(this, 'submit-error', {});
         this.getModel().parentNode.refresh();
         return;
       }
@@ -153,7 +153,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       }
       this._handleResponse(data);
       // this.dispatch('submit-done', {});
-      Fore.dispatch(this,'submit-done',{});
+      Fore.dispatch(this, 'submit-done', {});
       return;
     }
     // ### setting headers
@@ -167,7 +167,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     if (!this.methods.includes(this.method.toLowerCase())) {
       // this.dispatch('error', { message: `Unknown method ${this.method}` });
-      Fore.dispatch(this,'error',{ message: `Unknown method ${this.method}` })
+      Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
     const response = await fetch(resolvedUrl, {
@@ -180,7 +180,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     if (!response.ok || response.status > 400) {
       // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
-      Fore.dispatch(this,'submit-error',{ message: `Error while submitting ${this.id}` });
+      Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
       return;
     }
 
@@ -205,7 +205,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     // this.dispatch('submit-done', {});
-    Fore.dispatch(this,'submit-done',{});
+    Fore.dispatch(this, 'submit-done', {});
   }
 
   _serialize(instanceType, relevantNodes) {
@@ -415,7 +415,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
   _handleError() {
     // this.dispatch('submit-error', {});
-    Fore.dispatch(this,'submit-error',{});
+    Fore.dispatch(this, 'submit-error', {});
     /*
                 console.log('ERRRORRRRR');
                 this.dispatchEvent(

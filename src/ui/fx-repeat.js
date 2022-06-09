@@ -135,7 +135,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
           // const index = prev.index();
           // this.applyIndex(this.index -1);
 
-          Fore.dispatch(this,'path-mutated', { path, index: this.index });
+          Fore.dispatch(this, 'path-mutated', { path, index: this.index });
         }
       }
     });
@@ -200,12 +200,12 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
 
     const rawNodeset = evaluateXPath(this.ref, inscope, this);
-	if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
+    if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
       // This XPath likely returned an XPath array. Just collapse to that array
       this.nodeset = rawNodeset[0];
       return;
     }
-	this.nodeset = rawNodeset;
+    this.nodeset = rawNodeset;
   }
 
   async refresh(force) {

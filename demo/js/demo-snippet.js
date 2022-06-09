@@ -14,9 +14,9 @@ import '@polymer/marked-element/marked-element.js';
 import '@polymer/prism-element/prism-highlighter.js';
 import '@polymer/prism-element/prism-theme-default.js';
 
-import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
 /**
 `demo-snippet` is a helper element that displays the source of a code snippet
@@ -59,9 +59,8 @@ Polymer({
       :host {
         display: block;
 
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12),
+          0 3px 1px -2px rgba(0, 0, 0, 0.2);
         margin-bottom: 40px;
         @apply --demo-snippet;
       }
@@ -92,7 +91,6 @@ Polymer({
         font-size: 10px;
         overflow: auto;
         @apply --demo-snippet-code;
-        
       }
       .code > pre {
         margin: 0;
@@ -118,20 +116,19 @@ Polymer({
 
     <div class="code-container">
       <marked-element markdown="[[_markdown]]" id="marked">
-         <div class="code" slot="markdown-html" id="code"></div>
+        <div class="code" slot="markdown-html" id="code"></div>
       </marked-element>
-<!--      <button id="copyButton" title="copy to clipboard" on-tap="_copyToClipboard">Copy</button>-->
+      <!--      <button id="copyButton" title="copy to clipboard" on-tap="_copyToClipboard">Copy</button>-->
     </div>
-`,
+  `,
 
   is: 'demo-snippet',
 
   properties: {
-
     /**
-     * Fired when the demo-snippet is ready, i.e. when it has injected the code to demo 
+     * Fired when the demo-snippet is ready, i.e. when it has injected the code to demo
      * in the DOM and it can be interacted with
-     * 
+     *
      * @event dom-ready
      */
 
@@ -142,9 +139,11 @@ Polymer({
   },
 
   attached: function() {
-    this._observer = dom(this.$.content).observeNodes(function(info) {
-      this._updateMarkdown();
-    }.bind(this));
+    this._observer = dom(this.$.content).observeNodes(
+      function(info) {
+        this._updateMarkdown();
+      }.bind(this),
+    );
   },
 
   detached: function() {
@@ -172,8 +171,7 @@ Polymer({
     // Boolean properties are displayed as checked="", so remove the ="" bit.
     snippet = snippet.replace(/=""/g, '');
 
-    this._markdown = '```\n' + snippet + '\n' +
-        '```';
+    this._markdown = '```\n' + snippet + '\n' + '```';
     // Stamp the template.
     if (!template.hasAttribute('is')) {
       // Don't need to listen for more changes (since stamping the template
@@ -212,5 +210,5 @@ Polymer({
 
   _resetCopyButtonState: function() {
     this.$.copyButton.textContent = 'copy';
-  }
+  },
 });

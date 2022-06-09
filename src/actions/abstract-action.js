@@ -1,7 +1,7 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import {Fore} from '../fore.js';
+import { Fore } from '../fore.js';
 
 async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
@@ -119,7 +119,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing e phase', e.eventPhase);
     if (e && e.detail) {
       this.detail = e.detail;
-      console.log('#### detail',e.detail)
+      // console.log('#### detail', e.detail);
     }
     this.needsUpdate = false;
 
@@ -209,7 +209,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   dispatchActionPerformed() {
     console.log('action-performed ', this);
-    Fore.dispatch(this,'action-performed',{})
+    Fore.dispatch(this, 'action-performed', {});
   }
 }
 

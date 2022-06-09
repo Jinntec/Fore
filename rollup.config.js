@@ -8,7 +8,7 @@ import strip from '@rollup/plugin-strip';
 const { dependencies } = require('./package.json');
 
 export default [
-/*
+  /*
   {
     input: './index.js',
     output: [

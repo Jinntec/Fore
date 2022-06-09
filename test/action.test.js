@@ -447,7 +447,7 @@ describe('action Tests', () => {
     const firstSetval = firstDiv.querySelector('#setval');
     await oneEvent(el, 'refresh-done');
 
-/*
+    /*
     for (let i = 0; i < 10; ++i) {
       await oneEvent(firstSetval, 'action-performed');
     }
@@ -456,7 +456,7 @@ describe('action Tests', () => {
     const firstControl = firstDiv.querySelector('fx-output');
     expect(firstControl.value).to.equal('10');
 
-/*
+    /*
     const secondTrigger = secondDiv.querySelector('fx-trigger');
     secondTrigger.performActions();
 
@@ -506,7 +506,7 @@ describe('action Tests', () => {
     const secondSetval = secondDiv.querySelector('#setval');
     await oneEvent(el, 'refresh-done');
 
-/*
+    /*
     for (let i = 0; i < 10; ++i) {
       await oneEvent(secondSetval, 'action-performed');
     }

@@ -126,7 +126,7 @@ class FxAppend extends AbstractAction {
       targetRepeat = document.getElementById(this.repeat);
     }
     console.log('dispatching index change ', targetRepeat.nodeset.length);
-    Fore.dispatch(targetRepeat,'index-changed',{ index: targetRepeat.nodeset.length })
+    Fore.dispatch(targetRepeat, 'index-changed', { index: targetRepeat.nodeset.length });
   }
 
   /**

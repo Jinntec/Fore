@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
-import {Relevance} from "../src/relevance.js";
+import { Relevance } from '../src/relevance.js';
 
 import '../index.js';
 
@@ -80,7 +80,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -128,7 +128,7 @@ describe('submission tests', () => {
 
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -167,7 +167,7 @@ describe('submission tests', () => {
 
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant( sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPathToBoolean('exists(vehicle/text())', result, null, {});
     expect(vehicle).to.be.false;
 
@@ -201,7 +201,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle/text()', result, null, {});
     // expect(vehicle).to.be.true;
     expect(vehicle).to.be.empty;
@@ -301,37 +301,39 @@ describe('submission tests', () => {
 
   it('submits and replaces json ', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="json">
-                        {
-                            "foo":"bar"
-                        }
-                    </fx-instance>
-                    <fx-instance id="response" type="json">{}</fx-instance>
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="json">
+            { "foo":"bar" }
+          </fx-instance>
+          <fx-instance id="response" type="json">{}</fx-instance>
 
-                    <fx-submission id="submission"
-                                   url="#echo"
-                                   method="POST"
-                                   replace="instance"
-                                   instance="response">
-                        <fx-message event="submit-done">JSON Data have been submitted - replacing instance</fx-message>
-                    </fx-submission>
-                </fx-model>
-                <fx-group collapse="true">
-                    <h1>Submission of JSON data</h1>
-                    <fx-trigger>
-                        <button>replace instance with json</button>
-                        <fx-send submission="submission"></fx-send>
-                    </fx-trigger>
-                    <fx-output ref="instance()?foo">
-                        <label slot="label">instance()?foo =</label>
-                    </fx-output>
-                    <fx-output id="out" ref="instance('response')?foo">
-                        <label slot="label">This message comes from replaced instance:</label>
-                    </fx-output>
-                </fx-group>
-            </fx-fore>
+          <fx-submission
+            id="submission"
+            url="#echo"
+            method="POST"
+            replace="instance"
+            instance="response"
+          >
+            <fx-message event="submit-done"
+              >JSON Data have been submitted - replacing instance</fx-message
+            >
+          </fx-submission>
+        </fx-model>
+        <fx-group collapse="true">
+          <h1>Submission of JSON data</h1>
+          <fx-trigger>
+            <button>replace instance with json</button>
+            <fx-send submission="submission"></fx-send>
+          </fx-trigger>
+          <fx-output ref="instance()?foo">
+            <label slot="label">instance()?foo =</label>
+          </fx-output>
+          <fx-output id="out" ref="instance('response')?foo">
+            <label slot="label">This message comes from replaced instance:</label>
+          </fx-output>
+        </fx-group>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

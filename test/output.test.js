@@ -83,7 +83,7 @@ describe('fx-output Tests', () => {
     expect(control.value).to.equal('hey there');
     expect(control.getModelItem().value).to.equal('hey there');
     const label = control.querySelector('label');
-    //label exists in lightDOM
+    // label exists in lightDOM
     expect(label).to.exist;
     expect(label.textContent).to.equal('Output bound node as HTML: ');
 
@@ -127,18 +127,18 @@ describe('fx-output Tests', () => {
 
   it('uses context attribute', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <a><b>1</b></a>
-                            <b>2</b>
-                            <b>3</b>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <div><fx-output context="a" value="b"></fx-output> ⇒ 1 </div>
-            </fx-fore>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <a><b>1</b></a>
+              <b>2</b>
+              <b>3</b>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <div><fx-output context="a" value="b"></fx-output> ⇒ 1</div>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');

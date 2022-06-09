@@ -228,7 +228,7 @@ export const foreElementMixin = superclass =>
           return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
         } catch (error) {
           console.error(error);
-          Fore.dispatch(this,'error',{message:error});
+          Fore.dispatch(this, 'error', { message: error });
         }
       }
       if (this.textContent) {
