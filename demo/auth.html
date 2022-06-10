@@ -6,8 +6,6 @@
 
     <title>Basic Auth</title>
 
-    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>
-
     <link href="../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
         <link href="../resources/demo.css" rel="stylesheet">
@@ -65,7 +63,7 @@
 
             <fx-submission id="login"
                            method="urlencoded-post"
-                           url="/login"
+                           url="#echo"
                            replace="none">
                 <fx-setvalue ref="inprogress" event="submit">true</fx-setvalue>
                 <fx-header name="Authorization" value="'auth'"></fx-header>
@@ -111,6 +109,6 @@
     </fx-fore>
 
 </div>
-<script type="module" src="../index.js"></script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>
