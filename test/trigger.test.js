@@ -25,14 +25,14 @@ describe('trigger tests', () => {
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
     expect(trigger).to.exist;
-    expect(trigger.classList.contains('readonly')).to.be.true;
+    expect(trigger.hasAttribute('readonly')).to.be.true;
 
     const widget = trigger.firstElementChild;
     expect(widget).to.exist;
     expect(widget.hasAttribute('readonly')).to.be.true;
     expect(widget.hasAttribute('disabled')).to.be.true;
   });
-  it.skip('toggles disabled state', async () => {
+  it('toggles disabled state', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>

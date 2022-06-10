@@ -135,7 +135,7 @@ describe('refresh Tests', () => {
     expect(c1.modelItem.readonly).to.be.true;
     expect(c1.modelItem.required).to.be.false;
     // check control states
-    expect(c1.classList.contains('readonly')).to.be.true;
+    expect(c1.hasAttribute('readonly')).to.be.true;
 
     const c2 = el.querySelector('#output2');
     expect(c2.modelItem.value).to.equal('Bs');
@@ -143,7 +143,7 @@ describe('refresh Tests', () => {
     expect(c2.modelItem.boundControls.length).to.equal(2);
 
     expect(c2.modelItem.required).to.be.true;
-    expect(c2.classList.contains('required')).to.be.true;
+    expect(c2.hasAttribute('required')).to.be.true;
 
     const c3 = el.querySelector('#output3');
     expect(c3.modelItem.value).to.equal('C');

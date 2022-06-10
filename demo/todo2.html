@@ -27,8 +27,9 @@
                         <showclosed>false</showclosed>
                     </data>
                 </fx-instance>
-                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'">
-                    <fx-bind ref="./text()" required="true()"></fx-bind>
+                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'" readonly="@complete != 'false'">
+                    <fx-bind ref="./text()" required="true()" ></fx-bind>
+                    <fx-bind ref="./@due" required="true()" ></fx-bind>
                 </fx-bind>
             </fx-model>
 
