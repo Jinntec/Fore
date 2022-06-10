@@ -12,6 +12,10 @@
     font-size: 1.4rem;
     padding: 0.8rem 1.2rem;
     text-decoration: none;
+    border-top: thin solid rgba(255,255,255,0.5);
+    border-left:thin solid rgba(255,255,255,0.5);
+    border-bottom: thin solid rgba(0,0,0,0.2);
+    border-right: thin solid rgba(0,0,0,0.2);
 
 }
 
@@ -26,7 +30,11 @@ body {
 .left-col{
 
 }
-
+/*
+#demos header{
+    height: 200px;
+}
+*/
 demo-snippet{
     overflow: auto;
     height:fit-content;
@@ -46,6 +54,11 @@ em{
     margin: 1rem;
     color:var(--paper-grey-900);
     border-radius: 0.3rem;
+    /*border-top: thin solid rgba(255,255,255,0.5);*/
+    /*border-left:thin solid rgba(255,255,255,0.5);*/
+    border-bottom: thin solid rgba(0,0,0,0.7);
+    border-right: thin solid rgba(0,0,0,0.7);
+
     /*
     border-left:thin solid white;
     border-top: thin solid white;
@@ -58,6 +71,7 @@ em{
 }
 footer{
     margin-top:2rem;
+    border-top:thin solid rgba(255,255,255,0.5);
 }
 
 fx-fore{
@@ -160,7 +174,10 @@ header{
     /*background: url(../resources/images/cool-background.png) no-repeat ;*/
 
 }
-
+.learn{
+    margin-left:1rem;
+    font-size: 1.4rem;
+}
 .logo{
     width: 120px;
 }
@@ -185,6 +202,8 @@ nav{
     width: 100%;
     padding: 1.5rem 0;
     background: rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-bottom:1px solid rgba(0,0,0,0.2);
 }
 
 nav a, nav a:link, nav a:visited{
@@ -198,6 +217,7 @@ nav a, nav a:link, nav a:visited{
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     grid-gap: 1rem;
 }
+
 .teaser{
     justify-items: center;
     margin-top: 1rem;
@@ -281,6 +301,13 @@ ul a, ul a:link, ul a:visited{
 ul li{
     padding-bottom: 1rem;
 }
+
+[href="#"]{
+    background: rgba(255,255,255,0.75);
+    border-radius: 0.2rem;
+    text-decoration: none;
+}
+
 @media (max-width: 500px) {
     .github-corner:hover .octo-arm {
         animation: none
