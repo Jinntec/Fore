@@ -167,6 +167,111 @@ describe('control tests', () => {
     expect(input.widget.value).to.equal('A');
   });
 
+  it('gets readonly state attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" readonly="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    // let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.readonly).to.be.true;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('readonly')).to.be.true;
+  });
+
+  it('gets readonly state attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" readonly="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    // let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.readonly).to.be.true;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('readonly')).to.be.true;
+  });
+
+  it('gets required state attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" required="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    // let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.required).to.be.true;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('required')).to.be.true;
+  });
+
+  it('gets invalid state attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" constraint="false()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    // await elementUpdated(el);
+    let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.constraint).to.be.false;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('invalid')).to.be.false;
+
+    // modifying value
+    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    await oneEvent(input, 'invalid');
+    expect(input.hasAttribute('invalid')).to.be.true;
+  });
+
   /*
     it('listens for event', async () => {
         const el =  (

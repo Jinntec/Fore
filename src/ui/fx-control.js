@@ -406,8 +406,8 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
-      // ### bail out when nodeset is empty
-      if (nodeset.length === 0) return;
+      // ### bail out when nodeset is array and empty
+      if (Array.isArray(nodeset) && nodeset.length === 0) return;
 
       // ### clear items
       const { children } = widget;
@@ -419,7 +419,9 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
-        nodeset.forEach(node => {
+        if (nodeset.length) {
+          // console.log('nodeset', nodeset);
+          Array.from(nodeset).forEach(node => {
           // console.log('#### node', node);
           const newEntry = this.createEntry();
 
@@ -427,6 +429,10 @@ export default class FxControl extends XfAbstractControl {
           // ### set value
           this.updateEntry(newEntry, node);
         });
+        } else {
+          const newEntry = this.createEntry();
+          this.updateEntry(newEntry, nodeset);
+        }
       }
     }
   }

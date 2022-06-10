@@ -117,6 +117,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this.handleValid();
     }
     this.handleRelevant();
+    //todo: handleType()
   }
 
   _getForm() {
@@ -133,10 +134,11 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
-    if (this.required !== this.modelItem.required) {
+    // if (this.required !== this.modelItem.required) {
+    if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
-        this.widget.setAttribute('required', 'required');
-        this.setAttribute('required', 'required');
+        this.widget.setAttribute('required', '');
+        this.setAttribute('required', '');
         this._dispatchEvent('required');
       } else {
         this.widget.removeAttribute('required');
@@ -150,8 +152,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip readonly', this.modelItem.isReadonly);
     if (this.isReadonly() !== this.modelItem.readonly) {
       if (this.modelItem.readonly) {
-        this.widget.setAttribute('readonly', 'readonly');
-        this.setAttribute('readonly', 'readonly');
+        this.widget.setAttribute('readonly', '');
+        this.setAttribute('readonly', '');
         this._dispatchEvent('readonly');
       }
       if (!this.modelItem.readonly) {
@@ -171,7 +173,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem.constraint) {
         if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
+        this.removeAttribute('invalid');
       } else {
+        this.setAttribute('invalid','');
         // ### constraint is invalid - handle alerts
         if (alert) {
           alert.style.display = 'block';
@@ -218,12 +222,16 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     }
   }
 
-	isRequired() {
+  isRequired() {
       return this.hasAttribute('required');
   }
 
-	isValid() {
-		return this.valid;
+  isValid() {
+      // return this.valid;
+      if(this.hasAttribute('invalid')){
+        return false;
+      }
+      return true;
   }
 
   isReadonly() {
