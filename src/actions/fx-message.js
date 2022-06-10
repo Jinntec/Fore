@@ -61,4 +61,6 @@ class FxMessage extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-message', FxMessage);
+if (!customElements.get('fx-message')) {
+  window.customElements.define('fx-message', FxMessage);
+}

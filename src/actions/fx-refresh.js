@@ -19,4 +19,6 @@ class FxRefresh extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-refresh', FxRefresh);
+if (!customElements.get('fx-refresh')) {
+  window.customElements.define('fx-refresh', FxRefresh);
+}

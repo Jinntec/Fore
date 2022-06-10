@@ -69,4 +69,6 @@ export default class FxSetvalue extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-setvalue', FxSetvalue);
+if (!customElements.get('fx-setvalue')) {
+  window.customElements.define('fx-setvalue', FxSetvalue);
+}

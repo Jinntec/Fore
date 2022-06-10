@@ -31,4 +31,6 @@ class FxToggle extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-toggle', FxToggle);
+if (!customElements.get('fx-toggle')) {
+  window.customElements.define('fx-toggle', FxToggle);
+}

@@ -399,4 +399,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     return 'default';
   }
 }
-customElements.define('fx-bind', FxBind);
+if (!customElements.get('fx-bind')) {
+  customElements.define('fx-bind', FxBind);
+}

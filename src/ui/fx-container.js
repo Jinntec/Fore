@@ -111,4 +111,6 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   }
 }
 
-window.customElements.define('fx-container', FxContainer);
+if (!customElements.get('fx-container')) {
+  window.customElements.define('fx-container', FxContainer);
+}

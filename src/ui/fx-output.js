@@ -162,4 +162,6 @@ export class FxOutput extends XfAbstractControl {
   }
 }
 
-customElements.define('fx-output', FxOutput);
+if (!customElements.get('fx-output')) {
+  customElements.define('fx-output', FxOutput);
+}

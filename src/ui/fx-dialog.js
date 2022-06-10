@@ -77,4 +77,6 @@ export class FxDialog extends HTMLElement {
   }
 }
 
-customElements.define('fx-dialog', FxDialog);
+if (!customElements.get('fx-dialog')) {
+  customElements.define('fx-dialog', FxDialog);
+}

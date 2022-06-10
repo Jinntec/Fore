@@ -44,4 +44,6 @@ class FxCase extends HTMLElement {
   }
 }
 
-window.customElements.define('fx-case', FxCase);
+if (!customElements.get('fx-case')) {
+    window.customElements.define('fx-case', FxCase);
+}

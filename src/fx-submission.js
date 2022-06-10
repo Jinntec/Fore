@@ -428,5 +428,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         */
   }
 }
-
-customElements.define('fx-submission', FxSubmission);
+if (!customElements.get('fx-submission')) {
+  customElements.define('fx-submission', FxSubmission);
+}

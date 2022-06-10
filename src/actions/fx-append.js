@@ -207,4 +207,6 @@ class FxAppend extends AbstractAction {
   */
 }
 
-window.customElements.define('fx-append', FxAppend);
+if (!customElements.get('fx-append')) {
+  window.customElements.define('fx-append', FxAppend);
+}

@@ -12,4 +12,6 @@ class FxUpdate extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-update', FxUpdate);
+if (!customElements.get('fx-update')) {
+  window.customElements.define('fx-update', FxUpdate);
+}

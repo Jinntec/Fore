@@ -41,5 +41,6 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
     this.inScopeVariables = new Map(inScopeVariables);
   }
 }
-
-customElements.define('fx-var', FxVariable);
+if (!customElements.get('fx-var')) {
+  customElements.define('fx-var', FxVariable);
+}

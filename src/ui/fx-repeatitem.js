@@ -109,4 +109,6 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 }
 
-window.customElements.define('fx-repeatitem', FxRepeatitem);
+if (!customElements.get('fx-repeatitem')) {
+  window.customElements.define('fx-repeatitem', FxRepeatitem);
+}

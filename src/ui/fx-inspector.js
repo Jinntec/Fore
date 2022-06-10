@@ -140,4 +140,6 @@ export class FxInspector extends HTMLElement {
   }
 }
 
-customElements.define('fx-inspector', FxInspector);
+if (!customElements.get('fx-inspector')) {
+  customElements.define('fx-inspector', FxInspector);
+}

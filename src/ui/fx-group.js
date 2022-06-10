@@ -86,4 +86,6 @@ class FxGroup extends FxContainer {
   }
 }
 
-window.customElements.define('fx-group', FxGroup);
+if (!customElements.get('fx-group')) {
+  window.customElements.define('fx-group', FxGroup);
+}

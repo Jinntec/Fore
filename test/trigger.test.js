@@ -32,7 +32,8 @@ describe('trigger tests', () => {
     expect(widget.hasAttribute('readonly')).to.be.true;
     expect(widget.hasAttribute('disabled')).to.be.true;
   });
-  it('toggles disabled state', async () => {
+
+  it('toggles readonly state off', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -41,7 +42,7 @@ describe('trigger tests', () => {
               <disabled>true</disabled>
             </data>
           </fx-instance>
-          <fx-bind ref="disabled" readonly=". ='true'"></fx-bind>
+          <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
         </fx-model>
         <fx-trigger ref="disabled">
           <button>I'm a button</button>
@@ -53,23 +54,46 @@ describe('trigger tests', () => {
           <fx-setvalue id="senable" ref="disabled">false</fx-setvalue>
         </fx-trigger>
 
-        <fx-trigger id="disable">
-          <button>diabling...</button>
-          <fx-setvalue ref="disabled">true</fx-setvalue>
-        </fx-trigger>
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    // await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
     expect(trigger).to.exist;
 
     const enable = document.getElementById('enable');
     enable.performActions();
 
-    const action = document.getElementById('senable');
-    await oneEvent(action, 'action-performed');
+    expect(trigger.hasAttribute('readonly')).to.be.false;
+  });
 
-    expect(trigger.classList.contains('readonly')).to.be.true;
+  it('toggles readonly state on', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <disabled>false</disabled>
+            </data>
+          </fx-instance>
+          <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
+          <fx-setvalue event="model-construct-done" ref="disabled">true</fx-setvalue>
+        </fx-model>
+        <fx-trigger ref="disabled">
+          <button>I'm a button</button>
+          <fx-message class="action">Hi from button</fx-message>
+        </fx-trigger>
+
+        <fx-trigger id="setReadonly">
+          <button>set to readonly...</button>
+          <fx-setvalue id="readonly" ref="disabled">true</fx-setvalue>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    const trigger = el.querySelector('fx-trigger');
+    expect(trigger).to.exist;
+    await oneEvent(el, 'refresh-done');
+    expect(trigger.hasAttribute('readonly')).to.be.true;
   });
 });

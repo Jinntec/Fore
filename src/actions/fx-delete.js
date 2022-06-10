@@ -77,4 +77,6 @@ class FxDelete extends AbstractAction {
   }
 }
 
-window.customElements.define('fx-delete', FxDelete);
+if (!customElements.get('fx-delete')) {
+  window.customElements.define('fx-delete', FxDelete);
+}

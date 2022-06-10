@@ -28,7 +28,7 @@
     "!.DS_Store"
   ],
   "dependencies": {
-    "@jinntec/jinn-toast": "^1.0.3",
+    "@jinntec/jinn-toast": "^1.0.4",
     "fontoxpath": "^3.26.0"
   },
   "devDependencies": {

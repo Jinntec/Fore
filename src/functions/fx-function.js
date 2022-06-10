@@ -108,4 +108,6 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
     }
   }
 }
-customElements.define('fx-function', FxFunction);
+if (!customElements.get('fx-function')) {
+  customElements.define('fx-function', FxFunction);
+}

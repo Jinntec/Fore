@@ -17,4 +17,6 @@ export class FxHeader extends foreElementMixin(HTMLElement) {
     this.shadowRoot.innerHTML = ``;
   }
 }
-customElements.define('fx-header', FxHeader);
+if (!customElements.get('fx-header')) {
+  customElements.define('fx-header', FxHeader);
+}
