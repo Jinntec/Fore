@@ -38,6 +38,14 @@
             <label>Email</label>
             <fx-return ref="." event="value-changed"></fx-return>
         </fx-control>
+		<fx-trigger>
+          <button>Check it</button>
+          <fx-dispatch name="myEvent" targetid="report">
+          </fx-dispatch>
+        </fx-trigger>
+		<div id="report">
+		  <fx-message event="myEvent">Something happened {email}!</fx-message>
+		</div>
         <fx-trigger>
             <button>message and refresh me</button>
             <fx-message>Hey my address is {email}</fx-message>
