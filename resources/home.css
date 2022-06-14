@@ -96,8 +96,8 @@ footer h4{
     /*
     width: 300px;
     margin: 0 auto;
-    filter:contrast(2.5) brightness(1.2) drop-shadow(1px 2px 1px lightgrey);
     */
+    filter:drop-shadow(1px 1px 1px ghostwhite);
     margin:0.5rem 0;
 }
 
@@ -184,7 +184,6 @@ header{
 .logo.fore{
     width: 300px;
     filter:contrast(2.5) brightness(1.2) drop-shadow(1px 2px 1px lightgrey);
-
 }
 .logo.jinntec{
     margin:0.3rem 0;
@@ -208,7 +207,7 @@ nav{
 
 nav a, nav a:link, nav a:visited{
     color: black;
-    padding: 0 1rem;
+    padding: 0.75rem 1rem;
     font-size: 1.2rem;
 }
 
@@ -285,8 +284,13 @@ section > div {
 }
 #version{
     position:fixed;
-    bottom:1rem;
-    right: 1rem;
+    bottom:0;
+    right: 0;
+    background: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.5rem;
+    border-top-left-radius: 0.3rem;
+    font-size: 0.7rem;
+    color:white;
 }
 ul{
     list-style: none;
