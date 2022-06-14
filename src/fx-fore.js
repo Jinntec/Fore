@@ -76,10 +76,10 @@ export class FxFore extends HTMLElement {
             :host ::slotted(fx-model){
                 display:none;
             }
-            :host(.fx-ready){
-                animation: fadein .4s forwards;
-                display:block;
-            }
+            // :host(.fx-ready){
+            //     animation: fadein .4s forwards;
+            //     display:block;
+            // }
 
             #modalMessage .dialogActions{
                 text-align:center;

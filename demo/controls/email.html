@@ -43,6 +43,7 @@
 			</fx-control>
 			<fx-trigger>
 			  <button>Check it</button>
+			  <fx-show dialog="myDialog"></fx-show>
 			  <fx-dispatch name="myEvent" targetid="report">
 			  </fx-dispatch>
 			</fx-trigger>
@@ -52,11 +53,25 @@
 			<fx-message event="myEvent" target="report">!!!{.}</fx-message>
 			<fx-trigger>
               <button>message and refresh me</button>
-              <fx-message>Hey my address is {email}</fx-message>
+              <fx-message>Hey my address is {.}</fx-message>
               <fx-refresh></fx-refresh>
 			</fx-trigger>
+
+
+			<fx-dialog id="myDialog">
+              <div class="dialog-content">
+                <a class="close-dialog" href="#" autofocus>&times;</a>
+                <h3>Here's some dialog content</h3>
+                <p>Hey my address is {.}</p>
+                <fx-trigger class="action">
+                  <button>close</button>
+                  <fx-hide dialog="myDialog"></fx-hide>
+                </fx-trigger>
+              </div>
+			</fx-dialog>
+
 		  </template>
-		</fx-repeat>2
+		</fx-repeat>
 		<fx-trigger><button> append</button><fx-insert ref="email"></fx-trigger>
 		<!--        <fx-inspector open></fx-inspector>-->
       </fx-fore>
