@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
@@ -8,54 +8,61 @@
     <link href="../../resources/fore.css" rel="stylesheet">
 
     <style>
-        body, .wrapper {
-            margin: 0;
-            padding: 0;
-        }
+      body, .wrapper {
+          margin: 0;
+          padding: 0;
+      }
 
-        .wrapper {
-            width: 21cm;
-            height: 29.7cm;
-            background: lightyellow;
-        }
+      .wrapper {
+          width: 21cm;
+          height: 29.7cm;
+          background: lightyellow;
+      }
     </style>
-</head>
-<body>
-<div class="wrapper">
+  </head>
+  <body>
+	<div class="wrapper">
 
-    <fx-fore load-css="inner.css">
+      <fx-fore load-css="inner.css">
         <fx-message event="ready">subcomponent ready</fx-message>
         <fx-model>
-            <fx-message event="model-construct-done">subcomponent model ready</fx-message>
+          <fx-message event="model-construct-done">subcomponent model ready</fx-message>
 
-            <fx-instance id="email">
-                <data>
-                    <email>default</email>
-                </data>
-            </fx-instance>
+          <fx-instance id="email">
+            <data>
+              <email>default</email>
+              <email>default</email>
+            </data>
+          </fx-instance>
         </fx-model>
-        <fx-control ref="instance('email')/email" update-event="input">
-            <label>Email</label>
-            <fx-return ref="." event="value-changed"></fx-return>
-        </fx-control>
-		<fx-trigger>
-          <button>Check it</button>
-          <fx-dispatch name="myEvent" targetid="report">
-          </fx-dispatch>
-        </fx-trigger>
-		<div id="report">
-		  <fx-message event="myEvent">Something happened {email}!</fx-message>
-		</div>
-        <fx-trigger>
-            <button>message and refresh me</button>
-            <fx-message>Hey my address is {email}</fx-message>
-            <fx-refresh></fx-refresh>
-        </fx-trigger>
-<!--        <fx-inspector open></fx-inspector>-->
-    </fx-fore>
+		<fx-repeat id="emails" ref="instance('email')/email">
+		  <template>
+			<fx-control ref="." update-event="input">
+              <label>Email</label>
+              <fx-return ref="." event="value-changed"></fx-return>
+			</fx-control>
+			<fx-trigger>
+			  <button>Check it</button>
+			  <fx-dispatch name="myEvent" targetid="report">
+			  </fx-dispatch>
+			</fx-trigger>
+			<div id="report">
+			  <fx-message event="myEvent">Something happened {.}!</fx-message>
+			</div>
+			<fx-message event="myEvent" target="report">!!!{.}</fx-message>
+			<fx-trigger>
+              <button>message and refresh me</button>
+              <fx-message>Hey my address is {email}</fx-message>
+              <fx-refresh></fx-refresh>
+			</fx-trigger>
+		  </template>
+		</fx-repeat>2
+		<fx-trigger><button> append</button><fx-insert ref="email"></fx-trigger>
+		<!--        <fx-inspector open></fx-inspector>-->
+      </fx-fore>
 
 
-</div>
-<script type="module" src="../../index.js"></script>
-</body>
+	</div>
+	<script type="module" src="../../index.js"></script>
+  </body>
 </html>
