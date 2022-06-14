@@ -36,7 +36,7 @@
         fx-fore fx-fore {
             background: lightsteelblue;
             border: thin solid steelblue;
-            height:200px;
+            /*height:200px;*/
         }
 
         label{
@@ -52,6 +52,18 @@
         .wrapper{
             padding: 2rem;
             background: white;
+        }
+/*
+        #inner-inspect{
+            position:fixed;
+            left:0;
+        }
+*/
+        #attachments{
+            height: 300px;
+        }
+        #attachments fx-repeatitem{
+            display: block;
         }
     </style>
 </head>
@@ -81,6 +93,7 @@
                     </to>
                     <subject></subject>
                     <message></message>
+                    <attachments></attachments>
                 </data>
             </fx-instance>
 <!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
@@ -100,8 +113,7 @@
             </fx-control>
             <fx-control ref="to/email"
                         url="email.html"
-                        initial="."
-                        shadow>
+                        initial=".">
                 <label>To</label>
             </fx-control>
             <!--
@@ -113,6 +125,10 @@
                 <textarea class="widget" rows="10"></textarea>
             </fx-control>
 -->
+            <fx-control ref="attachments"
+                        url="attachments.html" >
+                <label>Attachments</label>
+            </fx-control>
         </fx-group>
         <fx-inspector open></fx-inspector>
     </fx-fore>
