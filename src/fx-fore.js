@@ -697,7 +697,7 @@ export class FxFore extends HTMLElement {
     })(this);
     console.log('Found variables:', variables);
 
-/*
+    /*
     const options = {
       root: null,
       rootMargin: '0px',

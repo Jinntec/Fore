@@ -1,5 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
-import { Fore} from '../fore.js';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-refresh`
@@ -10,7 +10,7 @@ import { Fore} from '../fore.js';
 class FxRefresh extends AbstractAction {
   perform() {
     if (this.hasAttribute('self')) {
-		const control = Fore.getClosest('fx-control', this);
+      const control = Fore.getClosest('fx-control', this);
       if (control) {
         control.refresh();
         return;

@@ -161,7 +161,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.removeAttribute('readonly');
         this._dispatchEvent('readwrite');
       }
-		  }
+    }
   }
 
   // todo - review alert handling altogether. There could be potentially multiple ones in model
@@ -175,7 +175,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this._dispatchEvent('valid');
         this.removeAttribute('invalid');
       } else {
-        this.setAttribute('invalid','');
+        this.setAttribute('invalid', '');
         // ### constraint is invalid - handle alerts
         if (alert) {
           alert.style.display = 'block';
@@ -223,20 +223,20 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isRequired() {
-      return this.hasAttribute('required');
+    return this.hasAttribute('required');
   }
 
   isValid() {
-      // return this.valid;
-      if(this.hasAttribute('invalid')){
-        return false;
-      }
-      return true;
+    // return this.valid;
+    if (this.hasAttribute('invalid')) {
+      return false;
+    }
+    return true;
   }
 
   isReadonly() {
     // const widget = this.querySelector('#widget');
-      return this.hasAttribute('readonly');
+    return this.hasAttribute('readonly');
   }
 
   isEnabled() {

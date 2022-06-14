@@ -14,7 +14,7 @@ import { AbstractAction } from './abstract-action.js';
  */
 export class FxReturn extends AbstractAction {
   connectedCallback() {
-    if(super.connectedCallback){
+    if (super.connectedCallback) {
       super.connectedCallback();
     }
     // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;

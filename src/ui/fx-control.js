@@ -422,13 +422,13 @@ export default class FxControl extends XfAbstractControl {
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
           Array.from(nodeset).forEach(node => {
-          // console.log('#### node', node);
-          const newEntry = this.createEntry();
+            // console.log('#### node', node);
+            const newEntry = this.createEntry();
 
-          // ### initialize new entry
-          // ### set value
-          this.updateEntry(newEntry, node);
-        });
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
         } else {
           const newEntry = this.createEntry();
           this.updateEntry(newEntry, nodeset);

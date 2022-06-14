@@ -1,4 +1,4 @@
-demo/js/*.js
-dist/
-test/*.js
+demo/**/*.js
+dist/*.js
+test/**/*.js
 src/drawdown.js

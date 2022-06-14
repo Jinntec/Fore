@@ -20,9 +20,9 @@ export class FxOutput extends XfAbstractControl {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-      this.valueAttr = this.hasAttribute('value') ? this.getAttribute('value') : null;
-	  // Outputs are always readonly!
-	  this.readonly = true;
+    this.valueAttr = this.hasAttribute('value') ? this.getAttribute('value') : null;
+    // Outputs are always readonly!
+    this.readonly = true;
   }
 
   connectedCallback() {
@@ -104,10 +104,10 @@ export class FxOutput extends XfAbstractControl {
     return valueWrapper;
   }
 
-	handleReadonly() {
-		// An output is always read-only
-		this.setAttribute('readonly', 'readonly');
-	}
+  handleReadonly() {
+    // An output is always read-only
+    this.setAttribute('readonly', 'readonly');
+  }
 
   async updateWidgetValue() {
     console.log('updateWidgetValue');

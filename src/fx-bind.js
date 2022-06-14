@@ -272,7 +272,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         if bind is the dot expression we use the modelitem of the parent
          */
     if (XPathUtil.isSelfReference(this.ref)) {
-		const parentBoundElement = Fore.getClosest('fx-bind[ref]', this.parentElement);
+      const parentBoundElement = Fore.getClosest('fx-bind[ref]', this.parentElement);
       console.log('parent bound element ', parentBoundElement);
 
       if (parentBoundElement) {

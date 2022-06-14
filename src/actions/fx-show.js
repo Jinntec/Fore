@@ -18,7 +18,7 @@ export class FxShow extends FxAction {
   }
 
   perform() {
-      resolveId(this.dialog, this).open();
+    resolveId(this.dialog, this).open();
   }
 }
 

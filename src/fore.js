@@ -144,22 +144,22 @@ export class Fore {
     return refreshed;
   }
 
-	/**
-	 * Alternative to `closest` that respects subcontrol boundaries
-*/
-	static getClosest(querySelector, start) {
-		while(!start.matches(querySelector)) {
-			if (start.matches('fx-fore')) {
-				// Subform reached. Bail out
-				return null;
-			}
-			start = start.parentNode;
-			if (!start) {
-				return null;
-			}
-		}
-		return start;
-	}
+  /**
+   * Alternative to `closest` that respects subcontrol boundaries
+   */
+  static getClosest(querySelector, start) {
+    while (!start.matches(querySelector)) {
+      if (start.matches('fx-fore')) {
+        // Subform reached. Bail out
+        return null;
+      }
+      start = start.parentNode;
+      if (!start) {
+        return null;
+      }
+    }
+    return start;
+  }
 
   /**
    * returns the proper content-type for instance.

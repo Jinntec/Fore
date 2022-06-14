@@ -46,7 +46,7 @@ export class FxItems extends FxControl {
       this.setAttribute('value', val.trim());
 
       // ### check for parent control
-		const parentBind = Fore.getClosest('[ref]', this.parentNode);
+      const parentBind = Fore.getClosest('[ref]', this.parentNode);
       if (!parentBind) return;
       const modelitem = parentBind.getModelItem();
       const setval = this.shadowRoot.getElementById('setvalue');
@@ -62,7 +62,7 @@ export class FxItems extends FxControl {
   async updateWidgetValue() {
     // console.log('setting items value');
 
-      const parentBind = Fore.getClosest('[ref]', this.parentNode);
+    const parentBind = Fore.getClosest('[ref]', this.parentNode);
     if (parentBind) {
       this.value = parentBind.value;
     }

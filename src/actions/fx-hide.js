@@ -18,7 +18,7 @@ export class FxHide extends AbstractAction {
   }
 
   perform() {
-      resolveId(this.dialog, this).hide();
+    resolveId(this.dialog, this).hide();
   }
 }
 
