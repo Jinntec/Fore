@@ -119,7 +119,7 @@ class FxAppend extends AbstractAction {
    * The target repeat is a child of the same repeat-item as the append action.
    */
   _dispatch() {
-    const targetRepeat= targetRepeat = resolveId(this.repeat, this);
+    const targetRepeat = resolveId(this.repeat, this);
     console.log('dispatching index change ', targetRepeat.nodeset.length);
     Fore.dispatch(targetRepeat, 'index-changed', { index: targetRepeat.nodeset.length });
   }
