@@ -45,6 +45,7 @@
                 </fx-model>
                 <div>{time}</div>
                 <div class="clock">
+                    <div class="circle" style="transform:rotate({second}deg);" data-secs="{substring(time,7,2)}"></div>
                     <div class="brand">Fore</div>
                     <span class="three-nine"></span>
 <!--
@@ -54,7 +55,6 @@
                     <div class="display-time">{time}</div>
                     <div style="transform:rotate({hour}deg);" class="hour"></div>
                     <div style="transform:rotate({minute}deg);" class="minute"></div>
-                    <div class="circle" style="transform:rotate({second}deg);" data-secs="{substring(time,7,2)}"></div>
                 </div>
 <!--                <fx-inspector open></fx-inspector>-->
             </fx-fore>

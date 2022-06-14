@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToBoolean } from '../xpath-evaluation.js';
+import { evaluateXPathToBoolean, resolveId } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 
@@ -88,7 +88,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       } else if (this.target === '#document') {
         document.addEventListener(this.event, e => this.execute(e));
       } else {
-        this.targetElement = document.getElementById(this.target);
+          this.targetElement = resolveId(this.target, this);
         this.targetElement.addEventListener(this.event, e => this.execute(e));
       }
     } else {

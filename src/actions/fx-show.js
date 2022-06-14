@@ -1,5 +1,6 @@
 import { Fore } from '../fore.js';
 import { FxAction } from './fx-action.js';
+import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-confirm`
@@ -17,7 +18,7 @@ export class FxShow extends FxAction {
   }
 
   perform() {
-    document.getElementById(this.dialog).open();
+      resolveId(this.dialog, this).open();
   }
 }
 

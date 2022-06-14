@@ -1,5 +1,6 @@
 import { Fore } from '../fore.js';
 import { AbstractAction } from './abstract-action.js';
+import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-hide`
@@ -17,7 +18,7 @@ export class FxHide extends AbstractAction {
   }
 
   perform() {
-    document.getElementById(this.dialog).hide();
+      resolveId(this.dialog, this).hide();
   }
 }
 

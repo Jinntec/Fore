@@ -144,15 +144,22 @@ export class Fore {
     return refreshed;
   }
 
-  static isRepeated(element) {
-    return element.closest('fx-repeatitem') !== null;
-  }
-
-  static getRepeatTarget(element, id) {
-    const repeatContextItem = element.closest('fx-repeatitem');
-    const target = repeatContextItem.querySelector(`#${id}`);
-    return target;
-  }
+	/**
+	 * Alternative to `closest` that respects subcontrol boundaries
+*/
+	static getClosest(querySelector, start) {
+		while(!start.matches(querySelector)) {
+			if (start.matches('fx-fore')) {
+				// Subform reached. Bail out
+				return null;
+			}
+			start = start.parentNode;
+			if (!start) {
+				return null;
+			}
+		}
+		return start;
+	}
 
   /**
    * returns the proper content-type for instance.

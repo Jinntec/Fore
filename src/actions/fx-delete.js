@@ -1,4 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
+import { Fore} from '../fore.js';
 
 /**
  * `fx-delete`
@@ -29,13 +30,13 @@ class FxDelete extends AbstractAction {
     // ### if there's no repeat the delete action is inside of a repeat template
     if (this.repeatId === '') {
       // find the index to delete
-      const rItem = this.parentNode.closest('fx-repeatitem');
+		const rItem = Fore.getClosest('fx-repeatitem', this.parentNode);
       const idx = Array.from(rItem.parentNode.children).indexOf(rItem) + 1;
       // console.log('>>> idx to delete ', idx);
 
       // ### get the model now as it'll be hard once we've deleted ourselves ;)
       this.model = this.getModel();
-      const repeat = this.parentNode.closest('fx-repeat');
+      const repeat = Fore.getClosest('fx-repeat', this.parentNode);
 
       // ### update the nodeset
       let nodeToDelete;

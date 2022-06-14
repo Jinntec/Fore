@@ -36,7 +36,7 @@ export class FxDialog extends HTMLElement {
     const closeBtn = this.querySelector('.close-dialog');
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
-        document.getElementById(this.id).classList.remove('show');
+        this.classList.remove('show');
       });
     }
 
