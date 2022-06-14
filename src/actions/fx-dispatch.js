@@ -91,7 +91,12 @@ export class FxDispatch extends AbstractAction {
 
     // ### when targetid is given dispatch to that if present (throw an error if not) - otherwise dispatch to document
     if (this.targetid) {
-      const target = resolveId(this.targetid, this.parentNode, null);
+		let target = resolveId(this.targetid, this.parentNode, null);
+		if (!target) {
+			// TODO: essentially, we want to highly prefer the closest target. in the same subcontrol.
+			// However, it may be that our target is elsewhere. Do a global search for that case
+			target = document.getElementById(this.targetid);
+		}
       console.log('target', target);
       if (!target) {
         throw new Error(`targetid ${this.targetid} does not exist in document`);
