@@ -31,7 +31,6 @@
           <fx-instance id="email">
             <data>
               <email>default</email>
-              <email>default</email>
             </data>
           </fx-instance>
         </fx-model>
@@ -56,6 +55,15 @@
               <fx-message>Hey my address is {.}</fx-message>
               <fx-refresh></fx-refresh>
 			</fx-trigger>
+
+			<fx-items ref=".">
+			  <template>
+                <span class="fx-checkbox">
+                  <input id="check" name="fruit" type="checkbox" value="{.}">
+                  <label style="display:inline" for="check">My label: {.}</label>
+                </span>
+              </template>
+			</fx-items>
 
 
 			<fx-dialog id="myDialog">

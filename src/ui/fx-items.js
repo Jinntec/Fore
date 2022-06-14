@@ -1,4 +1,4 @@
-import { evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 
@@ -33,8 +33,7 @@ export class FxItems extends FxControl {
 
       let target;
       if (e.target.nodeName === 'LABEL') {
-        // todo: review - this likely breaks with nested Fore
-        target = document.getElementById(e.target.getAttribute('for'));
+        target = resolveId(e.target.getAttribute('for'), this);
         target.checked = !target.checked;
       }
 
