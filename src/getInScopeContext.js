@@ -1,4 +1,5 @@
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { Fore} from './fore.js';
 
 import { XPathUtil } from './xpath-util.js';
 
@@ -28,8 +29,8 @@ function _getModelInContext(node) {
 }
 
 function _getInitialContext(node, ref) {
-  const parentBind = node.closest('[ref]');
-  const localFore = node.closest('fx-fore');
+	const parentBind = Fore.getClosest('[ref]', node);
+	const localFore = Fore.getClosest('fx-fore', node);
 
   const model = _getModelInContext(node);
 
@@ -60,7 +61,7 @@ function _getInitialContext(node, ref) {
 export default function getInScopeContext(node, ref) {
   const parentElement = _getElement(node);
 
-  const repeatItem = parentElement.closest('fx-repeatitem');
+	const repeatItem = Fore.getClosest('fx-repeatitem', parentElement);
   if (repeatItem) {
     if (node.nodeName === 'context') {
       return evaluateXPathToFirstNode(

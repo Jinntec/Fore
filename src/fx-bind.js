@@ -1,5 +1,6 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 import { foreElementMixin } from './ForeElementMixin.js';
+import { Fore } from './fore.js';
 import { ModelItem } from './modelitem.js';
 import {
   evaluateXPathToBoolean,
@@ -271,7 +272,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         if bind is the dot expression we use the modelitem of the parent
          */
     if (XPathUtil.isSelfReference(this.ref)) {
-      const parentBoundElement = this.parentElement.closest('fx-bind[ref]');
+		const parentBoundElement = Fore.getClosest('fx-bind[ref]', this.parentElement);
       console.log('parent bound element ', parentBoundElement);
 
       if (parentBoundElement) {

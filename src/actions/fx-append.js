@@ -1,5 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
+import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-append` appends an entry to a repeat.
@@ -118,13 +119,7 @@ class FxAppend extends AbstractAction {
    * The target repeat is a child of the same repeat-item as the append action.
    */
   _dispatch() {
-    let targetRepeat;
-    if (Fore.isRepeated(this)) {
-      console.log('append repeated ', this.repeatContext);
-      targetRepeat = Fore.getRepeatTarget(this, this.repeat);
-    } else {
-      targetRepeat = document.getElementById(this.repeat);
-    }
+    const targetRepeat= targetRepeat = resolveId(this.repeat, this);
     console.log('dispatching index change ', targetRepeat.nodeset.length);
     Fore.dispatch(targetRepeat, 'index-changed', { index: targetRepeat.nodeset.length });
   }
