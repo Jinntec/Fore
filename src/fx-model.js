@@ -215,7 +215,7 @@ export class FxModel extends HTMLElement {
         this.subgraph.addNode(modelItem.path, modelItem.node);
         // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
         // this._addSubgraphDependencies(modelItem.path);
-        if (this.mainGraph.hasNode(modelItem.path)) {
+        if (this.mainGraph && this.mainGraph.hasNode(modelItem.path)) {
           // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
 
           const all = this.mainGraph.dependantsOf(modelItem.path, false);
@@ -245,7 +245,7 @@ export class FxModel extends HTMLElement {
       // ### compute the subgraph
       const ordered = this.subgraph.overallOrder(false);
       ordered.forEach(path => {
-        if (this.mainGraph.hasNode(path)) {
+        if (this.mainGraph && this.mainGraph.hasNode(path)) {
           const node = this.mainGraph.getNodeData(path);
           this.compute(node, path);
         }

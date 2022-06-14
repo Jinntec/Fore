@@ -223,7 +223,7 @@ export class FxFore extends HTMLElement {
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );
       if (!modelElement) {
-        const generatedModel = document.createElement('FX-model');
+        const generatedModel = document.createElement('fx-model');
         this.appendChild(generatedModel);
         modelElement = generatedModel;
       }
