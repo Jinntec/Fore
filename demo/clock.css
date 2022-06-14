@@ -23,7 +23,6 @@
     width: 200px;
     height: 200px;
     position: absolute;
-    z-index: -1;
     background: conic-gradient(gold, darkgoldenrod);
     border-radius: 50%;
     transition:all 0.9s;
@@ -67,7 +66,6 @@
 
 .clock span{
     position: absolute;
-    z-index: 10;
     top:50%;
     left:3px;
     transform: translateY(-50%);
@@ -141,13 +139,11 @@
     border-radius: 50%;
     transition:all 1s;
     box-shadow: 0px 0px 10px 2px white;
-    z-index: 4;
 }
 .hour{
     height: 60px;
     background: #333;
     top:40px;
-    z-index: 5;
 }
 .minute{
     height: 80px;
