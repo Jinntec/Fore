@@ -199,7 +199,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       });
     }
 
-    this.nodeset = evaluateXPath(this.ref, inscope, this);
+    const rawNodeset = evaluateXPath(this.ref, inscope, this);
+    if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
+      // This XPath likely returned an XPath array. Just collapse to that array
+      this.nodeset = rawNodeset[0];
+      return;
+    }
+    this.nodeset = rawNodeset;
   }
 
   async refresh(force) {

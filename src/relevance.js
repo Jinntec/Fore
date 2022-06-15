@@ -1,7 +1,6 @@
 export class Relevance {
-
   static selectRelevant(element,type) {
-    console.log('selectRelevant' ,type)
+    console.log('selectRelevant', type);
     switch (type){
       case 'xml':
         return Relevance._relevantXmlNodes(element);
@@ -63,6 +62,4 @@ export class Relevance {
     }
     return false;
   }
-
-
 }

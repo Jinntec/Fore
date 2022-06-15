@@ -320,9 +320,7 @@ describe('scoped resolution tests', () => {
             </fx-instance>
         </fx-model>
         <fx-group>
-            <fx-control ref="from"
-                        url="/base/test/email.html"
-                        initial="from">
+          <fx-control ref="from" url="/base/test/email.html" initial="from">
                 <label>From</label>
                 <fx-fore class="widget">
                   <fx-model>
@@ -336,9 +334,7 @@ describe('scoped resolution tests', () => {
               </fx-fore>
             </fx-control>
             
-            <fx-control ref="to"
-                        url="/base/test/email.html"
-                        initial="to">
+          <fx-control ref="to" url="/base/test/email.html" initial="to">
                 <label>To</label>
             </fx-control>
             <fx-control ref="subject">
@@ -360,8 +356,6 @@ describe('scoped resolution tests', () => {
     const model = el.querySelector('fx-fore fx-fore fx-model');
     expect(model.modelItems.length).to.equal(1);
     expect(model.modelItems[0].value).to.equal('default');
-
-
   });
 
   /*

@@ -110,7 +110,7 @@ describe('fx-items tests', () => {
               <fx-items ref="instance('i-functions')//option" class="widget">
                   <template>
                       <span class="fx-checkbox">
-                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                <input id="check" name="option" type="checkbox" value="{@xml:id}" />
                           <label>{.}</label>
                       </span>
                   </template>
@@ -148,7 +148,8 @@ describe('fx-items tests', () => {
             <fx-instance 
               id="default" 
               src="/base/test/ling-checkboxes.xml" 
-              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
               
             <fx-instance id="i-functions" src="/base/test/functions.xml"/>
           </fx-model>
@@ -156,7 +157,7 @@ describe('fx-items tests', () => {
               <fx-items ref="instance('i-functions')//option" class="widget">
                   <template>
                       <span class="fx-checkbox">
-                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                <input id="check" name="option" type="checkbox" value="{@xml:id}" />
                           <label>{.}</label>
                       </span>
                   </template>
@@ -196,7 +197,8 @@ describe('fx-items tests', () => {
             <fx-instance 
               id="default" 
               src="/base/test/ling-checkboxes.xml" 
-              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          />
               
             <fx-instance id="i-functions" src="/base/test/functions.xml"/>
           </fx-model>
@@ -204,7 +206,7 @@ describe('fx-items tests', () => {
               <fx-items ref="instance('i-functions')//option" class="widget">
                   <template>
                       <span class="fx-checkbox">
-                          <input id="check" name="option" type="checkbox" value="{@xml:id}">
+                <input id="check" name="option" type="checkbox" value="{@xml:id}" />
                           <label>{.}</label>
                       </span>
                   </template>

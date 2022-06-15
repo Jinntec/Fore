@@ -236,7 +236,6 @@ describe('model tests', () => {
     expect(model.modelItems.length).to.equal(8);
     expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
-
     // there are 15 nodes in mainGraph
     // const graphCount = model.mainGraph.overallOrder(false);
     // expect(graphCount.length).to.equal(15);
@@ -457,7 +456,7 @@ describe('model tests', () => {
 
     expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
 
-    const subgraph = model.subgraph;
+    const { subgraph } = model;
     expect(subgraph).to.exist;
 
     const xControl = el.querySelector('#x');
@@ -483,7 +482,6 @@ describe('model tests', () => {
                     <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
                 </fx-model>
                 <fx-group>
-
                     <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
                         Dynamic CSS
                     </h1>
@@ -495,13 +493,17 @@ describe('model tests', () => {
                     <p></p>
                     transform:<fx-output ref="transform"></fx-output>
                     <p></p>
-                    <fx-control id="transform" ref="string" update-event="input" style="transform:translate({../transform}px);">
+          <fx-control
+            id="transform"
+            ref="string"
+            update-event="input"
+            style="transform:translate({../transform}px);"
+          >
                         <label>lets move - type something</label>
                     </fx-control>
                     <div class="foo {css}">
                         This div gets a class added when the range control is changed.
                     </div>
-
                 </fx-group>
             </fx-fore>
     `);
@@ -519,11 +521,6 @@ describe('model tests', () => {
     // control.blur();
     expect(control.modelItem.value).to.equal('10');
 
-
     expect(control.getAttribute('style')).to.equal('transform:translate(20px);');
-
-
-
-
   });
 });

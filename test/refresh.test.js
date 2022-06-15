@@ -16,8 +16,7 @@ describe('refresh Tests', () => {
                             <c>C</c>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="a" readonly="string-length(../b) > 1"
-                             required="../b = 'B'"></fx-bind>
+          <fx-bind ref="a" readonly="string-length(../b) > 1" required="../b = 'B'"></fx-bind>
                     <fx-bind ref="b" required="../c = 'C'"></fx-bind>
                     <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
                 </fx-model>
@@ -46,8 +45,6 @@ describe('refresh Tests', () => {
                     <fx-control ref="c" update-event="input">
                         <label>C</label>
                     </fx-control>
-
-
                 </fx-group>
             </fx-fore>
     `);
@@ -62,7 +59,6 @@ describe('refresh Tests', () => {
     expect(c1.modelItem.boundControls).to.exist;
     expect(c1.modelItem.boundControls.length).to.equal(2);
 
-
     const c2 = el.querySelector('#output2');
     expect(c2.modelItem.value).to.equal('B');
     expect(c2.modelItem.boundControls).to.exist;
@@ -72,8 +68,6 @@ describe('refresh Tests', () => {
     expect(c3.modelItem.value).to.equal('C');
     expect(c3.modelItem.boundControls).to.exist;
     expect(c3.modelItem.boundControls.length).to.equal(2);
-
-
   });
 
   it('refresh renders correct state after update of control', async () => {
@@ -87,8 +81,7 @@ describe('refresh Tests', () => {
                             <c>C</c>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="a" readonly="string-length(../b) > 1"
-                             required="../b = 'B'"></fx-bind>
+          <fx-bind ref="a" readonly="string-length(../b) > 1" required="../b = 'B'"></fx-bind>
                     <fx-bind ref="b" required="../c = 'C'"></fx-bind>
                     <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
                 </fx-model>
@@ -117,14 +110,11 @@ describe('refresh Tests', () => {
                     <fx-control ref="c" update-event="input">
                         <label>C</label>
                     </fx-control>
-
-
                 </fx-group>
             </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
-
 
 /*
     const c2 = el.querySelector('#output2');
@@ -145,7 +135,7 @@ describe('refresh Tests', () => {
     expect(c1.modelItem.readonly).to.be.true;
     expect(c1.modelItem.required).to.be.false;
     //check control states
-    expect(c1.classList.contains('readonly')).to.be.true;
+    expect(c1.hasAttribute('readonly')).to.be.true;
 
     const c2 = el.querySelector('#output2');
     expect(c2.modelItem.value).to.equal('Bs');
@@ -153,8 +143,7 @@ describe('refresh Tests', () => {
     expect(c2.modelItem.boundControls.length).to.equal(2);
 
     expect(c2.modelItem.required).to.be.true;
-    expect(c2.classList.contains('required')).to.be.true;
-
+    expect(c2.hasAttribute('required')).to.be.true;
 
     const c3 = el.querySelector('#output3');
     expect(c3.modelItem.value).to.equal('C');
@@ -162,7 +151,6 @@ describe('refresh Tests', () => {
     expect(c3.modelItem.boundControls.length).to.equal(2);
 
     expect(c3.modelItem.relevant).to.be.false;
-
   });
 
   it('refreshes bound fx-switch when page changes', async () => {
@@ -213,7 +201,6 @@ describe('refresh Tests', () => {
     expect(page2.classList.contains('selected-case')).to.be.false;
     const page3 = el.querySelector('#page3');
     expect(page3.classList.contains('selected-case')).to.be.true;
-
   });
 
   it('registers fx-repeat items in modelitem', async () => {
@@ -234,7 +221,6 @@ describe('refresh Tests', () => {
                 <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
-
             </fx-model>
 
             <h1>Todo</h1>
@@ -248,7 +234,8 @@ describe('refresh Tests', () => {
             </div>
 
             <div class="info open">
-                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+          {if(count(instance()/task[@complete='false'])!=0) then "You have " ||
+          count(instance()/task[@complete='false']) || " open tasks" else ""}
             </div>
 
             <div class="info big">
@@ -258,11 +245,11 @@ describe('refresh Tests', () => {
                 <template>
                     <div>
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
-                            <input class="widget" type="checkbox">
+                <input class="widget" type="checkbox" />
                         </fx-control>
                         <fx-control class="{@complete} task" id="task" ref="."></fx-control>
                         <fx-control ref="@due">
-                            <input type="date">
+                <input type="date" />
                         </fx-control>
                         <fx-trigger class="btn delete">
                             <button>x</button>
@@ -273,13 +260,12 @@ describe('refresh Tests', () => {
             </fx-repeat>
             <fx-control id="switch" ref="showclosed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
-                <input id="showcompleted" type="checkbox" class="widget">
+          <input id="showcompleted" type="checkbox" class="widget" />
             </fx-control>
             <trigger>
                 <button>refresh</button>
                 <fx-refresh></fx-refresh>
             </trigger>
-
         </fx-fore>
     `);
 
@@ -292,7 +278,6 @@ describe('refresh Tests', () => {
     expect(items[0].modelItem.boundControls.length).to.equal(2);
     expect(items[0].modelItem.boundControls.includes(items[0]));
 
-
     expect(items[1]).to.exist;
     expect(items[1].modelItem).to.exist;
     expect(items[1].modelItem.boundControls).to.exist;
@@ -302,7 +287,6 @@ describe('refresh Tests', () => {
     const task = el.querySelectorAll('.task');
     expect(task[0].modelItem.boundControls.includes(task));
     expect(task[1].modelItem.boundControls.includes(task));
-
 
 /*
     const b = el.querySelector('#changePage');
@@ -316,7 +300,5 @@ describe('refresh Tests', () => {
     const page3 = el.querySelector('#page3');
     expect(page3.classList.contains('selected-case')).to.be.true;
 */
-
   });
-
 });

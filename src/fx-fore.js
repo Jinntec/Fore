@@ -16,7 +16,10 @@ import { XPathUtil } from './xpath-util.js';
  *
  * Main responsiblities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
  *
- *
+ * @event compute-exception - dispatched in case the dependency graph is cirular
+ * @event refresh-done - dispatched after a refresh() run
+ * @event ready - dispatched after Fore has fully been initialized
+ * @event error - dispatches error when template expression fails to evaluate
  *
  * @ts-check
  */
@@ -59,7 +62,6 @@ export class FxFore extends HTMLElement {
       console.error('circular dependency: ', e);
     });
 
-
     this.ready = false;
     this.storedTemplateExpressionByNode = new Map();
 
@@ -68,15 +70,16 @@ export class FxFore extends HTMLElement {
                 // display: none;
                 height:auto;
                 padding:var(--model-element-padding);
+                font-family:Roboto, sans-serif;
                 color:var(--paper-grey-900);
             }
             :host ::slotted(fx-model){
                 display:none;
             }
-            :host(.fx-ready){
-                animation: fadein .4s forwards;
-                display:block;
-            }
+            // :host(.fx-ready){
+            //     animation: fadein .4s forwards;
+            //     display:block;
+            // }
 
             #modalMessage .dialogActions{
                 text-align:center;
@@ -197,7 +200,6 @@ export class FxFore extends HTMLElement {
     },true);
 */
 
-
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
       const options = {
@@ -221,7 +223,7 @@ export class FxFore extends HTMLElement {
         modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
       );
       if (!modelElement) {
-        const generatedModel = document.createElement('FX-model');
+        const generatedModel = document.createElement('fx-model');
         this.appendChild(generatedModel);
         modelElement = generatedModel;
       }
@@ -236,12 +238,11 @@ export class FxFore extends HTMLElement {
       }
       this.model = modelElement;
     });
-    this.addEventListener('path-mutated', (e) =>{
+    this.addEventListener('path-mutated', e => {
       console.log('path-mutated event received', e.detail.path, e.detail.index);
       this.someInstanceDataStructureChanged = true;
     });
   }
-
 
   addToRefresh(modelItem){
     const found = this.toRefresh.find(mi => mi.path === modelItem.path );
@@ -286,13 +287,19 @@ export class FxFore extends HTMLElement {
 
           // console.log('thefore', theFore)
           if(!theFore){
-            Fore.dispatchEvent(this,'error',{detail:{message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`}});
+          Fore.dispatchEvent(this, 'error', {
+            detail: {
+              message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
+            },
+          });
           }
           theFore.setAttribute('from-src', this.src);
           this.replaceWith(theFore);
         })
-        .catch(error => {
-          Fore.dispatch(this,'error',{message: `'${this.src}' not found or does not contain Fore element.`});
+      .catch(() => {
+        Fore.dispatch(this, 'error', {
+          message: `'${this.src}' not found or does not contain Fore element.`,
+        });
         });
   }
 
@@ -352,11 +359,9 @@ export class FxFore extends HTMLElement {
    * AVT:
    *
    */
-  async refresh(force) {
+  async refresh() {
     // refresh () {
     console.group('### refresh');
-
-
 
     console.time('refresh');
 
@@ -378,7 +383,7 @@ export class FxFore extends HTMLElement {
         }
 
         // ### check if other controls depend on current modelItem
-        const mainGraph = this.getModel().mainGraph;
+        const { mainGraph } = this.getModel();
         if(mainGraph && mainGraph.hasNode(modelItem.path)){
           const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
           // ### iterate dependant modelItems and refresh all their boundControls
@@ -388,7 +393,9 @@ export class FxFore extends HTMLElement {
               const basePath = XPathUtil.getBasePath(dep);
               const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
               // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach(control =>{control.refresh()});
+              modelItemOfDep.boundControls.forEach(control => {
+                control.refresh();
+              });
             });
             needsRefresh = true;
           }
@@ -456,7 +463,6 @@ export class FxFore extends HTMLElement {
 
     // TODO: Should we clean up nodes that existed but are now gone?
     this._processTemplateExpressions();
-
   }
 
   _processTemplateExpressions() {
@@ -487,8 +493,6 @@ export class FxFore extends HTMLElement {
   evaluateTemplateExpression(expr, node) {
     if (expr === '{}') return;
     const matches = expr.match(/{[^}]*}/g);
-    const namespaceContextNode =
-      node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
         // console.log('match ', match);
@@ -691,11 +695,13 @@ export class FxFore extends HTMLElement {
     })(this);
     console.log('Found variables:', variables);
 
+    /*
     const options = {
       root: null,
       rootMargin: '0px',
       threshold: 0.3,
     };
+*/
 
     await this.refresh();
     // this.style.display='block'

@@ -8,7 +8,7 @@ module.exports = {
       transform(context) {
         context.response.set('Access-Control-Allow-Origin', 'http://localhost:8080');
         return {
-          body: context.body
+          body: context.body,
         };
       },
 
@@ -70,7 +70,6 @@ module.exports = {
         return null;
       },
     },
-
   ],
   moduleDirs: ['node_modules', 'web_modules'],
 };

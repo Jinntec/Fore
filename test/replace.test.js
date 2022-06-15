@@ -1,7 +1,7 @@
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
-import * as fx from "fontoxpath";
+import * as fx from 'fontoxpath';
 
 describe('replace Tests', () => {
   it('replaces a node with one from another instance', async () => {
@@ -57,7 +57,6 @@ describe('replace Tests', () => {
     expect(values[1].outerHTML).to.equal('<value>B</value>');
     expect(values[2].outerHTML).to.equal('<value>C</value>');
     console.log('values', values);
-
   });
 
   it('replaces an attribute with one from another location', async () => {
@@ -94,10 +93,8 @@ describe('replace Tests', () => {
 
     const replaced = fx.evaluateXPath('//value/@replaced', inst, null, {});
     expect(replaced).to.exist;
-    console.log('replaced', replaced)
-    console.log('replaced inst', inst)
+    console.log('replaced', replaced);
+    console.log('replaced inst', inst);
     expect(replaced).to.equal('foo');
-
   });
-
 });

@@ -144,14 +144,21 @@ export class Fore {
     return refreshed;
   }
 
-  static isRepeated(element) {
-    return element.closest('fx-repeatitem') !== null;
+  /**
+   * Alternative to `closest` that respects subcontrol boundaries
+   */
+  static getClosest(querySelector, start) {
+    while (!start.matches(querySelector)) {
+      if (start.matches('fx-fore')) {
+        // Subform reached. Bail out
+        return null;
+      }
+      start = start.parentNode;
+      if (!start) {
+        return null;
   }
-
-  static getRepeatTarget(element, id) {
-    const repeatContextItem = element.closest('fx-repeatitem');
-    const target = repeatContextItem.querySelector(`#${id}`);
-    return target;
+    }
+    return start;
   }
 
   /**
@@ -197,12 +204,10 @@ export class Fore {
   static fadeOutElement(element, duration) {
     // const duration = duration;
     let fadeOut = () => {
-
       // Stop all current animations
       if (element.getAnimations) {
         element.getAnimations().map(anim => anim.finish());
       }
-
 
       // Play the animation with the newly specified duration
       fadeOut = element.animate(
@@ -295,14 +300,16 @@ export class Fore {
           // this.replaceWith(theFore);
         })
         .catch(error => {
-                hostElement.dispatchEvent(new CustomEvent('error', {
+        hostElement.dispatchEvent(
+          new CustomEvent('error', {
                     composed:false,
                     bubbles:true,
                     detail: {
-                        'error': error,
-                        message: `'${url}' not found or does not contain Fore element.`
-                    }
-                }));
+              error: error,
+              message: `'${url}' not found or does not contain Fore element.`,
+            },
+          }),
+        );
         });
   }
 

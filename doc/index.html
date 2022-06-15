@@ -179,18 +179,19 @@
                             <fx-bind ref="minute" calculate="number(substring(../time,4,2)) * 6"></fx-bind>
                             <fx-bind ref="second" calculate="number(substring(../time,7,2)) * 6"></fx-bind>
 
-                            <fx-function signature="local:now() as xs:string" type="text/javascript">
-                                return new Date().toLocaleTimeString();
+                            <fx-function signature="now() as xs:string" type="text/javascript">
+                              const now = new Date();
+                              return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
                             </fx-function>
                         </fx-model>
                         <div class="clock">
+                            <div class="circle" style="transform:rotate({second}deg);"
+                                 data-secs="{substring(time,7,2)}"></div>
                             <div class="brand">Fore</div>
                             <span class="three-nine"></span>
                             <div class="display-time">{substring(time,1,5)}</div>
                             <div style="transform:rotate({hour}deg);" class="hour"></div>
                             <div style="transform:rotate({minute}deg);" class="minute"></div>
-                            <div class="circle" style="transform:rotate({second}deg);"
-                                 data-secs="{substring(time,7,2)}"></div>
                         </div>
                     </fx-fore>
                 </template>
@@ -246,7 +247,7 @@
         <div>
             <h4>Fore is brought to you by</h4>
             <a href="https://jinntec.de" target="_blank"><img class="logo jinntec"
-                                                              src="../resources/images/jinntec-bw.svg"></a>
+                                                              src="../resources/images/jinntec-bw.png"></a>
             <div class="subline">For professional support contact us at<br/>info@jinntec.de</div>
         </div>
         <div>

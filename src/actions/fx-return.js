@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action.js";
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-return`
@@ -8,14 +8,16 @@ import {AbstractAction} from "./abstract-action.js";
  *
  * `targetref` will be the `ref` of the host control.
  *
+ * todo: deos not relevant selection yet
+ *
  * @customElement
  */
 export class FxReturn extends AbstractAction {
-
-
   connectedCallback() {
+    if (super.connectedCallback) {
     super.connectedCallback();
-    const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant'):null;
+    }
+    // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
   }
 
   perform() {
@@ -29,7 +31,7 @@ export class FxReturn extends AbstractAction {
     const event = new CustomEvent('return', {
       composed: true,
       bubbles: true,
-      detail:{nodeset:this.nodeset}
+      detail: { nodeset: this.nodeset },
     });
     this.getOwnerForm().dispatchEvent(event);
   }

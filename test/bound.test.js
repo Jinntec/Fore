@@ -213,7 +213,7 @@ describe('fx-control tests', () => {
               <template>
                 <span id="checkbox">
                   <label slot="label">{.}</label>
-                   <input type="checkbox" value="{.}">
+                  <input type="checkbox" value="{.}" />
                 </span>
               </template>
             </fx-items>
@@ -251,7 +251,7 @@ describe('fx-control tests', () => {
               <template>
                 <span id="checkbox">
                   <label slot="label">{.}</label>
-                   <input type="checkbox" value="{.}">
+                  <input type="checkbox" value="{.}" />
                 </span>
               </template>
             </fx-items>
@@ -267,6 +267,5 @@ describe('fx-control tests', () => {
     checkbox.click();
     const resultSpan = el.querySelector('#result');
     expect(resultSpan.innerText).to.equal('');
-
   });
 });

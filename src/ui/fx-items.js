@@ -1,4 +1,4 @@
-import { evaluateXPath, evaluateXPathToString, evaluateXPathToNodes } from '../xpath-evaluation.js';
+import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 
@@ -33,8 +33,7 @@ export class FxItems extends FxControl {
 
       let target;
       if (e.target.nodeName === 'LABEL') {
-        // todo: review - this likely breaks with nested Fore
-        target = document.getElementById(e.target.getAttribute('for'));
+        target = resolveId(e.target.getAttribute('for'), this);
         target.checked = !target.checked;
       }
 
@@ -47,7 +46,7 @@ export class FxItems extends FxControl {
       this.setAttribute('value', val.trim());
 
       // ### check for parent control
-      const parentBind = this.parentNode.closest('[ref]');
+      const parentBind = Fore.getClosest('[ref]', this.parentNode);
       if (!parentBind) return;
       const modelitem = parentBind.getModelItem();
       const setval = this.shadowRoot.getElementById('setvalue');
@@ -63,7 +62,7 @@ export class FxItems extends FxControl {
   async updateWidgetValue() {
     // console.log('setting items value');
 
-    const parentBind = this.parentNode.closest('[ref]');
+    const parentBind = Fore.getClosest('[ref]', this.parentNode);
     if (parentBind) {
       this.value = parentBind.value;
     }

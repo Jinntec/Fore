@@ -19,9 +19,7 @@ describe('Fore as Control Tests (nesting fx-fore elements)', () => {
             </fx-instance>
         </fx-model>
         <fx-group>
-            <fx-control ref="from"
-                        url="/base/test/email.html"
-                        initial=".">
+          <fx-control ref="from" url="/base/test/email.html" initial=".">
                 <label>From</label>
             </fx-control>
         </fx-group>
@@ -31,7 +29,7 @@ describe('Fore as Control Tests (nesting fx-fore elements)', () => {
     await oneEvent(control, 'loaded');
 
     const nestedFore = el.querySelector('fx-control fx-fore');
-    console.log("nested", nestedFore);
+    console.log('nested', nestedFore);
     expect(nestedFore).to.exist;
 
     const nestedControl = nestedFore.querySelector('fx-control');
@@ -40,8 +38,5 @@ describe('Fore as Control Tests (nesting fx-fore elements)', () => {
 
     // await oneEvent(nestedControl, 'ready');
     // expect(nestedControl.value).to.equal('default');
-
   });
-
-
 });

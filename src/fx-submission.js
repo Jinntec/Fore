@@ -167,7 +167,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     if (!this.methods.includes(this.method.toLowerCase())) {
       // this.dispatch('error', { message: `Unknown method ${this.method}` });
-      Fore.dispatch(this,'error',{ message: `Unknown method ${this.method}` })
+      Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
     const response = await fetch(resolvedUrl, {

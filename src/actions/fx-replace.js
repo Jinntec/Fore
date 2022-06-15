@@ -15,7 +15,7 @@ export default class FxReplace extends AbstractAction {
       with: {
         type: String,
       },
-      replaceNode:Object
+      replaceNode: Object,
     };
   }
 
@@ -33,14 +33,14 @@ export default class FxReplace extends AbstractAction {
 
   perform() {
     super.perform();
-    console.log('replace action')
+    console.log('replace action');
     if(!this.nodeset){
       return;
     }
     const target = evaluateXPathToFirstNode(this.with, this.nodeset, this);
     if(!target) return;
 
-    this.replace(this.nodeset,target)
+    this.replace(this.nodeset, target);
   }
 
   replace(toReplace,replaceWith){
@@ -61,7 +61,6 @@ export default class FxReplace extends AbstractAction {
     }
     this.needsUpdate = true;
   }
-
 }
 
 if (!customElements.get('fx-replace')) {

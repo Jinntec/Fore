@@ -1,9 +1,9 @@
 import {Fore} from '../fore.js';
-export class FxDialog extends HTMLElement {
 
+export class FxDialog extends HTMLElement {
     static get properties() {
         return {
-            id: String
+            id: String,
         };
     }
 
@@ -35,8 +35,8 @@ export class FxDialog extends HTMLElement {
 
         const closeBtn = this.querySelector('.close-dialog');
         if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                document.getElementById(this.id).classList.remove('show');
+      closeBtn.addEventListener('click', () => {
+        this.classList.remove('show');
             });
         }
 
@@ -58,11 +58,15 @@ export class FxDialog extends HTMLElement {
     }
 
     open(){
-        window.addEventListener('keyup', (e) => {
-            if (e.key === "Escape") {
+    window.addEventListener(
+      'keyup',
+      e => {
+        if (e.key === 'Escape') {
                 this.hide();
             }
-        },{once:true});
+      },
+      { once: true },
+    );
 
         this.classList.add('show');
     }
@@ -71,7 +75,6 @@ export class FxDialog extends HTMLElement {
         await Fore.fadeOutElement(this,400);
         this.classList.remove('show');
     }
-
 }
 
 if (!customElements.get('fx-dialog')) {

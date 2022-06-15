@@ -2,16 +2,18 @@
   console.log('editor.js');
 
   const targetFore = document.getElementById('edited');
-  const attributes = document.getElementById('attributes')
+  const attributes = document.getElementById('attributes');
   // const targetModel = targetFore.querySelector('xf-model');
   const targetModel = document.getElementById('targetModel');
   targetModel.querySelector('fx-instance').addEventListener('click', e => {
     console.log('element selected', e.target);
-    document.dispatchEvent(new CustomEvent('selectElement', {
+    document.dispatchEvent(
+      new CustomEvent('selectElement', {
       composed: true,
       bubbles: true,
       detail: {current: e.target},
-    }));
+      }),
+    );
 
 /*
         document.dispatchEvent(new CustomEvent('error',
@@ -19,7 +21,6 @@
         bubbles: true,
         { detail: {'current':e.target.innerText} }));
 */
-
   });
 
   document.addEventListener('dragover', function(e) {
@@ -83,7 +84,6 @@
       elementName === 'submission' ||
         elementName === 'function'
     ) {
-
       const realTarget = document.elementFromPoint(e.clientX, e.clientY);
       console.log('realTarget',realTarget);
 
@@ -91,7 +91,6 @@
       const newElem = document.createElement('fx-' + elementName);
       // newElem.setAttribute('data-name', elementName);
       newElem.textContent = elementName;
-
 
       // const model = document.querySelector('fx-model');
       currentInsertPoint.appendChild(newElem);

@@ -54,7 +54,7 @@ function renderGraph(graph, targetElement) {
 
   // build the nodes data
   Object.keys(entryNodes).filter(node => {
-    console.log('node', node)
+    console.log('node', node);
     if (!node.includes(':')) {
       // nodesData.push({id: node, label: node, shape:'circle',size:250,group:node});
       const realNode = graph.getNodeData(node);

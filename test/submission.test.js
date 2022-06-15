@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
-import {Relevance} from "../src/relevance.js";
+import { Relevance } from '../src/relevance.js';
 
 import '../index.js';
 
@@ -304,18 +304,20 @@ describe('submission tests', () => {
             <fx-fore>
                 <fx-model>
                     <fx-instance type="json">
-                        {
-                            "foo":"bar"
-                        }
+            { "foo":"bar" }
                     </fx-instance>
                     <fx-instance id="response" type="json">{}</fx-instance>
 
-                    <fx-submission id="submission"
+          <fx-submission
+            id="submission"
                                    url="#echo"
                                    method="POST"
                                    replace="instance"
-                                   instance="response">
-                        <fx-message event="submit-done">JSON Data have been submitted - replacing instance</fx-message>
+            instance="response"
+          >
+            <fx-message event="submit-done"
+              >JSON Data have been submitted - replacing instance</fx-message
+            >
                     </fx-submission>
                 </fx-model>
                 <fx-group collapse="true">

@@ -115,7 +115,6 @@ export default class FxControl extends XfAbstractControl {
       this._replaceNode(newNodes);
     });
 
-    const slot = this.shadowRoot.querySelector('slot');
     this.template = this.querySelector('template');
     // console.log('template',this.template);
   }
@@ -241,7 +240,7 @@ export default class FxControl extends XfAbstractControl {
       if (as === 'node' && this.nodeset !== widget.value) {
         const oldVal = this.nodeset.innerHTML;
         if (widget.value) {
-          if (this.oldVal !== this.widget.value) {
+          if (oldVal !== this.widget.value) {
             console.log('changed');
             return;
           }
@@ -406,8 +405,8 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
-      // ### bail out when nodeset is empty
-      if (nodeset.length === 0) return;
+      // ### bail out when nodeset is array and empty
+      if (Array.isArray(nodeset) && nodeset.length === 0) return;
 
       // ### clear items
       const { children } = widget;
@@ -419,7 +418,9 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
-        nodeset.forEach(node => {
+        if (nodeset.length) {
+          // console.log('nodeset', nodeset);
+          Array.from(nodeset).forEach(node => {
           // console.log('#### node', node);
           const newEntry = this.createEntry();
 
@@ -427,6 +428,10 @@ export default class FxControl extends XfAbstractControl {
           // ### set value
           this.updateEntry(newEntry, node);
         });
+        } else {
+          const newEntry = this.createEntry();
+          this.updateEntry(newEntry, nodeset);
+        }
       }
     }
   }
@@ -438,7 +443,7 @@ export default class FxControl extends XfAbstractControl {
     const valueAttribute = this._getValueAttribute(newEntry);
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = [evaluateXPath(cutted, node, newEntry)];
+    const evaluated = evaluateXPathToString(cutted, node, newEntry);
     valueAttribute.value = evaluated;
 
     if (this.value === evaluated) {

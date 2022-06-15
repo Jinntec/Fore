@@ -27,7 +27,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all modelItem state properties to this control. model -> UI
    */
-  async refresh(force) {
+  async refresh() {
     // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
@@ -63,7 +63,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // console.log('value of widget',this.value);
 
-
         /*
         * todo: find out on which foreign modelitems we might be dependant on when no binds are used.
         *
@@ -79,8 +78,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // const touched = FxBind.getReferencesForRef(this.ref,Array.from(this.nodeset));
         // console.log('touched',touched);
-
-
 
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
@@ -120,6 +117,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this.handleValid();
     }
     this.handleRelevant();
+    // todo: handleType()
   }
 
   _getForm() {
@@ -136,16 +134,15 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
+    // if (this.required !== this.modelItem.required) {
     if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
-        this.widget.setAttribute('required', 'required');
-        this.classList.add('required');
+        this.widget.setAttribute('required', '');
+        this.setAttribute('required', '');
         this._dispatchEvent('required');
       } else {
         this.widget.removeAttribute('required');
-        this.required = false;
-        // this.removeAttribute('required');
-        this.classList.toggle('required');
+        this.removeAttribute('required');
         this._dispatchEvent('optional');
       }
     }
@@ -155,15 +152,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip readonly', this.modelItem.isReadonly);
     if (this.isReadonly() !== this.modelItem.readonly) {
       if (this.modelItem.readonly) {
-        this.widget.setAttribute('readonly', 'readonly');
-        // this.setAttribute('readonly','readonly');
-        this.classList.toggle('readonly');
+        this.widget.setAttribute('readonly', '');
+        this.setAttribute('readonly', '');
         this._dispatchEvent('readonly');
       }
       if (!this.modelItem.readonly) {
         this.widget.removeAttribute('readonly');
-        // this.removeAttribute('readonly');
-        this.classList.toggle('readonly');
+        this.removeAttribute('readonly');
         this._dispatchEvent('readwrite');
       }
     }
@@ -176,12 +171,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
-        this.classList.remove('invalid');
         if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
+        this.removeAttribute('invalid');
       } else {
+        this.setAttribute('invalid', '');
         // ### constraint is invalid - handle alerts
-        this.classList.add('invalid');
         if (alert) {
           alert.style.display = 'block';
         }
@@ -208,7 +203,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
-    let item = this.modelItem.node;
+    const item = this.modelItem.node;
     if(Array.isArray(item) && item.length === 0){
       this._dispatchEvent('nonrelevant');
       this.style.display = 'none';
@@ -228,14 +223,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isRequired() {
-    if (this.widget.hasAttribute('required')) {
-      return true;
-    }
-    return false;
+    return this.hasAttribute('required');
   }
 
   isValid() {
-    if (this.classList.contains('invalid')) {
+    // return this.valid;
+    if (this.hasAttribute('invalid')) {
       return false;
     }
     return true;
@@ -243,10 +236,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   isReadonly() {
     // const widget = this.querySelector('#widget');
-    if (this.widget.hasAttribute('readonly')) {
-      return true;
-    }
-    return false;
+    return this.hasAttribute('readonly');
   }
 
   isEnabled() {

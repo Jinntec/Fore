@@ -17,12 +17,12 @@ html{
     pointer-events: none;
     cursor: default;
 }
-fx-fore{
-    opacity: 0;
-}
-fx-fore.fx-ready{
-    opacity: 1;
-}
+/* fx-fore{ */
+/*     opacity: 0; */
+/* } */
+/* fx-fore.fx-ready{ */
+/*     opacity: 1; */
+/* } */
 fx-group, fx-switch, fx-repeat, fx-dialog{
     display: block;
 }
@@ -47,7 +47,7 @@ fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
 
 fx-control, fx-trigger{
     white-space: nowrap;
-    position: relative;
+    /* position: relative; */
 }
 .fx-checkbox{
     white-space: nowrap;
@@ -167,11 +167,11 @@ fx-dialog .action{
     animation: none;
     opacity: 1;
 }
-@keyframes fadein {
-    0% {
-        opacity:0;
-    }
-    100% {
-        opacity:1;
-    }
-}
+/* @keyframes fadein { */
+/*     0% { */
+/*         opacity:0; */
+/*     } */
+/*     100% { */
+/*         opacity:1; */
+/*     } */
+/* } */

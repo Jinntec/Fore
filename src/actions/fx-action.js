@@ -54,7 +54,6 @@ export class FxAction extends AbstractAction {
       this.needsUpdate = true;
     }
   }
-
 }
 
 if (!customElements.get('fx-action')) {

@@ -156,7 +156,7 @@ export const foreElementMixin = superclass =>
         return this.getAttribute('ref');
       }
       // try to get closest parent bind
-      const parent = this.parentNode.closest('[ref]');
+      const parent = Fore.getClosest('[ref]', this.parentNode);
       if (!parent) {
         return 'instance()'; // the default instance
       }
@@ -195,10 +195,10 @@ export const foreElementMixin = superclass =>
         this.modelItem = mi;
       }
 
-      const repeated = this.closest('fx-repeatitem');
+      const repeated = Fore.getClosest('fx-repeatitem', this);
       let existed;
       if (repeated) {
-        const { index } = this.closest('fx-repeatitem');
+        const { index } = repeated;
         if (Array.isArray(this.nodeset)) {
           existed = this.getModel().getModelItem(this.nodeset[index - 1]);
         } else {
