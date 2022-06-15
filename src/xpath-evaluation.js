@@ -38,103 +38,6 @@ const xhtmlNamespaceResolver = prefix => {
   return undefined;
 };
 
-export function resolveId(id, sourceObject, nodeName = null) {
-  const allMatchingTargetObjects = fxEvaluateXPathToNodes(
-      'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
-      sourceObject,
-      null,
-      { id },
-      { namespaceResolver: xhtmlNamespaceResolver },
-  );
-
-  if (allMatchingTargetObjects.length === 0) {
-    return null;
-  }
-
-  if (
-      allMatchingTargetObjects.length === 1 &&
-      fxEvaluateXPathToBoolean(
-          '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
-          allMatchingTargetObjects[0],
-          null,
-          null,
-          { namespaceResolver: xhtmlNamespaceResolver },
-      )
-  ) {
-    // If the target element is not repeated, then the search for the target object is trivial since
-    // there is only one associated with the target element that bears the matching ID. This is true
-    // regardless of whether or not the source object is repeated. However, if the target element is
-    // repeated, then additional information must be used to help select a target object from among
-    // those associated with the identified target element.
-    const targetObject = allMatchingTargetObjects[0];
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
-    return targetObject;
-  }
-
-  // SPEC:
-
-  // 12.2.1 References to Elements within a repeat Element
-
-  // When the target element that is identified by the IDREF of a source object has one or more
-  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
-  // subsets, those in common with the source element and those that are not in common. Any ancestor
-  // repeat elements of the target element not in common with the source element are descendants of
-  // the repeat elements that the source and target element have in common, if any.
-
-  // For the repeat elements that are in common, the desired target object exists in the same set of
-  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
-  // element that is not in common with the source element, the current index of the repeat
-  // determines the set of run-time objects that contains the desired target object.
-  for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
-      'ancestor::fx-repeatitem => reverse()',
-      sourceObject,
-      null,
-      null,
-      { namespaceResolver: xhtmlNamespaceResolver },
-  )) {
-    const foundTargetObjects = allMatchingTargetObjects.filter(to =>
-        ancestorRepeatItem.contains(to),
-    );
-    switch (foundTargetObjects.length) {
-      case 0:
-        // Nothing found: ignore
-        break;
-      case 1: {
-        // A single one is found: the target object is directly in a common repeat
-        const targetObject = foundTargetObjects[0];
-        if (nodeName && targetObject.localName !== nodeName) {
-          return null;
-        }
-        return targetObject;
-      }
-      default: {
-        // Multiple target objects are found: they are in a repeat that is not common with the source object
-        // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
-        const targetObject = foundTargetObjects.find(to =>
-            fxEvaluateXPathToNodes(
-                'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
-                to,
-                null,
-                {},
-            ),
-        );
-        if (!targetObject) {
-          // Nothing valid found for whatever reason. This might be something dynamic?
-          return null;
-        }
-        if (nodeName && targetObject.localName !== nodeName) {
-          return null;
-        }
-        return targetObject;
-      }
-    }
-  }
-  // We found no target objects in common repeats. The id is unresolvable
-  return null;
-}
-
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
  * XPath in which the namespace is being resolved. The prefix will be resolved by using the
@@ -260,10 +163,6 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
   return createNamespaceResolver(query, formElement);
 }
 
-// A global registry of function names that are declared in Fore by a developer using the
-// `fx-function` element. These should be available without providing a prefix as well
-export const globallyDeclaredFunctionLocalNames = [];
-
 /**
  * Implementation of the functionNameResolver passed to FontoXPath to
  * redirect function resolving for unprefixed functions to either the fn or the xf namespace
@@ -284,12 +183,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
     case 'logtree':
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
-      if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
-        // The function has been declared without a prefix and is called here without a prefix.
-        // Just make this work. It is the developer-friendly way
-        return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
-      }
-      if (prefix === 'fn') {
+      if (prefix === '' || prefix === 'fn') {
         return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
       }
       if (prefix === 'local') {
@@ -522,6 +416,102 @@ export function evaluateXPathToNumber(
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
+export function resolveId(id, sourceObject, nodeName = null) {
+  const allMatchingTargetObjects = fxEvaluateXPathToNodes(
+    'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
+    sourceObject,
+    null,
+    { id },
+    { namespaceResolver: xhtmlNamespaceResolver },
+  );
+
+  if (allMatchingTargetObjects.length === 0) {
+    return null;
+  }
+
+  if (
+    allMatchingTargetObjects.length === 1 &&
+    fxEvaluateXPathToBoolean(
+      '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
+      allMatchingTargetObjects[0],
+      null,
+      null,
+      { namespaceResolver: xhtmlNamespaceResolver },
+    )
+  ) {
+    // If the target element is not repeated, then the search for the target object is trivial since
+    // there is only one associated with the target element that bears the matching ID. This is true
+    // regardless of whether or not the source object is repeated. However, if the target element is
+    // repeated, then additional information must be used to help select a target object from among
+    // those associated with the identified target element.
+    const targetObject = allMatchingTargetObjects[0];
+    if (nodeName && targetObject.localName !== nodeName) {
+      return null;
+    }
+    return targetObject;
+  }
+
+  // SPEC:
+
+  // 12.2.1 References to Elements within a repeat Element
+
+  // When the target element that is identified by the IDREF of a source object has one or more
+  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
+  // subsets, those in common with the source element and those that are not in common. Any ancestor
+  // repeat elements of the target element not in common with the source element are descendants of
+  // the repeat elements that the source and target element have in common, if any.
+
+  // For the repeat elements that are in common, the desired target object exists in the same set of
+  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
+  // element that is not in common with the source element, the current index of the repeat
+  // determines the set of run-time objects that contains the desired target object.
+  for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
+    'ancestor::fx-repeatitem => reverse()',
+    sourceObject,
+    null,
+    null,
+    { namespaceResolver: xhtmlNamespaceResolver },
+  )) {
+    const foundTargetObjects = allMatchingTargetObjects.filter(to =>
+      ancestorRepeatItem.contains(to),
+    );
+    switch (foundTargetObjects.length) {
+      case 0:
+        // Nothing found: ignore
+        break;
+      case 1: {
+        // A single one is found: the target object is directly in a common repeat
+        const targetObject = foundTargetObjects[0];
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
+      default: {
+        // Multiple target objects are found: they are in a repeat that is not common with the source object
+        // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
+        const targetObject = foundTargetObjects.find(to =>
+          fxEvaluateXPathToNodes(
+            'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+            to,
+            null,
+            {},
+          ),
+        );
+        if (!targetObject) {
+          // Nothing valid found for whatever reason. This might be something dynamic?
+          return null;
+        }
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
+    }
+  }
+  // We found no target objects in common repeats. The id is unresolvable
+  return null;
+}
 
 const contextFunction = (dynamicContext, string) => {
   const caller = dynamicContext.currentContext.formElement;
@@ -541,7 +531,7 @@ const contextFunction = (dynamicContext, string) => {
     }
   }
   const parent = XPathUtil.getParentBindingElement(caller);
-  // const p = caller.nodeName;
+  const p = caller.nodeName;
   // const p = dynamicContext.domFacade.getParentElement();
 
   if (parent) return parent;
