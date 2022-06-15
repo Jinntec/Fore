@@ -17,6 +17,10 @@ html{
     pointer-events: none;
     cursor: default;
 }
+input[readonly]{
+    background: lightgrey;
+}
+
 /* fx-fore{ */
 /*     opacity: 0; */
 /* } */

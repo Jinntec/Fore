@@ -60,28 +60,29 @@
                         <data></data>
                     </fx-instance>
 
+                    <fx-instance id="third">
+                        <data>
+                            <div>Thanks for being here</div>
+                        </data>
+                    </fx-instance>
+
                     <fx-submission id="submission"
-                                   url="/submission1"
+                                   url="#echo"
                                    method="POST"
                                    replace="none">
                         <fx-message event="submit-done">Data have been submitted - replacing nothing</fx-message>
                     </fx-submission>
 
                     <fx-submission id="submission2"
-                                   url="/submission2"
+                                   url="#echo"
                                    method="POST"
                                    replace="instance">
-                    </fx-submission>
-
-                    <fx-submission id="submission3"
-                                   url="/submission1"
-                                   method="POST"
-                                   replace="instance">
+                        <fx-setvalue ref="greeting" event="submit-done">Hello from response</fx-setvalue>
                     </fx-submission>
 
                     <fx-submission id="submission4"
-                                   url="/replaceall"
-                                   method="POST"
+                                   url="response.html"
+                                   method="get"
                                    replace="all">
                     </fx-submission>
 
@@ -93,15 +94,15 @@
                     </fx-submission>
 
                     <fx-submission id="submission6"
-                                   url="/submission2"
-                                   method="get"
+                                   url="#echo"
+                                   method="post"
                                    replace="instance"
                                    instance="replaced">
 
                     </fx-submission>
 
                     <fx-submission id="submission7"
-                                   url="/replaceall"
+                                   url="response.html"
                                    method="get"
                                    replace="target"
                                    target="#target">
@@ -129,7 +130,7 @@
                         <fx-send submission="submission"></fx-send>
                     </fx-trigger>
                     <p class="note">You won't notice a difference unless you're using a developer tool to inspect the network
-                    requests.</p>
+                    requests. However there will be a toast message when it succeeds.</p>
 
                     <h2>replace='instance'</h2>
                     <p>Sends the data and replaces the default instance with response</p>
@@ -142,9 +143,6 @@
                         <button>replace instance</button>
                         <fx-send submission="submission2"></fx-send>
                     </fx-trigger>
-                    <fx-output ref="greeting">
-                        <label slot="label">This message comes from default instance:</label>
-                    </fx-output>
 
                     <h2>replace='instance' - instance='replaced'</h2>
                     <p>Sends the data and replaces the instance with id='replaced'</p>
@@ -153,17 +151,9 @@
                         <fx-send submission="submission6"></fx-send>
                     </fx-trigger>
 
-                    <fx-output ref="instance('replaced')/greeting">
+                    <fx-output ref="instance('replaced')">
                         <label slot="label">This message comes from replaced instance:</label>
                     </fx-output>
-
-                    <h2>replace='instance' with empty response</h2>
-                    <p>Sends the data and replaces the default instance with response</p>
-
-                    <fx-trigger>
-                        <button>replace with empty data</button>
-                        <fx-send submission="submission3"></fx-send>
-                    </fx-trigger>
 
                     <h2>replace='all'</h2>
                     <p>Replaces the whole viewport (window) with response. However that will not change the

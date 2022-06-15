@@ -19,12 +19,11 @@ export class FxInspector extends HTMLElement {
             top:0;
             right:0;
             bottom:0;
-            height: 100vh;
+            height: 100%;
             background: var(--inspector-bg);
             color: white;
             /*max-height: 33%;*/
             overflow: scroll;
-            border-top:3px solid var(--paper-blue-500);
             transition:width 0.3s ease;
           }
           :host([open]){

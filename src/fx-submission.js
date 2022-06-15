@@ -143,7 +143,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     // console.log('data being send', serialized);
     // console.log('submitting data',serialized);
 
-    if (resolvedUrl === '#echo') {
+    // if (resolvedUrl === '#echo') {
+    if (resolvedUrl.startsWith('#echo')) {
       let data = null;
       if (serialized && instance.type === 'xml') {
         data = new DOMParser().parseFromString(serialized, 'application/xml');
