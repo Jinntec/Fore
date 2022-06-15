@@ -90,16 +90,19 @@ p{
     text-align: center;
     width: 100px;
     flex-grow:1;
+
 }
 .redline:hover{
     background: rgba(255,255,255,0.5);
 }
 .redline.next{
     align-self: flex-end;
+    color:black;
 }
 .redline.prev{
     align-self: flex-start;
     border-right: none;
+    color:black;
 }
 .wrapper:before{
     content:'Fore';
@@ -120,7 +123,8 @@ p{
     /*background: var(--paper-blue-grey-200);*/
     /*background: var(--paper-amber-300);*/
     /*background: ghostwhite;*/
-    background: rgba(40,40,40,0.3);
+    /*background: rgba(40,40,40,0.3);*/
+    background: rgba(1,87,155,0.3);
     opacity: 0.95;
     position: relative;
     min-height:80vh;
