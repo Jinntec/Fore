@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Email Address</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore load-css="inner.css">
+        <fx-message event="ready">attachement ready</fx-message>
+        <fx-model>
+            <fx-message event="model-construct-done">subcomponent model ready</fx-message>
+
+            <fx-instance id="email">
+                <data>
+                    <attachment>default</attachment>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-control ref="attachment" update-event="input">
+            <label>Email</label>
+            <fx-return ref="." event="value-changed"></fx-return>
+        </fx-control>
+        <fx-trigger>
+            <button>message and refresh me</button>
+            <fx-message>Hey my address is {email}</fx-message>
+            <fx-refresh></fx-refresh>
+        </fx-trigger>
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
