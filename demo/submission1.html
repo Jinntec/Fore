@@ -27,9 +27,6 @@
                 display: block;
             }
 
-            h2 {
-                margin-top: 100px;
-            }
             .demo{
                 border-radius: 10px;
                 backdrop-filter: blur(5px);
@@ -63,7 +60,7 @@
                     </fx-instance>
 
                     <fx-submission id="hooks"
-                                   url="/submission2"
+                                   url="#echo"
                                    method="POST"
                                    replace="instance"
                                    instance="other">
@@ -74,14 +71,16 @@
                         <fx-message event="submit-done">have submitted</fx-message>
                         <fx-message event="submit-error">Error occured</fx-message>
                     </fx-submission>
-
                     <fx-message event="ready">Hey it's ready</fx-message>
                 </fx-model>
                 <fx-group collapse="true">
-
-                    <h1>Submission</h1>
-
-                    <h2>Submission event hooks</h2>
+                    <h1>Submission Event Hooks</h1>
+                    <p>Submission emits these events to hook in:</p>
+                    <ul>
+                        <li><code>submit</code> - fired before submission is send to the URL</li>
+                        <li><code>submit-done</code> - fired when submission successfully returned</li>
+                        <li><code>submit-error</code> - fired when a submission error occurred</li>
+                    </ul>
                     <fx-trigger>
                         <button>fire hooks</button>
                         <fx-send submission="hooks"></fx-send>
@@ -96,8 +95,6 @@
                         <button>does not exist</button>
                         <fx-send submission="notexistent"></fx-send>
                     </fx-trigger>
-
-
                 </fx-group>
             </fx-fore>
         </template>

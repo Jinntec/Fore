@@ -85,7 +85,6 @@ function markdown(src) {
           highlight(content),
         ),
       );
-    });
   }
 
   function unesc(str) {

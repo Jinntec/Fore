@@ -49,12 +49,11 @@
                     </fx-instance>
 
                     <fx-submission id="sub1"
-                                   url="/submission2?foo={bar}&param2={another}"
+                                   url="#echo?foo={bar}&param2={another}"
                                    method="GET"
                                    replace="target"
                                    target="#out">
                     </fx-submission>
-
                 </fx-model>
                 <fx-group>
 
@@ -63,11 +62,16 @@
                     is executed.</p>
                     <h2 id="out"></h2>
 
+                    <p>Will use this URL '#echo?foo={bar}&amp;param2={another}'</p>
+
+                    <p class="note">
+                        For technical limitations on a static site like this, the submisson does not actually
+                        sends a request but echoes the request data.
+                    </p>
                     <fx-trigger>
                         <button>submit</button>
                         <fx-send submission="sub1"></fx-send>
                     </fx-trigger>
-
                 </fx-group>
             </fx-fore>
         </template>

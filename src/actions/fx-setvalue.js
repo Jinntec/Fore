@@ -50,6 +50,9 @@ export default class FxSetvalue extends AbstractAction {
     } else {
       value = '';
     }
+    if (value.nodeType === Node.ATTRIBUTE_NODE) {
+        value = value.nodeValue;
+    }
     const mi = this.getModelItem();
     this.setValue(mi, value);
   }

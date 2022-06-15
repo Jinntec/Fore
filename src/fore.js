@@ -283,15 +283,15 @@ export class Fore {
           const theFore = data.querySelector('fx-fore');
           // console.log('thefore', theFore)
           if(!theFore){
-                    hostElement.dispatchEvent(
-                        new CustomEvent('error', {
-                            composed: false,
-                            bubbles: true,
-                            detail: {
-                                message: 'cyclic graph',
-                            },
-                        })
-                    );
+              hostElement.dispatchEvent(
+                  new CustomEvent('error', {
+                      composed: false,
+                      bubbles: true,
+                      detail: {
+                          message: 'cyclic graph',
+                      },
+                  }),
+              );
           }
           hostElement.appendChild(theFore);
           theFore.classList.add('widget');
