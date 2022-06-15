@@ -296,7 +296,7 @@ export class FxFore extends HTMLElement {
         theFore.setAttribute('from-src', this.src);
         this.replaceWith(theFore);
       })
-      .catch(error => {
+      .catch(() => {
         Fore.dispatch(this, 'error', {
           message: `'${this.src}' not found or does not contain Fore element.`,
         });
@@ -359,7 +359,7 @@ export class FxFore extends HTMLElement {
    * AVT:
    *
    */
-  async refresh(force) {
+  async refresh() {
     // refresh () {
     console.group('### refresh');
 
@@ -493,8 +493,6 @@ export class FxFore extends HTMLElement {
   evaluateTemplateExpression(expr, node) {
     if (expr === '{}') return;
     const matches = expr.match(/{[^}]*}/g);
-    const namespaceContextNode =
-      node.nodeType === node.TEXT_NODE ? node.parentNode : node.ownerElement;
     if (matches) {
       matches.forEach(match => {
         // console.log('match ', match);

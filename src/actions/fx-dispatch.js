@@ -1,6 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath, resolveId } from '../xpath-evaluation.js';
-import { XPathUtil } from '../xpath-util.js';
 
 /**
  * `fx-dispatch`

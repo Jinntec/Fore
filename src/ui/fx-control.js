@@ -115,7 +115,6 @@ export default class FxControl extends XfAbstractControl {
       this._replaceNode(newNodes);
     });
 
-    const slot = this.shadowRoot.querySelector('slot');
     this.template = this.querySelector('template');
     // console.log('template',this.template);
   }
@@ -241,7 +240,7 @@ export default class FxControl extends XfAbstractControl {
       if (as === 'node' && this.nodeset !== widget.value) {
         const oldVal = this.nodeset.innerHTML;
         if (widget.value) {
-          if (this.oldVal !== this.widget.value) {
+          if (oldVal !== this.widget.value) {
             console.log('changed');
             return;
           }

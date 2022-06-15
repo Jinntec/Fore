@@ -117,7 +117,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this.handleValid();
     }
     this.handleRelevant();
-    //todo: handleType()
+    // todo: handleType()
   }
 
   _getForm() {
