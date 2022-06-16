@@ -24,7 +24,9 @@
     "resources/toastify.css",
     "src/**/*",
     "dist/fore.js",
+    "dist/fore.js.map",
     "dist/fore-dev.js",
+    "dist/fore-dev.js.map",
     "!.DS_Store"
   ],
   "dependencies": {
