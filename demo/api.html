@@ -154,7 +154,7 @@
             <div class="version">Version: {instance('package')?version}</div>
             <fx-control id="selected" ref="instance('vars')/selected" update-event="change">
                 <label>Jump to</label>
-                <select class="widget" ref="instance('default')?tags">
+                <select class="widget" ref="instance('default')?tags?*">
                     <template>
                         <option value="{?name}">{?name}</option>
                     </template>
@@ -209,6 +209,7 @@
                 </div>
             </template>
         </fx-repeat>
+        <fx-inspector open></fx-inspector>
     </fx-fore>
     <script>
         const current = document.getElementById('selected');
