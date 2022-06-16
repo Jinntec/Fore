@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Template Factory</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link rel="stylesheet" href="../resources/demo.css">
+
+
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        body {
+            font-size: 18px;
+        }
+
+        fx-instance {
+            display: none;
+        }
+
+        fx-control {
+            display: table-row;
+
+        }
+
+        fx-output {
+            margin: 1rem 0;
+        }
+
+        label {
+            /*display: table-cell;*/
+            display: block;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+
+        section {
+            padding-bottom: 50px;
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        fx-setvalue, fx-message {
+            display: none;
+        }
+
+        [type=checkbox], .inline {
+            display: inline;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <Name>John Doe</Name>
+                            <street>Nowhere 123</street>
+                            <city>Bielefeld</city>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-group>
+
+                    <h1>Template Factory</h1>
+
+                    <section>
+                        <h3>Wrapped paper controls</h3>
+
+                        <fx-template-factory>
+                            <template id="default-input" update-event="keyup">
+                                <paper-input class="widget" label="{label}">
+                                    <div slot="suffix">{hint}</div>
+                                </paper-input>
+                            </template>
+                        </fx-template-factory>
+
+                        <h2>Standard wrapping approach</h2>
+                        <fx-control ref="name" update-event="keyup">
+                            <paper-input class="widget" label="Name"></paper-input>
+                        </fx-control>
+                        <fx-control ref="street" update-event="keyup">
+                            <paper-input class="widget" label="street"></paper-input>
+                        </fx-control>
+                        <fx-control ref="city" update-event="keyup">
+                            <paper-input class="widget" label="city"></paper-input>
+                        </fx-control>
+
+                        <h2>with Template Factory</h2>
+                        <fx-control ref="name" use="default-input" label="Name"></fx-control>
+                        <fx-control ref="street" use="default-input" label="Street"></fx-control>
+                        <fx-control ref="city" use="default-input" label="City" hint="where you live stupid"></fx-control>
+                        <fx-control ref="city" use="default-input" params="{label:'City',hint:'where you live stupid'}"></fx-control>
+
+
+                    </section>
+
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

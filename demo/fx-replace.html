@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>invoice</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper{
+            margin:0;
+            padding:0;
+        }
+        .wrapper{
+            margin-left:5rem;
+            padding: 1rem;
+        }
+        fx-repeat{
+            margin-top:1rem;
+        }
+        fx-repeatitem{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1><code>fx-replace</code> Action</h1>
+    <p>
+        Replaces a node with another one.
+    </p>
+    <p>
+        Watch Data Inspector on the right to see the data changing after hitting the button.
+    </p>
+    <p>
+        After replacement the repeat will be bound to new nodes and be shown.
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <value>A</value>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="template">
+                        <data>
+                            <list>
+                                <value>A</value>
+                                <value>B</value>
+                                <value>C</value>
+                            </list>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger id="trigger">
+                    <button>replace</button>
+                    <fx-replace ref="value" with="instance('template')/list"></fx-replace>
+                </fx-trigger>
+                <fx-repeat ref="list/value">
+                    <template>
+                        Item: {.}
+                    </template>
+                </fx-repeat>
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+
+<!--
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <value attr="">A</value>
+                            <with attr="foo"></with>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger id="trigger">
+                    <button>replace</button>
+                    <fx-replace ref="value/attr" with="../with/@attr"></fx-replace>
+                </fx-trigger>
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+-->
+
+        </template>
+    </demo-snippet>
+
+
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

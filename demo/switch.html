@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Switch</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        :host{
+            display:none;
+        }
+        .dynamic {
+            background: #76ff03;
+        }
+
+        /*
+                fx-model{
+                    display: none;
+                }
+        */
+        fx-trigger:nth-child(1){
+            background: lightblue;
+        }
+        fx-trigger:nth-child(2){
+            background: #ffca28;
+        }
+        fx-trigger:nth-child(3){
+            background: #aeea00;
+        }
+        fx-case {
+            width: 600px;
+            height: 400px;
+            background: lightblue;
+            padding: 10px;
+        }
+        .second fx-case{
+            background: black;
+        }
+        .second fx-case h2{
+            color:white;
+        }
+
+        fx-trigger {
+            display: inline-block;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        #two {
+            background: #ffca28;
+        }
+
+        #three {
+            background: #aeea00;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Switch</h1>
+    <h2>fx-switch with toggle</h2>
+    <p>
+        <code>fx-case</code> child elements can be switched by an explicit <code>fx-toggle</code> action which take the id of an
+        <code>fx-case</code> element.
+    </p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-trigger label="page 1">
+                    <paper-button>toggle page 1</paper-button>
+                    <fx-toggle case="one"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 2" raised="raised">
+                    <paper-button>toggle page 2</paper-button>
+                    <fx-toggle case="two"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 3" raised="raised">
+                    <paper-button>toggle page 3</paper-button>
+                    <fx-toggle case="three"></fx-toggle>
+                </fx-trigger>
+
+                <fx-switch>
+                    <fx-case id="one" name="page1">
+                        some exclusive content
+                    </fx-case>
+                    <fx-case id="two" name="page2">
+                        some further content
+                    </fx-case>
+                    <fx-case id="three" name="page3">
+                        some completely unneeded content
+                    </fx-case>
+                </fx-switch>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+
+<h2>bound fx-switch</h2>
+<p>
+    When <code>fx-switch</code> is bound it will activate the <code>fx-case</code> whose <code>name</code> attribute
+    matches the bound value.
+</p>
+    <demo-snippet>
+        <template>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <page>page2</page>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <fx-control ref="page" update-event="change">
+            <label>select page</label>
+            <select class="widget">
+                <option>page1</option>
+                <option>page2</option>
+                <option>page3</option>
+            </select>
+        </fx-control>
+
+        <fx-switch class="second" ref="page">
+            <fx-case name="page1">
+                <h2>Page1</h2>
+            </fx-case>
+            <fx-case name="page2">
+                <h2>Page 2</h2>
+            </fx-case>
+            <fx-case name="page3">
+                <h2>Page 3</h2>
+            </fx-case>
+        </fx-switch>
+    </fx-fore>
+
+        </template>
+    </demo-snippet>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

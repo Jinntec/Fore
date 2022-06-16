@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello World</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link rel="stylesheet" href="../resources/demo.css">
+
+
+
+
+    <style>
+        .dynamic{
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+    <fx-fore xmlns:xf="test" xmlns:xf="test">
+        <fx-message event="refresh-done">refresh has been done </fx-message>
+
+        <fx-model id="model1">
+            <fx-instance>
+                <data>
+                    <greeting>Hello World!</greeting>
+                </data>
+            </fx-instance>
+
+            <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
+
+            <fx-instance id="second">
+                <data>
+                    <outro>GoodBye</outro>
+                    <foo></foo>
+                </data>
+            </fx-instance>
+
+<!--
+            <fx-bind instance="second" ref="instance('outro')">
+                <fx-bind ref="outro"></fx-bind>
+            </fx-bind>
+-->
+
+            <fx-message event="model-construct-done">Hey model-construct is done</fx-message>
+            <fx-message event="ready">Hey it's ready</fx-message>
+        </fx-model>
+        <fx-group>
+
+
+        <!--
+                        <fx-message event="value-changed">value has changed</fx-message>
+                        <fx-message event="refresh-done">refresh has been done </fx-message>
+        -->
+
+        <h1 class="{class}">
+            Greeting: <fx-output ref="./greeting" id="output"></fx-output>
+<!--            Greeting: <fx-output ref="instance()/greeting" id="output"></fx-output>-->
+        </h1>
+
+        <fx-control ref="greeting" label="Greeting"></fx-control>
+
+<!--
+        <h1>
+            <fx-output bind="b-greeting" id="output"></fx-output>
+        </h1>
+-->
+
+        <!--
+                        <fx-button label="say 'hello World'">
+                            <fx-setvalue bind="b-greeting" value="Hello World!"></fx-setvalue>
+                        </fx-button>
+                        <fx-button label="submit">
+                            <fx-submit></fx-submit>
+                        </fx-button>
+        -->
+        </fx-group>
+    </fx-fore>
+    <script type="module" src="./demo.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta
+            content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+            name="viewport"
+    />
+
+    <title>DocBook bibliography Sample</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <!--    <script src="https://cdn.jsdelivr.net/npm/webcomponents-loader@1.0.1/index.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet"/>
+    <link href="../resources/vars.css" rel="stylesheet"/>
+    <link href="../resources/demo.css" rel="stylesheet"/>
+    <style>
+        demo-snippet{
+          background: transparent;
+        }
+        details {
+            margin-top: 1rem;
+        }
+        summary{
+          background:var(--google-green-100);
+          padding: 1rem;
+        }
+        [part="demo"]{
+          background: red;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Working with an inlined instance of a docbook bibliography</h1>
+    <h2>This demonstrates how to use namespaces</h2>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore xpath-default-namespace="http://docbook.org/ns/docbook">
+                <fx-model>
+                    <fx-instance src="docbook/bibliography.xml"></fx-instance>
+                </fx-model>
+
+                <fx-repeat ref="/bibliography/bibliodiv">
+                    <template>
+                        <div>
+                            <h2>{title}</h2>
+                            <fx-repeat ref="biblioentry">
+                                <template>
+                                    <h3>{head(abbrev | @xreflabel)}</h3>
+                                    <label>Title
+                                        <fx-control ref="descendant::title[1]"></fx-control>
+                                    </label>
+                                    <fx-trigger>
+                                        <button>delete</button>
+                                        <fx-delete ref="."></fx-delete>
+                                    </fx-trigger>
+                                </template>
+                            </fx-repeat>
+                        </div>
+                    </template>
+                </fx-repeat>
+
+<!--
+                <details class="log" open>
+                    <summary>Data</summary>
+                    <pre>
+{log('default')}
+</pre>
+-->
+                <fx-inspector open>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+  <script type="module" src="./demo.js"></script>
+</div>
+</body>
+</html>

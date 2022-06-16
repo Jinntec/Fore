@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Country selector</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        body {
+            font-size: 18px;
+        }
+
+        fx-instance {
+            display: none;
+        }
+
+        fx-control {
+            display: table-row;
+
+        }
+
+        label {
+            display: table-cell;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+
+        section {
+            padding-bottom: 50px;
+        }
+
+        fx-setvalue, fx-message {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+
+        fx-fore {
+            max-width: 600px;
+        }
+
+        fx-output {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+<div class="wrapper">
+    <h1>Selects - one depends on the other</h1>
+
+    <p>Select a continent on the left and see what happens. The demo show how to setup a <code>select</code> whose items
+        will be
+        dependent on the selection of the first <code>select</code>. Here selecting a continent will constrain the list
+        of countries
+        by the continent selected.</p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <selected></selected>
+                            <continent></continent>
+                        </data>
+                    </fx-instance>
+
+                    <fx-instance id="countries" src="countries.xml"></fx-instance>
+                </fx-model>
+                <fx-group>
+
+                    <p></p>
+
+                    <div class="grid">
+                        <div class="wrapit">
+                            <fx-control id="continent" ref="continent" update-event="change">
+                                <label>Continent</label>
+                                <select class="widget">
+                                    <option value=""></option>
+                                    <option value="asia">Asia</option>
+                                    <option value="africa">Africa</option>
+                                    <option value="antarctica">Antarctica</option>
+                                    <option value="australasia">Australia</option>
+                                    <option value="europe">Europe</option>
+                                    <option value="north america">North America</option>
+                                    <option value="central america">Central America</option>
+                                    <option value="south america">South America</option>
+                                </select>
+                            </fx-control>
+                            <br>
+                            Selected Continent:
+                            <fx-output ref="continent"></fx-output>
+                        </div>
+
+                        <div class="wrapit">
+
+                            <fx-control ref="selected" update-event="change">
+                                <label>Country</label>
+                                <select class="widget"
+                                        ref="instance('countries')//country[@continent = instance('default')/continent]">
+                                    <template>
+                                        <option value="{@code}">{.}</option>
+                                    </template>
+                                </select>
+                                <!-- # refresh ourselves whenever 'continent' control changes -->
+                                <fx-refresh event="value-changed" target="continent" self></fx-refresh>
+                            </fx-control>
+                            <br>
+                            Country code is:
+                            <fx-output ref="selected"></fx-output>
+                        </div>
+                    </div>
+
+                    <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+    <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
+
+    <p>It is structered by this:</p>
+
+    <demo-snippet>
+        <template>
+            <countries>
+                <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+                <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+                <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+                <country>...</country>
+            </countries>
+        </template>
+    </demo-snippet>
+    <!--
+        <fx-output ref="instance('default')">
+            <wc-codemirror mode="xml" class="widget">
+                <script type="wc-content">
+                    <countries>
+                        <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+                        <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+                        <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+                        <country>...</country>
+                    </countries>
+                </script>
+            </wc-codemirror>
+        </fx-output>
+    -->
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

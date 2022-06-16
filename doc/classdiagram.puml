@@ -1,0 +1,102 @@
+@startuml
+class FxForm {
+    init()
+    refresh()
+}
+class ModelItem{
+    node
+    getValue
+    setValue
+    readonly
+    required
+    relevant
+    valid
+    type
+}
+class ForeElement{
+    model
+    abstract evalInContext()
+    isBound()
+    isNotBound()
+    getInScopeContext()
+}
+
+class BoundElement{
+    ref
+    evalInContext()
+    init(model)
+    getBindingExpr()
+    getModelItem()
+
+}
+
+ForeElement <|-- BoundElement
+
+
+package "model" #DDDDDD {
+    class FxModel{
+        bindingMap[]
+        rebuild()
+        recalculate()
+        revalidate()
+        registerBinding()
+    }
+    ForeElement <-- FxModel
+    class FxInstance{
+        getInstanceData()
+        getDefaultContext()
+    }
+    ForeElement <-- FxInstance
+    class FxBind
+    class FxSubmission
+}
+
+
+
+package "view" #DDDDDD{
+    class UIElement{
+        refresh()
+    }
+    abstract class AbstractControl{
+        getValue()
+    }
+    class XfSwitch #lightgrey
+    class XfSelect1 #lightgrey
+    class XfSelect #lightgrey
+    BoundElement <|-- AbstractControl
+    AbstractControl <|-- FxInput
+    AbstractControl <|-- FxOutput
+    AbstractControl <|-- FxButton
+    BoundElement <|-- FxRepeat
+    BoundElement <|-- FxRepeatitem
+    BoundElement <|-- FxGroup
+    BoundElement <|-- XfSwitch
+    AbstractControl <|-- XfSelect
+    AbstractControl <|-- XfSelect1
+}
+
+package "controller" #DDDDDD{
+    class FxAction{
+        needsRebuild
+        needsRecalculate
+        needsRevalidate
+        needsRefresh
+        execute()
+        actionPerformed()
+    }
+    FxAction <|-- FxDelete
+    FxAction <|-- FxAppend
+    FxAction <|-- XfInsert
+    FxAction <|-- FxSetvalue
+
+}
+
+
+
+BoundElement <|-- FxAction
+ForeElement <|-- FxBind
+BoundElement <|-- FxSubmission
+
+
+
+@enduml

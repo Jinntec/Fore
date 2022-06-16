@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission Demo</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link rel="stylesheet" href="../resources/demo.css">
+
+
+
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            .demo{
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+                background-color: rgba(135,135,135, 0.2);
+                box-shadow: rgba(0, 0, 0, 0.2) 2px 8px 8px;
+                border: 2px rgba(255,255,255,0.4) solid;
+                border-bottom: 2px rgba(40,40,40,0.35) solid;
+                border-right: 2px rgba(40,40,40,0.35) solid;
+
+            }
+
+
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <prop></prop>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="other">
+                        <data></data>
+                    </fx-instance>
+
+                    <fx-submission id="hooks"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="instance"
+                                   instance="other">
+                        <fx-action event="submit">
+                            <fx-message>Going to submit</fx-message>
+                            <fx-setvalue ref="prop">submit handler executed</fx-setvalue>
+                        </fx-action>
+                        <fx-message event="submit-done">have submitted</fx-message>
+                        <fx-message event="submit-error">Error occured</fx-message>
+                    </fx-submission>
+                    <fx-message event="ready">Hey it's ready</fx-message>
+                </fx-model>
+                <fx-group collapse="true">
+                    <h1>Submission Event Hooks</h1>
+                    <p>Submission emits these events to hook in:</p>
+                    <ul>
+                        <li><code>submit</code> - fired before submission is send to the URL</li>
+                        <li><code>submit-done</code> - fired when submission successfully returned</li>
+                        <li><code>submit-error</code> - fired when a submission error occurred</li>
+                    </ul>
+                    <fx-trigger>
+                        <button>fire hooks</button>
+                        <fx-send submission="hooks"></fx-send>
+                    </fx-trigger>
+
+                    <p><fx-output ref="instance('other')/greeting"></fx-output></p>
+                    <p><fx-output ref="prop"></fx-output></p>
+
+                    <h2>non-existing submission raises error</h2>
+
+                    <fx-trigger>
+                        <button>does not exist</button>
+                        <fx-send submission="notexistent"></fx-send>
+                    </fx-trigger>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

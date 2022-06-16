@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>submit with ref</title>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        button {
+            padding: 0.5rem 1rem;
+        }
+
+        fx-case {
+            position: relative;
+        }
+
+        fx-switch {
+            width: 100vw;
+            height: 100vh;
+        }
+
+
+        label {
+            width: 100px;
+            display: inline-block;
+        }
+
+        fx-control, fx-trigger {
+            display: inline-block;
+            margin: 0.3rem 0;
+        }
+
+        input {
+            height: 1.5rem;
+        }
+
+        .login {
+            width: 320px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            padding: 2rem;
+            border: thin solid #666;
+        }
+        pre{
+            background: black;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Submission and replacement of partial data</h1>
+    <p>With <code>ref</code> the initial data for submission are selected.</p>
+    <p><code>targetref</code> attribute points to the node that is replaced when <code>replace="instance"</code>.</p>
+    <p>Here the 'vehicle' node of the first instance is submitted, echoed by #echo submission and the returned node
+    is replacing the node referenced by <code>targetref</code>.</p>
+    <p>This Fore automatically runs the submission with a delay of 3 seconds. Reload and watch second instance change.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-send event="ready" submission="submission" delay="3000"></fx-send>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
+                            <car>
+                                <motor type="otto">electric</motor>
+                            </car>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="result">
+                        <data>
+                            <result></result>
+                        </data>
+                    </fx-instance>
+                    <fx-submission
+                        id="submission"
+                        ref="vehicle"
+                        method="post"
+                        url="#echo"
+                        replace="instance"
+                        instance="result"
+                        targetref="instance('result')/result">
+                    </fx-submission>
+                </fx-model>
+
+                Vehicle: {vehicle}
+
+                <h3>Original data:</h3>
+                <br>
+
+                <pre>
+                        {log('default')}
+                </pre>
+                <h3>replaced data:</h3>
+                <pre>
+                        {log('result')}
+                </pre>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

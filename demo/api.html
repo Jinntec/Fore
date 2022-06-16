@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>API (Demo)</title>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <style>
+        div{
+            margin:1rem 2rem;
+        }
+        details h2{
+            display: inline-block;
+        }
+        #elements{
+            max-width: 800px;
+            display: block;
+        }
+        #elements h2{
+            background: var(--paper-blue-500) ;
+            color: white;
+            padding: 1rem;
+            font-weight: 300;
+        }
+        #elements .description{
+            font-style: italic;
+            font-size:1rem;
+        }
+
+        fx-repeat.properties{
+            display: table;
+            width: 100%;
+        }
+        fx-repeat.properties fx-repeatitem{
+            display: table-row;
+
+        }
+
+        fx-repeat.properties fx-repeatitem div{
+            display: table-cell;
+            padding: 0.5rem;
+        }
+/*
+        fx-repeat.properties fx-repeatitem:first-child{
+            background: var(--paper-blue-100);
+            font-size: 1.2rem;
+        }
+*/
+        fx-repeat.properties fx-repeatitem:first-child div{
+            padding: 0.3rem;
+        }
+        h3{
+            background: var(--paper-blue-300);
+            padding: 0.3rem;
+            color: white;
+            font-weight: 300;
+        }
+        header{
+            position: relative;
+        }
+        header fx-control{
+            position:fixed;
+            top:0;
+            right:0;
+            z-index: 1;
+            background: whitesmoke;
+            padding: 0.5rem 1.5rem 1rem;
+            border-bottom-left-radius: 15px;
+            border: thin solid #999;
+            border-top:none;
+            border-right:none;
+
+        }
+        label{
+            display: block;
+            margin-bottom:0.5rem;
+        }
+        select{
+            font-size:1rem;
+            min-width: 200px;
+            border: thin solid #999;
+
+        }
+        .propWrapper{
+            margin:1rem 0rem 1rem 2rem;
+        }
+        [slot='header']{
+            display: inherit;
+            background: var(--paper-blue-200);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .wrapper{
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .up{
+            position:fixed;
+            font-size: 2rem;
+            width:48px;
+            height: 48px;
+            border-radius: 24px;
+            background: var(--paper-blue-900);
+            display: inline-block;
+            color:white;
+            text-align: center;
+            text-decoration: none;
+            line-height: 1.8;
+            bottom:1rem;
+            right:1rem;
+        }
+        .version{
+            margin-left: 0;
+        }
+/*
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(1):before{
+            content:'Name';
+            display: table-caption;
+            width: 100%;
+            background: #00bcd4;
+
+        }
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(2):before{
+            content:'Type';
+            display: table-caption;
+        }
+        fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(3):before{
+            content:'Default';
+            display: table-caption;
+        }
+*/
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="default" src="../fore-elements.json" type="json"></fx-instance>
+            <fx-instance id="package" src="../package.json" type="json"></fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <selected></selected>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <header name="top">
+            <h1>Fore API</h1>
+            <p>This is not a the real API doc but just another example working with a more
+            complex JSON structure.</p>
+            <div class="version">Version: {instance('package')?version}</div>
+            <fx-control id="selected" ref="instance('vars')/selected" update-event="change">
+                <label>Jump to</label>
+                <select class="widget" ref="instance('default')?tags?*">
+                    <template>
+                        <option value="{?name}">{?name}</option>
+                    </template>
+                </select>
+            </fx-control>
+        </header>
+        <a href="#top" class="up">^</a>
+
+<!--        <fx-repeat id="elements" ref="?tags"  refresh-on-view>-->
+        <fx-repeat id="elements" ref="?tags" refresh-on-view>
+            <template>
+                <h2 id="{?name}" style="transform: translateX(0)">{?name}</h2>
+                <div class="description">{?description}</div>
+                <div class="path">File: {?path}</div>
+
+                <div class="propWrapper">
+                    <h3>Properties</h3>
+
+                    <fx-repeat class="properties" ref="?properties">
+					    <!-- TODO: Fix the table here. It needs to be repeated but with a correct content model -->
+                         <table slot="header">
+                             <tr>
+                                 <td>Name</td>
+                                 <td>Description</td>
+                                 <td>Type</td>
+                                 <td>Default</td>
+                             </tr>
+                         </table>
+
+<!--
+                        <div slot="header">
+                            <div class="name">Name</div>
+                            <div class="type">Type</div>
+                            <div class="default">Default</div>
+                        </div>
+-->
+
+                        <template>
+                            <div class="name">{?name}</div>
+                            <div class="description">{?description}</div>
+                            <div class="type">{?type}</div>
+                            <div class="default">{?default}</div>
+                        </template>
+                    </fx-repeat>
+
+                    <h3>Events</h3>
+                    <fx-repeat class="events" ref="?events">
+                        <template>
+                            <div><span>{?name}</span> - <span>{?description}</span></div>
+                        </template>
+                    </fx-repeat>
+                </div>
+            </template>
+        </fx-repeat>
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+    <script>
+        const current = document.getElementById('selected');
+        current.addEventListener('value-changed', evt => {
+            console.log('evt', evt.target.value);
+			const scrollTarget = document.getElementById(evt.target.value);
+            scrollTarget.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        });
+    </script>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

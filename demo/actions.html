@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Actions</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        pre {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            width: 100vw;
+            z-index: 5;
+            padding: 1rem 0 0;
+        }
+
+        pre:before {
+            content: 'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top: -21px;
+            left: 0;
+            color: var(--paper-grey-800);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Actions</h1>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <confirmation>false</confirmation>
+                    <entered>false</entered>
+                </data>
+            </fx-instance>
+
+        </fx-model>
+
+        <!--
+                <fx-control ref="confirmation" update-event="input" value-prop="checked">
+                    <input id="confirm" type="checkbox">
+                    <label for="confirm">i agree</label>
+                </fx-control>
+        -->
+
+        <fx-group>
+
+            <h2>conditional action</h2>
+            <p>Any action element may have an <code>if</code> attribute that contains an XPath expression that needs to
+                evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
+
+            <demo-snippet>
+                <template>
+                    <fx-control id="control" ref="confirmation" update-event="change" value-prop="checked">
+                        <paper-checkbox class="widget">i agree</paper-checkbox>
+                        <fx-message if=".='true'" event="value-changed">Thanks</fx-message>
+                    </fx-control>
+
+
+                    <fx-trigger>
+                        <button>come in</button>
+                        <fx-setvalue if="../confirmation = 'true'" ref="entered">true</fx-setvalue>
+                    </fx-trigger>
+
+            <fx-output ref="entered">
+                <fx-message event="value-changed" level="modal">Welcome!</fx-message>
+            </fx-output>
+                </template>
+            </demo-snippet>
+
+        </fx-group>
+
+        <h2>Action block</h2>
+        <p class="note">Reload before trying next example...</p>
+        <p>defers update cycle to the end of the action block.</p>
+        <demo-snippet>
+            <template>
+                <fx-trigger>
+                    <button>execute action block</button>
+                    <fx-action>
+                        <fx-setvalue ref="confirmation">true</fx-setvalue>
+                        <fx-setvalue ref="entered">true</fx-setvalue>
+                    </fx-action>
+                </fx-trigger>
+            </template>
+        </demo-snippet>
+
+
+        <pre>
+                {log('default')}
+        </pre>
+
+    </fx-fore>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

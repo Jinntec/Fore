@@ -1,0 +1,103 @@
+x<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Variables</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        pre {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            width: 100vw;
+            z-index: 5;
+            padding: 1rem 0 0;
+        }
+
+        pre:before {
+            content: 'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top: -21px;
+            left: 0;
+            color: var(--paper-grey-800);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Variables</h1>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+              <data>
+				    <requirement kind="functional">It should work</requirement>
+				    <requirement kind="performance">It should be fast</requirement>
+				    <requirement kind="performance">It should be incredibly fast</requirement>
+				    <requirement kind="functional">It should not be broken</requirement>
+                    <filter>functional</filter>
+                </data>
+            </fx-instance>
+
+        </fx-model>
+
+		<fx-var name="requirements" value='(: This is a LONG XPath! :)
+										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
+        <fx-group>
+          <h2>Reusing data</h2>
+		  <fx-var value="'a value'" name="my-variable"></fx-var>
+		  <p>Variables can occur anywhere. They are invisible, they can contain simple values like "{$my-variable}"</p>
+		  <fx-var value="instance()/filter" name="filter"></fx-var>
+		  <p>They can also point to an instance, like this: {$filter}</p>
+
+		  <label>Current filter: {filter} - <fx-control ref="$filter"><input></fx-control></label>
+		  <p>There are {count(array:flatten($requirements))} requirements!</p>
+          <fx-repeat ref="$requirements">
+            <template>
+			  <p>Requirement: {@kind} {.}</p>
+			</template>
+		  </fx-repeat>
+
+		  <h3>All requirements:</h3>
+		  <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
+            <template>
+			  <p>Requirement: {@kind} {.}</p>
+			</template>
+		  </fx-repeat>
+        </fx-group>
+    </fx-fore>
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>a full example</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../../src/fx-fore.js';
+        import '../ui/fx-button.js';
+        import '../fx-result.js';
+        import '../deprecated/fx-json-data.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+    <link rel="stylesheet" href="demo.css"/>
+
+</head>
+<body unresolved="unresolved">
+
+
+<!--
+    <demo-snippet>
+        <template>
+-->
+<div class=".control">
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="control">
+        <xf-instance>
+            <data>
+                <vehicles count="">
+                    <vehicle type="bicycle" wheels="">
+                        <color>red</color>
+                        <motor></motor>
+                        <brand></brand>
+                        <registration-number></registration-number>
+                    </vehicle>
+                </vehicles>
+            </data>
+        </xf-instance>
+
+
+        <!-- Note:
+
+        bind ids are prefixed in this sample with 'b-'. This is just a convention - makes it easier
+        to distinguish between e.g. control ids and bind ids.
+
+        -->
+
+        <!-- @readonly, @required, @relevant, @constraint and @type are so-called Model Item Properties (MIPs).
+        Each of them can be present on a single-node binding at the same time.
+         -->
+
+        <xf-bind id="b-vehicles" set="vehicles">
+            <xf-bind id="b-vehicle" ref="vehicle" required="true()">
+                <xf-bind id="b-type" ref="@type" required="true()" constraint=". = 'bicycle' or . = 'car'">
+                    <xf-alert>You did not specify your type of vehicle or it is not a 'car' or 'bicylce'.</xf-alert>
+                    <!--
+                     to allow detailed error-messaging each MIP can also (alternatively) be expressed as
+                     an element which an alert.
+                    -->
+                    <!--
+                    <xf-required expr="true()">
+                        <xf-alert>You need to specify the type of vehicle!</xf-alert>
+                    </xf-required>
+                    <xf-constraint expr=". = 'bicycle' or . = 'car'">
+                        <xf-alert>Your vehicle is neither a 'car' nor a 'bicycle'</xf-alert>
+                    </xf-constraint>
+                    -->
+                </xf-bind>
+
+                <!-- sorry, there are only red vehicles available - you can't choose a different color  -->
+                <xf-bind id="b-color" ref="color" readonly="true()"></xf-bind>
+
+                <!-- The UI of the form will show controls that are bound to 'b-motor' just in case
+                the type of vehicle is a car. -->
+                <xf-bind id="b-motor" ref="motor" relevant="../@type = 'car'"></xf-bind>
+
+                <!-- showing how to specify a datatype. The mapping of types is not fully designed yet.  -->
+                <xf-bind id="b-registration" ref="registration-number" type="xs:integer"></xf-bind>
+            </xf-bind>
+        </xf-bind>
+
+
+        <!-- bind do NOT need to be nested - it's just an authoring convenience to minimize typing  -->
+        <!-- the calculate here has no effect as the value is already set - just for demonstration.  -->
+        <xf-bind id="b-firstVehicleBrand" ref="vehicles[1]/vehicle/brand/@type" calculate="'bicycle'"></xf-bind>
+
+
+        <xf-bind id="b-count" ref="vehicles/@count" calculate="count(vehicle)"></xf-bind>
+        <xf-bind id="b-wheels" ref="vehicles/@wheels" calculate="if(vehicle/@type='bicycle') then ../vehicles/@count * 2 else ../vehicles/@count * 4"></xf-bind>
+
+
+
+        <!-- xf-bind and xf-instance elements can occur in no particular order. It makes sense to group xf-instance
+           with its respective xf-bind elements for readability. -->
+        <xf-instance id="second">
+            <data>
+                <name>foo</name>
+                <features>
+                    <feature>fancy blinking lights</feature>
+                    <relevant>false</relevant>
+                </features>
+            </data>
+        </xf-instance>
+
+        <!-- on 'set' binding only the @relevant MIP is effective as it inherit down. The other MIPs apply
+        only refer to single nodes which might be e.g. readonly or become invalid.  -->
+        <xf-bind id="b-features" set="instances?second/features" relevant="instances?default/vehicle/@type = 'bicylce'">
+            <!-- the 'required' here is only effective if the parent bind evaluated to relevant=true. -->
+            <xf-bind id="b-feature" ref="feature" required="true()"></xf-bind>
+        </xf-bind>
+
+
+        <!--
+        submission is a complex beast in XForms and has many options. However we should concentrate on the most
+        important features.
+
+        Submissions use the URI context they are loaded from. For eXist-db this context is that of an app that holds
+        the form we're processing. A submission must support either relative (relative to the form document or absolute
+        addressing.
+
+        E.g. assuming this form was loaded from /db/apps/my-app/my-form.html our base URI would be '/db/apps/my-app'.
+        Whatever we put in the 'resource' attribute would resolve to that.
+
+        Absolute addressing would look like this: resource='/db/apps/another-app/data'.
+
+        Notice that there's no protocol mentioned. I assume that submitted data in the majority of cases will simply be
+        stored in the database somewhere or call an xquery for further processing. This should pretty much cover
+        our use cases though additional protocols like 'http://' might be added later for convenience.
+        -->
+
+
+        <!--
+        'resource' is the target where to send the submitted data. AVTs ({}) should be supported as part of the
+        resource value.
+
+        'replace' may have these values:
+        - 'none' do nothing with the response of the 'resource' endpoint
+        - 'instance' replace the default instance with the data returned by 'resource' (to target another instance there
+          might be the optional 'instance' attribute which is an idref to that instance.
+        - 'all' replace the whole form (ending the form session) with whatever the submission returns (not sure if we
+        need that in our context as we can achieve that in a different way)
+        -->
+
+        <!--
+        There are certainly more features of submissions that we'll want in the future. This means that the
+        implementation must be maintainable and flexible for extensions.
+        -->
+        <xf-submission id="s-prepare"
+                       resource="data/{$instances?second/name}.xml"
+                       replace="none"
+                       relevant="$instances?second/relevant">
+            <xf-submit-error>
+                <!-- return a message in case something went wrong with the submission.  -->
+                <xf-message modal="false">storing record failed</xf-message>
+            </xf-submit-error>
+            <xf-submit-done>
+                <!-- return a message to let the user know everything went fine.   -->
+                <xf-message level="ephemeral">Your data have been stored</xf-message>
+
+                <!-- call a chained submission -->
+                <xf-send submission="s-save"></xf-send>
+            </xf-submit-done>
+
+        </xf-submission>
+
+        <!--
+            we probably need some kind of protocol scheme that signals that the resource needs to be called instead
+            of just using store function.
+
+
+        -->
+        <xf-submission id="s-save"
+                       resource="xq:modules/persist.xql"
+                       replace="instance">
+            <xf-submit-done>
+                <!--
+                send the user to a new location. Means to just send a JSON snippet to the client that actually
+                does the request to the new URL.
+
+                Other actions in model are rarely necessary.
+                -->
+                <xf-load url="seed-form.html"/>
+            </xf-submit-done>
+        </xf-submission>
+
+
+    </xf-model>
+
+    <xf-form>
+        <h1>Your preferred vehicle</h1>
+
+    </xf-form>
+</div>
+<!--
+        </template>
+    </demo-snippet>
+-->
+</body>
+</html>

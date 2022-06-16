@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello World</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        pre {
+            position: absolute;
+            right: 5rem;
+            top: 3rem;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <h2>Bound to the same node</h2>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-message event="refresh-done">refresh-done has was fired</fx-message>
+                <fx-message event="ready">ready was fired</fx-message>
+
+                <fx-model id="model1">
+                    <fx-message event="model-construct">model-construct was fired</fx-message>
+                    <fx-message event="model-construct-done">model-construct-done was fired</fx-message>
+
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello World!</greeting>
+                            <prop></prop>
+                            <class>dynamic</class>
+                        </data>
+                    </fx-instance>
+                    <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
+                             readonly="string-length(.) < 6">
+                    </fx-bind>
+                    <fx-bind ref="prop"></fx-bind>
+
+                    <fx-instance id="second">
+                        <data>
+                            <outro>GoodBye</outro>
+                        </data>
+                    </fx-instance>
+
+
+                </fx-model>
+                <fx-group collapse="true">
+                    <h1>
+                        Greeting:
+                        <fx-output id="output" ref="./greeting"></fx-output>
+                    </h1>
+                    <fx-control label="Greeting" ref="greeting">
+                        <label>Greeting</label>
+                        <fx-message event="value-changed">value-changed fired on input</fx-message>
+                        <fx-message event="required">required should fire on input 'Greeting'</fx-message>
+                        <fx-message event="optional">optional should fire on input</fx-message>
+                        <fx-message event="valid">valid should fire on input</fx-message>
+                        <fx-message event="readwrite">readwrite should fire on input</fx-message>
+                        <fx-message event="readonly">readonly should fire on input</fx-message>
+                    </fx-control>
+
+                    <fx-control ref="greeting">
+                        <label>Greeting</label>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <button>say 'hello Universe'</button>
+                        <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>say 'hello'</button>
+                        <fx-setvalue ref="greeting">Hello</fx-setvalue>
+                    </fx-trigger>
+<!--
+            <pre>
+                {log('default')}
+            </pre>
+-->
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

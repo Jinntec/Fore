@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Configuration Editor Demo</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link rel="stylesheet" href="../resources/demo.css">
+
+
+
+
+    <style>
+        fx-repeat {
+            display: block;
+            height: auto;
+            background: #56CCF2;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        }
+
+        fx-repeatitem {
+            /*border: thin solid white;*/
+            /*background: lightsteelblue;*/
+            margin:0;
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            grid-column-gap: 1rem;
+            align-items: center;
+            padding: 0.2rem;
+
+            /*border-radius: 10px;*/
+            backdrop-filter: blur(5px);
+            background-color: rgba(135,135,135, 0.2);
+            box-shadow: rgba(0, 0, 0, 0.2) 2px 8px 8px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;
+        }
+        fx-repeatitem fx-control input{
+            width: 100%;
+        }
+        .repeat-header{
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: auto  16% 31%;
+            grid-column-gap: 1rem;
+            align-items: center;
+            font-size: 0.7rem;
+            position:absolute;
+            top:6.2rem;
+            color:white;
+            width: 100%;
+        }
+        .repeat-header div{
+            display: inline-block;
+        }
+        [repeat-index] {
+            backdrop-filter: blur(5px);
+            background-color: rgba(255,255,255, 0.3);
+            box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
+            border: 2px rgba(255,255,255,0.4) solid;
+            border-bottom: 2px rgba(40,40,40,0.35) solid;
+            border-right: 2px rgba(40,40,40,0.35) solid;
+        }
+        [repeat-index] input{
+            color:black;
+            font-weight: 500;
+        }
+        #env{
+            display: block;
+            width: 100%;
+            grid-template-columns: 20rem auto;
+        }
+        #env > fx-repeatitem{
+            display: grid;
+            grid-template-columns: 5rem auto;
+        }
+        #env fx-repeatitem h4{
+            align-self: start;
+        }
+        #env fx-repeatitem p{
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body unresolved="unresolved">
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="editor.xml"></fx-instance>
+
+            <fx-message event="ready">Hey it's ready</fx-message>
+
+            <fx-function
+                signature="local:server($who as xs:string) as element()*"
+                type="text/javascript">
+<!--                import { evaluateXPathToNodes } from '../src/xpath-evaluation.js';-->
+
+                console.log('who ',$who);
+
+<!--                const nodes = evaluateXPathToNodes($xpath,model.getDefaultInstanceData(),form);-->
+
+<!--                const nodes = Array.from(model.getDefaultInstanceData().children);-->
+				const nodes = form.evaluateToNodes(
+				`//server[@id = ("${$who}" => tokenize(','))]`,
+				this
+				);
+
+                return nodes;
+            </fx-function>
+
+        </fx-model>
+        <fx-group collapse="true">
+
+            <h3>Test input</h3>
+            <fx-control ref="servers/server/@ansible_host">
+                <label>Server</label>
+            </fx-control>
+
+            <h3>Servers:</h3>
+
+            <fx-repeat id="servers" ref="servers/server">
+                <template>
+                    <fx-control ref="@name"></fx-control>
+                    <fx-control ref="@type"></fx-control>
+                    <fx-control ref="@id"></fx-control>
+                    <fx-control ref="@ansible_host"></fx-control>
+                </template>
+            </fx-repeat>
+
+            <h3>Server per Environment:</h3>
+            <fx-repeat id="env" ref="envs/env">
+                <template>
+                    <h4>
+                        <fx-output ref="."></fx-output>
+                    </h4>
+
+                    <fx-repeat id="env-servers" ref="local:server(data(@servers))">
+                        <template>
+                            <p>{@id}</p>
+                            <p>{@name}</p>
+                            <p>{@type}</p>
+                            <p>{@ansible_host}</p>
+                        </template>
+                    </fx-repeat>
+                </template>
+            </fx-repeat>
+        </fx-group>
+    </fx-fore>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

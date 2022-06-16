@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Recalculate</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-control {
+            display: block;
+        }
+
+        fx-label {
+            display: inline;
+        }
+
+        .display {
+            font-size: 24px;
+        }
+
+        /*
+                .required {
+                    content: '*';
+                    background: red;
+                    padding-left: 4px;
+                }
+        */
+        fx-output {
+            display: block;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <!--    <fx-message event="refresh-done">refresh has been done</fx-message>-->
+
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <a>A</a>
+                            <b>B</b>
+                            <c>C</c>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="a" readonly="string-length(../b) > 1"
+                             required="../b = 'B'"></fx-bind>
+                    <fx-bind ref="b" required="../c = 'C'"></fx-bind>
+                    <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
+                </fx-model>
+                <fx-group collapse="true">
+                    <h1>
+                        Recalculation
+                    </h1>
+
+
+
+                    <p>There are several constraints in place here. You can play with the values to see the effects</p>
+                    <ul>
+                        <li>'a' will be readonly if 'b' is longer than 1</li>
+                        <li>'a' will be required if 'b' has a value of 'B'</li>
+                        <li>'b' is required only if 'c' has the value 'C'</li>
+                        <li>'c' is relevant only if 'b' has the value 'B'</li>
+                    </ul>
+                    <div class="display">
+                        <fx-output id="output" ref="a">
+                            <label slot="label">a:</label>
+                        </fx-output>
+                        <fx-output id="output" ref="b">
+                            <fx-label slot="label">b:</fx-label>
+                        </fx-output>
+                        <fx-output id="output" ref="c">
+                            <fx-label slot="label">c:</fx-label>
+                        </fx-output>
+                    </div>
+
+                    <fx-control ref="a" update-event="input">
+                        <label>A</label>
+                    </fx-control>
+                    <fx-control ref="b" update-event="input">
+                        <label>B</label>
+                    </fx-control>
+                    <fx-control ref="c" update-event="input">
+                        <label>C</label>
+                    </fx-control>
+
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

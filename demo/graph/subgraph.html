@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Dependency Graph calculation</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+
+    <script
+            type="text/javascript"
+            src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+    <script type="text/javascript" src="graph.js"></script>
+    <style>
+        body{
+            height: 100vh;
+            width:100vw;
+            margin:0;
+            padding:0;
+
+        }
+
+
+        header {
+            height:300px;
+        }
+
+        .invalid input {
+            color: red;
+        }
+        .fore{
+            padding: 1rem;
+            background:var(--paper-blue-grey-300);
+        }
+        fx-fore{
+            color:white;
+
+        }
+
+        fx-control {
+            display: block;
+        }
+
+        label {
+            width: 200px;
+            display: inline-block;
+        }
+
+        .readonly input {
+            opacity: 0.6;
+            background: lightgrey;
+        }
+
+        fx-group {
+            margin-top: 1rem;
+        }
+
+        fx-group div {
+            padding: 1rem 0;
+        }
+
+        .graph {
+            width: 100%;
+            border-top: thin solid #b0bec5;
+            border-collapse: collapse;
+            background: var(--paper-blue-grey-50);
+            position: relative;
+            height: calc((100vh - 300px) / 2);
+            min-height: 500px;
+
+        }
+
+        .graph::before {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.7);
+            border-bottom-left-radius: 1rem;
+            padding: 0.5rem;
+        }
+
+        #graph::before {
+            content: 'MainGraph'
+        }
+
+        main {
+            /*padding: 0.5rem;*/
+             display: grid;
+            grid-template-columns: 2fr 1fr;
+            width:100vw;
+            overflow:hidden;
+        }
+
+
+
+        #subgraph::before {
+            content: 'flattened SubGraph'
+        }
+
+        demo-snippet{
+            margin:0;
+            padding:0;
+        }
+        demo-snippet p{
+            color:black;
+        }
+        demo-snippet [required]:after {
+            content: '';
+        }
+        .graphs{
+            /*height: 100%;*/
+            /*display: inline-grid;*/
+            /*grid-template-rows: 1fr 1fr;*/
+            display:flex;
+            flex-direction: column;
+            background: var(--paper-blue-grey-50);
+        }
+        p{
+            color:var(--paper-blue-grey-50);
+        }
+    </style>
+</head>
+<body>
+<!--<div class="wrapper">-->
+
+    <div class="header">
+        <demo-snippet>
+            <template>
+                <p>A couple of bindings produce the graph on this page</p>
+                <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+
+                <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+                <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
+            </template>
+        </demo-snippet>
+
+    </div>
+    <main>
+        <div class="graphs">
+            <div id="graph" class="graph graph1"></div>
+            <div id="subgraph" class="graph graph2"></div>
+        </div>
+
+        <div class="fore">
+            <h1>Recalculation</h1>
+            <p>To determine the right order of calculations Fore uses a dependency graph.</p>
+            <p>When values change a subgraph is constructed that contains only the affected nodes.</p>
+            <p>Change values of white controls to see the effect.</p>
+            <p>Note: constraints are not computed during recalculate but afterwards in revalidate step.</p>
+            <fx-fore>
+                <!--
+                                <fx-action event="ready">
+                                    <fx-update></fx-update>
+                                    <fx-refresh></fx-refresh>
+                                </fx-action>
+                -->
+
+                <fx-model>
+                    <fx-message event="rebuild-done">rebuild is done</fx-message>
+
+                    <fx-instance>
+                        <data>
+                            <a>101</a>
+                            <b>10</b>
+                            <c></c>
+                            <d></d>
+                            <e></e>
+                            <x>3</x>
+                            <y>0</y>
+                            <z></z>
+                            <q>foo</q>
+                        </data>
+                    </fx-instance>
+
+                    <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                    <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                    <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+
+                    <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+                    <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+                    <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
+
+                </fx-model>
+                <fx-control ref="a" update-event="input">
+                    <label>a</label>
+                    <input type="number">
+                </fx-control>
+                <fx-control ref="b" update-event="input">
+                    <label>b</label>
+                    <input type="number">
+                </fx-control>
+
+                <fx-group>
+                    <div>some controls depending on the 'a' and 'b' controls</div>
+                    <fx-control ref="c">
+                        <label>c = a * b <= 100</label>
+                    </fx-control>
+                    <fx-control ref="d">
+                        <label>d = a + b <= 10</label>
+                    </fx-control>
+                    <fx-control ref="e">
+                        <label>e = a + 5 < 10</label>
+                    </fx-control>
+                </fx-group>
+
+                <fx-group>
+                    <div>Some controls depending on the 'x' node</div>
+                    <fx-control ref="x" update-event="input">
+                        <label>x</label>
+                        <input type="number">
+                    </fx-control>
+                    <fx-control ref="y">
+                        <label>y = ../x + 5.0 <= 10.0</label>
+                    </fx-control>
+                    <fx-control ref="z">
+                        <label>z</label>
+                    </fx-control>
+
+                    <fx-control ref="q">
+                        <label>q</label>
+                    </fx-control>
+
+                </fx-group>
+
+                <fx-group>
+                    <div>The data:</div>
+                    <pre>
+                    {log('default')}
+                </pre>
+                </fx-group>
+            </fx-fore>
+        </div>
+    </main>
+
+<!--</div>-->
+
+<script type="text/javascript">
+    (function () {
+
+        const model = document.querySelector('fx-model');
+
+        model.addEventListener('rebuild-done', (e) => {
+
+            // console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.maingraph, 'graph');
+
+        });
+        model.addEventListener('recalculate-done', (e) => {
+
+            // console.log('mainGraph', e.detail.graph);
+            renderGraph(e.detail.subgraph, 'subgraph');
+
+        });
+
+    })();
+
+</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"
+        integrity="sha512-XHDcSyqhOoO2ocB7sKOCJEkUjw/pQCJViP1ynpy+EGh/LggzrP6U/V3a++LQTnZT7sCQKeHRyWHfhN2afjXjCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+-->
+
+
+</body>
+</html>

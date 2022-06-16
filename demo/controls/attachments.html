@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Email Address</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore id="attachments">
+        <fx-message event="ready">attachements ready</fx-message>
+        <fx-model>
+            <fx-message event="model-construct-done">subcomponent model ready</fx-message>
+
+            <fx-instance>
+                <attachments>
+                    <attachment>Attachment1</attachment>
+                    <attachment>Attachment2</attachment>
+                </attachments>
+            </fx-instance>
+        </fx-model>
+
+        <fx-repeat id="r-attachments" ref="instance()//attachment">
+            <template>
+                {.}
+            </template>
+        </fx-repeat>
+<!--
+        <fx-trigger>
+            <button>add attachment</button>
+            <fx-insert ref="attachment"></fx-insert>
+        </fx-trigger>
+        <fx-repeat id="r-attachements" ref="attachment">
+            <template>
+                <fx-control ref="." update-event="input">
+                    <label>Attachment</label>
+                    <input type="file" class="widget">
+                </fx-control>
+            </template>
+        </fx-repeat>
+        <fx-trigger>
+            <button>Save attachments</button>
+            <fx-return ref="instance()" event="value-changed"></fx-return>
+        </fx-trigger>
+        <fx-inspector open></fx-inspector>
+-->
+<!--        <fx-inspector id="inner-inspect" open></fx-inspector>-->
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

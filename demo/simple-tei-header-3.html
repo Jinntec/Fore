@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>TEI header editor sample</title>
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/webcomponents-loader@1.0.1/index.js"></script>-->
+
+    <link href="../resources/demo.css" rel="stylesheet"/>
+
+    <style>
+        .deleteIcon button {
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: red;
+        }
+        input{
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            font-size: 1rem;
+        }
+
+        fx-repeatitem {
+            display: grid;
+            grid-template-columns: auto 30px;
+            width: 100%;
+            align-items: baseline;
+            margin: 0.3rem 0;
+        }
+        .wrapper{
+            margin-bottom: 3rem;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Editing an TEI header</h1>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="tei/header.xml"></fx-instance>
+        </fx-model>
+
+        <fx-group ref="teiHeader">
+            <fx-trigger>
+                <paper-button raised>fileDesc</paper-button>
+                <fx-toggle case="file"></fx-toggle>
+            </fx-trigger>
+            <fx-trigger>
+                <paper-button raised>profileDesc</paper-button>
+                <fx-toggle case="profile"></fx-toggle>
+            </fx-trigger>
+            <fx-trigger>
+                <paper-button raised>revisionDesc</paper-button>
+                <fx-toggle case="revision"></fx-toggle>
+            </fx-trigger>
+            <fx-switch>
+                <fx-case id="file">
+                    <h2>fileDesc</h2>
+                        <fx-group ref=".//titleStmt">
+                            <h4>Title</h4>
+                            <fx-repeat ref="title" id="titles">
+                                <template>
+                                    <fx-control ref="."></fx-control>
+                                    <fx-trigger class="deleteIcon">
+                                        <button>x</button>
+                                        <fx-delete ref="."></fx-delete>
+                                    </fx-trigger>
+                                </template>
+                            </fx-repeat>
+                            <fx-trigger>
+                                <button>add title</button>
+                                <fx-append ref="title" repeat="titles"></fx-append>
+                            </fx-trigger>
+
+                            <h4>Author</h4>
+                            <fx-repeat ref="author" id="authors">
+                                <template>
+                                    <fx-control ref="."></fx-control>
+                                    <fx-trigger class="deleteIcon">
+                                        <button>x</button>
+                                        <fx-delete ref="."></fx-delete>
+                                    </fx-trigger>
+                                </template>
+                            </fx-repeat>
+                            <fx-trigger>
+                                <button>add author</button>
+                                <fx-append ref="author" repeat="authors"></fx-append>
+                            </fx-trigger>
+
+                            <h4>Editor</h4>
+                            <fx-repeat ref="editor" id="editors">
+                                <template>
+                                    <fx-control ref="."></fx-control>
+                                    <fx-trigger class="deleteIcon">
+                                        <button>x</button>
+                                        <fx-delete ref="."></fx-delete>
+                                    </fx-trigger>
+                                </template>
+                            </fx-repeat>
+                            <fx-trigger>
+                                <button>add editor</button>
+                                <fx-append ref="editor" repeat="editors"></fx-append>
+                            </fx-trigger>
+                        </fx-group>
+                </fx-case>
+                <fx-case id="profile">
+                    <h2>profileDesc</h2>
+                </fx-case>
+                <fx-case id="revision">
+                    <h2>revisionDesc</h2>
+                </fx-case>
+            </fx-switch>
+        </fx-group>
+
+    </fx-fore>
+
+
+    <script type="module" src="./demo.js"></script>
+</body>
+</html>

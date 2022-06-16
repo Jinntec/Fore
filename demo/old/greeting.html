@@ -1,0 +1,104 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Greeting</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module">
+        import '../../src/fx-fore.js';
+        import '../deprecated/native/fx-button.js';
+        import '../ui/fx-output.js';
+        import '../deprecated/native/fx-input.js';
+        import '../deprecated/material/fx-material-input.js';
+        import '../actions/fx-setvalue.js';
+        import '../deprecated/fx-update.js';
+        import '../deprecated/fx-json-data.js';
+        import '../deprecated/fx-message.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+
+        xf-input, xf-material-input {
+            display: block;
+            margin-bottom: 20px;
+        }
+        xf-json-data {display:none;}
+
+    </style>
+</head>
+<body>
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-modelData is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-param name="dataroot" value="request:get-param('dataroot','/db/apps/fore/data"></xf-param>
+
+                <xf-instance>
+                    <data>
+                        <greeting>World!</greeting>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-greeting" ref="greeting" required="true()"></xf-bind>
+
+                <xf-submission replace="none"
+                               action="xmldb:store('{$dataroot}', 'hello.xml', $instances?default)">
+
+                </xf-submission>
+            </xf-model>
+            <!-- ### xf-json-data simulates JSON sent by the server for the above xf-model -->
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind":{
+                      "id":"b-greeting",
+                      "required":true,
+                      "value":"World"
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+                <xf-message event="value-changed">value of binding '${target.bind}' changed.</xf-message>
+
+                <h1>Hello
+                    <xf-output bind="b-greeting" id="output"></xf-output>
+                </h1>
+
+                <label for="greeting">Greeting:</label>
+                <xf-input bind="b-greeting" id="greeting" incremental="incremental" type="text"></xf-input>
+
+                <xf-input bind="b-greeting" id="greeting2" type="text" label="this fires onblur (default)">
+                    <xf-message event="value-changed">value of control 'greeting2' changed.</xf-message>
+                </xf-input>
+
+                <xf-material-input bind="b-greeting" id="greeting2" type="text" label="Material Design Input">
+                    <xf-message event="value-changed">value of control 'greeting2' changed.</xf-message>
+                </xf-material-input>
+
+                <xf-button label="set value to 'girls and boys'">
+                    <xf-setvalue bind="b-greeting" value="girls and boys"></xf-setvalue>
+                </xf-button>
+
+<!--
+                <xf-button label="update">
+                    <xf-update></xf-update>
+                </xf-button>
+-->
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

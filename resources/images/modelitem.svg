@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="100%" height="100%" version="1.1" viewBox="95.4252 161.2095 687.1024 479.5857"
+     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+    <defs/>
+    <marker id="marker1" markerUnits="strokeWidth" orient="auto" refX="-11.17254" refY="0" markerWidth="13.27247"
+            markerHeight="10.22955" viewBox="-12.27247 -5.114774 13.27247 10.22955">
+        <path d="M-11.27247 -4.114774 L0 0 L-11.27247 4.114773 Z " fill="#000000" fill-opacity="1" stroke="#000000"
+              stroke-opacity="1"/>
+    </marker>
+    <g id="layer1">
+        <ellipse cx="368.5039" cy="552.7559" rx="85.03937" ry="85.03937" opacity="1" stroke="#A1A1A1" stroke-opacity="1"
+                 stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" fill="#FFFFFF"
+                 fill-opacity="1"/>
+        <ellipse cx="609.4488" cy="340.1575" rx="170.0787" ry="155.9055" opacity="1" stroke="#000000" stroke-opacity="1"
+                 stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" fill="#F3F6F6"
+                 fill-opacity="1"/>
+        <g>
+            <ellipse cx="633.7458" cy="244.5056" rx="16.19797" ry="15.36015" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="631.2927" y="250.0392" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="552.7558" cy="336.6665" rx="16.19791" ry="15.36014" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="550.3026" y="342.2001" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="633.7458" cy="336.6665" rx="16.19797" ry="15.36014" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="631.2927" y="342.2001" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="714.7357" cy="336.6665" rx="16.19799" ry="15.36014" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="712.2825" y="342.2001" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="504.162" cy="428.8274" rx="16.19797" ry="15.36015" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="501.7088" y="434.361" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="601.3499" cy="428.8274" rx="16.19802" ry="15.36015" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="598.8967" y="434.361" font-size="12" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <line x1="623.3762" y1="256.3056" x2="563.1255" y2="324.8665" opacity="1" stroke="#000000"
+                  stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                  stroke-dasharray="none"/>
+            <line x1="633.7458" y1="259.8658" x2="633.7458" y2="321.3064" opacity="1" stroke="#000000"
+                  stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                  stroke-dasharray="none"/>
+            <line x1="644.1155" y1="256.3056" x2="704.366" y2="324.8665" opacity="1" stroke="#000000" stroke-opacity="1"
+                  stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+            <line x1="545.5119" y1="350.405" x2="511.4059" y2="415.0889" opacity="1" stroke="#000000" stroke-opacity="1"
+                  stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+            <line x1="559.9998" y1="350.405" x2="594.1058" y2="415.0889" opacity="1" stroke="#000000" stroke-opacity="1"
+                  stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+        </g>
+        <g>
+            <ellipse cx="383.9656" cy="539.6729" rx="27.05798" ry="26.16601" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FFFFFF" fill-opacity="1"/>
+            <text x="373.1951" y="549.2737" font-size="36" fill="#000000" fill-opacity="1" font-family="Arial"
+                  font-weight="normal" font-style="normal">N
+            </text>
+            <ellipse cx="338.869" cy="504.7849" rx="9.019319" ry="8.721966" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#F5A2FE" fill-opacity="1"/>
+            <ellipse cx="320.8304" cy="539.673" rx="9.019332" ry="8.721992" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#9EFF74" fill-opacity="1"/>
+            <ellipse cx="329.8497" cy="574.5609" rx="9.019332" ry="8.721939" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#FDAA66" fill-opacity="1"/>
+            <ellipse cx="365.927" cy="600.7269" rx="9.019345" ry="8.721966" opacity="1" stroke="#000000"
+                     stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                     stroke-dasharray="none" fill="#4AACFF" fill-opacity="1"/>
+            <line x1="345.9119" y1="510.2335" x2="362.8369" y2="523.3271" opacity="1" stroke="#000000"
+                  stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                  stroke-dasharray="none"/>
+            <line x1="329.8497" y1="539.673" x2="356.9077" y2="539.6729" opacity="1" stroke="#000000" stroke-opacity="1"
+                  stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+            <line x1="337.3542" y1="569.7228" x2="361.452" y2="554.1871" opacity="1" stroke="#000000" stroke-opacity="1"
+                  stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+            <line x1="368.4048" y1="592.3404" x2="376.5322" y2="564.8322" opacity="1" stroke="#000000"
+                  stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                  stroke-dasharray="none"/>
+        </g>
+        <line x1="439.3701" y1="609.4488" x2="694.4882" y2="481.8898" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+        <line x1="453.5433" y1="269.2914" x2="311.811" y2="481.8898" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+        <line x1="169.9096" y1="164.2095" x2="169.9096" y2="164.434" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none"/>
+        <line x1="492.5497" y1="439.5363" x2="412.4953" y2="513.3627" marker-end="url(#marker1)" opacity="1"
+              stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+              stroke-dasharray="16,4,8,4"/>
+        <text x="110.868" y="555.2384" font-size="20" fill="#000000" fill-opacity="1" font-family="Arial"
+              font-weight="normal" font-style="normal">Model Items
+        </text>
+        <line x1="226.7717" y1="532.913" x2="330.1388" y2="506.9756" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+        <line x1="226.7717" y1="545.2266" x2="311.8278" y2="540.2046" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+        <line x1="226.7717" y1="558.8173" x2="320.9408" y2="573.2001" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+        <line x1="226.7717" y1="565.3364" x2="357.2043" y2="598.5084" opacity="1" stroke="#000000" stroke-opacity="1"
+              stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="2,2"/>
+    </g>
+</svg>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission Chaining</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+            h2{
+                color:inherit;
+            }
+
+
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <bar>bar</bar>
+                            <another>value2</another>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="sub1"
+                                   url="#echo?foo={bar}&param2={another}"
+                                   method="GET"
+                                   replace="target"
+                                   target="#out">
+                    </fx-submission>
+                </fx-model>
+                <fx-group>
+
+                    <h1>Submission with Template Expression</h1>
+                    <p>The <code>url</code> attribute may contain template expressions that get evaluated before the submission
+                    is executed.</p>
+                    <h2 id="out"></h2>
+
+                    <p>Will use this URL '#echo?foo={bar}&amp;param2={another}'</p>
+
+                    <p class="note">
+                        For technical limitations on a static site like this, the submisson does not actually
+                        sends a request but echoes the request data.
+                    </p>
+                    <fx-trigger>
+                        <button>submit</button>
+                        <fx-send submission="sub1"></fx-send>
+                    </fx-trigger>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

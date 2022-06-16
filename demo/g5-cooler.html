@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>barebone Fore form with CDN</title>
+    <style>
+        body{
+            font-family: Verdana, sans-serif;
+            background: rgb(9,185,238);
+            background: linear-gradient(180deg, rgba(9,185,238,0.9962359943977591) 6%, rgba(0,29,255,1) 100%);
+            color:white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        fx-form{
+            width:100vw;
+            height: 100vh;
+            padding: 2rem;
+        }
+        fx-control, label, input{
+            display:block;
+            width: 100%;
+            text-align: center;
+        }
+        h1{
+            text-align: center;
+        }
+        input{
+            padding:0.5rem;
+        }
+        input:focus{
+            outline:none;
+        }
+        label{
+            margin-top:2rem;
+        }
+        .log{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+        }
+        .log fx-output{
+            align-self:end;
+        }
+        fx-output{
+            width: 100%;
+            text-align:center;
+        }
+        span{
+            display: inline-block;
+            text-align:center;
+            width: 100%;
+        }
+        .wrapper{
+            padding: 2rem;
+            background: rgba(233,233,233,0.2);
+            border-radius: 0.3rem;
+            max-width: 320px;
+            margin:0 auto;
+            border-left:rgba(255,255,255,0.3) solid 1px;
+            border-bottom:rgba(255,255,255,0.3) solid 1px;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<h1>G5 Cooler</h1>
+<div class="wrapper">
+    <!-- all elements and attributes are OPTIONAL, i.e. may be missing depending on config
+         placeholder P := integer percent value 0 <= P <= 100
+         placeholder I := integer
+         placeholder F := float with 2digit precision (eg 1.12)
+         placeholder S := string (reasonably short)
+         voltage element can be ignored (unimplemented yet)
+    -->
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <g5-cooler board="S" cpuspeed="I">
+                    <rear-fans speed="25" pwm="I" voltage="F"></rear-fans>
+                    <water-pump speed="25" pwm="I" voltage="F"></water-pump>
+                    <water-tank level="P" absolute="F"></water-tank>
+                    <front-env temperature="F" humidity="F"></front-env>
+                    <rear-env temperature="F" humidity="F"></rear-env>
+                    <voltage vrail="F" v5="F" vcpu="F"></voltage>
+                    <memory heap="I" fragmentation="P"></memory>
+                    <wifi ssid="S" ip="S"></wifi>
+                </g5-cooler>
+            </fx-instance>
+            <fx-bind ref="water-tank/@level" readonly="true()"></fx-bind>
+            <fx-submission id="setFan"
+                          url="http://{wifi/@ip}/fan-speed={rear-fans/@speed}"
+                          replace="instance"></fx-submission>
+
+            <fx-submission id="setPump"
+                          url="http://{wifi/@ip}/pump-speed={water-pump/@speed}"
+                          replace="instance"></fx-submission>
+        </fx-model>
+        <section>
+            <fx-control ref="rear-fans/@speed" update-event="input">
+                <label>Fan Speed</label>
+                <input type="range" min="0" max="100" step="5" autofocus>
+                <fx-send event="value-changed" submission="setFan"></fx-send>
+            </fx-control>
+            <span>{rear-fans/@speed} %</span>
+
+            <fx-control ref="water-pump/@speed" update-event="input">
+                <label>Pump Speed</label>
+                <input type="range" min="0" max="100" step="5" autofocus>
+                <fx-send event="value-changed" submission="setPump"></fx-send>
+            </fx-control>
+            <span>{water-pump/@speed} %</span>
+            <fx-control ref="water-tank/@level">
+                <label>Water level</label>
+                <input type="range" disabled="disabled">
+            </fx-control>
+        </section>
+        <section class="log">
+            <fx-output ref="rear-env/@temperature">
+                <label slot="label">Input temperature</label>
+            </fx-output>
+            <fx-output ref="front-env/@temperature">
+                <label slot="label">Output temperature</label>
+            </fx-output>
+            <fx-output ref="rear-env/@humidity">
+                <label slot="label">Humidity</label>
+            </fx-output>
+        </section>
+    </fx-fore>
+
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@0.24.0/dist/fore-all.js"></script>
+</body>
+</html>

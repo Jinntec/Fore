@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using Fore as control</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap:1rem;
+        }
+
+        input{
+            padding: 0.3rem;
+        }
+
+        fx-group {
+            width:max-content;
+        }
+
+        fx-fore fx-fore {
+            background: lightsteelblue;
+            border: thin solid steelblue;
+            /*height:200px;*/
+        }
+
+        label{
+            justify-self:end;
+        }
+        fx-fore fx-fore label{
+            display: none;
+        }
+        fx-inspector{
+            position: absolute;
+            height: 99%;
+        }
+        .wrapper{
+            padding: 2rem;
+            background: white;
+        }
+/*
+        #inner-inspect{
+            position:fixed;
+            left:0;
+        }
+*/
+        #attachments{
+            height: 300px;
+            position: relative;
+        }
+        #attachments fx-repeatitem{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Email message using Fore as control</h1>
+    <p>The areas in blue are loaded from another nested `fx-fore` element that is used as a widget
+    in the outer Fore.</p>
+
+    <p class="note">
+        The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
+        attached the nested Fore to the shadowDOM and is not reachable from the outside.
+    </p>
+    <fx-fore>
+        <fx-message event="ready">outer fore ready</fx-message>
+
+        <fx-model>
+            <fx-message event="model-construct-done">Outer model ready</fx-message>
+            <fx-instance>
+                <data>
+                    <from>
+                        <email>John.Doe@nowhere.com</email>
+                    </from>
+                    <to>
+                        <email>Jane.Doe@nowhere.com</email>
+                    </to>
+                    <subject></subject>
+                    <message></message>
+                    <attachments></attachments>
+                </data>
+            </fx-instance>
+<!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
+
+        </fx-model>
+
+        <fx-group>
+<!--
+            <fx-control ref="from/email">
+                <label>from inline</label>
+            </fx-control>
+-->
+            <fx-control ref="from/email"
+                        url="email.html"
+                        initial=".">
+                <label>From</label>
+            </fx-control>
+            <fx-control ref="to/email"
+                        url="email.html"
+                        initial=".">
+                <label>To</label>
+            </fx-control>
+            <!--
+            <fx-control ref="subject">
+                <label>Subject</label>
+            </fx-control>
+            <fx-control ref="message">
+                <label>Message</label>
+                <textarea class="widget" rows="10"></textarea>
+            </fx-control>
+-->
+            <fx-control ref="attachments"
+                        url="attachments.html" >
+                <label>Attachments</label>
+            </fx-control>
+        </fx-group>
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>The Wild Ass’s Skin: an electronic edition</title>
+                <author>Honoré de Balzac</author>
+                <editor>The TBE crew</editor>
+                <respStmt>
+                    <name>Ellen Marriage</name>
+                    <resp>translation</resp>
+                </respStmt>
+                <respStmt>
+                    <name>George Saintsbury</name>
+                    <resp>preface</resp>
+                </respStmt>
+                <respStmt>
+                    <name>Ron Van den Branden</name>
+                    <resp>transcription</resp>
+                    <resp>annotation</resp>
+                </respStmt>
+                <sponsor>Association for Literary and Linguistic Computing (ALLC)</sponsor>
+                <sponsor>Centre for Data, Culture and Society, University of Edinburgh, UK</sponsor>
+                <sponsor>Centre for Computing in the Humanities (CCH) - King's College London</sponsor>
+                <sponsor>University College London (UCL)</sponsor>
+                <funder>
+                    <address>
+                        <addrLine>Centre for Scholarly Editing and Document Studies (CTB)</addrLine>
+                        <addrLine>Royal Academy of Dutch Language and Literature</addrLine>
+                        <addrLine>Koningstraat 18</addrLine>
+                        <addrLine>9000 Gent</addrLine>
+                        <addrLine>Belgium</addrLine>
+                    </address>
+                    <email>ctb@kantl.be</email>
+                </funder>
+                <principal>Edward Vanhoutte</principal>
+                <principal>Melissa Terras</principal>
+            </titleStmt>
+        </fileDesc>
+    </teiHeader>
+</TEI>

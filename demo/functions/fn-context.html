@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>The context() function</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+        <link href="../../resources/demo.css" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <a><b>1</b></a>
+                            <b>2</b>
+                            <b>3</b>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <div><fx-output         ref="b"></fx-output> ⇒ 2 </div>
+                <div><fx-output         value="b[1]"></fx-output> ⇒ 2 </div>
+                <div><fx-output context="a" value="b"></fx-output> ⇒ 1 </div>
+                <div><fx-output ref="a" value="b"></fx-output> ⇒ 1 </div>
+                <div><fx-output ref="a" value="context()/b"></fx-output> ⇒ 2 </div>
+                <div><fx-output         value="b[last()]"></fx-output> ⇒ 3 </div>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

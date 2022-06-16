@@ -1,0 +1,348 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo with subtasks</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"> </script>
+    <script type="module">
+        import '../../src/fx-fore.js';
+        import '../fx-repeat.js';
+        import '../deprecated/native/fx-button.js';
+        import '../actions/fx-delete.js';
+        import '../actions/fx-append.js';
+        import '../actions/fx-setvalue.js';
+        import '../deprecated/fx-refresh.js';
+        import '../deprecated/native/fx-input.js';
+        import '../deprecated/fx-json-data.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+
+    <!--
+        <script>
+            function append() {
+                document.getElementById('r-todos').append();
+            }
+            function remove(elem){
+                const repeatItem = elem.closest('.repeat-item');
+                repeatItem.parentNode.removeChild(repeatItem);
+            }
+
+        </script>
+    -->
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        .header, #r-todos xf-repeat-item {
+            /*display: grid;*/
+            /*grid-template-columns: 400px 120px 50px 20px;*/
+            /*grid-column-gap: 10px;*/
+            border:thin solid lightgrey;
+            padding:10px;
+            position:relative;
+        }
+
+        #r-subtask xf-repeat-item{
+            display: block;
+            /*display: grid;*/
+            /*grid-template-columns: auto 20px;*/
+            /*grid-column-gap: 10px;*/
+        }
+
+        [required] {
+            background: lightyellow;
+        }
+
+        [label=add] {
+            background: #29B6F6;
+        }
+
+        #r-subtask{
+            margin-left:50px;
+            display: block;
+        }
+        #r-subtask repeat-item{
+            background: transparent;
+        }
+        #r-subtask [repeat-index]{
+            background:orange;
+        }
+
+        #subtask{
+            display: inline-block;
+/*
+            position: absolute;
+            top:72px;
+            left:130px;
+*/
+
+        }
+        .subtasks{
+            display:grid;
+            grid-template-columns: 200px 100px;
+        }
+
+        #r-subsubtask{
+            margin-left:50px;
+        }
+        #r-subsubtask [repeat-index]{
+            background:mediumpurple;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-modelData is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <task complete="false" due="2019-02-04" text="Pick up Milk">
+                            <task text="go to store" complete="true"></task>
+                            <task text="find milk" complete="false"></task>
+                            <task text="pay milk" complete="false"></task>
+                            <task text="take it home" complete="false"></task>
+                        </task>
+                        <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                    </data>
+                </xf-instance>
+
+                <xf-bind id="b-todo" set="task">
+                    <xf-bind id="b-task" ref="@text" required="true()"></xf-bind>
+                    <xf-bind id="b-state" ref="@complete" type="xs:boolean"></xf-bind>
+                    <xf-bind id="b-due" ref="@due" type="xs:date"></xf-bind>
+
+                    <xf-bind id="b-subtask" set="task">
+                        <xf-bind id="b-subtask-text" ref="@text"></xf-bind>
+                        <xf-bind id="b-subtask-complete" ref="@complete"></xf-bind>
+                    </xf-bind>
+                </xf-bind>
+
+                <!--
+                'db' scheme here is used as a posssible sample to write to an absolute address
+                -->
+<!--
+                <xf-submission id="s-save" method="put" replace="none"
+                               resource="xmldb:doc('/db/apps/fore/data/todo.xml')">
+                    <xf-submit-error>
+                        <xf-message modal="false">storing record failed</xf-message>
+                    </xf-submit-error>
+                    <xf-submit-done>
+                        &lt;!&ndash; start over &ndash;&gt;
+                        <xf-load url="seed-form.html"></xf-load>
+                        <xf-message level="ephemeral">Your data have been stored</xf-message>
+                    </xf-submit-done>
+                </xf-submission>
+-->
+
+            </xf-model>
+
+            <xf-json-data id="mockup">
+                [
+  {
+    "bind": {
+      "id": "b-todo",
+      "sequence":true,
+      "bind": [
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value": "Pick up Milk"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": false
+          },
+          {
+            "id": "b-due",
+            "type": "date",
+            "value": "2019-03-01"
+          },
+          {
+            "id":"b-subtask",
+            "bind":[
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"go to store"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":true
+                },
+                {
+                  "id":"b-subsubtask",
+                  "bind":[
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"stand up"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":true
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"fetch keys"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"find your way"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ],
+                    [
+                      {
+                        "id":"b-subsubtask-text",
+                        "value":"enter store"
+                      },
+                      {
+                        "id":"b-subsubtask-complete",
+                        "value":false
+                      }
+                    ]
+                  ]
+                }
+
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"find milk"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"pay milk"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ],
+              [
+                {
+                  "id":"b-subtask-text",
+                  "value":"take it home"
+                },
+                {
+                  "id":"b-subtask-complete",
+                  "value":false
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          {
+            "id": "b-task",
+            "required": true,
+            "value": "Make tutorial part"
+          },
+          {
+            "id": "b-state",
+            "type": "boolean",
+            "value": true
+          },
+          {
+            "id": "b-due",
+            "type": "date",
+            "value": "2019-04-01"
+          }
+        ]
+      ]
+    }
+  }
+]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+                <h1>todos</h1>
+                <xf-button label="refresh">
+                    <xf-refresh></xf-refresh>
+                </xf-button>
+                <xf-button label="add">
+                    <xf-append repeat="r-todos"></xf-append>
+                </xf-button>
+                <br/><br/>
+<!--
+                <div class="header">
+                    <span>todo</span>
+                    <span>due</span>
+                    <span>status</span>
+                </div>
+-->
+                <xf-repeat bind="b-todo" focus-on-create="task" id="r-todos">
+                    <template>
+                        <xf-input bind="b-task" id="task" type="text" label="TASK"></xf-input>
+                        <xf-input bind="b-due" type="date" label="DUE"></xf-input>
+                        <xf-input bind="b-state" type="checkbox" label="STATUS"></xf-input>
+                        <xf-button label="delete">
+                            <!--                    <xf-delete bind="b-todo"></xf-delete>-->
+                            <xf-delete></xf-delete>
+                        </xf-button>
+                        <xf-button id="subtask" label="add subtask">
+                            <xf-append repeat="r-subtask"></xf-append>
+                        </xf-button>
+
+                        <xf-repeat bind="b-subtask" id="r-subtask">
+                            <template>
+                                <xf-input bind="b-subtask-text" id="subtask" type="text"></xf-input>
+                                <xf-input bind="b-subtask-complete" id="subcomplete" type="checkbox"></xf-input>
+                                <xf-button label="delete">
+                                    <xf-delete></xf-delete>
+                                </xf-button>
+
+                                <xf-button id="subsubtask" label="add subsubtask">
+                                    <xf-append repeat="r-subsubtask"></xf-append>
+                                </xf-button>
+
+                                <xf-repeat bind="b-subsubtask" id="r-subsubtask">
+                                    <template>
+                                        <xf-input bind="b-subsubtask-text" id="subsubtask" type="text"></xf-input>
+                                        <xf-input bind="b-subsubtask-complete" id="subsubcomplete" type="checkbox"></xf-input>
+                                        <xf-button label="delete">
+                                            <xf-delete></xf-delete>
+                                        </xf-button>
+                                        <xf-button label="setvalue 'foo'">
+                                            <xf-setvalue bind="b-subsubtask-text" value="foo"></xf-setvalue>
+                                        </xf-button>
+                                    </template>
+                                </xf-repeat>
+                            </template>
+                        </xf-repeat>
+                    </template>
+                </xf-repeat>
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission Demo</title>
+
+    <!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-trigger {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 2rem;
+        }
+        button{
+            padding: 0.5rem;
+            font-size:1rem;
+            margin:0.5rem 0;
+        }
+        p{
+            font-size: 1rem;
+        }
+        fx-control, input{
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello World!</greeting>
+                            <prop></prop>
+                        </data>
+                    </fx-instance>
+
+                    <fx-instance id="replaced">
+                        <data></data>
+                    </fx-instance>
+
+                    <fx-instance id="third">
+                        <data>
+                            <div>Thanks for being here</div>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="submission"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="none">
+                        <fx-message event="submit-done">Data have been submitted - replacing nothing</fx-message>
+                    </fx-submission>
+
+                    <fx-submission id="submission2"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="instance">
+                        <fx-setvalue ref="greeting" event="submit-done">Hello from response</fx-setvalue>
+                    </fx-submission>
+
+                    <fx-submission id="submission4"
+                                   url="response.html"
+                                   method="get"
+                                   replace="all">
+                    </fx-submission>
+
+                    <fx-submission id="submission5"
+                                   url="/submissionxy"
+                                   method="POT">
+                        <fx-message event="submit-error">Wrong method</fx-message>
+
+                    </fx-submission>
+
+                    <fx-submission id="submission6"
+                                   url="#echo"
+                                   method="post"
+                                   replace="instance"
+                                   instance="replaced">
+
+                    </fx-submission>
+
+                    <fx-submission id="submission7"
+                                   url="response.html"
+                                   method="get"
+                                   replace="target"
+                                   target="#target">
+                    </fx-submission>
+
+                    <fx-submission id="submission8"
+                                   url="/redirect"
+                                   method="get"
+                                   replace="redirect">
+                    </fx-submission>
+
+                </fx-model>
+                <fx-group collapse="true">
+
+                    <h1>Submission replace modes</h1>
+
+                    <p>What to do with the response data a server might send us back?</p>
+
+                    <p>The <code>replace</code> attribute allows several ways of dealing with response data.</p>
+
+                    <h2>replace='none'</h2>
+                    <p>Just sends the data but ignores the response</p>
+                    <fx-trigger>
+                        <button>replace none</button>
+                        <fx-send submission="submission"></fx-send>
+                    </fx-trigger>
+                    <p class="note">You won't notice a difference unless you're using a developer tool to inspect the network
+                    requests. However there will be a toast message when it succeeds.</p>
+
+                    <h2>replace='instance'</h2>
+                    <p>Sends the data and replaces the default instance with response</p>
+
+                    <fx-control ref="greeting">
+                        <label>Data:</label>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <button>replace instance</button>
+                        <fx-send submission="submission2"></fx-send>
+                    </fx-trigger>
+
+                    <h2>replace='instance' - instance='replaced'</h2>
+                    <p>Sends the data and replaces the instance with id='replaced'</p>
+                    <fx-trigger>
+                        <button>replace another instance</button>
+                        <fx-send submission="submission6"></fx-send>
+                    </fx-trigger>
+
+                    <fx-output ref="instance('replaced')">
+                        <label slot="label">This message comes from replaced instance:</label>
+                    </fx-output>
+
+                    <h2>replace='all'</h2>
+                    <p>Replaces the whole viewport (window) with response. However that will not change the
+                    URL shown in the browser location bar.</p>
+
+                    <fx-trigger>
+                        <button>replace=all</button>
+                        <fx-send submission="submission4"></fx-send>
+                    </fx-trigger>
+
+
+                    <h2>replace=target</h2>
+                    <p>Replaces some HTML at target position. target is a CSS selector pointing to the wanted element.</p>
+
+                    <fx-trigger>
+                        <button>replace=target</button>
+                        <fx-send submission="submission7"></fx-send>
+                    </fx-trigger>
+
+                    <h1 id="target"></h1>
+                    <h2>replace=redirect</h2>
+                    <p>expects a URL returned as simple string and redirect to that.</p>
+
+                    <fx-trigger>
+                        <button>replace=redirect</button>
+                        <fx-send submission="submission8"></fx-send>
+                    </fx-trigger>
+
+
+                    <h2>Errors</h2>
+                    <p>If something goes wrong the 'submit-error' event will fire.</p>
+                    <fx-trigger>
+                        <button>network error</button>
+                        <fx-send submission="submission5"></fx-send>
+                    </fx-trigger>
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

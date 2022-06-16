@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>filtering with relevant</title>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <facets>
+                        <facet dimension="type" count="21" selected="">red</facet>
+                        <facet dimension="type" count="23" selected="">blue</facet>
+                        <facet dimension="type" count="74" selected="">green</facet>
+                    </facets>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="facets/facet" relevant="instance('vars')/running != 'true' or @selected='true'">
+                <fx-bind ref="@count" relevant="instance('vars')/running != 'true'"></fx-bind>
+                <fx-bind ref="@selected" relevant="instance('vars')/running != 'true'"></fx-bind>
+            </fx-bind>
+
+
+            <fx-instance id="params">
+                <data running="false">
+                    <facet dimension="type">green</facet>
+                    <facet dimension="type">red</facet>
+                    <facet dimension="authorship"></facet>
+                </data>
+            </fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <running>false</running>
+                </data>
+            </fx-instance>
+
+            <fx-submission id="search"
+                          url="#echo"
+                          method="post"
+                          replace="instance"
+                          instance="params">
+                <fx-action event="submit">
+                    <fx-setvalue ref="instance('vars')/running">true</fx-setvalue>
+                </fx-action>
+
+                <fx-action event="submit-done">
+                    <fx-setvalue ref="instance('vars')/running">false</fx-setvalue>
+<!--                    <fx-send submission="dosearch"></fx-send>-->
+                </fx-action>
+            </fx-submission>
+
+            <fx-submission id="dosearch"
+                           url="..."
+                           replace="instance"
+                           instance="default"></fx-submission>
+            </fx-submission>
+
+        </fx-model>
+        <fx-repeat ref="facets/facet">
+            <template>
+                <fx-control ref="./@selected" value-prop="checked" update-event="input">
+                    <label>{.}</label>
+                    <input type="checkbox" name="type" class="widget"/>
+                    <fx-send submission="search" event="value-changed"></fx-send>
+                </fx-control>
+            </template>
+        </fx-repeat>
+
+        <h3>default</h3>
+        <pre>
+            {log('default')}
+        </pre>
+        <h3>params</h3>
+        <pre>
+            {log('params')}
+        </pre>
+        <h3>vars</h3>
+        <pre>
+            {log('vars')}
+        </pre>
+    </fx-fore>
+
+</div>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

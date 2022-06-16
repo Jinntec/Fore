@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>lazy modelItem creation during UI init</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+
+
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+<demo-snippet>
+    <template>
+
+        <fx-fore>
+            <fx-message level="modal" event="refresh-done">refresh has been done</fx-message>
+
+            <fx-model id="model1">
+                <fx-instance>
+                    <data>
+                        <greeting type="message:">Hello World!</greeting>
+                    </data>
+                </fx-instance>
+            </fx-model>
+            <fx-group>
+
+                <h1 class="{class}">
+                    lazy greeting
+                </h1>
+                <fx-output id="output" ref="greeting/@type"></fx-output>
+                <fx-output id="output" ref="greeting"></fx-output>
+
+            </fx-group>
+        </fx-fore>
+    </template>
+</demo-snippet>
+
+
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

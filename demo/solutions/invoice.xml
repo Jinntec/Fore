@@ -1,0 +1,36 @@
+
+<invoice>
+    <invoice-number/>
+    <address>
+COMPNY
+STREET
+CITY
+COUNTRY
+    </address>
+    <date/><!-- status = unpaid|paid|overdue|invalid -->
+    <status/>
+    <currency symbol="€" decimalDevider=",">Euro</currency>
+    <period start-date="" end-date=""/><!-- text before table -->
+    <subject/>
+    <intro/>
+    <items><!-- typeref = project|lts|sla - used to choose a template for invoice generation -->
+        <item VAT="19" typeref="" project-ref=""><!-- @VAT can be used if different VATs apply -->
+            <text/><!-- quantity = day|instances -->
+            <quantity unit="day">3</quantity>
+            <price-per-unit/>
+            <net/>
+            <VAT/>
+            <gross/>
+        </item>
+    </items>
+    <total net="" vat=""/><!-- text after table including regards-->
+    <outro/>
+    <notes/>
+    <payday/>
+    <custom-fields>
+        <custom-field scope="">
+            <name/>
+            <value/>
+        </custom-field>
+    </custom-fields>
+</invoice>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Template Expressions</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Template Expressions</h1>
+
+    <p>A Template Expression is a binding expression enclosed within curly brackets.</p>
+
+    <p>Whenever the bound node changes the Template Expression will update and be substituted by its value. This
+    is especially useful for manipulating CSS from data.</p>
+
+    <p>Try removing chars from input one by one...</p>
+    <demo-snippet>
+        <template>
+            <style>
+                .static {
+                    font-size: 20px;
+                    padding: 10px;
+                }
+                .Hello {
+                    background: lime;
+                }
+                .Uni{
+                    background: yellow;
+                }
+                .Universe {
+                    border: 6px solid red;
+                    font-style: italic;
+                }
+            </style>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello Universe</greeting>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+<!--                <div class="static {greeting}">Greeting {greeting} another {greeting}</div>-->
+                <div class="static {greeting}">Greeting: {greeting}</div>
+                <fx-control ref="greeting" update-event="input">
+                    <label>Hey!</label>
+                </fx-control>
+
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <p>Once the node bound to 'greeting' changes the template expressions (enclosed in '{}' brackets) are re-evaluated
+    resulting in the 'div' element getting its CSS classes updated and different styles will match.</p>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

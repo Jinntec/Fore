@@ -1,0 +1,122 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>input</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script src="../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
+    <script type="module">
+        import '../../src/fx-fore.js';
+        import '../deprecated/native/fx-button.js';
+        import '../ui/fx-output.js';
+        import '../actions/fx-setvalue.js';
+        import '../deprecated/material/fx-material-input.js';
+        import '../deprecated/fx-json-data.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <h1><code>xf-material-input</code></h1>
+
+    <div class="note">In general all HTML types will be supported. However some of these types will still need some
+    extra consideration.</div>
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <value>a bound value</value>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-value" ref="value"></xf-bind>
+
+            </xf-model>
+        </template>
+    </demo-snippet>
+
+    <demo-snippet>
+        <template>
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind": {
+                      "id": "b-value",
+                      "value": "a bound value"
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+
+                <h1>Material input</h1>
+
+
+
+                <h2>a simple material input</h2>
+                <xf-material-input bind="b-value" label="a material design input"></xf-material-input>
+
+                <h2>date type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="date"></xf-material-input>
+
+                <h2>color type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="color"></xf-material-input>
+
+                <h2>datetime-local type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="datetime-local"></xf-material-input>
+
+                <h2>email type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="email"></xf-material-input>
+
+<!--
+                <h2>file type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="file"></xf-material-input>
+-->
+
+                <h2>month type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="month"></xf-material-input>
+
+                <h2>number type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="number"></xf-material-input>
+
+                <h2>password type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="password"></xf-material-input>
+
+                <h2>range type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="range"></xf-material-input>
+
+                <h2>search type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="search"></xf-material-input>
+
+                <h2>time type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="time"></xf-material-input>
+
+                <h2>week type</h2>
+                <xf-material-input bind="b-value" label="a material design input" type="week"></xf-material-input>
+
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

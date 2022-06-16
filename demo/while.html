@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>the while attribute</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>The <code>while</code> attribute</h1>
+    <p>The <code>while</code> attribute is allowed on actions to execute a loop until the condition becomes
+        <code>false</code>.</p>
+    <p>In this example the <code>fx-setvalue</code> action is executed as long as the counter is smaller than 10.
+        Afterwards
+        the message action is displaying the result.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <counter>0</counter>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>Count to 10</button>
+                    <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
+                    <fx-message>counted to {counter} done</fx-message>
+                </fx-trigger>
+                {counter}
+                <fx-trigger>
+                    <button>reset</button>
+                    <fx-setvalue ref="counter" value="0"></fx-setvalue>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Using <code>fx-update</code> and <code>fx-refresh</code> to update the message for each execution of the loop.
+    </h2>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <counter>0</counter>
+                            <oof></oof>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                  <button>Start</button>
+				  <fx-var name="steps" value="1"></fx-var>
+				  <fx-var name="max" value="10"></fx-var>
+
+                    <fx-action while="counter < $max">
+                        <fx-setvalue ref="counter" value=".+$steps"></fx-setvalue>
+                        <fx-update></fx-update>
+                        <fx-refresh></fx-refresh>
+                        <fx-message>{counter}</fx-message>
+                    </fx-action>
+                </fx-trigger>
+                {counter}
+                <fx-trigger>
+                    <button>reset</button>
+                    <fx-setvalue ref="counter" value="0"></fx-setvalue>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>User controlled start/stop loop</h2>
+    <p>When hitting 'start' this will execute a delayed message until 'stop' is clicked. This should certainly
+        used with caution and is included here for demo purposes.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <stop>false</stop>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>Start</button>
+                    <fx-message delay="1000" while="stop eq 'false'">hey</fx-message>
+                </fx-trigger>
+                {counter}
+                <fx-trigger>
+                    <button>reset</button>
+                    <fx-setvalue ref="stop">false</fx-setvalue>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>stop</button>
+                    <fx-setvalue ref="stop">true</fx-setvalue>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Canceled loops</h2>
+    <p>When the trigger is removed, the loop should also stop</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <task>Hey there!</task>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="templ">
+                        <data>
+                            <task>I'm new!</task>
+                        </data>
+                    </fx-instance>
+
+                    <fx-bind ref="task">
+                        <fx-bind ref="./text()" required="true()"></fx-bind>
+                    </fx-bind>
+
+                </fx-model>
+
+                <fx-repeat ref="task">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+
+                        <fx-trigger>
+                            <button>Start</button>
+                            <fx-message delay="1000" while="true()">{.}</fx-message>
+                        </fx-trigger>
+                        {counter}
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
+                <fx-trigger>
+                    <button>insert a new one</button>
+                    <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

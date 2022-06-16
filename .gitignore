@@ -1,3 +1,9 @@
 node_modules/
 build/
-.idea
+assets/
+!.gitignore
+!.github
+/.idea/
+/.idea/workspace.xml
+**/.DS_Store
+out/

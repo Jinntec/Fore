@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Load an instance with src</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link rel="stylesheet" href="../resources/demo.css">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        fx-input[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+    </style>
+</head>
+<body unresolved="unresolved">
+
+        <fx-fore>
+
+            <fx-model>
+                <fx-instance src="instance1.xml"></fx-instance>
+
+                <fx-bind ref="greeting"></fx-bind>
+
+            </fx-model>
+            <fx-group>
+
+
+                <h1>
+                    Greeting: <fx-output ref="./greeting"></fx-output>
+                </h1>
+
+<!--                <fx-input ref="greeting" label="Greeting"></fx-input>-->
+                <fx-control ref="greeting">
+                    <label>Greeting</label>
+                </fx-control>
+
+            </fx-group>
+        </fx-fore>
+    <script type="module" src="./demo.js"></script>
+</body>
+</html>

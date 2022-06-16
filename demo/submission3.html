@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission Chaining</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <link href="../resources/vars.css" rel="stylesheet">
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <running></running>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="running" readonly=".='running'"></fx-bind>
+                    <fx-instance id="other">
+                        <data>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="sub1"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="none">
+                        <fx-action event="submit">
+                            <fx-message>Going to submit</fx-message>
+                            <fx-setvalue ref="running">running</fx-setvalue>
+                        </fx-action>
+
+                        <fx-action event="submit-done"  delay="1000">
+                            <fx-message>First submission done</fx-message>
+                            <fx-send submission="second" delay="1000"></fx-send>
+                        </fx-action>
+                    </fx-submission>
+
+                    <fx-submission id="second" url="#echo"
+                                   method="POST"
+                                   replace="none">
+                        <fx-message event="submit-done">Second submission done</fx-message>
+                        <fx-setvalue event="submit-done" ref="running" delay="1000"></fx-setvalue>
+
+                    </fx-submission>
+
+                </fx-model>
+                <fx-group collapse="true">
+
+                    <h1>Submission Chaining</h1>
+                    <p>
+                        Submissions can be chained by using their event-hooks. In the example below
+                        the second submission will fire after the first has successfully returned.
+                    </p>
+                    <fx-trigger ref="running">
+                        <button class="{running}">fire chain</button>
+<!--                        <fx-setvalue ref="running">running</fx-setvalue>-->
+                        <fx-send submission="sub1"></fx-send>
+                    </fx-trigger>
+
+                    <p><fx-output ref="greeting"></fx-output></p>
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<data>
+    <foo>bar</foo>
+
+    <model>
+        <fx-bind readonly="" required="" relevant="" constraint="" calculate="" type=""/>
+        <fx-instance></fx-instance>
+        <fx-submission url="" replace=""></fx-submission>
+    </model>
+    <UI>
+        <fx-group ref=""/>
+        <fx-repeat ref="">
+            <template>
+            </template>
+        </fx-repeat>
+        <fx-switch ref="">
+            <fx-case id="default" data-target="">
+            </fx-case>
+        </fx-switch>
+        <fx-control ref=""/>
+        <fx-output ref=""/>
+        <fx-trigger ref=""/>
+    </UI>
+    <actions>
+        <fx-append ref="" position="" at=""/>
+        <fx-delete ref="" position="" at=""/>
+        <fx-dispatch ref="" position="" at=""/>
+        <fx-insert ref="" position="" at=""/>
+        <fx-message level="ephemeral"></fx-message>
+        <fx-refresh ref="" value=""/>
+        <fx-send ref="" value=""/>
+        <fx-setvalue ref="" value=""/>
+        <fx-toggle ref="" value=""/>
+        <fx-update ref="" value=""/>
+    </actions>
+</data>

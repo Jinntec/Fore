@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Simple Calculate</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        fx-control[required]:after {
+            content: "*";
+            display: inline;
+            color: red;
+        }
+
+        fx-output{
+            display: block;
+            padding-top: 1rem;
+
+        }
+        label{
+            width: 12rem;
+            display: inline-block;
+            text-align: right;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+
+<div class="wrapper">
+
+    <h1>Computations</h1>
+
+    <p>Any node may receive a computation through the <code>calculate</code> property.</p>
+
+    <p>The builtin dependency graph will determine the right order of the calculations independent
+    of document order of the <code>fx-bind</code> element.</p>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <m1>3</m1>
+                            <m2>0</m2>
+                            <add>0</add>
+                            <result></result>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
+                    <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
+                </fx-model>
+                <fx-group>
+                    <h2>Calculations</h2>
+                    <p class="note">Calculated nodes are always readonly!</p>
+                    <fx-control ref="m1" update-event="input">
+                        <label>start:</label>
+                        <input type="text">
+                    </fx-control>
+
+                    <fx-output ref="m2" update-event="input">
+                        <label slot="label">* 2  = </label>
+                    </fx-output>
+                    <fx-output id="output" ref="add">
+                        <label slot="label">+ 5 = </label>
+                    </fx-output>
+
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

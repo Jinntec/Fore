@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>select</title>
+
+    <script src="../../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script src="../../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
+    <script type="module">
+        import '../../../src/fx-fore.js';
+        import '../fx-button.js';
+        import '../fx-output.js';
+        import '../fx-setvalue.js';
+        import '../fx-material-combo.js';
+        import '../fx-json-data.js';
+        import '../fx-items.js';
+        import '../../assets/@polymer/iron-demo-helpers/demo-snippet.js';
+    </script>
+
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+
+        .note {
+            color: red;
+
+        }
+
+        h2 {
+            margin-top: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <demo-snippet>
+        <template>
+            <!-- ##### xf-model is not exposed to the client! ##### -->
+            <xf-model id="record">
+                <xf-instance>
+                    <data>
+                        <favorite>green</favorite>
+                        <yourown></yourown>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-selected" ref="favorite"></xf-bind>
+                <xf-bind id="b-selected2" ref="yourown"></xf-bind>
+
+                <xf-instance id="persons">
+                    <data>
+                        <name xml:id="P1-Antiochos" xml:lang="gr">Αντίοχος</name>
+                        <name xml:id="P2-Dikaios" xml:lang="gr">Δικαῖος</name>
+                        <name xml:id="P3-Wolfgang" xml:lang="de">Wolfgang</name>
+                        <name xml:id="P4-Joern" xml:lang="de">Jörn</name>
+                        <name xml:id="P5-Alexandra" xml:lang="de">Alexandra</name>
+                        <name xml:id="P6-Magdalena" xml:lang="pl">Magdalena</name>
+                        <name xml:id="P7-Joe" xml:lang="en">Joe</name>
+                        <name xml:id="P8-Juri" xml:lang="de">Juri</name>
+                    </data>
+                </xf-instance>
+                <xf-bind id="b-persons" set="persons">
+                    <xf-bind id="b-person-label" ref="./text()"></xf-bind>
+                    <xf-bind id="b-person-key" ref="@xml:id"></xf-bind>
+                </xf-bind>
+            </xf-model>
+
+            <xf-json-data id="mockup">
+                [
+                  {
+                    "bind": {
+                      "id": "b-selected",
+                      "required": true,
+                      "value": "green"
+                    }
+                  },
+                  {
+                    "bind": {
+                      "id": "b-selected2",
+                      "required": true,
+                      "value": "violet"
+                    }
+                  },
+                  {
+                    "bind": {
+                      "id": "b-persons",
+                      "bind": [
+                        [
+                          {
+                            "id": "b-person-label",
+                            "value": "Αντίοχος"
+                          },
+                          {
+                            "id": "b-person-key",
+                            "value": "P1-Antiochos"
+                          }
+                        ],
+                        [
+                          {
+                            "id": "b-person-label",
+                            "value": "Δικαῖος"
+                          },
+                          {
+                            "id": "b-person-key",
+                            "value": "P2-Dikaios"
+                          }
+                        ],
+                        [
+                          {
+                            "id": "b-person-label",
+                            "value": "Wolfgang"
+                          },
+                          {
+                            "id": "b-person-key",
+                            "value": "P3-Wolfgang"
+                          }
+                        ],
+                        [
+                          {
+                            "id": "b-person-label",
+                            "value": "Joe"
+                          },
+                          {
+                            "id": "b-person-key",
+                            "value": "P7-Joe"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                ]
+            </xf-json-data>
+
+            <xf-form mockup='mockup'>
+
+                <h1>Select-Autocomplete Control with dynamic list</h1>
+                <h2>Your favorite form the list:
+                    <xf-output bind="b-selected" id="output"></xf-output>
+                </h2>
+
+                <!-- todo: migrate to xf-items   -->
+                <xf-items data='[
+                    {"label":"LightGreen","value":"lightgreen"},
+                    {"label":"Green","value":"green"},
+                    {"label":"DarkGreen","value":"darkgreen"},
+                    {"label":"LightBlue","value":"lightblue"},
+                    {"label":"Blue","value":"blue"},
+                    {"label":"DarkBlue","value":"darkblue"},
+                    {"label":"LightRed","value":"lightred"},
+                    {"label":"red","value":"red"},
+                    {"label":"DarkRed","value":"darkred"},
+                    {"label":"LightYellow","value":"lightyellow"},
+                    {"label":"Yellow","value":"yellow"},
+                    {"label":"DarkYellow","value":"darkyellow"}]' id="names">
+                </xf-items>
+
+                <p>These 2 controls bind to the same modelItem. Just to show they update each other.</p>
+                <xf-material-combo bind="b-selected" id="selected" items="names"
+                                   label="Which do you like best?"></xf-material-combo>
+
+                <xf-material-combo bind="b-selected" items="names" label="Which do you like best?"></xf-material-combo>
+
+
+                <h2>User can provide a value that's not in the list</h2>
+                <xf-material-combo bind="b-selected2" id="selected2" items="names" label="Which do you like best?"
+                                   selection="open"></xf-material-combo>
+                <h2>Your free selection:
+                    <xf-output bind="b-selected2" id="output"></xf-output>
+                </h2>
+
+                <div class="note">Do not use `xf-material-combo` with conflicting 'selection' settings on the same bound
+                    node. This
+                    will lead to unexpected behavior as a selection='closed' control will reset a manually given value.
+                </div>
+
+            </xf-form>
+        </template>
+    </demo-snippet>
+</body>
+</html>

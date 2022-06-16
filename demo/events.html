@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Events</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        pre {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 5;
+            padding: 1rem;
+        }
+
+        pre:before {
+            content: 'instance:default';
+            font-size: 0.8rem;
+            position: absolute;
+            top: -21px;
+            left: 0;
+            color: var(--paper-grey-800);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2pt 6pt;
+            border-top-right-radius: 0.3rem;
+        }
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Event handler</h1>
+
+    <h2>Firing an fx-action on bubbling event</h2>
+
+    <p>
+        In this example a usual html button will fire an event via javascript. This event will
+        then be caught by the fx-action which is a bubbling listener on the 'custom' event.
+    </p>
+
+    <p>As actions by default attach the listener to their parent element (fx-fore here) the <code>fx-action</code>
+    will receive the event.</p>
+    <p>The <code>event()</code> function allows us to use the event detail params in further actions.</p>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <param1></param1>
+                            <param2></param2>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <!--
+                ### bubbling listener
+                -->
+                <fx-action event="custom">
+                    <fx-setvalue ref="param1" value="event('param1')"></fx-setvalue>
+                    <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
+                </fx-action>
+
+                <button onclick="firecustom(event)">fire custom event from js</button>
+
+                <h3>{param1}</h3>
+                <h3>{param2}</h3>
+            </fx-fore>
+
+            <script>
+                function firecustom(event) {
+                    event.target.dispatchEvent(
+                        new CustomEvent('custom', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {param1: 'foo', param2: 'bar'},
+                        }),
+                    );
+                }
+            </script>
+        </template>
+    </demo-snippet>
+
+    <h2>Attach a listener to a specific element (at target handler)</h2>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <param1></param1>
+                            <param2></param2>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <!--
+                ### target listener
+                -->
+                <fx-action event="customTarget" target="eventTarget">
+                    <fx-setvalue ref="param1" value="event('param1')"></fx-setvalue>
+                    <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
+                </fx-action>
+
+                <div id="eventTarget"></div>
+                <h3>{param1}</h3>
+                <h3>{param2}</h3>
+            </fx-fore>
+            <!-- ### button outside of fx-fore -->
+            <button onclick="firecustomTarget(event)">fire custom event to target</button>
+
+            <script>
+                function firecustomTarget(event) {
+                    const target = document.getElementById('eventTarget');
+                    target.dispatchEvent(
+                        new CustomEvent('customTarget', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {param1: 'to', param2: 'target'},
+                        }),
+                    );
+                }
+            </script>
+        </template>
+    </demo-snippet>
+
+    <h2>Attach document listener</h2>
+    <p>By setting the <code>target</code> attribute to '#document' a global eventlistener can be attached</p>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <param1></param1>
+                            <param2></param2>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <!--
+                ### document listener
+                -->
+                <fx-action event="customDoc" target="#document">
+                    <fx-setvalue ref="param1" value="event('param1')"></fx-setvalue>
+                    <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
+                </fx-action>
+
+                <h3>{param1}</h3>
+                <h3>{param2}</h3>
+            </fx-fore>
+            <!-- ### button outside of fx-fore -->
+            <button onclick="firecustomDoc(event)">fire custom event to document</button>
+
+            <script>
+                function firecustomDoc(event) {
+                    document.dispatchEvent(
+                        new CustomEvent('customDoc', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {param1: 'to', param2: 'doc'},
+                        }),
+                    );
+                }
+            </script>
+        </template>
+    </demo-snippet>
+
+
+    <!-- todo: file a bug - this is not working
+    {param1} / {param2}
+    -->
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>todo</title>
+
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="stylesheet" href="todo.css">
+    <script type="module" src="./demo.js"></script>
+
+
+</head>
+<body unresolved="unresolved">
+    <div class="wrapper">
+        <fx-fore id="todo">
+            <fx-model id="record">
+                <fx-instance>
+                    <data>
+                        <task complete="false" due="2022-06-05">Make tutorial part 1</task>
+                        <task complete="false" due="2022-06-15">Pick up Milk</task>
+                        <template>
+                            <task complete="false" due="">new task</task>
+                        </template>
+                        <count>1</count>
+                        <showclosed>false</showclosed>
+                    </data>
+                </fx-instance>
+                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'" readonly="@complete != 'false'">
+                    <fx-bind ref="./text()" required="true()" ></fx-bind>
+                    <fx-bind ref="./@due" required="true()" ></fx-bind>
+                </fx-bind>
+            </fx-model>
+
+            <h1>Todo
+                <fx-trigger class="btn add">
+                    <button>+</button>
+                    <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+                </fx-trigger>
+            </h1>
+
+            <div class="info">
+                You have {count(instance()/task[@complete='true'])} completed tasks
+            </div>
+
+            <div class="info open">
+                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+            </div>
+
+            <div class="info big">
+                {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+            </div>
+            <fx-repeat id="task" ref="task">
+                <template>
+                    <div>
+                        <fx-control ref="@complete" value-prop="checked" update-event="input">
+                            <input class="widget" type="checkbox">
+                        </fx-control>
+                        <fx-control class="{@complete}" id="task" ref="."></fx-control>
+                        <fx-control ref="@due">
+                            <input type="date">
+                        </fx-control>
+                        <fx-trigger class="btn delete">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </div>
+                </template>
+            </fx-repeat>
+            <fx-control id="switch" ref="showclosed" value-prop="checked" update-event="input">
+                <label for="showcompleted">show completed</label>
+                <input id="showcompleted" type="checkbox" class="widget">
+            </fx-control>
+        </fx-fore>
+    </div>
+
+</body>
+</html>

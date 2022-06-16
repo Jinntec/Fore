@@ -1,145 +1,273 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Fore Documentation</title>
-    <!--    <link href="styles.css" rel="stylesheet"/>-->
-    <script type="module">
-        import '../assets/@polymer/paper-styles/color.js'
-        import '../assets/@polymer/paper-styles/typography.js'
-        import '../assets/@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-        import '../assets/@polymer/app-layout/app-drawer/app-drawer.js';
-    </script>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <!--    <link href="styles.css"  type="text/css" rel="stylesheet"/>-->
 
-    <custom-style>
-        <style is="custom-style">
-            body {
-                padding: 0;
-                margin: 0;
-                border: 0;
-                font-family: 'Roboto', 'Noto', sans-serif;
-            }
+    <title>Fore</title>
 
-            .table-of-contents {
-                background: ghostwhite;
-
-            }
+    <!--    <link rel="stylesheet" href="../demo/todo.css">-->
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="../resources/demo.css">
+    <link rel="stylesheet" href="../demo/clock.css">
+    <link rel="stylesheet" href="../resources/home.css">
 
 
-            app-drawer, .drawer {
-                --app-drawer-width: 250px;
+    <style>
 
-                --app-drawer-content-container: {
-                    background: ghostwhite;
-                };
-            }
+    </style>
 
-            .header{
-                padding: 20px;
-                background: var(--paper-blue-300);
-                color:ghostwhite;
-
-            }
-            .title{
-                font-size:22px;
-            }
-            .subtitle{
-                display: block;
-                font-size:12px;
-            }
-
-
-            .topics{
-                padding: 20px;
-            }
-
-
-            .group, a {
-                display: block;
-                color: var(--paper-blue-500);
-                padding: 10px 0;
-                font-weight: 300;
-                text-decoration: none;
-            }
-
-            .group-label{
-                color:var(--paper-blue-900);
-            }
-
-            .group a{
-                padding-left:20px;
-                padding-top: 20px;
-            }
-
-
-
-            iframe {
-                width: 100%;
-                height: 100%;
-
-                border: none;
-            }
-
-
-        </style>
-    </custom-style>
 </head>
 <body>
-<app-drawer-layout fullbleed="fullbleed">
-    <app-drawer class="drawer" slot="drawer">
+<a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
+   aria-label="Visit Tuttle on GitHub" target="_blank">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+         style="color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+
+<header>
+<!--    <div class="background" style="background: rgb(255, 255, 255);"><canvas class="canvas canvas-particles" width="1192" height="580" style="width: 100%; height: 100%;"></canvas></div>-->
+    <img class="logo fore" src="../resources/images/light7.png">
+    <!--            <div class="version">{instance('package')?version}</div>-->
+    <h1>Declarative user interfaces in plain HTML</h1>
+
+    <a href="https://jinntec.github.io/fore-docs/getstarted/" role="button" class="action btn">Get Started</a>
+    <a class="learn" href="https://jinntec.github.io/fore-docs/" target="_blank">learn more</a>
+    <nav>
+        <a href="#" disabled="disabled">Home</a>
+        <a href="demos.html">Demos</a>
+<!--        <a href="https://jinntec.github.io/fore-docs/" target="_blank">Documentation</a>-->
+        <!--        <a href="https://github.com/Jinntec/Fore/discussions" target="_blank">Community</a>-->
+    </nav>
+</header>
+<div class="wrapper topic">
+    <p class="style-hint">If you don't like the colors just <a href="index.html">reload</a> the page.</p>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <color1></color1>
+                    <color2></color2>
+                </data>
+            </fx-instance>
+            <fx-instance id="package" src="../package.json" type="json"></fx-instance>
+
+            <fx-bind ref="color1" calculate="local:randomColor()"></fx-bind>
+            <fx-bind ref="color2" calculate="local:randomColor()"></fx-bind>
+
+            <fx-function
+                    signature="local:randomColor() as xs:string"
+                    type="text/javascript">
+
+                hex2rgba = (hex, alpha = 1) => {
+                const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+                return `rgba(${r},${g},${b},${alpha})`;
+                };
+
+
+                var characters = ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9];
+                var randomColorArray = [];
+                for (var i = 0; i < 6; i++) {
+                var randomIndex = Math.floor(Math.random()*characters.length);
+                randomColorArray.push(characters[randomIndex])
+                }
+                const hexCol = `#${randomColorArray.join("")}`;
+                return hex2rgba(hexCol,0.8);
+
+            </fx-function>
+
+
+        </fx-model>
+        <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>
+        <fx-action event="ready" src="setBg.js"></fx-action>
+    </fx-fore>
+    <!--
         <div class="header">
-            <span class="title">Fore</span>
-            <span class="subtitle">Forms for eXist-db</span>
+            <img class="logo" src="../resources/images/light7.png">
+            &lt;!&ndash;            <div class="version">{instance('package')?version}</div>&ndash;&gt;
+            <h1>Declarative user interfaces in plain HTML</h1>
         </div>
-        <div class="topics">
-            <a href="introduction.html" target="topic">Introduction</a>
-            <a href="get-started.html" target="topic">Get started</a>
-            <a href="../src/demo/index.html" target="topic">Examples</a>
-            <a href="writing-forms.html" target="topic">Writing forms</a>
-            <div class="group">
-                <div class="group-label">The Model</div>
-                <a href="model.html" target="topic">Overview</a>
-                <a href="xf-model.html" target="topic">xf-model</a>
-                <a href="xf-instance.html" target="topic">xf-instance</a>
-                <a href="xf-bind.html" target="topic">xf-bind</a>
-                <a href="xf-submission.html" target="topic">xf-submission</a>
-                <a href="ui-model.html" target="topic">The UI Model</a>
+    -->
 
-            </div>
-            <div class="group">
-                <div class="group-label">The User Interface</div>
-                <a href="ui-overview.html" target="topic">Overview</a>
-            </div>
-            <div class="group">
-                <div class="group-label">Actions</div>
-                <a href="actions-overview.html" target="topic">Actions Overview</a>
-            </div>
-            <div class="group">
-                <div class="group-label">Events</div>
-                <a href="event-overview.html" target="topic">Event Overview</a>
-            </div>
-<!--
-            <div class="group">
-                <div class="group-label">UI Reference</div>
-                <a href="xf-form.html" target="topic">xf-form</a>
+    <main>
+        <section class="three-col teaser">
+            <section>
+                <div>
+                    <h2>No Code or Low Code</h2>
+                    <p>Write
+                        complete interfaces without (or minimal) scripting.
+                    </p>
+                </div>
+            </section>
+            <section>
+                <div>
+                    <h2>built with Web Components</h2>
+                    <p>Fore extends HTML with Web Components for processing and displaying your data.</p>
+                </div>
+            </section>
+            <section>
+                <div>
+                    <h2>Data-driven</h2>
+                    <p>Load, process and submit multiple data sources in XML, JSON and other formats.</p>
+                </div>
+            </section>
+        </section>
 
+        <section class="samples">
+            <div class="col-left">
+                <h3>Just pure tags</h3>
+                <p>
+                    Build fully interactive user interfaces from pure markup with data-binding.
+                </p>
+                <p>From simple to very complex.</p>
             </div>
-            <div class="group">
-                <div class="group-label">Action Reference</div>
-                <a href="xf-message.html" target="topic">xf-message</a>
-            </div>
--->
+            <demo-snippet>
+                <template>
+                    <fx-fore>
+                        <fx-model>
+                            <fx-instance type="json">
+                                {"greeting":"Hello Universe"}
+                            </fx-instance>
+                        </fx-model>
+                        <h2>{?greeting}</h2>
+                    </fx-fore>
+                </template>
+            </demo-snippet>
+        </section>
 
-            <div class="group">
-                <div class="group-label">Developer Guide</div>
-                <a href="architecture.html" target="topic">Architecture</a>
-                <a href="client-server-protocol.html" target="topic">Client-Server Protocol</a>
-                <a href="../src/docs.html" target="topic">API Docs of UI Components</a>
+        <section class="samples two">
+            <div class="col-left">
+                <h3>A clock</h3>
+                <p>The <em>model</em> holds structured data in one or more <em>instances</em>. </p>
+                <p><em>Bindings</em> apply calculations (or constraints) to the data.</p>
+                <p>Predefined <em>Actions</em> mutate, load or send data, interact with the user or trigger events.</p>
+                <p>NoCode is fine most of the time but still you can define your own custom
+                    functions to reach out to some script.</p>
+                <p>The <em>state engine</em> tracks dependencies and updates the user interface
+                    as needed while dispatching lifecycle and state events to hook in.</p>
+                <p>When initialized the 'ready' event will start an endless loop that updates the time
+                    with a delay 1000ms. It does by calling a custom JavaScript function.</p>
+                <p>The bindings will recalculate their values
+                and the UI will update the template expressions - the ones in curly brackets.</p>
             </div>
-            <a href="terms.html" target="topic">Terms</a>
+            <demo-snippet>
+                <template>
+                    <fx-fore>
+                        <fx-action while="true()" event="ready" delay="1000">
+                            <fx-setvalue ref="time" value="now()"></fx-setvalue>
+                            <fx-update></fx-update>
+                            <fx-refresh></fx-refresh>
+                        </fx-action>
+                        <fx-model>
+                            <fx-instance>
+                                <data>
+                                    <time></time>
+                                    <hour></hour>
+                                    <minute></minute>
+                                    <second></second>
+                                </data>
+                            </fx-instance>
+
+                            <fx-bind ref="hour" calculate="number(substring(../time,1,2)) * 30"></fx-bind>
+                            <fx-bind ref="minute" calculate="number(substring(../time,4,2)) * 6"></fx-bind>
+                            <fx-bind ref="second" calculate="number(substring(../time,7,2)) * 6"></fx-bind>
+
+                            <fx-function signature="now() as xs:string" type="text/javascript">
+                              const now = new Date();
+                              return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                            </fx-function>
+                        </fx-model>
+                        <div class="clock">
+                            <div class="circle" style="transform:rotate({second}deg);"
+                                 data-secs="{substring(time,7,2)}"></div>
+                            <div class="brand">Fore</div>
+                            <span class="three-nine"></span>
+                            <div class="display-time">{substring(time,1,5)}</div>
+                            <div style="transform:rotate({hour}deg);" class="hour"></div>
+                            <div style="transform:rotate({minute}deg);" class="minute"></div>
+                        </div>
+                    </fx-fore>
+                </template>
+            </demo-snippet>
+        </section>
+        <h2 class="outer">More features</h2>
+        <section class="three-col">
+            <div class="feature">
+                <h3>group, repeat or switch</h3>
+                <p>Repeating (even nested) sections of the Ui or switching between views is no problem
+                with the respective Fore elements.</p>
+            </div>
+            <div class="feature">
+                <h3>Generic Control</h3>
+                <p>Use either native or third-party components acting as controls within Fore.
+                </p>
+            </div>
+            <div class="feature">
+                <h3>MVC Architecture</h3>
+                <p>Fore elements fall into 3 categories: model, user-interface and action elements that act
+                together in a defined lifecycle.</p>
+            </div>
+            <div class="feature">
+                <h3>Constraints</h3>
+                <p>With bindings data nodes can be constrained or be calculated from other data. Flexible alert
+                messages can be logged to the user.</p>
+            </div>
+            <div class="feature">
+                <h3>Dependency Tracking</h3>
+                <p>Fore keeps tracks of the dependencies that might exist between data nodes.</p>
+            </div>
+            <div class="feature">
+                <h3>XPath/XQuery 3.1 support</h3>
+                <p>With fontoXPath Fore uses a powerful expression language to address either XML and/or JSON.</p>
+            </div>
+            <div class="feature">
+                <h3>Submissions</h3>
+                <p>A submission can load data from or send them to a URL. </p>
+                <p>Responses can be handled depending on
+                    returned data and trigger further actions.</p>
+            </div>
+            <div class="feature">
+                <h3>Framework agnostic</h3>
+                <p>Fore is pure vanilla ES6 and not dependent on a specific framework.</p>
+            </div>
+        </section>
+    </main>
+
+
+</div>
+<footer>
+    <div class="wrapper three-col">
+        <div>
+            <h4>Fore is brought to you by</h4>
+            <a href="https://jinntec.de" target="_blank"><img class="logo jinntec"
+                                                              src="../resources/images/jinntec-bw.png"></a>
+            <div class="subline">For professional support contact us at<br/>info@jinntec.de</div>
+        </div>
+        <div>
+            <h4>Links</h4>
+            <ul>
+                <li><a href="https://twitter.com/JinnForeTec" target="_blank">Twitter</a></li>
+                <li><a href="https://twitter.com/JinnForeTec" target="_blank">Github</a></li>
+                <li><a href="https://github.com/Jinntec/Fore/discussions" target="_blank">Discussions</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="subline">this page is powered by</div>
+            <img class="logo" src="../resources/images/light7.png"/>
 
         </div>
-    </app-drawer>
-    <iframe name="topic" src="introduction.html"></iframe>
-</app-drawer-layout>
+    </div>
+</footer>
+
+<script type="module" src="../demo/demo.js"></script>
+
 </body>
 </html>

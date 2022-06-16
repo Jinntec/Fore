@@ -1,0 +1,15 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <text>
+        <body>
+            <entry xml:id="uuid-0001">
+                <form type="lemma">
+                    <orth type="greek">Greek</orth>
+                    <orth type="latin"/>
+                </form>
+                <gramGrp cert="high" ana="" type="segmentation" subtype="">
+                    <m baseForm="" type="prefix" n="1" function=""/>
+                </gramGrp>
+            </entry>
+        </body>
+    </text>
+</TEI>

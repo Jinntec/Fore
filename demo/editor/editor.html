@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+
+    <title>barebone Fore form</title>
+
+<!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../../resources/fore.css" rel="stylesheet">
+    <!--    <link href="../resources/vars.css" rel="stylesheet">-->
+    <!--    <link href="../resources/demo.css" rel="stylesheet">-->
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            border:none;
+        }
+        #elements{
+            /*position:fixed;*/
+            /*left:0;*/
+            /*top:0;*/
+            /*width:200px;*/
+            overflow: auto;
+        }
+        .element-name{
+            background: lightblue;
+            padding: 0.5rem 0.3rem;
+        }
+        #elements fx-repeatitem{
+            border-bottom:thin solid #999;
+            display: block;
+        }
+
+        .elementPanel{
+            overflow: auto;
+            height: 100vh;
+        }
+
+        .wrapper > fx-fore{
+            margin: 0;
+        }
+
+        h1{
+            margin: 0;
+            padding: 0 1rem;
+        }
+
+        [repeat-index] fx-repeat{
+            display: block;
+        }
+        label{
+            display: block;
+        }
+        pre{
+            position:fixed;
+            bottom:0;
+            right:0;
+            background: rgba(255,255,255,0.5);
+            padding: 1rem;
+        }
+        main{
+            width: 100%;
+            height: 100%;
+            background: whitesmoke;
+        }
+        main {
+            width:100%;
+            background: orange;
+            display: block;
+        }
+        main *::before{
+            content:attr(data-name);
+        }
+        .wrapper{
+            width: 100vw;
+            height: 100vh;
+            margin:0;
+            display: grid;
+            grid-template-columns: 200px auto 200px;
+        }
+        main fx-fore{
+            position: relative;
+        }
+        main fx-model, main #ui{
+            background:white;
+            border:thin solid;
+            margin:1rem 0;
+            position: relative;
+        }
+        main fx-fore fx-model *{
+            margin-left: 1rem;
+        }
+/*
+        main fx-fore fx-instance{
+            display:block;
+            width: 100%;
+            background: lightblue;
+            vertical-align: center;
+        }
+*/
+        main fx-model{
+            min-height : 200px;
+            height: auto;
+            width: 100%;
+            display: block;
+            overflow: auto;
+        }
+        main fx-model:before{
+            content:'Model';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+        main fx-instance:before{
+            content: "Instance: '" attr(id) "'";
+        }
+        #ui {
+            min-height : 200px;
+        }
+/*
+        #ui::before{
+            content:'View';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+*/
+
+        main fx-bind,
+        main fx-instance,
+        main fx-submission,
+        main fx-function
+        {
+            display:block;
+            width: 100%;
+            padding:1rem;
+            border:thin solid;
+            border-bottom-left-radius: 1rem;
+        }
+/*
+        #ui::before {
+            content:'View';
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+*/
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore id="components">
+        <fx-action src="editor.js" event="ready"></fx-action>
+<!--        <fx-message event="drop" target="fore">got drop</fx-message>-->
+<!--        <fx-action src="editor.js" event="model-construct-done"></fx-action>-->
+        <fx-model>
+            <fx-instance id="editor" src="template.xml"></fx-instance>
+
+            <fx-instance id="elements" src="elements.xml"></fx-instance>
+
+            <fx-instance id="vars">
+                <data>
+                    <current></current>
+                </data>
+            </fx-instance>
+            <fx-function
+                    signature="local:elementLabel($elementName as xs:string) as xs:string?"
+                    type="text/javascript">
+                console.log('elementName', $elementName);
+                return $elementName.substring(3, $elementName.length);
+            </fx-function>
+
+        </fx-model>
+
+<!--        <fx-group class="elementPanel">-->
+            <h4>Model</h4>
+
+            <fx-repeat id="r-elements" ref="instance('elements')/model/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+
+            <h4>UI</h4>
+            <fx-repeat id="r-ui" ref="instance('elements')/UI/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+
+            <h4>Actions</h4>
+            <fx-repeat id="r-actions" ref="instance('elements')/actions/*">
+                <template>
+                    <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
+                </template>
+            </fx-repeat>
+<!--        </fx-group>-->
+
+<!--
+        <fx-control ref="instance('vars')/current">
+            <select ref="instance('elements')/*" class="widget" update-event="change">
+                <template>
+                    <option value="{name(.)}">{name(.)}</option>
+                </template>
+            </select>
+        </fx-control>
+-->
+
+<!--
+<pre>
+{log('elements')}
+</pre>
+-->
+
+    </fx-fore>
+
+
+    <main current>
+        <h1>Fore Editor</h1>
+
+        <fx-fore id="edited">
+            <fx-model id="targetModel" class="droppable">
+                <fx-instance id="default"></fx-instance>
+            </fx-model>
+            <fx-group id="ui" class="droppable"></fx-group>
+        </fx-fore>
+    </main>
+    <aside>
+        <h2>Properties</h2>
+        <fx-fore id="attributes">
+            <fx-action target="#document"
+                       event="selectElement">
+                <fx-message></fx-message>
+<!--                <fx-setvalue ref="instance('propvars')/currentElement" value="event('current')"></fx-setvalue>-->
+<!--                <fx-insert ref="instance('attributes')" origin="event('current')"></fx-insert>-->
+            </fx-action>
+            <fx-model id="targetModel">
+                <fx-instance id="attributes">
+                    <data>
+                        <fx-instance id="foo" src="bar"></fx-instance>
+<!--
+                        <attribute name="id"></attribute>
+                        <attribute name="src"></attribute>
+                        <attribute name="type"></attribute>
+-->
+                    </data>
+                </fx-instance>
+                <fx-instance id="propvars">
+                    <data>
+                        <currentElement>
+
+                        </currentElement>
+                    </data>
+                </fx-instance>
+            </fx-model>
+            <fx-group id="ui">
+                <fx-repeat ref="instance('attributes')//@*">
+                    <template>
+                        <fx-control ref=".">
+                            <label>{.}</label>
+                        </fx-control>
+                    </template>
+                </fx-repeat>
+            </fx-group>
+            <code>
+                {log('propvars')}
+            </code>
+        </fx-fore>
+    </aside>
+</div>
+<script type="module" src="../../index.js"></script>
+<!--<script>
+    (function () {
+        console.log('inited page.....')
+        const draggables = document.querySelectorAll('.element-name')
+        Array.from(draggables).forEach(element => {
+            element.addEventListener("dragstart", ev =>{
+                console.log('_handleDragStart',ev);
+                console.log('_handleDragStart target',ev.target);
+                console.log('_handleDragStart target',ev.target.innerText);
+                ev.dataTransfer.setData("text/plain", ev.target.innerText);
+
+            });
+        });
+    })();
+</script>-->
+<!--<script src="./editor.js"></script>-->
+
+</body>
+</html>

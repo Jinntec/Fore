@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello</title>
+
+    <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
+    <link href="css/print.css" type="text/css" rel="stylesheet" media="print"/>
+
+    <style>
+
+        fx-model {
+            display: none;
+        }
+
+        .headergrid {
+            display: grid;
+            grid-template-columns: 65% auto;
+            margin-top: 60px;
+        }
+
+        .intro{
+            margin:20px 0;
+            width: 100%;
+        }
+        .left textarea {
+            width: 100%;
+            height: 200px;
+        }
+
+        .right {
+            padding-left: 10px;
+        }
+
+        .logo {
+            width: 400px;
+            padding-bottom: 20px;
+        }
+
+        .company, .block {
+            margin-bottom: 20px;
+        }
+
+        #description{
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size:2.5em;
+        }
+
+        .payment {
+            font-size: 10px;
+        }
+
+
+
+        fx-repeat{
+            margin-bottom: 20px;
+        }
+
+        .items{
+            width: 100%;
+            vertical-align: top;
+            margin-bottom: 20px;
+        }
+        .header{
+            background:orange;
+        }
+        .item-header, fx-repeatitem{
+            display:grid;
+            grid-template-columns: auto 100px 100px 100px;
+            grid-column-gap: 8px;
+            padding:10px;
+            position: relative;
+            align-items: stretch;
+
+        }
+        .item-header{
+            background: var(--paper-orange-500);
+        }
+        .add{
+            width: 22px;
+            height: 18px;
+            background: ghostwhite;
+            position: absolute;
+            right: -22px;
+            text-align: center;
+            border: 1px solid lightgrey;
+            display: inline-block;
+            cursor:pointer;
+        }
+        .sum{
+            /*width: 100%;*/
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-wrap">
+    <fx-fore>
+<!--        <fx-setvalue event="ready" ref="date" value="current-date()"></fx-setvalue>-->
+        <fx-model>
+            <!--                <fx-instance src="invoice.xml">-->
+            <fx-instance>
+                <data>
+                    <address>
+                        COMPANY
+                        STREET
+                        CITY
+                        COUNTRY
+                    </address>
+                    <date>foo</date>
+                    <item>
+                        <description>helo</description>
+                        <quantity>32</quantity>
+                        <price>100</price>
+                        <sum>10</sum>
+                    </item>
+                    <total></total>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="date" required="true()"></fx-bind>
+            <fx-bind ref="address" required="true()"></fx-bind>
+            <fx-bind ref="item">
+                <fx-bind ref="description"></fx-bind>
+                <fx-bind ref="quantity"></fx-bind>
+                <fx-bind ref="price"></fx-bind>
+                <fx-bind ref="sum" calculate="../quantity * ../price"></fx-bind>
+            </fx-bind>
+        </fx-model>
+
+
+        <!-- ### header ###  -->
+        <!-- ### header ###  -->
+        <!-- ### header ###  -->
+        <fx-group>
+            <div class="headergrid">
+                <div class="left">
+                    <img src="images/existsolutions.svg" class="logo">
+                    <fx-control ref="address">
+                        <textarea name="" id="" cols="60" rows="8"></textarea>
+                    </fx-control>
+                </div>
+                <div class="right">
+                    <div class="company">eXist Solutions GmbH</div>
+
+                    <div class="block">
+                        <div>Bonndorfer Straße 45</div>
+                        <div>79853 Lenzkirch</div>
+                        <div>Germany</div>
+                    </div>
+
+                    <div class="block">
+                        <div>Tel.: +49 (0) 7653 96 49 442</div>
+                        <div>Email: info@existsolutions.com</div>
+                        <div>EU VAT ID: DE273180763</div>
+                        <div>Tax No: 07006/53508</div>
+                        <div>DUNS: 341868194</div>
+                    </div>
+                </div>
+            </div>
+            <h1>Invoice</h1>
+
+            <table>
+                <tr>
+                    <td>Date</td>
+                    <td>
+<!--                        <fx-control ref="date">
+                            <input name="value" value="">
+                        </fx-control>-->
+<!--                        <fx-input ref="date" type="date"></fx-input>-->
+
+                        <fx-control ref="date">
+                            <input name="value" value="" type="date">
+                        </fx-control>
+<!--                        <input name="value" value="2021-01-01" type="date">-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>Invoice Number</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Order Number</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <textarea class="intro" rows="3">Some unbound intro text .....</textarea>
+
+<!--
+            <fx-input ref="item/quantity">
+                <fx-label>lsjdlfjk</fx-label>
+            </fx-input>
+-->
+
+<!--
+            <fx-input ref="item/description">
+            </fx-input>
+            <fx-control ref="item/description">
+            </fx-control>
+-->
+
+
+
+
+            <div class="item-header">
+                <div>Description</div>
+                <div>Quantity (hours)</div>
+                <div>Price (Euro)</div>
+                <div>Total</div>
+            </div>
+            <fx-repeat ref="item">
+                <template>
+                    <fx-control ref="description" value-prop="content" update-event="input">
+                        <textarea id="description" rows="4"></textarea>
+                    </fx-control>
+                    <fx-control ref="quantity">
+                        <input type="number">
+                    </fx-control>
+
+                    <fx-control ref="price">
+                        <input type="number">
+                    </fx-control>
+
+                    <fx-output class="sum" ref="sum"></fx-output>
+                    <span class="add">+
+                        <fx-append ref="item" repeat="item"></fx-append>
+                    </span>
+                </template>
+            </fx-repeat>
+
+            <fx-output id="after" ref="item[1]/sum">
+                <label>sum>>> </label>
+            </fx-output>
+
+<!--            <fx-input ref="item[1]/sum"></fx-input>-->
+
+
+            <!--
+                        <table class="items">
+                            <tr class="header">
+                                <td>Description</td>
+                                <td>Quantity (Hours)</td>
+                                <td>Unit Price</td>
+                                <td>Sum</td>
+                            </tr>
+                            <fx-repeat ref="item">
+                                <template>
+                                    <tr>
+                                        <td>
+                                            <fx-control ref="description" value-prop="content">
+                                                <textarea></textarea>
+                                            </fx-control>
+                                        </td>
+                                        <td>
+                                            <fx-input ref="quantity">
+                                                <input type="number">
+                                            </fx-input>
+                                        </td>
+                                        <td>
+                                            <fx-control ref="price">
+                                                <input type="number">
+                                            </fx-control>
+                                        </td>
+                                        <td>
+                                            <fx-output ref="sum"></fx-output>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </fx-repeat>
+                        </table>
+            -->
+
+            <div class="vat-notice">
+                (Exempt supply for VAT purposes)<br>
+                Invoice Term: 10 Business Days
+            </div>
+            <br>
+
+            <div class="payment">
+                <div>Payment by check or electronic bank transfer.</div>
+                <div>Details for electronic transfers:</div>
+                <table>
+                    <tr>
+                        <td>Bank</td>
+                        <td>
+                            GLS Bank Gemeinschaftsbank eG<br>
+                            Christstrasse 9<br>
+                            44789 Bochum<br>
+                            Bochum<br>
+                            Germany
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort Code</td>
+                        <td>430 609 67</td>
+                    </tr>
+                    <tr>
+                        <td>BIC / SWIFT</td>
+                        <td>GENODEM1GLS</td>
+                    </tr>
+                    <tr>
+                        <td>Account Name</td>
+                        <td>eXist Solutions GmbH</td>
+                    </tr>
+                    <tr>
+                        <td>Account No / IBAN</td>
+                        <td>DE34430609676018685500</td>
+                    </tr>
+                </table>
+            </div>
+        </fx-group>
+    </fx-fore>
+
+</div>
+
+<script type="module" src="../../index.js"></script>
+
+</body>
+</html>

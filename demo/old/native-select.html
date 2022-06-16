@@ -1,0 +1,162 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>native select</title>
+
+    <script src="../../assets/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script src="../../assets/web-animations-js/web-animations-next-lite.min.js"></script>
+
+    <script src="../../src/fx-fore.js" type="module"></script>
+    <script src="../../src/deprecated/native/fx-button.js" type="module"></script>
+    <script src="../../src/ui/fx-output.js" type="module"></script>
+    <script src="../../src/actions/fx-setvalue.js" type="module"></script>
+
+
+    <style>
+        xf-model {
+            display: none;
+        }
+
+        xf-output {
+            color: blue;
+        }
+        .row{
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- ##### xf-model is not exposed to the client! ##### -->
+    <xf-model id="record">
+
+        <xf-instance>
+            <data>
+                <selected>bananas</selected>
+                <selected2>bananas</selected2>
+            </data>
+        </xf-instance>
+
+        <xf-bind id="b-selected" ref="selected"></xf-bind>
+        <xf-bind id="b-selected2" ref="selected2"></xf-bind>
+
+        <xf-instance id="fruits">
+            <data>
+                <fruit value="apple">Apple</fruit>
+                <fruit value="pears">Pears</fruit>
+                <fruit value="oranges">Oranges</fruit>
+                <fruit value="bananas">Bananas</fruit>
+            </data>
+        </xf-instance>
+
+
+        <xf-bind id="b-fruit" set="fruit">
+            <xf-bind id="b-fruit-label" ref="./text()"></xf-bind>
+            <xf-bind id="b-fruit-value" ref="@value"></xf-bind>
+        </xf-bind>
+    </xf-model>
+
+
+    <xf-form mockup='[
+  {
+    "bind": {
+      "id": "b-selected",
+      "required": true,
+      "value": "bananas"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-selected2",
+      "value": "apples"
+    }
+  },
+  {
+    "bind": {
+      "id": "b-fruit",
+      "bind": [
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Apples"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "apples"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Pears"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "pears"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Oranges"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "oranges"
+          }
+        ],
+        [
+          {
+            "id": "b-fruit-label",
+            "value": "Bananas"
+          },
+          {
+            "id": "b-fruit-value",
+            "value": "bananas"
+          }
+        ]
+      ]
+    }
+  }
+]'>
+
+        <h1>Native Select Controls</h1>
+        <h2>Your favorite fruit:
+            <xf-output bind="b-selected" id="output"></xf-output>
+        </h2>
+        <h3>Second choice
+            <xf-output bind="b-selected2"></xf-output>
+        </h3>
+
+        <div class="row">
+            <label for="selected">Which do you like best?</label>
+            <select bind="b-selected" id="selected">
+                <option value="apples">Apples</option>
+                <option value="pears">Pears</option>
+                <option value="oranges">Oranges</option>
+                <option value="bananas">Bananas</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="selected2">Second choice?</label>
+            <select bind="b-selected2" id="selected2">
+                <option value="apples">Apples</option>
+                <option value="pears">Pears</option>
+                <option value="oranges">Oranges</option>
+                <option value="bananas">Bananas</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <xf-button label="'apples' are best!">
+                <xf-setvalue bind="b-selected" value="apples"></xf-setvalue>
+            </xf-button>
+        </div>
+
+
+    </xf-form>
+</body>
+</html>

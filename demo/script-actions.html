@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Actions with Script</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+
+        fx-control {
+            font-size: 1.2rem;
+        }
+
+        fx-output {
+            display: none;
+        }
+
+        button {
+            padding: 0.4rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Actions calling JavaScript</h1>
+
+    <p class="note">
+        Use responsibly!<br><br>
+        For security reasons the script needs to be external. Also you should make sure to wrap your script
+        in curly brackets to put it into its own scope. Otherwise repeated executions might fail with errors.
+        <br><br>
+        Special testing and precautions should be considered when using script.
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <confirmation>false</confirmation>
+                            <entered>false</entered>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <h2>Script action</h2>
+                <p>loads JavaScript from external file</p>
+                <fx-trigger>
+                    <button>script action</button>
+                    <fx-action src="test.js"></fx-action>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <p>Open the browser console to see the instance data logged.</p>
+    <h2>The JavaScript used here (test.js):</h2>
+    <demo-snippet>
+        <template>
+            {
+                const inst = document.querySelector('fx-instance');
+                console.log('instanceData', inst.instanceData.firstElementChild);
+                alert(`confirmation: ${inst.instanceData.firstElementChild.firstElementChild.textContent}`);
+            }
+        </template>
+    </demo-snippet>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

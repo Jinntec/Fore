@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Instances</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Instances - a home for your precious data</h1>
+
+    <p>First of all - there can as many <code>fx-instance</code> elements as you need.</p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <foobar></foobar>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="second">
+                        <data>
+                            <item>second instance</item>
+                        </data>
+                    </fx-instance>
+                    .
+                    .
+                    .
+                </fx-model>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+    <h3>Description</h3>
+    <p>We got 2 instances that create 2 separate XML documents. The first in document order is
+    the default. All following ones need to have an <code>id</code>.</p>
+
+    <p class="note">It's important to understand that the data are not part of the html page but
+    exist as separate document in memory. Therefore you cannot inspect the state of the instance data with a
+    developer tool.</p>
+
+    <p>This not only ensures the integrity of the instance data but also allows us to work with real
+    XML documents.</p>
+
+    <h3>Limitations of inline instances</h3>
+    <p class="note">Inline instances use the HTML DOM of the browser which e.g.
+    only supports lowercase element names, no namespaces etc. If you intend to work with
+    full XML documents you need to use external to use external files with the <code>src</code> attribute. See
+    next example.</p>
+
+    <h2>Addressing instances</h2>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <foobar>hi</foobar>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="second">
+                        <data>
+                            <item>second</item>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-output ref="foobar"></fx-output>,
+                <fx-output ref="instance('second')//item"></fx-output>
+
+            </fx-fore>
+
+
+        </template>
+    </demo-snippet>
+
+    <p>To refer to a node in a non-default instance you have to use the <code>instance()</code> function which takes
+    the <code>id</code> as parameter. This returns the root-node of that instance.</p>
+
+    <div class="nav-buttons">
+        <a class="redline prev" href="./02-refs.html">previous</a>
+        <a class="redline next" href="./04-instances.html?param1=foo&param2=bar">next</a>
+    </div>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

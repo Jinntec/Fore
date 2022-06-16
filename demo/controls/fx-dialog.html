@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-dialog</title>
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        fx-control{
+            display: block;
+            margin-top:3rem;
+        }
+        label{
+            display: block;
+            white-space: pre-wrap;
+        }
+        #dialog2.show .dialog-content{
+            width: 600px;
+            height:500px;
+            max-width: 90%;
+            background: orange;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>fx-dialog</h1>
+
+<!--
+    <demo-snippet>
+        <template>
+-->
+
+        <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <foo>bar</foo>
+                </data>
+            </fx-instance>
+        </fx-model>
+            <demo-snippet>
+                <template>
+
+        <fx-trigger>
+            <button>open dialog 1</button>
+            <fx-show dialog="dialog1"></fx-show>
+        </fx-trigger>
+        <fx-trigger>
+            <button>open dialog 2</button>
+            <fx-show dialog="dialog2"></fx-show>
+        </fx-trigger>
+
+        <fx-control ref="foo">
+            <label>just foo not to be clickable when dialog is open</label>
+        </fx-control>
+
+        <fx-dialog id="dialog1">
+            <div class="dialog-content">
+                <a class="close-dialog" href="#" autofocus>&times;</a>
+                <h3>Here's some dialog content</h3>
+                <p>....some more....</p>
+                <fx-trigger class="action">
+                    <button>close</button>
+                    <fx-hide dialog="dialog1"></fx-hide>
+                </fx-trigger>
+            </div>
+        </fx-dialog>
+
+        <fx-dialog id="dialog2">
+            <div class="dialog-content">
+<!--                <a class="close-dialog" href="#" autofocus>&times;</a>-->
+                <h1>Custom size and background</h1>
+                <p>....some more content....</p>
+                <fx-trigger class="action">
+                    <button>close</button>
+                    <fx-hide dialog="dialog2"></fx-hide>
+                </fx-trigger>
+            </div>
+        </fx-dialog>
+    </template>
+</demo-snippet>
+    </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>
