@@ -43,4 +43,3 @@ import './src/actions/fx-hide.js';
 
 import './src/functions/fx-function.js';
 
-// import '@teipublisher/pb-components/src/pb-components-bundle.js';
