@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/css/fore.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        </fx-model>
+        <fx-group ref="teiHeader">
+            <h1>EDEp Editor</h1>
+
+            <fx-repeat ref=".//msPart">
+                <template>
+                    <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
+                        <!-- 19) -->
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/width">
+                            <label>Breite</label>
+                        </fx-control>
+                    </fx-group>
+                </template>
+            </fx-repeat>
+
+        </fx-group>
+    </fx-fore>
+
+</div>
+<script type="module" src="./demo.js"/>
+</body>
+</html>
