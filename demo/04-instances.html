@@ -59,8 +59,11 @@
                 <fx-model>
                     <fx-instance src="#querystring"></fx-instance>
                 </fx-model>
-                <fx-output ref="param1"></fx-output>
-                <fx-output ref=param2></fx-output>
+                <fx-repeat ref="instance()/*">
+                    <template>
+                        <div>Param '{name(.)}' = {.}</div>
+                    </template>
+                </fx-repeat>
             </fx-fore>
         </template>
     </demo-snippet>
