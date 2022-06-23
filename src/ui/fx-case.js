@@ -26,7 +26,7 @@ class FxCase extends HTMLElement {
 
     const style = `
             :host {
-                display: none;
+                visibility: none;
             }
         `;
     const html = `
@@ -40,7 +40,6 @@ class FxCase extends HTMLElement {
             ${html}
     `;
 
-    this.style.display = 'none';
   }
 }
 
