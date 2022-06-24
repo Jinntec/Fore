@@ -117,9 +117,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing', this);
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
+    if(e && e.code){
+      const vars = new Map();
+      vars.set('code',e.code);
+      this.setInScopeVariables(vars);
+    }
+
     if (e && e.detail) {
       this.detail = e.detail;
-      // console.log('#### detail', e.detail);
+      console.log('#### detail', e.detail);
     }
     this.needsUpdate = false;
 

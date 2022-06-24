@@ -1,0 +1,1464 @@
+{
+  "item": [
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/1000",
+      "name": "not present"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/2000",
+      "name": "yes"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/16",
+      "name": "Abrazo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/15",
+      "name": "Acanto"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/17",
+      "name": "Achilles"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/18",
+      "name": "Acrótera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/19",
+      "name": "Adonis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/20",
+      "name": "Aigle"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/21",
+      "name": "Akanthus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/22",
+      "name": "Aktäon; Aktaion"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/23",
+      "name": "Alkestis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/2",
+      "name": "Alpha et Omega"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/44",
+      "name": "Altar"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/25",
+      "name": "Ancla"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/564",
+      "name": "Andromeda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/27",
+      "name": "Äneas"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/24",
+      "name": "Anfiteatro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/28",
+      "name": "Animal"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/351",
+      "name": ""
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/29",
+      "name": "Aphrodite; Venus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/30",
+      "name": "Apollo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/566",
+      "name": "Apollon"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/352",
+      "name": "Apollón; Apollo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/78",
+      "name": "Arado"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/31",
+      "name": "Arbol"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/32",
+      "name": "Arco"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/36",
+      "name": "Ariadne"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/38",
+      "name": "Arma"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/33",
+      "name": "Arquitectura"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/34",
+      "name": "Arquitrave"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/37",
+      "name": "Artemis; Diana"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/39",
+      "name": "Ascia"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/40",
+      "name": "Asklepios; Asclepius; Aesculap"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/41",
+      "name": "Astrágalo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/42",
+      "name": "Athena; Minerva"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/361",
+      "name": "Athéné; Minerva"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/43",
+      "name": "Attis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/45",
+      "name": "Bacchus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/46",
+      "name": "Balteus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/47",
+      "name": "Banda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/49",
+      "name": "Barco"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/48",
+      "name": "Basa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/149",
+      "name": "Bellota"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/52",
+      "name": "Bogenzwickel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/57",
+      "name": "Bolsa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/58",
+      "name": "Botón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/60",
+      "name": "Brazo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/61",
+      "name": "Brustschmuck"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/62",
+      "name": "Bucráneo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/51",
+      "name": "Buey"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/63",
+      "name": "Bulla"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/65",
+      "name": "Busto"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/80",
+      "name": "Caballo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/311",
+      "name": "Cabeza"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/73",
+      "name": "Cadena"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/67",
+      "name": "Caduceo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/53",
+      "name": "Caja"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/68",
+      "name": "Calo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/569",
+      "name": "Calo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/69",
+      "name": "Cántaro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/50",
+      "name": "Carnero"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/77",
+      "name": "Carreta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/76",
+      "name": "Carro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/71",
+      "name": "Casco"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/141",
+      "name": "Cenefa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/72",
+      "name": "Cérvido"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/229",
+      "name": "Cesta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/75",
+      "name": "Chaflán"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/14",
+      "name": "chi-rho"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/81",
+      "name": "Chiton"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/113",
+      "name": "Cima"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/99",
+      "name": "Cimacio"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/64",
+      "name": "Cincel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/273",
+      "name": "Cinta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/83",
+      "name": "Circo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/82",
+      "name": "Círculo circulus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/84",
+      "name": "Ciste"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/85",
+      "name": "Clipeus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/87",
+      "name": "Cofre"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/89",
+      "name": "Concha"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/86",
+      "name": "Corazón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/216",
+      "name": "Cordero"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/92",
+      "name": "Cornisa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/93",
+      "name": "Corona"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/94",
+      "name": "Corona cívica"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/95",
+      "name": "Corona de laurel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/98",
+      "name": "Creciente"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/571",
+      "name": "Creusa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/97",
+      "name": "Creusa;Kreusa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/6",
+      "name": "cross"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/3",
+      "name": "Crux Decussata"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/4",
+      "name": "Crux Gammata"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/5",
+      "name": "Crux Immissa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/70",
+      "name": "Cuadrado"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/96",
+      "name": "Cuchillo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/91",
+      "name": "Cuerno de la abundancia"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/90",
+      "name": "Cuervo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/572",
+      "name": "Daedalus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/101",
+      "name": "Dardos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/103",
+      "name": "Decoración compleja"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/102",
+      "name": "Delfín"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/1",
+      "name": "Desunt"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/105",
+      "name": "Dextrarum iunctio"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/106",
+      "name": "Diener"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/189",
+      "name": "Dintel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/107",
+      "name": "Dioskuren"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/574",
+      "name": "Dipti"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/108",
+      "name": "Diptychon"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/112",
+      "name": "Divinidad"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/109",
+      "name": "Dolichenus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/110",
+      "name": "Doppelknopffibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/111",
+      "name": "Dosenortband"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/115",
+      "name": "Einheimische Frau"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/576",
+      "name": "Endymion"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/118",
+      "name": "Entablamiento"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/119",
+      "name": "Epona"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/121",
+      "name": "Eroten"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/114",
+      "name": "Escama"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/280",
+      "name": "Escena de banquete"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/281",
+      "name": "Escena de caza"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/283",
+      "name": "Escena de sacrificio"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/282",
+      "name": "Escena familiar"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/285",
+      "name": "Escena funeraria"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/286",
+      "name": "Escena militar"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/287",
+      "name": "Escena mitológica"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/288",
+      "name": "Escena religiosa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/284",
+      "name": "Escena triunfale"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/289",
+      "name": "Escocia"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/120",
+      "name": "Escuadra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/55",
+      "name": "Escudo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/147",
+      "name": "Espada"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/211",
+      "name": "Espejo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/35",
+      "name": "Espina de pescado"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/321",
+      "name": "Espiral"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/122",
+      "name": "Estandarte"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/123",
+      "name": "Estrella"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/304",
+      "name": "Estrígile"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/305",
+      "name": "Esvástica"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/124",
+      "name": "Exedra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/125",
+      "name": "Falera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/127",
+      "name": "Festón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/129",
+      "name": "Fibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/130",
+      "name": "Figura humana"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/131",
+      "name": "Filete"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/133",
+      "name": "Flecha"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/134",
+      "name": "Flor"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/135",
+      "name": "Florón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/137",
+      "name": "Flügelfibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/138",
+      "name": "Fortuna"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/142",
+      "name": "Frontón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/143",
+      "name": "Fruto"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/88",
+      "name": "Gallo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/144",
+      "name": "Ganymed"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/427",
+      "name": "Ganymédes"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/79",
+      "name": "Gato"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/145",
+      "name": "Genius"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/148",
+      "name": "Gorgoneion"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/152",
+      "name": "Greca"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/151",
+      "name": "Greif"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/153",
+      "name": "Guirnalda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/154",
+      "name": "Haube"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/583",
+      "name": "Hector"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/155",
+      "name": "Hedera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/156",
+      "name": "Hekate"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/158",
+      "name": "Helena"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/159",
+      "name": "Hephaistos; Vulcanus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/162",
+      "name": "Héra; Iuno"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/160",
+      "name": "Herakles;Hercules"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/440",
+      "name": "Hermés; Mercur"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/163",
+      "name": "Heros"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/164",
+      "name": "Hexágono"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/188",
+      "name": "Hiedra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/165",
+      "name": "Hippokamp; Seepferd"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/444",
+      "name": "Hippolytos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/140",
+      "name": "Hogar"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/128",
+      "name": "Hoja"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/167",
+      "name": "Horuslocke"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/223",
+      "name": "Huevo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/168",
+      "name": "Hygeia"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/169",
+      "name": "Ikarus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/170",
+      "name": "Instrumento de música"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/171",
+      "name": "Iphigenie"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/275",
+      "name": "Jabalí"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/172",
+      "name": "Jahreszeit"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/329",
+      "name": "Jarrón"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/587",
+      "name": "Jupiter; Juppiter; Zeus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/174",
+      "name": "Kannelur"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/175",
+      "name": "Kapitell"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/176",
+      "name": "Kentaur"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/177",
+      "name": "Kerberos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/178",
+      "name": "Kline"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/179",
+      "name": "Kniefibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/180",
+      "name": "Kompositkapitell"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/181",
+      "name": "Korinthisches Kapitell"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/457",
+      "name": "Kybele;Magna Mater;Mater Deum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/184",
+      "name": "Latobius"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/185",
+      "name": "Leda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/183",
+      "name": "Lengüeta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/186",
+      "name": "Librarius"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/187",
+      "name": "Lictor"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/191",
+      "name": "Listel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/132",
+      "name": "Llama"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/192",
+      "name": "Lorica"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/193",
+      "name": "Löwe"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/195",
+      "name": "Luna"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/196",
+      "name": "Lunula"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/202",
+      "name": "Mänade"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/197",
+      "name": "Mano"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/203",
+      "name": "Mappa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/66",
+      "name": "Marco"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/204",
+      "name": "Mars;Ares"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/205",
+      "name": "Marsyas"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/198",
+      "name": "Martillo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/199",
+      "name": "Máscara"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/200",
+      "name": "Meandro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/201",
+      "name": "medallion"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/206",
+      "name": "Medea"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/207",
+      "name": "Medusa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/208",
+      "name": "Meerwesen"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/209",
+      "name": "Menelaos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/306",
+      "name": "Mesa"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/210",
+      "name": "Minotaurus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/212",
+      "name": "Mithras"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/215",
+      "name": "Moldura"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/214",
+      "name": "Molduración"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/213",
+      "name": "Moneda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/13",
+      "name": "Monogr. Christi cum Alpha et Omega"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/8",
+      "name": "Monogr. Christi Decussatum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/9",
+      "name": "Monogr. Christi in crucem transl. cum A e O"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/10",
+      "name": "Monogr. Christi in crucem translatum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/12",
+      "name": "Monogr. Christi radiatum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/11",
+      "name": "Monogr. Christi radiatum cum Alpha et Omega"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/7",
+      "name": "Monogr. Ἰη(σοῦς)"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/126",
+      "name": "Mujer"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/217",
+      "name": "Nemesis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/218",
+      "name": "Nereide"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/219",
+      "name": "Nicho"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/117",
+      "name": "Niño"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/220",
+      "name": "Nudo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/221",
+      "name": "Ödipus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/222",
+      "name": "Orpheus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/225",
+      "name": "Oso"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/226",
+      "name": "Ovalo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/227",
+      "name": "Ovas"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/234",
+      "name": "Paenula"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/224",
+      "name": "Pájaro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/228",
+      "name": "Palma"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/235",
+      "name": "Pan; Faun"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/236",
+      "name": "Panzer"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/230",
+      "name": "Pátera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/246",
+      "name": "Pedestal"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/231",
+      "name": "Peine"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/232",
+      "name": "Peltae"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/237",
+      "name": "Pelzhut"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/54",
+      "name": "Pendientes"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/233",
+      "name": "Pentágono"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/238",
+      "name": "Peplos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/239",
+      "name": "Perla"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/240",
+      "name": "Perseus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/241",
+      "name": "Pétalo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/242",
+      "name": "Phädra; Phaidra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/243",
+      "name": "Phalera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/244",
+      "name": "Phrygische Mütze"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/245",
+      "name": "Pie"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/248",
+      "name": "Pilar"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/247",
+      "name": "Pilastra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/249",
+      "name": "Pilum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/252",
+      "name": "Piña"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/250",
+      "name": "Polos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/251",
+      "name": "Polyptychon"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/255",
+      "name": "Poseidon; Neptun"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/256",
+      "name": "Priamos"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/257",
+      "name": "Prisionero"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/258",
+      "name": "Pteryges"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/253",
+      "name": "Puerta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/59",
+      "name": "Pulsera"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/259",
+      "name": "Pyramidenstumpf"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/261",
+      "name": "Queue d'aronde"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/262",
+      "name": "Rahmenfeld"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/146",
+      "name": "Rama"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/56",
+      "name": "Ramo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/263",
+      "name": "Raya"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/139",
+      "name": "Rayo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/264",
+      "name": "Rectángulo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/265",
+      "name": "Regla graduada"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/254",
+      "name": "Retrato"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/190",
+      "name": "Ribete"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/267",
+      "name": "Ringschnalle"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/136",
+      "name": "Río"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/266",
+      "name": "Róleo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/268",
+      "name": "Rolle"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/194",
+      "name": "Rombo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/269",
+      "name": "Roseta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/270",
+      "name": "Rostra"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/271",
+      "name": "Rueda"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/272",
+      "name": "Rueda radiada"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/274",
+      "name": "Sagum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/277",
+      "name": "Sarmiento"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/276",
+      "name": "Satyr"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/278",
+      "name": "Säule"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/279",
+      "name": "Scheibenfibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/290",
+      "name": "Schreibtafel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/291",
+      "name": "Seitenwange"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/531",
+      "name": "sella curulis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/292",
+      "name": "Sella curulis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/104",
+      "name": "Semicírculo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/293",
+      "name": "Serapis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/294",
+      "name": "Serpiente"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/74",
+      "name": "Silla"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/295",
+      "name": "Silvanus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/296",
+      "name": "Sirene"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/297",
+      "name": "Sockelbild"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/298",
+      "name": "Soffitte"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/300",
+      "name": "Sol"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/299",
+      "name": "Soldado"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/301",
+      "name": "Sphinx"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/302",
+      "name": "Stilus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/303",
+      "name": "Syrinx"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/307",
+      "name": "Tabula Ansata"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/315",
+      "name": "Tallo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/498",
+      "name": "talpazat"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/308",
+      "name": "Tänien"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/312",
+      "name": "Teatro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/310",
+      "name": "Templo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/313",
+      "name": "Theseus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/314",
+      "name": "Thyrsosstab"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/325",
+      "name": "Tímpano"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/316",
+      "name": "Toga"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/317",
+      "name": "Toga contabulata"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/318",
+      "name": "Tomba"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/320",
+      "name": "Toque"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/309",
+      "name": "Toro"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/811",
+      "name": "Toro (archit)"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/322",
+      "name": "Trenza"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/323",
+      "name": "Triton"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/324",
+      "name": "Tropaion"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/326",
+      "name": "Tunica"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/327",
+      "name": "Urceus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/328",
+      "name": "Urna"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/150",
+      "name": "Uva"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/330",
+      "name": "Vexillum"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/331",
+      "name": "Victoria"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/332",
+      "name": "Volumen"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/333",
+      "name": "Voluta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/260",
+      "name": "Volutenpolster;Pulvinus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/334",
+      "name": "Zigzag"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/335",
+      "name": "Zwiebelknopffibel"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/815",
+      "name": "crux immissa cum alpha et omega"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/900",
+      "name": "cervus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/901",
+      "name": "navis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/902",
+      "name": "herma"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/903",
+      "name": "homo"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/904",
+      "name": "femina"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/905",
+      "name": "vir"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/906",
+      "name": "caput"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/907",
+      "name": "gladiator"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/908",
+      "name": "galea"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/909",
+      "name": "athleta"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/910",
+      "name": "canis"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/911",
+      "name": "venatio"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/912",
+      "name": "eroticus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/913",
+      "name": "camelus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/914",
+      "name": "gallus"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/915",
+      "name": "columna"
+    },
+    {
+      "value": "https://www.eagle-network.eu/voc/decor/lod/916",
+      "name": "planta"
+    }
+  ]
+}

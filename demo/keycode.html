@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <h1>Handling key codes</h1>
+            <p>Press left or right, ESC or ENTER key.</p>
+            <p>The <code>event()</code> function provides the key code for keyboard events</p>
+            <fx-fore>
+                <fx-action event="keydown" target="#document" if="event('code') = 'Enter'">
+                    <fx-message>Enter!</fx-message>
+                </fx-action>
+                <fx-action event="keydown" target="#document" if="event('code') = 'Escape'">
+                    <fx-message>Escape!</fx-message>
+                </fx-action>
+                <fx-action event="keydown" target="#document" if="event('code') = 'ArrowLeft'">
+                    <fx-message>Left!</fx-message>
+                </fx-action>
+                <fx-action event="keydown" target="#document"  if="event('code') = 'ArrowRight'">
+                    <fx-message>Right!</fx-message>
+                </fx-action>
+                <p></p>
+            </fx-fore>
+        </template>
+    </demo-snippet></div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
