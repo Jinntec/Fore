@@ -36,6 +36,7 @@ export class FxInspector extends HTMLElement {
             padding-left:var(--inspector-handle-width);
             color:var(--inspector-color);
             overflow:scroll;
+            height:100%;
           }
           pre{
             background:var(--inspector-pre-bg);
@@ -45,7 +46,7 @@ export class FxInspector extends HTMLElement {
           }
           .handle{
             display:block;
-            height:100vh;
+            height:100%;
             width:var(--inspector-handle-width);
             background:var(--inspector-handle-bg);
             opacity:0.7;
