@@ -84,9 +84,9 @@ export class FxInspector extends HTMLElement {
   }
 
   update() {
-    console.log('update');
+    // console.log('update');
     const pre = this.shadowRoot.querySelectorAll('pre');
-    console.log('pre', pre);
+    // console.log('pre', pre);
     const fore = this.closest('fx-fore');
 
     Array.from(pre).forEach(element => {
@@ -123,7 +123,7 @@ export class FxInspector extends HTMLElement {
 
     const handle = this.shadowRoot.querySelector('.handle');
     handle.addEventListener('click', e => {
-      console.log('toggling');
+      // console.log('toggling');
       const { target } = e;
       if (this.hasAttribute('open')) {
         this.removeAttribute('open');
@@ -134,7 +134,7 @@ export class FxInspector extends HTMLElement {
   }
 
   serializeDOM(data) {
-    console.log('serializeDOM', data);
+    // console.log('serializeDOM', data);
     const ser = new XMLSerializer().serializeToString(data);
     return Fore.prettifyXml(ser);
   }

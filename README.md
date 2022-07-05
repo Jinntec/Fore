@@ -144,7 +144,7 @@ Import it in your HTML page like so:
 
 ```
 <script type="module">
-    import 'node_modules/@jinntec/fore/dist/fore-all.js';
+    import 'node_modules/@jinntec/fore/dist/fore.js';
 </script>
 ```
 

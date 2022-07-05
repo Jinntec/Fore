@@ -147,7 +147,7 @@ export default class FxControl extends XfAbstractControl {
       const widgetValue = this.getWidget().value;
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, this.getWidget().value);
-      if (widgetValue && widgetValue !== modelitem.value) {
+      if (modelitem && widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;
         replace.actionPerformed();
       }
@@ -372,7 +372,7 @@ export default class FxControl extends XfAbstractControl {
 
   async refresh(force) {
     // console.log('fx-control refresh', this);
-    super.refresh();
+    super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
 

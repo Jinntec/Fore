@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Reading json response</title>
+    <link rel="stylesheet" href="../../resources/css/fore.css"/>
+<!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance type="json">
+            { "foo":"bar" }
+        </fx-instance>
+        <fx-instance id="response" type="json">{}</fx-instance>
+
+        <fx-submission
+                id="submission"
+                url="#echo"
+                method="POST"
+                replace="instance"
+                instance="response"
+        >
+            <fx-message event="submit-done"
+            >JSON Data have been submitted - replacing instance</fx-message
+            >
+        </fx-submission>
+    </fx-model>
+    <fx-group collapse="true">
+        <h1>Submission of JSON data</h1>
+        <fx-trigger>
+            <button>replace instance with json</button>
+            <fx-send submission="submission"></fx-send>
+        </fx-trigger>
+        <fx-output ref="instance()?foo">
+            <label slot="label">instance()?foo =</label>
+        </fx-output>
+        <fx-output id="out" ref="instance('response')?foo">
+            <label slot="label">This message comes from replaced instance:</label>
+        </fx-output>
+    </fx-group>
+</fx-fore>
+
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="../../index.js"/>
+</body>
+</html>

@@ -18,6 +18,10 @@ const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
 
+// A global registry of function names that are declared in Fore by a developer using the
+// `fx-function` element. These should be available without providing a prefix as well
+export const globallyDeclaredFunctionLocalNames = [];
+
 function getCachedNamespaceResolver(xpath, node) {
     if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
         return null;
@@ -39,6 +43,9 @@ const xhtmlNamespaceResolver = prefix => {
     return undefined;
 };
 
+/**
+ * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
+ */
 export function resolveId(id, sourceObject, nodeName = null) {
     const allMatchingTargetObjects = fxEvaluateXPathToNodes(
         'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
@@ -261,9 +268,6 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
     return createNamespaceResolver(query, formElement);
 }
 
-// A global registry of function names that are declared in Fore by a developer using the
-// `fx-function` element. These should be available without providing a prefix as well
-export const globallyDeclaredFunctionLocalNames = [];
 
 /**
  * Implementation of the functionNameResolver passed to FontoXPath to
@@ -520,10 +524,6 @@ export function evaluateXPathToNumber(
     });
 }
 
-/**
- * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
- */
-
 const contextFunction = (dynamicContext, string) => {
     const caller = dynamicContext.currentContext.formElement;
     if (string) {
@@ -549,6 +549,12 @@ const contextFunction = (dynamicContext, string) => {
     return caller.getInScopeContext();
 };
 
+// todo: implement
+const currentFunction = (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+    return null;
+};
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -569,6 +575,13 @@ registerCustomXPathFunction(
     ['xs:string'],
     'item()?',
     contextFunction,
+);
+
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'current'},
+    ['xs:string'],
+    'item()?',
+    currentFunction,
 );
 
 /**

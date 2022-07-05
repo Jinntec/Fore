@@ -131,6 +131,7 @@ export class Fore {
             resolve('done');
           }
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            // console.log('refreshing', element, element?.ref);
             // console.log('refreshing ',element);
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
@@ -227,7 +228,7 @@ export class Fore {
       bubbles: true,
       detail,
     });
-    console.log('firing', event);
+    console.log('dispatching', event);
     target.dispatchEvent(event);
   }
 
