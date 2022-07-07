@@ -1,0 +1,76 @@
+{
+  "elements": [
+    {
+      "name": "div",
+      "children": "ab",
+      "top": true,
+      "attributes": ["type", "subtype"]
+    },
+    {
+      "name": "ab",
+      "children": ["expan", "supplied", "lb", "unclear", "gap"],
+      "top": true
+    },
+    {
+      "name": "expan",
+      "children": ["ex"],
+      "top": true
+    },
+    {
+      "name": "ex",
+      "attributes": ["cert"],
+      "top": false
+    },
+    {
+      "name": "supplied",
+      "attributes": ["reason", "cert"],
+      "top": true
+    },
+    {
+      "name": "unclear",
+      "top": true
+    },
+    {
+      "name": "gap",
+      "attributes": ["reason", "quantity", "unit"]
+    },
+    {
+      "name": "lb",
+      "top": true
+    }
+  ],
+  "attributes": [
+    {
+      "name": "n",
+      "global": true
+    },
+    {
+      "name": "break",
+      "values": ["yes", "no"]
+    },
+    {
+      "name": "type",
+      "values": ["textpart"]
+    },
+    {
+      "name": "subtype",
+      "values": ["fragment", "part"]
+    },
+    {
+      "name": "reason",
+      "values": ["lost", "illegible", "omitted"]
+    },
+    {
+      "name": "unit",
+      "values": ["character"]
+    },
+    {
+      "name": "extent",
+      "values": ["unknown"]
+    },
+    {
+      "name": "cert",
+      "values": ["low"]
+    }
+  ]
+}

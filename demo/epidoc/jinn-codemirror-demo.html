@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leiden+ Editor Demo</title>
+    <style>
+        main {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+        jinn-codemirror {
+            max-height: 400px;
+            min-height: 320px;
+            font-size: 16px;
+        }
+        #xml-editor {
+            flex: 2;
+        }
+        #leiden-editor {
+            flex: 1;
+            padding-right: 10px;
+            border-right: 1px solid #CCAA00;
+            margin-right: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        [slot=toolbar] {
+            display: flex;
+            column-gap: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        [slot=toolbar] * {
+            font-size: .85rem;
+            border: 1px solid transparent;
+            background-color: inherit;
+        }
+        [slot=toolbar] *:hover {
+            border: 1px solid orange;
+        }
+    </style>
+    <script type="module" src="../src/jinn-codemirror.ts"></script>
+</head>
+<body>
+<h2>EpiDoc Editor</h2>
+<main>
+    <jinn-codemirror id="leiden-editor" class="leiden hidden">
+        <div slot="toolbar">
+            <select name="modes">
+                <option value="edcs" selected>EDCS/EDH</option>
+                <option value="default">Petrae</option>
+                <option value="leiden_plus">Leiden+</option>
+            </select>
+            <button data-command="expan" class="leiden_plus">(a(bcd))</button>
+            <button data-command="erasure" class="leiden_plus">〚abc〛</button>
+            <button data-command="unclear" class="leiden_plus">ạ</button>
+            <button data-command="div" class="leiden_plus">&lt;=...</button>
+            <!--button data-command="fragment" class="leiden_plus">&lt;D=.1.fragment...</button-->
+            <button data-command="part" class="leiden_plus">&lt;D=.A.part...</button>
+            <button data-command="recto" class="leiden_plus">&lt;D=.r...</button>
+            <button data-command="verso" class="leiden_plus">&lt;D=.v...</button>
+            <button data-command="erasure" class="edcs">〚abc〛</button>
+            <button data-command="gap" class="edcs">[...]</button>
+            <button data-command="convert" class="edcs">Leiden+</button>
+        </div>
+    </jinn-codemirror>
+    <jinn-codemirror id="xml-editor" mode="xml" schema="../src/epidoc.json" namespace="http://www.tei-c.org/ns/1.0">
+        <div slot="toolbar">
+            <button id="import" title="Import from Leiden markup">Import Leiden</button>
+            <button data-command="selectElement" title="Select element around current cursor position">&lt;|></button>
+            <buttom data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</buttom>
+            <button data-command="removeEnclosing" title="Remove enclosing tags">&lt;X></button>
+        </div>
+    </jinn-codemirror>
+</main>
+
+<button id="mybutton">set value</button>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const xml = document.getElementById('xml-editor');
+        const leiden = document.getElementById('leiden-editor');
+        const toggle = document.getElementById('import');
+        const button = document.getElementById('mybutton');
+
+        toggle.addEventListener('click', () => {
+            leiden.classList.toggle('hidden');
+            if (!leiden.classList.contains('hidden')) {
+                leiden.focus();
+            }
+        });
+
+        leiden.addEventListener('update', (ev) => {
+            xml.content = ev.detail.content;
+        });
+
+        xml.addEventListener('invalid', (ev) => {
+            console.log("XML INVALID", ev)
+        });
+        xml.addEventListener('valid', (ev) => {
+            console.log("XML VALID", ev)
+        });
+        xml.addEventListener('update', (ev) => {
+            console.log("XML UPDATE", ev.detail.serialized)
+        });
+        button.addEventListener('click', function (ev) {
+            xml.value = document.createElementNS("http://www.tei-c.org/ns/1.0", "ab")
+        });
+    });
+</script>
+</body>
+</html>
