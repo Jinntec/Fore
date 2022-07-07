@@ -242,11 +242,14 @@ export default class FxControl extends XfAbstractControl {
         if (widget.value) {
           if (oldVal !== this.widget.value) {
             console.log('changed');
+            widget.value = this.nodeset.cloneNode(true);
             return;
           }
         }
 
         widget.value = this.nodeset.cloneNode(true);
+        // todo: should be more like below but that can cause infinite loop when controll trigger update event due to calling a setter for property
+        // widget[this.valueProp] = this.nodeset.cloneNode(true);
         console.log('passed value to widget', widget.value);
       }
 

@@ -56,7 +56,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
           console.log('as', this.nodeset);
           this.modelItem.value = this.nodeset;
-          this.value = this.modelItem.value;
+          this.value = this.modelItem.node;
         } else {
           this.value = this.modelItem.value;
         }

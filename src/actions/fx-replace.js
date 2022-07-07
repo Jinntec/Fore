@@ -34,6 +34,7 @@ export default class FxReplace extends AbstractAction {
   perform() {
     super.perform();
     console.log('replace action');
+    // console.log('replace action variables', this.inScopeVariables);
     if (!this.nodeset) {
       return;
     }
@@ -59,6 +60,7 @@ export default class FxReplace extends AbstractAction {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);
     }
+    this.getModel().changed.push(this.getModelItem());
     this.needsUpdate = true;
   }
 }

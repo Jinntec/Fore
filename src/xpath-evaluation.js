@@ -286,6 +286,7 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'index':
         case 'instance':
         case 'log':
+        case 'parse':
         case 'logtree':
             return {namespaceURI: XFORMS_NAMESPACE_URI, localName};
         default:
@@ -605,6 +606,32 @@ registerCustomXPathFunction(
             }
         }
         return null;
+    },
+);
+
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'parse'},
+    ['xs:string?'],
+    'element()?',
+    (dynamicContext, string) => {
+        const parser = new DOMParser();
+        const out = parser.parseFromString(string, "application/xml");
+        console.log('parse', out);
+
+        /*
+                const {formElement} = dynamicContext.currentContext;
+                const instance = resolveId(string, formElement, 'fx-instance');
+                if (instance) {
+                    if (instance.getAttribute('type') === 'json') {
+                        console.warn('log() does not work for JSON yet');
+                        // return JSON.stringify(instance.getDefaultContext());
+                    } else {
+                        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+                        return Fore.prettifyXml(def);
+                    }
+                }
+        */
+        return out.firstElementChild;
     },
 );
 
