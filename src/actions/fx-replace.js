@@ -60,7 +60,7 @@ export default class FxReplace extends AbstractAction {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);
     }
-    this.getModel().changed.push(this.getModelItem());
+    // this.getModel().changed.push(this.getModelItem());
     this.needsUpdate = true;
   }
 }
