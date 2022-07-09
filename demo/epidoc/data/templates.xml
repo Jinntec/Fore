@@ -1,0 +1,18 @@
+<body xmlns="http://www.tei-c.org/ns/1.0">
+    <div type="edition">
+        <div type="textpart" subtype="fragment" n="a" corresp="">
+            <ab/>
+        </div>
+    </div>
+    <!-- 36) Apparatus für 1. Fragment: @corresp referenziert msPart -->
+    <div type="apparatus" corresp="#fragment1">
+        <listApp>
+            <app loc="1"/>
+        </listApp>
+    </div>
+    <!-- 42) Übersetzung: @corresp referenziert msPart; @resp = Kürzel des Übersetzers -->
+    <div type="translation" corresp="#fragment1" resp="#Feraudi"/>
+    <!-- 37) Kommentar: freier Inhalt. Nur einmal pro Dokument -->
+    <div type="commentary"/>
+    <epidoc> </epidoc>
+</body>

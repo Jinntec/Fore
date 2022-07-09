@@ -1,0 +1,115 @@
+<msPart xml:id="" xmlns="http://www.tei-c.org/ns/1.0">
+    <msIdentifier>
+        <!-- 12a) Aufbewahrung -->
+        <repository ref="http://sicily.classics.ox.ac.uk/museum/064"></repository>
+        <!-- 4) TM-Nummer -->
+        <idno type="TM"></idno>
+    </msIdentifier>
+    <msContents>
+        <!-- 15) Inschriftengattung in @class -->
+        <msItem class="https://www.eagle-network.eu/voc/typeins/lod/51">
+            <!-- 25) Sprache -->
+            <textLang mainLang="lat"/>
+            <!-- 35b) Bibliographie-->
+            <listBibl type="edition">
+                <!-- Einträge wiederholbar -->
+                <bibl>
+                    <!-- Zotero Referenz -->
+                    <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                </bibl>
+            </listBibl>
+            <!-- 35a) Ältere Editionen -->
+<!--
+            <listBibl type="previousEditions">
+                <bibl>
+                    <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                </bibl>
+            </listBibl>
+            <listBibl type="images">
+                <bibl>
+                    <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                    <biblScope>
+                        <graphic url="photo.png">
+                            <desc>Beschreibung des Bildes</desc>
+                        </graphic>
+                    </biblScope>
+                </bibl>
+            </listBibl>
+-->
+            <!-- 35d) Abbildungen, wiederholbar -->
+            <graphic url="photo.png"/>
+        </msItem>
+    </msContents>
+    <physDesc>
+        <objectDesc>
+            <supportDesc>
+                <support>
+                    <dimensions>
+                        <!-- 19) Inschriftträger: Breite -->
+                        <width></width>
+                        <!-- 38) Inschriftträger: Höhe -->
+                        <height></height>
+                        <!-- 20) Inschriftträger: Tiefe -->
+                        <depth></depth>
+                    </dimensions>
+                    <!-- 14) Dekor -->
+                    <rs type="decoration" ref="http://www.eagle-network.eu/voc/decor/lod/2000"></rs>
+                </support>
+                <!-- 13) Erhaltung -->
+                <condition></condition>
+            </supportDesc>
+            <layoutDesc>
+                <layout>
+                    <dimensions>
+                        <!-- 21) Inschriftfeld: Höhe -->
+                        <height></height>
+                        <!-- 22) Inschriftfeld: Breite -->
+                        <width></width>
+                    </dimensions>
+                </layout>
+            </layoutDesc>
+        </objectDesc>
+        <handDesc>
+            <handNote>
+                <dimensions type="letterHeight">
+                    <!-- 23) Buchstabenhöhe -->
+                    <height></height>
+                </dimensions>
+                <!-- 39) Ligatur -->
+                <rs type="ligature"></rs>
+            </handNote>
+        </handDesc>
+    </physDesc>
+    <history>
+        <origin>
+            <!-- in @corresp wird die GeoID angegeben, andere Ortsangaben sind redundant und werden
+                                am Ende nur hinein kopiert - siehe Kommentare -->
+            <origPlace corresp="#GeoID">
+                <!-- 5) Provinz / augusteische Region: kopiert aus Geodatenbank -->
+                <placeName type="province"></placeName>
+                <!-- 8) Fundort (antik): kopiert aus Geodatenbank -->
+                <placeName type="ancient" ref="https://pleiades.stoa.org/places/108818"></placeName>
+            </origPlace>
+        </origin>
+        <!--
+                          11) Fundjahr (Attribute auf <provenance>)
+
+                          @when - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                          @notBefore - wie @when aber gemeint als "nach"
+                          @notAfter - wie @when aber gemeint als "vor"
+                          @when-custom - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                      -->
+        <provenance type="found" when="" when-custom="" notBefore="" notAfter="">
+            <!-- 6) Land: kopiert aus Geodatenbank -->
+            <placeName type="country" ref="https://www.geonames.org/2921044"></placeName>
+            <!-- 9) Fundort (modern): kopiert aus Geodatenbank -->
+            <placeName type="modern" ref="http://www.geonames.org/2946447"></placeName>
+            <!-- 10a) Fundstelle: kopiert aus Geodatenbank -->
+            <placeName type="findspot"></placeName>
+            <!-- 7) moderne Region: kopiert aus Geodatenbank -->
+            <placeName type="region"></placeName>
+            <!-- 10b) Fundkontext: nicht kopiert, freie Eingabe -->
+            <note type="context"></note>
+        </provenance>
+    </history>
+</msPart>

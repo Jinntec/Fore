@@ -616,21 +616,7 @@ registerCustomXPathFunction(
     (dynamicContext, string) => {
         const parser = new DOMParser();
         const out = parser.parseFromString(string, "application/xml");
-        console.log('parse', out);
-
-        /*
-                const {formElement} = dynamicContext.currentContext;
-                const instance = resolveId(string, formElement, 'fx-instance');
-                if (instance) {
-                    if (instance.getAttribute('type') === 'json') {
-                        console.warn('log() does not work for JSON yet');
-                        // return JSON.stringify(instance.getDefaultContext());
-                    } else {
-                        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-                        return Fore.prettifyXml(def);
-                    }
-                }
-        */
+        console.log('parse', out.firstElementChild);
         return out.firstElementChild;
     },
 );

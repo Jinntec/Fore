@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="edep-theme.css" rel="stylesheet"/>
+
+
+
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="./jinn-codemirror.js"></script>
+
+    <script type="text/javascript" src="util.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="default" src="data/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="province" src="data/province.json" type="json"></fx-instance>
+            <fx-instance id="typeins" src="data/typeins.json" type="json"></fx-instance>
+            <fx-instance id="objtyp" src="data/objtyp.json" type="json"></fx-instance>
+            <fx-instance id="mspart" src="data/mspart-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+            <fx-instance id="templates" src="data/templates.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="editor" src="epidoc-snippet.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+            <fx-instance id="vars">
+                <data>
+                    <display-leiden>hidden</display-leiden>
+                    <can-delete>false</can-delete>
+                    <parent></parent>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="instance('vars')/can-delete" relevant="index('parts') gt 1"></fx-bind>
+
+            <fx-instance id="tmp">
+                <data>
+                    <dummy>xpath?</dummy>
+                </data>
+            </fx-instance>
+
+            <fx-function signature="gen-id() as xs:string" type="text/javascript">
+                return createUUID();
+            </fx-function>
+        </fx-model>
+        <fx-group ref="teiHeader">
+            <h1>EDEp Editor</h1>
+<!--
+            <fx-control class="title" ref="fileDesc/titleStmt/title">
+                <label>Titel</label>
+            </fx-control>
+-->
+
+<!--
+            <fx-group class="group-1">
+                &lt;!&ndash; 3) &ndash;&gt;
+                <fx-control ref=".//msDesc/msIdentifier/idno">
+                    <label>EDE-p-Id</label>
+                </fx-control>
+
+                &lt;!&ndash; 4) &ndash;&gt;
+                <fx-control ref=".//msPart[1]/msIdentifier/idno">
+                    <label>TM-Nummer</label>
+                </fx-control>
+            </fx-group>
+-->
+
+            <fx-repeat id="parts" ref=".//msPart">
+                <template>
+<!--
+                    <fx-group class="group-2">
+                        &lt;!&ndash; geoId from geodata &ndash;&gt;
+                        <fx-control ref="history/origin/origPlace/@corresp">
+                            <label>GeoId</label>
+                        </fx-control>
+
+                        &lt;!&ndash; 5) &ndash;&gt;
+                        <fx-output ref="history/origin/origPlace/placeName[@type='province']">
+                            <label slot="label">Provinz/augusteische Region</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 6) &ndash;&gt;
+                        <fx-output ref="history/provenance/placeName[@type='country']">
+                            <label slot="label">Land</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 7) &ndash;&gt;
+                        <fx-output ref="history/history/provenance/placeName[@type='region']">
+                            <label slot="label">Region</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 8) &ndash;&gt;
+                        <fx-output ref="history/origin/origPlace/placeName[@type='ancient']">
+                            <label slot="label">Fundort (antik)</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 9) &ndash;&gt;
+                        <fx-output ref="history/provenance/placeName[@type='modern']">
+                            <label slot="label">Fundort (modern)</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 10a) &ndash;&gt;
+                        <fx-output ref="history/provenance/placeName[@type='findspot']">
+                            <label slot="label">Fundstelle</label>
+                        </fx-output>
+
+                        &lt;!&ndash; 10b) &ndash;&gt;
+                        <fx-control ref="history/provenance/note[@type='context']">
+                            <label>Fundkontext</label>
+                            <textarea rows="4" class="widget"></textarea>
+                        </fx-control>
+
+                        &lt;!&ndash; 11) &ndash;&gt;
+                        <fx-control ref="history/provenance/@when">
+                            <label>Fundjahr</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@notbefore">
+                            <label>nach</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@notAfter">
+                            <label>vor</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@when-custom">
+                            <label>vor</label>
+                        </fx-control>
+                        &lt;!&ndash; 12a) &ndash;&gt;
+                        <fx-control ref="msIdentifier/repository">
+                            <label>Aufbewahrung</label>
+                        </fx-control>
+                        &lt;!&ndash; 12b-12e missing &ndash;&gt;
+
+                    </fx-group>
+                    <fx-group class="group-3">
+                        &lt;!&ndash; 13) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/supportDesc/condition">
+                            <label>Erhaltung</label>
+                            <select class="widget">
+                                <option value="complete">vollständig</option>
+                                <option value="fragmentary">fragmentarisch</option>
+                            </select>
+                        </fx-control>
+                        &lt;!&ndash; 14) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/rs/@ref">
+                            <label>Dekor</label>
+                            <select ref="instance('decor')?item?*" class="widget">
+                                <option value="yes">Ja</option>
+                                <option value="no">Nein</option>
+                                <option value="uncertain">unsicher</option>
+                            </select>
+                        </fx-control>
+
+                        &lt;!&ndash; 15) &ndash;&gt;
+                        <fx-control ref="msContents/msItem/@class">
+                            <label>Inschriftengattung</label>
+                            <select ref="instance('typeins')?*" class="widget">
+                                <template>
+                                    <option value="{?value}">{?name}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        &lt;!&ndash; 16a) &ndash;&gt;
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType">
+                            <label>Inschriftträger</label>
+                            <select ref="instance('objtyp')?*" class="widget">
+                                <template>
+                                    <option value="{?value}">{?name}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        &lt;!&ndash; 16b) &ndash;&gt;
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/note">
+                            <label>Beschreibung Inschriftträger</label>
+                        </fx-control>
+
+                        &lt;!&ndash; there's no 17) &ndash;&gt;
+
+                        &lt;!&ndash; 18) &ndash;&gt;
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/material" update-event="change" class="orange">
+                            <label>Material</label>
+                        </fx-control>
+
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/width">
+                            <label>Breite</label>
+                        </fx-control>
+                        &lt;!&ndash; 38) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/height">
+                            <label>Höhe</label>
+                        </fx-control>
+                        &lt;!&ndash; 20) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/depth">
+                            <label>Tiefe</label>
+                        </fx-control>
+
+                    </fx-group>
+
+                    <fx-group class="group-4">
+                        <label>Inschriftfeld</label>
+                        &lt;!&ndash; 21) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/height">
+                            <label>Höhe</label>
+                        </fx-control>
+                        &lt;!&ndash; 22) &ndash;&gt;
+                        <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/width">
+                            <label>Breite</label>
+                        </fx-control>
+                        &lt;!&ndash; 23) &ndash;&gt;
+                        <fx-control ref="physDesc/handDesc/handNote/dimensions/height">
+                            <label>Buchstabenhöhe</label>
+                        </fx-control>
+
+                    </fx-group>
+
+                    <fx-group class="group-5">
+                        &lt;!&ndash; 24) &ndash;&gt;
+                        <fx-control ref="instance('tmp')/dummy">
+                            <label>Metrik</label>
+                        </fx-control>
+                        &lt;!&ndash; 25) &ndash;&gt;
+                        <fx-control ref="msContents/msItem/textLang">
+                            <label>Sprache</label>
+                        </fx-control>
+                    </fx-group>
+-->
+
+                    <fx-var name="frag" value="'#' || ./@xml:id"></fx-var>
+
+                    <div class="repeat-wrapper">
+                        <!-- 35b) -->
+
+
+                        <fx-trigger class="add-bib">
+<!--                            <iron-icon icon="add-circle-outline" title="add Bibliographie"/>-->
+                            <button>+</button>
+
+                            <!-- ##### when a new entry is created.. ##### -->
+                            <!-- ##### 1. store away the value of the xml:id of this part as fx-var is failing here for some reason ##### -->
+                            <fx-setvalue ref="instance('vars')/parent" value="instance()//msPart[index('parts')]/@xml:id"></fx-setvalue>
+
+                            <!-- ##### 2. insert a new bibl element ##### -->
+                            <fx-insert ref="msContents/msItem/listBibl[@type='edition']/bibl" origin="instance('mspart')//listBibl[@type='edition']/bibl"/>
+                            <!-- ##### 3. insert a new textpart div element in the body ##### -->
+                            <fx-insert ref="//body/div[@type='edition']/div" origin="instance('templates')/div[@type='edition']/div"/>
+                            <!-- ##### 4. set the stored id to the newly created textpart @corresp ##### -->
+                            <fx-setvalue ref="//body/div[@type='edition']/div[fn:last()]/@corresp" value="string(instance('vars')/parent)"></fx-setvalue>
+
+                        </fx-trigger>
+
+                        <label>Bibliographie</label>
+                        <fx-repeat class="nested-repeat" id="bib" ref="msContents/msItem/listBibl[@type='edition']/bibl">
+                            <template>
+<!--                                <fx-var name="current" value="count(./preceding-sibling::bibl) + 1"></fx-var>-->
+
+                                <fx-message event="update">got the update</fx-message>
+
+                                <fx-control ref="instance('editor')" as="node">
+                                <jinn-codemirror id="leiden" class="leiden widget {instance('vars')/display-leiden}">
+                                    <div slot="toolbar">
+                                        <select name="modes">
+                                            <option value="edcs" selected>EDCS/EDH</option>
+                                            <option value="default">Petrae</option>
+                                            <option value="leiden_plus">Leiden+</option>
+                                        </select>
+                                        <button data-command="expan" class="leiden_plus">(a(bcd))</button>
+                                        <button data-command="erasure" class="leiden_plus">〚abc〛</button>
+                                        <button data-command="unclear" class="leiden_plus">ạ</button>
+                                        <button data-command="div" class="leiden_plus">&lt;=...</button>
+                                        <button data-command="fragment" class="leiden_plus">&lt;D=.1.fragment...</button>
+                                        <button data-command="part" class="leiden_plus">&lt;D=.A.part...</button>
+                                        <button data-command="recto" class="leiden_plus">&lt;D=.r...</button>
+                                        <button data-command="verso" class="leiden_plus">&lt;D=.v...</button>
+                                        <button data-command="erasure" class="edcs">〚abc〛</button>
+                                        <button data-command="gap" class="edcs">[...]</button>
+                                        <button data-command="convert" class="edcs">Leiden+</button>
+                                    </div>
+                                </jinn-codemirror>
+                            </fx-control>
+                                <fx-replace event="update" target="leiden" ref="./ptr" with="instance('editor')"></fx-replace>
+                                <fx-action event="update">
+                                    <fx-update></fx-update>
+                                    <fx-refresh force="force"></fx-refresh>
+                                </fx-action>
+<!--                                <fx-replace target="leiden" event="update" ref="ptr" with="parse(event('content'))"></fx-replace>-->
+<!--                                <fx-replace target="leiden" event="update" ref="ptr" with="instance('editor')"></fx-replace>-->
+                                <fx-message target="leiden" event="update">it fired</fx-message>
+<!--                                <fx-refresh force="force" target="leiden" event="update"></fx-refresh>-->
+
+                                <label style="display: block">epidoc from leiden</label>
+                                <code>
+                                    {log('editor')}
+                                </code>
+<!--                                {'#'||./ancestor::*[@xml:id]/@xml:id}<br>-->
+<!--                                {fn:count(./preceding-sibling::bibl) + 1}-->
+<!--                                <fx-var name="cnt" value="fn:count(./preceding-sibling::bibl) + 1"></fx-var>-->
+<!--                                {index('bib')}-->
+<!--                                {//body/div[@type='edition']/div[1]/@n}-->
+<!--                                {//body/div[@type='edition']/div[2]/@n}-->
+<!--                                {//body/div[@type='edition']/div[fn:count(context('bib')/preceding-sibling::bibl) + 1]/@n}-->
+<!--                                {//body/div[@type='edition']/div[@corresp='#'||./ancestor::*[@xml:id]/@xml:id][fn:count(context('bib')/preceding-sibling::bibl) + 1]/@n}-->
+<!--                                <code>-->
+<!--                                    {//body/div[@type='edition']/div[@corresp='#'||./ancestor::*[@xml:id]/@xml:id]/@corresp}-->
+<!--                                    {//body/div[@type='edition']/div[@corresp = '#'||./ancestor::msPart[@xml:id]/@xml:id]/@corresp}-->
+<!--                                    {//body/div[@type='edition']/div[@corresp = '#'||./ancestor::msPart[@xml:id]/@xml:id][number(fn:count(./preceding-sibling::bibl) + 1)]/@corresp}-->
+<!--                                </code>-->
+<!--                                <fx-control ref="instance('editor')" as="node" update-event="update">-->
+<!--                                <fx-control ref="ptr" as="node" update-event="update">-->
+<!--                                <fx-control ref="//body/div[@type='edition']/div[@corresp='#'||./ancestor::*[@xml:id]/@xml:id][fn:count(context('bib')/preceding-sibling::bibl) + 1]" as="node" update-event="update">-->
+<!--                                <fx-control ref="//body/div[@type='edition']/div[@corresp=./ancestor::*[@xml:id]/@xml:id]" as="node" update-event="update">-->
+<!--                                <fx-control ref="//body/div[@type='edition']/div[@corresp='F5771067f-65fb-47af-9a84-8e9d7dd393a8']" as="node" update-event="update">-->
+                                <fx-control ref="ptr" as="node" update-event="update">
+                                    <jinn-codemirror id="xmleditor" mode="xml" schema="epidoc.json" namespace="http://www.tei-c.org/ns/1.0"
+                                                     class="widget" remote="remote">
+                                        <div slot="toolbar">
+                                            <fx-trigger>
+                                                <button id="import" title="Import from Leiden markup">Import Leiden</button>
+                                                <fx-setvalue ref="instance('vars')/display-leiden"></fx-setvalue>
+                                            </fx-trigger>
+                                            <button data-command="selectElement" title="Select element around current cursor position">&lt;|&gt;
+                                            </button>
+                                            <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                                            <button data-command="removeEnclosing" title="Remove enclosing tags">&lt;X&gt;</button>
+                                        </div>
+                                    </jinn-codemirror>
+                                </fx-control>
+                                <label style="display: block">Body</label>
+                                <code>
+                                    {//body/div[@type='edition']/div}
+                                </code>
+
+
+
+                                <fx-trigger>
+<!--                                    <iron-icon icon="remove-circle-outline" title="delete Bibliographie"/>-->
+                                    <button>-</button>
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-trigger>
+
+                            </template>
+                        </fx-repeat>
+
+                    </div>
+
+                    <fx-trigger class="delete {if(count(./preceding-sibling::msPart) = 0) then 'hidden' else ''}">
+                        <button>Löschen</button>
+                        <!--                        <fx-confirm message="really delete?">-->
+                        <fx-delete ref="."/>
+                        <!--                        </fx-confirm>-->
+                        <!--                            <fx-delete ref="."></fx-delete>-->
+                    </fx-trigger>
+
+                </template>
+            </fx-repeat>
+            <fx-trigger class="add">
+                <button>Hinzufügen</button>
+                <fx-action>
+                    <!-- insert a new msPart  -->
+                    <fx-insert ref="//msPart" origin="instance('mspart')"/>
+                    <!-- update and refresh so the repeat index is updated -->
+                    <fx-update/>
+                    <fx-refresh/>
+                    <!-- setting generated id on new msPart -->
+                    <fx-var name="uuid" value="gen-id()"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/@xml:id" value="$uuid"/>
+
+                    <!-- add required textpart to edition
+                    <fx-insert ref="//body/div[@type='edition']/div" origin="instance('templates')//div[@type='edition']/div"/>
+                    <fx-update/>
+                    <fx-refresh/>
+                    <fx-setvalue ref="//body/div[@type='edition']/div[fn:last()]/@corresp" value="$uuid"/>
+                    -->
+                </fx-action>
+            </fx-trigger>
+
+        </fx-group>
+<fx-inspector></fx-inspector>
+    </fx-fore>
+
+</div>
+</body>
+</html>

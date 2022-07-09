@@ -36,6 +36,7 @@ import './src/actions/fx-dispatch.js';
 import './src/actions/fx-update.js';
 import './src/actions/fx-refresh.js';
 import './src/actions/fx-replace.js';
+import './src/actions/fx-replacechild.js';
 import './src/actions/fx-return.js';
 import './src/actions/fx-confirm.js';
 import './src/actions/fx-show.js';
