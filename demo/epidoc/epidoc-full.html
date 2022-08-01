@@ -259,8 +259,8 @@
 
                                 <fx-message event="update">got the update</fx-message>
 
-                                <fx-control ref="instance('editor')" as="node">
                                 <jinn-codemirror id="leiden" class="leiden widget {instance('vars')/display-leiden}">
+<!--                                <jinn-codemirror id="leiden" class="leiden widget">-->
                                     <div slot="toolbar">
                                         <select name="modes">
                                             <option value="edcs" selected>EDCS/EDH</option>
@@ -280,16 +280,13 @@
                                         <button data-command="convert" class="edcs">Leiden+</button>
                                     </div>
                                 </jinn-codemirror>
-                            </fx-control>
-                                <fx-replace event="update" target="leiden" ref="./ptr" with="instance('editor')"></fx-replace>
-                                <fx-action event="update">
-                                    <fx-update></fx-update>
-                                    <fx-refresh force="force"></fx-refresh>
-                                </fx-action>
-<!--                                <fx-replace target="leiden" event="update" ref="ptr" with="parse(event('content'))"></fx-replace>-->
+<!--                                <fx-replace target="leiden" event="update" ref="instance()" with="parse(event('content'))"></fx-replace>-->
+
+<!--                                <fx-replace event="update" target="leiden" ref="./ptr" with="instance('editor')"></fx-replace>-->
+                                <fx-replacechild target="leiden" event="update" ref="ptr" child="parse(event('content'))"></fx-replacechild>
 <!--                                <fx-replace target="leiden" event="update" ref="ptr" with="instance('editor')"></fx-replace>-->
                                 <fx-message target="leiden" event="update">it fired</fx-message>
-<!--                                <fx-refresh force="force" target="leiden" event="update"></fx-refresh>-->
+                                <fx-refresh force="force" target="leiden" event="update"></fx-refresh>
 
                                 <label style="display: block">epidoc from leiden</label>
                                 <code>
@@ -314,6 +311,7 @@
 <!--                                <fx-control ref="//body/div[@type='edition']/div[@corresp=./ancestor::*[@xml:id]/@xml:id]" as="node" update-event="update">-->
 <!--                                <fx-control ref="//body/div[@type='edition']/div[@corresp='F5771067f-65fb-47af-9a84-8e9d7dd393a8']" as="node" update-event="update">-->
                                 <fx-control ref="ptr" as="node" update-event="update">
+
                                     <jinn-codemirror id="xmleditor" mode="xml" schema="epidoc.json" namespace="http://www.tei-c.org/ns/1.0"
                                                      class="widget" remote="remote">
                                         <div slot="toolbar">
