@@ -5,6 +5,7 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
+import {FxRepeatAttributes} from "./ui/fx-repeat-attrbutes";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -421,6 +422,7 @@ export class FxFore extends HTMLElement {
                 console.log('skipping refresh - no dependants');
             }
         } else {
+            // this._createRepeatsFromAttributes();
             Fore.refreshChildren(this, true);
             console.timeEnd('refreshChildren');
         }
@@ -783,6 +785,31 @@ export class FxFore extends HTMLElement {
         } else {
             const toast = this.shadowRoot.querySelector('#message');
             toast.showToast(msg);
+        }
+    }
+
+    _createRepeatsFromAttributes() {
+        const repeats = this.querySelectorAll('[data-ref]');
+        if(repeats){
+            // const repeatFromAttr = document.createElement('fx-repeat');
+
+
+            Array.from(repeats).forEach(item =>{
+                const repeatFromAttr = new FxRepeatAttributes();
+
+                item.parentNode.insertBefore(repeatFromAttr,item);
+
+                const host = item.cloneNode(true);
+                item.parentNode.removeChild(item);
+
+
+                repeatFromAttr.appendChild(host);
+                repeatFromAttr.setAttribute('ref',host.getAttribute('data-ref'));
+                host.removeAttribute('data-ref');
+
+                console.log('host clone',host);
+
+            });
         }
     }
 }

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem{
+            display: block;
+            background:lightblue;
+        }
+    </style>
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <item>
+                    <field name="a">a</field>
+                    <field name="b">b</field>
+                    <field name="c">c</field>
+                    <field name="d">d</field>
+                    <field name="e">e</field>
+                    <field name="f">f</field>
+                </item>
+                <item>
+                    <field name="a">a</field>
+                    <field name="b">b</field>
+                    <field name="c">c</field>
+                    <field name="d">d</field>
+                    <field name="e">e</field>
+                    <field name="f">f</field>
+                </item>
+                <item>
+                    <field name="a">a</field>
+                    <field name="b">b</field>
+                    <field name="c">c</field>
+                    <field name="d">d</field>
+                    <field name="e">e</field>
+                    <field name="f">f</field>
+                </item>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-repeat ref="item">
+        <template>
+            {./field[@name="a"]}
+        </template>
+    </fx-repeat>
+<!--
+    <table data-ref="item">
+            <tr>
+                <td>{field[@name="a"]}</td>
+                <td>{field[@name="b"]}</td>
+                <td>{field[@name="c"]}</td>
+                <td>{field[@name="d"]}</td>
+                <td>{field[@name="e"]}</td>
+                <td>{field[@name="f"]}</td>
+            </tr>
+    </table>
+-->
+
+<!--
+    <fx-repeat-attributes ref="item">
+        <table data-ref="item">
+            <template>
+                <tr>
+                    <td>{field[@name="a"]}</td>
+                    <td>{field[@name="b"]}</td>
+                    <td>{field[@name="c"]}</td>
+                    <td>{field[@name="d"]}</td>
+                    <td>{field[@name="e"]}</td>
+                    <td>{field[@name="f"]}</td>
+                </tr>
+            </template>
+        </table>
+    </fx-repeat-attributes>
+-->
+
+<!--
+    <ul data-ref="item">
+        <template>
+            <li>
+                {field[@name="a"]} | {field[@name="b"]}
+            </li>
+        </template>
+    </ul>
+-->
+</fx-fore>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

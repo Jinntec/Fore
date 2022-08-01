@@ -15,6 +15,7 @@ import './src/ui/fx-group.js';
 import './src/ui/fx-hint.js';
 import './src/ui/fx-output.js';
 import './src/ui/fx-repeat.js';
+import './src/ui/fx-repeat-attrbutes.js';
 import './src/ui/fx-switch.js';
 import './src/ui/fx-trigger.js';
 import './src/ui/fx-case.js';

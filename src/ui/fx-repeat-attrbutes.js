@@ -1,10 +1,11 @@
-import './fx-repeatitem.js';
+import {FxRepeat} from "./fx-repeat";
 
+/*
 import { Fore } from '../fore.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
+*/
 
 /**
  * `fx-repeat`
@@ -21,67 +22,44 @@ import { XPathUtil } from '../xpath-util.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeat extends foreElementMixin(HTMLElement) {
+export class FxRepeatAttributes extends FxRepeat {
   static get properties() {
     return {
       ...super.properties,
-      index: {
-        type: Number,
-      },
-      template: {
-        type: Object,
-      },
-      focusOnCreate: {
-        type: String,
-      },
-      initDone: {
-        type: Boolean,
-      },
-      repeatIndex: {
-        type: Number,
-      },
-      nodeset: {
-        type: Array,
-      },
     };
   }
 
   constructor() {
     super();
-    this.ref = '';
-    this.dataTemplate = [];
-    this.focusOnCreate = '';
-    this.initDone = false;
-    this.repeatIndex = 1;
-    this.nodeset = [];
-    this.inited = false;
-    this.index = 1;
-    this.repeatSize = 0;
-    this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
   get repeatSize() {
-    return this.querySelectorAll(':scope > fx-repeatitem').length;
+    // return this.querySelectorAll(':scope > fx-repeatitem').length;
+    return this.querySelectorAll(':scope > *').length;
   }
 
   set repeatSize(size) {
-    this.size = size;
+    super.repeatSize = size;
   }
+
 
   setIndex(index) {
     // console.log('new repeat index ', index);
     this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
+    const rItems = this.querySelectorAll(':scope > *');
     this.applyIndex(rItems[this.index - 1]);
   }
 
+/*
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
       repeatItem.setAttribute('repeat-index', '');
     }
   }
+*/
 
+/*
   get index() {
     return this.getAttribute('index');
   }
@@ -89,85 +67,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   set index(idx) {
     this.setAttribute('index', idx);
   }
-
-  _getRef(){
-    return this.getAttribute('ref');
-  }
-
-  connectedCallback() {
-    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
-    this.ref = this._getRef();
-    // console.log('### fx-repeat connected ', this.id);
-    this.addEventListener('item-changed', e => {
-      console.log('handle index event ', e);
-      const { item } = e.detail;
-      const idx = Array.from(this.children).indexOf(item);
-      this.applyIndex(this.children[idx]);
-      this.index = idx + 1;
-    });
-    // todo: review - this is just used by append action - event consolidation ?
-    document.addEventListener('index-changed', e => {
-      e.stopPropagation();
-      if (!e.target === this) return;
-      console.log('handle index event ', e);
-      // const { item } = e.detail;
-      // const idx = Array.from(this.children).indexOf(item);
-      const { index } = e.detail;
-      this.index = Number(index);
-      this.applyIndex(this.children[index - 1]);
-    });
-    /*
-    document.addEventListener('insert', e => {
-      const nodes = e.detail.insertedNodes;
-      this.index = e.detail.position;
-      console.log('insert catched', nodes, this.index);
-    });
 */
 
-    // if (this.getOwnerForm().lazyRefresh) {
-    this.mutationObserver = new MutationObserver(mutations => {
-      console.log('mutations', mutations);
-
-      if (mutations[0].type === 'childList') {
-        const added = mutations[0].addedNodes[0];
-        if (added) {
-          const path = XPathUtil.getPath(added);
-          console.log('path mutated', path);
-          // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
-          // this.index = index;
-          // const prev = mutations[0].previousSibling.previousElementSibling;
-          // const index = prev.index();
-          // this.applyIndex(this.index -1);
-
-          Fore.dispatch(this, 'path-mutated', { path, index: this.index });
-        }
-      }
-    });
-    // }
-    this.getOwnerForm().registerLazyElement(this);
-
-    const style = `
-      :host{
-      }
-       .fade-out-bottom {
-          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      }
-      .fade-out-bottom {
-          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      }
-   `;
-    const html = `
-          <slot name="header"></slot>
-          <slot></slot>
-        `;
-    this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
+  connectedCallback() {
+    super.connectedCallback();
   }
 
   init() {
@@ -183,6 +86,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     this.setAttribute('index', this.index);
     this.inited = true;
+  }
+
+  _getRef(){
+    return this.getAttribute('data-ref');
   }
 
   /**
@@ -399,6 +306,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 }
 
-if (!customElements.get('fx-repeat')) {
-  window.customElements.define('fx-repeat', FxRepeat);
+if (!customElements.get('fx-repeat-attributes')) {
+  window.customElements.define('fx-repeat-attributes', FxRepeatAttributes);
 }
