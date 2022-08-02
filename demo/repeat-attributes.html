@@ -101,6 +101,10 @@
             </template>
         </tbody>
     </table>
+    <fx-trigger>
+        <button>append</button>
+        <fx-insert ref="item" keep-values></fx-insert>
+    </fx-trigger>
 
     <h2>Output all field in a list</h2>
     <ul data-ref="//field">
@@ -150,6 +154,42 @@
         </tbody>
     </table>
 
+    <h2>table with header and nested repeat within a cell</h2>
+    <table>
+        <thead>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+        <th>F</th>
+        <th>x</th>
+        </thead>
+        <tbody data-ref="item">
+        <template>
+            <tr>
+                <td>
+                    <fx-repeat ref="field">
+                        <template>
+                            <span>{.}</span>
+                        </template>
+                    </fx-repeat>
+                    <!--                        <fx-output ref="field[@name='a']"></fx-output></td>-->
+                <td><fx-output ref="field[@name='b']"></fx-output></td>
+                <td><fx-output ref="field[@name='c']"></fx-output></td>
+                <td><fx-output ref="field[@name='d']"></fx-output></td>
+                <td><fx-output ref="field[@name='e']"></fx-output></td>
+                <td><fx-output ref="field[@name='f']"></fx-output></td>
+                <td>
+                    <fx-trigger>
+                        <button>del</button>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
 
     <!--
         <ul data-ref="field">

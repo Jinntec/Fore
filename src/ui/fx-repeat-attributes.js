@@ -43,7 +43,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
 
   get repeatSize() {
     // return this.querySelectorAll(':scope > fx-repeatitem').length;
-    return this.querySelectorAll(':scope > *').length;
+    return this.querySelectorAll(':scope > .fx-repeatitem').length;
   }
 
   set repeatSize(size) {
@@ -212,7 +212,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
 
-    let repeatItems = this.querySelectorAll(':scope > .fx-repeatitem');
+    let repeatItems = this.querySelectorAll('.fx-repeatitem');
     let repeatItemCount = repeatItems.length;
 
     let nodeCount = 1;

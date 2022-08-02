@@ -30,13 +30,13 @@ class FxDelete extends AbstractAction {
     // ### if there's no repeat the delete action is inside of a repeat template
     if (this.repeatId === '') {
       // find the index to delete
-      const rItem = Fore.getClosest('fx-repeatitem', this.parentNode);
+      const rItem = Fore.getClosest('fx-repeatitem, .fx-repeatitem', this.parentNode);
       const idx = Array.from(rItem.parentNode.children).indexOf(rItem) + 1;
       // console.log('>>> idx to delete ', idx);
 
       // ### get the model now as it'll be hard once we've deleted ourselves ;)
       this.model = this.getModel();
-      const repeat = Fore.getClosest('fx-repeat', this.parentNode);
+      const repeat = Fore.getClosest('fx-repeat, fx-repeat-attributes', this.parentNode);
 
       // ### update the nodeset
       let nodeToDelete;
@@ -55,9 +55,9 @@ class FxDelete extends AbstractAction {
       const { repeatSize } = repeat;
       if (idx === 1 || repeatSize === 1) {
         repeat.setIndex(1);
-      } else if (idx > repeatSize) {
+      } /*else if (idx > repeatSize) {
         repeat.setIndex(repeatSize);
-      } else {
+      } */else {
         repeat.setIndex(idx);
       }
     }
