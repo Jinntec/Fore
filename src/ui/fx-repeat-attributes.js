@@ -1,5 +1,3 @@
-import {FxRepeat} from "./fx-repeat";
-
 import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
@@ -176,7 +174,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   _getRef(){
-    return this.getAttribute('data-ref');
+    return this.getAttribute('ref');
   }
 
   /**

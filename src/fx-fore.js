@@ -801,11 +801,7 @@ export class FxFore extends HTMLElement {
     _createRepeatsFromAttributes() {
         const repeats = this.querySelectorAll('[data-ref]');
         if(repeats){
-
-
-
             Array.from(repeats).forEach(item =>{
-                // const repeatFromAttr = new FxRepeat();
 
                 // ### clone original item to move it into fx-repeat-attributes
                 const host = item.cloneNode(true);
@@ -820,24 +816,14 @@ export class FxFore extends HTMLElement {
                 // ### append the cloned original element to fx-repeat-attributes
                 repeatFromAttr.appendChild(host);
 
-                // repeatFromAttr.addEventListener('slotchange',)
-
-                console.log('shadow of fx-repeat-attributes', repeatFromAttr);
-
                 // ### insert fx-repeat-attributes element before element with the 'data-ref'
                 // repeats[0].parentNode.insertBefore(repeatFromAttr,repeats[0]);
                 item.parentNode.insertBefore(repeatFromAttr,item);
 
                 // ### remove original item from DOM
                 item.parentNode.removeChild(item);
-
-
-
-
-                // ### remove the 'data-ref' to not disturb further refreshes
                 host.removeAttribute('data-ref');
-
-                // repeatFromAttr.init();
+                host.setAttribute('insertPoint','');
 
             });
         }

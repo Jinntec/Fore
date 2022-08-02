@@ -11,6 +11,9 @@
             display: block;
             background:lightblue;
         }
+        th, td{
+            border:thin solid;
+        }
     </style>
 </head>
 <body>
@@ -54,6 +57,9 @@
         </template>
     </fx-repeat>
 -->
+
+
+    <h2>Simple Table via attributes</h2>
     <table data-ref="item">
         <template>
             <tr>
@@ -66,6 +72,37 @@
             </tr>
         </template>
     </table>
+
+    <h2>Table with header via attributes</h2>
+    <table>
+        <thead>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+        </thead>
+        <tbody data-ref="item">
+            <template>
+                <tr>
+                    <td><fx-output ref="field[@name='a']"></fx-output></td>
+                    <td><fx-output ref="field[@name='b']"></fx-output></td>
+                    <td><fx-output ref="field[@name='c']"></fx-output></td>
+                    <td><fx-output ref="field[@name='d']"></fx-output></td>
+                    <td><fx-output ref="field[@name='e']"></fx-output></td>
+                    <td><fx-output ref="field[@name='f']"></fx-output></td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+
+    <h2>Output all field in a list</h2>
+    <ul data-ref="//field">
+        <template>
+            <li><fx-output ref="."></fx-output></li>
+        </template>
+    </ul>
 
 <!--
     <fx-repeat-attributes ref="item">
@@ -85,7 +122,7 @@
 -->
 
 <!--
-    <ul data-ref="item">
+    <ul data-ref="field">
         <template>
             <li>
                 {field[@name="a"]} | {field[@name="b"]}
