@@ -1,11 +1,10 @@
 import {FxRepeat} from "./fx-repeat";
 
-/*
 import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-*/
+import {foreElementMixin} from "../ForeElementMixin";
 
 /**
  * `fx-repeat`
@@ -22,7 +21,7 @@ import { XPathUtil } from '../xpath-util.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends FxRepeat {
+export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,
@@ -31,6 +30,17 @@ export class FxRepeatAttributes extends FxRepeat {
 
   constructor() {
     super();
+    this.ref = '';
+    this.dataTemplate = [];
+    this.focusOnCreate = '';
+    this.initDone = false;
+    this.repeatIndex = 1;
+    this.nodeset = [];
+    this.inited = false;
+    this.host= {};
+    this.index = 1;
+    this.repeatSize = 0;
+    this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
   get repeatSize() {
@@ -50,16 +60,13 @@ export class FxRepeatAttributes extends FxRepeat {
     this.applyIndex(rItems[this.index - 1]);
   }
 
-/*
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
       repeatItem.setAttribute('repeat-index', '');
     }
   }
-*/
 
-/*
   get index() {
     return this.getAttribute('index');
   }
@@ -67,25 +74,105 @@ export class FxRepeatAttributes extends FxRepeat {
   set index(idx) {
     this.setAttribute('index', idx);
   }
+
+  async connectedCallback() {
+    console.log('connectedCallback',this);
+    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
+    this.ref = this.getAttribute('ref');
+    // this.ref = this._getRef();
+    // console.log('### fx-repeat connected ', this.id);
+    this.addEventListener('item-changed', e => {
+      console.log('handle index event ', e);
+      const { item } = e.detail;
+      const idx = Array.from(this.children).indexOf(item);
+      this.applyIndex(this.children[idx]);
+      this.index = idx + 1;
+    });
+    // todo: review - this is just used by append action - event consolidation ?
+    document.addEventListener('index-changed', e => {
+      e.stopPropagation();
+      if (!e.target === this) return;
+      console.log('handle index event ', e);
+      // const { item } = e.detail;
+      // const idx = Array.from(this.children).indexOf(item);
+      const { index } = e.detail;
+      this.index = Number(index);
+      this.applyIndex(this.children[index - 1]);
+    });
+    /*
+    document.addEventListener('insert', e => {
+      const nodes = e.detail.insertedNodes;
+      this.index = e.detail.position;
+      console.log('insert catched', nodes, this.index);
+    });
 */
 
-  connectedCallback() {
-    super.connectedCallback();
+    // if (this.getOwnerForm().lazyRefresh) {
+    this.mutationObserver = new MutationObserver(mutations => {
+      console.log('mutations', mutations);
+
+      if (mutations[0].type === 'childList') {
+        const added = mutations[0].addedNodes[0];
+        if (added) {
+          const path = XPathUtil.getPath(added);
+          console.log('path mutated', path);
+          // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+          // this.index = index;
+          // const prev = mutations[0].previousSibling.previousElementSibling;
+          // const index = prev.index();
+          // this.applyIndex(this.index -1);
+
+          Fore.dispatch(this, 'path-mutated', { path, index: this.index });
+        }
+      }
+    });
+    // }
+    this.getOwnerForm().registerLazyElement(this);
+
+    const style = `
+      :host{
+      }
+       .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+      .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+   `;
+    const html = `
+          <slot></slot>
+    `;
+    this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${html}
+        `;
+
+    // this.init();
   }
 
-  init() {
+  async init() {
     // ### there must be a single 'template' child
-    // console.log('##### repeat init ', this.id);
-    // if(!this.inited) this.init();
-    // does not use this.evalInContext as it is expecting a nodeset instead of single node
-    this._evalNodeset();
-    // console.log('##### ',this.id, this.nodeset);
 
-    this._initTemplate();
-    this._initRepeatItems();
+    const inited = new Promise(resolve => {
+      console.log('##### repeat-attributes init ', this.id);
+      // if(!this.inited) this.init();
+      // does not use this.evalInContext as it is expecting a nodeset instead of single node
+      this._evalNodeset();
+      // console.log('##### ',this.id, this.nodeset);
 
-    this.setAttribute('index', this.index);
-    this.inited = true;
+      this._initTemplate();
+      // this._initRepeatItems();
+
+      this.setAttribute('index', this.index);
+      this.inited = true;
+      resolve('done');
+    });
+
+    return inited;
   }
 
   _getRef(){
@@ -126,10 +213,9 @@ export class FxRepeatAttributes extends FxRepeat {
     console.time('repeat-refresh', this);
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
-    // console.log('repeatCount', this.repeatCount);
 
-    const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
-    const repeatItemCount = repeatItems.length;
+    let repeatItems = this.querySelectorAll(':scope > .fx-repeatitem');
+    let repeatItemCount = repeatItems.length;
 
     let nodeCount = 1;
     if (Array.isArray(this.nodeset)) {
@@ -155,20 +241,24 @@ export class FxRepeatAttributes extends FxRepeat {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
-        const newItem = document.createElement('fx-repeatitem');
         const clonedTemplate = this._clone();
-        newItem.appendChild(clonedTemplate);
-        this.appendChild(newItem);
+        this.firstElementChild.appendChild(clonedTemplate);
+        clonedTemplate.classList.add('fx-repeatitem');
+        clonedTemplate.setAttribute('index',position);
 
-        this._initVariables(newItem);
 
-        newItem.nodeset = this.nodeset[position - 1];
-        newItem.index = position;
+        // this._initVariables(clonedTemplate);
+
+        // newItem.nodeset = this.nodeset[position - 1];
+        // newItem.index = position;
         this.getOwnerForm().someInstanceDataStructureChanged = true;
       }
     }
 
     // ### update nodeset of repeatitems
+    repeatItems = this.querySelectorAll(':scope > .fx-repeatitem');
+    repeatItemCount = repeatItems.length;
+
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
       this.getOwnerForm().registerLazyElement(item);
@@ -188,10 +278,6 @@ export class FxRepeatAttributes extends FxRepeat {
     this.setIndex(this.index);
     console.timeEnd('repeat-refresh');
 
-    // this.replaceWith(clone);
-
-    // this.repeatCount = contextSize;
-    // console.log('repeatCount', this.repeatCount);
     console.groupEnd();
   }
 
@@ -228,7 +314,7 @@ export class FxRepeatAttributes extends FxRepeat {
     })();
   }
 
-  _initTemplate() {
+  async _initTemplate() {
     // const shadowTemplate = this.shadowRoot.querySelector('template');
     // console.log('shadowtempl ', shadowTemplate);
 
@@ -236,7 +322,7 @@ export class FxRepeatAttributes extends FxRepeat {
     // todo: this is still weak - should handle that better maybe by an explicit slot?
     // this.template = this.firstElementChild;
     this.template = this.querySelector('template');
-    // console.log('### init template for repeat ', this.id, this.template);
+    console.log('### init template for repeat ', this.id, this.template);
 
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);
@@ -254,22 +340,22 @@ export class FxRepeatAttributes extends FxRepeat {
   }
 
   _initRepeatItems() {
+    console.log('_initRepeatItems', this.nodeset);
     // const model = this.getModel();
     // this.textContent = '';
-    this.nodeset.forEach((item, index) => {
-      const repeatItem = document.createElement('fx-repeatitem');
-      repeatItem.nodeset = this.nodeset[index];
-      repeatItem.index = index + 1; // 1-based index
+    Array.from(this.nodeset).forEach((item, index) => {
 
       const clone = this._clone();
-      repeatItem.appendChild(clone);
+      this.appendChild(clone);
+/*
       this.appendChild(repeatItem);
 
-      if (repeatItem.index === 1) {
-        this.applyIndex(repeatItem);
+      if (item.index === 1) {
+        this.applyIndex(item);
       }
 
-      this._initVariables(repeatItem);
+      this._initVariables(item);
+*/
     });
   }
 
@@ -289,8 +375,10 @@ export class FxRepeatAttributes extends FxRepeat {
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
-    const content = this.template.content.cloneNode(true);
-    return document.importNode(content, true);
+    // this.template = this.querySelector('template');
+    // const content = this.template.content.cloneNode(true);
+    // return document.importNode(content, true);
+    return this.template.content.firstElementChild.cloneNode(true);
   }
 
   _removeIndexMarker() {

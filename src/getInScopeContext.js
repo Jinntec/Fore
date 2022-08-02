@@ -1,4 +1,4 @@
-import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import {evaluateXPathToFirstNode, evaluateXPathToNumber} from './xpath-evaluation.js';
 import { Fore } from './fore.js';
 
 import { XPathUtil } from './xpath-util.js';

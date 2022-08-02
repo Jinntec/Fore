@@ -5,7 +5,8 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
-import {FxRepeatAttributes} from "./ui/fx-repeat-attrbutes";
+// import {FxRepeat} from "./ui/fx-repeat";
+import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -238,6 +239,9 @@ export class FxFore extends HTMLElement {
                 modelElement.modelConstruct();
             }
             this.model = modelElement;
+
+            this._createRepeatsFromAttributes();
+
         });
         this.addEventListener('path-mutated', e => {
             console.log('path-mutated event received', e.detail.path, e.detail.index);
@@ -411,7 +415,7 @@ export class FxFore extends HTMLElement {
                             // ### refresh all boundControls
                             modelItemOfDep.boundControls.forEach(control => {
                                 control.refresh();
-                            });
+                               });
                         });
                         needsRefresh = true;
                     }
@@ -429,6 +433,8 @@ export class FxFore extends HTMLElement {
 
         // ### refresh template expressions
         if (this.initialRun || this.someInstanceDataStructureChanged) {
+            // this._createRepeatsFromAttributes();
+
             this._updateTemplateExpressions();
             this.someInstanceDataStructureChanged = false; // reset
         }
@@ -788,26 +794,50 @@ export class FxFore extends HTMLElement {
         }
     }
 
+    /**
+     * wraps the element having a 'data-ref' attribute with an fx-repeat-attributes element.
+     * @private
+     */
     _createRepeatsFromAttributes() {
         const repeats = this.querySelectorAll('[data-ref]');
         if(repeats){
-            // const repeatFromAttr = document.createElement('fx-repeat');
+
 
 
             Array.from(repeats).forEach(item =>{
-                const repeatFromAttr = new FxRepeatAttributes();
+                // const repeatFromAttr = new FxRepeat();
 
+                // ### clone original item to move it into fx-repeat-attributes
+                const host = item.cloneNode(true);
+
+                // ### create wrapper element
+                const repeatFromAttr = new FxRepeatAttributes();
+                // const repeatFromAttr = document.createElement('fx-repeat-attributes');
+
+                // ### copy the value of 'data-ref' to 'ref' on fx-repeat-attributes
+                repeatFromAttr.setAttribute('ref',host.getAttribute('data-ref'));
+
+                // ### append the cloned original element to fx-repeat-attributes
+                repeatFromAttr.appendChild(host);
+
+                // repeatFromAttr.addEventListener('slotchange',)
+
+                console.log('shadow of fx-repeat-attributes', repeatFromAttr);
+
+                // ### insert fx-repeat-attributes element before element with the 'data-ref'
+                // repeats[0].parentNode.insertBefore(repeatFromAttr,repeats[0]);
                 item.parentNode.insertBefore(repeatFromAttr,item);
 
-                const host = item.cloneNode(true);
+                // ### remove original item from DOM
                 item.parentNode.removeChild(item);
 
 
-                repeatFromAttr.appendChild(host);
-                repeatFromAttr.setAttribute('ref',host.getAttribute('data-ref'));
+
+
+                // ### remove the 'data-ref' to not disturb further refreshes
                 host.removeAttribute('data-ref');
 
-                console.log('host clone',host);
+                // repeatFromAttr.init();
 
             });
         }

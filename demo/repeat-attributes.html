@@ -28,42 +28,44 @@
                     <field name="f">f</field>
                 </item>
                 <item>
-                    <field name="a">a</field>
-                    <field name="b">b</field>
-                    <field name="c">c</field>
-                    <field name="d">d</field>
-                    <field name="e">e</field>
-                    <field name="f">f</field>
+                    <field name="a">g</field>
+                    <field name="b">h</field>
+                    <field name="c">i</field>
+                    <field name="d">j</field>
+                    <field name="e">k</field>
+                    <field name="f">l</field>
                 </item>
                 <item>
-                    <field name="a">a</field>
-                    <field name="b">b</field>
-                    <field name="c">c</field>
-                    <field name="d">d</field>
-                    <field name="e">e</field>
-                    <field name="f">f</field>
+                    <field name="a">m</field>
+                    <field name="b">n</field>
+                    <field name="c">o</field>
+                    <field name="d">p</field>
+                    <field name="e">q</field>
+                    <field name="f">r</field>
                 </item>
             </data>
         </fx-instance>
     </fx-model>
 
+<!--
     <fx-repeat ref="item">
         <template>
             {./field[@name="a"]}
         </template>
     </fx-repeat>
-<!--
-    <table data-ref="item">
-            <tr>
-                <td>{field[@name="a"]}</td>
-                <td>{field[@name="b"]}</td>
-                <td>{field[@name="c"]}</td>
-                <td>{field[@name="d"]}</td>
-                <td>{field[@name="e"]}</td>
-                <td>{field[@name="f"]}</td>
-            </tr>
-    </table>
 -->
+    <table data-ref="item">
+        <template>
+            <tr>
+                <td><fx-output ref="field[@name='a']"></fx-output></td>
+                <td><fx-output ref="field[@name='b']"></fx-output></td>
+                <td><fx-output ref="field[@name='c']"></fx-output></td>
+                <td><fx-output ref="field[@name='d']"></fx-output></td>
+                <td><fx-output ref="field[@name='e']"></fx-output></td>
+                <td><fx-output ref="field[@name='f']"></fx-output></td>
+            </tr>
+        </template>
+    </table>
 
 <!--
     <fx-repeat-attributes ref="item">

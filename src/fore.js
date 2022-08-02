@@ -78,6 +78,7 @@ export class Fore {
       'FX-RANGE',
       'FX-REPEAT',
       'FX-REPEATITEM',
+      'FX-REPEAT-ATTRIBUTES',
       'FX-SWITCH',
       'FX-SECRET',
       'FX-SELECT',

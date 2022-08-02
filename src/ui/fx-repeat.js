@@ -95,8 +95,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
+    console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
-    this.ref = this._getRef();
+    this.ref = this.getAttribute('ref');
+    // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
       console.log('handle index event ', e);
@@ -168,6 +170,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             </style>
             ${html}
         `;
+
+    // this.init();
   }
 
   init() {
