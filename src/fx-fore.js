@@ -180,6 +180,7 @@ export class FxFore extends HTMLElement {
         this.toRefresh = [];
         this.initialRun = true;
         this.someInstanceDataStructureChanged = false;
+        this.repeatsFromAttributesCreated = false;
     }
 
     connectedCallback() {
@@ -799,34 +800,49 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _createRepeatsFromAttributes() {
+        if(this.repeatsFromAttributesCreated) return;
         const repeats = this.querySelectorAll('[data-ref]');
         if(repeats){
             Array.from(repeats).forEach(item =>{
 
+                const table = item.parentNode.closest('table');
+                let host;
+                if(table){
+                    host = table.cloneNode(true);
+                }else{
+                    host = item.cloneNode(true);
+                }
                 // ### clone original item to move it into fx-repeat-attributes
-                const host = item.cloneNode(true);
+                // const host = item.cloneNode(true);
 
                 // ### create wrapper element
                 const repeatFromAttr = new FxRepeatAttributes();
                 // const repeatFromAttr = document.createElement('fx-repeat-attributes');
 
                 // ### copy the value of 'data-ref' to 'ref' on fx-repeat-attributes
-                repeatFromAttr.setAttribute('ref',host.getAttribute('data-ref'));
+                repeatFromAttr.setAttribute('ref',item.getAttribute('data-ref'));
+                // item.removeAttribute('data-ref');
 
                 // ### append the cloned original element to fx-repeat-attributes
                 repeatFromAttr.appendChild(host);
 
                 // ### insert fx-repeat-attributes element before element with the 'data-ref'
                 // repeats[0].parentNode.insertBefore(repeatFromAttr,repeats[0]);
-                item.parentNode.insertBefore(repeatFromAttr,item);
+
+                if(table){
+                    table.parentNode.insertBefore(repeatFromAttr,table);
+                    table.parentNode.removeChild(table);
+                }else{
+                    item.parentNode.insertBefore(repeatFromAttr,item);
+                    item.parentNode.removeChild(item);
+                }
 
                 // ### remove original item from DOM
-                item.parentNode.removeChild(item);
-                host.removeAttribute('data-ref');
-                host.setAttribute('insertPoint','');
+                item.setAttribute('insertPoint','');
 
             });
         }
+        this.repeatsFromAttributesCreated = true;
     }
 }
 

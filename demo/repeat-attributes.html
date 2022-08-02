@@ -50,13 +50,11 @@
         </fx-instance>
     </fx-model>
 
-<!--
     <fx-repeat ref="item">
         <template>
             {./field[@name="a"]}
         </template>
     </fx-repeat>
--->
 
 
     <h2>Simple Table via attributes</h2>
@@ -82,6 +80,7 @@
                 <th>D</th>
                 <th>E</th>
                 <th>F</th>
+                <th>x</th>
         </thead>
         <tbody data-ref="item">
             <template>
@@ -92,6 +91,12 @@
                     <td><fx-output ref="field[@name='d']"></fx-output></td>
                     <td><fx-output ref="field[@name='e']"></fx-output></td>
                     <td><fx-output ref="field[@name='f']"></fx-output></td>
+                    <td>
+                        <fx-trigger>
+                            <button>del</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </td>
                 </tr>
             </template>
         </tbody>
@@ -104,32 +109,57 @@
         </template>
     </ul>
 
-<!--
-    <fx-repeat-attributes ref="item">
-        <table data-ref="item">
-            <template>
-                <tr>
-                    <td>{field[@name="a"]}</td>
-                    <td>{field[@name="b"]}</td>
-                    <td>{field[@name="c"]}</td>
-                    <td>{field[@name="d"]}</td>
-                    <td>{field[@name="e"]}</td>
-                    <td>{field[@name="f"]}</td>
-                </tr>
-            </template>
-        </table>
-    </fx-repeat-attributes>
--->
-
-<!--
-    <ul data-ref="field">
+    <h2>Table using template expressions</h2>
+    <table data-ref="item">
         <template>
-            <li>
-                {field[@name="a"]} | {field[@name="b"]}
-            </li>
+            <tr>
+                <td>{field[@name="a"]}</td>
+                <td>{field[@name="b"]}</td>
+                <td>{field[@name="c"]}</td>
+                <td>{field[@name="d"]}</td>
+                <td>{field[@name="e"]}</td>
+                <td>{field[@name="f"]}</td>
+            </tr>
         </template>
-    </ul>
--->
+    </table>
+
+
+    <h2>Table with header using template expressions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+            </tr>
+        </thead>
+        <tbody data-ref="item">
+        <template>
+            <tr>
+                <td>{field[@name='a']}</td>
+                <td>{field[@name='b']}</td>
+                <td>{field[@name='c']}</td>
+                <td>{field[@name='d']}</td>
+                <td>{field[@name='e']}</td>
+                <td>{field[@name='f']}</td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
+
+
+    <!--
+        <ul data-ref="field">
+            <template>
+                <li>
+                    {field[@name="a"]} | {field[@name="b"]}
+                </li>
+            </template>
+        </ul>
+    -->
 </fx-fore>
 <script type="module" src="../index.js"></script>
 </body>

@@ -240,7 +240,10 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         // add new repeatitem
 
         const clonedTemplate = this._clone();
-        this.firstElementChild.appendChild(clonedTemplate);
+
+        // ### cloned templates are always appended to the binding element - the one having the data-ref
+        const bindingElement = this.querySelector('[data-ref]');
+        bindingElement.appendChild(clonedTemplate);
         clonedTemplate.classList.add('fx-repeatitem');
         clonedTemplate.setAttribute('index',position);
 
