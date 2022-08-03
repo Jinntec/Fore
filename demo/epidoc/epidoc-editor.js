@@ -1,4 +1,6 @@
-(()=>{var h=`
+(() => {
+  // src/epidoc-editor.ts
+  var style = `
     :host{
         display: block;
         width: 100%;
@@ -32,9 +34,44 @@
     }
     [slot=toolbar] *:hover {
         border: 1px solid orange;
-    }`,i=class extends HTMLElement{constructor(){super();this._wrapper=null,this._remote=!1,this.xmlEditor=null,this.valid=!0,this.schema=null,this.attachShadow({mode:"open"})}set value(e){if(this._wrapper===e){console.debug("value unchanged");return}if(e||(this._wrapper=null),!(e instanceof Element))throw new Error("Value is not a node");this._wrapper=e,this._remote=!0;let n=e.firstElementChild;if(!this.xmlEditor)throw new Error("XML editor not initialized");this.xmlEditor.value=n}get value(){return this._wrapper}connectedCallback(){var l,d,a;this.schema=this.getAttribute("schema"),this.shadowRoot.innerHTML=`
+    }`;
+  var JinnEpidocEditor = class extends HTMLElement {
+    constructor() {
+      super();
+      this._wrapper = null;
+      this._remote = false;
+      this.xmlEditor = null;
+      this.valid = true;
+      this.schema = null;
+      this.attachShadow({ mode: "open" });
+    }
+    set value(value) {
+      if (this._wrapper === value) {
+        console.debug("value unchanged");
+        return;
+      }
+      if (!value) {
+        this._wrapper = null;
+      }
+      if (!(value instanceof Element)) {
+        throw new Error("Value is not a node");
+      }
+      this._wrapper = value;
+      const node = value.firstElementChild;
+      if (!this.xmlEditor) {
+        throw new Error("XML editor not initialized");
+      }
+      this.xmlEditor.value = node;
+    }
+    get value() {
+      return this._wrapper;
+    }
+    connectedCallback() {
+      var _a, _b, _c;
+      this.schema = this.getAttribute("schema");
+      this.shadowRoot.innerHTML = `
             <style>
-                ${h}
+                ${style}
             </style>
             <jinn-codemirror id="leiden-editor" class="leiden hidden">
                 <div slot="toolbar">
@@ -65,5 +102,66 @@
                     <button data-command="removeEnclosing" title="Remove enclosing tags">&lt;X></button>
                 </div>
             </jinn-codemirror>
-        `;let e=(l=this.shadowRoot)==null?void 0:l.querySelector("#xml-editor"),n=(d=this.shadowRoot)==null?void 0:d.querySelector("#leiden-editor"),r=(a=this.shadowRoot)==null?void 0:a.querySelector("#import");if(!(e&&n&&r))throw new Error("One or more components were not initialized");r.addEventListener("click",()=>{n.classList.toggle("hidden")||n.focus()}),n.addEventListener("update",t=>{e.content=t.detail.content}),this.xmlEditor=e,e.addEventListener("update",t=>{var s,c,u;if(t.stopPropagation(),!this._wrapper)return null;if(this._remote)return this._remote=!1;let m=((s=this._wrapper)==null?void 0:s.children.length)||0;for(let o=0;o<m;o++)(c=this._wrapper)==null||c.removeChild(this._wrapper.children[o]);if(e.value)if(e.value instanceof Element)(u=this._wrapper)==null||u.appendChild(e.value);else throw new Error("XML editor value is not a node");let p=this._wrapper;this.dispatchEvent(new CustomEvent("update",{detail:{content:p},composed:!0,bubbles:!0}))}),e.addEventListener("invalid",t=>{t.stopPropagation(),this.valid=!1}),e.addEventListener("valid",t=>{t.stopPropagation(),this.valid=!0})}};customElements.get("jinn-epidoc-editor")||window.customElements.define("jinn-epidoc-editor",i);})();
-//# sourceMappingURL=epidoc-editor.js.map
+        `;
+      const xmlEditor = (_a = this.shadowRoot) == null ? void 0 : _a.querySelector("#xml-editor");
+      const leidenEditor = (_b = this.shadowRoot) == null ? void 0 : _b.querySelector("#leiden-editor");
+      const toggle = (_c = this.shadowRoot) == null ? void 0 : _c.querySelector("#import");
+      if (!(xmlEditor && leidenEditor && toggle)) {
+        throw new Error("One or more components were not initialized");
+      }
+      toggle.addEventListener("click", () => {
+        const hidden = leidenEditor.classList.toggle("hidden");
+        if (!hidden) {
+          leidenEditor.focus();
+        }
+      });
+      leidenEditor.addEventListener("update", (ev) => {
+        ev.stopPropagation();
+        xmlEditor.content = ev.detail.content;
+      });
+      this.xmlEditor = xmlEditor;
+      xmlEditor.addEventListener("update", (ev) => {
+        var _a2, _b2, _c2;
+        ev.stopPropagation();
+        if (!this._wrapper) {
+          console.log("no wrapper !!!");
+          return null;
+        }
+        if (this._remote) {
+          this._remote = false;
+          console.log("set value was called - so no update");
+          return;
+        }
+        const cl = ((_a2 = this._wrapper) == null ? void 0 : _a2.children.length) || 0;
+        for (let i = 0; i < cl; i++) {
+          (_b2 = this._wrapper) == null ? void 0 : _b2.removeChild(this._wrapper.children[i]);
+        }
+        if (!xmlEditor.value) {
+          console.log("xml editor value is empty");
+        } else if (!(xmlEditor.value instanceof Element)) {
+          throw new Error("XML editor value is not a node");
+        } else {
+          console.log("appending", xmlEditor.value);
+          (_c2 = this._wrapper) == null ? void 0 : _c2.appendChild(xmlEditor.value);
+        }
+        const content = this._wrapper;
+        this.dispatchEvent(new CustomEvent("update", {
+          detail: { content },
+          composed: true,
+          bubbles: true
+        }));
+      });
+      xmlEditor.addEventListener("invalid", (ev) => {
+        ev.stopPropagation();
+        this.valid = false;
+      });
+      xmlEditor.addEventListener("valid", (ev) => {
+        ev.stopPropagation();
+        this.valid = true;
+      });
+    }
+  };
+  if (!customElements.get("jinn-epidoc-editor")) {
+    window.customElements.define("jinn-epidoc-editor", JinnEpidocEditor);
+  }
+})();

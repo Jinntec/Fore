@@ -8,8 +8,9 @@
     <link href="../../resources/demo.css" rel="stylesheet"/>
 
 
+    <script type="module" src="./jinn-codemirror.js"></script>
     <script type="module" src="./epidoc-editor.js"></script>
-    <script type="module" src="../demo.js"></script>
+    <script type="module" src="../../index.js"></script>
     <style>
         .hidden{
             display: none;
@@ -26,25 +27,28 @@
     </style>
 </head>
 <body>
-<!--<div class="wrapper">-->
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="epidoc-snippet-with-wrapper.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="defalse" src="epidoc-snippet-with-wrapper.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <leiden>(aa(b))</leiden>
+                    <display-leiden>hidden</display-leiden>
+                    <convert></convert>
+                </data>
+            </fx-instance>
+        </fx-model>
 
-            <fx-fore>
-                <fx-model>
-                    <fx-instance src="epidoc-snippet.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-                    <fx-instance id="vars">
-                        <data>
-                            <leiden>(aa(b))</leiden>
-                            <display-leiden>hidden</display-leiden>
-                            <convert></convert>
-                        </data>
-                    </fx-instance>
-                </fx-model>
+        <fx-control ref="instance()" as="node" update-event="update">
+            <jinn-epidoc-editor schema="epidoc.json" class="widget"></jinn-epidoc-editor>
+        </fx-control>
 
-                <fx-control ref="instance()" as="node">
-                    <jinn-epidoc-editor schema="epidoc.json" class="widget"></jinn-epidoc-editor>
-                </fx-control>
-
-                <fx-inspector open></fx-inspector>
-            </fx-fore>
+        <fx-trigger>
+            <button>atse</button>
+            <fx-replace ref="instance()" with="instance('defalse')"></fx-setvalue>
+        </fx-trigger>
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
 </body>
 </html>
