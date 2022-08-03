@@ -74,7 +74,10 @@ export default function getInScopeContext(node, ref) {
   }
 
   // ### check for repeatitems created by fx-repeat-attributes - this could possibly be unified with standard repeats
-  const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  const repeatItemFromAttrs = parentElement.closest('.fx-repeatitem');
+
   if (repeatItemFromAttrs) {
     // ### determine correct inscopecontext by determining the index of the repeatitem in its parent list and
     // ### using that as an index on the repeat nodeset

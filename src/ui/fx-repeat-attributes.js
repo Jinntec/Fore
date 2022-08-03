@@ -232,6 +232,8 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
+        this.getOwnerForm().someInstanceDataStructureChanged = true;
+
       }
     }
 

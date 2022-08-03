@@ -427,7 +427,6 @@ export class FxFore extends HTMLElement {
                 console.log('skipping refresh - no dependants');
             }
         } else {
-            // this._createRepeatsFromAttributes();
             Fore.refreshChildren(this, true);
             console.timeEnd('refreshChildren');
         }
@@ -435,7 +434,6 @@ export class FxFore extends HTMLElement {
         // ### refresh template expressions
         if (this.initialRun || this.someInstanceDataStructureChanged) {
             // this._createRepeatsFromAttributes();
-
             this._updateTemplateExpressions();
             this.someInstanceDataStructureChanged = false; // reset
         }
