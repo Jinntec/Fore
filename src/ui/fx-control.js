@@ -427,6 +427,13 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
+
+        if(this.widget.hasAttribute('open')){
+          const firstTemplateChild=this.template.firstElementChild;
+          const option = document.createElement('option');
+          this.widget.insertBefore(option,firstTemplateChild);
+        }
+
         nodeset.forEach(node => {
           // console.log('#### node', node);
           const newEntry = this.createEntry();
