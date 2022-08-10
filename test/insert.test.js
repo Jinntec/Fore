@@ -495,7 +495,7 @@ describe('insert Tests', () => {
             </data>
           </fx-instance>
         </fx-model>
-        <fx-group ref="//entry">
+        <fx-group ref="//entry[true()]">
           <fx-trigger id="addGrp">
             <button>add</button>
             <fx-insert

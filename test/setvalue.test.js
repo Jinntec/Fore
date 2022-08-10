@@ -17,7 +17,7 @@ describe('setvalue tests', () => {
         </fx-model>
 
         <fx-group>
-          <fx-output id="output" ref="greeting"></fx-output>
+          <fx-output id="output" ref="greeting[true()]"></fx-output>
           <fx-trigger id="btn" label="say 'hello Universe'">
             <fx-setvalue ref="greeting">Hello Universe</fx-setvalue>
           </fx-trigger>
