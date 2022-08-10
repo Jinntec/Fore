@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission consuming data from localStorage</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+            h2{
+                color:inherit;
+            }
+
+
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="get"
+                                   url="localStore:foo"
+                                   method="get">
+                        <fx-message event="submit-error">Data not present</fx-message>
+                    </fx-submission>
+                    <fx-submission id="consume"
+                                   url="localStore:foo"
+                                   method="consume">
+                        <fx-message event="submit-error">Data have already been consumed</fx-message>
+                    </fx-submission>
+                </fx-model>
+                <fx-group>
+
+                    <h1>Submission reading from localStore</h1>
+                    <p>Can be used to pass data between several browser tabs</p>
+                    <fx-trigger>
+                        <button>get from localStorage</button>
+                        <fx-send submission="get"></fx-send>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>consume from localStorage</button>
+                        <fx-send submission="consume"></fx-send>
+                    </fx-trigger>
+                </fx-group>
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
