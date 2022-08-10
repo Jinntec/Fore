@@ -451,7 +451,7 @@ export class FxFore extends HTMLElement {
     _updateTemplateExpressions() {
         // Note the fact we're going over HTML here: therefore the `html` prefix.
         const search =
-            "(descendant-or-self::*/(text(), @*))[matches(.,'\\{.*\\}')] except descendant-or-self::fx-model/descendant-or-self::node()/(., @*)";
+            "(descendant-or-self::*/(text(), @*))[not(ancestor-or-self::fx-model)][matches(.,'\\{.*\\}')]";
 
         const tmplExpressions = evaluateXPathToNodes(search, this, this);
         // console.log('template expressions found ', tmplExpressions);

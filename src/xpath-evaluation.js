@@ -143,6 +143,9 @@ export function resolveId(id, sourceObject, nodeName = null) {
     return null;
 }
 
+// Make namespace resolving use the `instance` element that is related to here
+const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
+
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
  * XPath in which the namespace is being resolved. The prefix will be resolved by using the
@@ -162,9 +165,6 @@ function createNamespaceResolver(xpathQuery, formElement) {
     if (cachedResolver) {
         return cachedResolver;
     }
-
-    // Make namespace resolving use the `instance` element that is related to here
-    const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
     const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
     let instanceReferences = fxEvaluateXPathToStrings(
