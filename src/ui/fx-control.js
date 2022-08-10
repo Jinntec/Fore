@@ -62,7 +62,15 @@ export default class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
     // console.log('widget ', this.widget);
+    let listenOn = this.widget // default: usually listening on widget
 
+    if(this.hasAttribute('listen-on')){
+      const q = this.getAttribute('listen-on');
+      const target = this.querySelector(q);
+      if(target){
+        listenOn = target;
+      }
+    }
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
       this.widget.addEventListener('keyup', event => {
@@ -75,7 +83,7 @@ export default class FxControl extends XfAbstractControl {
       this.updateEvent = 'blur'; // needs to be registered too
     }
     if (this.debounceDelay) {
-      this.widget.addEventListener(
+      listenOn.addEventListener(
         this.updateEvent,
         debounce(() => {
           console.log('eventlistener ', this.updateEvent);
@@ -83,7 +91,7 @@ export default class FxControl extends XfAbstractControl {
         }, this.debounceDelay),
       );
     } else {
-      this.widget.addEventListener(this.updateEvent, () => {
+      listenOn.addEventListener(this.updateEvent, () => {
         console.log('eventlistener ', this.updateEvent);
         this.setValue(this.widget[this.valueProp]);
       });
@@ -423,6 +431,12 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
+        if(this.widget.hasAttribute('open')){
+          const firstTemplateChild=this.template.firstElementChild;
+          const option = document.createElement('option');
+          this.widget.insertBefore(option,firstTemplateChild);
+        }
+
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
           Array.from(nodeset).forEach(node => {
@@ -484,6 +498,5 @@ export default class FxControl extends XfAbstractControl {
     return result;
   }
 }
-if (!customElements.get('fx-control')) {
-  window.customElements.define('fx-control', FxControl);
-}
+
+window.customElements.define('fx-control', FxControl);

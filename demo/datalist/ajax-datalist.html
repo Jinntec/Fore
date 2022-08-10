@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Third party auto complete</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+</head>
+<body>
+
+
+<div class="wrapper">
+    <h1>Third-party autocomplete</h1>
+
+    <p>This demo shows the use of a third-party component - <a href="https://github.com/craigbuckler/datalist-ajax" target="_blank">datalist-ajax</a> -
+        that is able to build a data-list dynamically
+    and use it to pick some value from a list with autocompletion.</p>
+    <p>The component is loaded from a CDN in this example.</p>
+    <p>You need to type at least one character into the input to see the filtered list.</p>
+<!--
+    <demo-snippet>
+        <template>
+-->
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <country>al</country>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-control ref="country" update-event="change" listen-on="#list">
+                    <label>Select a country</label>
+                    <form>
+                        <auto-complete api="./country.json" resultname="value" querymin="1" optionmax="500">
+                            <input id="list" type="text" name="name" />
+                        </auto-complete>
+                        <input type="hidden" name="name" class="widget" data-autofill="name" />
+                    </form>
+                </fx-control>
+                <p>Country code for selected country is: {country}</p>
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+
+<!--    <p>This component requires to live inside of a <code>form</code> so it's just added to the <code>fx-control</code>.</p>-->
+
+</div>
+
+<script type="module" src="../demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/datalist-ajax/dist/datalist-ajax.min.js"></script>
+
+</body>
+</html>

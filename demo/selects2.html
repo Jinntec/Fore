@@ -51,7 +51,7 @@
             <fx-instance>
                 <data>
                     <item>foobar</item>
-                    <fruit>apple</fruit>
+                    <fruit></fruit>
                     <listitem>foo</listitem>
                 </data>
             </fx-instance>
@@ -104,7 +104,7 @@
 
                         <fx-control ref="fruit" update-event="change">
                             <label>native select</label>
-                            <select ref="instance('fruits')//fruit" class="widget">
+                            <select ref="instance('fruits')//fruit" class="widget" open>
                                 <template>
                                     <option value="{@value}">{.}</option>
                                 </template>
