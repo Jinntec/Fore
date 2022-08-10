@@ -5,6 +5,15 @@
 
     <title>Epidoc</title>
     <link href="../../resources/css/fore.css" rel="stylesheet"/>
+    <style>
+        fx-group{
+            padding: 1rem 0;
+            border:thin solid;
+        }
+        label{
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper">
@@ -16,11 +25,21 @@
             <h1>EDEp Editor</h1>
 
             <fx-repeat ref=".//msPart">
+
                 <template>
+                    <span>{name(.)}</span>
+
                     <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
-                        <!-- 19) -->
+                        <label>group1: {name(.)}</label>
                         <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/width">
                             <label>Breite</label>
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
+                        <label>group2</label>
+                        <fx-control ref="width">
+                            <label>Breite 2</label>
                         </fx-control>
                     </fx-group>
                 </template>
