@@ -431,7 +431,9 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
-        if(this.widget.hasAttribute('open')){
+        if(this.widget.nodeName === "SELECT" &&
+            this.widget.hasAttribute('selection') &&
+            this.widget.getAttribute('selection') === 'open'){
           const firstTemplateChild=this.template.firstElementChild;
           const option = document.createElement('option');
           this.widget.insertBefore(option,firstTemplateChild);
