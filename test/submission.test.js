@@ -352,4 +352,53 @@ describe('submission tests', () => {
     const out = el.querySelector('#out');
     expect(out.value).to.equal('bar');
   });
+
+  it('preserves root node', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/submission-root-data.xml">
+            <data></data>
+          </fx-instance>
+
+          <fx-instance id="target">
+            <data></data>
+          </fx-instance>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                         replace="instance"
+                         instance="target">
+          </fx-submission>
+        </fx-model>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    const inst = el.querySelectorAll('fx-instance');
+    expect(inst[1]).to.exist;
+    expect(inst[1].instanceData).to.exist;
+    await oneEvent(sm, 'submit-done');
+
+    const root = inst[1].instanceData.firstElementChild;
+    console.log(root);
+    expect(root.nodeName).to.equal('place');
+    expect(root.hasAttribute('xml:id')).to.be.true;
+    expect(root.getAttribute('xml:id')).to.equal('G003584');
+
+    expect(root.hasAttribute('xmlns')).to.be.true;
+    expect(root.getAttribute('xmlns')).to.equal('http://www.tei-c.org/ns/1.0');
+
+
+  });
 });
