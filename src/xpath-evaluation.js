@@ -295,7 +295,7 @@ function functionNameResolver({prefix, localName}, _arity) {
                 // Just make this work. It is the developer-friendly way
                 return {namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName};
             }
-            if (prefix === 'fn') {
+            if (prefix === 'fn' || prefix === '') {
                 return {namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName};
             }
             if (prefix === 'local') {
@@ -379,6 +379,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
             xf: XFORMS_NAMESPACE_URI,
         },
         currentContext: {formElement},
+        functionNameResolver,
         namespaceResolver,
     });
 }
