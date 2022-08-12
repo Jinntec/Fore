@@ -547,7 +547,7 @@ const contextFunction = (dynamicContext, string) => {
     // const p = caller.nodeName;
     // const p = dynamicContext.domFacade.getParentElement();
 
-    if (parent) return parent;
+    if (parent) return parent.nodeset;
     return caller.getInScopeContext();
 };
 
