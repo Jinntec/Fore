@@ -15,6 +15,7 @@
 <body unresolved="unresolved">
     <div class="wrapper">
         <fx-fore id="todo">
+
             <fx-model id="record">
                 <fx-instance>
                     <data>
@@ -37,6 +38,7 @@
                 <fx-trigger class="btn add">
                     <button>+</button>
                     <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
+                    <fx-setfocus control="text"></fx-setfocus>
                 </fx-trigger>
             </h1>
 
@@ -57,7 +59,9 @@
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
                         </fx-control>
-                        <fx-control class="{@complete}" id="task" ref="."></fx-control>
+                        <fx-control class="{@complete}" id="text" ref=".">
+                            <input class="widget">
+                        </fx-control>
                         <fx-control ref="@due">
                             <input type="date">
                         </fx-control>
