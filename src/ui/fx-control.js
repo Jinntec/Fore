@@ -246,7 +246,8 @@ export default class FxControl extends XfAbstractControl {
         widget.value = pretty;
       }
       if (as === 'node' && this.nodeset !== widget.value) {
-        const oldVal = this.nodeset.innerHTML;
+        // const oldVal = this.nodeset.innerHTML;
+        const oldVal = this.nodeset;
         if (widget.value) {
           if (oldVal !== this.widget.value) {
             console.log('changed');

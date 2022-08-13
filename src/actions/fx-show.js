@@ -18,7 +18,11 @@ export class FxShow extends FxAction {
   }
 
   perform() {
-    resolveId(this.dialog, this).open();
+    const targetDlg = resolveId(this.dialog,this);
+    if(!targetDlg){
+      console.error('target dialog with given id does not exist',this.dialog);
+    }
+    targetDlg.open();
   }
 }
 
