@@ -408,6 +408,28 @@ export class FxModel extends HTMLElement {
             }
           }
         }
+        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
+          const required = bind.getAttribute('required');
+          if (required) {
+            const compute = evaluateXPathToBoolean(required, modelItem.node, this);
+            console.log('modelItem required computed: ', compute);
+            modelItem.required = compute;
+            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            if(!modelItem.node.textContent){
+               valid = false;
+            }
+            // if (!compute) valid = false;
+/*
+            if (!this.modelConstructed) {
+              // todo: get alert from attribute or child element
+              const alert = bind.getAlert();
+              if (alert) {
+                modelItem.addAlert(alert);
+              }
+            }
+*/
+          }
+        }
       }
     });
     console.timeEnd('revalidate');

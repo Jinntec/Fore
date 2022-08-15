@@ -401,4 +401,82 @@ describe('submission tests', () => {
 
 
   });
+
+  it('checks constraints and dispatches error when invalid', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item></item>
+              <fail></fail>
+            </data>
+          </fx-instance>
+          <fx-bind ref="item" constraint="false()"></fx-bind>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                        replace="none">
+            <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+          </fx-submission>
+        </fx-model>
+        <fx-output ref="fail"></fx-output>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    await oneEvent(sm, 'submit-error');
+    const out=el.querySelector('fx-output');
+    expect(out.value).to.equal('true');
+  });
+
+  it('checks required and dispatches error when invalid', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item></item>
+              <fail></fail>
+            </data>
+          </fx-instance>
+          <fx-bind ref="item" required="true()"></fx-bind>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                        replace="none">
+            <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+          </fx-submission>
+        </fx-model>
+        <fx-output ref="fail"></fx-output>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    await oneEvent(sm, 'submit-error');
+    const out=el.querySelector('fx-output');
+    expect(out.value).to.equal('true');
+  });
+
+
 });
