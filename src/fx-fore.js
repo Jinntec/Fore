@@ -551,8 +551,8 @@ export class FxFore extends HTMLElement {
                         this.evaluateTemplateExpression(replaced, node);
                     }
                 } catch (error) {
-                    // console.log(error);
-                    this.dispatchEvent(new CustomEvent('error', {detail: error}));
+                    console.log('ignoring unparseable expr');
+                    // this.dispatchEvent(new CustomEvent('error', {detail: error}));
                 }
             });
         }
