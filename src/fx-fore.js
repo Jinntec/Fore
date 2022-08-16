@@ -502,59 +502,40 @@ export class FxFore extends HTMLElement {
 
     /**
      * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
-     * @param expr the XPath to evaluate
+     * @param input The string to parse for expressions
      * @param node the node which will get updated with evaluation result
      * @param form the form element
      */
     evaluateTemplateExpression(expr, node) {
-        if (expr === '{}') return;
-        const matches = expr.match(/{[^}]*}/g);
-        if (matches) {
-            matches.forEach(match => {
-                // console.log('match ', match);
-                let naked = match.substring(1, match.length - 1);
-                const inscope = getInScopeContext(node, naked);
-                if (!inscope) {
-                    const errNode =
-                        node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-                            ? node.parentNode
-                            : node;
-                    console.warn('no inscope context for ', errNode);
-                    return;
-                }
-                // Templates are special: they use the namespace configuration from the place where they are
-                // being defined
-                const instanceId = XPathUtil.getInstanceId(naked);
-                // console.log('target instance ', instanceId);
-                const inst = this.getModel().getInstance(instanceId);
-                try {
-                    const result = evaluateXPathToString(naked, inscope, node, null, inst);
+        const replaced = expr.replace(/{[^}]*}/g, match => {
+            if (match === '{}') return match;
+            const naked = match.substring(1, match.length - 1);
+            const inscope = getInScopeContext(node, naked);
+            if (!inscope) {
+                const errNode =
+                    node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
+                        ? node.parentNode
+                        : node;
+                console.warn('no inscope context for ', errNode);
+                return match;
+            }
+            // Templates are special: they use the namespace configuration from the place where they are
+            // being defined
+            const instanceId = XPathUtil.getInstanceId(naked);
+            const inst = this.getModel().getInstance(instanceId);
+            try {
+                return evaluateXPathToString(naked, inscope, node, null, inst);
+            } catch (error) {
+                console.log('ignoring unparseable expr');
+                return match;
+            }
+        });
 
-                    // console.log('result of eval ', result);
-                    const replaced = expr.replaceAll(match, result);
-                    // console.log('result of replacing ', replaced);
-
-                    if (node.nodeType === Node.ATTRIBUTE_NODE) {
-                        const parent = node.ownerElement;
-
-                        // parent.setAttribute(name, replaced);
-                        parent.setAttribute(node.nodeName, replaced);
-                    } else if (node.nodeType === Node.TEXT_NODE) {
-                        node.textContent = replaced;
-                    }
-
-                    if (replaced.includes('{')) {
-                        // console.log('need to go next round');
-
-                        // todo: duplicated code here - see above
-                        naked = replaced.substring(1, replaced.length);
-                        this.evaluateTemplateExpression(replaced, node);
-                    }
-                } catch (error) {
-                    console.log('ignoring unparseable expr');
-                    // this.dispatchEvent(new CustomEvent('error', {detail: error}));
-                }
-            });
+        if (node.nodeType === Node.ATTRIBUTE_NODE) {
+            const parent = node.ownerElement;
+            parent.setAttribute(node.nodeName, replaced);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            node.textContent = replaced;
         }
     }
 
