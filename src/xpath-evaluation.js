@@ -341,7 +341,7 @@ function getVariablesInScope(formElement) {
  * @param  {Node} contextNode The start of the XPath
  * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}) {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -358,6 +358,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}) {
             },
             functionNameResolver,
             namespaceResolver,
+			language: options.language || evaluateXPath.XPATH_3_1
         },
     );
 }
