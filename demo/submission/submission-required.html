@@ -47,7 +47,8 @@
                                    method="post"
                                    replace="none">
                         <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
-                        <fx-message event="submit-error">Daten sind unvollständig</fx-message>
+                        <fx-message event="submit-error">data are incomplete</fx-message>
+                        <fx-message event="submit-done">data are complete and have been sent</fx-message>
                     </fx-submission>
                     <fx-submission id="sub2"
                                    url="#echo"
