@@ -112,7 +112,7 @@ export class FxInspector extends HTMLElement {
             <span class="handle"></span>
                 ${instances.map(
                   (instance, index) => `
-                  <details open>
+                  <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
                   </details>
@@ -121,6 +121,7 @@ export class FxInspector extends HTMLElement {
             </div>
         `;
 
+/*
     const handle = this.shadowRoot.querySelector('.handle');
     handle.addEventListener('click', e => {
       // console.log('toggling');
@@ -131,6 +132,7 @@ export class FxInspector extends HTMLElement {
         this.setAttribute('open', 'open');
       }
     });
+*/
   }
 
   serializeDOM(data) {

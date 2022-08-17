@@ -6,7 +6,7 @@
 
     <title>todo</title>
 
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
 
@@ -15,7 +15,6 @@
 <body unresolved="unresolved">
     <div class="wrapper">
         <fx-fore id="todo">
-
             <fx-model id="record">
                 <fx-instance>
                     <data>
@@ -28,9 +27,8 @@
                         <showclosed>false</showclosed>
                     </data>
                 </fx-instance>
-                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'" readonly="@complete != 'false'">
-                    <fx-bind ref="./text()" required="true()" ></fx-bind>
-                    <fx-bind ref="./@due" required="true()" ></fx-bind>
+                <fx-bind ref="task" relevant="../showclosed='true' or ./@complete='false'">
+                    <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
             </fx-model>
 
@@ -38,7 +36,6 @@
                 <fx-trigger class="btn add">
                     <button>+</button>
                     <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
-                    <fx-setfocus control="text"></fx-setfocus>
                 </fx-trigger>
             </h1>
 
@@ -53,15 +50,16 @@
             <div class="info big">
                 {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
             </div>
-            <fx-repeat id="task" ref="task">
+
+            <fx-setfocus target="#document" control="task" event="index-changed"></fx-setfocus>
+            <fx-repeat id="r-task" ref="task">
+
                 <template>
                     <div>
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
                         </fx-control>
-                        <fx-control class="{@complete}" id="text" ref=".">
-                            <input class="widget">
-                        </fx-control>
+                        <fx-control class="{@complete}" id="task" ref="."></fx-control>
                         <fx-control ref="@due">
                             <input type="date">
                         </fx-control>

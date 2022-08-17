@@ -298,7 +298,24 @@ ul a, ul a:link, ul a:visited{
 ul li{
     padding-bottom: 1rem;
 }
+.updated{
+    position: relative;
+}
+.updated::before{
+    position:absolute;
+    content:' ';
+    width:1rem;
+    height: 1rem;
+    background: yellowgreen;
+    border-radius: 50%;
+    top:0;
+    right:0;
 
+}
+.inline.updated::before{
+    position: relative;
+    display: inline-block;
+}
 .version{
     display: block;
     margin-top: -1rem;

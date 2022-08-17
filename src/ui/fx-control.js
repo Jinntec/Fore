@@ -149,8 +149,6 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
     const modelitem = this.getModelItem();
 
-    if (modelitem?.readonly) return; // do nothing when modelItem is readonly
-
     if (this.getAttribute('as') === 'node') {
       const widgetValue = this.getWidget().value;
       const replace = this.shadowRoot.getElementById('replace');

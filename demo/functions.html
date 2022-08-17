@@ -11,7 +11,11 @@
     <link href="../resources/demo.css" rel="stylesheet">
     <script type="module" src="./codemirror/jinn-codemirror.js"></script>
 	    <script type="module" src="./demo.js"></script>
-
+    <style>
+        fx-control{
+            width: 100%;
+        }
+    </style>
 </head>
 <body unresolved="unresolved">
 
@@ -62,9 +66,10 @@
     </demo-snippet>
 
     <h1>Functions over elements</h1>
-    <p>
-	  Functions can also accept elements, and XQuery update facility is present!Elements can be mutated before actually being loaded as an instance!
-    </p>
+    <p>Functions can also accept elements, and XQuery update facility is present allowing to transform data on the fly! </p>
+
+    <p>Modify the input data and see the result control change.</p>
+
     <demo-snippet>
         <template>
 
@@ -90,8 +95,8 @@
                     </fx-instance>
 
                     <fx-function
-                            signature="shuffle-children($element as element()) as element()*"
-                            type="text/xquf">
+                        signature="shuffle-children($element as element()) as element()*"
+                        type="text/xquf">
 					  copy $xml := $element modify (
 					  for $ref in $xml/main/ref
 					  	return replace node $ref with $xml/references/ref[@id=$ref/@link]
@@ -101,17 +106,17 @@
                 <fx-group>
 
                     <h2>XQuery update facility function</h2>
+                    <fx-control ref="//xml" as="node" update-event="input">
+                        <label>The input:</label>
+                        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+                    </fx-control>
+
                     <p>And the transformation result is:</p>
-					<fx-control ref="//xml" as="node">
-					  <label>The input:</label>
-			        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
 
-					  </fx-control>
-					<fx-control ref="shuffle-children(//xml)" as="node">
-					  <label>The transformed XML:</label>
-			        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
-
-					  </fx-control>
+                    <fx-control ref="shuffle-children(//xml)" as="node">
+                        <label>The transformed XML:</label>
+                        <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
+                    </fx-control>
 
                 </fx-group>
             </fx-fore>
