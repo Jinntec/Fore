@@ -8,3 +8,4 @@
 6. step through np and select appropriate release numbering
 7. push tags
 8. goto github and write release notes
+9. merge dev to master
