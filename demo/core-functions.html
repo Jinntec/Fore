@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <!-- Instance data -->
+        <fx-instance>
+            <data>
+                <response>
+                    <one yes="true">This is true.</one>
+                    <two yes="false">This is false.</two>
+                </response>
+            </data>
+        </fx-instance>
+        <!-- /Instance data -->
+    </fx-model>
+
+    <!-- This works. -->
+    <fx-output ref="response/*[@yes = 'true']"></fx-output>
+
+    <!-- This doesn't. -->
+    <fx-output ref="response/*[@yes = fn:true()]"></fx-output>
+    <fx-inspector open="true"></fx-inspector>
+</fx-fore>
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

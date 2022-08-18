@@ -20,7 +20,7 @@ export class XPathUtil {
       if (start.parentNode.hasAttribute('ref')) {
         return start.parentNode;
       }
-      XPathUtil.getParentBindingElement(start.parentNode);
+      return XPathUtil.getParentBindingElement(start.parentNode);
     }
     return null;
   }

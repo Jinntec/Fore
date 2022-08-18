@@ -16,6 +16,10 @@ class FxRefresh extends AbstractAction {
         return;
       }
     }
+    if(this.hasAttribute('force')){
+      this.getOwnerForm().forceRefresh();
+      return;
+    }
     this.getOwnerForm().refresh();
   }
 }

@@ -2,6 +2,7 @@
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import getInScopeContext from "../getInScopeContext";
 
 /**
  * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.
@@ -34,11 +35,13 @@ export default class FxReplace extends AbstractAction {
   perform() {
     super.perform();
     console.log('replace action');
-    if (!this.nodeset) {
-      return;
-    }
+    // console.log('replace action variables', this.inScopeVariables);
+    // if (!this.nodeset) {
+    //   return;
+    // }
     const target = evaluateXPathToFirstNode(this.with, this.nodeset, this);
     if (!target) return;
+
 
     this.replace(this.nodeset, target);
   }
@@ -59,6 +62,8 @@ export default class FxReplace extends AbstractAction {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);
     }
+    // const modelitem = this.getModelItem();
+    // this.getModel().changed.push(modelitem);
     this.needsUpdate = true;
   }
 }

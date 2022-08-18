@@ -1,0 +1,167 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc+Leiden</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
+
+
+    <script type="module" src="./jinn-codemirror.js"></script>
+    <script type="module" src="../demo.js"></script>
+    <style>
+        .hidden{
+            display: none;
+        }
+        fx-control{
+            display:block;
+        }
+        fx-fore{
+            opacity: 0;
+        }
+        fx-fore.fx-ready{
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<!--<div class="wrapper">-->
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance src="epidoc-snippet.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                    <fx-instance id="vars">
+                        <data>
+                            <leiden>(aa(b))</leiden>
+                            <display-leiden>hidden</display-leiden>
+                            <convert></convert>
+                        </data>
+                    </fx-instance>
+<!--
+                    <fx-function signature="leiden() as xs:string" type="text/javascript">
+                        console.log("+++++++++++++++++++ the element", form);
+
+                        const leiden = document.getElementById('leiden');
+                        console.log("+++++++++++++++++++ leiden editor", leiden);
+                        console.log("+++++++++++++++++++ leiden editor", leiden.value);
+                        console.log("+++++++++++++++++++ leiden editor", leiden.content);
+
+
+                        import { resolveId } from '../xpath-evaluation.js';
+                        const csntent = resolveId('')
+                        return "something";
+                    </fx-function>
+-->
+<!--
+                    <fx-function signature="parseit($input as xs:string) as element()" type="text/javascript">
+                        const parser = new DOMParser();
+                        const out = parser.parseFromString($input, "application/xml");
+                        console.log('qqqqqqqqqqq', out);
+                        return out;
+                    </fx-function>
+-->
+                </fx-model>
+
+<!--
+                <fx-message target="leiden" event="update" targetId="xml-editor">leiden updated</fx-message>
+                <fx-replace target="leiden" event="update" ref="instance()" with="parse(event('content'))"></fx-replace>
+-->
+<!--                <fx-update event="update"></fx-update>-->
+<!--                <fx-refresh event="update" force="force"></fx-refresh>-->
+
+<!--                <fx-control ref="instance('vars')/leiden" update-event="update">-->
+                    <jinn-codemirror id="leiden" class="leiden widget {instance('vars')/display-leiden}">
+                        <div slot="toolbar">
+                            <select name="modes">
+                                <option value="edcs" selected>EDCS/EDH</option>
+                                <option value="default">Petrae</option>
+                                <option value="leiden_plus">Leiden+</option>
+                            </select>
+                            <button data-command="expan" class="leiden_plus">(a(bcd))</button>
+                            <button data-command="erasure" class="leiden_plus">〚abc〛</button>
+                            <button data-command="unclear" class="leiden_plus">ạ</button>
+                            <button data-command="div" class="leiden_plus">&lt;=...</button>
+                            <button data-command="fragment" class="leiden_plus">&lt;D=.1.fragment...</button>
+                            <button data-command="part" class="leiden_plus">&lt;D=.A.part...</button>
+                            <button data-command="recto" class="leiden_plus">&lt;D=.r...</button>
+                            <button data-command="verso" class="leiden_plus">&lt;D=.v...</button>
+                            <button data-command="erasure" class="edcs">〚abc〛</button>
+                            <button data-command="gap" class="edcs">[...]</button>
+                            <button data-command="convert" class="edcs">Leiden+</button>
+                        </div>
+                    </jinn-codemirror>
+                    <!-- ### when leiden editor updates the result of conversion -> event('content') is
+                        ### parsed and replaces the default instance which contains the epidoc elements.
+                    -->
+<!--                <fx-message target="leiden" event="update" targetId="xml-editor">leiden updated</fx-message>-->
+                <fx-replace target="leiden" event="update" ref="instance()" with="parse(event('content'))"></fx-replace>
+
+                <!--                </fx-control>-->
+
+
+
+                <!-- update instance with serialized value from xml editor -->
+
+                <fx-control ref="instance()" value-prop="content" as="node">
+                    <jinn-codemirror id="xmleditor" mode="xml" schema="epidoc.json" namespace="http://www.tei-c.org/ns/1.0" class="widget">
+                        <div slot="toolbar">
+                            <fx-trigger>
+                                <button id="import" title="Import from Leiden markup">Import Leiden</button>
+                                <fx-setvalue ref="instance('vars')/display-leiden"></fx-setvalue>
+                            </fx-trigger>
+                            <button data-command="selectElement" title="Select element around current cursor position">&lt;|&gt;</button>
+                            <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                            <button data-command="removeEnclosing" title="Remove enclosing tags">&lt;X&gt;</button>
+                        </div>
+                    </jinn-codemirror>
+<!--
+                    <fx-message target="xmleditor" event="update">updated</fx-message>
+                    <fx-message target="xmleditor" event="invalid">the markup is invalid</fx-message>
+                    <fx-message target="xmleditor" event="valid">the markup is valid</fx-message>
+-->
+                    <fx-replace ref="instance()" with="parse(event('content'))" event="update"></fx-replace>
+                </fx-control>
+
+                <!--                {instance()}-->
+
+
+
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+<!--
+                <script>
+                    window.addEventListener('DOMContentLoaded', () => {
+                    const xml = document.getElementById('xmleditor');
+                    const leiden = document.getElementById('leiden');
+                    const toggle = document.getElementById('import');
+                    const button = document.getElementById('mybutton');
+
+                    toggle.addEventListener('click', () => {
+                    leiden.classList.toggle('hidden');
+                    if (!leiden.classList.contains('hidden')) {
+                    leiden.focus();
+                }
+                });
+
+                leiden.addEventListener('update', (ev) => {
+                    xml.content = ev.detail.content;
+                });
+
+                    xml.addEventListener('invalid', (ev) => {
+                    console.log("XML INVALID", ev)
+                });
+                    xml.addEventListener('valid', (ev) => {
+                    console.log("XML VALID", ev)
+                });
+                    xml.addEventListener('update', (ev) => {
+                    console.log("XML UPDATE", ev.detail.serialized)
+                });
+                    button.addEventListener('click', function (ev) {
+                    xml.value = document.createElementNS("http://www.tei-c.org/ns/1.0", "ab")
+                });
+                });
+            </script>
+-->
+</body>
+</html>

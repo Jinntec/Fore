@@ -117,9 +117,22 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing', this);
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
+    if(e && e.code){
+      const vars = new Map();
+      vars.set('code',e.code);
+      this.setInScopeVariables(vars);
+    }
+
     if (e && e.detail) {
       this.detail = e.detail;
-      // console.log('#### detail', e.detail);
+      const vars = new Map();
+      Object.keys(e.detail).forEach(function(key,index) {
+        // key: the name of the object key
+        // index: the ordinal position of the key within the object
+        vars.set(key,e.detail[key]);
+      });
+      console.log("event detail vars", vars);
+      this.setInScopeVariables(vars);
     }
     this.needsUpdate = false;
 

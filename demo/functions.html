@@ -9,6 +9,13 @@
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link href="../resources/demo.css" rel="stylesheet">
+    <script type="module" src="./codemirror/jinn-codemirror.js"></script>
+	    <script type="module" src="./demo.js"></script>
+    <style>
+        fx-control{
+            width: 100%;
+        }
+    </style>
 </head>
 <body unresolved="unresolved">
 
@@ -52,6 +59,68 @@
 
                     <h2>XPath function</h2>
                     <p>And the anwer is {local:hello('from function')}</p>
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>A function transforming data with XUpdate</h2>
+    <p>Functions can also accept elements, and XQuery update facility is present allowing to transform data on the fly! </p>
+
+    <p>Modify the `reference/ref` elements in the input data and see the result control change.</p>
+
+    <p>The function will work on the `main/ref` elements and update them according
+    to their `id` matching the `reference/ref/@id`.</p>
+
+    <p></p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+<xml>
+  <references>
+    <ref id="123">The first ref!</ref>
+    <ref id="abc">The second ref!</ref>
+  </references>
+  <main>
+    <not-a-ref>Not a ref here!</not-a-ref>
+    <ref link="123">I should be replaced!</ref>
+    <not-a-ref>Not a ref here!</not-a-ref>
+    <ref link="abc">I should also be replaced!</ref>
+    <not-a-ref>Not a ref here!</not-a-ref>
+  </main>
+</xml>
+                        </data>
+                    </fx-instance>
+
+                    <fx-function
+                        signature="shuffle-children($element as element()) as element()*"
+                        type="text/xquf">
+					  copy $xml := $element modify (
+					  for $ref in $xml/main/ref
+					  	return replace node $ref with $xml/references/ref[@id=$ref/@link]
+					  ) return $xml
+					</fx-function>
+                </fx-model>
+                <fx-group>
+
+                    <h2>XQuery update facility function</h2>
+                    <fx-control ref="//xml" as="node" update-event="update">
+                        <h3>The input:</h3>
+                        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+                    </fx-control>
+
+
+                    <fx-control ref="shuffle-children(//xml)" as="node">
+                        <h3>The transformed XML:</h3>
+                        <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
+                    </fx-control>
 
                 </fx-group>
             </fx-fore>

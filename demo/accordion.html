@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Accordion with fx-switch</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        /* set body and Fore to full page */
+        body, fx-fore{
+            width: 100vw;
+            height: 100vh;
+            margin:0;
+            padding: 0;
+        }
+        /* add a flex container */
+        fx-switch{
+            display: flex;
+            flex-direction: column;
+        }
+        /* give your caption a height */
+        fx-switch > fx-trigger{
+            height:40px;
+        }
+        fx-trigger button{
+            cursor:pointer;
+            width: 100%;
+            height:100%;
+            border: none;
+            text-align: left;
+            border-top: thin solid gray;
+        }
+        fx-case{
+            height:0;
+            opacity: 0;
+            transition: all 0.4s;
+            display: inline;
+        }
+        fx-case.selected-case{
+            /* calculate case height by substracting 4 times the height of the caption button */
+            height:calc(100vh - 160px);
+            opacity: 1;
+            overflow: auto;
+        }
+        .content {
+            display: none;
+        }
+        fx-case.selected-case .content{
+            padding: 1rem;
+            display: block;
+
+        }
+
+    </style>
+</head>
+<body>
+<fx-fore>
+<!--
+    <fx-model>
+        <fx-instance>
+            <data></data>
+        </fx-instance>
+    </fx-model>
+-->
+    <fx-switch>
+        <fx-trigger class="caption">
+            <button>ONE</button>
+            <fx-toggle case="one"></fx-toggle>
+        </fx-trigger>
+        <fx-case id="one">
+            <div class="content">
+                <h1>Accordion with fx-switch</h1>
+                <p>This demo shows how to create an Accordion with <code>fx-switch</code>.</p>
+                <p>For each accordion caption we add a <code>fx-trigger</code> and a <code>fx-case</code>
+                for the content.</p>
+            </div>
+        </fx-case>
+        <fx-trigger class="caption">
+            <button>TWO</button>
+            <fx-toggle case="two"></fx-toggle>
+        </fx-trigger>
+        <fx-case id="two">
+            <div class="content">Content Two</div>
+        </fx-case>
+        <fx-trigger class="caption">
+            <button>THREE</button>
+            <fx-toggle case="three"></fx-toggle>
+        </fx-trigger>
+        <fx-case id="three">
+            <div class="content">Content Three</div>
+        </fx-case>
+        <fx-trigger class="caption">
+            <button>FOUR</button>
+            <fx-toggle case="four"></fx-toggle>
+        </fx-trigger>
+        <fx-case id="four">
+            <div class="content">Content Four</div>
+        </fx-case>
+    </fx-switch>
+</fx-fore>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

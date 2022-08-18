@@ -8,6 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
  */
 export class FxOutput extends XfAbstractControl {
+/*
   static get properties() {
     return {
       ...super.properties,
@@ -17,6 +18,7 @@ export class FxOutput extends XfAbstractControl {
     };
   }
 
+*/
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });

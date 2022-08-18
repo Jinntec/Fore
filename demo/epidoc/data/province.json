@@ -1,0 +1,266 @@
+[
+  {
+    "name": "Ach",
+    "value": "Achaia"
+  },
+  {
+    "name": "Aeg",
+    "value": "Aegyptus"
+  },
+  {
+    "name": "Aem",
+    "value": "Aemilia (Regio VIII)"
+  },
+  {
+    "name": "Afr",
+    "value": "Africa Proconsularis"
+  },
+  {
+    "name": "AlC",
+    "value": "Alpes Cottiae"
+  },
+  {
+    "name": "AlG",
+    "value": "Alpes Graiae"
+  },
+  {
+    "name": "AlM",
+    "value": "Alpes Maritimae"
+  },
+  {
+    "name": "AlP",
+    "value": "Alpes Poeninae"
+  },
+  {
+    "name": "ApC",
+    "value": "Apulia et Calabria (Regio II)"
+  },
+  {
+    "name": "Aqu",
+    "value": "Aquitania"
+  },
+  {
+    "name": "Ara",
+    "value": "Arabia"
+  },
+  {
+    "name": "Arm",
+    "value": "Armenia"
+  },
+  {
+    "name": "Asi",
+    "value": "Asia"
+  },
+  {
+    "name": "Ass",
+    "value": "Assyria"
+  },
+  {
+    "name": "Bae",
+    "value": "Baetica"
+  },
+  {
+    "name": "Bar",
+    "value": "Barbaricum"
+  },
+  {
+    "name": "Bel",
+    "value": "Belgica"
+  },
+  {
+    "name": "BiP",
+    "value": "Bithynia et Pontus"
+  },
+  {
+    "name": "BrL",
+    "value": "Bruttium et Lucania (Regio III)"
+  },
+  {
+    "name": "Bri",
+    "value": "Britannia"
+  },
+  {
+    "name": "Cap",
+    "value": "Cappadocia"
+  },
+  {
+    "name": "Cil",
+    "value": "Cilicia"
+  },
+  {
+    "name": "Cor",
+    "value": "Corsica"
+  },
+  {
+    "name": "Cre",
+    "value": "Creta"
+  },
+  {
+    "name": "Cyp",
+    "value": "Cyprus"
+  },
+  {
+    "name": "Cyr",
+    "value": "Cyrene"
+  },
+  {
+    "name": "Dac",
+    "value": "Dacia"
+  },
+  {
+    "name": "Dal",
+    "value": "Dalmatia"
+  },
+  {
+    "name": "Epi",
+    "value": "Epirus"
+  },
+  {
+    "name": "Etr",
+    "value": "Etruria (Regio VII)"
+  },
+  {
+    "name": "Gal",
+    "value": "Galatia"
+  },
+  {
+    "name": "GeI",
+    "value": "Germania inferior"
+  },
+  {
+    "name": "GeS",
+    "value": "Germania superior"
+  },
+  {
+    "name": "HiC",
+    "value": "Hispania citerior"
+  },
+  {
+    "name": "Inc",
+    "value": "Provincia incerta"
+  },
+  {
+    "name": "Iud",
+    "value": "Iudaea"
+  },
+  {
+    "name": "LaC",
+    "value": "Latium et Campania (Regio I)"
+  },
+  {
+    "name": "Lig",
+    "value": "Liguria (Regio IX)"
+  },
+  {
+    "name": "Lug",
+    "value": "Lugdunensis"
+  },
+  {
+    "name": "Lus",
+    "value": "Lusitania"
+  },
+  {
+    "name": "LyP",
+    "value": "Lycia et Pamphylia"
+  },
+  {
+    "name": "MaC",
+    "value": "Mauretania Caesariensis"
+  },
+  {
+    "name": "MaT",
+    "value": "Mauretania Tingitana"
+  },
+  {
+    "name": "Mak",
+    "value": "Macedonia"
+  },
+  {
+    "name": "Mes",
+    "value": "Mesopotamia"
+  },
+  {
+    "name": "MoI",
+    "value": "Moesia inferior"
+  },
+  {
+    "name": "MoS",
+    "value": "Moesia superior"
+  },
+  {
+    "name": "Nar",
+    "value": "Narbonensis"
+  },
+  {
+    "name": "Nor",
+    "value": "Noricum"
+  },
+  {
+    "name": "Num",
+    "value": "Numidia"
+  },
+  {
+    "name": "PaI",
+    "value": "Pannonia inferior"
+  },
+  {
+    "name": "PaS",
+    "value": "Pannonia superior"
+  },
+  {
+    "name": "Pic",
+    "value": "Picenum (Regio V)"
+  },
+  {
+    "name": "Rae",
+    "value": "Raetia"
+  },
+  {
+    "name": "ReB",
+    "value": "Regnum Bospori"
+  },
+  {
+    "name": "Rom",
+    "value": "Roma"
+  },
+  {
+    "name": "Sam",
+    "value": "Samnium (Regio IV)"
+  },
+  {
+    "name": "Sar",
+    "value": "Sardinia"
+  },
+  {
+    "name": "Sic",
+    "value": "Sicilia, Melita"
+  },
+  {
+    "name": "Syr",
+    "value": "Syria"
+  },
+  {
+    "name": "Thr",
+    "value": "Thracia"
+  },
+  {
+    "name": "Tra",
+    "value": "Transpadana (Regio XI)"
+  },
+  {
+    "name": "Tri",
+    "value": "Tripolitania"
+  },
+  {
+    "name": "Umb",
+    "value": "Umbria (Regio VI)"
+  },
+  {
+    "name": "Val",
+    "value": "Valeria"
+  },
+  {
+    "name": "VeH",
+    "value": "Venetia et Histria (Regio X)"
+  }
+]

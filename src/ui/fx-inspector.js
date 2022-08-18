@@ -36,6 +36,7 @@ export class FxInspector extends HTMLElement {
             padding-left:var(--inspector-handle-width);
             color:var(--inspector-color);
             overflow:scroll;
+            height:100%;
           }
           pre{
             background:var(--inspector-pre-bg);
@@ -45,7 +46,7 @@ export class FxInspector extends HTMLElement {
           }
           .handle{
             display:block;
-            height:100vh;
+            height:100%;
             width:var(--inspector-handle-width);
             background:var(--inspector-handle-bg);
             opacity:0.7;
@@ -83,9 +84,9 @@ export class FxInspector extends HTMLElement {
   }
 
   update() {
-    console.log('update');
+    // console.log('update');
     const pre = this.shadowRoot.querySelectorAll('pre');
-    console.log('pre', pre);
+    // console.log('pre', pre);
     const fore = this.closest('fx-fore');
 
     Array.from(pre).forEach(element => {
@@ -111,7 +112,7 @@ export class FxInspector extends HTMLElement {
             <span class="handle"></span>
                 ${instances.map(
                   (instance, index) => `
-                  <details open>
+                  <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
                   </details>
@@ -120,9 +121,10 @@ export class FxInspector extends HTMLElement {
             </div>
         `;
 
+/*
     const handle = this.shadowRoot.querySelector('.handle');
     handle.addEventListener('click', e => {
-      console.log('toggling');
+      // console.log('toggling');
       const { target } = e;
       if (this.hasAttribute('open')) {
         this.removeAttribute('open');
@@ -130,10 +132,11 @@ export class FxInspector extends HTMLElement {
         this.setAttribute('open', 'open');
       }
     });
+*/
   }
 
   serializeDOM(data) {
-    console.log('serializeDOM', data);
+    // console.log('serializeDOM', data);
     const ser = new XMLSerializer().serializeToString(data);
     return Fore.prettifyXml(ser);
   }

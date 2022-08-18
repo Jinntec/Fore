@@ -107,7 +107,7 @@ export const foreElementMixin = superclass =>
       if (this.hasAttribute('ref')) {
         inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
       }
-      if (!inscopeContext) {
+      if (!inscopeContext && this.getModel().instances.length !== 0) {
         // ### always fall back to default context with there's neither a 'context' or 'ref' present
         inscopeContext = this.getModel()
           .getDefaultInstance()

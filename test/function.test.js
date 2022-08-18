@@ -1,6 +1,7 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
+import {evaluateXPathToNodes,evaluateXPath} from "fontoxpath";
 
 describe('functions', () => {
   describe('Functions in JavaScript', () => {
@@ -271,4 +272,41 @@ describe('functions', () => {
       'The outer repeat is indexed at 2, the first and last inner ones at 1, the middle inner one at 2!',
     );
   });
+
+/*
+  it.only('context() function returns correct nodesets', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <group>
+                <item attr="foo">bar</item>
+              </group>
+              <copy></copy>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-group ref="group">
+            <fx-control ref="item/@attr">
+              <fx-setvalue event="value-changed" ref="copy" value="context()"></fx-setvalue>
+            </fx-control>     
+            <div id="result">{copy}</div>
+        </fx-group>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+
+    const control = el.querySelector('fx-control');
+    control.setValue("fooo");
+
+    const action = el.querySelector('fx-setvalue');
+    action.perform();
+    // const result = evaluateXPath('context()',action);
+    // await oneEvent(action, 'action-performed');
+    const copy = el.querySelector('#result');
+
+    expect(copy.innerHTML).to.equal('foo');
+  });
+*/
 });

@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+
+
+    <style>
+        /*
+                @font-face {
+                    font-family: "Kimberley";
+                    src: url(../../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
+                }
+        */
+
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+            font-family: "Kimberley";
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1rem;
+            margin-bottom: 2rem;
+            border: thin solid var(--paper-grey-300);
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 200px auto;
+            /*width: fit-content;*/
+
+            grid-gap: 0.3rem;
+            margin: 0.5rem 0;
+
+        }
+
+        fx-control input {
+            width: 200px;
+        }
+
+        fx-control textarea {
+            width: 95%;
+            display: inline-block;
+        }
+
+        .group {
+            border: thin solid var(--paper-grey-300);
+            margin-bottom: 1rem;
+        }
+
+        fx-control label {
+            justify-self: end;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="templates/fore/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="province" src="data/province.json" type="json"></fx-instance>
+            <!--            <fx-instance id="country" src="data/country.json" type="json"/>-->
+<!--                        <fx-instance id="decor" src="api/decor" type="json"/>-->
+                        <fx-instance id="decor" src="data/decor.json" type="json"/>
+            <fx-instance id="typeins" src="data/typeins.json" type="json"></fx-instance>
+            <fx-instance id="objtyp" src="data/objtyp.json" type="json"></fx-instance>
+
+            <fx-instance id="tmp">
+                <data>
+                    <dummy>xpath?</dummy>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-group ref="teiHeader">
+            <h1>EDEp Editor</h1>
+
+            <span>Sprachselector hier</span>
+            <fx-group>
+                <!-- 3) -->
+                <fx-control ref=".//msDesc/msIdentifier/idno">
+                    <label>EDE-p-Id</label>
+                    <span class="note">
+                        generated id starting with 'EEE000001'
+                    </span>
+                </fx-control>
+
+                <!-- 4) -->
+                <fx-control ref=".//msPart[1]/msIdentifier/idno">
+                    <label>TM-Nummer</label>
+                    <span class="note">
+                        number from trismegistos.org - is in msPart which is repeated so use first one?
+                    </span>
+                </fx-control>
+            </fx-group>
+
+
+            <fx-repeat ref=".//msPart">
+                <template>
+
+                    <fx-group>
+                        <!-- geoId from geodata -->
+                        <fx-control ref="history/origin/origPlace/@corresp">
+                            <label>GeoId</label>
+                        </fx-control>
+                        <!-- 5) -->
+                        <fx-output ref="history/origin/origPlace/placeName[@type='province']">
+                            <label slot="label">Provinz/augusteische Region</label>
+                        </fx-output>
+
+                        <!-- 6) -->
+                        <fx-output ref="history/provenance/placeName[@type='country']">
+                            <label slot="label">Land</label>
+                        </fx-output>
+
+                        <!-- 7) -->
+                        <fx-output ref="history/history/provenance/placeName[@type='region']">
+                            <label slot="label">Region</label>
+                        </fx-output>
+
+                        <!-- 8) -->
+                        <fx-output ref="history/origin/origPlace/placeName[@type='ancient']">
+                            <label slot="label">Fundort (antik)</label>
+                        </fx-output>
+
+                        <!-- 9) -->
+                        <fx-output ref="history/provenance/placeName[@type='modern']">
+                            <label slot="label">Fundort (modern)</label>
+                        </fx-output>
+
+                        <!-- 10a) -->
+                        <fx-output ref="history/provenance/placeName[@type='findspot']">
+                            <label slot="label">Fundstelle</label>
+                        </fx-output>
+                    </fx-group>
+
+                    <fx-group>
+                        <!-- 10b) -->
+                        <fx-control ref="history/provenance/note[@type='context']">
+                            <label>Fundkontext</label>
+                            <textarea rows="4" class="widget"></textarea>
+                        </fx-control>
+
+                        <!-- 11) -->
+                        <fx-control ref="history/provenance/@when">
+                            <label>Fundjahr</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@notbefore">
+                            <label>nach</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@notAfter">
+                            <label>vor</label>
+                        </fx-control>
+                        <fx-control ref="history/provenance/@when-custom">
+                            <label>vor</label>
+                        </fx-control>
+
+                        <!-- 12a) -->
+                        <fx-control ref="msIdentifier/repository">
+                            <label>Aufbewahrung</label>
+                        </fx-control>
+                        <!-- 12b-12e missing -->
+
+                    </fx-group>
+
+                    <fx-group>
+
+                        <!-- 13) -->
+                        <fx-control ref="physDesc/objectDesc/supportDesc/condition">
+                            <label>Erhaltung</label>
+                            <select class="widget">
+                                <option value="complete">vollständig</option>
+                                <option value="fragmentary">fragmentarisch</option>
+                            </select>
+                        </fx-control>
+
+                        <!-- 14) -->
+                        <fx-control ref="physDesc/objectDesc/supportDesc/support/rs/@ref">
+                            <label>Dekor</label>
+                            <select ref="instance('decor')?item?*" class="widget">
+                                <option value="yes">Ja</option>
+                                <option value="no">Nein</option>
+                                <option value="uncertain">unsicher</option>
+                            </select>
+                        </fx-control>
+
+                        <!-- 15) -->
+                        <fx-control ref="msContents/msItem/@class">
+                            <label>Inschriftengattung</label>
+                            <select ref="instance('typeins')?*" class="widget">
+                                <template>
+                                    <option value="{?value}">{?name}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        <!-- 16a) -->
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType">
+                            <label>Inschriftträger</label>
+                            <select ref="instance('objtyp')?*" class="widget">
+                                <template>
+                                    <option value="{?value}">{?name}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        <!-- 16b) -->
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/note">
+                            <label>Beschreibung Inschriftträger</label>
+                        </fx-control>
+
+                        <!-- there's no 17) -->
+
+                        <!-- 18) -->
+                        <fx-control ref="//physDesc/objectDesc/supportDesc/support/material" update-event="change" class="orange">
+                            <label>Material</label>
+                            <select ref="instance('material')/category[@name=instance('tmp')/material-group]/material/@name" class="widget">
+                                <template>
+                                    <option value="{string(.)}">{.}</option>
+                                </template>
+                            </select>
+                            <!--                            <fx-setvalue event="value-changed" ref="//physDesc/objectDesc/supportDesc/support/material" value="string(..)"/>-->
+                        </fx-control>
+
+
+                        <fx-group>
+                            <label>Inschriftträger</label>
+                            <!-- 19) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/width">
+                                <label>Breite</label>
+                            </fx-control>
+                            <!-- 38) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/height">
+                                <label>Höhe</label>
+                            </fx-control>
+                            <!-- 20) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/depth">
+                                <label>Tiefe</label>
+                            </fx-control>
+                        </fx-group>
+
+                        <fx-group>
+                            <label>Inschriftfeld</label>
+                            <!-- 21) -->
+                            <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/height">
+                                <label>Höhe</label>
+                            </fx-control>
+                            <!-- 22) -->
+                            <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/width">
+                                <label>Breite</label>
+                            </fx-control>
+                            <!-- 23) -->
+                            <fx-control ref="physDesc/handDesc/handNote/dimensions/height">
+                                <label>Buchstabenhöhe</label>
+                            </fx-control>
+                        </fx-group>
+
+                        <!-- 24) unclear -->
+
+                        <!-- 25) -->
+                        <fx-group>
+                            <fx-control ref="msContents/msItem/textLang">
+                                <label>Sprache</label>
+                            </fx-control>
+                        </fx-group>
+
+
+
+                    </fx-group>
+
+                </template>
+            </fx-repeat>
+
+            <!-- 26) -->
+            <fx-group ref="//msDesc">
+                <!-- 26), 27)-->
+
+                <fx-control ref="history/origin/origDate/@when">
+                    <label>Datierung</label>
+                </fx-control>
+                <fx-control ref="history/origin/origDate/@notBefore">
+                    <label>nach</label>
+                </fx-control>
+                <fx-control ref="history/origin/origDate/@notAfter">
+                    <label>vor</label>
+                </fx-control>
+                <fx-control ref="history/origin/origDate/@when-custom">
+                    <label>vor</label>
+                </fx-control>
+                <span class="note">Datingmethod?</span>
+            </fx-group>
+
+            <fx-group ref="profileDesc">
+                <!-- 28)  -->
+                <fx-control ref="textClass/keywords/term">
+                    <label>Religion</label>
+                </fx-control>
+            </fx-group>
+
+
+            <!-- 29) missing -->
+            <!-- 30) -->
+            <!-- 31) -->
+            <!-- 32) -->
+            <!-- 33) -->
+            <!-- 34) unclear -->
+            <!-- 35b) -->
+            <!-- 35a) -->
+            <!-- 35c) -->
+            <!-- 35d) -->
+
+
+            <!-- 47) -->
+            <!-- 45) -->
+
+
+
+            <fx-trigger>
+                <button>Save</button>
+            </fx-trigger>
+        </fx-group>
+        <fx-inspector></fx-inspector>
+    </fx-fore>
+
+</div>
+<script type="module" src="../../dist/fore-dev.js"/>
+</body>
+</html>

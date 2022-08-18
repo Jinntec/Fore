@@ -83,7 +83,12 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
         break;
       }
 
+      case 'text/xquf':
+      case 'text/xquery':
       case 'text/xpath': {
+        const language = type === 'text/xpath' ?
+            'XPath3.1' : type === 'text/xquery' ?
+            'XQuery3.1' : 'XQueryUpdate3.1';
         const fun = (domFacade, ...args) =>
           evaluateXPath(
             this.functionBody,
@@ -93,6 +98,7 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
               variablesByName[paramPart.variableName.replace('$', '')] = args[i];
               return variablesByName;
             }, {}),
+			  {language}
           );
         registerCustomXPathFunction(
           functionIdentifier,

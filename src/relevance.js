@@ -21,8 +21,7 @@ export class Relevance {
     const mi = element.getModel().getModelItem(element.nodeset);
     if (mi && !mi.relevant) return null;
 
-    const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-    const root = doc.firstElementChild;
+    const root = element.nodeset.cloneNode(false);
 
     if (element.nodeset.children.length === 0 && Relevance._isRelevant(element, element.nodeset)) {
       return element.nodeset;
