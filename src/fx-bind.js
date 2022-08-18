@@ -340,11 +340,11 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   }
 
   getReferences(propertyExpr) {
-      const touchedNodes = new Set();
-      const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
-      this.nodeset.forEach(node => {
-        evaluateXPathToString(propertyExpr, node, this, domFacade);
-      });
+    const touchedNodes = new Set();
+    const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
+    this.nodeset.forEach(node => {
+      evaluateXPathToString(propertyExpr, node, this, domFacade);
+    });
     return Array.from(touchedNodes.values());
   }
 

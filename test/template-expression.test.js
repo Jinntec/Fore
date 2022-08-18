@@ -161,4 +161,27 @@ describe('template expressions', () => {
 
     expect(attr.trim()).to.equal('background:{}');
   });
+
+	it('does not double-parse expressions', async () => {
+		const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <braces>I contain {braces}</braces>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div class="static">Braces! {braces}</div>
+        <fx-input ref="greeting" label="greeting"></fx-input>
+      </fx-fore>
+    `);
+
+		await oneEvent(el, 'refresh-done');
+
+		const theDiv = el.querySelector('.static');
+
+		expect(theDiv.textContent).to.equal('Braces! I contain {braces}');
+	});
 });

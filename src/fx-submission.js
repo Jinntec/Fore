@@ -67,7 +67,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   async submit() {
-    await Fore.dispatch(this,'submit', { submission: this });
+    await Fore.dispatch(this, 'submit', { submission: this });
     this._submit();
   }
 
@@ -78,13 +78,13 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     model.recalculate();
 
-    if (this.validate) {
+    if (this.validate==='true') {
       const valid = model.revalidate();
       if (!valid) {
         console.log('validation failed. Bubmission stopped');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
-        Fore.dispatch(this,'submit-error',{});
+        Fore.dispatch(this, 'submit-error', {});
         this.getModel().parentNode.refresh();
         return;
       }
@@ -145,18 +145,39 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     // if (resolvedUrl === '#echo') {
     if (resolvedUrl.startsWith('#echo')) {
-      let data = null;
-      if (serialized && instance.type === 'xml') {
-        data = new DOMParser().parseFromString(serialized, 'application/xml');
-      }
-      if (serialized && instance.type === 'json') {
-        data = JSON.parse(serialized);
-      }
+      let data = this._parse(serialized, instance);
       this._handleResponse(data);
       // this.dispatch('submit-done', {});
-      Fore.dispatch(this,'submit-done',{});
+      Fore.dispatch(this, 'submit-done', {});
       return;
     }
+
+    if(resolvedUrl.startsWith('localStore:') && this.method === 'post'){
+      // let data = this._parse(serialized, instance);
+      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+      localStorage.setItem(key,serialized);
+      Fore.dispatch(this, 'submit-done', {});
+      return;
+    }
+
+    if(resolvedUrl.startsWith('localStore:') && (this.method === 'consume' || this.method === 'get')){
+      // let data = this._parse(serialized, instance);
+      this.replace = 'instance';
+      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+      const serialized = localStorage.getItem(key);
+      if(!serialized){
+        Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
+        return;
+      }
+      let data = this._parse(serialized, instance);
+      this._handleResponse(data);
+      if(this.method === 'consume'){
+        localStorage.removeItem(key);
+      }
+      Fore.dispatch(this, 'submit-done', {});
+      return;
+    }
+
     // ### setting headers
     const headers = this._getHeaders();
     console.log('headers', headers);
@@ -181,7 +202,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     if (!response.ok || response.status > 400) {
       // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
-      Fore.dispatch(this,'submit-error',{ message: `Error while submitting ${this.id}` });
+      Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
       return;
     }
 
@@ -206,7 +227,18 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     // this.dispatch('submit-done', {});
-    Fore.dispatch(this,'submit-done',{});
+    Fore.dispatch(this, 'submit-done', {});
+  }
+
+  _parse(serialized, instance) {
+    let data = null;
+    if (serialized && instance.type === 'xml') {
+      data = new DOMParser().parseFromString(serialized, 'application/xml');
+    }
+    if (serialized && instance.type === 'json') {
+      data = JSON.parse(serialized);
+    }
+    return data;
   }
 
   _serialize(instanceType, relevantNodes) {
@@ -416,7 +448,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
   _handleError() {
     // this.dispatch('submit-error', {});
-    Fore.dispatch(this,'submit-error',{});
+    Fore.dispatch(this, 'submit-error', {});
     /*
                 console.log('ERRRORRRRR');
                 this.dispatchEvent(

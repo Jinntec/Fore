@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Akklamation",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
+  },
+  {
+    "name": "Adnuntiatio",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
+  },
+  {
+    "name": "Assignationsinschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
+  },
+  {
+    "name": "Aufschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/115"
+  },
+  {
+    "name": "Bau-,/Stifterinschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/261"
+  },
+  {
+    "name": "Beischrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/109"
+  },
+  {
+    "name": "Besitzer-,/Herstellerinschrift",
+    "value":"https://www.eagle-network.eu/voc/typeins/lod/311"
+  },
+  {
+    "name": "Brief",
+    "value": "[##im eagle-Vokabular bisher keine rdf-Referenzierung vorhanden## (FFG 11/4/22)]"
+  },
+  {
+    "name": "Defixio",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/76"
+  },
+  {
+    "name": "Ehreninschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/69"
+  },
+  {
+    "name": "Elogium",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/70"
+  },
+  {
+    "name": "Gebet",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/85"
+  },
+  {
+    "name": "Grabinschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/92"
+  },
+  {
+    "name": "Grenzmarkierung",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/293"
+  },
+  {
+    "name": "Kalender",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/3"
+  },
+  {
+    "name": "Meilen-,/Leugenstein",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/102"
+  },
+  {
+    "name": "Militärdiplom",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/91"
+  },
+  {
+    "name": "Rechtliche , Verfügung, öffentlich",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/5"
+  },
+  {
+    "name": "Rechtliche , Verfügung, privat",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/49"
+  },
+  {
+    "name": "Sitzinschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/111"
+  },
+  {
+    "name": "Verzeichnis",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/108"
+  },
+  {
+    "name": "Weihinschrift",
+    "value": "https://www.eagle-network.eu/voc/typeins/lod/80"
+  }
+]

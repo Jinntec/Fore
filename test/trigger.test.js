@@ -42,7 +42,7 @@ describe('trigger tests', () => {
               <disabled>true</disabled>
             </data>
           </fx-instance>
-          <fx-bind ref="disabled" readonly=". ='true'"></fx-bind>
+          <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
         </fx-model>
         <fx-trigger ref="disabled">
           <button>I'm a button</button>

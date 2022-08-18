@@ -62,7 +62,15 @@ export default class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
     // console.log('widget ', this.widget);
+    let listenOn = this.widget // default: usually listening on widget
 
+    if(this.hasAttribute('listen-on')){
+      const q = this.getAttribute('listen-on');
+      const target = this.querySelector(q);
+      if(target){
+        listenOn = target;
+      }
+    }
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
       this.widget.addEventListener('keyup', event => {
@@ -75,7 +83,7 @@ export default class FxControl extends XfAbstractControl {
       this.updateEvent = 'blur'; // needs to be registered too
     }
     if (this.debounceDelay) {
-      this.widget.addEventListener(
+      listenOn.addEventListener(
         this.updateEvent,
         debounce(() => {
           console.log('eventlistener ', this.updateEvent);
@@ -83,7 +91,7 @@ export default class FxControl extends XfAbstractControl {
         }, this.debounceDelay),
       );
     } else {
-      this.widget.addEventListener(this.updateEvent, () => {
+      listenOn.addEventListener(this.updateEvent, () => {
         console.log('eventlistener ', this.updateEvent);
         this.setValue(this.widget[this.valueProp]);
       });
@@ -141,13 +149,16 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
     const modelitem = this.getModelItem();
 
-    if(modelitem?.readonly) return; // do nothing when modelItem is readonly
+    if (modelitem?.readonly){
+      console.warn('attempt to change readonly node', modelitem);
+      return; // do nothing when modelItem is readonly
+    }
 
-    if(this.getAttribute('as') === 'node'){
+    if (this.getAttribute('as') === 'node') {
       const widgetValue = this.getWidget().value;
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, this.getWidget().value);
-      if (widgetValue && widgetValue !== modelitem.value) {
+      if (modelitem && widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;
         replace.actionPerformed();
       }
@@ -238,15 +249,19 @@ export default class FxControl extends XfAbstractControl {
         widget.value = pretty;
       }
       if (as === 'node' && this.nodeset !== widget.value) {
-        const oldVal = this.nodeset.innerHTML;
+        // const oldVal = this.nodeset.innerHTML;
+        const oldVal = this.nodeset;
         if (widget.value) {
           if (oldVal !== this.widget.value) {
             console.log('changed');
+            widget.value = this.nodeset.cloneNode(true);
             return;
           }
         }
 
         widget.value = this.nodeset.cloneNode(true);
+        // todo: should be more like below but that can cause infinite loop when controll trigger update event due to calling a setter for property
+        // widget[this.valueProp] = this.nodeset.cloneNode(true);
         console.log('passed value to widget', widget.value);
       }
 
@@ -334,11 +349,13 @@ export default class FxControl extends XfAbstractControl {
           console.log('subcomponent ready', e.target);
           const defaultInst = theFore.querySelector('fx-instance');
           console.log('defaultInst', defaultInst);
-          const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-          // Note: Clone the input to prevent the inner fore from editing the outer node
-          doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-          // defaultinst.setInstanceData(this.initialNode);
-          defaultInst.setInstanceData(doc);
+          if(this.initialNode){
+            const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+            // Note: Clone the input to prevent the inner fore from editing the outer node
+            doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+            // defaultinst.setInstanceData(this.initialNode);
+            defaultInst.setInstanceData(doc);
+          }
           console.log('new data', defaultInst.getInstanceData());
           // theFore.getModel().modelConstruct();
           theFore.getModel().updateModel();
@@ -372,7 +389,7 @@ export default class FxControl extends XfAbstractControl {
 
   async refresh(force) {
     // console.log('fx-control refresh', this);
-    super.refresh();
+    super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
 
@@ -418,16 +435,24 @@ export default class FxControl extends XfAbstractControl {
 
       // ### build the items
       if (this.template) {
+        if(this.widget.nodeName === "SELECT" &&
+            this.widget.hasAttribute('selection') &&
+            this.widget.getAttribute('selection') === 'open'){
+          const firstTemplateChild=this.template.firstElementChild;
+          const option = document.createElement('option');
+          this.widget.insertBefore(option,firstTemplateChild);
+        }
+
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
           Array.from(nodeset).forEach(node => {
-          // console.log('#### node', node);
-          const newEntry = this.createEntry();
+            // console.log('#### node', node);
+            const newEntry = this.createEntry();
 
-          // ### initialize new entry
-          // ### set value
-          this.updateEntry(newEntry, node);
-        });
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
         } else {
           const newEntry = this.createEntry();
           this.updateEntry(newEntry, nodeset);

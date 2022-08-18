@@ -167,7 +167,7 @@ export class FxInstance extends HTMLElement {
     })
       .then(response => {
         const { status } = response;
-        if(status >= 400){
+        if (status >= 400) {
           console.log('response status', status);
           alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
           throw new Error(`failed to load data - status: ${status}`);

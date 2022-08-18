@@ -6,7 +6,7 @@
 
     <title>todo</title>
 
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
 
@@ -51,7 +51,10 @@
             <div class="info big">
                 {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
             </div>
-            <fx-repeat id="task" ref="task">
+
+            <fx-setfocus target="#document" control="task" event="index-changed"></fx-setfocus>
+            <fx-repeat id="r-task" ref="task">
+
                 <template>
                     <div>
                         <fx-control ref="@complete" value-prop="checked" update-event="input">

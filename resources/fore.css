@@ -45,6 +45,11 @@ fx-alert{
     font-size: 0.9rem;
 }
 
+/* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
+fx-case{
+    display: none;
+}
+
 fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
     display:none;
 }

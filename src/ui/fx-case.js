@@ -26,7 +26,7 @@ class FxCase extends HTMLElement {
 
     const style = `
             :host {
-                display: none;
+                visibility: none;
             }
         `;
     const html = `
@@ -40,10 +40,9 @@ class FxCase extends HTMLElement {
             ${html}
     `;
 
-    this.style.display = 'none';
   }
 }
 
 if (!customElements.get('fx-case')) {
-    window.customElements.define('fx-case', FxCase);
+  window.customElements.define('fx-case', FxCase);
 }

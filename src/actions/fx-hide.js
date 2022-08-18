@@ -1,4 +1,4 @@
-import {Fore} from '../fore.js';
+import { Fore } from '../fore.js';
 import { AbstractAction } from './abstract-action.js';
 import { resolveId } from '../xpath-evaluation.js';
 
@@ -12,7 +12,7 @@ import { resolveId } from '../xpath-evaluation.js';
 export class FxHide extends AbstractAction {
   connectedCallback() {
     this.dialog = this.getAttribute('dialog');
-    if(!this.dialog){
+    if (!this.dialog) {
       Fore.dispatch(this, 'error', { message: 'dialog does not exist' });
     }
   }

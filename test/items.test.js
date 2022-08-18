@@ -98,24 +98,24 @@ describe('fx-items tests', () => {
   it('displays expected values', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-          <fx-model id="model-1">
-            <fx-instance 
-              id="default" 
-              src="/base/test/ling-checkboxes.xml" 
+        <fx-model id="model-1">
+          <fx-instance
+            id="default"
+            src="/base/test/ling-checkboxes.xml"
               xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-              
-            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
-          </fx-model>
-          <fx-control ref="//m/@function" update-event="input">
-              <fx-items ref="instance('i-functions')//option" class="widget">
-                  <template>
-                      <span class="fx-checkbox">
+
+          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+        </fx-model>
+        <fx-control ref="//m/@function" update-event="input">
+          <fx-items ref="instance('i-functions')//option" class="widget">
+            <template>
+              <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}" />
-                          <label>{.}</label>
-                      </span>
-                  </template>
-              </fx-items>
-          </fx-control>
+                <label>{.}</label>
+              </span>
+            </template>
+          </fx-items>
+        </fx-control>
       </fx-fore>
     `);
 
@@ -144,25 +144,25 @@ describe('fx-items tests', () => {
   it('updates value when item is changed', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-          <fx-model id="model-1">
-            <fx-instance 
-              id="default" 
-              src="/base/test/ling-checkboxes.xml" 
+        <fx-model id="model-1">
+          <fx-instance
+            id="default"
+            src="/base/test/ling-checkboxes.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           />
-              
-            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
-          </fx-model>
-          <fx-control ref="//m/@function" update-event="input">
-              <fx-items ref="instance('i-functions')//option" class="widget">
-                  <template>
-                      <span class="fx-checkbox">
+
+          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+        </fx-model>
+        <fx-control ref="//m/@function" update-event="input">
+          <fx-items ref="instance('i-functions')//option" class="widget">
+            <template>
+              <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}" />
-                          <label>{.}</label>
-                      </span>
-                  </template>
-              </fx-items>
-          </fx-control>
+                <label>{.}</label>
+              </span>
+            </template>
+          </fx-items>
+        </fx-control>
       </fx-fore>
     `);
 
@@ -193,25 +193,25 @@ describe('fx-items tests', () => {
   it('works when checkbox label is clicked', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-          <fx-model id="model-1">
-            <fx-instance 
-              id="default" 
-              src="/base/test/ling-checkboxes.xml" 
+        <fx-model id="model-1">
+          <fx-instance
+            id="default"
+            src="/base/test/ling-checkboxes.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           />
-              
-            <fx-instance id="i-functions" src="/base/test/functions.xml"/>
-          </fx-model>
-          <fx-control ref="//m/@function" update-event="input">
-              <fx-items ref="instance('i-functions')//option" class="widget">
-                  <template>
-                      <span class="fx-checkbox">
+
+          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+        </fx-model>
+        <fx-control ref="//m/@function" update-event="input">
+          <fx-items ref="instance('i-functions')//option" class="widget">
+            <template>
+              <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}" />
-                          <label>{.}</label>
-                      </span>
-                  </template>
-              </fx-items>
-          </fx-control>
+                <label>{.}</label>
+              </span>
+            </template>
+          </fx-items>
+        </fx-control>
       </fx-fore>
     `);
 

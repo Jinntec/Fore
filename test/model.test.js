@@ -468,44 +468,44 @@ describe('model tests', () => {
 
   it('recalcuates node "string"', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <css></css>
-                            <rotate>0</rotate>
-                            <transform></transform>
-                            <string></string>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="css"></fx-bind>
-                    <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
-                </fx-model>
-                <fx-group>
-                    <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
-                        Dynamic CSS
-                    </h1>
-                    <p>Change the range control and see what happens.</p>
-                    <fx-control ref="rotate" update-event="change">
-                        <input type="range" step="10" min="0" max="360"/>
-                        <fx-setvalue event="value-changed" ref="../css">bar</fx-setvalue>
-                    </fx-control>
-                    <p></p>
-                    transform:<fx-output ref="transform"></fx-output>
-                    <p></p>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <css></css>
+              <rotate>0</rotate>
+              <transform></transform>
+              <string></string>
+            </data>
+          </fx-instance>
+          <fx-bind ref="css"></fx-bind>
+          <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
+        </fx-model>
+        <fx-group>
+          <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
+            Dynamic CSS
+          </h1>
+          <p>Change the range control and see what happens.</p>
+          <fx-control ref="rotate" update-event="change">
+            <input type="range" step="10" min="0" max="360" />
+            <fx-setvalue event="value-changed" ref="../css">bar</fx-setvalue>
+          </fx-control>
+          <p></p>
+          transform:<fx-output ref="transform"></fx-output>
+          <p></p>
           <fx-control
             id="transform"
             ref="string"
             update-event="input"
             style="transform:translate({../transform}px);"
           >
-                        <label>lets move - type something</label>
-                    </fx-control>
-                    <div class="foo {css}">
-                        This div gets a class added when the range control is changed.
-                    </div>
-                </fx-group>
-            </fx-fore>
+            <label>lets move - type something</label>
+          </fx-control>
+          <div class="foo {css}">
+            This div gets a class added when the range control is changed.
+          </div>
+        </fx-group>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'ready');

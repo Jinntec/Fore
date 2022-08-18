@@ -9,13 +9,13 @@
     console.log('element selected', e.target);
     document.dispatchEvent(
       new CustomEvent('selectElement', {
-      composed: true,
-      bubbles: true,
-      detail: {current: e.target},
+        composed: true,
+        bubbles: true,
+        detail: { current: e.target },
       }),
     );
 
-/*
+    /*
         document.dispatchEvent(new CustomEvent('error',
         composed: true,
         bubbles: true,
@@ -62,13 +62,13 @@
       }
     }
   }
-  targetModel.addEventListener('dragenter', function(e){
-      // if(event.target.innerText === 'FX-MODEL'){
-        event.target.style.background = 'rgba(255,255,255,0.8)';
-      // }
+  targetModel.addEventListener('dragenter', function(e) {
+    // if(event.target.innerText === 'FX-MODEL'){
+    event.target.style.background = 'rgba(255,255,255,0.8)';
+    // }
   });
 
-  console.log('targetModel',targetModel);
+  console.log('targetModel', targetModel);
   document.addEventListener('drop', function(e) {
     console.log('drop', e);
     // e.preventDefault();
@@ -82,10 +82,10 @@
       elementName === 'instance' ||
       elementName === 'bind' ||
       elementName === 'submission' ||
-        elementName === 'function'
+      elementName === 'function'
     ) {
       const realTarget = document.elementFromPoint(e.clientX, e.clientY);
-      console.log('realTarget',realTarget);
+      console.log('realTarget', realTarget);
 
       const currentInsertPoint = document.querySelector('main fx-model');
       const newElem = document.createElement('fx-' + elementName);

@@ -84,7 +84,7 @@ function markdown(src) {
             : 'code',
           highlight(content),
         ),
-      );
+    );
   }
 
   function unesc(str) {
@@ -130,12 +130,12 @@ function markdown(src) {
   replace(rx_table, (all, table) => {
     const sep = table.match(rx_thead)[1];
     return `\n${element(
-        'table',
+      'table',
       table.replace(rx_row, (row, ri) =>
         row == sep
-            ? ''
-            : element(
-                'tr',
+          ? ''
+          : element(
+              'tr',
               row.replace(rx_cell, (all, cell, ci) =>
                 ci ? element(sep && !ri ? 'th' : 'td', unesc(highlight(cell || ''))) : '',
               ),

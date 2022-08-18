@@ -27,6 +27,7 @@ import './src/ui/fx-items.js';
 // action classes
 import './src/actions/fx-append.js';
 import './src/actions/fx-delete.js';
+import './src/actions/fx-setfocus.js';
 import './src/actions/fx-insert.js';
 import './src/actions/fx-message.js';
 import './src/actions/fx-setvalue.js';
@@ -43,4 +44,3 @@ import './src/actions/fx-hide.js';
 
 import './src/functions/fx-function.js';
 
-// import '@teipublisher/pb-components/src/pb-components-bundle.js';

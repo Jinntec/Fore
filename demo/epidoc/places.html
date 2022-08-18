@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Places</title>
+    <link href="../resources/css/fore.css" rel="stylesheet"/>
+
+
+    <style>
+        /*
+                @font-face {
+                    font-family: "Kimberley";
+                    src: url(../../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
+                }
+        */
+
+        body, .wrapper{
+            margin:0;
+            padding:0;
+            font-family: "Kimberley";
+        }
+        button{
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+        }
+        .wrapper{
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+            margin:0 auto;
+            padding: 2rem;
+        }
+        .grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap:1rem;
+            margin-bottom: 2rem;
+            border:thin solid var(--paper-grey-300);
+        }
+        fx-control{
+            display: grid;
+            grid-template-columns: 200px auto;
+            /*width: fit-content;*/
+
+            grid-gap:0.3rem;
+            margin: 0.5rem 0;
+
+        }
+        fx-control input{
+            width:200px;
+        }
+        fx-control textarea{
+            width: 95%;
+            display: inline-block;
+        }
+
+        .group{
+            border:thin solid var(--paper-grey-300);
+            margin-bottom:1rem;
+        }
+
+        fx-control label{
+            justify-self: end;
+        }
+        .green{
+            background:green;
+        }
+        .orange{
+            background:orange;
+        }
+        .yellow{
+            background:yellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Places</h1>
+    <fx-fore id="places">
+        <fx-model>
+            <fx-instance src="templates/fore/place-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+
+            <fx-submission id="s-save" method="post" url="api/place" replace="none">
+                <fx-message event="submit-done">Ort wurde gespeichert</fx-message>
+            </fx-submission>
+        </fx-model>
+
+        <h1>Places</h1>
+
+        <fx-switch>
+
+            <fx-case id="list">
+                <fx-trigger class="toggle-view">
+                    <button>+</button>
+                    <fx-toggle case="add"></fx-toggle>
+                </fx-trigger>
+
+                <div id="places-list"></div>
+
+            </fx-case>
+
+            <fx-case id="add">
+                <fx-group>
+                    <fx-control ref="placeName[@type='findspot']">
+                        <label>Fundstelle</label>
+                    </fx-control>
+                    <fx-control ref="placeName[@type='modern']">
+                        <label>moderner Ortsname</label>
+                    </fx-control>
+                    <fx-control ref="placeName[@type='ancient']">
+                        <label>antiker Ortsname</label>
+                    </fx-control>
+                </fx-group>
+                <fx-group>
+                    <fx-control ref="region[@type='province']">
+                        <label>Provinz</label>
+                    </fx-control>
+                    <fx-control ref="region[@tyoe='modern']">
+                        <label>moderne Region</label>
+                    </fx-control>
+                    <fx-control ref="country">
+                        <label>Modernes Land</label>
+                    </fx-control>
+                </fx-group>
+                <fx-group ref="location">
+                    <fx-control ref="geo">
+                        <label/>
+                    </fx-control>
+                </fx-group>
+                <fx-group>
+                    <fx-control ref="ptr[@type='pleiades']">
+                        <label>Pleiades</label>
+                    </fx-control>
+                    <fx-control ref="ptr[@type='geonames']">
+                        <label>Geonames</label>
+                    </fx-control>
+                </fx-group>
+                <div class="actions">
+                    <fx-trigger>
+                        <button>Speichern</button>
+                        <fx-send submission="s-save"/>
+                    </fx-trigger>
+                    <fx-trigger class="toggle-view close">
+                        <a href="#">Abbrechen</a>
+                        <fx-toggle case="list"></fx-toggle>
+                    </fx-trigger>
+                </div>
+
+            </fx-case>
+        </fx-switch>
+        <fx-inspector/>
+    </fx-fore>
+
+</div>
+<script type="module" src="../resources/scripts/fore-dev.js"/>
+</body>
+</html>

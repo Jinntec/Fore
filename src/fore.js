@@ -127,10 +127,11 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         Array.from(children).forEach(element => {
-          if(element.nodeName.toUpperCase() === 'FX-FORE'){
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
             resolve('done');
           }
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            // console.log('refreshing', element, element?.ref);
             // console.log('refreshing ',element);
             element.refresh();
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
@@ -156,7 +157,7 @@ export class Fore {
       start = start.parentNode;
       if (!start) {
         return null;
-  }
+      }
     }
     return start;
   }
@@ -223,34 +224,35 @@ export class Fore {
 
   static dispatch(target, eventName, detail) {
     const event = new CustomEvent(eventName, {
-            composed: false,
+      composed: false,
       bubbles: true,
       detail,
     });
-    console.log('firing', event);
+    console.log('dispatching', event);
     target.dispatchEvent(event);
   }
 
   static prettifyXml(source) {
     const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
     const xsltDoc = new DOMParser().parseFromString(
-        [
-          // describes how we want to modify the XML - indent everything
+      [
+        // describes how we want to modify the XML - indent everything
         '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         '  <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>',
-          '  <xsl:strip-space elements="*"/>',
+        '  <xsl:strip-space elements="*"/>',
         '  <xsl:template match="text()">', // change to just text() to strip space in text nodes
-          '    <xsl:value-of select="normalize-space(.)"/>',
-          '  </xsl:template>',
-          '  <xsl:template match="node()|@*">',
+        '    <xsl:value-of select="normalize-space(.)"/>',
+        '  </xsl:template>',
+        '  <xsl:template match="node()|@*">',
         '    <xsl:copy>',
         '        <xsl:apply-templates select="node()|@*"/>',
         '    </xsl:copy>',
-          '  </xsl:template>',
-          '</xsl:stylesheet>',
-        ].join('\n'),
-        'application/xml',
+        '  </xsl:template>',
+        '</xsl:stylesheet>',
+      ].join('\n'),
+      'application/xml',
     );
+
 
     const xsltProcessor = new XSLTProcessor();
     xsltProcessor.importStylesheet(xsltDoc);
@@ -259,8 +261,57 @@ export class Fore {
     return resultXml;
   }
 
-  static async loadForeFromUrl(hostElement,url) {
-    console.log('########## loading Fore from ',this.src ,'##########');
+  static formatXml (xml) {
+    var reg = /(>)(<)(\/*)/g;
+    var wsexp = / *(.*) +\n/g;
+    var contexp = /(<.+>)(.+\n)/g;
+    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    var pad = 0;
+    var formatted = '';
+    var lines = xml.split('\n');
+    var indent = 0;
+    var lastType = 'other';
+    // 4 types of tags - single, closing, opening, other (text, doctype, comment) - 4*4 = 16 transitions
+    var transitions = {
+      'single->single': 0,
+      'single->closing': -1,
+      'single->opening': 0,
+      'single->other': 0,
+      'closing->single': 0,
+      'closing->closing': -1,
+      'closing->opening': 0,
+      'closing->other': 0,
+      'opening->single': 1,
+      'opening->closing': 0,
+      'opening->opening': 1,
+      'opening->other': 1,
+      'other->single': 0,
+      'other->closing': -1,
+      'other->opening': 0,
+      'other->other': 0
+    };
+
+    for (var i = 0; i < lines.length; i++) {
+      var ln = lines[i];
+      var single = Boolean(ln.match(/<.+\/>/)); // is this line a single tag? ex. <br />
+      var closing = Boolean(ln.match(/<\/.+>/)); // is this a closing tag? ex. </a>
+      var opening = Boolean(ln.match(/<[^!].*>/)); // is this even a tag (that's not <!something>)
+      var type = single ? 'single' : closing ? 'closing' : opening ? 'opening' : 'other';
+      var fromTo = lastType + '->' + type;
+      lastType = type;
+      var padding = '';
+
+      indent += transitions[fromTo];
+      for (var j = 0; j < indent; j++) {
+        padding += '    ';
+      }
+
+      formatted += padding + ln + '\n';
+    }
+  }
+
+  static async loadForeFromUrl(hostElement, url) {
+    console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -269,50 +320,50 @@ export class Fore {
         'Content-Type': 'text/html',
       },
     })
-        .then(response => {
-          const responseContentType = response.headers.get('content-type').toLowerCase();
-          console.log('********** responseContentType *********', responseContentType);
-          if (responseContentType.startsWith('text/html')) {
-            return response.text().then(result =>
-                // console.log('xml ********', result);
-                new DOMParser().parseFromString(result, 'text/html'),
-            );
-          }
-          return 'done';
-        })
-        .then(data => {
-          // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
-          const theFore = data.querySelector('fx-fore');
-          // console.log('thefore', theFore)
-          if(!theFore){
-              hostElement.dispatchEvent(
-                  new CustomEvent('error', {
-                      composed: false,
-                      bubbles: true,
-                      detail: {
-                          message: 'cyclic graph',
-                      },
-                  }),
-              );
-          }
-          hostElement.appendChild(theFore);
-          theFore.classList.add('widget');
-          // return theFore;
-          // theFore.setAttribute('from-src', this.src);
-          // this.replaceWith(theFore);
-        })
-        .catch(error => {
+      .then(response => {
+        const responseContentType = response.headers.get('content-type').toLowerCase();
+        console.log('********** responseContentType *********', responseContentType);
+        if (responseContentType.startsWith('text/html')) {
+          return response.text().then(result =>
+            // console.log('xml ********', result);
+            new DOMParser().parseFromString(result, 'text/html'),
+          );
+        }
+        return 'done';
+      })
+      .then(data => {
+        // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
+        const theFore = data.querySelector('fx-fore');
+        // console.log('thefore', theFore)
+        if (!theFore) {
+          hostElement.dispatchEvent(
+            new CustomEvent('error', {
+              composed: false,
+              bubbles: true,
+              detail: {
+                message: 'cyclic graph',
+              },
+            }),
+          );
+        }
+        hostElement.appendChild(theFore);
+        theFore.classList.add('widget');
+        // return theFore;
+        // theFore.setAttribute('from-src', this.src);
+        // this.replaceWith(theFore);
+      })
+      .catch(error => {
         hostElement.dispatchEvent(
           new CustomEvent('error', {
-                    composed:false,
-                    bubbles:true,
-                    detail: {
+            composed: false,
+            bubbles: true,
+            detail: {
               error: error,
               message: `'${url}' not found or does not contain Fore element.`,
             },
           }),
         );
-        });
+      });
   }
 
   /**

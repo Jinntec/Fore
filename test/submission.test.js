@@ -80,7 +80,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -128,7 +128,7 @@ describe('submission tests', () => {
 
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
     expect(vehicle).to.exist;
 
@@ -167,7 +167,7 @@ describe('submission tests', () => {
 
     sm.evalInContext();
     // const result = sm.selectRelevant('xml');
-    const result = Relevance.selectRelevant( sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPathToBoolean('exists(vehicle/text())', result, null, {});
     expect(vehicle).to.be.false;
 
@@ -201,7 +201,7 @@ describe('submission tests', () => {
     expect(sm).to.exist;
 
     sm.evalInContext();
-    const result = Relevance.selectRelevant(sm,'xml');
+    const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle/text()', result, null, {});
     // expect(vehicle).to.be.true;
     expect(vehicle).to.be.empty;
@@ -301,39 +301,39 @@ describe('submission tests', () => {
 
   it('submits and replaces json ', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="json">
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="json">
             { "foo":"bar" }
-                    </fx-instance>
-                    <fx-instance id="response" type="json">{}</fx-instance>
+          </fx-instance>
+          <fx-instance id="response" type="json">{}</fx-instance>
 
           <fx-submission
             id="submission"
-                                   url="#echo"
-                                   method="POST"
-                                   replace="instance"
+            url="#echo"
+            method="POST"
+            replace="instance"
             instance="response"
           >
             <fx-message event="submit-done"
               >JSON Data have been submitted - replacing instance</fx-message
             >
-                    </fx-submission>
-                </fx-model>
-                <fx-group collapse="true">
-                    <h1>Submission of JSON data</h1>
-                    <fx-trigger>
-                        <button>replace instance with json</button>
-                        <fx-send submission="submission"></fx-send>
-                    </fx-trigger>
-                    <fx-output ref="instance()?foo">
-                        <label slot="label">instance()?foo =</label>
-                    </fx-output>
-                    <fx-output id="out" ref="instance('response')?foo">
-                        <label slot="label">This message comes from replaced instance:</label>
-                    </fx-output>
-                </fx-group>
-            </fx-fore>
+          </fx-submission>
+        </fx-model>
+        <fx-group collapse="true">
+          <h1>Submission of JSON data</h1>
+          <fx-trigger>
+            <button>replace instance with json</button>
+            <fx-send submission="submission"></fx-send>
+          </fx-trigger>
+          <fx-output ref="instance()?foo">
+            <label slot="label">instance()?foo =</label>
+          </fx-output>
+          <fx-output id="out" ref="instance('response')?foo">
+            <label slot="label">This message comes from replaced instance:</label>
+          </fx-output>
+        </fx-group>
+      </fx-fore>
     `);
 
     await oneEvent(el, 'refresh-done');
@@ -352,4 +352,131 @@ describe('submission tests', () => {
     const out = el.querySelector('#out');
     expect(out.value).to.equal('bar');
   });
+
+  it('preserves root node', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/submission-root-data.xml">
+            <data></data>
+          </fx-instance>
+
+          <fx-instance id="target">
+            <data></data>
+          </fx-instance>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                         replace="instance"
+                         instance="target">
+          </fx-submission>
+        </fx-model>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    const inst = el.querySelectorAll('fx-instance');
+    expect(inst[1]).to.exist;
+    expect(inst[1].instanceData).to.exist;
+    await oneEvent(sm, 'submit-done');
+
+    const root = inst[1].instanceData.firstElementChild;
+    console.log(root);
+    expect(root.nodeName).to.equal('place');
+    expect(root.hasAttribute('xml:id')).to.be.true;
+    expect(root.getAttribute('xml:id')).to.equal('G003584');
+
+    expect(root.hasAttribute('xmlns')).to.be.true;
+    expect(root.getAttribute('xmlns')).to.equal('http://www.tei-c.org/ns/1.0');
+
+
+  });
+
+  it('checks constraints and dispatches error when invalid', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item></item>
+              <fail></fail>
+            </data>
+          </fx-instance>
+          <fx-bind ref="item" constraint="false()"></fx-bind>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                        replace="none">
+            <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+          </fx-submission>
+        </fx-model>
+        <fx-output ref="fail"></fx-output>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    await oneEvent(sm, 'submit-error');
+    const out=el.querySelector('fx-output');
+    expect(out.value).to.equal('true');
+  });
+
+  it('checks required and dispatches error when invalid', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item></item>
+              <fail></fail>
+            </data>
+          </fx-instance>
+          <fx-bind ref="item" required="true()"></fx-bind>
+
+          <fx-submission id="sub1"
+                         url="#echo"
+                         method="post"
+                        replace="none">
+            <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+          </fx-submission>
+        </fx-model>
+        <fx-output ref="fail"></fx-output>
+        <fx-trigger>
+          <button>submit</button>
+          <fx-send submission="sub1"></fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const sm = el.querySelector('#sub1');
+    expect(sm).to.exist;
+    sm.submit();
+
+    await oneEvent(sm, 'submit-error');
+    const out=el.querySelector('fx-output');
+    expect(out.value).to.equal('true');
+  });
+
+
 });

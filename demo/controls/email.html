@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
@@ -8,39 +8,39 @@
     <link href="../../resources/fore.css" rel="stylesheet">
 
     <style>
-        body, .wrapper {
-            margin: 0;
-            padding: 0;
-        }
+      body, .wrapper {
+          margin: 0;
+          padding: 0;
+      }
 
-        .wrapper {
-            width: 21cm;
-            height: 29.7cm;
-            background: lightyellow;
-        }
+      .wrapper {
+          width: 21cm;
+          height: 29.7cm;
+          background: lightyellow;
+      }
     </style>
-</head>
-<body>
-<div class="wrapper">
+  </head>
+  <body>
+	<div class="wrapper">
 
-    <fx-fore load-css="inner.css">
+      <fx-fore load-css="inner.css">
         <fx-message event="ready">email ready</fx-message>
         <fx-model>
 <!--          <fx-message event="model-construct-done">email model ready</fx-message>-->
 
-            <fx-instance id="email">
-                <data>
-                    <email>default</email>
-                </data>
-            </fx-instance>
+          <fx-instance id="email">
+            <data>
+              <email>default</email>
+            </data>
+          </fx-instance>
         </fx-model>
 		<fx-repeat id="emails" ref="instance('email')/email">
 		  <template>
 			<fx-control ref="." update-event="input">
-            <label>Email</label>
-            <fx-return ref="." event="value-changed"></fx-return>
-        </fx-control>
-        <fx-trigger>
+              <label>Email</label>
+              <fx-return ref="." event="value-changed"></fx-return>
+			</fx-control>
+			<fx-trigger>
 			  <button>Check it</button>
 			  <fx-show dialog="myDialog"></fx-show>
 			  <fx-dispatch name="myEvent" targetid="report">
@@ -51,10 +51,10 @@
 			</div>
 			<fx-message event="myEvent" target="report">!!!{.}</fx-message>
 			<fx-trigger>
-            <button>message and refresh me</button>
+              <button>message and refresh me</button>
               <fx-message>Hey my address is {.}</fx-message>
-            <fx-refresh></fx-refresh>
-        </fx-trigger>
+              <fx-refresh></fx-refresh>
+			</fx-trigger>
 
 			<fx-items ref=".">
 			  <template>
@@ -82,10 +82,10 @@
 		</fx-repeat>
 		<fx-trigger><button> append</button><fx-insert ref="email"></fx-trigger>
 		<!--        <fx-inspector open></fx-inspector>-->
-    </fx-fore>
+      </fx-fore>
 
 
-</div>
-<script type="module" src="../../index.js"></script>
-</body>
+	</div>
+	<script type="module" src="../../index.js"></script>
+  </body>
 </html>

@@ -39,7 +39,7 @@ class FxSwitch extends FxContainer {
   refresh() {
     super.refresh();
     console.log('refresh on switch ');
-    const cases = this.querySelectorAll('fx-case');
+    const cases = this.querySelectorAll(':scope > fx-case');
     if (this.isBound()) {
       Array.from(cases).forEach(caseElem => {
         const name = caseElem.getAttribute('name');
@@ -50,7 +50,7 @@ class FxSwitch extends FxContainer {
         }
       });
     } else {
-      const selected = this.querySelector('.selected-case');
+      const selected = this.querySelector(':scope > .selected-case');
       if (!selected) {
         cases[0].classList.add('selected-case');
       }

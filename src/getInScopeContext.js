@@ -39,7 +39,7 @@ function _getInitialContext(node, ref) {
     make sure that the closest ref belongs to the same fx-fore element
     */
     const parentBindFore = parentBind.closest('fx-fore');
-    if(localFore === parentBindFore){
+    if (localFore === parentBindFore) {
       return parentBind.nodeset;
     }
     return model.getDefaultInstance().getDefaultContext();
@@ -47,7 +47,7 @@ function _getInitialContext(node, ref) {
 
   if (XPathUtil.isAbsolutePath(ref)) {
     const instanceId = XPathUtil.getInstanceId(ref);
-    if(instanceId){
+    if (instanceId) {
       return model.getInstance(instanceId).getDefaultContext();
     }
     return model.getDefaultInstance().getDefaultContext();
@@ -63,7 +63,7 @@ export default function getInScopeContext(node, ref) {
 
   const repeatItem = Fore.getClosest('fx-repeatitem', parentElement);
   if (repeatItem) {
-    if(node.nodeName === 'context'){
+    if (node.nodeName === 'context') {
       return evaluateXPathToFirstNode(
         node.nodeValue,
         repeatItem.nodeset,

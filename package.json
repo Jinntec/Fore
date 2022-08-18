@@ -1,7 +1,7 @@
 {
   "name": "@jinntec/fore",
   "version": "1.0.0",
-  "description": "Fore - Forms for the Web",
+  "description": "Fore - declarative user interfaces in plain HTML",
   "module": "./index.js",
   "publishConfig": {
     "access": "public"
@@ -24,7 +24,9 @@
     "resources/toastify.css",
     "src/**/*",
     "dist/fore.js",
+    "dist/fore.js.map",
     "dist/fore-dev.js",
+    "dist/fore-dev.js.map",
     "!.DS_Store"
   ],
   "dependencies": {
@@ -88,7 +90,9 @@
     "XQuery",
     "form",
     "xforms",
-    "html form"
+    "html form",
+    "declarative",
+    "user interface"
   ],
   "author": "Joern Turner",
   "license": "MIT",

@@ -40,7 +40,7 @@
     <demo-snippet>
         <template>
 
-            <fx-fore xpath-default-namespace="http://docbook.org/ns/docbook">
+            <fx-fore xpath-default-namespace="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <fx-model>
                     <fx-instance src="docbook/bibliography.xml"></fx-instance>
                 </fx-model>
@@ -54,7 +54,13 @@
                                     <h3>{head(abbrev | @xreflabel)}</h3>
                                     <label>Title
                                         <fx-control ref="descendant::title[1]"></fx-control>
-                                    </label>
+                                    </label><br/>
+                                    <label>Publisher
+                                        <fx-control ref="descendant::publisher[1]"></fx-control>
+                                    </label><br/>
+                                    <label>Publisher Website
+                                        <fx-control ref="descendant::xlink:link/@xlink:href"></fx-control>
+                                    </label><br/>
                                     <fx-trigger>
                                         <button>delete</button>
                                         <fx-delete ref="."></fx-delete>

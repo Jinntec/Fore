@@ -36,9 +36,9 @@ export class FxModel extends HTMLElement {
         `;
 
     this.addEventListener('model-construct-done', () => {
-      this.modelConstructed = true;
-      // console.log('model-construct-done fired ', this.modelConstructed);
-      // console.log('model-construct-done fired ', e.detail.model.instances);
+        this.modelConstructed = true;
+        // console.log('model-construct-done fired ', this.modelConstructed);
+        // console.log('model-construct-done fired ', e.detail.model.instances);
     },{ once: true });
 
     this.skipUpdate = false;
@@ -202,8 +202,13 @@ export class FxModel extends HTMLElement {
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
   recalculate() {
+    if(!this.mainGraph){
+      return;
+    }
+
     console.group('### recalculate');
     console.log('changed nodes ', this.changed);
+
 
     console.time('recalculate');
     this.computes = 0;
@@ -215,7 +220,7 @@ export class FxModel extends HTMLElement {
         this.subgraph.addNode(modelItem.path, modelItem.node);
         // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
         // this._addSubgraphDependencies(modelItem.path);
-        if (this.mainGraph && this.mainGraph.hasNode(modelItem.path)) {
+        if (this.mainGraph.hasNode(modelItem.path)) {
           // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
 
           const all = this.mainGraph.dependantsOf(modelItem.path, false);
@@ -245,7 +250,7 @@ export class FxModel extends HTMLElement {
       // ### compute the subgraph
       const ordered = this.subgraph.overallOrder(false);
       ordered.forEach(path => {
-        if (this.mainGraph && this.mainGraph.hasNode(path)) {
+        if (this.mainGraph.hasNode(path)) {
           const node = this.mainGraph.getNodeData(path);
           this.compute(node, path);
         }
@@ -371,8 +376,9 @@ export class FxModel extends HTMLElement {
    *
    */
   revalidate() {
-    console.group('### revalidate');
+    if(this.modelItems.length === 0) return true;
 
+    console.group('### revalidate');
     console.time('revalidate');
     let valid = true;
     this.modelItems.forEach(modelItem => {
@@ -402,6 +408,28 @@ export class FxModel extends HTMLElement {
             }
           }
         }
+        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
+          const required = bind.getAttribute('required');
+          if (required) {
+            const compute = evaluateXPathToBoolean(required, modelItem.node, this);
+            console.log('modelItem required computed: ', compute);
+            modelItem.required = compute;
+            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            if(!modelItem.node.textContent){
+               valid = false;
+            }
+            // if (!compute) valid = false;
+/*
+            if (!this.modelConstructed) {
+              // todo: get alert from attribute or child element
+              const alert = bind.getAlert();
+              if (alert) {
+                modelItem.addAlert(alert);
+              }
+            }
+*/
+          }
+        }
       }
     });
     console.timeEnd('revalidate');
@@ -428,7 +456,7 @@ export class FxModel extends HTMLElement {
   }
 
   getDefaultInstance() {
-    return this.instances[0];
+    return this?.instances[0];
   }
 
   getDefaultInstanceData() {

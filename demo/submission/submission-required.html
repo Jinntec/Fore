@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Submission with required data</title>
+    <link rel="stylesheet" href="../../resources/vars.css"/>
+    <link rel="stylesheet" href="../../resources/demo.css"/>
+    <style>
+        [required] label::after {
+            content: '*';
+        }
+
+        [invalid] .widget {
+            background: lightcoral;
+        }
+
+        .isRequiredFalse .widget {
+            background: lightcoral;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>submitting with required data</h1>
+    <p>If there are required fields submission will stop and dispatch an `submit-error` in case
+    there are missing values. The `isRequiredFalse` class can be used to apply individual styling
+    to required control that are empty.</p>
+    <p>The second button uses a duplicate of the other submission just with `validation="false"`
+    to send data without being valid.</p>
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item></item>
+                            <fail></fail>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="item" required="true()"></fx-bind>
+
+                    <fx-submission id="sub1"
+                                   url="#echo"
+                                   method="post"
+                                   replace="none">
+                        <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+                        <fx-message event="submit-error">data are incomplete</fx-message>
+                        <fx-message event="submit-done">data are complete and have been sent</fx-message>
+                    </fx-submission>
+                    <fx-submission id="sub2"
+                                   url="#echo"
+                                   method="post"
+                                   replace="none"
+                                   validate="false">
+                        <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
+                        <fx-message event="submit-done">Daten wurden gesendet</fx-message>
+                    </fx-submission>
+                </fx-model>
+
+                <fx-control ref="item">
+                    <label>required item:</label>
+                </fx-control>
+                <fx-output ref="fail">
+                    <label slot="label">failed?</label>
+                </fx-output>
+                <fx-trigger>
+                    <button>submit</button>
+                    <fx-send submission="sub1"></fx-send>
+                </fx-trigger>
+
+                <fx-trigger>
+                    <button>submit without validation</button>
+                    <fx-send submission="sub2"></fx-send>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="../demo.js"/>
+</body>
+</html>

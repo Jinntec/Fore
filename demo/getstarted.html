@@ -6,6 +6,7 @@
 
     <title>Get started</title>
 
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
@@ -22,13 +23,6 @@
             background: orange;
             font-size: 2rem;
         }
-        textarea{
-            color:black;
-            white-space: pre-line;
-            background: ghostwhite;
-            font-size: 1.2rem;
-            padding: 0.5rem;
-        }
     </style>
 </head>
 <body>
@@ -40,11 +34,12 @@
 
     <h2>Step 1 - Setting up the page</h2>
     <p>Add these two lines to the head of a new HTML page.</p>
-        <textarea readonly="readonly" rows="3">
-<link href="../resources/fore.css" rel="stylesheet">
-
-<script type="module" src="../index.js"></script>
-        </textarea>
+    <demo-snippet>
+        <template>
+            <link href="../resources/fore.css" rel="stylesheet">
+            <script type="module" src="../index.js"></script>
+        </template>
+    </demo-snippet>
 
     <p>Let's jump right into the simplest possible example...</p>
     <p>In lazy mode you don't even need to write a model. This is for the 'small and quick' use cases where
@@ -56,6 +51,13 @@
             </fx-fore>
         </template>
     </demo-snippet>
+
+
+
+
+
+
+
 
 
     <p>

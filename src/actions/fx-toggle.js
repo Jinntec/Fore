@@ -5,7 +5,7 @@ import { AbstractAction } from './abstract-action.js';
  *
  */
 class FxToggle extends AbstractAction {
-/*
+  /*
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });

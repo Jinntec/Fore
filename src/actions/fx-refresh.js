@@ -9,12 +9,16 @@ import { Fore } from '../fore.js';
  */
 class FxRefresh extends AbstractAction {
   perform() {
-    if(this.hasAttribute('self')){
+    if (this.hasAttribute('self')) {
       const control = Fore.getClosest('fx-control', this);
-      if(control){
+      if (control) {
         control.refresh();
-        return ;
+        return;
       }
+    }
+    if(this.hasAttribute('force')){
+      this.getOwnerForm().forceRefresh();
+      return;
     }
     this.getOwnerForm().refresh();
   }

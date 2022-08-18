@@ -77,9 +77,10 @@
                     <fx-instance>
                         <data>
                             <disabled>true</disabled>
+                            <isdisabled>true</isdisabled>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="disabled" readonly=". ='true'"></fx-bind>
+                    <fx-bind ref="disabled" readonly="../isdisabled ='true'"></fx-bind>
                 </fx-model>
                 <fx-trigger ref="disabled">
                     <button>I'm a button</button>
@@ -97,10 +98,11 @@
                 </fx-trigger>
 
 
-                <fx-control ref="disabled" value-prop="checked" update-event="input">
+                <fx-control ref="isdisabled" value-prop="checked" update-event="input">
                     <label for="check">toggle disabled state</label>
                     <input id="check" type="checkbox" class="widget">
                 </fx-control>
+                <fx-inspector open></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>

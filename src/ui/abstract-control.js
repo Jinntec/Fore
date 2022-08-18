@@ -37,7 +37,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     // await this.updateComplete;
     // await this.getWidget();
-    this.oldVal = this.nodeset?this.nodeset:null;
+    this.oldVal = this.nodeset ? this.nodeset : null;
     this.evalInContext();
 
     if (this.isBound()) {
@@ -53,28 +53,28 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
-        if(this.hasAttribute('as') && this.getAttribute('as') === 'node'){
+        if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
           console.log('as', this.nodeset);
-          this.modelItem.value=this.nodeset;
-          this.value = this.modelItem.value;
-        }else{
+          this.modelItem.value = this.nodeset;
+          this.value = this.modelItem.node;
+        } else {
           this.value = this.modelItem.value;
         }
 
         // console.log('value of widget',this.value);
 
         /*
-        * todo: find out on which foreign modelitems we might be dependant on when no binds are used.
-        *
-        * e.g. filter expr on 'ref' 'instance('countries')//country[@continent = instance('default')/continent]'
-        *
-        * the country node is dependant on instance('default')/continent here (foreign node).
-        *
-        * possible approach:
-        * - pipe ref expression through DependencyNotifyingDomFacade to get referred nodes.
-        * - lookup modelItems of referred nodes
-        * - add ourselves to boundControls of foreign modelItem -> this control will then get refreshed when the foreign modelItem is changed.
-        */
+         * todo: find out on which foreign modelitems we might be dependant on when no binds are used.
+         *
+         * e.g. filter expr on 'ref' 'instance('countries')//country[@continent = instance('default')/continent]'
+         *
+         * the country node is dependant on instance('default')/continent here (foreign node).
+         *
+         * possible approach:
+         * - pipe ref expression through DependencyNotifyingDomFacade to get referred nodes.
+         * - lookup modelItems of referred nodes
+         * - add ourselves to boundControls of foreign modelItem -> this control will then get refreshed when the foreign modelItem is changed.
+         */
 
         // const touched = FxBind.getReferencesForRef(this.ref,Array.from(this.nodeset));
         // console.log('touched',touched);
@@ -82,7 +82,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
          */
-        if(!this.modelItem.boundControls.includes(this)){
+        if (!this.modelItem.boundControls.includes(this)) {
           this.modelItem.boundControls.push(this);
         }
 
@@ -94,7 +94,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value) {
-          Fore.dispatch(this,'value-changed', { path: this.modelItem.path });
+          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path });
         }
       }
     }
@@ -126,7 +126,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   _dispatchEvent(event) {
     if (this.getOwnerForm().ready) {
-      Fore.dispatch(this,event, {});
+      Fore.dispatch(this, event, {});
     }
   }
 
@@ -135,8 +135,15 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     // if (this.required !== this.modelItem.required) {
-    if (this.isRequired() !== this.modelItem.required) {
+    // if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
+        if (this.getOwnerForm().ready){
+          if(this.widget.value === ''){
+            this.classList.add('isRequiredFalse');
+          }else{
+            this.classList.remove('isRequiredFalse');
+          }
+        }
         this.widget.setAttribute('required', '');
         this.setAttribute('required', '');
         this._dispatchEvent('required');
@@ -145,7 +152,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.removeAttribute('required');
         this._dispatchEvent('optional');
       }
-    }
+    // }
   }
 
   handleReadonly() {
@@ -204,10 +211,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
     const item = this.modelItem.node;
-    if(Array.isArray(item) && item.length === 0){
+    if (Array.isArray(item) && item.length === 0) {
       this._dispatchEvent('nonrelevant');
       this.style.display = 'none';
-      return ;
+      return;
     }
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {

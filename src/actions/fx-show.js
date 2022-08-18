@@ -1,4 +1,4 @@
-import {Fore} from '../fore.js';
+import { Fore } from '../fore.js';
 import { FxAction } from './fx-action.js';
 import { resolveId } from '../xpath-evaluation.js';
 
@@ -12,13 +12,17 @@ import { resolveId } from '../xpath-evaluation.js';
 export class FxShow extends FxAction {
   connectedCallback() {
     this.dialog = this.getAttribute('dialog');
-    if(!this.dialog){
+    if (!this.dialog) {
       Fore.dispatch(this, 'error', { message: 'dialog does not exist' });
     }
   }
 
   perform() {
-    resolveId(this.dialog, this).open();
+    const targetDlg = resolveId(this.dialog,this);
+    if(!targetDlg){
+      console.error('target dialog with given id does not exist',this.dialog);
+    }
+    targetDlg.open();
   }
 }
 

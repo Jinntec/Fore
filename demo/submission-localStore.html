@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission storing to localStorage</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+            h2{
+                color:inherit;
+            }
+
+            a,a:link,a:visited{
+                color: blue;
+            }
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <bar>bar</bar>
+                            <another>value2</another>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="second">
+                        <data></data>
+                    </fx-instance>
+
+                    <fx-submission id="sub1"
+                                   url="localStore:foo"
+                                   method="post">
+                    </fx-submission>
+                </fx-model>
+                <fx-group>
+
+                    <h1>Submission storing to localStorage of browser</h1>
+                    <p>Can be used to pass data between several browser tabs</p>
+
+                    <ul>
+                        <li>click 'submit' to store data in localstorage</li>
+                        <li>Open this <a href="submission-consumer.html" target="_blank">page</a> and click the button
+                            to load the data that have been passed via localstorage.</li>
+                    </ul>
+                    <fx-trigger>
+                        <button>submit</button>
+                        <fx-send submission="sub1"></fx-send>
+                    </fx-trigger>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

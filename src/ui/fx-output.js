@@ -1,4 +1,4 @@
-import {Fore} from '../fore.js';
+import { Fore } from '../fore.js';
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToStrings } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
@@ -8,6 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
  */
 export class FxOutput extends XfAbstractControl {
+/*
   static get properties() {
     return {
       ...super.properties,
@@ -17,6 +18,7 @@ export class FxOutput extends XfAbstractControl {
     };
   }
 
+*/
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -94,7 +96,7 @@ export class FxOutput extends XfAbstractControl {
       return evaluateXPathToStrings(this.valueAttr, inscopeContext, this)[0];
     } catch (error) {
       console.error(error);
-      Fore.dispatch(this,'error', { message: error });
+      Fore.dispatch(this, 'error', { message: error });
     }
     return null;
   }

@@ -73,7 +73,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.inited = true;
   }
 
-/*
+  /*
   getModelItem() {
     super.getModelItem();
     // console.log('modelItem in repeatitem ', this.getModelItem()[this.index]);
@@ -84,7 +84,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   refresh(force) {
     this.modelItem = this.getModelItem();
     // ### register ourselves as boundControl
-    if(!this.modelItem.boundControls.includes(this)){
+    if (!this.modelItem.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
 

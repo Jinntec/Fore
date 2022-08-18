@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<!-- Fehlende Felder da unklar: 34, 24 -->
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <!-- TODO: Eingabe Haupttitel der Inschrift fehlt im Formular? -->
+                <title>Votive inscription from Bonna &amp;ndash; Bonn (Germania inferior)</title>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license. </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <!-- 3) EDEp ID -->
+                        <idno type="EDEp">HD025278</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <!-- 16a) Inschriftträger -->
+                                    <objectType ref="https://www.eagle-network.eu/voc/objtyp/lod/29">altar</objectType>
+                                    <!-- 18) Material -->
+                                    <material ref="http://www.eagle-network.eu/voc/material/lod/75">Sandstein</material>
+                                    <!-- 16b) Beschreibung Inschriftträger -->
+                                    <note>Beschreibung Inschriftträger</note>
+                                </support>
+                            </supportDesc>
+                        </objectDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <!--
+                                26) und 27) Datierung (zusammenfassen?)
+                                
+                                @when - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                                @notBefore - wie @when aber gemeint als "nach"
+                                @notAfter - wie @when aber gemeint als "vor"
+                                @when-custom - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                                @datingMethod - fixes Attribut, hier immer Julianisch
+                            -->
+                            <origDate when="0205" when-custom="möglicherweise 205" notBefore="0204" notAfter="0206"
+                                datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">205 AD</origDate>
+                        </origin>
+                    </history>
+                    <!-- msPart ist als Ganzes wiederholbar -->
+                    <msPart>
+                        <msIdentifier>
+                            <!-- 12a) Aufbewahrung -->
+                            <repository ref="http://sicily.classics.ox.ac.uk/museum/064">Bonn, Rhein. Landesmus.</repository>
+                            <!-- 4) TM-Nummer -->
+                            <idno type="TM">TM210152</idno>
+                        </msIdentifier>
+                        <msContents>
+                            <!-- 15) Inschriftengattung in @class -->
+                            <msItem class="https://www.eagle-network.eu/voc/typeins/lod/51">
+                                <!-- 25) Sprache -->
+                                <textLang mainLang="lat"></textLang>
+                                <!-- 35b) Bibliographie-->
+                                <listBibl type="edition">
+                                    <!-- Einträge wiederholbar -->
+                                    <bibl>
+                                        <!-- Zotero Referenz -->
+                                        <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                                    </bibl>
+                                </listBibl>
+                                <!-- 35a) Ältere Editionen -->
+                                <listBibl type="previousEditions">
+                                    <!-- Einträge wiederholbar -->
+                                    <bibl>
+                                        <!-- Zotero Referenz -->
+                                        <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                                    </bibl>
+                                </listBibl>
+                                <!-- 35c) Bilder -->
+                                <listBibl type="images">
+                                    <!-- Einträge wiederholbar -->
+                                    <bibl>
+                                        <!-- Zotero Referenz -->
+                                        <ptr target="https://www.zotero.org/groups/382445/items/FZWWPUD6"/>
+                                        <biblScope>
+                                            <graphic url="photo.png">
+                                                <desc>Beschreibung des Bildes</desc>
+                                            </graphic>
+                                        </biblScope>
+                                    </bibl>
+                                </listBibl>
+                                <!-- 35d) Abbildungen, wiederholbar -->
+                                <graphic url="photo.png"></graphic>
+                            </msItem>
+                        </msContents>
+                        <physDesc>
+                            <objectDesc>
+                                <supportDesc>
+                                    <support>
+                                        <dimensions>
+                                            <!-- 19) Inschriftträger: Breite -->
+                                            <width>(75)</width>
+                                            <!-- 38) Inschriftträger: Höhe -->
+                                            <height>30</height>
+                                            <!-- 20) Inschriftträger: Tiefe -->
+                                            <depth>7.5</depth>
+                                        </dimensions>
+                                        <!-- 14) Dekor -->
+                                        <rs type="decoration" ref="http://www.eagle-network.eu/voc/decor/lod/2000">yes</rs>
+                                    </support>
+                                    <!-- 13) Erhaltung -->
+                                    <condition>fragmentary</condition>
+                                </supportDesc>
+                                <layoutDesc>
+                                    <layout>
+                                        <dimensions>
+                                            <!-- 21) Inschriftfeld: Höhe -->
+                                            <height>28</height>
+                                            <!-- 22) Inschriftfeld: Breite -->
+                                            <width>6</width>
+                                        </dimensions>
+                                    </layout>
+                                </layoutDesc>
+                            </objectDesc>
+                            <handDesc>
+                                <handNote>
+                                    <dimensions type="letterHeight">
+                                        <!-- 23) Buchstabenhöhe -->
+                                        <height>7-3.5</height>
+                                    </dimensions>
+                                    <!-- 39) Ligatur -->
+                                    <rs type="ligature">yes/no</rs>
+                                </handNote>
+                            </handDesc>
+                        </physDesc>
+                        <history>
+                            <origin>
+                                <!-- in @corresp wird die GeoID angegeben, andere Ortsangaben sind redundant und werden
+                                    am Ende nur hinein kopiert - siehe Kommentare -->
+                                <origPlace corresp="#GeoID">
+                                    <!-- 5) Provinz / augusteische Region: kopiert aus Geodatenbank -->
+                                    <placeName type="province">Germania inferior</placeName>
+                                    <!-- 8) Fundort (antik): kopiert aus Geodatenbank -->
+                                    <placeName type="ancient" ref="https://pleiades.stoa.org/places/108818">Bonna</placeName>
+                                </origPlace>
+                            </origin>
+                            <!--
+                                11) Fundjahr (Attribute auf <provenance>)
+                                
+                                @when - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                                @notBefore - wie @when aber gemeint als "nach"
+                                @notAfter - wie @when aber gemeint als "vor"
+                                @when-custom - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                            -->
+                            <provenance type="found" when="1929" when-custom="1. Hälfte 20. Jahrhundert" notBefore="1928"
+                                notAfter="1929">
+                                <!-- 6) Land: kopiert aus Geodatenbank -->
+                                <placeName type="country" ref="https://www.geonames.org/2921044">Germany</placeName>
+                                <!-- 9) Fundort (modern): kopiert aus Geodatenbank -->
+                                <placeName type="modern" ref="http://www.geonames.org/2946447">Bonn</placeName>
+                                <!-- 10a) Fundstelle: kopiert aus Geodatenbank -->
+                                <placeName type="findspot">Steinfelder Straße, Flur "Auf der Kaulen", fränkisches Gräberfeld, sekundär verwendet</placeName>
+                                <!-- 7) moderne Region: kopiert aus Geodatenbank -->
+                                <placeName type="region">Nordrhein-Westfalen</placeName>
+                                <!-- 10b) Fundkontext: nicht kopiert, freie Eingabe -->
+                                <note type="context">Context of Provenance</note>
+                            </provenance>
+                        </history>
+                    </msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                <!-- Welche URI für lokale Klassifikation? -->
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    <!-- 28) Religion - kontrolliertes Vokabular? -->
+                    <term ref="#jewish"/>
+                </keywords>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/terms">
+                    <!-- 30) Sozial-/Wirtschafts-/Rechtsgeschichte: ja = vorhanden -->
+                    <term ref="#social-economic-legal-history"/>
+                    <!-- 31) Geographie: ja = vorhanden -->
+                    <term ref="#geography"/>
+                    <!-- 32) Militär: ja = vorhanden -->
+                    <term ref="#military"/>
+                </keywords>
+            </textClass>
+        </profileDesc>
+        <!-- 33) Stand der Bearbeitung in @status -->
+        <revisionDesc status="draft">
+            <!-- 
+                47) Datensatz generiert/zuletzt geändert am. 46) ist redundant?
+                45) Bearbeiter des Datensatzes in @who
+            
+            -->
+            <change when="2020-02-06" who="Feraudi"/>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="edition"></div>
+        </body>
+    </text>
+</TEI>

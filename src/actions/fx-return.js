@@ -15,14 +15,14 @@ import { AbstractAction } from './abstract-action.js';
 export class FxReturn extends AbstractAction {
   connectedCallback() {
     if (super.connectedCallback) {
-    super.connectedCallback();
+      super.connectedCallback();
     }
     // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
   }
 
   perform() {
     super.perform();
-    console.log('performing return with nodes',this.nodeset);
+    console.log('performing return with nodes', this.nodeset);
 
     /*
     ### note that this event does not use Fore.dispatch as the event uses 'composed:true' to let the event travel

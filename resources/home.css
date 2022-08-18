@@ -72,10 +72,11 @@ em{
 footer{
     margin-top:2rem;
     border-top:thin solid rgba(255,255,255,0.5);
+    background: rgba(248, 248, 255,0.95) ;
 }
 
 fx-fore{
-    padding: 2rem;
+    padding: 0;
 }
 
 footer .wrapper::before{
@@ -87,7 +88,7 @@ footer .col-header{
 }
 footer h4{
     margin:0;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 1.2rem;
     color: black;
 }
@@ -161,7 +162,6 @@ h3{
 
 }
 header, footer{
-    background: rgba(248, 248, 255,0.26) ;
     /*background: rgba(248, 248, 255,0.86) ;*/
     padding:2rem 0;
 }
@@ -171,6 +171,8 @@ header{
     text-align: center;
     position: relative;
     z-index: 10;
+    background: rgba(248, 248, 255,0.26) ;
+
     /*background: url(../resources/images/cool-background.png) no-repeat ;*/
 
 }
@@ -229,6 +231,7 @@ p {
     color:white;
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
+    line-height: 1.5;
 }
 
 section {
@@ -277,20 +280,10 @@ section > div {
     /*background: rgba(100, 100, 100, 0.1);*/
     background: transparent;
     /*background: white;*/
-    padding: 0 1rem;
+    padding: 1rem;
     border-radius:0;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-}
-#version{
-    position:fixed;
-    bottom:0;
-    right: 0;
-    background: rgba(255,255,255,0.5);
-    padding: 0.3rem 0.5rem;
-    border-top-left-radius: 0.3rem;
-    font-size: 0.7rem;
-    color:white;
 }
 ul{
     list-style: none;
@@ -304,6 +297,30 @@ ul a, ul a:link, ul a:visited{
 }
 ul li{
     padding-bottom: 1rem;
+}
+.updated{
+    position: relative;
+}
+.updated::before{
+    position:absolute;
+    content:' ';
+    width:1rem;
+    height: 1rem;
+    background: yellowgreen;
+    border-radius: 50%;
+    top:0;
+    right:0;
+
+}
+.inline.updated::before{
+    position: relative;
+    display: inline-block;
+}
+.version{
+    display: block;
+    margin-top: -1rem;
+    margin-left: 1rem;
+    font-size: 0.8rem;
 }
 
 [href="#"]{

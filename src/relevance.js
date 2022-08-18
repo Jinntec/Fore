@@ -1,7 +1,7 @@
 export class Relevance {
-  static selectRelevant(element,type) {
+  static selectRelevant(element, type) {
     console.log('selectRelevant', type);
-    switch (type){
+    switch (type) {
       case 'xml':
         return Relevance._relevantXmlNodes(element);
       default:
@@ -21,19 +21,18 @@ export class Relevance {
     const mi = element.getModel().getModelItem(element.nodeset);
     if (mi && !mi.relevant) return null;
 
-    const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-    const root = doc.firstElementChild;
+    const root = element.nodeset.cloneNode(false);
 
-    if (element.nodeset.children.length === 0 && Relevance._isRelevant(element,element.nodeset)) {
+    if (element.nodeset.children.length === 0 && Relevance._isRelevant(element, element.nodeset)) {
       return element.nodeset;
     }
-    return Relevance._filterRelevant(element,element.nodeset, root);
+    return Relevance._filterRelevant(element, element.nodeset, root);
   }
 
-  static _filterRelevant(element,node, result) {
+  static _filterRelevant(element, node, result) {
     const { childNodes } = node;
     Array.from(childNodes).forEach(n => {
-      if (Relevance._isRelevant(element,n)) {
+      if (Relevance._isRelevant(element, n)) {
         const clone = n.cloneNode(false);
         result.appendChild(clone);
         const { attributes } = n;
@@ -55,7 +54,7 @@ export class Relevance {
     return result;
   }
 
-  static _isRelevant(element,node) {
+  static _isRelevant(element, node) {
     const mi = element.getModel().getModelItem(node);
     if (!mi || mi.relevant) {
       return true;

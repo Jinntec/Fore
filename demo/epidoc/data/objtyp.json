@@ -1,0 +1,154 @@
+[
+  {
+    "name": "Altar",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/29"
+  },
+  {
+    "name": "Architekturteil",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/35"
+  },
+  {
+    "name": "Bueste",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/135"
+  },
+  {
+    "name": "Bank",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/254"
+  },
+  {
+    "name": "Barren",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/154"
+  },
+  {
+    "name": "Basis",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/53"
+  },
+  {
+    "name": "Block",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/189"
+  },
+  {
+    "name": "Brunnen",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/40"
+  },
+  {
+    "name": "Cippus",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/85"
+  },
+  {
+    "name": "Clipeus",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/94"
+  },
+  {
+    "name": "Cupa",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/112"
+  },
+  {
+    "name": "Diptychon",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/118"
+  },
+  {
+    "name": "EhrenVotivbogen",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/20"
+  },
+  {
+    "name": "EhrenVotivsäule",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/102"
+  },
+  {
+    "name": "Fels",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/210"
+  },
+  {
+    "name": "Grabbau",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/230"
+  },
+  {
+    "name": "Herme",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/132"
+  },
+  {
+    "name": "instrdom",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/140"
+  },
+  {
+    "name": "instrmil",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/141"
+  },
+  {
+    "name": "instrsac",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/142"
+  },
+  {
+    "name": "Meilenstein",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/89"
+  },
+  {
+    "name": "Mensa",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/157"
+  },
+  {
+    "name": "Olla",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/182"
+  },
+  {
+    "name": "Pflaster",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/190"
+  },
+  {
+    "name": "Platte",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/260"
+  },
+  {
+    "name": "Relief",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/24"
+  },
+  {
+    "name": "Sarkophag",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/214"
+  },
+  {
+    "name": "Schmuck",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/163"
+  },
+  {
+    "name": "Skulptur",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/224"
+  },
+  {
+    "name": "Stadtbefestigung",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/67"
+  },
+  {
+    "name": "Statue",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/241"
+  },
+  {
+    "name": "Statuenbasis",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/57"
+  },
+  {
+    "name": "Stele",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/250"
+  },
+  {
+    "name": "Tafel",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/257"
+  },
+  {
+    "name": "Tessera",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/276"
+  },
+  {
+    "name": "Urne",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/78"
+  },
+  {
+    "name": "Waffe",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/42"
+  },
+  {
+    "name": "Ziegel",
+    "value": "https://www.eagle-network.eu/voc/objtyp/lod/147"
+  }
+]

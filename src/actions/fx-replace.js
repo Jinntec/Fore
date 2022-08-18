@@ -2,6 +2,7 @@
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import getInScopeContext from "../getInScopeContext";
 
 /**
  * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.
@@ -34,31 +35,35 @@ export default class FxReplace extends AbstractAction {
   perform() {
     super.perform();
     console.log('replace action');
-    if(!this.nodeset){
-      return;
-    }
+    // console.log('replace action variables', this.inScopeVariables);
+    // if (!this.nodeset) {
+    //   return;
+    // }
     const target = evaluateXPathToFirstNode(this.with, this.nodeset, this);
-    if(!target) return;
+    if (!target) return;
+
 
     this.replace(this.nodeset, target);
   }
 
-  replace(toReplace,replaceWith){
-    if(!toReplace || !replaceWith) return; // bail out silently
-    if(!toReplace.nodeName || !replaceWith.nodeName) {
+  replace(toReplace, replaceWith) {
+    if (!toReplace || !replaceWith) return; // bail out silently
+    if (!toReplace.nodeName || !replaceWith.nodeName) {
       console.warn('fx-replace: one argument is not a node');
       return;
     }
 
-    if(toReplace.nodeType === Node.ATTRIBUTE_NODE){
-      const {ownerElement} = toReplace;
-      ownerElement.setAttribute(replaceWith.nodeName,replaceWith.textContent);
+    if (toReplace.nodeType === Node.ATTRIBUTE_NODE) {
+      const { ownerElement } = toReplace;
+      ownerElement.setAttribute(replaceWith.nodeName, replaceWith.textContent);
       ownerElement.removeAttribute(toReplace.nodeName);
       console.log('owner', ownerElement);
-    }else if(toReplace.nodeType === Node.ELEMENT_NODE){
+    } else if (toReplace.nodeType === Node.ELEMENT_NODE) {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);
     }
+    // const modelitem = this.getModelItem();
+    // this.getModel().changed.push(modelitem);
     this.needsUpdate = true;
   }
 }
