@@ -28,7 +28,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
    * (re)apply all modelItem state properties to this control. model -> UI
    */
   async refresh() {
-    console.log('### AbstractControl.refresh on : ', this);
+    // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
 
@@ -54,7 +54,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
-          console.log('as', this.nodeset);
+          // console.log('as', this.nodeset);
           this.modelItem.value = this.nodeset;
           this.value = this.modelItem.node;
         } else {
@@ -189,7 +189,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         }
         if (this.modelItem.alerts.length !== 0) {
           const { alerts } = this.modelItem;
-          console.log('alerts from bind: ', alerts);
+          // console.log('alerts from bind: ', alerts);
 
           const controlAlert = this.querySelector('fx-alert');
           if (!controlAlert) {
