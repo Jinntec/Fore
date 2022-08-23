@@ -111,7 +111,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
   handleModelItemProperties() {
     // console.log('handleModelItemProperties',this.modelItem);
-    debugger;
     this.handleRequired();
     this.handleReadonly();
     if (this.getOwnerForm().ready) {
@@ -136,7 +135,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     // if (this.required !== this.modelItem.required) {
-    // if (this.isRequired() !== this.modelItem.required) {
+    if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
         if (this.getOwnerForm().ready){
           if(this.widget.value === ''){
@@ -153,7 +152,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.removeAttribute('required');
         this._dispatchEvent('optional');
       }
-    // }
+    }
   }
 
   handleReadonly() {

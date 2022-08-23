@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>rereshing a specific control</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <item>foo</item>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-control id="control" ref="item">
+        <label>an item</label>
+    </fx-control>
+    <fx-trigger>
+        <button>refresh the control</button>
+        <fx-refresh control="control"></fx-refresh>
+    </fx-trigger>
+</fx-fore>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

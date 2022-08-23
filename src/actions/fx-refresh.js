@@ -1,5 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
+import {resolveId} from "../xpath-evaluation";
 
 /**
  * `fx-refresh`
@@ -18,6 +19,14 @@ class FxRefresh extends AbstractAction {
     }
     if(this.hasAttribute('force')){
       this.getOwnerForm().forceRefresh();
+      return;
+    }
+    if(this.hasAttribute('control')){
+      const targetId = this.getAttribute('control');
+      const ctrl = resolveId(targetId, this);
+      if (Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
+        ctrl.refresh();
+      }
       return;
     }
     this.getOwnerForm().refresh();
