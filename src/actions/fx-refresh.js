@@ -1,6 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
-import {resolveId} from "../xpath-evaluation";
+import {resolveId} from "../xpath-evaluation.js";
 
 /**
  * `fx-refresh`
