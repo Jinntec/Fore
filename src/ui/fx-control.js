@@ -6,6 +6,7 @@ import {
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
+import {ModelItem} from "../modelitem.js";
 
 const WIDGETCLASS = 'widget';
 
@@ -166,6 +167,11 @@ export default class FxControl extends XfAbstractControl {
     }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
+
+    if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
+      this.modelItem.boundControls.push(this);
+    }
+
     setval.actionPerformed();
   }
 

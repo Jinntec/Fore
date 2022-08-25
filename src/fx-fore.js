@@ -384,7 +384,7 @@ export class FxFore extends HTMLElement {
         console.log('toRefresh', this.toRefresh);
 
         // if (!this.initialRun && this.toRefresh.length !== 0) {
-        if (!this.initialRun && this.toRefresh.length !== 0) {
+        if (!force && !this.initialRun && this.toRefresh.length !== 0) {
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
