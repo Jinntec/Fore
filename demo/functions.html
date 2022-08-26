@@ -104,7 +104,7 @@
                         type="text/xquf">
 					  copy $xml := $element modify (
 					  for $ref in $xml/main/ref
-					  	return replace node $ref with $xml/references/ref[@id=$ref/@link]
+					  	return replace node $ref/text() with $xml/references/ref[@id=$ref/@link]/text()
 					  ) return $xml
 					</fx-function>
                 </fx-model>
@@ -121,6 +121,7 @@
                         <h3>The transformed XML:</h3>
                         <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
                     </fx-control>
+
 
                 </fx-group>
             </fx-fore>

@@ -8,7 +8,7 @@
     <link href="../../resources/demo.css" rel="stylesheet"/>
 
 
-    <script type="module" src="./jinn-codemirror.js"></script>
+    <script type="module" src="./jinn-codemirror-bundle.js"></script>
     <script type="module" src="../demo.js"></script>
     <style>
     </style>
@@ -27,7 +27,7 @@
                 <fx-model>
                     <fx-instance src="epidoc2.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
                 </fx-model>
-                <fx-control ref="//publicationStmt" update-event="update" debounce="300" as="node">
+                <fx-control ref="//publicationStmt" as="node" update-event="update">
                     <label>publicationStmt</label>
                     <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                 </fx-control>

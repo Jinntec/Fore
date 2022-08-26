@@ -273,7 +273,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
          */
     if (XPathUtil.isSelfReference(this.ref)) {
       const parentBoundElement = Fore.getClosest('fx-bind[ref]', this.parentElement);
-      console.log('parent bound element ', parentBoundElement);
+      // console.log('parent bound element ', parentBoundElement);
 
       if (parentBoundElement) {
         // todo: Could be fancier by combining them

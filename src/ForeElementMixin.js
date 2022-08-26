@@ -59,7 +59,7 @@ export const foreElementMixin = superclass =>
       this.model = null;
       this.modelItem = {};
       this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
-      this.inScopeVariables = null;
+      this.inScopeVariables = new Map();
     }
 
     getModel() {

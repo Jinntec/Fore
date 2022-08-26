@@ -67,9 +67,11 @@ export class FxOutput extends XfAbstractControl {
     // console.log('widget ', this.widget);
     this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
 
+/*
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
     });
+*/
   }
 
   async refresh() {
@@ -112,7 +114,7 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    console.log('updateWidgetValue');
+    // console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
 
     if (this.mediatype === 'markdown') {

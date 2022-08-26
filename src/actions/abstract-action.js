@@ -120,7 +120,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if(e && e.code){
       const vars = new Map();
       vars.set('code',e.code);
-      this.setInScopeVariables(vars);
+      // this.setInScopeVariables(vars);
+      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
     }
 
     if (e && e.detail) {
@@ -132,11 +133,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         vars.set(key,e.detail[key]);
       });
       console.log("event detail vars", vars);
-      this.setInScopeVariables(vars);
+      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
     }
     this.needsUpdate = false;
 
-    this.evalInContext();
+    try{
+      this.evalInContext();
+    }catch (error){
+      console.warn('evaluation faild',error);
+    }
     if (this.targetElement && this.targetElement.nodeset) {
       this.nodeset = this.targetElement.nodeset;
     }
@@ -172,6 +177,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       // After loop is done call actionPerformed to update the model and UI
       await loop();
       this.actionPerformed();
+      Fore.dispatch(this, 'while-performed', {});
       return;
     }
 

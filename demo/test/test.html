@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>DOA eXist Configuration</title>
+    <link rel="stylesheet" href="../../resources/fore.css"/>
+<!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <disabled>false</disabled>
+            </data>
+        </fx-instance>
+        <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
+<!--        <fx-setvalue event="model-construct-done" ref="disabled">true</fx-setvalue>-->
+    </fx-model>
+    <fx-trigger ref="disabled">
+        <button>I'm a button</button>
+        <fx-message class="action">Hi from button</fx-message>
+    </fx-trigger>
+
+    <fx-trigger id="setReadonly">
+        <button>set to readonly...</button>
+        <fx-setvalue id="readonly" ref="disabled">true</fx-setvalue>
+    </fx-trigger>
+</fx-fore>
+
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="../../index.js"/>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<!-- Fehlende Felder da unklar: 34, 24 -->
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <!-- zusätzlich 0) freie Eingabe Textfeld -->
+                <title></title>
+                <!-- 44) Bearbeiter der Inschriftenedition -->
+                <editor></editor>
+                <!-- 45) Bearbeiter des Datensatzes -->
+                <author></author>
+            </titleStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <!-- 3) EDEp ID -->
+                        <idno type="EDEp"></idno>
+                    </msIdentifier>
+                    <msPart xml:id="1234">
+                        <msIdentifier>
+                            <!-- 12a) Aufbewahrung -->
+                            <repository ref="http://sicily.classics.ox.ac.uk/museum/064"></repository>
+                            <!-- 4) TM-Nummer -->
+                            <idno type="TM"></idno>
+                        </msIdentifier>
+                    </msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <facsimile>
+        <!-- @corresp referenziert msPart -->
+        <surface corresp="#1234">
+            <!-- 35d) Abbildungen, wiederholbar -->
+            <graphic url="photo.png"></graphic>
+        </surface>
+    </facsimile>
+    <text>
+        <body>
+            <div type="edition">
+                <!-- 41) Textedition: @corresp referenziert msPart - eingefügt aus jinn-codemirror. Required -->
+                <div type="textpart" subtype="fragment" n="a" corresp="#1234">
+                </div>
+            </div>
+            <!-- 36) Apparatus für 1. Fragment: @corresp referenziert msPart - eingefügt aus jinn-codemirror -->
+            <div type="apparatus" corresp="#1234">
+                <listApp>
+                    <app loc="1"><note>Lorem <hi rend="bold">ipsum</hi></note></app>
+                </listApp>
+            </div>
+            <!-- 42) Übersetzung: @corresp referenziert msPart; @resp = Kürzel des Übersetzers - eingefügt aus jinn-codemirror -->
+            <!-- ??? woher kommt '#Feraudi' ? -->
+            <div type="translation" corresp="#1234" resp="#Feraudi">
+                <ab>Übersetzung des Textes in XML</ab>
+            </div>
+            <!-- 37) Kommentar: freier Inhalt. Nur einmal pro Dokument - eingefügt aus jinn-codemirror -->
+            <div type="commentary"></div>
+        </body>
+    </text>
+</TEI>

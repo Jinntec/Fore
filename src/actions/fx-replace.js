@@ -47,6 +47,7 @@ export default class FxReplace extends AbstractAction {
   }
 
   replace(toReplace, replaceWith) {
+    console.log('replace', toReplace, replaceWith);
     if (!toReplace || !replaceWith) return; // bail out silently
     if (!toReplace.nodeName || !replaceWith.nodeName) {
       console.warn('fx-replace: one argument is not a node');

@@ -32,6 +32,7 @@ export class FxAction extends AbstractAction {
   }
 
   perform() {
+    super.perform();
     const { children } = this;
 
     if (this.src) {

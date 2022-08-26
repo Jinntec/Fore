@@ -43,7 +43,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isBound()) {
       // this.control = this.querySelector('#control');
 
-      if (this.nodeset === null) {
+      if(!this.nodeset){
         this.style.display = 'none';
         return;
       }
@@ -54,8 +54,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
-          console.log('as', this.nodeset);
-          this.modelItem.value = this.nodeset;
+          // console.log('as', this.nodeset);
+          // this.modelItem.value = this.nodeset;
+          this.modelItem.node = this.nodeset;
           this.value = this.modelItem.node;
         } else {
           this.value = this.modelItem.value;
@@ -135,7 +136,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     // if (this.required !== this.modelItem.required) {
-    // if (this.isRequired() !== this.modelItem.required) {
+    if (this.isRequired() !== this.modelItem.required) {
       if (this.modelItem.required) {
         if (this.getOwnerForm().ready){
           if(this.widget.value === ''){
@@ -152,7 +153,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.removeAttribute('required');
         this._dispatchEvent('optional');
       }
-    // }
+    }
   }
 
   handleReadonly() {
@@ -189,7 +190,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         }
         if (this.modelItem.alerts.length !== 0) {
           const { alerts } = this.modelItem;
-          console.log('alerts from bind: ', alerts);
+          // console.log('alerts from bind: ', alerts);
 
           const controlAlert = this.querySelector('fx-alert');
           if (!controlAlert) {
