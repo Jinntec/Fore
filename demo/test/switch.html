@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>DOA eXist Configuration</title>
+    <link rel="stylesheet" href="../../resources/fore.css"/>
+<!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <page>page3</page>
+                <foo></foo>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-control ref="page">
+        <label>select page</label>
+        <fx-toggle case="page1" event="value-changed"></fx-toggle>
+    </fx-control>
+
+    <fx-switch ref="page">
+        <fx-case id="page1" name="page1">
+            <h2>Page1</h2>
+        </fx-case>
+        <fx-case name="page2">
+            <h2>Page 2</h2>
+        </fx-case>
+        <fx-case id="page3" name="page3">
+            <h2>Page 3</h2>
+        </fx-case>
+    </fx-switch>
+</fx-fore>
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="../../index.js"/>
+</body>
+</html>

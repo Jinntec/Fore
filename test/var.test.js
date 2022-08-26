@@ -67,7 +67,7 @@ describe('var Tests', () => {
     expect(control4.innerText).to.equal('4-4');
   });
 
-  it.only('handles variables in actions', async () => {
+  it('handles variables in actions', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
