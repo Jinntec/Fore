@@ -13,11 +13,6 @@
     <link rel="stylesheet" href="../demo/clock.css">
     <link rel="stylesheet" href="../resources/home.css">
 
-
-    <style>
-
-    </style>
-
 </head>
 <body>
 <a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
@@ -48,20 +43,22 @@
     </nav>
 </header>
 <div class="wrapper topic">
-    <p class="style-hint">If you don't like the colors just <a href="index.html">reload</a> the page.</p>
+<!--    <p class="style-hint">If you don't like the colors just <a href="index.html">reload</a> the page.</p>-->
 
     <fx-fore>
         <fx-model>
             <fx-instance>
                 <data>
-                    <color1></color1>
-                    <color2></color2>
+                    <color1>#424242</color1>
+                    <color2>#9e9e9e</color2>
                 </data>
             </fx-instance>
             <fx-instance id="package" src="../package.json" type="json"></fx-instance>
 
+<!--
             <fx-bind ref="color1" calculate="local:randomColor()"></fx-bind>
             <fx-bind ref="color2" calculate="local:randomColor()"></fx-bind>
+-->
 
             <fx-function
                     signature="local:randomColor() as xs:string"
@@ -80,14 +77,15 @@
                 randomColorArray.push(characters[randomIndex])
                 }
                 const hexCol = `#${randomColorArray.join("")}`;
-                return hex2rgba(hexCol,0.8);
+                return hex2rgba(hexCol,0.9);
 
             </fx-function>
 
 
         </fx-model>
-        <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>
-        <fx-action event="ready" src="setBg.js"></fx-action>
+<!--        <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>-->
+<!--        <div id="rule" data-style="linear-gradient(to right, rgba(93, 5, 244, 0.8), rgba(67, 222, 106, 0.8))"></div>-->
+<!--        <fx-action event="ready" src="setBg.js"></fx-action>-->
     </fx-fore>
     <!--
         <div class="header">

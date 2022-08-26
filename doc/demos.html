@@ -45,44 +45,6 @@
     <div class="wrapper demos topic">
         <!--    <p class="style-hint">If you don't like the colors just <a href="demos.html">reload</a> the page.</p>-->
 
-        <fx-fore>
-            <fx-model>
-                <fx-instance>
-                    <data>
-                        <color1>#424242</color1>
-                        <color2>#9e9e9e</color2>
-                    </data>
-                </fx-instance>
-                <fx-instance id="package" src="../package.json" type="json">{}</fx-instance>
-
-                <!--            <fx-bind ref="color1" calculate="local:randomColor()"></fx-bind>-->
-                <!--            <fx-bind ref="color2" calculate="local:randomColor()"></fx-bind>-->
-
-                <fx-function
-                        signature="local:randomColor() as xs:string"
-                        type="text/javascript">
-
-                    hex2rgba = (hex, alpha = 1) => {
-                    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-                    return `rgba(${r},${g},${b},${alpha})`;
-                    };
-
-
-                    var characters = ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9];
-                    var randomColorArray = [];
-                    for (var i = 0; i < 6; i++) {
-                    var randomIndex = Math.floor(Math.random()*characters.length);
-                    randomColorArray.push(characters[randomIndex])
-                    }
-                    const hexCol = `#${randomColorArray.join("")}`;
-                    return hex2rgba(hexCol,0.9);
-
-                </fx-function>
-
-
-            </fx-model>
-            <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>
-            <fx-action event="ready" src="setBg.js"></fx-action>
             <h1>Demos</h1>
             <p>The demos are a vital part of the Fore documentation. They range from simple to advanced examples
                 and are a premier resource for learning Fore. If you are looking for the element reference or like
@@ -398,14 +360,13 @@
                     <h3><a href="../demo/clock2.html" target="_blank">Clock</a></h3>
                     <p>A clock with one line of JavaScript</p>
                 </div>
-                <div>
+                <div class="updated">
                     <h3><a href="../demo/codemirror/codemirror.html" target="_blank">Codemirror as Control</a></h3>
                     <p>Editing a document fragment with CodeMirror and binding it with <code>fx-control</code>.</p>
                 </div>
             </section>
 
             <!--        <h3><a href="../demo/auth.html" target="_blank">URLEncoded Submission</a></h3>-->
-
 
     </div>
     <footer>
@@ -433,7 +394,6 @@
             </div>
         </div>
     </footer>
-</fx-fore>
 
 <script type="module" src="../demo/demo.js"></script>
 
