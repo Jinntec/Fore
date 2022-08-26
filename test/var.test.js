@@ -66,4 +66,47 @@ describe('var Tests', () => {
     expect(control4).to.be.ok;
     expect(control4.innerText).to.equal('4-4');
   });
+
+  it.only('handles variables in actions', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <counter>0</counter>
+              <oof></oof>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger class="start">
+          <button>Start</button>
+          <fx-var name="steps" value="1"></fx-var>
+          <fx-var name="max" value="10"></fx-var>
+
+          <fx-action while="counter < $max">
+            <fx-setvalue ref="counter" value=".+$steps"></fx-setvalue>
+            <fx-update></fx-update>
+            <fx-refresh force></fx-refresh>
+            <fx-message>{counter}</fx-message>
+          </fx-action>
+        </fx-trigger>
+        <fx-output value="counter"></fx-output>
+        <fx-trigger>
+          <button>reset</button>
+          <fx-setvalue ref="counter" value="0"></fx-setvalue>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const trigger = el.querySelector('fx-trigger.start');
+    const action = el.querySelector('fx-action')
+    trigger.performActions();
+
+    await oneEvent(action, 'while-performed');
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('10');
+  });
 });
