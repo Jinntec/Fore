@@ -272,10 +272,7 @@ export class FxModel extends HTMLElement {
     console.log(`recalculated ${this.computes} modelItems`);
 
     console.timeEnd('recalculate');
-    console.log(
-      `recalculate finished with modelItems ${this.modelItems.length} item(s)`,
-      this.modelItems,
-    );
+    console.log('recalculate finished with modelItems ',this.modelItems);
     console.groupEnd();
   }
 

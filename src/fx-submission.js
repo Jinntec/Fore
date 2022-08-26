@@ -72,7 +72,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   async _submit() {
-    console.log('submitting....');
+    console.log('submitting....', this.getAttribute('id'));
     this.evalInContext();
     const model = this.getModel();
 
@@ -349,8 +349,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
 
         this.model.updateModel(); // force update
-        // this.model.formElement.refresh();
-        this.getOwnerForm().refresh();
+        this.getOwnerForm().refresh(true);
       } else {
         throw new Error(`target instance not found: ${targetInstance}`);
       }

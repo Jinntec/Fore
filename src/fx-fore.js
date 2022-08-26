@@ -380,11 +380,11 @@ export class FxFore extends HTMLElement {
         console.time('refresh');
 
         // ### refresh Fore UI elements
-        console.time('refreshChildren');
+        // console.time('refreshChildren');
         console.log('toRefresh', this.toRefresh);
 
         // if (!this.initialRun && this.toRefresh.length !== 0) {
-        if (!this.initialRun && this.toRefresh.length !== 0) {
+        if (!force && !this.initialRun && this.toRefresh.length !== 0) {
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
@@ -422,7 +422,7 @@ export class FxFore extends HTMLElement {
             }
         } else {
             Fore.refreshChildren(this, true);
-            console.timeEnd('refreshChildren');
+            // console.timeEnd('refreshChildren');
         }
 
         // ### refresh template expressions
@@ -460,7 +460,7 @@ export class FxFore extends HTMLElement {
             this.storedTemplateExpressions = [];
         }
 
-        console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
+        // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
         /*
             storing expressions and their nodes for re-evaluation
@@ -475,7 +475,7 @@ export class FxFore extends HTMLElement {
             // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
             this.storedTemplateExpressionByNode.set(node, expr);
         });
-        console.log('stored template expressions ', this.storedTemplateExpressionByNode);
+        // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
         // TODO: Should we clean up nodes that existed but are now gone?
         this._processTemplateExpressions();
@@ -690,7 +690,7 @@ export class FxFore extends HTMLElement {
                 registerVariables(child);
             }
         })(this);
-        console.log('Found variables:', variables);
+        // console.log('Found variables:', variables);
 
         /*
         const options = {
@@ -708,7 +708,7 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
-        console.log('modelItems: ', this.getModel().modelItems);
+        console.log('### modelItems: ', this.getModel().modelItems);
         console.log('### <<<<< FORE: form fully initialized...', this);
         Fore.dispatch(this, 'ready', {});
     }
