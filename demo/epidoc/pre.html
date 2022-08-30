@@ -42,9 +42,10 @@
                         type="text/xquf">
 					  copy $xml := $element modify (
                           for $ref in $xml//*[@corresp]
-                            let $id := string($ref/@corresp)
+                            (: Substring the '#' sign out of the id ref :)
+                            let $id := substring($ref/@corresp, 2)
                             return (
-                                insert node $ref as last into $xml//msPart
+                                insert node $ref as last into $xml//msPart[@xml:id = $id]
                             )
 					  ) return $xml
 					</fx-function>
@@ -54,8 +55,10 @@
                         type="text/xquf">
 					  copy $xml := $element modify (
                           for $ref in $xml//*[@corresp]
+                            (: Substring the '#' sign out of the id ref :)
+                            let $id := substring($ref/@corresp, 2)
                             return (
-                                insert node $ref as last into $xml//msPart,
+                                insert node $ref as last into $xml//msPart[@xml:id=$id],
                                 delete node $ref
                             )
 					  ) return $xml
