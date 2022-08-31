@@ -76,6 +76,19 @@ export class XPathUtil {
     return null;
   }
 
+  static resolveInstance(boundElement){
+    const instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+    if(instanceId !== null){
+      return instanceId;
+    }
+
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if(parentBinding){
+      return this.resolveInstance(parentBinding);
+    }
+    return 'default';
+  }
+
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
   static getPath(node) {
     const path = fx.evaluateXPathToString('path()', node);
