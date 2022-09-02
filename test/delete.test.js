@@ -388,8 +388,11 @@ describe('delete Tests', () => {
 
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(2);
-    // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
-    expect(el.getModel().modelItems.length).to.equal(2);
+
+    const instance = el.querySelector('fx-instance');
+    console.log('isntance',instance);
+    const firstChild = instance.instanceData.firstElementChild;
+    expect(firstChild.nodeName).to.equal('data');
 
   });
 

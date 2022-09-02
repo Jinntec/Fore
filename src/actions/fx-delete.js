@@ -32,6 +32,7 @@ class FxDelete extends AbstractAction {
         const nodesToDelete = this.nodeset;
         let parent;
         if (Array.isArray(nodesToDelete)) {
+            if(nodesToDelete.length === 0) return;
             parent = nodesToDelete[0].parentNode;
             nodesToDelete.forEach(item => {
                 this._deleteNode(parent, item);
