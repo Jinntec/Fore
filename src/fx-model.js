@@ -97,13 +97,7 @@ export class FxModel extends HTMLElement {
   modelConstruct() {
     // console.log('### <<<<< dispatching model-construct >>>>>');
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-    this.dispatchEvent(
-      new CustomEvent('model-construct', {
-        composed: false,
-        bubbles: true,
-        detail: { model: this },
-      }),
-    );
+    Fore.dispatch(this,'model-construct',{model:this});
 
     console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
@@ -121,13 +115,7 @@ export class FxModel extends HTMLElement {
         this.inited = true;
 
         // console.log('### <<<<< dispatching model-construct-done >>>>>');
-        this.dispatchEvent(
-          new CustomEvent('model-construct-done', {
-            composed: false,
-            bubbles: true,
-            detail: { model: this },
-          }),
-        );
+        Fore.dispatch(this,'model-construct-done',{ model: this });
       });
       console.groupEnd();
     } else {
@@ -413,6 +401,7 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if(!modelItem.node.textContent){
+              console.log('modelItem required check failed: ');
                valid = false;
             }
             // if (!compute) valid = false;

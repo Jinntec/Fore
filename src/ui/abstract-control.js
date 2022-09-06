@@ -16,6 +16,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.required = false;
     this.readonly = false;
     this.widget = null;
+    this.visited = false;
+    this.force = false;
     // this.attachShadow({ mode: 'open' });
   }
 
@@ -27,7 +29,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all modelItem state properties to this control. model -> UI
    */
-  async refresh() {
+  async refresh(force) {
+    if(force) this.force=true;
     // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
@@ -135,24 +138,31 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
-    // if (this.required !== this.modelItem.required) {
-    if (this.isRequired() !== this.modelItem.required) {
-      if (this.modelItem.required) {
-        if (this.getOwnerForm().ready){
-          if(this.widget.value === ''){
-            this.classList.add('isRequiredFalse');
-          }else{
-            this.classList.remove('isRequiredFalse');
-          }
+    if (this.required !== this.modelItem.required) {
+    // if (this.isRequired() !== this.modelItem.required || this.force) {
+      this._updateRequired();
+    }
+  }
+
+
+  _updateRequired() {
+    if (this.modelItem.required) {
+      // if (this.getOwnerForm().ready){
+      if (this.visited || this.force) {
+      // if (this.visited ) {
+        if (this.widget.value === '') {
+          this.classList.add('isEmpty');
+        } else {
+          this.classList.remove('isEmpty');
         }
-        this.widget.setAttribute('required', '');
-        this.setAttribute('required', '');
-        this._dispatchEvent('required');
-      } else {
-        this.widget.removeAttribute('required');
-        this.removeAttribute('required');
-        this._dispatchEvent('optional');
       }
+      this.widget.setAttribute('required', '');
+      this.setAttribute('required', '');
+      this._dispatchEvent('required');
+    } else {
+      this.widget.removeAttribute('required');
+      this.removeAttribute('required');
+      this._dispatchEvent('optional');
     }
   }
 

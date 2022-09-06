@@ -25,7 +25,7 @@ class FxSend extends AbstractAction {
     super.perform();
 
     console.log('submitting ', this.submission);
-    console.log('submitting model', this.getModel());
+    // console.log('submitting model', this.getModel());
 
     // if not exists signal error
     const submission = this.getModel().querySelector(`#${this.submission}`);

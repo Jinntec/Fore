@@ -36,7 +36,7 @@ class FxSwitch extends FxContainer {
     `;
   }
 
-  refresh() {
+  refresh(force) {
     super.refresh();
     console.log('refresh on switch ');
     const cases = this.querySelectorAll(':scope > fx-case');
@@ -56,7 +56,7 @@ class FxSwitch extends FxContainer {
       }
     }
 
-    Fore.refreshChildren(this);
+    Fore.refreshChildren(this,force);
     // console.log('value ', this.value);
   }
 

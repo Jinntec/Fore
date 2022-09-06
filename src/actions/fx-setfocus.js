@@ -28,7 +28,9 @@ export class FxSetfocus extends AbstractAction {
         targetElement = repeat.querySelector('[repeat-index] ' + selector);
 
       }
-      targetElement.getWidget().focus();
+      // if(targetElement){
+          targetElement.getWidget().focus();
+      // }
   }
 }
 

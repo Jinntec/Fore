@@ -85,7 +85,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
         Fore.dispatch(this, 'submit-error', {});
-        this.getModel().parentNode.refresh();
+        this.getModel().parentNode.refresh(true);
         return;
       }
     }
@@ -340,7 +340,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             this,
           );
           console.log('theTarget', theTarget);
-          theTarget.innerHTML = data;
+          if(data.nodeType === Node.DOCUMENT_NODE){
+            theTarget.appendChild( data.firstElementChild);
+          }else{
+            theTarget.innerHTML = data;
+          }
         } else {
           const instanceData = data;
           targetInstance.instanceData = instanceData;

@@ -93,7 +93,7 @@ export default class FxControl extends XfAbstractControl {
       );
     } else {
       listenOn.addEventListener(this.updateEvent, () => {
-        console.log('eventlistener ', this.updateEvent);
+        console.log('eventlistener ', this, this.updateEvent);
         this.setValue(this.widget[this.valueProp]);
       });
     }
@@ -173,6 +173,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     setval.actionPerformed();
+    this.visited = true;
   }
 
   _replaceNode(node) {

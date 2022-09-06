@@ -375,7 +375,7 @@ export class FxFore extends HTMLElement {
 
     async refresh(force) {
         // refresh () {
-        console.group('### refresh');
+        console.group('### refresh', force);
 
         console.time('refresh');
 
@@ -393,7 +393,7 @@ export class FxFore extends HTMLElement {
                 const controlsToRefresh = modelItem.boundControls;
                 if (controlsToRefresh) {
                     controlsToRefresh.forEach(ctrl => {
-                        ctrl.refresh();
+                        ctrl.refresh(force);
                     });
                 }
 
@@ -409,7 +409,7 @@ export class FxFore extends HTMLElement {
                             const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
                             // ### refresh all boundControls
                             modelItemOfDep.boundControls.forEach(control => {
-                                control.refresh();
+                                control.refresh(force);
                             });
                         });
                         needsRefresh = true;
