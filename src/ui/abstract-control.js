@@ -189,15 +189,17 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
-        if (alert) alert.style.display = 'none';
+        // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
         // ### constraint is invalid - handle alerts
+/*
         if (alert) {
           alert.style.display = 'block';
         }
+*/
         if (this.modelItem.alerts.length !== 0) {
           const { alerts } = this.modelItem;
           // console.log('alerts from bind: ', alerts);

@@ -19,7 +19,7 @@ export class FxSetfocus extends AbstractAction {
 
       // const targetElement = resolveId(this.control, this);
       const selector = '#'+this.control;
-      let targetElement = document.querySelector(selector);
+      let targetElement = this.getOwnerForm().querySelector(selector);
       const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
       if(repeatitem){
         // targetElement is repeated
@@ -28,9 +28,9 @@ export class FxSetfocus extends AbstractAction {
         targetElement = repeat.querySelector('[repeat-index] ' + selector);
 
       }
-      // if(targetElement){
+      if(targetElement){
           targetElement.getWidget().focus();
-      // }
+      }
   }
 }
 

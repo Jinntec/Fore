@@ -82,6 +82,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       const valid = model.revalidate();
       if (!valid) {
         console.log('validation failed. Bubmission stopped');
+        this.getOwnerForm().classList.add('submit-validation-failed');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
         Fore.dispatch(this, 'submit-error', {});

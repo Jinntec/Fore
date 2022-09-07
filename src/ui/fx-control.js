@@ -150,6 +150,8 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
     const modelitem = this.getModelItem();
 
+    this.classList.add('visited');
+
     if (modelitem?.readonly){
       console.warn('attempt to change readonly node', modelitem);
       return; // do nothing when modelItem is readonly
