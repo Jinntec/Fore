@@ -1,9 +1,26 @@
 import XfAbstractControl from './abstract-control.js';
 
+function leadingDebounce(func, timeout = 300){
+  console.log('debouncing', func);
+  let timer;
+  return (...args) => {
+    if (!timer) {
+      func.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = undefined;
+      return null;
+    }, timeout);
+  };
+}
+
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
     this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : null;
+    this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
+
     const style = `
           :host {
             cursor:pointer;
@@ -24,7 +41,17 @@ export class FxTrigger extends XfAbstractControl {
       elements[0].setAttribute('role', 'button');
 
       const element = elements[0];
-      element.addEventListener('click', e => this.performActions(e));
+
+      if(this.debounceDelay){
+        this.addEventListener(
+            'click',
+            leadingDebounce((e) => {
+              this.performActions(e)
+            }, this.debounceDelay),
+        );
+      }else{
+        element.addEventListener('click', e => this.performActions(e));
+      }
       this.widget = element;
       // # terrible hack but browser behaves strange - seems to fire a 'click' for a button when it receives a
       // # 'Space' or 'Enter' key
