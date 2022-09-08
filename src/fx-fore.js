@@ -437,6 +437,7 @@ export class FxFore extends HTMLElement {
         console.groupEnd();
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
+        // this.initialRun = false;
         Fore.dispatch(this, 'refresh-done', {});
     }
 

@@ -170,8 +170,8 @@ export class FxModel extends HTMLElement {
 
     // console.log(`dependencies of a `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}a[1]:required"));
     // console.log(`dependencies of b `, this.mainGraph.dependenciesOf("/Q{}data[1]/Q{}b[1]:required"));
-    console.log(`rebuild mainGraph`, this.mainGraph);
-    console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+    // console.log(`rebuild mainGraph`, this.mainGraph);
+    // console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
 
     this.dispatchEvent(new CustomEvent('rebuild-done', { detail: { maingraph: this.mainGraph } }));
 
@@ -333,10 +333,12 @@ export class FxModel extends HTMLElement {
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
             modelItem[property] = compute;
+/*
             console.log(
               `recalculating path ${path} - Expr:'${expr}' computed`,
               modelItem[property],
             );
+*/
           }
         }
       }
@@ -379,7 +381,7 @@ export class FxModel extends HTMLElement {
           const constraint = bind.getAttribute('constraint');
           if (constraint) {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
-            console.log('modelItem validity computed: ', compute);
+            // console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!compute) valid = false;
@@ -397,7 +399,7 @@ export class FxModel extends HTMLElement {
           const required = bind.getAttribute('required');
           if (required) {
             const compute = evaluateXPathToBoolean(required, modelItem.node, this);
-            console.log('modelItem required computed: ', compute);
+            // console.log('modelItem required computed: ', compute);
             modelItem.required = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if(!modelItem.node.textContent){

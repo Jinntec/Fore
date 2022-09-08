@@ -124,7 +124,7 @@ describe('refresh Tests', () => {
     const b = el.querySelector('#b');
     b.modelItem.value = 'Bs';
     el.getModel().updateModel();
-    el.refresh();
+    el.refresh(true);
 
     const c1 = el.querySelector('#output1');
     expect(c1.modelItem.value).to.equal('A');

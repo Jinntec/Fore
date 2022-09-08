@@ -212,7 +212,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-    console.time('repeat-refresh', this);
+    // console.time('repeat-refresh', this);
     this._evalNodeset();
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
@@ -275,7 +275,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // this.style.display = 'block';
     // this.style.display = this.display;
     this.setIndex(this.index);
-    console.timeEnd('repeat-refresh');
+    // console.timeEnd('repeat-refresh');
 
     // this.replaceWith(clone);
 
