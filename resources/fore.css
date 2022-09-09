@@ -150,6 +150,12 @@ fx-dialog .action{
     display: inline;
     color: red;
 }
+.isEmpty.visited .widget{
+    background: lightpink;
+}
+.submit-validation-failed .isEmpty .widget{
+    background: lightpink;
+}
 .logtree details{
     padding:0.1rem 1rem;
     margin:0;
