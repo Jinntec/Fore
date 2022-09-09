@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <script type="module" src="../codemirror/jinn-codemirror.js"></script>
+
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+
+        <fx-instance src="new-fore.xml"></fx-instance>
+
+        <fx-instance id="i-elements" src="component-templates.xml">
+            <data></data>
+        </fx-instance>
+
+        <fx-instance id="vars">
+            <data>
+                <selected></selected>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-control ref="instance()/fx-fore" as="node">
+        <jinn-xml-editor class="widget"></jinn-xml-editor>
+    </fx-control>
+
+    <fx-control ref="instance('vars')/selected">
+        <label>add</label>
+        <input list="elements">
+        <datalist id="elements">
+            <option value="fx-bind">bind</option>
+            <option value="fx-instance">instance</option>
+            <option value="fx-function">function</option>
+            <option value="fx-submission">submission</option>
+        </datalist>
+        <fx-insert event="value-changed" context="instance()//fx-model" ref="instance('vars')/selected" origin="instance('i-elements')//*[name()=instance('vars')/selected]" ></fx-insert>
+    </fx-control>
+<!--    <fx-inspector open></fx-inspector>-->
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
