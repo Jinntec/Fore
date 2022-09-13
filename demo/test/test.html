@@ -10,25 +10,27 @@
 </head>
 <body>
 <fx-fore>
+      <fx-action while="true()" event="ready" delay="1000">
+        <fx-setvalue ref="time" value="now()"></fx-setvalue>
+        <fx-refresh></fx-refresh>
+      </fx-action>
+
     <fx-model>
         <fx-instance>
             <data>
-                <disabled>false</disabled>
+                <time>12:00:00</time>
             </data>
         </fx-instance>
-        <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
-<!--        <fx-setvalue event="model-construct-done" ref="disabled">true</fx-setvalue>-->
-    </fx-model>
-    <fx-trigger ref="disabled">
-        <button>I'm a button</button>
-        <fx-message class="action">Hi from button</fx-message>
-    </fx-trigger>
 
-    <fx-trigger id="setReadonly">
-        <button>set to readonly...</button>
-        <fx-setvalue id="readonly" ref="disabled">true</fx-setvalue>
-    </fx-trigger>
+        <fx-function signature="now() as xs:string" type="text/javascript">
+            const now = new Date();
+            return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        </fx-function>
+
+    </fx-model>
+    {time}
 </fx-fore>
+
 
 <!--    <script type="module" src="./js/fore-debug.js"/>-->
 <script type="module" src="../../index.js"/>

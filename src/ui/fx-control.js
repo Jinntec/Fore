@@ -7,6 +7,7 @@ import {
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import {ModelItem} from "../modelitem.js";
+import {debounce} from "../events.js";
 
 const WIDGETCLASS = 'widget';
 
@@ -20,7 +21,8 @@ const WIDGETCLASS = 'widget';
  * @demo demo/index.html
  */
 
-function debounce(func, timeout = 300) {
+/*
+function debounce( func, timeout = 300) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
@@ -29,6 +31,7 @@ function debounce(func, timeout = 300) {
     }, timeout);
   };
 }
+*/
 export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
@@ -86,7 +89,7 @@ export default class FxControl extends XfAbstractControl {
     if (this.debounceDelay) {
       listenOn.addEventListener(
         this.updateEvent,
-        debounce(() => {
+        debounce(this,() => {
           console.log('eventlistener ', this.updateEvent);
           this.setValue(this.widget[this.valueProp]);
         }, this.debounceDelay),

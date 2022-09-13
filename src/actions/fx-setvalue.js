@@ -57,6 +57,9 @@ export default class FxSetvalue extends AbstractAction {
         }
         const mi = this.getModelItem();
         this.setValue(mi, value);
+        // todo: check this again - logically needsUpate should be set but makes tests fail
+        //  this.needsUpdate = true;
+
     }
 
     setValue(modelItem, newVal) {

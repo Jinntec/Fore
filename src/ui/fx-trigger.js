@@ -1,19 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-
-function leadingDebounce(func, timeout = 300){
-  console.log('debouncing', func);
-  let timer;
-  return (...args) => {
-    if (!timer) {
-      func.apply(this, args);
-    }
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = undefined;
-      return null;
-    }, timeout);
-  };
-}
+import {leadingDebounce} from "../events.js";
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
@@ -45,7 +31,7 @@ export class FxTrigger extends XfAbstractControl {
       if(this.debounceDelay){
         this.addEventListener(
             'click',
-            leadingDebounce((e) => {
+            leadingDebounce(this,(e) => {
               this.performActions(e)
             }, this.debounceDelay),
         );

@@ -10,36 +10,7 @@ html{
     --inspector-handle-width: 30px;
 
 }
-[unresolved]{
-    display: none;
-}
-[disabled] {
-    pointer-events: none;
-    cursor: default;
-}
-input[readonly]{
-    background: lightgrey;
-}
 
-/* fx-fore{ */
-/*     opacity: 0; */
-/* } */
-/* fx-fore.fx-ready{ */
-/*     opacity: 1; */
-/* } */
-fx-group, fx-switch, fx-repeat, fx-dialog{
-    display: block;
-}
-fx-trigger a[disabled] {
-    color:lightgrey;
-}
-fx-trigger img[disabled]{
-    filter:blur(2px);
-}
-
-.error{
-    background: var(--paper-red-500);
-}
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
@@ -50,36 +21,41 @@ fx-case{
     display: none;
 }
 
-fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
-    display:none;
+[unresolved]{
+    display: none;
+}
+[disabled] {
+    pointer-events: none;
+    cursor: default;
+}
+[readonly]{
+    background: lightgrey;
+}
+[refresh-on-view]{
+    /*opacity: 0;*/
+}
+[required]:after {
+    content: "*";
+    display: inline;
+    color: red;
+}
+
+
+
+/*
+input[readonly]{
+    background: lightgrey;
+}
+*/
+
+.error{
+    background: var(--paper-red-500);
 }
 
 fx-control, fx-trigger{
     white-space: nowrap;
     /* position: relative; */
 }
-.fx-checkbox{
-    white-space: nowrap;
-}
-fx-hint{
-    display: none;
-}
-fx-repeatitem{
-    position:relative;
-    /*
-    opacity:1;
-    -webkit-transition: opacity 3s;
-    -moz-transition: opacity 3s;
-    transition: opacity 3s;
-    */
-}
-.hidden {
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 2s, opacity 2s linear;
-}
-
-/* fx-inspector styles */
 
 /* ### FX-DIALOG STYLES ### */
 /* ### FX-DIALOG STYLES ### */
@@ -126,6 +102,83 @@ fx-dialog .action{
     display: block;
 }
 
+/* fx-fore{ */
+/*     opacity: 0; */
+/* } */
+/* fx-fore.fx-ready{ */
+/*     opacity: 1; */
+/* } */
+
+.fx-checkbox{
+    white-space: nowrap;
+}
+
+fx-group, fx-switch, fx-repeat, fx-dialog{
+    display: block;
+}
+
+fx-hint{
+    display: none;
+}
+
+fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
+    display:none;
+}
+
+fx-trigger a[disabled] {
+    color:lightgrey;
+}
+fx-trigger img[disabled]{
+    filter:blur(2px);
+}
+
+
+
+fx-repeatitem{
+    position:relative;
+    /*
+    opacity:1;
+    -webkit-transition: opacity 3s;
+    -moz-transition: opacity 3s;
+    transition: opacity 3s;
+    */
+}
+
+/* fx-inspector styles */
+
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 2s, opacity 2s linear;
+}
+
+.isEmpty.visited .widget{
+    background: lightpink;
+}
+
+.loaded{
+    animation: fadein 0.3s forwards;
+}
+/* avoid flicker from nested lazily loaded elements */
+.loaded .loaded{
+    animation: none;
+    opacity: 1;
+}
+
+.logtree details{
+    padding:0.1rem 1rem;
+    margin:0;
+}
+.logtree details summary{
+
+}
+
+.non-relevant{
+    opacity: 0;
+    height: 0;
+    transition: opacity 1s;
+}
 
 
 /*
@@ -136,6 +189,7 @@ fx-dialog .action{
 }
 */
 
+/*
 .required:after {
     content: '*';
     color: red;
@@ -144,43 +198,13 @@ fx-dialog .action{
     top:3px;
     z-index: 1;
 }
+*/
 
-[required]:after {
-    content: "*";
-    display: inline;
-    color: red;
-}
-.isEmpty.visited .widget{
-    background: lightpink;
-}
 .submit-validation-failed .isEmpty .widget{
     background: lightpink;
 }
-.logtree details{
-    padding:0.1rem 1rem;
-    margin:0;
-}
-.logtree details summary{
-
-}
-.non-relevant{
-    opacity: 0;
-    height: 0;
-    transition: opacity 1s;
-}
 .vertical label{
     display: block;
-}
-[refresh-on-view]{
-    /*opacity: 0;*/
-}
-.loaded{
-    animation: fadein 0.3s forwards;
-}
-/* avoid flicker from nested lazily loaded elements */
-.loaded .loaded{
-    animation: none;
-    opacity: 1;
 }
 /* @keyframes fadein { */
 /*     0% { */
