@@ -2,7 +2,7 @@ import {Fore} from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
 import '@jinntec/jinn-toast';
-import {evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
+import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
 
@@ -558,6 +558,19 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _handleModelConstructDone() {
+        const showConfirm = this.hasAttribute('show-confirmation')?this.getAttribute('show-confirmation'):null
+        if(showConfirm){
+            window.addEventListener('beforeunload', event => {
+                const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
+                if(mustDisplay){
+                    console.log('have to display confirmation')
+                    return event.returnValue = 'are you sure';
+                }else{
+                    event.preventDefault();
+                    console.log('do not display confirmation')
+                }
+            })
+        }
         this._initUI();
     }
 
