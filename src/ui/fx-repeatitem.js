@@ -90,12 +90,14 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
 
     if (this.modelItem && !this.modelItem.relevant) {
       // await Fore.fadeOutElement(this)
-      this.style.display = 'none';
+      // this.style.display = 'none';
+      this.classList.add('nonrelevant');
     } else {
       // if(this.hasAttribute('repeat-index')){
       //   Fore.fadeInElement(this);
       // }
-      this.style.display = this.display;
+      // this.style.display = this.display;
+      this.classList.remove('nonrelevant');
     }
 
     /*
