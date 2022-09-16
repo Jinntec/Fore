@@ -17,10 +17,9 @@
     height: 32px;
 }
 fx-trigger.btn.add, fx-trigger.btn.add button{
-    width: 64px;
-    height: 64px;
+    width: 2.5rem;
+    height: 2.5rem;
     font-size: 2rem;
-    margin:0.5rem 0;
 }
 fx-trigger .btn.add button:focus{
     border:3px;

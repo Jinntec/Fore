@@ -11,52 +11,48 @@
 <body unresolved="unresolved">
     <div class="wrapper">
         <fx-fore id="todo">
+            <fx-send submission="load" event="model-construct-done"></fx-send>
+            <fx-setvalue ref="instance('helper')/changed" event="value-changed">true</fx-setvalue>
+
             <fx-model id="record">
                 <fx-instance>
                     <data>
-                        <task complete="false" due="2022-06-05">Make tutorial part 1</task>
-                        <task complete="false" due="2022-06-15">Pick up Milk</task>
+                        <show-completed>false</show-completed>
                     </data>
                 </fx-instance>
+                <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
+                    <fx-bind ref="./text()" required="true()"></fx-bind>
+                </fx-bind>
+                <fx-submission id="save"
+                               url="localStore:todos"
+                               method="post">
+                    <fx-message event="submit-done">Changes have been stored</fx-message>
+                </fx-submission>
+                <fx-submission id="load"
+                               url="localStore:todos"
+                               method="get">
+                    <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
+                </fx-submission>
+
+                <fx-submission id="clear"
+                               url="localStore:todos"
+                               method="consume">
+                    <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
+                </fx-submission>
 
                 <fx-instance id="helper">
                     <data>
                         <template>
                             <task complete="false" due=""></task>
                         </template>
-                        <show-completed>false</show-completed>
                     </data>
                 </fx-instance>
-
-<!--
-                <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
-                    <fx-bind ref="./text()" required="true()"></fx-bind>
-                </fx-bind>
--->
-                <fx-submission id="save"
-                               url="localStore:todos"
-                               method="post">
-                    <fx-message event="submit-done">stored</fx-message>
-                </fx-submission>
-                <fx-submission id="load"
-                               url="localStore:todos"
-                               method="get"></fx-submission>
-
-                <fx-send submission="load" event="model-construct-done"></fx-send>
             </fx-model>
 
-            <fx-trigger>
-                <button>load</button>
-                <fx-send submission="load"></fx-send>
-            </fx-trigger>
-            <fx-trigger>
-                <button>save</button>
-                <fx-send submission="save"></fx-send>
-            </fx-trigger>
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                    <fx-insert ref="task" at="1" position="before" origin="instance('helper')/template/task"></fx-insert>
+                    <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -71,16 +67,14 @@
                 {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
             </div>
 
-            <fx-setfocus target="#document" control="task" event="index-changed"></fx-setfocus>
+            <fx-setfocus target="#document" control="task" event="value-changed"></fx-setfocus>
             <fx-repeat id="r-task" ref="task">
                 <template>
                     <div>
-<!--
                         <fx-action event="value-changed">
                             <fx-send submission="save"></fx-send>
                         </fx-action>
 
--->
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
                         </fx-control>
@@ -96,14 +90,17 @@
                 </template>
             </fx-repeat>
 
-<!--
-            <fx-control id="switch" ref="instance('helper')/show-completed" value-prop="checked" update-event="input">
+            <fx-control id="switch" ref="show-completed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
                 <input id="showcompleted" type="checkbox" class="widget">
             </fx-control>
--->
 
+            <fx-trigger>
+                <button>clear your data</button>
+                <fx-send submission="clear"></fx-send>
+            </fx-trigger>
         </fx-fore>
+
     </div>
 
 </body>

@@ -136,8 +136,8 @@ fx-trigger img[disabled]{
 
 fx-repeatitem{
     position:relative;
-    /*
     opacity:1;
+    /*
     -webkit-transition: opacity 3s;
     -moz-transition: opacity 3s;
     transition: opacity 3s;
@@ -174,10 +174,14 @@ fx-repeatitem{
 
 }
 
-.non-relevant{
+.nonrelevant{
     opacity: 0;
     height: 0;
-    transition: opacity 1s;
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    transition: opacity 0.4s;
 }
 
 
