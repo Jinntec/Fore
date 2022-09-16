@@ -97,8 +97,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        if (currentVal !== this.value) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path });
+        if (currentVal !== this.value ) {
+          // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
+        // if (currentVal !== this.value && this.visited) {
+          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
         }
       }
     }
