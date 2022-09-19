@@ -5,7 +5,6 @@ import { AbstractAction } from './abstract-action.js';
 /**
  * `fx-send` - finds and activates a `fx-submission` element.
  *
- *
  * @customElement
  */
 class FxSend extends AbstractAction {
@@ -28,6 +27,9 @@ class FxSend extends AbstractAction {
     // console.log('submitting model', this.getModel());
 
     // if not exists signal error
+    // todo: instead of relying on model just use pure dom to find submission as the context could be broken due to a delete action
+    // const fore = this.closest('fx-fore');
+    // const submission = fore.querySelector(`#${this.submission}`);
     const submission = this.getModel().querySelector(`#${this.submission}`);
     if (submission === null) {
       this.dispatchEvent(

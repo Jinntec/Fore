@@ -11,6 +11,7 @@ export class Fore {
 
   static get ACTION_ELEMENTS() {
     return [
+      'FX-ACTION',
       'FX-DELETE',
       'FX-DISPATCH',
       'FX-HIDE',
@@ -21,6 +22,7 @@ export class Fore {
       'FX-RECALCULATE',
       'FX-REFRESH',
       'FX-RENEW',
+      'FX-RELOAD',
       'FX-REPLACE',
       'FX-RESET',
       'FX-RETAIN',
@@ -89,6 +91,16 @@ export class Fore {
     ];
   }
 
+  static get MODEL_ELEMENTS(){
+    return [
+      'FX-BIND',
+      'FX-FUNCTION',
+      'FX-MODEL',
+      'FX-INSTANCE',
+      'FX-SUBMISSION',
+    ];
+  }
+
   static isUiElement(elementName) {
     const found = Fore.UI_ELEMENTS.includes(elementName);
     if (found) {
@@ -144,6 +156,54 @@ export class Fore {
 
     return refreshed;
   }
+
+  static copyDom(inputElement){
+    console.time('convert');
+    const target = new DOMParser().parseFromString('<fx-fore></fx-fore>', 'text/html');
+    console.log('copyDom new doc',target);
+    console.log('copyDom new body',target.body);
+    console.log('copyDom new body',target.querySelector('fx-fore'));
+    const newFore = target.querySelector('fx-fore');
+    this.convertFromSimple(inputElement,newFore);
+    newFore.removeAttribute('convert');
+    console.log('converted', newFore);
+    return newFore;
+    console.timeEnd('convert');
+  }
+  static convertFromSimple(startElement,targetElement){
+    const { children } = startElement;
+    if (children) {
+      Array.from(children).forEach(element => {
+        const lookFor = `FX-${element.nodeName.toUpperCase()}`;
+        if (Fore.MODEL_ELEMENTS.includes(lookFor)
+            || Fore.UI_ELEMENTS.includes(lookFor)
+            || Fore.ACTION_ELEMENTS.includes(lookFor)
+        ) {
+          const conv = targetElement.ownerDocument.createElement(lookFor);
+          console.log('conv', element, conv);
+          targetElement.appendChild(conv);
+          Fore.copyAttributes(element,conv);
+          Fore.convertFromSimple(element,conv);
+        } else{
+          const copied = targetElement.ownerDocument.createElement(element.nodeName);
+          targetElement.appendChild(copied);
+          Fore.copyAttributes(element,targetElement);
+
+          Fore.convertFromSimple(element,copied);
+        }
+      });
+    }
+  }
+
+  static copyAttributes(source, target) {
+    return Array.from(source.attributes).forEach(attribute => {
+      target.setAttribute(
+          attribute.nodeName,
+          attribute.nodeValue,
+      );
+    });
+  }
+
 
   /**
    * Alternative to `closest` that respects subcontrol boundaries
