@@ -49,14 +49,6 @@ export class FxTrigger extends XfAbstractControl {
         });
       }
     });
-    /*
-            this.addEventListener('click', e => this.performActions(e));
-            this.addEventListener('keypress', (e) => {
-                if(e.code === 'Space' || e.code === 'Enter'){
-                    this.performActions(e);
-                }
-            });
-    */
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -102,6 +94,7 @@ export class FxTrigger extends XfAbstractControl {
         if (typeof child.execute === 'function') {
           // eslint-disable-next-line no-await-in-loop
           await child.execute(e);
+          // child.execute(e);
         }
       }
     };

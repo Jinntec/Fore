@@ -63,7 +63,11 @@ fx-control, fx-trigger{
 fx-dialog{
     display: none;
     opacity: 0;
+    width:100vw;
+    height: 100vh;
     transition: opacity 1s linear;
+    z-index: -1;
+    transition: none;
 }
 fx-dialog.show{
     display: block;
@@ -72,7 +76,7 @@ fx-dialog.show{
     opacity: 1;
     background:rgba(0,0,0,0.5);
     z-index: 10;
-    transition: opacity 2s linear;
+    transition: opacity 0.4s linear;
 }
 
 fx-dialog.show .dialog-content{
