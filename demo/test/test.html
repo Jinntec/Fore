@@ -10,10 +10,7 @@
 </head>
 <body>
 <fx-fore>
-      <fx-action while="true()" event="ready" delay="1000">
-        <fx-setvalue ref="time" value="now()"></fx-setvalue>
-        <fx-refresh></fx-refresh>
-      </fx-action>
+    <fx-message event="instance-loaded" value="event('id')">Instance is loaded</fx-message>
 
     <fx-model>
         <fx-instance>
@@ -22,14 +19,9 @@
             </data>
         </fx-instance>
 
-        <fx-function signature="now() as xs:string" type="text/javascript">
-            const now = new Date();
-            return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-        </fx-function>
-
     </fx-model>
-    {time}
 </fx-fore>
+
 
 
 <!--    <script type="module" src="./js/fore-debug.js"/>-->

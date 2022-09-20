@@ -218,6 +218,13 @@ export class FxFore extends HTMLElement {
 
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', event => {
+            // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            if(this.hasAttribute('convert')){
+                this.replaceWith(Fore.copyDom(this));
+                // Fore.copyDom(this);
+                return;
+            }
+
             const children = event.target.assignedElements();
             let modelElement = children.find(
                 modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
