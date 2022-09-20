@@ -28,8 +28,13 @@ fx-case{
     pointer-events: none;
     cursor: default;
 }
+/*
 [readonly]{
     background: lightgrey;
+}
+*/
+fx-output[readonly] img{
+    background: inherit;
 }
 [refresh-on-view]{
     /*opacity: 0;*/

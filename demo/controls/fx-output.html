@@ -30,6 +30,7 @@
                             <a><b>1</b></a>
                             <b>2</b>
                             <b>3</b>
+                            <pic>../../resources/images/light7.png</pic>
                         </data>
                     </fx-instance>
 <!--
@@ -42,7 +43,6 @@
 -->
                     <fx-instance id="external" type="html" src="../../doc/actions-overview.html"></fx-instance>
                 </fx-model>
-                <h2>Plain</h2>
 
                 <h2>Outputting a referenced value</h2>
                 <div><fx-output ref="b"></fx-output> ⇒ 2</div>
@@ -60,9 +60,20 @@
                 <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
 
                 <h2>Mediatypes</h2>
-                <p>HTML taken from an instance</p>
+
+                <h3>HTML taken from an instance (mediatype='html')</h3>
 <!--                <div class="html-out"><fx-output ref="instance('html')" mediatype="html"></fx-output></div>-->
                 <div class="html-out"><fx-output ref="instance('external')//*:body" mediatype="html"></fx-output></div>
+
+                <h3>An image (mediatype='image')</h3>
+<!--                <img src="../../resources/images/light7.png">-->
+                <div class="img-out"><fx-output ref="pic" mediatype="image"></fx-output></div>
+
+
+                <h3>Same but different</h3>
+                <p>Same result can be achieved with a simple template expression. However for accessibility reasons (label)
+                and potentially attaching listeners the <code>fx-output</code> variant is still valid.</p>
+                <img src="{pic}">
 
             </fx-fore>
         </template>
