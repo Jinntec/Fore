@@ -10,6 +10,21 @@ html{
     --inspector-handle-width: 30px;
 
 }
+[unresolved]{
+    display: none;
+}
+[disabled] {
+    pointer-events: none;
+    cursor: default;
+}
+[refresh-on-view]{
+    /*opacity: 0;*/
+}
+[required]:after {
+    content: "*";
+    display: inline;
+    color: red;
+}
 
 fx-alert{
     color:darkred;
@@ -21,43 +36,15 @@ fx-case{
     display: none;
 }
 
-[unresolved]{
-    display: none;
-}
-[disabled] {
-    pointer-events: none;
-    cursor: default;
-}
-/*
-[readonly]{
-    background: lightgrey;
-}
-*/
 fx-output[readonly] img{
     background: inherit;
 }
-[refresh-on-view]{
-    /*opacity: 0;*/
-}
-[required]:after {
-    content: "*";
-    display: inline;
-    color: red;
-}
-
-
-
-/*
-input[readonly]{
-    background: lightgrey;
-}
-*/
 
 .error{
     background: var(--paper-red-500);
 }
 
-fx-control, fx-trigger{
+fx-control, fx-trigger , .fx-checkbox{
     white-space: nowrap;
     /* position: relative; */
 }
@@ -118,9 +105,6 @@ fx-dialog .action{
 /*     opacity: 1; */
 /* } */
 
-.fx-checkbox{
-    white-space: nowrap;
-}
 
 fx-group, fx-switch, fx-repeat, fx-dialog{
     display: block;
@@ -142,7 +126,6 @@ fx-trigger img[disabled]{
 }
 
 
-
 fx-repeatitem{
     position:relative;
     opacity:1;
@@ -152,9 +135,6 @@ fx-repeatitem{
     transition: opacity 3s;
     */
 }
-
-/* fx-inspector styles */
-
 
 .hidden {
     visibility: hidden;
@@ -193,32 +173,13 @@ fx-repeatitem{
     transition: opacity 0.4s;
 }
 
-
-/*
-.visible {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 2s linear;
-}
-*/
-
-/*
-.required:after {
-    content: '*';
-    color: red;
-    padding-left: 4px;
-    right:3px;
-    top:3px;
-    z-index: 1;
-}
-*/
-
 .submit-validation-failed .isEmpty .widget{
     background: lightpink;
 }
 .vertical label{
     display: block;
 }
+
 /* @keyframes fadein { */
 /*     0% { */
 /*         opacity:0; */

@@ -1,0 +1,32 @@
+<body xmlns="http://www.tei-c.org/ns/1.0">
+    <div type="edition">
+        <div type="textpart" subtype="fragment" n="a" corresp="">
+<!--            <ab>abc</ab>-->
+        </div>
+    </div>
+    <!-- 36) Apparatus für 1. Fragment: @corresp referenziert msPart -->
+    <!-- todo: fix template: should insert meaningful template node    -->
+    <div type="apparatus" corresp="#fragment1">
+<!--
+        <listApp>
+            <app loc="1"/>
+        </listApp>
+-->
+    </div>
+    <!-- 42) Übersetzung: @corresp referenziert msPart; @resp = Kürzel des Übersetzers -->
+    <div type="translation" corresp="#fragment1" resp="#Feraudi"/>
+    <!-- 37) Kommentar: freier Inhalt. Nur einmal pro Dokument -->
+    <div type="commentary"/>
+    <epidoc> </epidoc>
+    <term ref="#social-economic-legal-history"/>
+    <!-- 31) Geographie: ja = vorhanden -->
+    <term ref="#geography"/>
+    <!-- 32) Militär: ja = vorhanden -->
+    <term ref="#military"/>
+
+    <bibl>
+        <ptr target=""/>
+    </bibl>
+
+
+</body>

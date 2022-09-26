@@ -1,0 +1,128 @@
+<msPart xml:id="" xmlns="http://www.tei-c.org/ns/1.0">
+    <!--  ### runtime instance inlining these divs which finally end up in the body -->
+    <!-- 41) Textedition: @corresp referenziert msPart - eingefügt aus jinn-codemirror. Required -->
+    <div type="textpart" subtype="fragment" n="a" corresp="#F5771067f-65fb-47af-9a84-8e9d7dd393a8">
+    </div>
+    <!-- 36) Apparatus für 1. Fragment: @corresp referenziert msPart - eingefügt aus jinn-codemirror -->
+    <div type="apparatus" corresp="#F5771067f-65fb-47af-9a84-8e9d7dd393a8"></div>
+    <!-- 42) Übersetzung: @corresp referenziert msPart; @resp = Kürzel des Übersetzers - eingefügt aus jinn-codemirror -->
+    <div type="translation" corresp="#F5771067f-65fb-47af-9a84-8e9d7dd393a8" resp="#Feraudi">
+    </div>
+    <!-- 35d) Abbildungen, wiederholbar -->
+    <facsimile corresp="#F5771067f-65fb-47af-9a84-8e9d7dd393a8">
+        <graphic url=""></graphic>
+    </facsimile>
+    <msIdentifier>
+        <!-- 12a) Aufbewahrung -->
+        <repository ref="http://sicily.classics.ox.ac.uk/museum/064"></repository>
+        <!-- 4) TM-Nummer -->
+        <idno type="TM"></idno>
+    </msIdentifier>
+    <msContents>
+        <!-- 15) Inschriftengattung in @class -->
+        <msItem class="https://www.eagle-network.eu/voc/typeins/lod/51">
+            <!-- 25) Sprache -->
+            <textLang mainLang="lat"/>
+            <!-- 12c) Überlieferung -->
+            <listBibl type="transmission">
+                <bibl>
+                    <!-- Zotero Referenz -->
+                    <ptr target=""/>
+                    <note></note>
+                </bibl>
+            </listBibl>
+            <!-- 35b) Bibliographie-->
+            <listBibl type="bibliography">
+                <!-- Einträge wiederholbar -->
+                <bibl>
+                    <!-- Zotero Referenz -->
+                    <ptr target=""/>
+                </bibl>
+            </listBibl>
+            <!-- 35a) Ältere Editionen -->
+            <listBibl type="previousEditions">
+                <bibl>
+                    <ptr target=""/>
+                </bibl>
+            </listBibl>
+            <!-- 35c) Bilder-->
+            <listBibl type="images">
+                <bibl>
+                    <ptr target=""/>
+                    <note></note>
+                </bibl>
+            </listBibl>
+            <!-- 12d in @subtype -->
+            <note type="verification" subtype="">
+                <!-- 12e -->
+                <date when=""/>
+            </note>
+        </msItem>
+    </msContents>
+    <physDesc>
+        <objectDesc>
+            <supportDesc>
+                <support>
+                    <dimensions>
+                        <!-- 19) Inschriftträger: Breite -->
+                        <width></width>
+                        <!-- 38) Inschriftträger: Höhe -->
+                        <height></height>
+                        <!-- 20) Inschriftträger: Tiefe -->
+                        <depth></depth>
+                    </dimensions>
+                    <!-- 14) Dekor -->
+                    <rs type="decoration" ref="https://www.eagle-network.eu/voc/decor/lod/1000"></rs>
+                    <!-- 24) Metrik -->
+                    <rs type="metric">no</rs>
+                </support>
+                <!-- 13) Erhaltung -->
+                <condition>complete</condition>
+            </supportDesc>
+            <layoutDesc>
+                <layout>
+                    <dimensions>
+                        <!-- 21) Inschriftfeld: Höhe -->
+                        <height></height>
+                        <!-- 22) Inschriftfeld: Breite -->
+                        <width></width>
+                    </dimensions>
+                </layout>
+            </layoutDesc>
+        </objectDesc>
+        <handDesc>
+            <handNote>
+                <dimensions type="letterHeight">
+                    <!-- 23) Buchstabenhöhe -->
+                    <height></height>
+                </dimensions>
+                <!-- 39) Ligatur -->
+                <rs type="ligature">no</rs>
+            </handNote>
+        </handDesc>
+    </physDesc>
+    <history>
+        <origin>
+            <!-- in @corresp wird die GeoID angegeben, andere Ortsangaben sind redundant und werden
+                                am Ende nur hinein kopiert - siehe Kommentare -->
+            <origPlace corresp="">
+                <!-- 5) Provinz / augusteische Region: kopiert aus Geodatenbank -->
+                <placeName type="province"></placeName>
+                <!-- 8) Fundort (antik): kopiert aus Geodatenbank -->
+                <placeName type="ancient" ref="https://pleiades.stoa.org/places/108818"></placeName>
+            </origPlace>
+        </origin>
+        <!--
+                          11) Fundjahr (Attribute auf <provenance>)
+
+                          @when - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                          @notBefore - wie @when aber gemeint als "nach"
+                          @notAfter - wie @when aber gemeint als "vor"
+                          @when-custom - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                      -->
+        <provenance type="found" when="" when-custom="" notBefore="" notAfter="">
+            <!-- 10b) Fundkontext: nicht kopiert, freie Eingabe -->
+            <note type="context"></note>
+        </provenance>
+    </history>
+</msPart>

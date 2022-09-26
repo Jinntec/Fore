@@ -1,0 +1,628 @@
+[ {
+  "name" : "Brick",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/642"
+}, {
+  "name" : "Bronze, Copper Alloy",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/644"
+}, {
+  "name" : "Kalkstein/ Alabaster",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/507"
+}, {
+  "name" : "Metalle",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/107"
+}, {
+  "name" : "Metalle / Edelmetall",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/308"
+}, {
+  "name" : "Metalle / Edelmetall / Silber",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/115"
+}, {
+  "name" : "Metalle / Edelmetall / aurum",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/112"
+}, {
+  "name" : "Metalle / anderes metall",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/309"
+}, {
+  "name" : "Metalle / anderes metall / Blei",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/108"
+}, {
+  "name" : "Metalle / anderes metall / Bronze",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/109"
+}, {
+  "name" : "Metalle / anderes metall / Bronze / Bronze, gilded",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/110"
+}, {
+  "name" : "Metalle / anderes metall / Eisen",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/111"
+}, {
+  "name" : "Metalle / anderes metall / Kupfer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/113"
+}, {
+  "name" : "Metalle / anderes metall / Kupfer / Kupferniederschlag",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/310"
+}, {
+  "name" : "Metalle / anderes metall / Messing",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/114"
+}, {
+  "name" : "Metalle / anderes metall / Zinn",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/116"
+}, {
+  "name" : "Metalle / unbestimmt",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/117"
+}, {
+  "name" : "Rock",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/1"
+}, {
+  "name" : "Rock / Andere Gestein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/5"
+}, {
+  "name" : "Rock / Edelstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/288"
+}, {
+  "name" : "Rock / Edelstein / Glaspaste",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/289"
+}, {
+  "name" : "Rock / Edelstein / Saphir",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/290"
+}, {
+  "name" : "Rock / Edelstein / Smaragd",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/291"
+}, {
+  "name" : "Rock / Edelstein / Smaragd / Smaragdplasma",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/292"
+}, {
+  "name" : "Rock / Edelstein / Topas",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/293"
+}, {
+  "name" : "Rock / Kuenstliche Gesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/3"
+}, {
+  "name" : "Rock / Kuenstliche Gesteine / Steinputz-Trockenmörtel",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/4"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/6"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Aplit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/7"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/14"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Andesit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/15"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Basalt",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/16"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Diabas",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/294"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Dolerit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/295"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Felsit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/17"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Feinkörnige Kristallingesteine / Rhyolit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/18"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Glasige magmatische Gesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/19"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Glasige magmatische Gesteine / Obsidian",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/20"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/8"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine / Diorit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/9"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine / Hornblendegranit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/13"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine / Marmor der Troas (Granit)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/11"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine / Peridodit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/12"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Grobkörnige Kristallingesteine / Serpentin",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/10"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/21"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Basalt-Porphyr",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/23"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Feldspat-Porphyr",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/24"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Marmor, thessalischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/25"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Porphyr, grüner",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/22"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Quarz-Porphyr",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/26"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Porphyrische (ungleichkörnige) Kristallingesteine / Rhyolith-Porphyr",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/27"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Vulkangestein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/28"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Vulkangestein / (vulkanische) Breccie",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/735"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Vulkangestein / Bimsstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/31"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Vulkangestein / CIL: Tuff, vulkanischer vor allem Peperin",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/30"
+}, {
+  "name" : "Rock / MAGMATISCHE GESTEINE / Vulkangestein / Schillkalk",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/32"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/33"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/34"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Amphibolit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/35"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Eklogit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/36"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Glimmerschiefer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/39"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Gneis",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/37"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Hornfels",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/38"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Serpentinit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/40"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Magmatisches Ausgangsgestein / Steatit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/41"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/42"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Amphibolit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/43"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Dolomit-Marmor",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/44"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Gneis",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/45"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Hornfels",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/46"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Kalk-Marmor",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/47"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/48"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Cipollino",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/648"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marbre de Prokonnesos",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/353"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor Chium",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/739"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor Claudianum",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/740"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor von Thassos",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/749"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, Carrara (blau)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/738"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/50"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / Kunstmarmor",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/312"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / Marmor, numidischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/365"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / Marmor, schwarzer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/366"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / Marmor, weiß",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/49"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / Marmor, weiß / Marmor, Carrara (weiß)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/362"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / blue grey marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/750"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / blue marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/751"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / cream marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/354"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / cream marble flecked with brown",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/355"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / dark grey marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/356"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / grey marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/357"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / pink-grained white marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/360"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, geädert / farbig / yellow and white marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/364"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, hymettischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/741"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, karystischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/742"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, parischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/743"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, pentelischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/363"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, phrygischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/744"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, prokonnesischer ",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/745"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, skyrischer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/746"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, taenarischer (rot)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/747"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Marmor, taenarischer (schwarz)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/748"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Numidian marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/359"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / Portasanta marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/361"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Marmor (Farbe unbestimmt) / grey-flecked, white marble",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/358"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Quarzit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/51"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Schiefer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/52"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Schiefer / Metagrauwacke",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/736"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Silex",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/53"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Silex / Lavaschlacke",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/737"
+}, {
+  "name" : "Rock / METAMORPHE GESTEINE / Sedimentäres Ausgangsgestein / Tonschiefer",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/54"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/55"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/56"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Biogene Sedimente",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/65"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Biogene Sedimente / Kalkstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/67"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Biogene Sedimente / Limestone",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/66"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Biogene Sedimente / Limestone / limestone veined with quartz",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/647"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Biogene Sedimente / Muschelkalk",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/68"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Chemische Sedimente",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/69"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Chemische Sedimente / Oolith",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/70"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Chemische Sedimente / Travertin",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/71"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Dolomit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/59"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Kalksandstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/57"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Kalkstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/60"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Kalkstein / Poros",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/297"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Korallen-Kalkstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/58"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Magnesit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/61"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Mergel",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/62"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Muschel-Kalkstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/63"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Karbonatische Sedimentgesteine / Tuff Kalkstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/64"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/103"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/104"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Amethyst",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/304"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Bergkristall",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/305"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Chaux",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/106"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Cuir",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/105"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Kork",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/307"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Kieselige Sedimentgesteine / Quazt / Korund",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/306"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/72"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Alabaster",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/77"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Brekzie",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/73"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Kalkmergel / Mergel",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/76"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Kalktuff",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/78"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Konglomerat",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/74"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Molasse",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/79"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Klastische Sedimentgesteine / Sandstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/75"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/87"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Achat",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/88"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Chlorit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/298"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Fluorit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/299"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Gagat",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/300"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Granat",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/301"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Heliotrop",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/91"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Hämatit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/90"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Jaspis",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/89"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Karneol",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/92"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Lapislazuli",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/93"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Magnetit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/94"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Onyx",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/95"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Opal",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/96"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Sardonyx",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/97"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Sepiolith (Meerschaum)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/302"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Minerale / Vulkantuff",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/98"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht Klastische silikatreiche Sedimentgesteine",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/85"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht Klastische silikatreiche Sedimentgesteine / Feuerstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/86"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht-karbonatische Salze",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/99"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht-karbonatische Salze / Anhydrit",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/100"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht-karbonatische Salze / Gips",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/101"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Nicht-karbonatische Salze / Phosphat",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/102"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Pyroclastische Sedimente",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/80"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Pyroclastische Sedimente / Nenfro",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/81"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Pyroclastische Sedimente / Peperin",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/82"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Pyroclastische Sedimente / Trachyt",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/83"
+}, {
+  "name" : "Rock / SEDIMENTGESTEINE / Pyroclastische Sedimente / Vulkantuff",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/84"
+}, {
+  "name" : "Rock / Stein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/2"
+}, {
+  "name" : "Sonstige Materialen",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/118"
+}, {
+  "name" : "Sonstige Materialen / Acrolithic",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/136"
+}, {
+  "name" : "Sonstige Materialen / Bein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/124"
+}, {
+  "name" : "Sonstige Materialen / Bernstein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/119"
+}, {
+  "name" : "Sonstige Materialen / Ciment",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/135"
+}, {
+  "name" : "Sonstige Materialen / Elfenbein",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/120"
+}, {
+  "name" : "Sonstige Materialen / Emaille",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/121"
+}, {
+  "name" : "Sonstige Materialen / Fayence",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/311"
+}, {
+  "name" : "Sonstige Materialen / Glas",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/122"
+}, {
+  "name" : "Sonstige Materialen / Holz",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/123"
+}, {
+  "name" : "Sonstige Materialen / Kunststoff",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/313"
+}, {
+  "name" : "Sonstige Materialen / Leder",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/125"
+}, {
+  "name" : "Sonstige Materialen / Lehm",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/314"
+}, {
+  "name" : "Sonstige Materialen / Materialkombination",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/321"
+}, {
+  "name" : "Sonstige Materialen / Papier",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/319"
+}, {
+  "name" : "Sonstige Materialen / Papyrus",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/320"
+}, {
+  "name" : "Sonstige Materialen / Porzellan",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/315"
+}, {
+  "name" : "Sonstige Materialen / Putz",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/128"
+}, {
+  "name" : "Sonstige Materialen / Putz (Wandmalerei)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/126"
+}, {
+  "name" : "Sonstige Materialen / Stoff",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/317"
+}, {
+  "name" : "Sonstige Materialen / Stoff / Leinwand",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/318"
+}, {
+  "name" : "Sonstige Materialen / Terra sigillata",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/132"
+}, {
+  "name" : "Sonstige Materialen / Ton",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/131"
+}, {
+  "name" : "Sonstige Materialen / Ton",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/130"
+}, {
+  "name" : "Sonstige Materialen / Wachs",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/133"
+}, {
+  "name" : "Sonstige Materialen / musivum",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/134"
+}, {
+  "name" : "Sonstige Materialen / opus latericium",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/129"
+}, {
+  "name" : "Sonstige Materialen / tectorium induens sepulchrum",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/127"
+}, {
+  "name" : "ceramic (glazed)",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/643"
+}, {
+  "name" : "durvaszemcsés kristályos kőzetek",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/352"
+}, {
+  "name" : "ignoratur",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/138"
+}, {
+  "name" : "ignoratur / unbestimmt",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/137"
+}, {
+  "name" : "mozaik",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/251"
+}, {
+  "name" : "sandstone",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/502"
+}, {
+  "name" : "üveg",
+  "value" : "https://www.eagle-network.eu/voc/material/lod/604"
+} ]
