@@ -202,6 +202,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
    */
   perform() {
+    //todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
