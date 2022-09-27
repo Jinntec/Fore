@@ -459,7 +459,7 @@ export class FxFore extends HTMLElement {
     _updateTemplateExpressions() {
         // Note the fact we're going over HTML here: therefore the `html` prefix.
         const search =
-            "(descendant-or-self::*/(text(), @*))[not(ancestor-or-self::fx-model)][matches(.,'\\{.*\\}')]";
+            "(descendant-or-self::*!(text(), @*))[matches(.,'\\{.*\\}')][not(ancestor-or-self::fx-model)]";
 
         const tmplExpressions = evaluateXPathToNodes(search, this, this);
         // console.log('template expressions found ', tmplExpressions);
@@ -572,10 +572,10 @@ export class FxFore extends HTMLElement {
                 if(mustDisplay){
                     console.log('have to display confirmation')
                     return event.returnValue = 'are you sure';
-                }else{
+                }
                     event.preventDefault();
                     console.log('do not display confirmation')
-                }
+                
             })
         }
         this._initUI();
