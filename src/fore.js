@@ -288,7 +288,7 @@ export class Fore {
       bubbles: true,
       detail,
     });
-    console.log('dispatching', target,  event);
+    console.info('dispatching', event.type, target);
     target.dispatchEvent(event);
   }
 

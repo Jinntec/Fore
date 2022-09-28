@@ -235,9 +235,11 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
             }
             if (!modelElement.inited) {
-                console.log(
-                    `########## FORE: kick off processing for ... ${window.location.href} ##########`,
+                console.info(
+                    `%cFore is processing URL ${window.location.href}`,
+                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
+
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');
                 }
@@ -382,7 +384,8 @@ export class FxFore extends HTMLElement {
 
     async refresh(force) {
         // refresh () {
-        console.group('### refresh', force);
+        console.info('%crefresh','font-style: italic; background: #8bc34a; color:white; padding:0.3rem 5rem 0.3rem 0.3rem; display:block; width:100%;');
+        console.group('refresh', force);
 
         console.time('refresh');
 
@@ -729,9 +732,12 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
-        console.log('### modelItems: ', this.getModel().modelItems);
-        console.log('### <<<<< FORE: form fully initialized...', this);
+        // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
+        console.info(
+            `%cPage Initialization done`,
+            "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+        );
     }
 
     registerLazyElement(element) {

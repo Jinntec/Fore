@@ -52,7 +52,7 @@ export default class FxSetvalue extends AbstractAction {
         }
         console.log('value', value);
         if (value.nodeType === Node.ATTRIBUTE_NODE) {
-            console.log('value', value.nodeValue);
+            // console.log('value', value.nodeValue);
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
@@ -63,8 +63,6 @@ export default class FxSetvalue extends AbstractAction {
     }
 
     setValue(modelItem, newVal) {
-        console.log('setvalue[1]  ', modelItem, newVal);
-
         const item = modelItem;
         if (!item) return;
 
@@ -72,7 +70,6 @@ export default class FxSetvalue extends AbstractAction {
             item.value = newVal;
             this.getModel().changed.push(modelItem);
             this.needsUpdate = true;
-            console.log('setvalue[2] ', item, newVal);
         }
     }
 }
