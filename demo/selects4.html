@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Select Long list</title>
+    <style>
+        fx-control{
+            margin:3rem;
+            width: auto;
+        }
+        label{
+            display: block;
+        }
+    </style>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+<demo-snippet>
+    <template>
+        <fx-fore>
+            <fx-model>
+
+                <fx-instance>
+                    <data>
+                        <listitem></listitem>
+                        <listitem2></listitem2>
+                    </data>
+                </fx-instance>
+                <fx-instance id="list" src="data/material.json" type="json">{}</fx-instance>
+                <fx-instance id="list2" src="data/material.json" type="json">{}</fx-instance>
+            </fx-model>
+
+            <fx-group>
+                <h1>Static and dynamic list widgets</h1>
+
+                <p>A dynamic list needs to rebuild its items on every refresh</p>
+                <fx-control ref="listitem" update-event="input">
+                    <label>dynamic list</label>
+                    <select ref="instance('list')?*" class="widget">
+                        <template>
+                            <option value="{?value}">{?name}</option>
+                        </template>
+                    </select>
+                </fx-control>
+
+
+                <p>A static list is mucher faster in updating as the list will only be built once</p>
+                <fx-control ref="listitem2" update-event="input">
+                    <label>static list</label>
+                    <select ref="instance('list2')?*" class="widget" static>
+                        <template>
+                            <option value="{?value}">{?name}</option>
+                        </template>
+                    </select>
+                </fx-control>
+                <p class="note">It is recommended to use 'static' whenever possible to optimize rendering speed.</p>
+
+                <!--<fx-inspector></fx-inspector>-->
+            </fx-group>
+        </fx-fore>
+    </template>
+</demo-snippet>
+
+</div>
+
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

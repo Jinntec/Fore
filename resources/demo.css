@@ -3,6 +3,7 @@
 @font-face {
     font-family: "Kimberley";
     src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
+    font-display:swap;
 }
 
 a, a:link, a:visited {

@@ -130,6 +130,8 @@ export default class FxControl extends XfAbstractControl {
     });
 
     this.template = this.querySelector('template');
+    this.boundInitialized = false;
+    this.static = this.widget.hasAttribute('static')? true:false;
     // console.log('template',this.template);
   }
 
@@ -422,6 +424,8 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   _handleBoundWidget(widget) {
+    if(this.boundInitialized && this.static) return;
+
     if (widget && widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
@@ -459,18 +463,36 @@ export default class FxControl extends XfAbstractControl {
 
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
+          const fragment = document.createDocumentFragment();
+          console.time('offscreen');
+/*
           Array.from(nodeset).forEach(node => {
             // console.log('#### node', node);
             const newEntry = this.createEntry();
+            this.template.parentNode.appendChild(newEntry);
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
+*/
+          // this should actually perform better than the above but does not seem to make a measurable difference.
+          Array.from(nodeset).forEach(node => {
+            // console.log('#### node', node);
+            const newEntry = this.createEntry();
+            fragment.appendChild(newEntry);
 
             // ### initialize new entry
             // ### set value
             this.updateEntry(newEntry, node);
           });
+          this.template.parentNode.appendChild(fragment);
+          console.timeEnd('offscreen');
         } else {
           const newEntry = this.createEntry();
+          this.template.parentNode.appendChild(newEntry);
           this.updateEntry(newEntry, nodeset);
         }
+        this.boundInitialized = true;
       }
     }
   }
@@ -499,10 +521,12 @@ export default class FxControl extends XfAbstractControl {
   }
 
   createEntry() {
-    const content = this.template.content.firstElementChild.cloneNode(true);
-    const newEntry = document.importNode(content, true);
-    this.template.parentNode.appendChild(newEntry);
-    return newEntry;
+    return this.template.content.firstElementChild.cloneNode(true);
+    // const content = this.template.content.firstElementChild.cloneNode(true);
+    // return content;
+    // const newEntry = document.importNode(content, true);
+    // this.template.parentNode.appendChild(newEntry);
+    // return newEntry;
   }
 
   // eslint-disable-next-line class-methods-use-this

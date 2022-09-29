@@ -428,7 +428,7 @@ export class FxFore extends HTMLElement {
             });
             this.toRefresh = [];
             if (!needsRefresh) {
-                console.log('skipping refresh - no dependants');
+                console.log('no dependants to refresh');
             }
         } else {
             Fore.refreshChildren(this, true);
