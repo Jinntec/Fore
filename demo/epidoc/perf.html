@@ -43,9 +43,10 @@
 <!--        <fx-setfocus control="title" event="ready"></fx-setfocus>-->
 
         <fx-model>
-            <fx-action event="model-construct-done">
+            <fx-action event="model-construct-done" if="exists(instance('params')/id)">
                 <!--                            <fx-send submission="s-login" if="instance('vars')/loggedin != 'true'" />-->
-                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>
+                <fx-send submission="s-load-inscription"></fx-send>
+<!--                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>-->
             </fx-action>
 
             <fx-instance id="default" src="data/HD025278.xml"

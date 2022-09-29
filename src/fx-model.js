@@ -141,7 +141,10 @@ export class FxModel extends HTMLElement {
     updateModel() {
         // console.time('updateModel');
         this.rebuild();
-        if (this.skipUpdate) return;
+        if (this.skipUpdate){
+            console.info('%crecalculate/revalidate skipped - no bindings', 'font-style: italic; background: #90a4ae; color:lightgrey; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
+            return;
+        }
         this.recalculate();
         this.revalidate();
         // console.timeEnd('updateModel');

@@ -248,7 +248,7 @@ export class FxFore extends HTMLElement {
             this.model = modelElement;
         });
         this.addEventListener('path-mutated', e => {
-            console.log('path-mutated event received', e.detail.path, e.detail.index);
+            // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
     }
