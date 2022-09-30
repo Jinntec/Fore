@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        fx-repeatitem{
+            display: block;
+        }
+        fx-div{
+            width: 280px;
+            display: inline-block;
+        }
+    </style>
+    <script type="module" src="../../index.js"></script>
+</head>
+<body>
+
+<!--<div class="wrapper">-->
+    <fx-fore>
+        <fx-message event="ready">Done</fx-message>
+        <fx-model>
+            <fx-message event="model-construct-done">Model is ready</fx-message>
+
+            <fx-instance src="item-1000.xml">
+                <data></data>
+            </fx-instance>
+        </fx-model>
+
+        <fx-repeat ref="item">
+            <template>
+                <fx-div tabindex="0">
+                    <label>item</label> {.}
+                </fx-div>
+                <fx-div tabindex="0">
+                    <label>prop1</label> {@prop1}
+                </fx-div>
+                <fx-div tabindex="0">
+                    <label>prop2</label> {@prop2}
+                </fx-div>
+                <fx-div tabindex="0">
+                    <label>prop3</label> {@prop3}
+                </fx-div>
+                <fx-div tabindex="0">
+                    <label>prop4</label> {@prop4}
+                </fx-div>
+                <fx-div tabindex="0">
+                    <label>prop5</label> {@prop5}
+                </fx-div>
+            </template>
+<!--
+            <template>
+                <fx-output ref=".">
+                    <label>item</label>
+                </fx-output>
+                <fx-output ref="@prop1">
+                    <label>prop1</label>
+                </fx-output>
+                <fx-output ref="@prop2">
+                    <label>prop2</label>
+                </fx-output>
+                <fx-output ref="@prop3">
+                    <label>prop3</label>
+                </fx-output>
+                <fx-output ref="@prop4">
+                    <label>prop4</label>
+                </fx-output>
+                <fx-output ref="@prop5">
+                    <label>prop5</label>
+                </fx-output>
+            </template>
+-->
+<!--
+            <template>
+                <fx-control ref=".">
+                    <label>item</label>
+                </fx-control>
+                <fx-control ref="@prop1">
+                    <label>prop1</label>
+                </fx-control>
+                <fx-control ref="@prop2">
+                    <label>prop2</label>
+                </fx-control>
+                <fx-control ref="@prop3">
+                    <label>prop3</label>
+                </fx-control>
+                <fx-control ref="@prop4">
+                    <label>prop4</label>
+                </fx-control>
+                <fx-control ref="@prop5">
+                    <label>prop5</label>
+                </fx-control>
+            </template>
+-->
+        </fx-repeat>
+    </fx-fore>
+<!--</div>-->
+</body>
+</html>
