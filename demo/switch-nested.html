@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="auth">
+                <data>
+                    <user>John</user>
+                    <password></password>
+                    <inprogress>false</inprogress>
+                </data>
+            </fx-instance>
+            <fx-submission id="login"
+                           method="urlencoded-post"
+                           url="#echo"
+                           ref="instance('auth')"
+                           replace="none">
+                <fx-setvalue ref="inprogress" event="submit">true</fx-setvalue>
+                <fx-header name="Authorization" value="'auth'"></fx-header>
+                <fx-header name="Accept" value="'application/xml'"></fx-header>
+                <fx-header name="Another">bar</fx-header>
+
+                <fx-message event="submit-error">Login failed</fx-message>
+                <fx-action event="submit-done">
+                    <fx-message>Access granted</fx-message>
+                    <fx-toggle case="tabcontainer"></fx-toggle>
+                </fx-action>
+
+            </fx-submission>
+
+        </fx-model>
+        <fx-switch>
+            <fx-case id="loginpage">
+                <section class="login">
+                    <fx-control ref="instance('auth')/user" update-event="enter">
+                        <label>User</label>
+                        <input type="text" autofocus="autofocus" autocomplete="false"/>
+                    </fx-control>
+                    <fx-control ref="instance('auth')/password" update-event="enter">
+                        <label>Password</label>
+                        <input type="password"/>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <button>Login</button>
+                        <fx-send submission="login"/>
+                    </fx-trigger>
+                </section>
+            </fx-case>
+            <fx-case id="tabcontainer">
+                <section>
+                    <fx-trigger label="page 1">
+                        <paper-button>Basics</paper-button>
+                        <fx-toggle case="one"/>
+                    </fx-trigger>
+                    <fx-trigger label="page 2" raised="raised">
+                        <paper-button>Infos</paper-button>
+                        <fx-toggle case="two"/>
+                    </fx-trigger>
+                    <fx-trigger label="page 3" raised="raised">
+                        <paper-button>SozNet</paper-button>
+                        <fx-toggle case="three"/>
+                    </fx-trigger>
+                    <fx-trigger label="page 4" raised="raised">
+                        <paper-button>HC</paper-button>
+                        <fx-toggle case="four"/>
+                    </fx-trigger>
+                    <fx-switch>
+                        <fx-case id="one">
+                            page one
+                        </fx-case>
+                        <fx-case id="two" name="page2">
+                            {log('auth')}
+                        </fx-case>
+                        <fx-case id="three" name="page3">
+                            some completely unneeded content
+                        </fx-case>
+                        <fx-case id="four" name="page4">
+                            some completely unneeded content
+                        </fx-case>
+                    </fx-switch>
+                </section>
+            </fx-case>
+        </fx-switch>
+    </fx-fore>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
+import {Fore} from "../fore";
 
 /**
  * `fx-toggle`
@@ -24,6 +25,10 @@ class FxToggle extends AbstractAction {
     if (this.case) {
       const ownerForm = this.getOwnerForm();
       const caseElement = ownerForm.querySelector(`#${this.case}`);
+      if(!caseElement){
+        Fore.dispatch(this, 'error', { message: `fx-case id not found: ${this.case}` });
+        return;
+      }
       const fxSwitch = caseElement.parentNode;
       fxSwitch.toggle(caseElement);
     }
