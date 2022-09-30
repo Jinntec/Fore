@@ -36,28 +36,31 @@ class FxSwitch extends FxContainer {
     `;
   }
 
-  refresh(force) {
+  async refresh(force) {
     super.refresh();
-    console.log('refresh on switch ');
+    // console.log('refresh on switch ');
     const cases = this.querySelectorAll(':scope > fx-case');
+    let selectedCase;
     if (this.isBound()) {
       Array.from(cases).forEach(caseElem => {
         const name = caseElem.getAttribute('name');
         if (name === this.modelItem.value) {
           caseElem.classList.add('selected-case');
+          selectedCase = caseElem;
         } else {
           caseElem.classList.remove('selected-case');
         }
       });
     } else {
-      const selected = this.querySelector(':scope > .selected-case');
-      if (!selected) {
-        cases[0].classList.add('selected-case');
+      selectedCase = this.querySelector(':scope > .selected-case');
+      // if none is selected select the first as default
+      if (!selectedCase) {
+        selectedCase = cases[0];
+        selectedCase.classList.add('selected-case');
       }
     }
 
-    Fore.refreshChildren(this,force);
-    // console.log('value ', this.value);
+    Fore.refreshChildren(selectedCase,force);
   }
 
   toggle(caseElement) {
@@ -66,6 +69,7 @@ class FxSwitch extends FxContainer {
       if (caseElement === c) {
         // eslint-disable-next-line no-param-reassign
         c.classList.add('selected-case');
+        this.refresh();
       } else {
         // eslint-disable-next-line no-param-reassign
         c.classList.remove('selected-case');

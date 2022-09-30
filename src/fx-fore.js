@@ -181,6 +181,8 @@ export class FxFore extends HTMLElement {
     }
 
     connectedCallback() {
+        this.style.visibility = 'hidden';
+
         /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -218,6 +220,7 @@ export class FxFore extends HTMLElement {
 
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', event => {
+
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
@@ -448,6 +451,7 @@ export class FxFore extends HTMLElement {
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
+        this.style.visibility='visible';
         Fore.dispatch(this, 'refresh-done', {});
     }
 

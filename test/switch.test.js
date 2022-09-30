@@ -172,4 +172,143 @@ describe('fx-switch Tests', () => {
     expect(cases[1].classList.contains('selected-case')).to.be.false;
     expect(cases[2].classList.contains('selected-case')).to.be.true;
   });
+
+
+  it('refreshes just the default case', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item1>a bound item</item1>
+              <item2>second bound item</item2>
+              <item3>third bound item</item3>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger label="page 1" class="orange">
+          <paper-button>toggle page 1</paper-button>
+          <fx-toggle case="one"></fx-toggle>
+        </fx-trigger>
+
+        <fx-trigger label="page 2" raised="raised" class="green">
+          <paper-button>toggle page 2</paper-button>
+          <fx-toggle case="two"></fx-toggle>
+        </fx-trigger>
+
+        <fx-trigger label="page 3" raised="raised" class="blue">
+          <paper-button>toggle page 3</paper-button>
+          <fx-toggle case="three"></fx-toggle>
+        </fx-trigger>
+
+        <fx-switch>
+          <fx-case id="one" class="orange">
+            some exclusive content
+            <fx-control ref="item1">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+          <fx-case id="two" class="green">
+            some further content
+            <fx-control ref="item2">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+          <fx-case id="three" class="blue">
+            some completely unneeded content
+            <fx-control ref="item3">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    const control = el.querySelector('fx-control');
+    control.setValue('bar');
+
+    await oneEvent(el, 'refresh-done');
+
+    const cases = el.querySelectorAll('fx-case');
+    expect(cases[0].classList.contains('selected-case')).to.be.true;
+    expect(cases[1].classList.contains('selected-case')).to.be.false;
+    expect(cases[2].classList.contains('selected-case')).to.be.false;
+
+    // check that only the first of conrols will have a value -> be initialized
+    const control1 = el.querySelector('[ref="item1"]');
+    expect(control1.value).to.equal('a bound item');
+
+    const control2 = el.querySelector('[ref="item2"]');
+    expect(control2.value).to.equal('');
+
+    const control3 = el.querySelector('[ref="item3"]');
+    expect(control3.value).to.equal('');
+
+  });
+
+/*
+  it('refreshes second case when toggled', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-toggle event="model-construct-done" case="two"></fx-toggle>
+          <fx-instance>
+            <data>
+              <item1>a bound item</item1>
+              <item2>second bound item</item2>
+              <item3>third bound item</item3>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger label="page 1" class="orange">
+          <paper-button>toggle page 1</paper-button>
+          <fx-toggle case="one"></fx-toggle>
+        </fx-trigger>
+
+        <fx-trigger id="two" label="page 2" raised="raised" class="green">
+          <paper-button>toggle page 2</paper-button>
+          <fx-toggle case="two"></fx-toggle>
+        </fx-trigger>
+
+        <fx-trigger label="page 3" raised="raised" class="blue">
+          <paper-button>toggle page 3</paper-button>
+          <fx-toggle case="three"></fx-toggle>
+        </fx-trigger>
+
+        <fx-switch>
+          <fx-case id="one" class="orange">
+            some exclusive content
+            <fx-control ref="item1">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+          <fx-case id="two" class="green">
+            some further content
+            <fx-control ref="item2">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+          <fx-case id="three" class="blue">
+            some completely unneeded content
+            <fx-control ref="item3">
+              <label>Item1</label>
+            </fx-control>
+          </fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const control2 = el.querySelector('[ref="item2"]');
+    expect(control2.value).to.equal('second bound item');
+
+    const control3 = el.querySelector('[ref="item3"]');
+    expect(control3.value).to.equal('');
+
+
+  });
+*/
 });

@@ -66,16 +66,12 @@ export class Fore {
     return [
       'FX-ALERT',
       'FX-CONTROL',
-      'FX-BUTTON',
-      'FX-CONTROL',
       'FX-DIALOG',
       'FX-FILENAME',
       'FX-MEDIATYPE',
       'FX-GROUP',
       'FX-HINT',
-      'FX-INPUT',
       'FX-ITEMS',
-      'FX-LABEL',
       'FX-OUTPUT',
       'FX-RANGE',
       'FX-REPEAT',
@@ -171,25 +167,32 @@ export class Fore {
     console.timeEnd('convert');
   }
   static convertFromSimple(startElement,targetElement){
-    const { children } = startElement;
+    const children = startElement.childNodes;
     if (children) {
-      Array.from(children).forEach(element => {
-        const lookFor = `FX-${element.nodeName.toUpperCase()}`;
+      Array.from(children).forEach(node => {
+        const lookFor = `FX-${node.nodeName.toUpperCase()}`;
         if (Fore.MODEL_ELEMENTS.includes(lookFor)
             || Fore.UI_ELEMENTS.includes(lookFor)
             || Fore.ACTION_ELEMENTS.includes(lookFor)
         ) {
           const conv = targetElement.ownerDocument.createElement(lookFor);
-          console.log('conv', element, conv);
+          console.log('conv', node, conv);
           targetElement.appendChild(conv);
-          Fore.copyAttributes(element,conv);
-          Fore.convertFromSimple(element,conv);
+          Fore.copyAttributes(node,conv);
+          Fore.convertFromSimple(node,conv);
         } else{
-          const copied = targetElement.ownerDocument.createElement(element.nodeName);
-          targetElement.appendChild(copied);
-          Fore.copyAttributes(element,targetElement);
 
-          Fore.convertFromSimple(element,copied);
+          if(node.nodeType === Node.TEXT_NODE){
+            const copied = targetElement.ownerDocument.createTextNode(node.textContent);
+            targetElement.appendChild(copied);
+          }
+
+          if(node.nodeType === Node.ELEMENT_NODE){
+            const copied = targetElement.ownerDocument.createElement(node.nodeName);
+            targetElement.appendChild(copied);
+            Fore.copyAttributes(node,targetElement);
+            Fore.convertFromSimple(node,copied);
+          }
         }
       });
     }

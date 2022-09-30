@@ -84,6 +84,11 @@ class FxGroup extends FxContainer {
 
     console.groupEnd();
   }
+
+  async refresh(force) {
+    super.refresh(force);
+    Fore.refreshChildren(this,force);
+  }
 }
 
 if (!customElements.get('fx-group')) {
