@@ -146,6 +146,30 @@ export function resolveId(id, sourceObject, nodeName = null) {
 // Make namespace resolving use the `instance` element that is related to here
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
+function findInstanceReferences(xpathQuery) {
+	if (!xpathQuery.includes('instance')) {
+		// No call to the instance function anyway: short-circuit and prevent AST processing
+		return [];
+	}
+    const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
+    const instanceReferences = fxEvaluateXPathToStrings(
+        `descendant::xqx:functionCallExpr
+				[xqx:functionName = "instance"]
+				/xqx:arguments
+				/xqx:stringConstantExpr
+				/xqx:value`,
+        xpathAST,
+        null,
+        {},
+        {
+            namespaceResolver: prefix =>
+                prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+        },
+    );
+
+	return instanceReferences;
+}
+
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
  * XPath in which the namespace is being resolved. The prefix will be resolved by using the
@@ -165,22 +189,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
     if (cachedResolver) {
         return cachedResolver;
     }
-
-    const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
-    let instanceReferences = fxEvaluateXPathToStrings(
-        `descendant::xqx:functionCallExpr
-				[xqx:functionName = "instance"]
-				/xqx:arguments
-				/xqx:stringConstantExpr
-				/xqx:value`,
-        xpathAST,
-        null,
-        {},
-        {
-            namespaceResolver: prefix =>
-                prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-        },
-    );
+	let instanceReferences = findInstanceReferences(xpathQuery);
     if (instanceReferences.length === 0) {
         // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
         const ancestorComponent = fxEvaluateXPathToFirstNode('ancestor::*[@ref][1]', formElement);
