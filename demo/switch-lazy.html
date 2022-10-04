@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Switch</title>
+    <title>Switch is lazy</title>
 
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -60,13 +60,13 @@
 <body unresolved="unresolved">
 <div class="wrapper">
 
-    <h1>Switch</h1>
-    <h2>fx-switch with toggle</h2>
-    <p>
-        <code>fx-case</code> child elements can be switched by an explicit <code>fx-toggle</code> action which take the id of an
-        <code>fx-case</code> element.
+    <h1>Switch is lazy</h1>
+    <p>Switch can be used to limit the amount of the user interface to be refreshed as it only updates
+        the children of the selected <code>fx-case</code> element.
     </p>
 
+    <p>Watching the console when using a dev version of Fore will reveal that only the needed parts
+    are affected by a <code>refresh</code> when you toggle a case.</p>
     <demo-snippet>
         <template>
             <fx-fore>
