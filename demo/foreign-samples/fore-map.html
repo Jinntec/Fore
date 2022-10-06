@@ -1,0 +1,159 @@
+
+<?xml-stylesheet href="../../xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://www.w3.org/1999/xhtml"
+      xmlns:ev="http://www.w3.org/2001/xml-events">
+<head>
+    <title>Basic map</title>
+
+    <link rel="stylesheet" href="../../resources/fore.css">
+    <script type="module" src="../demo.js"></script>
+
+    <style type="text/css">
+        .map, .mouse {
+            height: 512px; width: 512px; line-height: 0;
+            white-space: nowrap; overflow: hidden;
+        }
+        .mouse {position: absolute; top: 0; left: 0;}
+        .space {height: 512px; width: 512px;}
+        #root {position: relative;}
+        .fx-repeatitem {display: inline}
+
+
+    </style>
+
+</head>
+<body>
+<!-- The two divs 'map' and 'mouse' are positioned over each other by the CSS -->
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <zoom>10</zoom>
+                    <lasty>22058667</lasty>
+                    <lastx>34477602</lastx>
+                    <posx></posx>
+                    <posy></posy>
+                    <x></x>
+                    <y></y>
+                    <tilesize>256</tilesize>
+                    <scale></scale>
+                    <maxpos></maxpos>
+                    <maxzoom>19</maxzoom>
+                    <offx></offx>
+                    <offy></offy>
+                    <offsets></offsets>
+                    <site>http://tile.openstreetmap.org/</site>
+                    <row y="-1">
+                        <url x="-1"></url>
+                        <url x="0"></url>
+                        <url x="1"></url>
+                    </row>
+                    <row y="0">
+                        <url x="-1"></url>
+                        <url x="0"></url>
+                        <url x="1"></url>
+                    </row>
+                    <row y="1" >
+                        <url x="-1"></url>
+                        <url x="0"></url>
+                        <url x="1"></url>
+                    </row>
+                    <mouse>
+                        <x>0</x>
+                        <y>0</y>
+                        <state>up</state>
+                        <cursor></cursor>
+                        <start>
+                            <x></x>
+                            <y></y>
+                        </start>
+                        <end>
+                            <x></x>
+                            <y></y>
+                        </end>
+                        <move>
+                            <x></x>
+                            <y></y>
+                        </move>
+                    </mouse>
+                </data>
+            </fx-instance>
+            <fx-bind ref="mouse/cursor" calculate="if(../state = 'up') then 'pointer' else 'move'"></fx-bind>
+
+            <!--
+                        <fx-bind ref="scale" calculate="power(2, 26 - ../zoom)"/>
+                        <fx-bind ref="maxpos" calculate="power(2, 26)"/>
+                        <fx-bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"/>
+                        <fx-bind ref="posy" calculate="(../lasty - (../mouse/move/y * (../scale div ../tilesize))) mod ../maxpos"/>
+                        <fx-bind ref="x" calculate="floor(../posx div ../scale)"/>
+                        <fx-bind ref="y" calculate="floor(../posy div ../scale)"/>
+
+                        <fx-bind ref="row/url" calculate="concat(/map/site, /map/zoom, '/',
+                                     /map/x + @x, '/', /map/y + ../@y, '.png')"/>
+                        <fx-bind ref="offx" calculate="floor(((../posx - ../x * ../scale) div ../scale)*../tilesize)" />
+                        <fx-bind ref="offy" calculate="floor(((../posy - ../y * ../scale) div ../scale)*../tilesize)" />
+                        <fx-bind ref="offsets" calculate="concat('margin-left: ', 0 - (../offx), 'px; margin-top: ', 0 - (../offy), 'px;')" />
+
+                        <fx-bind ref="mouse/cursor" calculate="if(../state = 'up', 'pointer', 'move')"/>
+                        <fx-bind ref="mouse/end/x" calculate="if(../../state = 'down', ../../x, .)"/>
+                        <fx-bind ref="mouse/end/y" calculate="if(../../state = 'down', ../../y, .)"/>
+                        <fx-bind ref="mouse/move/x" calculate="../../end/x - ../../start/x"/>
+                        <fx-bind ref="mouse/move/y" calculate="../../end/y - ../../start/y"/>
+            -->
+        </fx-model>
+        <div id="root" class="map" style="cursor: {mouse/cursor};">
+            <div style="{offsets}">
+                <fx-group xmlns="http://www.w3.org/2002/xforms">
+                    <fx-repeat ref="row">
+                        <template>
+                            <fx-repeat ref="url">
+                                <template>
+                                    {.} <output ref="." mediatype="image"/>
+                                </template>
+                            </fx-repeat>
+                        </template>
+                    </fx-repeat>
+                </fx-group>
+            </div>
+            <div class="mouse">
+                <div style="cursor: {mouse/cursor}">
+                    <fx-group class="space">
+                        <fx-action ev:event="mousemove">
+                            <fx-setvalue ref="mouse/x" value="event('clientX')"/>
+                            <fx-setvalue ref="mouse/y" value="event('clientY')"/>
+                        </fx-action>
+                        <fx-action ev:event="mousedown" ev:defaultAction="cancel">
+                            <fx-setvalue ref="mouse/state">down</fx-setvalue>
+                            <fx-setvalue ref="mouse/start/x" value="event('clientX')"/>
+                            <fx-setvalue ref="mouse/start/y" value="event('clientY')"/>
+                        </fx-action>
+                        <fx-action ev:event="mouseup" ev:defaultAction="cancel">
+                            <fx-setvalue ref="mouse/state">up</fx-setvalue>
+                            <fx-setvalue ref="lastx" value="../posx"/>
+                            <fx-setvalue ref="lasty" value="../posy"/>
+                            <fx-setvalue ref="mouse/start/x" value="../../end/x"/>
+                            <fx-setvalue ref="mouse/start/y" value="../../end/y"/>
+                            <!-- Not sure why this is necessary;
+                                 either something to do with the recalc algorithm that I have forgotten, or a bug :-) -->
+                            <fx-setvalue ref="mouse/move/x" value="0"/>
+                            <fx-setvalue ref="mouse/move/y" value="0"/>
+                        </fx-action>
+                        <fx-action ev:event="dblclick" ev:defaultAction="cancel">
+                            <fx-setvalue ref="zoom" value="if(. &gt;= ../maxzoom, ../maxzoom, . + 1)"/>
+                        </fx-action>
+                        <fx-action ev:event="mousewheel" ev:defaultAction="cancel">
+                            <fx-setvalue ref="zoom"
+                                      value="if(event('wheelDelta') &gt; 0, if(. &gt;= ../maxzoom, ../maxzoom, . + 1), if(. &lt;= 0, 0, . - 1))"/>
+                        </fx-action>
+                    </fx-group>
+                </div>
+            </div>
+        </div>
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+</div>
+
+</body>
+</html>
