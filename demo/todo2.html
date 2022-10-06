@@ -38,6 +38,7 @@
                                url="localStore:todos"
                                method="consume">
                     <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
+                    <fx-reload event="submit-done"></fx-reload>
                 </fx-submission>
 
                 <fx-instance id="helper">

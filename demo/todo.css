@@ -115,7 +115,9 @@ input[type=checkbox]{
     font-size: 1.4rem;
 }
 
-
+.nonrelevant{
+    display: none;
+}
 [repeat-index] {
     border-radius: 10px;
     /*box-shadow: rgb(0 0 0 / 10%) 1px 1px 14px;*/
