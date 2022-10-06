@@ -1,4 +1,4 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {html, fixtureSync, expect, oneEvent, elementUpdated} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -153,16 +153,28 @@ describe('action Tests', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
+
+    const trigger = el.querySelector('fx-trigger');
+
+    // const setval = el.querySelector('fx-trigger');
+    trigger.addEventListener('action-performed',()=>{
+      console.log('action is received ################')
+      const control = el.querySelector('fx-control');
+      expect(control.value).to.equal('B');
+      expect(control.getModelItem().value).to.equal('B');
+    });
 
     const control = el.querySelector('fx-control');
     expect(control.value).to.equal('A');
     expect(control.getModelItem().value).to.equal('A');
 
-    const trigger = el.querySelector('fx-trigger');
+
     trigger.performActions();
 
-    expect(control.value).to.equal('B');
-    expect(control.getModelItem().value).to.equal('B');
+    // await oneEvent (setval,'action-performed');
+    console.log('now its done')
+
   });
 
   it('truthy condition performs the action, with variables', async () => {
@@ -194,6 +206,10 @@ describe('action Tests', () => {
 
     const trigger = el.querySelector('fx-trigger');
     trigger.performActions();
+
+    const setval = el.querySelector('fx-setvalue');
+    await (setval,'action-performed');
+
 
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
