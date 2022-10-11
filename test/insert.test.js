@@ -30,7 +30,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -68,7 +68,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -122,7 +122,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -183,7 +183,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -230,7 +230,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -281,7 +281,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -317,7 +317,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -352,7 +352,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     const tasks = fx.evaluateXPath('//task', inst, null, {});
@@ -387,7 +387,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -419,7 +419,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -451,7 +451,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -549,7 +549,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -641,7 +641,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);

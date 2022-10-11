@@ -78,7 +78,7 @@ describe('submission tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-    sm.evalInContext();
+      await sm.submit();
     // const result = sm.selectRelevant('xml');
     const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});

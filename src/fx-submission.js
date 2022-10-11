@@ -68,7 +68,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
   async submit() {
     await Fore.dispatch(this, 'submit', { submission: this });
-    this._submit();
+    await this._submit();
   }
 
   async _submit() {
@@ -146,7 +146,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     // if (resolvedUrl === '#echo') {
     if (resolvedUrl.startsWith('#echo')) {
-      let data = this._parse(serialized, instance);
+      const data = this._parse(serialized, instance);
       this._handleResponse(data);
       // this.dispatch('submit-done', {});
       Fore.dispatch(this, 'submit-done', {});
@@ -170,7 +170,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
         return;
       }
-      let data = this._parse(serialized, instance);
+      const data = this._parse(serialized, instance);
       this._handleResponse(data);
       if(this.method === 'consume'){
         localStorage.removeItem(key);
@@ -353,8 +353,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
           console.log('### replaced instance ', targetInstance.instanceData);
         }
 
+		  // Skip any refreshes if the model is not yet inited
+		  if (this.model.inited) {
+
         this.model.updateModel(); // force update
-        this.getOwnerForm().refresh(true);
+			  this.getOwnerForm().refresh(true);
+		  }
       } else {
         throw new Error(`target instance not found: ${targetInstance}`);
       }

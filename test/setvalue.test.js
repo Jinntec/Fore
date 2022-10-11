@@ -36,7 +36,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-    btn.performActions();
+   await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello Universe');
@@ -73,7 +73,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-    btn.performActions();
+   await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello World!');
@@ -110,7 +110,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-    btn.performActions();
+   await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello Universe');
@@ -147,7 +147,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-    btn.performActions();
+   await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('');

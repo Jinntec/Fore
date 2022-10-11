@@ -117,32 +117,41 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
+    let resolveThisEvent = () => {};
+    if (e && e.listenerPromises) {
+      e.listenerPromises.push(
+        new Promise(resolve => {
+          resolveThisEvent = resolve;
+        }),
+      );
+    }
+
     // console.log('executing', this);
 
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
-    if(AbstractAction.outermostHandler === null){
+    if (AbstractAction.outermostHandler === null) {
       console.info(
-          `%coutermost Action `,
-          "background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
-          this
+        `%coutermost Action `,
+        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
       );
       // console.log('starting outermost handler',this);
       AbstractAction.outermostHandler = this;
     }
 
-    if(AbstractAction.outermostHandler !== this){
+    if (AbstractAction.outermostHandler !== this) {
       console.info(
-          `%cAction `,
-          "background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
-          this
+        `%cAction `,
+        'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
       );
     }
     // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
 
-    if(e && e.code){
+    if (e && e.code) {
       const vars = new Map();
-      vars.set('code',e.code);
+      vars.set('code', e.code);
       // this.setInScopeVariables(vars);
       this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
     }
@@ -150,22 +159,22 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (e && e.detail) {
       this.detail = e.detail;
       const vars = new Map();
-      Object.keys(e.detail).forEach(function(key,index) {
+      Object.keys(e.detail).forEach(function(key, index) {
         // key: the name of the object key
         // index: the ordinal position of the key within the object
-        vars.set(key,e.detail[key]);
+        vars.set(key, e.detail[key]);
       });
-      if(vars.size !== 0){
-        console.log("event detail vars", vars);
+      if (vars.size !== 0) {
+        console.log('event detail vars', vars);
       }
       this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
     }
     this.needsUpdate = false;
 
-    try{
+    try {
       this.evalInContext();
-    }catch (error){
-      console.warn('evaluation faild',error);
+    } catch (error) {
+      console.warn('evaluation faild', error);
     }
     if (this.targetElement && this.targetElement.nodeset) {
       this.nodeset = this.targetElement.nodeset;
@@ -173,6 +182,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     // First check if 'if' condition is true - otherwise exist right away
     if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
+      resolveThisEvent();
       return;
     }
 
@@ -203,6 +213,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       await loop();
       this.actionPerformed();
       Fore.dispatch(this, 'while-performed', {});
+      resolveThisEvent();
       return;
     }
 
@@ -212,21 +223,22 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       if (!this.ownerDocument.contains(this)) {
         // We are no longer in the document. Stop working
         this.actionPerformed();
+        resolveThisEvent();
         return;
       }
     }
 
-    this.perform();
+    await this.perform();
     this.actionPerformed();
-    if(AbstractAction.outermostHandler === this){
+    if (AbstractAction.outermostHandler === this) {
       AbstractAction.outermostHandler = null;
       console.info(
-          `%coutermost Action done`,
-          "background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
-          this
+        `%coutermost Action done`,
+        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
       );
-
     }
+    resolveThisEvent();
   }
 
   /**
@@ -235,11 +247,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    *
    * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
    */
-  perform() {
+  async perform() {
     console.info(
-        `%cperform `,
-        "background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
-        this
+      `%cperform `,
+      'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+      this,
     );
 
     //todo: review - this evaluation seems redundant as we already evaluated in execute
@@ -252,14 +264,33 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * calls the update cycle if action signalled that update is needed.
    */
   actionPerformed() {
+    const model = this.getModel();
+    if (!model.inited) {
+      return;
+    }
+    if (
+      AbstractAction.outermostHandler &&
+      !AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
+    ) {
+      // The old outermosthandler fell out of the document. An error has happened.
+      // Just remove the old one and act like we are starting anew.
+      console.warn('Unsetting outermost handler');
+      AbstractAction.outermostHandler = null;
+    }
     // console.log('actionPerformed action parentNode ', this.parentNode);
-    // if (this.needsUpdate && AbstractAction.outermostHandler !== this) {
-    if (this.needsUpdate) {
-      const model = this.getModel();
+    if (
+      this.needsUpdate &&
+      (AbstractAction.outermostHandler === this || !AbstractAction.outermostHandler)
+    ) {
+      console.log('Running actionperformed');
       model.recalculate();
       model.revalidate();
       model.parentNode.refresh();
       this.dispatchActionPerformed();
+    } else if (this.needsUpdate) {
+      // We need an update, but the outermost action handler may not. Make this clear!
+      AbstractAction.outermostHandler.needsUpdate = true;
+      console.log('Update surpressed!');
     }
   }
 

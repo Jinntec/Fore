@@ -81,7 +81,7 @@ describe('fx-switch Tests', () => {
 
     const trigger = el.querySelectorAll('fx-trigger');
 
-    trigger[1].performActions();
+   await trigger[1].performActions();
 
     const cases = el.querySelectorAll('fx-case');
     expect(cases[0].classList.contains('selected-case')).to.be.false;

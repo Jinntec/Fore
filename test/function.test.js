@@ -225,7 +225,7 @@ describe('functions', () => {
 
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const indexVal = document.getElementById('index').innerText;
     expect(Number(indexVal)).to.equal(3);

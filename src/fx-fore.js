@@ -56,7 +56,7 @@ export class FxFore extends HTMLElement {
     constructor() {
         super();
         this.model = {};
-        this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
         this.addEventListener('error', this._displayError);
         window.addEventListener('compute-exception', e => {
@@ -220,7 +220,7 @@ export class FxFore extends HTMLElement {
         }
 
         const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', event => {
+        slot.addEventListener('slotchange', async event => {
 
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
             if(this.hasAttribute('convert')){
@@ -247,7 +247,8 @@ export class FxFore extends HTMLElement {
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');
                 }
-                modelElement.modelConstruct();
+                await modelElement.modelConstruct();
+				this._handleModelConstructDone();
             }
             this.model = modelElement;
         });
@@ -744,7 +745,8 @@ export class FxFore extends HTMLElement {
         };
     */
 
-        await this.refresh();
+		// First refresh should be forced
+        await this.refresh(true);
         // this.style.display='block'
         this.classList.add('fx-ready');
         document.body.classList.add('fx-ready');

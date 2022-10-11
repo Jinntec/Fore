@@ -189,7 +189,7 @@ describe('refresh Tests', () => {
     expect(sw.modelItem.value).to.equal('page2');
 
     const b = el.querySelector('#changePage');
-    b.performActions();
+   await b.performActions();
 
     expect(sw.modelItem.value).to.equal('page3');
     expect(sw.modelItem.boundControls).to.exist;
@@ -290,7 +290,7 @@ describe('refresh Tests', () => {
 
     /*
     const b = el.querySelector('#changePage');
-    b.performActions();
+   await b.performActions();
 
 
     const page1 = el.querySelector('#page1');

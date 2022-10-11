@@ -103,7 +103,7 @@ describe('var Tests', () => {
 
     const trigger = el.querySelector('fx-trigger.start');
     const action = el.querySelector('fx-action')
-    trigger.performActions();
+   await trigger.performActions();
 
     await oneEvent(action, 'while-performed');
     const output = el.querySelector('fx-output');

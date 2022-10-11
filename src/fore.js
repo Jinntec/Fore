@@ -285,14 +285,23 @@ export class Fore {
     return fadeOut();
   }
 
-  static dispatch(target, eventName, detail) {
+  static async dispatch(target, eventName, detail) {
     const event = new CustomEvent(eventName, {
       composed: false,
       bubbles: true,
       detail,
     });
-    console.info('dispatching', event.type, target);
-    target.dispatchEvent(event);
+	  event.listenerPromises = [];
+      console.info('dispatching', event.type, target);
+	  console.log('!!! DISPATCH_START', eventName);
+
+      target.dispatchEvent(event);
+
+	  // By now, all listeners for the event should have registered their completion promises to us.
+	  if (event.listenerPromises.length) {
+		  await Promise.all(event.listenerPromises);
+	  }
+	  console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static prettifyXml(source) {

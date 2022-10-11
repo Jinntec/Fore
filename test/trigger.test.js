@@ -62,7 +62,7 @@ describe('trigger tests', () => {
     expect(trigger).to.exist;
 
     const enable = document.getElementById('enable');
-    enable.performActions();
+   await enable.performActions();
 
     expect(trigger.hasAttribute('readonly')).to.be.false;
   });

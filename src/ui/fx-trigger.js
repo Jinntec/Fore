@@ -1,5 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
-import {leadingDebounce} from "../events.js";
+import { leadingDebounce } from '../events.js';
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
@@ -28,14 +28,18 @@ export class FxTrigger extends XfAbstractControl {
 
       const element = elements[0];
 
-      if(this.debounceDelay){
+      if (this.debounceDelay) {
         this.addEventListener(
-            'click',
-            leadingDebounce(this,(e) => {
-              this.performActions(e)
-            }, this.debounceDelay),
+          'click',
+          leadingDebounce(
+            this,
+            e => {
+              this.performActions(e);
+            },
+            this.debounceDelay,
+          ),
         );
-      }else{
+      } else {
         element.addEventListener('click', e => this.performActions(e));
       }
       this.widget = element;
@@ -88,17 +92,14 @@ export class FxTrigger extends XfAbstractControl {
     // Update all child variables, but only once
     this.querySelectorAll('fx-var').forEach(variableElement => variableElement.refresh());
 
-    const forLoop = async () => {
-      for (let i = 0; i < this.children.length; i += 1) {
-        const child = this.children[i];
-        if (typeof child.execute === 'function') {
-          // eslint-disable-next-line no-await-in-loop
-          await child.execute(e);
-          // child.execute(e);
-        }
+    for (let i = 0; i < this.children.length; i += 1) {
+      const child = this.children[i];
+      if (typeof child.execute === 'function') {
+        // eslint-disable-next-line no-await-in-loop
+        await child.execute(e);
+        // child.execute(e);
       }
-    };
-    forLoop();
+    }
   }
 
   /*

@@ -20,7 +20,7 @@ class FxSend extends AbstractAction {
     this.submission = this.getAttribute('submission');
   }
 
-  perform() {
+  async perform() {
     super.perform();
 
     console.log('submitting ', this.submission);
@@ -42,7 +42,7 @@ class FxSend extends AbstractAction {
       throw new Error(`submission with id: ${this.submission} not found`);
     }
     console.log('submission', submission);
-    submission.submit();
+      await submission.submit();
 /*
     if(submission.replace === 'instance'){
       this.getModel().updateModel();
