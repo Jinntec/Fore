@@ -192,7 +192,9 @@ function createNamespaceResolver(xpathQuery, formElement) {
 	let instanceReferences = findInstanceReferences(xpathQuery);
     if (instanceReferences.length === 0) {
         // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
-        const ancestorComponent = formElement.parentNode.closest('[ref]');
+        const ancestorComponent = formElement.parentNode &&
+			  formElement.parentNode.nodeType === formElement.ELEMENT &&
+			  formElement.parentNode.closest('[ref]');
         if (ancestorComponent) {
             const resolver = createNamespaceResolver(
                 ancestorComponent.getAttribute('ref'),
