@@ -44,7 +44,7 @@
 
         <fx-model>
             <fx-action event="model-construct-done" if="exists(instance('params')/id)">
-                <!--                            <fx-send submission="s-login" if="instance('vars')/loggedin != 'true'" />-->
+                <fx-send submission="s-login" if="instance('vars')/loggedin != 'true'" />
                 <fx-send submission="s-load-inscription"></fx-send>
 <!--                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>-->
             </fx-action>
@@ -186,10 +186,10 @@
             </fx-instance>
 
             <fx-submission id="s-load-geodata"
-                           url="api/places/{instance('vars')/geoid}"
+                           url="data/geo.xml"
                            method="get"
                            replace="instance"
-                           into="instance('geodata')"
+                           instance="geodata"
                            validate="false">
             </fx-submission>
 
@@ -199,7 +199,8 @@
 
             <fx-instance id="login" type="json">{}</fx-instance>
 
-            <fx-submission id="s-login" ref="instance('login')?*" url="api/login" method="post" replace="instance"
+            <fx-submission id="s-login" ref="instance('login')?*"
+                           url="data/login.json" method="post" replace="instance"
                            instance="login" validate="false">
                 <fx-setvalue ref="instance('vars')/loggedin" event="submit-error">false</fx-setvalue>
                 <fx-setvalue ref="instance('vars')/loggedin" event="submit-done">true</fx-setvalue>
@@ -272,7 +273,6 @@
                                 <label>TM-Nummer</label>
                             </fx-control>
 
-<!--
                             <div class="block findspot">
                                 <h3>Fundort</h3>
                                 <fx-var name="corresp" value="history/origin/origPlace/@corresp"></fx-var>
@@ -313,7 +313,6 @@
                                     <textarea rows="4" class="widget"></textarea>
                                 </fx-control>
                             </div>
--->
 
                             <!-- 11) -->
 

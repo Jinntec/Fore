@@ -139,7 +139,7 @@
                             <origin>
                                 <!-- in @corresp wird die GeoID angegeben, andere Ortsangaben sind redundant und werden
                                     am Ende nur hinein kopiert - siehe Kommentare -->
-                                <origPlace corresp="G003585"/>
+                                <origPlace corresp="G003584"/>
                             </origin>
                             <!--
                                 11) Fundjahr (Attribute auf <provenance>)
