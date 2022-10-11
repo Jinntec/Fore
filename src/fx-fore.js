@@ -5,6 +5,7 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
+import {AbstractAction} from "./actions/abstract-action";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -572,19 +573,34 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _handleModelConstructDone() {
-        const showConfirm = this.hasAttribute('show-confirmation')?this.getAttribute('show-confirmation'):null
-        if(showConfirm){
-            window.addEventListener('beforeunload', event => {
-                const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
-                if(mustDisplay){
-                    console.log('have to display confirmation')
-                    return event.returnValue = 'are you sure';
-                }
+        /*
+        listening on beforeunload after model is constructed - this is to be able to evaluate a condition on the data
+        that specifies whether or not to show confirmation.
+         */
+        if(this.hasAttribute('show-confirmation')){
+            const condition = this.getAttribute('show-confirmation');
+            if(condition){
+                window.addEventListener('beforeunload', event => {
+                    const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
+                    if(mustDisplay){
+                        console.log('have to display confirmation')
+                        return event.returnValue = 'are you sure';
+                    }
                     event.preventDefault();
                     console.log('do not display confirmation')
-                
-            })
+                })
+            }else{
+                window.addEventListener('beforeunload', event => {
+                    if(AbstractAction.dataChanged){
+                        console.log('have to display confirmation')
+                        return event.returnValue = 'are you sure';
+                    }
+                    event.preventDefault();
+                    console.log('do not display confirmation')
+                })
+            }
         }
+
         this._initUI();
     }
 
@@ -742,6 +758,7 @@ export class FxFore extends HTMLElement {
             `%cPage Initialization done`,
             "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
+        console.log('dataChanged', AbstractAction.dataChanged);
     }
 
     registerLazyElement(element) {

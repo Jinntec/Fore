@@ -236,7 +236,7 @@
                 </fx-output>
 
                 <!-- 16a) -->
-                <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType/@ref">
+                <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType/@ref" update-event="change">
                     <label>Inschriftträger</label>
                     <select ref="instance('objtyp')?*" class="widget" selection="open">
                         <template>
@@ -355,7 +355,7 @@
                             </fx-control>
 
                             <!-- 12c) Überlieferung -->
-                            <fieldset>
+                            <div>
                                 <legend>
                                     <label>Überlieferung</label>
                                     <fx-trigger class="add">
@@ -386,7 +386,7 @@
 
                                     </template>
                                 </fx-repeat>
-                            </fieldset>
+                            </div>
 
                             <div class="block">
                                 <h3>Verifizierung</h3>
@@ -1028,7 +1028,7 @@
                 <input style="display:none;"></input>
             </fx-control>
         </fx-group>
-        <fx-inspector open></fx-inspector>
+        <fx-inspector></fx-inspector>
     </fx-fore></div>
 <script src="./util.js" type="text/javascript"></script>
 <script type="module" src="../demo.js"></script>

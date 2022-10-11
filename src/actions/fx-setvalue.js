@@ -70,7 +70,11 @@ export default class FxSetvalue extends AbstractAction {
             item.value = newVal;
             this.getModel().changed.push(modelItem);
             this.needsUpdate = true;
-        }
+            AbstractAction.dataChanged = true;
+            // console.log('dataChanged', AbstractAction.dataChanged);
+        }/*else{
+            console.log('dataChanged', AbstractAction.dataChanged);
+        }*/
     }
 }
 

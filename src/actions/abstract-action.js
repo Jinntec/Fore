@@ -17,6 +17,7 @@ async function wait(howLong) {
  */
 export class AbstractAction extends foreElementMixin(HTMLElement) {
   static outermostHandler = null;
+  static dataChanged = false;
 
   static get properties() {
     return {
