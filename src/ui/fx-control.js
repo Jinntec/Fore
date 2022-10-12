@@ -76,6 +76,11 @@ export default class FxControl extends XfAbstractControl {
         listenOn = target;
       }
     }
+
+
+    this.addEventListener('keyup', event => {
+      FxModel.dataChanged = true;
+    });
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
       this.widget.addEventListener('keyup', event => {
@@ -178,7 +183,6 @@ export default class FxControl extends XfAbstractControl {
     }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
-    FxModel.dataChanged = true;
 
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
