@@ -6,6 +6,7 @@ import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} fro
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
 import {AbstractAction} from "./actions/abstract-action";
+import {FxModel} from "./fx-model.js";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -594,7 +595,8 @@ export class FxFore extends HTMLElement {
                 })
             }else{
                 window.addEventListener('beforeunload', event => {
-                    if(AbstractAction.dataChanged){
+                    // if(AbstractAction.dataChanged){
+                    if(FxModel.dataChanged){
                         console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
@@ -761,7 +763,7 @@ export class FxFore extends HTMLElement {
             `%cPage Initialization done`,
             "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
-        console.log('dataChanged', AbstractAction.dataChanged);
+        console.log('dataChanged', FxModel.dataChanged);
     }
 
     registerLazyElement(element) {

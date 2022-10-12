@@ -9,6 +9,7 @@ import {XPathUtil} from './xpath-util.js';
  * @ts-check
  */
 export class FxModel extends HTMLElement {
+    static dataChanged = false;
     constructor() {
         super();
         // this.id = '';

@@ -8,6 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import {ModelItem} from "../modelitem.js";
 import {debounce} from "../events.js";
+import {FxModel} from "../fx-model";
 
 const WIDGETCLASS = 'widget';
 
@@ -170,12 +171,14 @@ export default class FxControl extends XfAbstractControl {
       replace.replace(this.nodeset, this.getWidget().value);
       if (modelitem && widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;
+        FxModel.dataChanged = true;
         replace.actionPerformed();
       }
       return;
     }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
+    FxModel.dataChanged = true;
 
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
