@@ -579,7 +579,10 @@ export class FxFore extends HTMLElement {
          */
         if(this.hasAttribute('show-confirmation')){
             const condition = this.getAttribute('show-confirmation');
-            if(condition){
+            if(condition
+                && condition !== 'show-confirmation'
+                && condition !== 'true'
+                && condition !== ''){
                 window.addEventListener('beforeunload', event => {
                     const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
