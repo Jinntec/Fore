@@ -53,7 +53,7 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                    <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
+                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -85,7 +85,10 @@
                         </fx-control>
                         <fx-trigger class="btn delete">
                             <button>x</button>
-                            <fx-delete ref="."></fx-delete>
+                            <fx-action>
+                                <fx-delete ref="."></fx-delete>
+                                <fx-send submission="save"></fx-send>
+                            </fx-action>
                         </fx-trigger>
                     </div>
                 </template>
