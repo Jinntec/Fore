@@ -9,7 +9,7 @@
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link href="../resources/demo.css" rel="stylesheet">
-    <script type="module" src="./jinn-codemirror.js"></script>
+    <script type="module" src="./jinn-codemirror-bundle.js"></script>
 	    <script type="module" src="../demo.js"></script>
     <style>
         fx-control{
@@ -25,9 +25,6 @@
         <template>
 
             <fx-fore>
-                <fx-replace ref="instance('result')"
-                            with="pre-process-corresp(instance())"
-                            event="ready"></fx-replace>
                 <fx-model id="model1">
                     <fx-instance src="data/HD025278.xml"
                                  xpath-default-namespace="http://www.tei-c.org/ns/1.0">
@@ -43,10 +40,12 @@
 					  copy $xml := $element modify (
                           for $ref in $xml//*[@corresp]
                             (: Substring the '#' sign out of the id ref :)
-                            let $id := substring($ref/@corresp, 2)
-                            return (
-                                insert node $ref as last into $xml//msPart[@xml:id = $id]
-                            )
+                      let $id := substring($ref/@corresp, 2)
+					  let $replacement := $xml//msPart[@xml:id = $id]
+                            return  if ($replacement) then
+                                insert node $ref as last into $replacement
+                            else
+					            ()
 					  ) return $xml
 					</fx-function>
 
@@ -65,10 +64,13 @@
 					</fx-function>
 
                 </fx-model>
+                <fx-replace ref="instance('result')"
+                            with="pre-process-corresp(instance())"
+                            event="ready"></fx-replace>
                 <fx-group>
 
                     <h2>XQuery update facility function</h2>
-                    <fx-control ref="instance()" as="node" update-event="update">
+                    <fx-control ref="instance()" as="node" >
                         <h3>The input:</h3>
                         <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                     </fx-control>
