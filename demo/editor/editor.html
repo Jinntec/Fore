@@ -228,11 +228,12 @@
 
         <fx-fore id="edited">
             <fx-model id="targetModel" class="droppable">
-                <fx-instance id="default"></fx-instance>
+                <fx-instance id="default" draggable="true"></fx-instance>
             </fx-model>
             <fx-group id="ui" class="droppable"></fx-group>
         </fx-fore>
     </main>
+
     <aside>
         <h2>Properties</h2>
         <fx-fore id="attributes">
@@ -245,7 +246,7 @@
             <fx-model id="targetModel">
                 <fx-instance id="attributes">
                     <data>
-                        <fx-instance id="foo" src="bar"></fx-instance>
+                        <fx-instance id="foo"></fx-instance>
 <!--
                         <attribute name="id"></attribute>
                         <attribute name="src"></attribute>
