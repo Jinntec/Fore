@@ -102,10 +102,9 @@ describe('var Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const trigger = el.querySelector('fx-trigger.start');
-    const action = el.querySelector('fx-action')
-   await trigger.performActions();
+      const action = el.querySelector('fx-action');
+	  await trigger.performActions();
 
-    await oneEvent(action, 'while-performed');
     const output = el.querySelector('fx-output');
     expect(output.value).to.equal('10');
   });

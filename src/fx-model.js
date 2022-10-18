@@ -115,9 +115,9 @@ export class FxModel extends HTMLElement {
             // console.log('_modelConstruct this.instances ', this.instances);
 			// Await until the model-construct-done event is handled off
 
+            await Fore.dispatch(this, 'model-construct-done', {model: this});
             this.inited = true;
             this.updateModel();
-            await Fore.dispatch(this, 'model-construct-done', {model: this});
             console.groupEnd();
         } else {
             // ### if there's no instance one will created

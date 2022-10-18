@@ -76,6 +76,8 @@ describe('Event Tests', () => {
       }),
     );
 
+	  await oneEvent(el, 'refresh-done');
+
     const inst = el
       .getModel()
       .getDefaultInstance()
@@ -121,6 +123,8 @@ describe('Event Tests', () => {
       }),
     );
 
+	  	  await oneEvent(el, 'refresh-done');
+
     const inst = el
       .getModel()
       .getDefaultInstance()
@@ -163,6 +167,8 @@ describe('Event Tests', () => {
         detail: { param1: 'foo', param2: 'bar' },
       }),
     );
+	  	  await oneEvent(el, 'refresh-done');
+
 
     const inst = el
       .getModel()

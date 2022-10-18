@@ -93,7 +93,10 @@ describe('trigger tests', () => {
 
     const trigger = el.querySelector('fx-trigger');
     expect(trigger).to.exist;
-    await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'refresh-done');
+
+	  await el.querySelector('#setReadonly').performActions();
+	  
     expect(trigger.hasAttribute('readonly')).to.be.true;
   });
 });

@@ -186,7 +186,6 @@ describe('fx-dispatch tests', () => {
 
     const trigger = el.querySelector('fx-trigger');
    await trigger.performActions();
-    await oneEvent(control, 'value-changed');
 
     expect(bar.innerText).to.equal('foobar');
   });
