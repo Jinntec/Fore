@@ -142,9 +142,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     if(e && e.code){
       const vars = new Map();
-      vars.set('code',e.code);
+      vars.set('code', e.code);
       // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
 
     if (e && e.detail) {
@@ -158,7 +158,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       if(vars.size !== 0){
         console.log("event detail vars", vars);
       }
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+		this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
     this.needsUpdate = false;
 
