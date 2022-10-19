@@ -183,7 +183,7 @@ export class FxFore extends HTMLElement {
 
     connectedCallback() {
         this.style.visibility = 'hidden';
-
+        console.time('init');
         /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -760,6 +760,7 @@ export class FxFore extends HTMLElement {
             `%cPage Initialization done`,
             "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
+        console.timeEnd('init');
         console.log('dataChanged', AbstractAction.dataChanged);
     }
 
