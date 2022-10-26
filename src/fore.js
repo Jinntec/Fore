@@ -231,8 +231,8 @@ export class Fore {
    * @param instance an fx-instance element
    * @returns {string|null}
    */
-  static getContentType(instance, method) {
-    if (method === 'urlencoded-post') {
+  static getContentType(instance, contentType) {
+    if (contentType === 'application/x-www-form-urlencoded') {
       return 'application/x-www-form-urlencoded; charset=UTF-8';
     }
     if (instance.type === 'xml') {

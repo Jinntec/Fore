@@ -188,15 +188,13 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
+    // todo: headers not
     const response = await fetch(resolvedUrl, {
       method: this.method,
       mode: 'cors',
       credentials: 'include',
       headers,
       body: serialized,
-      headers:{
-        'Content-Type':this.serialization
-      }
     });
 
     if (!response.ok || response.status > 400) {
@@ -266,7 +264,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     // ### set content-type header according to type of instance
     const instance = this.getInstance();
-    const contentType = Fore.getContentType(instance, this.method);
+    const contentType = Fore.getContentType(instance, this.serialization);
     headers.append('Content-Type', contentType);
     // ### needed to overwrite browsers' setting of 'Accept' header
     if (headers.has('Accept')) {
