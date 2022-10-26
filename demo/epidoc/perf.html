@@ -200,7 +200,7 @@
             <fx-instance id="login" type="json">{}</fx-instance>
 
             <fx-submission id="s-login" ref="instance('login')?*"
-                           url="data/login.json" method="post" replace="instance"
+                           url="data/login.json" method="get" replace="instance"
                            instance="login" validate="false">
                 <fx-setvalue ref="instance('vars')/loggedin" event="submit-error">false</fx-setvalue>
                 <fx-setvalue ref="instance('vars')/loggedin" event="submit-done">true</fx-setvalue>

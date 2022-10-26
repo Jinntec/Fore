@@ -193,9 +193,11 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem.constraint) {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
+        this.setAttribute('valid','');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
+        this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
 /*
         if (alert) {
@@ -212,7 +214,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
               const newAlert = document.createElement('fx-alert');
               newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
-              newAlert.style.display = 'block';
+              // newAlert.style.display = 'block';
             });
           }
         }

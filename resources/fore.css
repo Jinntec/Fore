@@ -30,6 +30,9 @@ fx-alert{
     color:darkred;
     font-size: 0.9rem;
 }
+[invalid] fx-alert{
+    display: block;
+}
 
 /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
 fx-case{

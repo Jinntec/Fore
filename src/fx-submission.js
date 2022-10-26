@@ -183,11 +183,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     const headers = this._getHeaders();
     console.log('headers', headers);
 
-    // ### map urlencoded-post to post for fetch
-    if (this.method === 'urlencoded-post') {
-      this.method = 'post';
-    }
-
     if (!this.methods.includes(this.method.toLowerCase())) {
       // this.dispatch('error', { message: `Unknown method ${this.method}` });
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
@@ -199,6 +194,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       credentials: 'include',
       headers,
       body: serialized,
+      headers:{
+        'Content-Type':this.serialization
+      }
     });
 
     if (!response.ok || response.status > 400) {
@@ -243,7 +241,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   _serialize(instanceType, relevantNodes) {
-    if (this.method === 'urlencoded-post') {
+    if (this.serialization === 'application/x-www-form-urlencoded') {
       // this.method = 'post';
       const params = new URLSearchParams();
       // console.log('nodes to serialize', relevantNodes);
