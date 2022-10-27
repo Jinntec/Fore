@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action";
+import {FxAction} from "./fx-action.js";
 
 /**
  * `fx-confirm`
@@ -7,7 +7,7 @@ import {AbstractAction} from "./abstract-action";
  * @customElement
  * @demo demo/project.html
  */
-export class FxConfirm extends AbstractAction {
+export class FxConfirm extends FxAction {
   connectedCallback() {
     this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
   }
