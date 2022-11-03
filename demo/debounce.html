@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>debouncing events</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+    <h1>Debouncing trigger updates</h1>
+        <p>Sometimes for save buttons and the like you don't want triggers to fire too often to prevent unwanted
+        'double-clicks'. </p>
+        <p>The <code>debounce</code> attributes allows to specify a period in milliseconds before
+        the actions can be triggered again.</p>
+
+        <p>Try clicking fast on the button. You'll notice that only one message is displayed within a 800 milliseconds
+        timespan.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-trigger debounce="800">
+                    <button>click for message</button>
+                    <fx-message>a debounced message</fx-message>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

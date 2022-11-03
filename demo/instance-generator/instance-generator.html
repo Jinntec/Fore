@@ -44,11 +44,9 @@
                         </item>
                     </data>-->
             </fx-instance>
-            <!--
-                        <fx-function signature="local:now() as xs:dateTime" type="text/javascript">
-                            return Date.now();
+            <fx-function signature="random() as xs:string" type="text/xpath">
+                string-join(random-number-generator())
                         </fx-function>
-            -->
         </fx-model>
         <fx-group id="group">
             <fx-control ref="n">
@@ -63,6 +61,12 @@
                     <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
                     <fx-insert origin="instance('template')/item"
                                ref="instance('generated')/item"></fx-insert>
+                    <fx-message value="counter"></fx-message>
+                    <fx-var name="cnt" value="instance()/counter"></fx-var>
+                    <fx-setvalue ref="instance('generated')/item[last()]/@prop3" value="string($cnt)"></fx-setvalue>
+                    <fx-setvalue ref="instance('generated')/item[last()]/@prop4" value="random-number-generator()?number"></fx-setvalue>
+                    <fx-setvalue ref="instance('generated')/item[last()]/@prop5" value="number(random-number-generator()?number) * 10"></fx-setvalue>
+                    <fx-setvalue ref="instance('generated')/item[last()]" value="'item'||$cnt"></fx-setvalue>
                 </fx-action>
 
             </fx-trigger>
