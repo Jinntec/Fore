@@ -2,9 +2,11 @@ import {Fore} from './fore.js';
 import './fx-instance.js';
 import './fx-model.js';
 import '@jinntec/jinn-toast';
-import {evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
+import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
+import {AbstractAction} from "./actions/abstract-action";
+import {FxModel} from "./fx-model.js";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -181,6 +183,8 @@ export class FxFore extends HTMLElement {
     }
 
     connectedCallback() {
+        this.style.visibility = 'hidden';
+
         /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -218,6 +222,14 @@ export class FxFore extends HTMLElement {
 
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', event => {
+
+            // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            if(this.hasAttribute('convert')){
+                this.replaceWith(Fore.copyDom(this));
+                // Fore.copyDom(this);
+                return;
+            }
+
             const children = event.target.assignedElements();
             let modelElement = children.find(
                 modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
@@ -228,9 +240,11 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
             }
             if (!modelElement.inited) {
-                console.log(
-                    `########## FORE: kick off processing for ... ${window.location.href} ##########`,
+                console.info(
+                    `%cFore is processing URL ${window.location.href}`,
+                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
+
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');
                 }
@@ -239,7 +253,7 @@ export class FxFore extends HTMLElement {
             this.model = modelElement;
         });
         this.addEventListener('path-mutated', e => {
-            console.log('path-mutated event received', e.detail.path, e.detail.index);
+            // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
     }
@@ -375,7 +389,8 @@ export class FxFore extends HTMLElement {
 
     async refresh(force) {
         // refresh () {
-        console.group('### refresh');
+        console.info('%crefresh','font-style: italic; background: #8bc34a; color:white; padding:0.3rem 5rem 0.3rem 0.3rem; display:block; width:100%;');
+        console.group('refresh', force);
 
         console.time('refresh');
 
@@ -393,7 +408,7 @@ export class FxFore extends HTMLElement {
                 const controlsToRefresh = modelItem.boundControls;
                 if (controlsToRefresh) {
                     controlsToRefresh.forEach(ctrl => {
-                        ctrl.refresh();
+                        ctrl.refresh(force);
                     });
                 }
 
@@ -409,7 +424,7 @@ export class FxFore extends HTMLElement {
                             const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
                             // ### refresh all boundControls
                             modelItemOfDep.boundControls.forEach(control => {
-                                control.refresh();
+                                control.refresh(force);
                             });
                         });
                         needsRefresh = true;
@@ -418,7 +433,7 @@ export class FxFore extends HTMLElement {
             });
             this.toRefresh = [];
             if (!needsRefresh) {
-                console.log('skipping refresh - no dependants');
+                console.log('no dependants to refresh');
             }
         } else {
             Fore.refreshChildren(this, true);
@@ -437,6 +452,8 @@ export class FxFore extends HTMLElement {
         console.groupEnd();
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
+        // this.initialRun = false;
+        this.style.visibility='visible';
         Fore.dispatch(this, 'refresh-done', {});
     }
 
@@ -451,7 +468,7 @@ export class FxFore extends HTMLElement {
     _updateTemplateExpressions() {
         // Note the fact we're going over HTML here: therefore the `html` prefix.
         const search =
-            "(descendant-or-self::*/(text(), @*))[not(ancestor-or-self::fx-model)][matches(.,'\\{.*\\}')]";
+            "(descendant-or-self::*!(text(), @*))[contains(., '{')][matches(.,'\\{.*\\}')][not(ancestor-or-self::fx-model)]";
 
         const tmplExpressions = evaluateXPathToNodes(search, this, this);
         // console.log('template expressions found ', tmplExpressions);
@@ -557,6 +574,38 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _handleModelConstructDone() {
+        /*
+        listening on beforeunload after model is constructed - this is to be able to evaluate a condition on the data
+        that specifies whether or not to show confirmation.
+         */
+        if(this.hasAttribute('show-confirmation')){
+            const condition = this.getAttribute('show-confirmation');
+            if(condition
+                && condition !== 'show-confirmation'
+                && condition !== 'true'
+                && condition !== ''){
+                window.addEventListener('beforeunload', event => {
+                    const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
+                    if(mustDisplay){
+                        console.log('have to display confirmation')
+                        return event.returnValue = 'are you sure';
+                    }
+                    event.preventDefault();
+                    console.log('do not display confirmation')
+                })
+            }else{
+                window.addEventListener('beforeunload', event => {
+                    // if(AbstractAction.dataChanged){
+                    if(FxModel.dataChanged){
+                        console.log('have to display confirmation')
+                        return event.returnValue = 'are you sure';
+                    }
+                    event.preventDefault();
+                    console.log('do not display confirmation')
+                })
+            }
+        }
+
         this._initUI();
     }
 
@@ -708,9 +757,13 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
-        console.log('### modelItems: ', this.getModel().modelItems);
-        console.log('### <<<<< FORE: form fully initialized...', this);
+        // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
+        console.info(
+            `%cPage Initialization done`,
+            "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+        );
+        console.log('dataChanged', FxModel.dataChanged);
     }
 
     registerLazyElement(element) {

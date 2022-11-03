@@ -51,8 +51,9 @@ export class FxOutput extends XfAbstractControl {
 
     const outputHtml = `
             <slot name="label"></slot>
+            
             <span id="value">
-                <slot id="main"></slot>
+                <slot></slot>
             </span>
         `;
 
@@ -132,16 +133,7 @@ export class FxOutput extends XfAbstractControl {
         const { node } = this.modelItem;
 
         if (node.nodeType) {
-          // const mainSlot = this.shadowRoot.querySelector('#main');
-          // valueWrapper.appendChild(node);
-
-          // todo: checking if ownerDocument of node and ownerDocument of this are the same - otherwise import first
-          // const imported = this.ownerDocument.importNode(node,true);
-          // const clone = node.cloneNode(true);
-
           this.appendChild(node);
-          // this.innerHtml = node;
-          // this.innerHTML = node;
           return;
         }
         Object.entries(node).map(obj => {
@@ -155,6 +147,13 @@ export class FxOutput extends XfAbstractControl {
       valueWrapper.innerHTML = this.value.outerHTML;
 
       // this.shadowRoot.appendChild(this.value);
+      return;
+    }
+
+    if(this.mediatype === 'image'){
+      const img = document.createElement('img');
+      img.setAttribute('src',this.value);
+      this.appendChild(img);
       return;
     }
 

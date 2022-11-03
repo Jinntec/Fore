@@ -12,9 +12,8 @@
             <template>
             </template>
         </fx-repeat>
-        <fx-switch ref="">
-            <fx-case id="default" data-target="">
-            </fx-case>
+        <fx-switch>
+            <fx-case id="default" data-target="">[Content]</fx-case>
         </fx-switch>
         <fx-control ref=""/>
         <fx-output ref=""/>

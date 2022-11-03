@@ -1,9 +1,12 @@
 import XfAbstractControl from './abstract-control.js';
+import {leadingDebounce} from "../events.js";
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
     this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : null;
+    this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
+
     const style = `
           :host {
             cursor:pointer;
@@ -24,7 +27,17 @@ export class FxTrigger extends XfAbstractControl {
       elements[0].setAttribute('role', 'button');
 
       const element = elements[0];
-      element.addEventListener('click', e => this.performActions(e));
+
+      if(this.debounceDelay){
+        this.addEventListener(
+            'click',
+            leadingDebounce(this,(e) => {
+              this.performActions(e)
+            }, this.debounceDelay),
+        );
+      }else{
+        element.addEventListener('click', e => this.performActions(e));
+      }
       this.widget = element;
       // # terrible hack but browser behaves strange - seems to fire a 'click' for a button when it receives a
       // # 'Space' or 'Enter' key
@@ -36,14 +49,6 @@ export class FxTrigger extends XfAbstractControl {
         });
       }
     });
-    /*
-            this.addEventListener('click', e => this.performActions(e));
-            this.addEventListener('keypress', (e) => {
-                if(e.code === 'Space' || e.code === 'Enter'){
-                    this.performActions(e);
-                }
-            });
-    */
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -89,6 +94,7 @@ export class FxTrigger extends XfAbstractControl {
         if (typeof child.execute === 'function') {
           // eslint-disable-next-line no-await-in-loop
           await child.execute(e);
+          // child.execute(e);
         }
       }
     };

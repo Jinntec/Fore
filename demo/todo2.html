@@ -3,14 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-
     <title>todo</title>
-
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
-
-
 </head>
 <body unresolved="unresolved">
     <div class="wrapper">
@@ -60,7 +56,6 @@
                     <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
             </h1>
-
             <div class="info">
                 You have {count(instance()/task[@complete='true'])} completed tasks
             </div>
@@ -75,7 +70,6 @@
 
             <fx-setfocus target="#document" control="task" event="value-changed"></fx-setfocus>
             <fx-repeat id="r-task" ref="task">
-
                 <template>
                     <div>
                         <fx-action event="value-changed">
@@ -92,7 +86,7 @@
                         <fx-trigger class="btn delete">
                             <button>x</button>
                             <fx-action>
-                            <fx-delete ref="."></fx-delete>
+                                <fx-delete ref="."></fx-delete>
                                 <fx-send submission="save"></fx-send>
                             </fx-action>
                         </fx-trigger>
@@ -110,6 +104,7 @@
                 <fx-send submission="clear"></fx-send>
             </fx-trigger>
         </fx-fore>
+
     </div>
 
 </body>

@@ -37,7 +37,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all state properties to this control.
    */
-  refresh(force) {
+  async refresh(force) {
     if (!force && this.hasAttribute('refresh-on-view')) return;
     // console.log('### FxContainer.refresh on : ', this);
 
@@ -57,7 +57,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (this._getForm().ready) {
       this.handleModelItemProperties();
     }
-    Fore.refreshChildren(this, force);
+    // Fore.refreshChildren(this, force);
   }
 
   handleModelItemProperties() {

@@ -9,26 +9,44 @@
 <!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
 </head>
 <body>
+<!--<fx-fore>
+    <fx-model id="model1">
+        <fx-instance>
+            <data>
+                <greeting>Hello World!</greeting>
+                <b></b>
+            </data>
+        </fx-instance>
+        <fx-bind ref="greeting[../b]">
+            <fx-bind required="true()"></fx-bind>
+        </fx-bind>
+    </fx-model>
+</fx-fore>-->
+
 <fx-fore>
     <fx-model>
         <fx-instance>
             <data>
-                <disabled>false</disabled>
+                <counter max="10">0</counter>
+                <counter max="15">5</counter>
             </data>
         </fx-instance>
-        <fx-bind ref="disabled" readonly=".='true'"></fx-bind>
-<!--        <fx-setvalue event="model-construct-done" ref="disabled">true</fx-setvalue>-->
     </fx-model>
-    <fx-trigger ref="disabled">
-        <button>I'm a button</button>
-        <fx-message class="action">Hi from button</fx-message>
-    </fx-trigger>
-
-    <fx-trigger id="setReadonly">
-        <button>set to readonly...</button>
-        <fx-setvalue id="readonly" ref="disabled">true</fx-setvalue>
-    </fx-trigger>
+    <fx-repeat ref="counter">
+        <template>
+            <div>
+                <fx-trigger>
+                    <button>Count to {@max}</button>
+                    <fx-action while="number(.) lt number(@max)">
+                        <fx-setvalue id="setval" ref="." value=".+1"></fx-setvalue>
+                    </fx-action>
+                </fx-trigger>
+                <fx-output ref="."></fx-output>
+            </div>
+        </template>
+    </fx-repeat>
 </fx-fore>
+
 
 <!--    <script type="module" src="./js/fore-debug.js"/>-->
 <script type="module" src="../../index.js"/>

@@ -81,11 +81,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     if (this.validate==='true') {
       const valid = model.revalidate();
       if (!valid) {
-        console.log('validation failed. Bubmission stopped');
+        console.log('validation failed. Submission stopped');
+        this.getOwnerForm().classList.add('submit-validation-failed');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
         Fore.dispatch(this, 'submit-error', {});
-        this.getModel().parentNode.refresh();
+        this.getModel().parentNode.refresh(true);
         return;
       }
     }
@@ -182,16 +183,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     const headers = this._getHeaders();
     console.log('headers', headers);
 
-    // ### map urlencoded-post to post for fetch
-    if (this.method === 'urlencoded-post') {
-      this.method = 'post';
-    }
-
     if (!this.methods.includes(this.method.toLowerCase())) {
       // this.dispatch('error', { message: `Unknown method ${this.method}` });
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
+    // todo: headers not
     const response = await fetch(resolvedUrl, {
       method: this.method,
       mode: 'cors',
@@ -242,7 +239,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
   }
 
   _serialize(instanceType, relevantNodes) {
-    if (this.method === 'urlencoded-post') {
+    if (this.serialization === 'application/x-www-form-urlencoded') {
       // this.method = 'post';
       const params = new URLSearchParams();
       // console.log('nodes to serialize', relevantNodes);
@@ -267,7 +264,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     // ### set content-type header according to type of instance
     const instance = this.getInstance();
-    const contentType = Fore.getContentType(instance, this.method);
+    const contentType = Fore.getContentType(instance, this.serialization);
     headers.append('Content-Type', contentType);
     // ### needed to overwrite browsers' setting of 'Accept' header
     if (headers.has('Accept')) {
@@ -340,7 +337,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             this,
           );
           console.log('theTarget', theTarget);
-          theTarget.innerHTML = data;
+          if(data.nodeType === Node.DOCUMENT_NODE){
+            theTarget.appendChild( data.firstElementChild);
+          }else{
+            theTarget.innerHTML = data;
+          }
         } else {
           const instanceData = data;
           targetInstance.instanceData = instanceData;

@@ -16,6 +16,9 @@ async function wait(howLong) {
  * @demo demo/index.html
  */
 export class AbstractAction extends foreElementMixin(HTMLElement) {
+  static outermostHandler = null;
+  static dataChanged = false;
+
   static get properties() {
     return {
       ...super.properties,
@@ -115,13 +118,33 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   async execute(e) {
     // console.log('executing', this);
+
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
+    if(AbstractAction.outermostHandler === null){
+      console.info(
+          `%coutermost Action `,
+          "background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
+          this
+      );
+      // console.log('starting outermost handler',this);
+      AbstractAction.outermostHandler = this;
+    }
+
+    if(AbstractAction.outermostHandler !== this){
+      console.info(
+          `%cAction `,
+          "background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
+          this
+      );
+    }
+    // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
+
     if(e && e.code){
       const vars = new Map();
-      vars.set('code',e.code);
+      vars.set('code', e.code);
       // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
 
     if (e && e.detail) {
@@ -132,8 +155,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // index: the ordinal position of the key within the object
         vars.set(key,e.detail[key]);
       });
-      console.log("event detail vars", vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      if(vars.size !== 0){
+        console.log("event detail vars", vars);
+      }
+		this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
     this.needsUpdate = false;
 
@@ -193,6 +218,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     this.perform();
     this.actionPerformed();
+    if(AbstractAction.outermostHandler === this){
+      AbstractAction.outermostHandler = null;
+      console.info(
+          `%coutermost Action done`,
+          "background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
+          this
+      );
+
+    }
   }
 
   /**
@@ -202,6 +236,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
    */
   perform() {
+    console.info(
+        `%cperform `,
+        "background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;",
+        this
+    );
+
+    //todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
@@ -212,6 +253,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   actionPerformed() {
     // console.log('actionPerformed action parentNode ', this.parentNode);
+    // if (this.needsUpdate && AbstractAction.outermostHandler !== this) {
     if (this.needsUpdate) {
       const model = this.getModel();
       model.recalculate();
@@ -227,7 +269,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
-    console.log('action-performed ', this);
+    // console.log('action-performed ', this);
     Fore.dispatch(this, 'action-performed', {});
   }
 }

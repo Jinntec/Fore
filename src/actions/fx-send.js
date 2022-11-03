@@ -5,6 +5,7 @@ import { AbstractAction } from './abstract-action.js';
 /**
  * `fx-send` - finds and activates a `fx-submission` element.
  *
+ * extension idea: allow params to be passed as with dispatch action which can be used to set properties on submission attributes
  *
  * @customElement
  */
@@ -25,9 +26,12 @@ class FxSend extends AbstractAction {
     super.perform();
 
     console.log('submitting ', this.submission);
-    console.log('submitting model', this.getModel());
+    // console.log('submitting model', this.getModel());
 
     // if not exists signal error
+    // todo: instead of relying on model just use pure dom to find submission as the context could be broken due to a delete action
+    // const fore = this.closest('fx-fore');
+    // const submission = fore.querySelector(`#${this.submission}`);
     const submission = this.getModel().querySelector(`#${this.submission}`);
     if (submission === null) {
       this.dispatchEvent(
@@ -41,6 +45,12 @@ class FxSend extends AbstractAction {
     }
     console.log('submission', submission);
     submission.submit();
+/*
+    if(submission.replace === 'instance'){
+      this.getModel().updateModel();
+      this.getOwnerForm().refresh();
+    }
+*/
     // if not of type fx-submission signal error
   }
 }

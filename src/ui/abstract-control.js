@@ -16,6 +16,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.required = false;
     this.readonly = false;
     this.widget = null;
+    this.visited = false;
+    this.force = false;
     // this.attachShadow({ mode: 'open' });
   }
 
@@ -27,7 +29,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all modelItem state properties to this control. model -> UI
    */
-  async refresh() {
+  async refresh(force) {
+    if(force) this.force=true;
     // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
@@ -94,8 +97,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        if (currentVal !== this.value) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path });
+        if (currentVal !== this.value ) {
+          // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
+        // if (currentVal !== this.value && this.visited) {
+          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
         }
       }
     }
@@ -135,24 +140,43 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
-    // if (this.required !== this.modelItem.required) {
-    if (this.isRequired() !== this.modelItem.required) {
-      if (this.modelItem.required) {
-        if (this.getOwnerForm().ready){
-          if(this.widget.value === ''){
-            this.classList.add('isRequiredFalse');
-          }else{
-            this.classList.remove('isRequiredFalse');
-          }
+    if (this.required !== this.modelItem.required) {
+    // if (this.isRequired() !== this.modelItem.required || this.force) {
+      this._updateRequired();
+    }
+  }
+
+
+  _updateRequired() {
+    if (this.modelItem.required) {
+      // if (this.getOwnerForm().ready){
+      if (this.visited || this.force) {
+      // if (this.visited ) {
+        if (this.widget.value === '') {
+          this.classList.add('isEmpty');
+          this._toggleValid(false);
+        } else {
+          this.classList.remove('isEmpty');
+          this._toggleValid(true);
         }
-        this.widget.setAttribute('required', '');
-        this.setAttribute('required', '');
-        this._dispatchEvent('required');
-      } else {
-        this.widget.removeAttribute('required');
-        this.removeAttribute('required');
-        this._dispatchEvent('optional');
       }
+      this.widget.setAttribute('required', '');
+      this.setAttribute('required', '');
+      this._dispatchEvent('required');
+    } else {
+      this.widget.removeAttribute('required');
+      this.removeAttribute('required');
+      this._dispatchEvent('optional');
+    }
+  }
+
+  _toggleValid(valid){
+    if(valid){
+      this.removeAttribute('invalid');
+      this.setAttribute('valid','');
+    }else{
+      this.removeAttribute('valid');
+      this.setAttribute('invalid','');
     }
   }
 
@@ -179,15 +203,19 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
-        if (alert) alert.style.display = 'none';
+        // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
+        this.setAttribute('valid','');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
+        this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
+/*
         if (alert) {
           alert.style.display = 'block';
         }
+*/
         if (this.modelItem.alerts.length !== 0) {
           const { alerts } = this.modelItem;
           // console.log('alerts from bind: ', alerts);
@@ -198,7 +226,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
               const newAlert = document.createElement('fx-alert');
               newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
-              newAlert.style.display = 'block';
+              // newAlert.style.display = 'block';
             });
           }
         }

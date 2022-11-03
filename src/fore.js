@@ -11,6 +11,7 @@ export class Fore {
 
   static get ACTION_ELEMENTS() {
     return [
+      'FX-ACTION',
       'FX-DELETE',
       'FX-DISPATCH',
       'FX-HIDE',
@@ -21,6 +22,7 @@ export class Fore {
       'FX-RECALCULATE',
       'FX-REFRESH',
       'FX-RENEW',
+      'FX-RELOAD',
       'FX-REPLACE',
       'FX-RESET',
       'FX-RETAIN',
@@ -64,16 +66,12 @@ export class Fore {
     return [
       'FX-ALERT',
       'FX-CONTROL',
-      'FX-BUTTON',
-      'FX-CONTROL',
       'FX-DIALOG',
       'FX-FILENAME',
       'FX-MEDIATYPE',
       'FX-GROUP',
       'FX-HINT',
-      'FX-INPUT',
       'FX-ITEMS',
-      'FX-LABEL',
       'FX-OUTPUT',
       'FX-RANGE',
       'FX-REPEAT',
@@ -86,6 +84,16 @@ export class Fore {
       'FX-TRIGGER',
       'FX-UPLOAD',
       'FX-VAR',
+    ];
+  }
+
+  static get MODEL_ELEMENTS(){
+    return [
+      'FX-BIND',
+      'FX-FUNCTION',
+      'FX-MODEL',
+      'FX-INSTANCE',
+      'FX-SUBMISSION',
     ];
   }
 
@@ -133,7 +141,7 @@ export class Fore {
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             // console.log('refreshing', element, element?.ref);
             // console.log('refreshing ',element);
-            element.refresh();
+            element.refresh(force);
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
             Fore.refreshChildren(element, force);
           }
@@ -144,6 +152,61 @@ export class Fore {
 
     return refreshed;
   }
+
+  static copyDom(inputElement){
+    console.time('convert');
+    const target = new DOMParser().parseFromString('<fx-fore></fx-fore>', 'text/html');
+    console.log('copyDom new doc',target);
+    console.log('copyDom new body',target.body);
+    console.log('copyDom new body',target.querySelector('fx-fore'));
+    const newFore = target.querySelector('fx-fore');
+    this.convertFromSimple(inputElement,newFore);
+    newFore.removeAttribute('convert');
+    console.log('converted', newFore);
+    return newFore;
+    console.timeEnd('convert');
+  }
+  static convertFromSimple(startElement,targetElement){
+    const children = startElement.childNodes;
+    if (children) {
+      Array.from(children).forEach(node => {
+        const lookFor = `FX-${node.nodeName.toUpperCase()}`;
+        if (Fore.MODEL_ELEMENTS.includes(lookFor)
+            || Fore.UI_ELEMENTS.includes(lookFor)
+            || Fore.ACTION_ELEMENTS.includes(lookFor)
+        ) {
+          const conv = targetElement.ownerDocument.createElement(lookFor);
+          console.log('conv', node, conv);
+          targetElement.appendChild(conv);
+          Fore.copyAttributes(node,conv);
+          Fore.convertFromSimple(node,conv);
+        } else{
+
+          if(node.nodeType === Node.TEXT_NODE){
+            const copied = targetElement.ownerDocument.createTextNode(node.textContent);
+            targetElement.appendChild(copied);
+          }
+
+          if(node.nodeType === Node.ELEMENT_NODE){
+            const copied = targetElement.ownerDocument.createElement(node.nodeName);
+            targetElement.appendChild(copied);
+            Fore.copyAttributes(node,targetElement);
+            Fore.convertFromSimple(node,copied);
+          }
+        }
+      });
+    }
+  }
+
+  static copyAttributes(source, target) {
+    return Array.from(source.attributes).forEach(attribute => {
+      target.setAttribute(
+          attribute.nodeName,
+          attribute.nodeValue,
+      );
+    });
+  }
+
 
   /**
    * Alternative to `closest` that respects subcontrol boundaries
@@ -168,8 +231,8 @@ export class Fore {
    * @param instance an fx-instance element
    * @returns {string|null}
    */
-  static getContentType(instance, method) {
-    if (method === 'urlencoded-post') {
+  static getContentType(instance, contentType) {
+    if (contentType === 'application/x-www-form-urlencoded') {
       return 'application/x-www-form-urlencoded; charset=UTF-8';
     }
     if (instance.type === 'xml') {
@@ -228,7 +291,7 @@ export class Fore {
       bubbles: true,
       detail,
     });
-    console.log('dispatching', event);
+    console.info('dispatching', event.type, target);
     target.dispatchEvent(event);
   }
 

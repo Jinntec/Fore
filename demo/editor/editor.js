@@ -78,6 +78,11 @@
     const droppedElement = e.dataTransfer.getData('text/html');
     console.log('dropped element', droppedElement);
 
+    const elements = document.getElementById('elements');
+    const templateForElement = elements.instanceData.querySelector(`fx-${elementName}`);
+    console.log('found template element', templateForElement);
+
+
     if (
       elementName === 'instance' ||
       elementName === 'bind' ||
@@ -111,6 +116,7 @@
         const droppedElement = e.dataTransfer.getData('text/html');
         console.log('dropped element', droppedElement);
 
+
         const newElem = document.createElement('fx-' + elementName);
         newElem.setAttribute('data-name', elementName);
         newElem.textContent = elementName;
@@ -127,9 +133,13 @@
     }
     // const currentInsertPoint = document.querySelector('[current]');
     const currentInsertPoint = document.elementFromPoint(e.clientX, e.clientY);
+
+    const newElem = templateForElement.cloneNode(true);
+/*
     const newElem = document.createElement('fx-' + elementName);
     // newElem.setAttribute('data-name', elementName);
     newElem.textContent = elementName;
+*/
     currentInsertPoint.appendChild(newElem);
     // currentDroppable.appendChild(newElem);
 

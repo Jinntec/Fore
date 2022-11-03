@@ -43,7 +43,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     // console.log('_dispatchIndexChange on index ', this.index);
     if (this.parentNode) {
       this.parentNode.dispatchEvent(
-        new CustomEvent('item-changed', { composed: true, bubbles: true, detail: { item: this } }),
+        new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
       );
     }
   }
@@ -90,12 +90,14 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
 
     if (this.modelItem && !this.modelItem.relevant) {
       // await Fore.fadeOutElement(this)
-      this.style.display = 'none';
+      // this.style.display = 'none';
+      this.classList.add('nonrelevant');
     } else {
       // if(this.hasAttribute('repeat-index')){
       //   Fore.fadeInElement(this);
       // }
-      this.style.display = this.display;
+      // this.style.display = this.display;
+      this.classList.remove('nonrelevant');
     }
 
     /*

@@ -168,12 +168,12 @@ export class FxInstance extends HTMLElement {
       .then(response => {
         const { status } = response;
         if (status >= 400) {
-          console.log('response status', status);
+          // console.log('response status', status);
           alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
           throw new Error(`failed to load data - status: ${status}`);
         }
         const responseContentType = response.headers.get('content-type').toLowerCase();
-        console.log('********** responseContentType *********', responseContentType);
+        // console.log('********** responseContentType *********', responseContentType);
         if (responseContentType.startsWith('text/html')) {
           // const htmlResponse = response.text();
           // return new DOMParser().parseFromString(htmlResponse, 'text/html');
@@ -205,7 +205,7 @@ export class FxInstance extends HTMLElement {
       .then(data => {
         if (data.nodeType) {
           this.instanceData = data;
-          console.log('instanceData loaded: ', this.instanceData);
+          console.log('instanceData loaded: ', this.id, this.instanceData);
           return;
         }
         this.instanceData = data;
@@ -231,12 +231,12 @@ export class FxInstance extends HTMLElement {
       // console.log('innerHTML ', this.innerHTML);
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
 
-      console.log('fx-instance init id:', this.id);
+      // console.log('fx-instance init id:', this.id);
       this.instanceData = instanceData;
       // console.log('instanceData ', this.instanceData);
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
-      console.log('fx-instance data: ', this.instanceData);
+      // console.log('fx-instance data: ', this.instanceData);
       // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
