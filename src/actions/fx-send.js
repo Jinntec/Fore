@@ -5,6 +5,8 @@ import { AbstractAction } from './abstract-action.js';
 /**
  * `fx-send` - finds and activates a `fx-submission` element.
  *
+ * extension idea: allow params to be passed as with dispatch action which can be used to set properties on submission attributes
+ *
  * @customElement
  */
 class FxSend extends AbstractAction {

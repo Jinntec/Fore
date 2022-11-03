@@ -154,8 +154,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       // if (this.visited ) {
         if (this.widget.value === '') {
           this.classList.add('isEmpty');
+          this._toggleValid(false);
         } else {
           this.classList.remove('isEmpty');
+          this._toggleValid(true);
         }
       }
       this.widget.setAttribute('required', '');
@@ -165,6 +167,16 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this.widget.removeAttribute('required');
       this.removeAttribute('required');
       this._dispatchEvent('optional');
+    }
+  }
+
+  _toggleValid(valid){
+    if(valid){
+      this.removeAttribute('invalid');
+      this.setAttribute('valid','');
+    }else{
+      this.removeAttribute('valid');
+      this.setAttribute('invalid','');
     }
   }
 
