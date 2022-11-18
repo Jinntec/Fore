@@ -157,6 +157,31 @@ export class FxInstance extends HTMLElement {
     const url = `${this.src}`;
     const contentType = Fore.getContentType(this, 'get');
 
+    if(url.startsWith('localStore')){
+      const key = url.substring(url.indexOf(':')+1);
+
+      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+      const root = doc.firstElementChild;
+      this.instanceData = doc;
+
+      if(!key){
+        console.warn('no key specified for localStore');
+        return;
+      }
+
+      const serialized = localStorage.getItem(key);
+      if(!serialized){
+        console.warn(`Data for key ${key} cannot be found`);
+        this._useInlineData();
+        return;
+      }
+      const data = new DOMParser().parseFromString(serialized, 'application/xml');
+      // let data = this._parse(serialized, instance);
+      // root.appendChild(data);
+      doc.firstElementChild.replaceWith(data.firstElementChild);
+      return;
+    }
+
     await fetch(url, {
       method: 'GET',
       mode: 'cors',

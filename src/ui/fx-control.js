@@ -294,6 +294,7 @@ export default class FxControl extends XfAbstractControl {
     // ### when there's a url Fore is used as widget and will be loaded from external file
     if (this.url && !this.loaded) {
       // ### evaluate initial data if necessary
+
       if (this.initial) {
         this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
         console.log('initialNodes', this.initialNode);
@@ -332,7 +333,7 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   async _loadForeFromUrl() {
-    console.log('########## loading Fore from ', this.src, '##########');
+    console.log('########## loading Fore from ', this.url, '##########');
     try {
       const response = await fetch(this.url, {
         method: 'GET',
@@ -342,6 +343,7 @@ export default class FxControl extends XfAbstractControl {
           'Content-Type': 'text/html',
         },
       });
+
       const responseContentType = response.headers.get('content-type').toLowerCase();
       console.log('********** responseContentType *********', responseContentType);
       let data;
@@ -355,6 +357,8 @@ export default class FxControl extends XfAbstractControl {
       }
       // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
       const theFore = data.querySelector('fx-fore');
+      const imported = document.importNode(theFore,true);
+
       // console.log('thefore', theFore)
       theFore.classList.add('widget'); // is the new widget
       const dummy = this.querySelector('input');
@@ -362,7 +366,9 @@ export default class FxControl extends XfAbstractControl {
         dummy.parentNode.removeChild(dummy);
         this.shadowRoot.appendChild(theFore);
       } else {
-        dummy.replaceWith(theFore);
+        console.log(this, 'replacing widget with',theFore);
+        dummy.replaceWith(imported);
+        // this.appendChild(imported);
       }
 
       console.log(`########## loaded fore as component ##### ${this.url}`);
