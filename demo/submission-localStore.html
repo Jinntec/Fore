@@ -49,19 +49,34 @@
                             <another>value2</another>
                         </data>
                     </fx-instance>
-                    <fx-instance id="second">
+                    <fx-instance id="second" src="localStore:foo">
                         <data></data>
                     </fx-instance>
 
                     <fx-submission id="sub1"
                                    url="localStore:foo"
-                                   method="post">
+                                   method="post"
+                                   replace="instance"
+                                   instance="second">
+                    </fx-submission>
+                    <fx-submission id="sub2"
+                                   url="localStore:foo"
+                                   method="delete"
+                                   replace="instance"
+                                   instance="second">
                     </fx-submission>
                 </fx-model>
                 <fx-group>
 
                     <h1>Submission storing to localStorage of browser</h1>
-                    <p>Can be used to pass data between several browser tabs</p>
+
+
+                    <h2>'localStore' scheme to read, write and delete localstorage items</h2>
+
+                    <p>The 'localStore' URI scheme can be used to access a certain key in localstorage of the
+                    browser.</p>
+
+                    <p>This can for instance be used to pass data between several browser tabs or store some user data.</p>
 
                     <ul>
                         <li>click 'submit' to store data in localstorage</li>
@@ -72,7 +87,26 @@
                         <button>submit</button>
                         <fx-send submission="sub1"></fx-send>
                     </fx-trigger>
+
+                    <p>After you've clicked 'submit' the data will survive page reloads or even closing the browser.</p>
+
+                    <fx-trigger>
+                        <button>clear local storage</button>
+                        <fx-send submission="sub2"></fx-send>
+                    </fx-trigger>
+
+                    <h3>Methods</h3>
+                    <ul>
+                        <li>get - read data with key</li>
+                        <li>consume - read  and delete data with key</li>
+                        <li>post - write data with key</li>
+                        <li>delete - delete data with key</li>
+                    </ul>
+
+
+                    <h2>Foo is {instance('second')/bar} and bar is {instance('second')/another}</h2>
                 </fx-group>
+                <fx-inspector></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>

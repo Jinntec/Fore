@@ -84,14 +84,14 @@ export class FxInstance extends HTMLElement {
    */
   getInstanceData() {
     if (!this.instanceData) {
-      this._createInstanceData();
+      this.createInstanceData();
     }
     return this.instanceData;
   }
 
   setInstanceData(data) {
     if (!data) {
-      this._createInstanceData();
+      this.createInstanceData();
       return;
     }
     this.instanceData = data;
@@ -142,7 +142,7 @@ export class FxInstance extends HTMLElement {
     }
   }
 
-  _createInstanceData() {
+  createInstanceData() {
     if (this.type === 'xml') {
       // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');

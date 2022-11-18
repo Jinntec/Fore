@@ -153,29 +153,39 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       return;
     }
 
-    if(resolvedUrl.startsWith('localStore:') && this.method === 'post'){
-      // let data = this._parse(serialized, instance);
-      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
-      localStorage.setItem(key,serialized);
-      Fore.dispatch(this, 'submit-done', {});
-      return;
-    }
+    if(resolvedUrl.startsWith('localStore:')){
 
-    if(resolvedUrl.startsWith('localStore:') && (this.method === 'consume' || this.method === 'get')){
-      // let data = this._parse(serialized, instance);
-      this.replace = 'instance';
-      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
-      const serialized = localStorage.getItem(key);
-      if(!serialized){
-        Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
-        return;
+      if(this.method === 'get' || this.method === 'consume'){
+        // let data = this._parse(serialized, instance);
+        this.replace = 'instance';
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+        const serialized = localStorage.getItem(key);
+        if(!serialized){
+          Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
+          return;
+        }
+        let data = this._parse(serialized, instance);
+        this._handleResponse(data);
+        if(this.method === 'consume'){
+          localStorage.removeItem(key);
+        }
+        Fore.dispatch(this, 'submit-done', {});
       }
-      let data = this._parse(serialized, instance);
-      this._handleResponse(data);
-      if(this.method === 'consume'){
+      if(this.method === 'post'){
+        // let data = this._parse(serialized, instance);
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+        localStorage.setItem(key,serialized);
+        this._handleResponse(instance.instanceData);
+        Fore.dispatch(this, 'submit-done', {});
+      }
+      if(this.method === 'delete'){
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
         localStorage.removeItem(key);
+        const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
+        this._handleResponse(newInst);
+        Fore.dispatch(this, 'submit-done', {});
       }
-      Fore.dispatch(this, 'submit-done', {});
+
       return;
     }
 

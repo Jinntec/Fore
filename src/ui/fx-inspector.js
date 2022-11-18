@@ -25,6 +25,7 @@ export class FxInspector extends HTMLElement {
             /*max-height: 33%;*/
             overflow: scroll;
             transition:width 0.3s ease;
+            z-index:100;
           }
           :host([open]){
             width: 30%;
