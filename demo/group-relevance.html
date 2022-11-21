@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Group relevance</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Group Relevance</h1>
+    <p>A group being bound to a non-existing node becomes non-relevant and hides it's contents</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data></data>
+                    </fx-instance>
+                    <fx-instance id="data">
+                        <data>
+                            <foo>bar</foo>
+                            <item type="color">blue</item>
+                            <item type="color">red</item>
+                            <item type="color">greeb</item>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="s-load"
+                                   method="post"
+                                   url="#echo"
+                                   ref="instance('data')"
+                                   replace="instance"
+                                   instance="default"></fx-submission>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>switch group 1 relevant</button>
+                    <fx-send submission="s-load"></fx-send>
+                </fx-trigger>
+
+                <fx-group ref="foo">
+                    <h2>a section of content being non-relevant initiallly</h2>
+                    <fx-control ref=".">
+                        <label>Foo</label>
+                    </fx-control>
+                    <fx-trigger>
+                        <button>switch non-relevant again</button>
+                        <fx-delete ref="instance()/foo"></fx-delete>
+                    </fx-trigger>
+                </fx-group>
+
+
+
+                <fx-group ref="item[@type='color'][2]">
+                    <h2>A more complex binding</h2>
+                    <fx-control ref="@type">
+                        <label>color</label>
+                    </fx-control>
+                </fx-group>
+
+                <fx-inspector></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
