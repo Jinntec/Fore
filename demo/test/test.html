@@ -1,54 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>DOA eXist Configuration</title>
-    <link rel="stylesheet" href="../../resources/fore.css"/>
-<!--    <link rel="stylesheet" href="resources/css/doa.css"/>-->
+    <title>Epidoc</title>
+    <link href="../../resources/css/fore.css" rel="stylesheet"/>
 </head>
 <body>
-<!--<fx-fore>
-    <fx-model id="model1">
-        <fx-instance>
-            <data>
-                <greeting>Hello World!</greeting>
-                <b></b>
-            </data>
-        </fx-instance>
-        <fx-bind ref="greeting[../b]">
-            <fx-bind required="true()"></fx-bind>
-        </fx-bind>
-    </fx-model>
-</fx-fore>-->
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="../epidoc/data/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        </fx-model>
+        <fx-group ref="teiHeader">
+            <fx-repeat ref=".//msPart">
+                <template>
+                    <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
+                        <fx-control ref="width">
+                            <label>Breite2</label>
+                        </fx-control>
+                    </fx-group>
+                </template>
+            </fx-repeat>
+        </fx-group>
+    </fx-fore>
 
-<fx-fore>
-    <fx-model>
-        <fx-instance>
-            <data>
-                <counter max="10">0</counter>
-                <counter max="15">5</counter>
-            </data>
-        </fx-instance>
-    </fx-model>
-    <fx-repeat ref="counter">
-        <template>
-            <div>
-                <fx-trigger>
-                    <button>Count to {@max}</button>
-                    <fx-action while="number(.) lt number(@max)">
-                        <fx-setvalue id="setval" ref="." value=".+1"></fx-setvalue>
-                    </fx-action>
-                </fx-trigger>
-                <fx-output ref="."></fx-output>
-            </div>
-        </template>
-    </fx-repeat>
-</fx-fore>
-
-
-<!--    <script type="module" src="./js/fore-debug.js"/>-->
-<script type="module" src="../../index.js"/>
+</div>
+<script type="module" src="../demo.js"/>
 </body>
 </html>
