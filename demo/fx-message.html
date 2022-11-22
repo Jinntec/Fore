@@ -44,6 +44,10 @@
                     <button>modal</button>
                     <fx-message level="modal">Modal Message</fx-message>
                 </fx-trigger>
+                <fx-trigger>
+                    <button>Complex</button>
+                    <fx-message class="{'compound'||'-class'}">Message that was created at {current-dateTime()}</fx-message>
+                </fx-trigger>
             </fx-fore>        </template>
     </demo-snippet>
 

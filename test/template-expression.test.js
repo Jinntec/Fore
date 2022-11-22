@@ -36,6 +36,44 @@ describe('template expressions', () => {
     expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');
   });
 
+	it('detects template expressions with multiple lines', async () => {
+		const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greeting>Hello Universe</greeting>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div class="{
+if (greeting => contains('Universe')) then
+'Hello Everyone'
+else
+greeting
+}">Greeting: {
+greeting
+
+|| " With
+             new
+lines
+"
+} another {greeting}</div>
+        <fx-input ref="greeting" label="greeting"></fx-input>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const div = el.querySelector('div');
+
+    expect(div.getAttribute('class')).to.equal('Hello Everyone');
+    expect(div.textContent).to.equal(`Greeting: Hello Universe With
+             new
+lines
+ another Hello Universe`);
+  });
+
   it('skips the contents of fx-model for template detection', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

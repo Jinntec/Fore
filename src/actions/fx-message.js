@@ -17,6 +17,8 @@ class FxMessage extends AbstractAction {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
+
+	this.messageTextContent = this.textContent;
     const style = `
         :host{
             display:none;
@@ -48,6 +50,7 @@ class FxMessage extends AbstractAction {
     if (this.hasAttribute('value')) {
       message = this.getValue();
     } else {
+		this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
       message = this.textContent;
     }
 
