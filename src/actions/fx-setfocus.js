@@ -3,7 +3,7 @@ import {resolveId} from "../xpath-evaluation";
 
 /**
  * `fx-setfocus`
- * Set the focus to a target control.
+ * Set the focus to a target control optionally selecting eventual value in case a `select` attribute is given.
  *
  * @customElement
  */
@@ -39,11 +39,20 @@ export class FxSetfocus extends AbstractAction {
       }
 
       this._focus(targetElement);
+      if(this.hasAttribute('select')){
+          this._select(targetElement);
+      }
   }
 
     _focus(targetElement){
         if(targetElement){
             targetElement.getWidget().focus();
+        }
+    }
+
+    _select(targetElement){
+        if(targetElement){
+            targetElement.getWidget().select();
         }
     }
 
