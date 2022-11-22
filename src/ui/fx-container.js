@@ -47,15 +47,12 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
       }
-
-      // this.value = this.modelItem.value;
+      this.handleModelItemProperties();
     }
-
-    // await this.updateComplete;
 
     // state change event do not fire during init phase (initial refresh)
     // if (this._getForm().ready) {
-      this.handleModelItemProperties();
+    //   this.handleModelItemProperties();
     // }
     // Fore.refreshChildren(this, force);
   }
