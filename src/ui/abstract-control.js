@@ -140,8 +140,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
-    if (this.required !== this.modelItem.required) {
-    // if (this.isRequired() !== this.modelItem.required || this.force) {
+    if (this.isRequired() !== this.modelItem.required) {
       this._updateRequired();
     }
   }
