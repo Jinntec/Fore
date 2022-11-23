@@ -312,6 +312,69 @@ describe('control tests', () => {
     expect(input.hasAttribute('invalid')).to.be.true;
   });
 
+  it('updates isEmpty class', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a></a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" required="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    // await elementUpdated(el);
+    let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.required).to.be.true;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('invalid')).to.be.true;
+    expect(input.classList.contains('isEmpty')).to.be.true;
+
+    // modifying value
+    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    await oneEvent(input, 'value-changed');
+
+    expect(input.classList.contains('isEmpty')).to.be.false;
+
+  });
+
+  it('updates visited class', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a></a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" required="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+      </fx-fore>
+    `);
+
+    // await elementUpdated(el);
+    let { detail } = await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(input.classList.contains('visited')).to.be.false;
+
+    // modifying value
+    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    await oneEvent(input, 'value-changed');
+
+    expect(input.classList.contains('visited')).to.be.true;
+
+  });
+
   /*
     it('listens for event', async () => {
         const el =  (
