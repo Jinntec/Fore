@@ -61,6 +61,9 @@ function _getInitialContext(node, ref) {
 export default function getInScopeContext(node, ref) {
     const parentElement = _getElement(node);
 
+    if(parentElement.nodeName === 'FX-FORE'){
+        return parentElement.getModel().getDefaultInstance().getDefaultContext();
+    }
     const parentBind = Fore.getClosest('[ref]', parentElement.parentNode);
     if (parentBind && parentBind.nodeName === 'FX-GROUP') {
         return parentBind.nodeset;

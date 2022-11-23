@@ -140,9 +140,37 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
+
+    if(!this.modelItem.required){
+      this.widget.removeAttribute('required');
+      this.removeAttribute('required');
+      if (this.isRequired() !== this.modelItem.required){
+        this._dispatchEvent('optional');
+      }
+      return;
+    }
+
+    // ### modelItem is required
+    if (this.visited || this.force) {
+      if (this.modelItem.value === '') {
+        this.classList.add('isEmpty');
+        this._toggleValid(false);
+      } else {
+        this.classList.remove('isEmpty');
+        this._toggleValid(true);
+      }
+    }
+    this.widget.setAttribute('required', '');
+    this.setAttribute('required', '');
+    if (this.isRequired() !== this.modelItem.required) {
+      this._dispatchEvent('required');
+    }
+
+/*
     if (this.isRequired() !== this.modelItem.required) {
       this._updateRequired();
     }
+*/
   }
 
 
@@ -151,7 +179,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       // if (this.getOwnerForm().ready){
       if (this.visited || this.force) {
       // if (this.visited ) {
-        if (this.widget.value === '') {
+      //   if (this.widget.value === '') {
+        if (this.modelItem.value === '') {
           this.classList.add('isEmpty');
           this._toggleValid(false);
         } else {

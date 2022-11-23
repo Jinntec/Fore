@@ -242,6 +242,46 @@ describe('control tests', () => {
     expect(input.hasAttribute('required')).to.be.true;
   });
 
+/*
+  it.only('changes readonly state to optional', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+              <required>true</required>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" required="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+        <fx-trigger>
+          <fx-setvalue id="set" ref="required">false</fx-setvalue>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
+
+    // let { detail } = await oneEvent(el, 'refresh-done');
+    const input = el.querySelector('#input1');
+    const mi = input.getModelItem();
+    expect(mi.required).to.be.true;
+    expect(input.widget).to.exist;
+    expect(input.hasAttribute('required')).to.be.true;
+
+
+    const trigger = el.querySelector('fx-trigger');
+    trigger.performActions();
+    expect(input.hasAttribute('required')).to.be.false;
+
+  });
+*/
+
+
   it('gets invalid state attribute', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

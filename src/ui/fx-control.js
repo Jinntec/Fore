@@ -85,7 +85,7 @@ export default class FxControl extends XfAbstractControl {
     if (this.updateEvent === 'enter') {
       this.widget.addEventListener('keyup', event => {
         if (event.keyCode === 13) {
-          console.info('handling Event:', event.type, listenOn);
+          // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
           event.preventDefault();
           this.setValue(this.widget[this.valueProp]);
@@ -98,13 +98,13 @@ export default class FxControl extends XfAbstractControl {
         this.updateEvent,
         debounce(this,() => {
           // console.log('eventlistener ', this.updateEvent);
-          console.info('handling Event:', event.type, listenOn);
+          // console.info('handling Event:', event.type, listenOn);
           this.setValue(this.widget[this.valueProp]);
         }, this.debounceDelay),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, () => {
-        console.info('handling Event:', event.type, listenOn);
+        // console.info('handling Event:', event.type, listenOn);
         this.setValue(this.widget[this.valueProp]);
       });
     }

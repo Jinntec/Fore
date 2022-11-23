@@ -198,43 +198,46 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
-    // todo: headers not
-    const response = await fetch(resolvedUrl, {
-      method: this.method,
-      mode: 'cors',
-      credentials: 'include',
-      headers,
-      body: serialized,
-    });
+    try{
+      const response = await fetch(resolvedUrl, {
+        method: this.method,
+        mode: 'cors',
+        credentials: 'include',
+        headers,
+        body: serialized,
+      });
 
-    if (!response.ok || response.status > 400) {
-      // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
-      Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
-      return;
+      if (!response.ok || response.status > 400) {
+        // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+        Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
+        return;
+      }
+
+      const contentType = response.headers.get('content-type').toLowerCase();
+      if (
+          contentType.startsWith('text/plain') ||
+          contentType.startsWith('text/html') ||
+          contentType.startsWith('text/markdown')
+      ) {
+        const text = await response.text();
+        this._handleResponse(text);
+      } else if (contentType.startsWith('application/json')) {
+        const json = await response.json();
+        this._handleResponse(json);
+      } else if (contentType.startsWith('application/xml')) {
+        const text = await response.text();
+        const xml = new DOMParser().parseFromString(text, 'application/xml');
+        this._handleResponse(xml);
+      } else {
+        const blob = await response.blob();
+        this._handleResponse(blob);
+      }
+
+      // this.dispatch('submit-done', {});
+      Fore.dispatch(this, 'submit-done', {});
+    } catch (error){
+      Fore.dispatch(this, 'submit-error', {error:error.message});
     }
-
-    const contentType = response.headers.get('content-type').toLowerCase();
-    if (
-      contentType.startsWith('text/plain') ||
-      contentType.startsWith('text/html') ||
-      contentType.startsWith('text/markdown')
-    ) {
-      const text = await response.text();
-      this._handleResponse(text);
-    } else if (contentType.startsWith('application/json')) {
-      const json = await response.json();
-      this._handleResponse(json);
-    } else if (contentType.startsWith('application/xml')) {
-      const text = await response.text();
-      const xml = new DOMParser().parseFromString(text, 'application/xml');
-      this._handleResponse(xml);
-    } else {
-      const blob = await response.blob();
-      this._handleResponse(blob);
-    }
-
-    // this.dispatch('submit-done', {});
-    Fore.dispatch(this, 'submit-done', {});
   }
 
   _parse(serialized, instance) {
