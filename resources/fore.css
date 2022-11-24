@@ -42,7 +42,7 @@ fx-alert{
     color:darkred;
     font-size: 0.9rem;
 }
-[invalid] fx-alert{
+.visited[invalid] fx-alert{
     display: block;
 }
 
