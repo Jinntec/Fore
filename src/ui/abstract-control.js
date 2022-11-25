@@ -21,6 +21,27 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // this.attachShadow({ mode: 'open' });
   }
 
+
+  // todo: discuss - this is a hack to circumvent that modelItems in toRefresh diverge from the modelItems in
+  // the model in some situations. This code first looks for refresh
+/*
+  getModelItem() {
+    console.log('toRefreshModelItems', this.getOwnerForm().toRefresh);
+    const s = this.modelItem.path;
+    console.log('toRefreshModelItems path', s);
+
+    const toRefresh = this.getOwnerForm().toRefresh;
+    let mi;
+    if(toRefresh){
+      mi = this.getOwnerForm().toRefresh.find(m => m.path === s);
+    }
+
+    return mi? mi: super.getModelItem();
+    // console.log('toRefreshModelItems realitem', mi);
+
+  }
+*/
+
   // eslint-disable-next-line class-methods-use-this
   getWidget() {
     throw new Error('You have to implement the method getWidget!');
@@ -43,6 +64,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.oldVal = this.nodeset ? this.nodeset : null;
     this.evalInContext();
 
+    // todo this if should be removed - see above
     if (this.isBound()) {
       // this.control = this.querySelector('#control');
 
@@ -52,6 +74,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       }
 
       this.modelItem = this.getModelItem();
+      console.log('refresh modelItem', this.modelItem);
 
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
@@ -104,6 +127,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         }
       }
     }
+  }
+
+  refreshFromModelItem(modelItem){
+
   }
 
   /**
@@ -229,6 +256,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip valid', this.modelItem.required);
     const alert = this.querySelector('fx-alert');
 
+    const mi = this.getModelItem();
+    console.log('late modelItem', mi);
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
         // if (alert) alert.style.display = 'none';
@@ -245,13 +274,14 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         }
 */
         if (this.modelItem.alerts.length !== 0) {
-          const { alerts } = this.modelItem;
-          // console.log('alerts from bind: ', alerts);
 
           const controlAlert = this.querySelector('fx-alert');
           if (!controlAlert) {
+            const { alerts } = this.modelItem;
+            // console.log('alerts from bind: ', alerts);
             alerts.forEach(modelAlert => {
               const newAlert = document.createElement('fx-alert');
+              // const newAlert = document.createElement('span');
               newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
               // newAlert.style.display = 'block';
