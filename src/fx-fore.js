@@ -239,10 +239,10 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
             }
             if (!modelElement.inited) {
-                console.info(
-                    `%cFore is processing URL ${window.location.href}`,
-                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
-                );
+                    console.info(
+                        `%cFore is processing URL ${window.location.href}`,
+                        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+                    );
 
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');

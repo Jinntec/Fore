@@ -74,7 +74,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       }
 
       this.modelItem = this.getModelItem();
-      console.log('refresh modelItem', this.modelItem);
+      // console.log('refresh modelItem', this.modelItem);
 
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);

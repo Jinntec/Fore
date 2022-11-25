@@ -41,6 +41,7 @@ html{
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
+    display: none;
 }
 .visited[invalid] fx-alert{
     display: block;

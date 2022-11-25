@@ -334,6 +334,10 @@ export default class FxControl extends XfAbstractControl {
    */
   async _loadForeFromUrl() {
     console.log('########## loading Fore from ', this.url, '##########');
+    console.info(
+        `%cFore is processing URL ${this.url}`,
+        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+    );
     try {
       const response = await fetch(this.url, {
         method: 'GET',
@@ -360,38 +364,39 @@ export default class FxControl extends XfAbstractControl {
       const imported = document.importNode(theFore,true);
 
       // console.log('thefore', theFore)
-      theFore.classList.add('widget'); // is the new widget
+      imported.classList.add('widget'); // is the new widget
+      console.log(`########## loaded fore as component ##### ${this.url}`);
+      imported.addEventListener(
+          'model-construct-done',
+          e => {
+            console.log('subcomponent ready', e.target);
+            const defaultInst = imported.querySelector('fx-instance');
+            // console.log('defaultInst', defaultInst);
+            if(this.initialNode){
+              const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+              // Note: Clone the input to prevent the inner fore from editing the outer node
+              doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+              // defaultinst.setInstanceData(this.initialNode);
+              defaultInst.setInstanceData(doc);
+            }
+            // console.log('new data', defaultInst.getInstanceData());
+            // theFore.getModel().modelConstruct();
+            imported.getModel().updateModel();
+            imported.refresh();
+          },
+          { once: true },
+      );
+
       const dummy = this.querySelector('input');
       if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
-        this.shadowRoot.appendChild(theFore);
+        this.appendChild(imported);
       } else {
         console.log(this, 'replacing widget with',theFore);
         dummy.replaceWith(imported);
         // this.appendChild(imported);
       }
 
-      console.log(`########## loaded fore as component ##### ${this.url}`);
-      theFore.addEventListener(
-        'model-construct-done',
-        e => {
-          console.log('subcomponent ready', e.target);
-          const defaultInst = theFore.querySelector('fx-instance');
-          console.log('defaultInst', defaultInst);
-          if(this.initialNode){
-            const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-            // Note: Clone the input to prevent the inner fore from editing the outer node
-            doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-            // defaultinst.setInstanceData(this.initialNode);
-            defaultInst.setInstanceData(doc);
-          }
-          console.log('new data', defaultInst.getInstanceData());
-          // theFore.getModel().modelConstruct();
-          theFore.getModel().updateModel();
-          theFore.refresh();
-        },
-        { once: true },
-      );
 
       if (!theFore) {
         this.dispatchEvent(
