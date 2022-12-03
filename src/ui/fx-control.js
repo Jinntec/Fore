@@ -390,7 +390,7 @@ export default class FxControl extends XfAbstractControl {
       const dummy = this.querySelector('input');
       if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
-        this.appendChild(imported);
+        this.shadowRoot.appendChild(imported);
       } else {
         console.log(this, 'replacing widget with',theFore);
         dummy.replaceWith(imported);
