@@ -428,7 +428,7 @@ describe('action Tests', () => {
     expect(control1.value).to.equal('10');
   });
 
-  it('executes while condition is true, using inscopecontext', async () => {
+  it.skip('executes while condition is true, using inscopecontext', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -486,7 +486,7 @@ describe('action Tests', () => {
     expect(secondControl.value).to.equal('15');
 */
   });
-  it('executes while condition is true, using inscopecontext - part 2', async () => {
+  it.skip('executes while condition is true, using inscopecontext - part 2', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>

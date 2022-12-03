@@ -233,7 +233,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * Template method to be implemented by each action that is called by execute() as part of
    * the processing.
    *
-   * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
+   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   perform() {
     console.info(
