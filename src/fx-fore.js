@@ -1,12 +1,11 @@
 import {Fore} from './fore.js';
 import './fx-instance.js';
-import './fx-model.js';
+import {FxModel} from './fx-model.js';
 import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
 import {AbstractAction} from "./actions/abstract-action";
-import {FxModel} from "./fx-model.js";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -240,10 +239,10 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
             }
             if (!modelElement.inited) {
-                console.info(
-                    `%cFore is processing URL ${window.location.href}`,
-                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
-                );
+                    console.info(
+                        `%cFore is processing URL ${window.location.href}`,
+                        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+                    );
 
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');
@@ -466,9 +465,8 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _updateTemplateExpressions() {
-        // Note the fact we're going over HTML here: therefore the `html` prefix.
         const search =
-            "(descendant-or-self::*!(text(), @*))[contains(., '{')][matches(.,'\\{.*\\}')][not(ancestor-or-self::fx-model)]";
+            "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
 
         const tmplExpressions = evaluateXPathToNodes(search, this, this);
         // console.log('template expressions found ', tmplExpressions);

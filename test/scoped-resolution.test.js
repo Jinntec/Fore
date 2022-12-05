@@ -358,36 +358,34 @@ describe('scoped resolution tests', () => {
     expect(model.modelItems[0].value).to.equal('default');
   });
 
-  /*
-    it('dispatches a bind exception for non-existing ref', async () => {
-        const el =  (
-            await fixtureSync(html`
-                <fx-fore>
-                    <fx-model id="record">
-                        <fx-instance>
-                            <data>
-                                <foo></foo>
-                            </data>
-                        </fx-instance>
-                        <fx-bind ref="bar"></fx-bind>
-                    </fx-model>
-                    <fx-group ref="bar">
-                    </fx-group>
-                </fx-fore>`)
-        );
+  it('resolves group within repeat', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+        </fx-model>
+        <fx-group ref="teiHeader">
+          <fx-repeat ref=".//msPart">
+            <template>
+              <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
+                <fx-control ref="width">
+                  <label>Breite2</label>
+                </fx-control>
+              </fx-group>
+            </template>
+          </fx-repeat>
+        </fx-group>
+      </fx-fore>
+    `);
 
-        await elementUpdated(el);
-/!*
-        const model = el.querySelector('fx-model');
-        expect(model.modelItems.length).to.equal(8);
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
 
-        let out = el.querySelector('#output');
-        expect(out.modelItem.value).to.equal('index');
+    const controls = el.querySelectorAll('fx-control');
+    expect(controls.length).to.equal(2);
 
-        out = el.querySelector('#output3');
-        expect(out.modelItem.value).to.equal('right');
-*!/
+    expect(controls[0].value).to.equal('66');
+    expect(controls[1].value).to.equal('78');
+  });
 
-    });
-*/
 });

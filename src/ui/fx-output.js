@@ -118,10 +118,11 @@ export class FxOutput extends XfAbstractControl {
     // console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
 
-    if (this.mediatype === 'markdown') {
-      const md = markdown(this.nodeset);
-      this.innerHtml = md;
-    }
+
+    // if (this.mediatype === 'markdown') {
+    //   const md = markdown(this.nodeset);
+    //   this.innerHtml = md;
+    // }
 
     if (this.mediatype === 'html') {
       if (this.modelItem.node) {

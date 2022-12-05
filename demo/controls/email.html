@@ -17,14 +17,23 @@
           width: 21cm;
           height: 29.7cm;
           background: lightyellow;
+          position: relative;
       }
     </style>
   </head>
   <body>
 	<div class="wrapper">
 
-      <fx-fore load-css="inner.css">
-        <fx-message event="ready">email ready</fx-message>
+      <fx-fore>
+          <!--
+          # as only the `fx-fore` element is taken when loaded into outer page a CSS stylesheet link
+          # can be put here to style the local content. However it must be noted that these styles
+          # are added to the page and therefore and interfere with settings made before. To avoid that
+          the matchers can be scoped quite simply with 'fx-fore.widget'.
+          -->
+<!--          <link href="../../resources/custom.css" rel="stylesheet">-->
+
+          <fx-message event="ready">email ready</fx-message>
         <fx-model>
 <!--          <fx-message event="model-construct-done">email model ready</fx-message>-->
 
@@ -81,7 +90,7 @@
 		  </template>
 		</fx-repeat>
 		<fx-trigger><button> append</button><fx-insert ref="email"></fx-trigger>
-		<!--        <fx-inspector open></fx-inspector>-->
+		        <fx-inspector></fx-inspector>
       </fx-fore>
 
 

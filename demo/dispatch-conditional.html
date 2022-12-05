@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+
+    <style>
+        fx-control{
+            display: block;
+        }
+        label{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <item>ite</item>
+                <condition></condition>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-message event="signal" target="#document">The signal event was fired</fx-message>
+
+    <fx-control id="ctrl" ref="item" update-event="input">
+        <label>an item</label>
+        <fx-dispatch event="value-changed" name="signal" if="../condition='true'"></fx-dispatch>
+    </fx-control>
+
+    <fx-control ref="condition" value-prop="checked" update-event="input">
+        <label for="check">toggle conditional</label>
+        <input id="check" type="checkbox" class="widget">
+
+        <fx-setvalue ref="." if=".='true'">false</fx-setvalue>
+        <fx-setvalue ref="." if=".!='true'">true</fx-setvalue>
+    </fx-control>
+
+    <p>{log('default')}</p>
+</fx-fore>
+<script type="module" src="../index.js"></script>
+</body>
+</html>

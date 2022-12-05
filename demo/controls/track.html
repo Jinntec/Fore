@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>track</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+        .duration{
+            position: relative;
+        }
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+            position: relative;
+        }
+        fx-alert{
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <user></user>
+                    <minutes>0</minutes>
+                    <foo></foo>
+                </data>
+            </fx-instance>
+
+        </fx-model>
+
+        <fx-control ref="minutes" initial="." url="../duration.html">
+
+<!--            <fx-update event="value-changed"></fx-update>-->
+<!--            <fx-refresh event="value-changed"></fx-refresh>-->
+
+<!--
+            <fx-action event="value-changed">
+                <fx-update></fx-update>
+            </fx-action>
+-->
+        </fx-control>
+
+        <fx-inspector></fx-inspector>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

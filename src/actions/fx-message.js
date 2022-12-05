@@ -1,4 +1,7 @@
 import { AbstractAction } from './abstract-action.js';
+import {evaluateXPathToString} from "../xpath-evaluation";
+import {Fore} from "../fore";
+import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * `fx-message`
@@ -17,6 +20,8 @@ class FxMessage extends AbstractAction {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
+
+	this.messageTextContent = this.textContent;
     const style = `
         :host{
             display:none;
@@ -46,8 +51,9 @@ class FxMessage extends AbstractAction {
     super.perform();
     let message;
     if (this.hasAttribute('value')) {
-      message = this.getValue();
+      message = this._getValue();
     } else {
+		this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
       message = this.textContent;
     }
 
@@ -59,6 +65,24 @@ class FxMessage extends AbstractAction {
       }),
     );
   }
+
+  _getValue() {
+    if (this.hasAttribute('value')) {
+      const valAttr = this.getAttribute('value');
+      try {
+        const inscopeContext = getInScopeContext(this, valAttr);
+        return evaluateXPathToString(valAttr, inscopeContext, this);
+      } catch (error) {
+        console.error(error);
+        Fore.dispatch(this, 'error', { message: error });
+      }
+    }
+    if (this.textContent) {
+      return this.textContent;
+    }
+    return null;
+  }
+
 }
 
 if (!customElements.get('fx-message')) {

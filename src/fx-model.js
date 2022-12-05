@@ -366,6 +366,9 @@ export class FxModel extends HTMLElement {
 
         console.group('### revalidate');
         console.time('revalidate');
+
+        // reset submission validation
+        // this.parentNode.classList.remove('submit-validation-failed')
         let valid = true;
         this.modelItems.forEach(modelItem => {
             // console.log('validating node ', modelItem.node);

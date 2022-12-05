@@ -25,7 +25,7 @@
     position: absolute;
     background: conic-gradient(gold, darkgoldenrod);
     border-radius: 50%;
-    transition:all 0.9s;
+    transition:all 0.9s forwards;
 }
 
 .clock{

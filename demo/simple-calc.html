@@ -28,7 +28,7 @@
         <template>
 
             <fx-fore>
-
+                <fx-setfocus control="input" event="ready" select></fx-setfocus>
                 <fx-model id="model1">
                     <fx-instance>
                         <data>
@@ -42,7 +42,7 @@
                 <fx-group>
 
 
-                    <fx-control ref="value" update-event="input">
+                    <fx-control id="input" ref="value" update-event="input">
                         <label>some string</label>
                     </fx-control>
                        <p> String length is: <fx-output id="output" ref="computed"></fx-output></p>

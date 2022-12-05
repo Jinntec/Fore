@@ -84,14 +84,14 @@ export class FxInstance extends HTMLElement {
    */
   getInstanceData() {
     if (!this.instanceData) {
-      this._createInstanceData();
+      this.createInstanceData();
     }
     return this.instanceData;
   }
 
   setInstanceData(data) {
     if (!data) {
-      this._createInstanceData();
+      this.createInstanceData();
       return;
     }
     this.instanceData = data;
@@ -142,7 +142,7 @@ export class FxInstance extends HTMLElement {
     }
   }
 
-  _createInstanceData() {
+  createInstanceData() {
     if (this.type === 'xml') {
       // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
@@ -156,6 +156,31 @@ export class FxInstance extends HTMLElement {
   async _loadData() {
     const url = `${this.src}`;
     const contentType = Fore.getContentType(this, 'get');
+
+    if(url.startsWith('localStore')){
+      const key = url.substring(url.indexOf(':')+1);
+
+      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+      const root = doc.firstElementChild;
+      this.instanceData = doc;
+
+      if(!key){
+        console.warn('no key specified for localStore');
+        return;
+      }
+
+      const serialized = localStorage.getItem(key);
+      if(!serialized){
+        console.warn(`Data for key ${key} cannot be found`);
+        this._useInlineData();
+        return;
+      }
+      const data = new DOMParser().parseFromString(serialized, 'application/xml');
+      // let data = this._parse(serialized, instance);
+      // root.appendChild(data);
+      doc.firstElementChild.replaceWith(data.firstElementChild);
+      return;
+    }
 
     await fetch(url, {
       method: 'GET',

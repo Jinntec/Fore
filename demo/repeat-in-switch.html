@@ -38,10 +38,8 @@
 
 <body unresolved="unresolved">
 <div class="wrapper">
-<!--
     <demo-snippet>
         <template>
--->
             <fx-fore>
                 <fx-model>
                     <fx-instance id="default">
@@ -62,6 +60,8 @@
                 </fx-model>
 
                 <h1>Repeat in Switch / Case</h1>
+
+                <p>Nesting `fx-repeat` within a `fx-switch`</p>
                 <fx-trigger label="toggle page 1">
                     <paper-button raised>toogle page 1</paper-button>
                     <fx-toggle case="one"/>
@@ -72,8 +72,9 @@
                     <fx-toggle case="two"/>
                 </fx-trigger>
 
-                <fx-switch ref="page">
-                    <fx-case id="one" name="Page 1">
+
+                <fx-switch>
+                    <fx-case id="one">
                         <fx-repeat id="r-item" ref="//repeat[1]/item">
                             <template>
                                 <label>Item:</label>
@@ -81,7 +82,7 @@
                             </template>
                         </fx-repeat>
                     </fx-case>
-                    <fx-case id="two" name="page2">
+                    <fx-case id="two">
                         <fx-repeat id="r-item" ref="//repeat[2]/item">
                             <template>
                                 <label>Item:</label>

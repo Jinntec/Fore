@@ -153,29 +153,39 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       return;
     }
 
-    if(resolvedUrl.startsWith('localStore:') && this.method === 'post'){
-      // let data = this._parse(serialized, instance);
-      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
-      localStorage.setItem(key,serialized);
-      Fore.dispatch(this, 'submit-done', {});
-      return;
-    }
+    if(resolvedUrl.startsWith('localStore:')){
 
-    if(resolvedUrl.startsWith('localStore:') && (this.method === 'consume' || this.method === 'get')){
-      // let data = this._parse(serialized, instance);
-      this.replace = 'instance';
-      const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
-      const serialized = localStorage.getItem(key);
-      if(!serialized){
-        Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
-        return;
+      if(this.method === 'get' || this.method === 'consume'){
+        // let data = this._parse(serialized, instance);
+        this.replace = 'instance';
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+        const serialized = localStorage.getItem(key);
+        if(!serialized){
+          Fore.dispatch(this, 'submit-error', { message: `Error reading key ${key} from localstorage` });
+          return;
+        }
+        let data = this._parse(serialized, instance);
+        this._handleResponse(data);
+        if(this.method === 'consume'){
+          localStorage.removeItem(key);
+        }
+        Fore.dispatch(this, 'submit-done', {});
       }
-      let data = this._parse(serialized, instance);
-      this._handleResponse(data);
-      if(this.method === 'consume'){
+      if(this.method === 'post'){
+        // let data = this._parse(serialized, instance);
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
+        localStorage.setItem(key,serialized);
+        this._handleResponse(instance.instanceData);
+        Fore.dispatch(this, 'submit-done', {});
+      }
+      if(this.method === 'delete'){
+        const key = resolvedUrl.substring(resolvedUrl.indexOf(':')+1);
         localStorage.removeItem(key);
+        const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
+        this._handleResponse(newInst);
+        Fore.dispatch(this, 'submit-done', {});
       }
-      Fore.dispatch(this, 'submit-done', {});
+
       return;
     }
 
@@ -188,43 +198,46 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
-    // todo: headers not
-    const response = await fetch(resolvedUrl, {
-      method: this.method,
-      mode: 'cors',
-      credentials: 'include',
-      headers,
-      body: serialized,
-    });
+    try{
+      const response = await fetch(resolvedUrl, {
+        method: this.method,
+        mode: 'cors',
+        credentials: 'include',
+        headers,
+        body: serialized,
+      });
 
-    if (!response.ok || response.status > 400) {
-      // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
-      Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
-      return;
+      if (!response.ok || response.status > 400) {
+        // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+        Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
+        return;
+      }
+
+      const contentType = response.headers.get('content-type').toLowerCase();
+      if (
+          contentType.startsWith('text/plain') ||
+          contentType.startsWith('text/html') ||
+          contentType.startsWith('text/markdown')
+      ) {
+        const text = await response.text();
+        this._handleResponse(text);
+      } else if (contentType.startsWith('application/json')) {
+        const json = await response.json();
+        this._handleResponse(json);
+      } else if (contentType.startsWith('application/xml')) {
+        const text = await response.text();
+        const xml = new DOMParser().parseFromString(text, 'application/xml');
+        this._handleResponse(xml);
+      } else {
+        const blob = await response.blob();
+        this._handleResponse(blob);
+      }
+
+      // this.dispatch('submit-done', {});
+      Fore.dispatch(this, 'submit-done', {});
+    } catch (error){
+      Fore.dispatch(this, 'submit-error', {error:error.message});
     }
-
-    const contentType = response.headers.get('content-type').toLowerCase();
-    if (
-      contentType.startsWith('text/plain') ||
-      contentType.startsWith('text/html') ||
-      contentType.startsWith('text/markdown')
-    ) {
-      const text = await response.text();
-      this._handleResponse(text);
-    } else if (contentType.startsWith('application/json')) {
-      const json = await response.json();
-      this._handleResponse(json);
-    } else if (contentType.startsWith('application/xml')) {
-      const text = await response.text();
-      const xml = new DOMParser().parseFromString(text, 'application/xml');
-      this._handleResponse(xml);
-    } else {
-      const blob = await response.blob();
-      this._handleResponse(blob);
-    }
-
-    // this.dispatch('submit-done', {});
-    Fore.dispatch(this, 'submit-done', {});
   }
 
   _parse(serialized, instance) {

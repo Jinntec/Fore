@@ -20,6 +20,18 @@ html{
 [refresh-on-view]{
     /*opacity: 0;*/
 }
+/*
+    defaults for relevance
+
+    You can overwrite these matchers to use transistions
+*/
+[nonrelevant]{
+    display: none;
+}
+[relevant]{
+    display: block;
+}
+
 [required]:after {
     content: "*";
     display: inline;
@@ -29,8 +41,9 @@ html{
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
+    display: none;
 }
-[invalid] fx-alert{
+.visited[invalid] fx-alert{
     display: block;
 }
 
@@ -166,6 +179,7 @@ fx-repeatitem{
 
 }
 
+/*
 .nonrelevant{
     opacity: 0;
     height: 0;
@@ -175,6 +189,8 @@ fx-repeatitem{
     border: none;
     transition: opacity 0.4s;
 }
+*/
+
 
 .submit-validation-failed .isEmpty .widget{
     background: lightpink;

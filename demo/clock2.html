@@ -16,39 +16,57 @@
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-action while="true()" event="ready" delay="1000">
-                    <fx-setvalue ref="time" value="now()" ></fx-setvalue>
+                <fx-action event="ready" while="true()" delay="1000">
+                    <fx-setvalue ref="time" value="now()"></fx-setvalue>
                     <fx-update></fx-update>
                     <fx-refresh></fx-refresh>
                 </fx-action>
+
                 <fx-model>
                     <fx-instance>
                         <data>
-                            <time>12:00:00</time>
-                            <hour></hour>
-                            <minute></minute>
-                            <second></second>
-                            <offset></offset>
+                            <time>12:30:00</time>
+                            <hour>0</hour>
+                            <minute>0</minute>
+                            <second>0</second>
+                            <h-deg></h-deg>
+                            <min-deg>0</min-deg>
+                            <s-deg></s-deg>
                         </data>
                     </fx-instance>
 
-                    <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time)) * 30"></fx-bind>
-                    <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time)) * 6"></fx-bind>
-                    <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time)) * 6"></fx-bind>
+                    <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
+                    <!--          <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>-->
+
+                    <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
+                    <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
+
+                    <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
+
+                    <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
+                    <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
+
 
                     <fx-function signature="now() as xs:string" type="text/javascript">
-					  const now = new Date();
-					  return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                        const now = new Date();
+                        return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
                     </fx-function>
+
                 </fx-model>
+                <div>{time}</div>
                 <div class="clock">
-                    <div class="circle" style="transform:rotate({second}deg);" data-secs="{substring(time,7,2)}"></div>
+                  <div class="circle" style="transform:rotate({s-deg}deg);"></div>
                     <div class="brand">Fore</div>
                     <span class="three-nine"></span>
+<!--
+                    <span class="tick ticks1"></span>
+                    <span class="tick ticks2"></span>
+-->
                     <div class="display-time">{time}</div>
-                    <div style="transform:rotate({hour}deg);" class="hour"></div>
-                    <div style="transform:rotate({minute}deg);" class="minute"></div>
+                    <div style="transform:rotate({h-deg}deg);" class="hour"></div>
+                  <div style="transform:rotate({min-deg}deg);" class="minute"></div>
                 </div>
+<!--                <fx-inspector open></fx-inspector>-->
             </fx-fore>
         </template>
     </demo-snippet>
