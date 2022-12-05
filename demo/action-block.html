@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>complex test </title>
+    <link rel="stylesheet" href="../resources/vars.css"/>
+    <link rel="stylesheet" href="../resources/demo.css"/>
+</head>
+<body>
+<div class="wrapper">  
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>                    
+                    <fx-instance>
+                        <data>
+                            <test/>
+                        </data>
+                    </fx-instance>
+
+                    <fx-instance id="vars" type="xml">
+                        <data>                         
+                            <completed>0</completed>
+                            <success>false</success>
+                        </data>
+                    </fx-instance>
+                    
+                    <!-- SUBMISSIONS -->
+                    <fx-submission id="s-submission1" method="get" url="#echo" replace="none">
+                        <fx-message event="submit">submit</fx-message>
+                        <fx-message event="submit-error">error</fx-message>
+                        <fx-dispatch event="submit-done" name="check-done" targetid="deployment"></fx-dispatch>
+                    </fx-submission>
+                    
+                </fx-model>
+        
+                <fx-group class="ui">
+                    <fx-trigger>
+                        <button>one</button>
+                        <fx-send submission="s-submission1"></fx-send>
+                    </fx-trigger>
+                    <fx-group id="deployment">
+                        <fx-action event="check-done">
+                            <fx-setvalue ref="instance('vars')/completed" value=". + 1"></fx-setvalue>
+                            <fx-update></fx-update>
+                            <fx-refresh></fx-refresh>
+                            <fx-message if="instance('vars')/completed = '6'">all checks done</fx-message>
+                            <fx-action if="instance('vars')/completed = 6">
+                                <fx-setvalue ref="instance('vars')/success">true</fx-setvalue>
+                            </fx-action>
+                        </fx-action>
+                    </fx-group>
+                        
+                    <!-- DEBUG Section -->
+                    
+                    <fx-group>
+                        <ul>
+                            <li>Complete: { instance('vars')/completed }</li>                            
+                            <li>Complete = 6: {instance('vars')/completed = 6}</li>
+                            <li>success: {instance('vars')/success}</li>
+                        </ul>    
+                    </fx-group>
+                </fx-group>
+                <fx-inspector open></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<!--    <script type="module" src="./js/fore-debug.js"/>-->
+<script type="module" src="demo.js"/>
+</body>
+</html>
