@@ -154,6 +154,10 @@
                                 <note type="context"/>
                             </provenance>
                         </history>
+                        <facsimile>
+                            <graphic></graphic>
+                        </facsimile>
+
                     </msPart>
                     <msPart xml:id="Fbc62ff44-fed5-451d-8e05-62031b9aeb1d">
                         <msIdentifier>
@@ -257,6 +261,7 @@
                                 <note type="context"/>
                             </provenance>
                         </history>
+
                     </msPart>
                 </msDesc>
             </sourceDesc>
@@ -287,6 +292,7 @@
             <change type="created" when="2022-09-08T15:08:01.35Z" who="edep"/>
             <change type="changed" when="2022-09-22T16:08:39.658Z" who="edep"/>
         </revisionDesc>
+
     </teiHeader>
     <text>
         <body>

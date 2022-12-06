@@ -7,7 +7,7 @@ import { AbstractAction } from './abstract-action.js';
  *
  */
 class FxUpdate extends AbstractAction {
-  perform() {
+  async perform() {
     this.getModel().updateModel();
   }
 }

@@ -19,7 +19,7 @@ class FxToggle extends AbstractAction {
     }
   }
 
-  perform() {
+  async perform() {
     super.perform();
     console.log('### fx-toggle.execute ');
     if (this.case) {

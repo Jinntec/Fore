@@ -13,7 +13,7 @@ export class FxSetfocus extends AbstractAction {
       this.control = this.hasAttribute('control') ? this.getAttribute('control') : null;
   }
 
-  perform() {
+  async perform() {
       console.log('setting focus', this.control);
       // super.perform();
       const selector = '#'+this.control;

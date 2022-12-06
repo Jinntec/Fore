@@ -12,7 +12,7 @@ export class FxConfirm extends FxAction {
     this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
   }
 
-  perform() {
+  async perform() {
     if (window.confirm(this.message)) {
       super.perform();
     }

@@ -9,7 +9,7 @@ import {resolveId} from "../xpath-evaluation.js";
  *
  */
 class FxRefresh extends AbstractAction {
-  perform() {
+  async perform() {
     if (this.hasAttribute('self')) {
       const control = Fore.getClosest('fx-control', this);
       if (control) {

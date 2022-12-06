@@ -20,7 +20,7 @@ export class FxReturn extends AbstractAction {
     // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
   }
 
-  perform() {
+  async perform() {
     super.perform();
     console.log('performing return with nodes', this.nodeset);
 

@@ -43,7 +43,8 @@
 <!--        <fx-setfocus control="title" event="ready"></fx-setfocus>-->
 
         <fx-model>
-            <fx-action event="model-construct-done" if="exists(instance('params')/id)">
+<!--            <fx-action event="model-construct-done" if="exists(instance('params')/id)">-->
+            <fx-action event="model-construct-done">
                 <fx-send submission="s-login" if="instance('vars')/loggedin != 'true'" />
                 <fx-send submission="s-load-inscription"></fx-send>
 <!--                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>-->
@@ -359,7 +360,7 @@
                                 <legend>
                                     <label>Überlieferung</label>
                                     <fx-trigger class="add">
-                                        <iron-icon icon="add-circle-outline" title="Überlieferung hinzufügen"/>
+                                        <iron-icon icon="add-circle-outline" title="Überlieferung hinzufügen"></iron-icon>
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='transmission']"
                                                    ref="bibl"
@@ -380,7 +381,7 @@
                                             </fx-control>
                                         </div>
                                         <fx-trigger>
-                                            <iron-icon icon="remove-circle-outline" title="Überlieferung löschen"/>
+                                            <iron-icon icon="remove-circle-outline" title="Überlieferung löschen"></iron-icon>
                                             <fx-delete ref="."/>
                                         </fx-trigger>
 
@@ -520,7 +521,7 @@
                                 <legend>
                                     <label>Ältere Editionen</label>
                                     <fx-trigger class="add">
-                                        <iron-icon icon="add-circle-outline" title="add Bibliographie"/>
+                                        <iron-icon icon="add-circle-outline" title="add Bibliographie"></iron-icon>
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='previousEditions']"
                                                    ref="bibl"
@@ -542,7 +543,7 @@
                                         </fx-control>
 
                                         <fx-trigger>
-                                            <iron-icon icon="remove-circle-outline" title="delete Bibliographie"/>
+                                            <iron-icon icon="remove-circle-outline" title="delete Bibliographie"></iron-icon>
                                             <fx-delete ref="."/>
                                         </fx-trigger>
 
@@ -555,7 +556,7 @@
                                 <legend>
                                     <label>Bibliographie</label>
                                     <fx-trigger class="add">
-                                        <iron-icon icon="add-circle-outline" title="add edition"/>
+                                        <iron-icon icon="add-circle-outline" title="add edition"></iron-icon>
 
                                         <!-- ##### when a new entry is created.. ##### -->
                                         <!-- ##### 1. store away the value of the xml:id of this part as fx-var is failing here for some reason ##### -->
@@ -585,7 +586,7 @@
                                         </fx-control>
 
                                         <fx-trigger>
-                                            <iron-icon icon="remove-circle-outline" title="Bibliographie löschen"/>
+                                            <iron-icon icon="remove-circle-outline" title="Bibliographie löschen"></iron-icon>
                                             <fx-delete ref="."/>
                                         </fx-trigger>
 
@@ -599,7 +600,7 @@
                                 <legend>
                                     <label>Bilder</label>
                                     <fx-trigger class="add">
-                                        <iron-icon icon="add-circle-outline" title="add image"/>
+                                        <iron-icon icon="add-circle-outline" title="add image"></iron-icon>
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='images']"
                                                    ref="bibl"
@@ -618,7 +619,7 @@
                                             </fx-control>
                                         </div>
                                         <fx-trigger>
-                                            <iron-icon icon="remove-circle-outline" title="delete image"/>
+                                            <iron-icon icon="remove-circle-outline" title="delete image"></iron-icon>
                                             <fx-delete ref="."/>
                                         </fx-trigger>
 
@@ -631,11 +632,11 @@
                                 <legend>
                                     <label>Abbildungen</label>
                                     <fx-trigger class="add">
-                                        <iron-icon icon="add-circle-outline" title="add image"/>
+                                        <iron-icon icon="add-circle-outline" title="add image"></iron-icon>
 
                                         <fx-insert context="facsimile"
                                                    ref="graphic"
-                                                   origin="instance('mspart')//facsimile/graphic"/>
+                                                   origin="instance('mspart')//facsimile/graphic"></fx-insert>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" ref="facsimile/graphic">
@@ -645,8 +646,8 @@
                                         </fx-control>
 
                                         <fx-trigger>
-                                            <iron-icon icon="remove-circle-outline" title="delete image"/>
-                                            <fx-delete ref="."/>
+                                            <iron-icon icon="remove-circle-outline" title="delete image"></iron-icon>
+                                            <fx-delete ref="."></fx-delete>
                                         </fx-trigger>
 
                                     </template>
