@@ -49,7 +49,7 @@ export class FxAction extends AbstractAction {
 			const action = actionOrVar;
 			action.detail = this.detail;
         await action.execute();
-      });
+      }
       this.dispatchActionPerformed();
       this.needsUpdate = true;
     }
