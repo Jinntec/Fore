@@ -153,7 +153,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       const vars = new Map();
       vars.set('code', e.code);
       // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
+      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
     }
 
     if (e && e.detail) {
@@ -167,7 +167,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       if (vars.size !== 0) {
         console.log('event detail vars', vars);
       }
-		this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
+      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
     }
     this.needsUpdate = false;
 
@@ -206,15 +206,20 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this.perform();
 
         // Go for one more iteration
+        if (this.delay) {
+          // If we have a delay, fire and forget this.
+          // Otherwise, if we have no delay, keep waiting for all iterations to be done.
+          // The while is then uninteruptable and immediate
+          loop();
+          return;
+        }
         await loop();
       };
 
       // After loop is done call actionPerformed to update the model and UI
       await loop();
-      this.actionPerformed();
-      Fore.dispatch(this, 'while-performed', {});
-      resolveThisEvent();
-      return;
+
+      this._finalizePerform(resolveThisEvent);
     }
 
     if (this.delay) {
@@ -229,6 +234,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 
     await this.perform();
+    this._finalizePerform(resolveThisEvent);
+  }
+
+  _finalizePerform(resolveThisEvent) {
     this.actionPerformed();
     if (AbstractAction.outermostHandler === this) {
       AbstractAction.outermostHandler = null;
