@@ -47,12 +47,15 @@
                             <another>value2</another>
                         </data>
                     </fx-instance>
+                    <fx-instance id="target">
+                        <data></data>
+                    </fx-instance>
 
                     <fx-submission id="sub1"
                                    url="#echo?foo={bar}&param2={another}"
-                                   method="GET"
-                                   replace="target"
-                                   target="#out">
+                                   method="post"
+                                   replace="instance"
+                                   instance="target">
                     </fx-submission>
                 </fx-model>
                 <fx-group>
@@ -60,10 +63,11 @@
                     <h1>Submission with Template Expression</h1>
                     <p>The <code>url</code> attribute may contain template expressions that get evaluated before the submission
                     is executed.</p>
-                    <h2 id="out"></h2>
 
                     <p>Will use this URL '#echo?foo={bar}&amp;param2={another}'</p>
 
+                    {instance('target')/bar}
+                    {instance('target')/another}
                     <p class="note">
                         For technical limitations on a static site like this, the submisson does not actually
                         sends a request but echoes the request data.

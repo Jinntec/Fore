@@ -37,6 +37,7 @@
             background: lightsteelblue;
             border: thin solid steelblue;
             /*height:200px;*/
+            position:relative;
         }
 
         label{
@@ -48,6 +49,9 @@
         fx-inspector{
             position: absolute;
             height: 99%;
+        }
+        fx-fore fx-fore fx-inspector{
+            /*right:2rem;*/
         }
         .wrapper{
             padding: 2rem;
@@ -74,6 +78,7 @@
     <h1>Email message using Fore as control</h1>
     <p>The areas in blue are loaded from another nested `fx-fore` element that is used as a widget
     in the outer Fore.</p>
+    <p>Data can be passed into nested Fore elements, being updated in sub-Fore and being passed back to outer Fore.</p>
 
     <p class="note">
         The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
@@ -112,7 +117,7 @@
                         initial=".">
                 <label>From</label>
             </fx-control>
-            <fx-control ref="to/email"
+            <fx-control id="to" ref="to/email"
                         url="email.html"
                         initial=".">
                 <label>To</label>

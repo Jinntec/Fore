@@ -1,9 +1,14 @@
 # how to release step-by-step
 
 ## Prerequisites
-1. merge dev into demo branch
+1. merge dev into demo branch. 'demo' branch has git attributes to prevent important files to be overwritten. 
 2. eventually update demo.js if third-party deps have changed
 3. update demo build and push
+
+Fore homepage and online demos will be published then automatically
+via github pages.
+
+Before moving on demo site should be checked.
 
 ## Release
 1. `git status` must report 'working tree clean' to continue

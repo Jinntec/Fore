@@ -1,0 +1,114 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Duration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="static/images/favicon_io/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon_io/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon_io/favicon-16x16.png"/>
+
+    <!--    <link rel="manifest" href="static/images/favicon_io/site.webmanifest"/>-->
+
+    <script type="module">
+        // import 'http:/localhost:8090/index.js';
+        import './demo.js';
+    </script>
+
+
+
+
+    <link rel="stylesheet" href="../resources/fore.css"/>
+
+</head>
+<body>
+
+    <fx-fore>
+        <fx-action event="ready">
+            <fx-var name="mins" value="minutes"></fx-var>
+            <fx-setvalue ref="instance('vars')/hours"
+                         value="
+                            if($mins > 45) then
+                                floor(number($mins) div 60)
+                            else '0'">
+            </fx-setvalue>
+            <fx-setvalue ref="instance('vars')/mins" value="if($mins > 45) then (number($mins) mod 60) else string($mins)"></fx-setvalue>
+
+            <fx-setvalue ref="instance('vars')/ready">true</fx-setvalue>
+        </fx-action>
+        <fx-model style="display:none;">
+
+            <fx-instance>
+                <data>
+                    <minutes>0</minutes>
+                </data>
+            </fx-instance>
+
+            <<fx-instance id="vars">
+                <data>
+                    <hours>0</hours>
+                    <mins>0</mins>
+                    <ready></ready>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="instance('vars')/hours" constraint="instance()/minutes != 0"></fx-bind>
+            <fx-bind ref="instance('vars')/mins" constraint="instance()/minutes != 0"></fx-bind>
+
+        </fx-model>
+        <fx-message event="value-changed" if="instance('vars')/ready='true'">{instance()/minutes}</fx-message>
+        <fx-return ref="instance()/minutes" event="value-changed"></fx-return>
+
+        <div class="duration">
+            <fx-action event="value-changed">
+                <fx-setvalue ref="instance()/minutes"
+                             value="number(instance('vars')/hours) * 60 + number(instance('vars')/mins)"></fx-setvalue>
+            </fx-action>
+
+            <label>Duration</label>
+            <fx-control id="duration" ref="instance('vars')/hours" update-event="input">
+                <select class="widget">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="04">4</option>
+                    <option value="05">5</option>
+                    <option value="06">6</option>
+                    <option value="07">7</option>
+                    <option value="08">8</option>
+                </select>
+<!--
+                <fx-action event="value-changed">
+                    <fx-setvalue ref="instance()/minutes"
+                                 value="number(instance('vars')/hours) * 60 + number(instance('vars')/mins)"></fx-setvalue>
+                </fx-action>
+-->
+
+            </fx-control>
+            <fx-control id="minutes" ref="instance('vars')/mins" update-event="input">
+                <select class="widget">
+                    <option value="0">0</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select>
+
+<!--
+                <fx-action event="value-changed">
+                    <fx-setvalue ref="instance()/minutes"
+                                 value="number(instance('vars')/hours) * 60 + number(instance('vars')/mins)"></fx-setvalue>
+                </fx-action>
+-->
+                <fx-alert>Please select a duration</fx-alert>
+
+            </fx-control>
+        </div>
+
+    <fx-inspector open></fx-inspector>
+
+
+    </fx-fore>
+
+</body>
+</html>

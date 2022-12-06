@@ -25,6 +25,7 @@ export class FxInspector extends HTMLElement {
             /*max-height: 33%;*/
             overflow: scroll;
             transition:width 0.3s ease;
+            z-index:100;
           }
           :host([open]){
             width: 30%;
@@ -134,6 +135,10 @@ export class FxInspector extends HTMLElement {
   }
 
   serializeDOM(data) {
+    if(!data){
+      console.warn('no data to serialize');
+      return ;
+    }
     // console.log('serializeDOM', data);
     const ser = new XMLSerializer().serializeToString(data);
     return Fore.prettifyXml(ser);

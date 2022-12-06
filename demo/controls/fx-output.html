@@ -10,17 +10,21 @@
     <link href="../../resources/demo.css" rel="stylesheet">
 
     <style>
-        .html-out{
-            border:thin solid;
+        [mediatype]{
+            border:thin solid var(--paper-light-blue-500);
+            padding: 1rem;
         }
     </style>
-<!--    <script type="text/javascript" src="../src/drawdown.js"></script>-->
+    <script type="text/javascript" src="../../src/drawdown.js"></script>
 
 </head>
 <body>
 <div class="wrapper">
 
     <h1>The <code>fx-output</code> Element</h1>
+    <p>Outputs a reference or calculated value</p>
+    <p>Supports several mediatypes to render content</p>
+
     <demo-snippet>
         <template>
             <fx-fore>
@@ -31,6 +35,13 @@
                             <b>2</b>
                             <b>3</b>
                             <pic>../../resources/images/light7.png</pic>
+                            <md-page>
+# this is my nice md page
+
+this is a paragraph
+
+## another heading
+                            </md-page>
                         </data>
                     </fx-instance>
 <!--
@@ -42,25 +53,34 @@
                     </fx-instance>
 -->
                     <fx-instance id="external" type="html" src="../../doc/actions-overview.html"></fx-instance>
+
+                    <fx-function signature="markdown($input as xs:string?) as xs:string"
+                                 type="text/javascript">
+                        const source = $input;
+                        const converted = markdown(source);
+                        return converted;
+                    </fx-function>
                 </fx-model>
 
-                <h2>Outputting a referenced value</h2>
-                <div><fx-output ref="b"></fx-output> ⇒ 2</div>
+                <section>
+                    <h2>Outputting a referenced value</h2>
+                    <div><fx-output ref="b"></fx-output> ⇒ 2</div>
 
-                <h3>Using the <code>value</code> attribute to evaluate an expression in context</h3>
-                <div><fx-output value="b"></fx-output> ⇒ 2</div>
+                    <h3>Using the <code>value</code> attribute to evaluate an expression in context</h3>
+                    <div><fx-output value="b"></fx-output> ⇒ 2</div>
 
-                <h3>Using the <code>value</code> attribute to evaluate an expression in context of its <code>ref</code></h3>
-                <div><fx-output ref="a" value="b"></fx-output> ⇒ 1 </div>
+                    <h3>Using the <code>value</code> attribute to evaluate an expression in context of its <code>ref</code></h3>
+                    <div><fx-output ref="a" value="b"></fx-output> ⇒ 1 </div>
 
-                <h3>Using the <code>context()</code> function to use the parent context</h3>
-                 <div><fx-output ref="a" value="context()/b[1]"></fx-output> ⇒ 2 </div>
+                    <h3>Using the <code>context()</code> function to use the parent context</h3>
+                    <div><fx-output ref="a" value="context()/b[1]"></fx-output> ⇒ 2 </div>
 
-                <h3>Using <code>value</code> with predicate</h3>
-                <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
+                    <h3>Using <code>value</code> with predicate</h3>
+                    <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
+                </section>
 
                 <h2>Mediatypes</h2>
-
+                <p>For demo purposes the `fx-output` element with mediatype have a blue border.</p>
                 <h3>HTML taken from an instance (mediatype='html')</h3>
 <!--                <div class="html-out"><fx-output ref="instance('html')" mediatype="html"></fx-output></div>-->
                 <div class="html-out"><fx-output ref="instance('external')//*:body" mediatype="html"></fx-output></div>
@@ -69,11 +89,16 @@
 <!--                <img src="../../resources/images/light7.png">-->
                 <div class="img-out"><fx-output ref="pic" mediatype="image"></fx-output></div>
 
-
                 <h3>Same but different</h3>
                 <p>Same result can be achieved with a simple template expression. However for accessibility reasons (label)
                 and potentially attaching listeners the <code>fx-output</code> variant is still valid.</p>
                 <img src="{pic}">
+
+                <h3>Markdown locally converted to HTML</h3>
+                <p>This works with the help of drawdown.js which needs to be imported in the page.</p>
+                <p>It uses a custom function to do the actual conversion. As the markdown support is linked in
+                we do not need a special mediatype.</p>
+                <fx-output value="markdown(md-page/text())" mediatype="markdown"></fx-output>
 
             </fx-fore>
         </template>

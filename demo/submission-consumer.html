@@ -48,13 +48,9 @@
 
                     <fx-submission id="get"
                                    url="localStore:foo"
-                                   method="get">
+                                   method="get"
+                                   replace="instance">
                         <fx-message event="submit-error">Data not present</fx-message>
-                    </fx-submission>
-                    <fx-submission id="consume"
-                                   url="localStore:foo"
-                                   method="consume">
-                        <fx-message event="submit-error">Data have already been consumed</fx-message>
                     </fx-submission>
                 </fx-model>
                 <fx-group>
@@ -65,10 +61,12 @@
                         <button>get from localStorage</button>
                         <fx-send submission="get"></fx-send>
                     </fx-trigger>
-                    <fx-trigger>
-                        <button>consume from localStorage</button>
-                        <fx-send submission="consume"></fx-send>
-                    </fx-trigger>
+                </fx-group>
+
+
+                <fx-group ref="instance()/*">
+                    <p>This group becomes visible only if there are data nodes loaded from localStore</p>
+                    {../bar} {../another}
                 </fx-group>
                 <fx-inspector open></fx-inspector>
             </fx-fore>

@@ -25,18 +25,20 @@
                 </fx-bind>
                 <fx-submission id="save"
                                url="localStore:todos"
-                               method="post">
+                               method="post"
+                               replace="none">
                     <fx-message event="submit-done">Changes have been stored</fx-message>
                 </fx-submission>
                 <fx-submission id="load"
                                url="localStore:todos"
-                               method="get">
+                               method="get"
+                               replace="instance">
                     <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
                 </fx-submission>
 
                 <fx-submission id="clear"
                                url="localStore:todos"
-                               method="consume">
+                               method="delete">
                     <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
                     <fx-reload event="submit-done"></fx-reload>
                 </fx-submission>
@@ -53,7 +55,7 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                    <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
+                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -85,7 +87,10 @@
                         </fx-control>
                         <fx-trigger class="btn delete">
                             <button>x</button>
-                            <fx-delete ref="."></fx-delete>
+                            <fx-action>
+                                <fx-delete ref="."></fx-delete>
+                                <fx-send submission="save"></fx-send>
+                            </fx-action>
                         </fx-trigger>
                     </div>
                 </template>

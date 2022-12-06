@@ -153,7 +153,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       const vars = new Map();
       vars.set('code', e.code);
       // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
 
     if (e && e.detail) {
@@ -167,7 +167,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       if (vars.size !== 0) {
         console.log('event detail vars', vars);
       }
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+		this.setInScopeVariables(new Map([ ...this.inScopeVariables, ...vars]));
     }
     this.needsUpdate = false;
 
@@ -245,7 +245,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * Template method to be implemented by each action that is called by execute() as part of
    * the processing.
    *
-   * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
+   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
     console.info(
@@ -285,7 +285,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       console.log('Running actionperformed');
       model.recalculate();
       model.revalidate();
-      model.parentNode.refresh();
+      model.parentNode.refresh(true);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // We need an update, but the outermost action handler may not. Make this clear!

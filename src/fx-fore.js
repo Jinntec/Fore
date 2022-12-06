@@ -1,6 +1,6 @@
 import {Fore} from './fore.js';
 import './fx-instance.js';
-import './fx-model.js';
+import {FxModel} from './fx-model.js';
 import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
@@ -466,9 +466,8 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _updateTemplateExpressions() {
-        // Note the fact we're going over HTML here: therefore the `html` prefix.
         const search =
-            "(descendant-or-self::*!(text(), @*))[matches(.,'\\{.*\\}')][not(ancestor-or-self::fx-model)]";
+            "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
 
         const tmplExpressions = evaluateXPathToNodes(search, this, this);
         // console.log('template expressions found ', tmplExpressions);
@@ -580,7 +579,10 @@ export class FxFore extends HTMLElement {
          */
         if(this.hasAttribute('show-confirmation')){
             const condition = this.getAttribute('show-confirmation');
-            if(condition){
+            if(condition
+                && condition !== 'show-confirmation'
+                && condition !== 'true'
+                && condition !== ''){
                 window.addEventListener('beforeunload', event => {
                     const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
@@ -592,7 +594,8 @@ export class FxFore extends HTMLElement {
                 })
             }else{
                 window.addEventListener('beforeunload', event => {
-                    if(AbstractAction.dataChanged){
+                    // if(AbstractAction.dataChanged){
+                    if(FxModel.dataChanged){
                         console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
@@ -761,7 +764,7 @@ export class FxFore extends HTMLElement {
             "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
         console.timeEnd('init');
-        console.log('dataChanged', AbstractAction.dataChanged);
+        console.log('dataChanged', FxModel.dataChanged);
     }
 
     registerLazyElement(element) {

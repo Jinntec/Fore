@@ -116,6 +116,9 @@
         .version{
             margin-left: 0;
         }
+        .warning{
+            color:orange;
+        }
 /*
         fx-repeat.properties fx-repeatitem:nth-child(1) div:nth-child(1):before{
             content:'Name';
@@ -149,7 +152,7 @@
         </fx-model>
         <header name="top">
             <h1>Fore API</h1>
-            <p>This is not a the real API doc but just another example working with a more
+            <p class="warning">This is not an up-to-date API of Fore but just another example working with a more
             complex JSON structure.</p>
             <div class="version">Version: {instance('package')?version}</div>
             <fx-control id="selected" ref="instance('vars')/selected" update-event="change">

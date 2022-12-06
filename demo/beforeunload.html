@@ -9,6 +9,7 @@
         a, a:link, a:visited{
             display: block;
             color:black;
+            margin:1rem 0;
         }
     </style>
 </head>
@@ -16,15 +17,18 @@
 <div class="wrapper">
     <h1>showing page exit confirmation</h1>
 
-    <h2>confirmation based on a condition</h2>
+
+    <p>This feature allows to show/not show a confirmation based on data changed by the user. </p>
+
+    <h2>Confirmation based on a condition</h2>
 
     <p>On <code>show-confirmation</code> attribute you can specify an XPath resolving to a boolean
     value that determines whether to show/not show a page exit warning when the user navigates away from the page e.g. by
     clicking a link.</p>
     <p>
-        Clicking the link without touching the button will just send you to the destination
+        Clicking the link without touching the control will just send you to the destination.
     </p>
-    <p>If using the button before a page exit warning will appear allowing the user to cancel navigation, go
+    <p>If you change the control value a page exit warning will appear allowing the user to cancel navigation, go
     back and save changes.</p>
     <demo-snippet>
         <template>
@@ -33,29 +37,26 @@
                     <fx-instance>
                         <data>
                             <changed>false</changed>
-                            <item></item>
+                            <item>item</item>
                         </data>
                     </fx-instance>
                 </fx-model>
-                <fx-trigger>
-                    <button>change the item</button>
-                    <fx-setvalue ref="changed">true</fx-setvalue>
-                    <fx-setvalue ref="item">foobar</fx-setvalue>
-                </fx-trigger>
-
-
-                <pre><code>{log('default')}</code></pre>
+                <fx-control ref="item">
+                    <label>Change this</label>
+                    <fx-setvalue event="value-changed" ref="../changed">true</fx-setvalue>
+                </fx-control>
             </fx-fore>
             <a href="https://github.com/jinntec/fore">Fore on Github</a>
-
         </template>
     </demo-snippet>
 
     <h2>Show confirmation when data changed</h2>
     <p>With just the attribute given the confirmation will show once the data have been changed by user interaction.</p>
+
+    <p><code>show-confirmation</code> can be empty, the empty string, 'true' or 'show-confirmation'</p>
     <demo-snippet>
         <template>
-            <fx-fore id="todo" show-confirmation>
+            <fx-fore id="todo" show-confirmation="true">
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -64,17 +65,18 @@
                         </data>
                     </fx-instance>
                 </fx-model>
-
                 <fx-control ref="changed" update-event="input">
                     <label>a value</label>
                 </fx-control>
-
-                <pre><code>{log('default')}</code></pre>
             </fx-fore>
             <a href="https://github.com/jinntec/fore">Fore on Github</a>
-
         </template>
     </demo-snippet>
+
+    <p class="note"><code>fx-setvalue</code> or other actions changing data will have no direct effect on wether to show/not show
+        the confirmation. It's just answers the question if the user has at least changed one control value.</p>
+
+
 </div>
 
 <script type="module" src="./demo.js"></script>
