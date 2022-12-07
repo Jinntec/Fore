@@ -418,13 +418,42 @@ export class Fore {
             }),
           );
         }
-        hostElement.appendChild(theFore);
-        theFore.classList.add('widget');
-        // return theFore;
-        // theFore.setAttribute('from-src', this.src);
-        // this.replaceWith(theFore);
+        const imported = document.importNode(theFore,true);
+        console.log(`########## loaded fore as component ##### ${hostElement.url}`);
+        imported.addEventListener(
+            'model-construct-done',
+            e => {
+              console.log('subcomponent ready', e.target);
+              const defaultInst = imported.querySelector('fx-instance');
+              // console.log('defaultInst', defaultInst);
+              if(hostElement.initialNode){
+                const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+                // Note: Clone the input to prevent the inner fore from editing the outer node
+                doc.firstElementChild.appendChild(hostElement.initialNode.cloneNode(true));
+                // defaultinst.setInstanceData(this.initialNode);
+                defaultInst.setInstanceData(doc);
+              }
+              // console.log('new data', defaultInst.getInstanceData());
+              // theFore.getModel().modelConstruct();
+              imported.getModel().updateModel();
+              imported.refresh();
+              return 'done';
+
+            },
+            { once: true },
+        );
+
+        const dummy = hostElement.querySelector('input');
+        if (hostElement.hasAttribute('shadow')) {
+          dummy.parentNode.removeChild(dummy);
+          hostElement.shadowRoot.appendChild(imported);
+        } else {
+          console.log(this, 'replacing widget with',theFore);
+          dummy.replaceWith(imported);
+          // this.appendChild(imported);
+        }
       })
-      .catch(error => {
+      /*.catch(error => {
         hostElement.dispatchEvent(
           new CustomEvent('error', {
             composed: false,
@@ -435,7 +464,7 @@ export class Fore {
             },
           }),
         );
-      });
+      });*/
   }
 
   /**
