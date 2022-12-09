@@ -486,6 +486,10 @@ describe('action Tests', () => {
     expect(secondControl.value).to.equal('15');
 */
   });
+
+  /*
+  same test as above but for second trigger - ideally both could be done in one
+  */
   it.skip('executes while condition is true, using inscopecontext - part 2', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -513,6 +517,7 @@ describe('action Tests', () => {
       </fx-fore>
     `);
 
+    // waiting for Fore to dispatch refresh-done for the first time
     await oneEvent(el, 'refresh-done');
     const [firstDiv, secondDiv] = el.querySelectorAll('div');
 
@@ -523,10 +528,14 @@ describe('action Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     /*
+    ideally one could assert that certain events have fired
+
+    Here the fx-setvalue element will dispatch an 'action-performed' event when it is done
+
     for (let i = 0; i < 10; ++i) {
       await oneEvent(secondSetval, 'action-performed');
     }
-*/
+    */
 
     const secondControl = secondDiv.querySelector('fx-output');
     expect(secondControl.value).to.equal('15');
