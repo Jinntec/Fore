@@ -5,7 +5,6 @@ import { FxContainer } from './fx-container.js';
  * `fx-switch`
  * a container allowing to switch between fx-case elements
  *
- *  todo: dispatch 'selected/unselected' events
  * @customElement
  */
 class FxSwitch extends FxContainer {
