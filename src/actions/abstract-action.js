@@ -220,6 +220,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       await loop();
 
       this._finalizePerform(resolveThisEvent);
+      return;
     }
 
     if (this.delay) {
