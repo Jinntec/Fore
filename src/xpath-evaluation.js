@@ -47,8 +47,13 @@ const xhtmlNamespaceResolver = prefix => {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-    const allMatchingTargetObjects = fxEvaluateXPathToNodes(
-        'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
+	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+	if (nodeName==='fx-instance') {
+		// Instance elements can only be in the `model` element
+		query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
+	}
+
+    const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
         sourceObject,
         null,
         {id},
