@@ -14,9 +14,10 @@ async function handleResponse(response) {
     // const htmlResponse = response.text();
     // return new DOMParser().parseFromString(htmlResponse, 'text/html');
     // return response.text();
-    const result = await response.text();
-    // console.log('xml ********', result);
-    return new DOMParser().parseFromString(result, 'text/html');
+    return response.text().then(result =>
+      // console.log('xml ********', result);
+      new DOMParser().parseFromString(result, 'text/html'),
+    );
   }
   if (
     responseContentType.startsWith('text/plain') ||
@@ -191,20 +192,20 @@ export class FxInstance extends HTMLElement {
   async _loadData() {
     const url = `${this.src}`;
 
-    if(url.startsWith('localStore')){
-      const key = url.substring(url.indexOf(':')+1);
+    if (url.startsWith('localStore')) {
+      const key = url.substring(url.indexOf(':') + 1);
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       const root = doc.firstElementChild;
       this.instanceData = doc;
 
-      if(!key){
+      if (!key) {
         console.warn('no key specified for localStore');
         return;
       }
 
       const serialized = localStorage.getItem(key);
-      if(!serialized){
+      if (!serialized) {
         console.warn(`Data for key ${key} cannot be found`);
         this._useInlineData();
         return;

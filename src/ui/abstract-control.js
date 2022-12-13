@@ -257,6 +257,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     const alert = this.querySelector('fx-alert');
 
     const mi = this.getModelItem();
+    // console.log('late modelItem', mi);
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
         // if (alert) alert.style.display = 'none';
