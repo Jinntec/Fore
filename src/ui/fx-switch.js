@@ -5,7 +5,7 @@ import { FxContainer } from './fx-container.js';
  * `fx-switch`
  * a container allowing to switch between fx-case elements
  *
- *  * todo: implement
+ *  todo: dispatch 'selected/unselected' events
  * @customElement
  */
 class FxSwitch extends FxContainer {
@@ -45,9 +45,13 @@ class FxSwitch extends FxContainer {
       Array.from(cases).forEach(caseElem => {
         const name = caseElem.getAttribute('name');
         if (name === this.modelItem.value) {
+          Fore.dispatch(caseElem,'select',{});
           caseElem.classList.add('selected-case');
           selectedCase = caseElem;
         } else {
+          if(caseElem.classList.contains('selected-case')){
+            Fore.dispatch(caseElem,'deselect',{});
+          }
           caseElem.classList.remove('selected-case');
         }
       });
@@ -56,6 +60,7 @@ class FxSwitch extends FxContainer {
       // if none is selected select the first as default
       if (!selectedCase) {
         selectedCase = cases[0];
+        Fore.dispatch(selectedCase,'select',{});
         selectedCase.classList.add('selected-case');
       }
     }
@@ -69,9 +74,13 @@ class FxSwitch extends FxContainer {
       if (caseElement === c) {
         // eslint-disable-next-line no-param-reassign
         c.classList.add('selected-case');
+        Fore.dispatch(c,'select',{});
         this.refresh();
       } else {
         // eslint-disable-next-line no-param-reassign
+        if(c.classList.contains('selected-case')){
+          Fore.dispatch(c,'deselect',{});
+        }
         c.classList.remove('selected-case');
       }
     });
