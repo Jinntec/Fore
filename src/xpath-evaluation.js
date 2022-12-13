@@ -48,7 +48,7 @@ const xhtmlNamespaceResolver = prefix => {
  */
 export function resolveId(id, sourceObject, nodeName = null) {
 	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
-	if (nodeName==='fx-instance') {
+	if (nodeName === 'fx-instance') {
 		// Instance elements can only be in the `model` element
 		query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
 	}

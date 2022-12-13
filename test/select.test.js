@@ -12,11 +12,11 @@ describe('fx-control with select tests', () => {
             <data>
               <item>foobar</item>
             </data>
-            <fx-instance id="second">
-              <data>
-                <option>option1</option>
-              </data>
-            </fx-instance>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <option>option1</option>
+            </data>
           </fx-instance>
         </fx-model>
         <fx-control ref="item">
@@ -46,13 +46,13 @@ describe('fx-control with select tests', () => {
             <data>
               <item>foobar</item>
             </data>
-            <fx-instance id="second">
-              <data>
-                <option>option1</option>
-                <option>option2</option>
-                <option>option3</option>
-              </data>
-            </fx-instance>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <option>option1</option>
+              <option>option2</option>
+              <option>option3</option>
+            </data>
           </fx-instance>
         </fx-model>
         <fx-control ref="item">
@@ -88,13 +88,13 @@ describe('fx-control with select tests', () => {
             <data>
               <item>foobar</item>
             </data>
-            <fx-instance id="second">
-              <data>
-                <option>option1</option>
-                <option>option2</option>
-                <option>option3</option>
-              </data>
-            </fx-instance>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <option>option1</option>
+              <option>option2</option>
+              <option>option3</option>
+            </data>
           </fx-instance>
         </fx-model>
         <fx-control ref="item">
@@ -119,7 +119,7 @@ describe('fx-control with select tests', () => {
     console.log('children of selects', select.children);
     expect(select.children[0].nodeName).to.equal('TEMPLATE');
     expect(select.children[1].nodeName).to.equal('OPTION');
-    //first option is empty
+    // first option is empty
     expect(select.children[1].textContent).to.equal('');
 
     expect(select.children[2].nodeName).to.equal('OPTION');
