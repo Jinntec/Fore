@@ -140,6 +140,8 @@ export class FxInstance extends HTMLElement {
     } else if (this.childNodes.length !== 0) {
       this._useInlineData();
     }
+    console.log('instanceData loaded: ', this.id, this.instanceData);
+
   }
 
   createInstanceData() {
@@ -230,7 +232,7 @@ export class FxInstance extends HTMLElement {
       .then(data => {
         if (data.nodeType) {
           this.instanceData = data;
-          console.log('instanceData loaded: ', this.id, this.instanceData);
+          // console.log('instanceData loaded: ', this.id, this.instanceData);
           return;
         }
         this.instanceData = data;
