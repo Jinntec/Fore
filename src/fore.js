@@ -292,8 +292,8 @@ export class Fore {
       detail,
     });
 	  event.listenerPromises = [];
-      console.info('dispatching', event.type, target);
-	  console.log('!!! DISPATCH_START', eventName);
+      // console.info('dispatching', event.type, target);
+	  // console.log('!!! DISPATCH_START', eventName);
 
       target.dispatchEvent(event);
 
@@ -301,7 +301,7 @@ export class Fore {
 	  if (event.listenerPromises.length) {
 		  await Promise.all(event.listenerPromises);
 	  }
-	  console.log('!!! DISPATCH_DONE', eventName);
+	  // console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static prettifyXml(source) {

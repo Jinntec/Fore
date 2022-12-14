@@ -275,6 +275,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    */
   actionPerformed() {
     const model = this.getModel();
+    if(!model){
+      return;
+    }
     if (!model.inited) {
       return;
     }

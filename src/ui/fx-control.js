@@ -482,7 +482,7 @@ export default class FxControl extends XfAbstractControl {
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
           const fragment = document.createDocumentFragment();
-          console.time('offscreen');
+          // console.time('offscreen');
 /*
           Array.from(nodeset).forEach(node => {
             // console.log('#### node', node);
@@ -504,7 +504,7 @@ export default class FxControl extends XfAbstractControl {
             this.updateEntry(newEntry, node);
           });
           this.template.parentNode.appendChild(fragment);
-          console.timeEnd('offscreen');
+          // console.timeEnd('offscreen');
         } else {
           const newEntry = this.createEntry();
           this.template.parentNode.appendChild(newEntry);
