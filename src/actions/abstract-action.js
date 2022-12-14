@@ -182,7 +182,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     // First check if 'if' condition is true - otherwise exist right away
     if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
-      resolveThisEvent();
+      this._finalizePerform(resolveThisEvent);
       return;
     }
 
@@ -220,6 +220,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       await loop();
 
       this._finalizePerform(resolveThisEvent);
+      return;
     }
 
     if (this.delay) {

@@ -498,7 +498,18 @@ export class FxFore extends HTMLElement {
     }
 
     _processTemplateExpressions() {
-        for (const node of this.storedTemplateExpressionByNode.keys()) {
+        for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
+			if (node.nodeType === Node.ATTRIBUTE_NODE) {
+				// Attribute nodes are not contained by the document, but their owner elements are!
+				if (!node.ownerDocument.contains(node.ownerElement)) {
+					this.storedTemplateExpressionByNode.delete(node);
+					continue;
+				}
+			} else if (!node.ownerDocument.contains(node)) {
+				// For all other nodes, if the document does not contain them, they are dead
+				this.storedTemplateExpressionByNode.delete(node);
+				continue;
+			}
             this._processTemplateExpression({
                 node,
                 expr: this.storedTemplateExpressionByNode.get(node),

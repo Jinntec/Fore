@@ -106,6 +106,8 @@
 
                 <fx-switch>
                     <fx-case id="one">
+                        <fx-message event="select">Tab one selected</fx-message>
+                        <fx-message event="deselect">Tab one deselected</fx-message>
                         some exclusive content
 <!--
                         <fx-control ref="item1">
@@ -170,6 +172,8 @@
                 <h2>Page 2</h2>
             </fx-case>
             <fx-case name="page3">
+                <fx-message event="select">page 3 selected</fx-message>
+                <fx-message event="deselect">page 3 deselected</fx-message>
                 <h2>Page 3</h2>
             </fx-case>
         </fx-switch>

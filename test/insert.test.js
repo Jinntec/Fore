@@ -482,13 +482,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+         ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -575,13 +575,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -672,13 +672,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources-nested.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -748,13 +748,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources-nested.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>

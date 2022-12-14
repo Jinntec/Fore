@@ -495,6 +495,7 @@ describe('action Tests', () => {
       </fx-fore>
     `);
 
+    // waiting for Fore to dispatch refresh-done for the first time
     await oneEvent(el, 'refresh-done');
     const [firstDiv, secondDiv] = el.querySelectorAll('div');
 
