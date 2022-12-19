@@ -763,10 +763,7 @@ const instance = (dynamicContext, string) => {
 
     // const def = instance.getInstanceData();
     if (inst) {
-        const def = inst.getDefaultContext();
-        // console.log('target instance root node: ', def);
-
-        return def;
+        return inst.getDefaultContext();
     }
     return null;
 };

@@ -258,12 +258,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
-    console.info(
-      `%cperform `,
-      'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-      this,
-    );
-
     //todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
