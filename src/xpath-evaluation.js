@@ -49,8 +49,14 @@ const xhtmlNamespaceResolver = prefix => {
 export function resolveId(id, sourceObject, nodeName = null) {
 	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
 	if (nodeName === 'fx-instance') {
+        // ### bit hacky but early out for instances avoiding any evaluation and using already stored array of instances in model
 		// Instance elements can only be in the `model` element
-		query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
+		// query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
+
+        const fore = Fore.getFore(sourceObject);
+        const instances = fore.getModel().instances;
+        const targetInstance = instances.find(i => i.id === id);
+        return targetInstance;
 	}
 
     const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
@@ -746,6 +752,7 @@ const instance = (dynamicContext, string) => {
     // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
     // TODO: handle no string passed (null will be passed instead)
 
+/*
     const formElement = fxEvaluateXPathToFirstNode(
         'ancestor-or-self::fx-fore[1]',
         dynamicContext.currentContext.formElement,
@@ -753,15 +760,14 @@ const instance = (dynamicContext, string) => {
         null,
         {namespaceResolver: xhtmlNamespaceResolver},
     );
-
-    // console.log('fnInstance dynamicContext: ', dynamicContext);
-    // console.log('fnInstance string: ', string);
+*/
+    const sourceNode = dynamicContext.currentContext.formElement;
+    const formElement = Fore.getFore(sourceNode);
 
     const inst = string
         ? resolveId(string, formElement, 'fx-instance')
         : formElement.querySelector(`fx-instance`);
 
-    // const def = instance.getInstanceData();
     if (inst) {
         return inst.getDefaultContext();
     }

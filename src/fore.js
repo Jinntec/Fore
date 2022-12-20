@@ -9,6 +9,16 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  /**
+   * returns the next `fx-fore` element upwards in tree
+   *
+   * @param start
+   * @returns {*}
+   */
+  static getFore(start) {
+    return start.nodeType === Node.TEXT_NODE ? start.parentNode.closest('fx-fore'):start.closest('fx-fore');
+  }
+
   static get ACTION_ELEMENTS() {
     return [
       'FX-ACTION',
