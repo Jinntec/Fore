@@ -320,6 +320,11 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this,
     );
 
+    const alert = this.getAlert();
+    if (alert) {
+      newItem.addAlert(alert);
+    }
+
     this.getModel().registerModelItem(newItem);
   }
 

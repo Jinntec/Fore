@@ -390,14 +390,6 @@ export class FxModel extends HTMLElement {
                         modelItem.constraint = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!compute) valid = false;
-                        // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
-                        if (!this.modelConstructed) {
-                            // todo: get alert from attribute or child element
-                            const alert = bind.getAlert();
-                            if (alert) {
-                                modelItem.addAlert(alert);
-                            }
-                        }
                     }
                 }
                 if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
