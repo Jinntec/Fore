@@ -30,7 +30,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -68,7 +68,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -122,7 +122,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -183,7 +183,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -230,7 +230,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -281,7 +281,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -317,7 +317,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -352,7 +352,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     const tasks = fx.evaluateXPath('//task', inst, null, {});
@@ -387,7 +387,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -419,7 +419,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -451,7 +451,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -482,13 +482,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+         ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -549,7 +549,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -575,13 +575,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -641,7 +641,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-    trigger.performActions();
+   await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -672,13 +672,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources-nested.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>
@@ -748,13 +748,13 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources-nested.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
           <fx-instance
             id="i-template"
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
           <fx-instance id="temp">
             <data>
               <hypotheses>1</hypotheses>

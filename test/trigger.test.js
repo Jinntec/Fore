@@ -62,7 +62,7 @@ describe('trigger tests', () => {
     expect(trigger).to.exist;
 
     const enable = document.getElementById('enable');
-    enable.performActions();
+   await enable.performActions();
 
     expect(trigger.hasAttribute('readonly')).to.be.false;
   });
@@ -93,7 +93,10 @@ describe('trigger tests', () => {
 
     const trigger = el.querySelector('fx-trigger');
     expect(trigger).to.exist;
-    await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'refresh-done');
+
+	  await el.querySelector('#setReadonly').performActions();
+	  
     expect(trigger.hasAttribute('readonly')).to.be.true;
   });
 });

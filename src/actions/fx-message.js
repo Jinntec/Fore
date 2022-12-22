@@ -47,7 +47,7 @@ class FxMessage extends AbstractAction {
     `;
   }
 
-  perform() {
+  async perform() {
     super.perform();
     let message;
     if (this.hasAttribute('value')) {

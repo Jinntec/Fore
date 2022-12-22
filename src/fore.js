@@ -9,6 +9,16 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  /**
+   * returns the next `fx-fore` element upwards in tree
+   *
+   * @param start
+   * @returns {*}
+   */
+  static getFore(start) {
+    return start.nodeType === Node.TEXT_NODE ? start.parentNode.closest('fx-fore'):start.closest('fx-fore');
+  }
+
   static get ACTION_ELEMENTS() {
     return [
       'FX-ACTION',
@@ -285,14 +295,23 @@ export class Fore {
     return fadeOut();
   }
 
-  static dispatch(target, eventName, detail) {
+  static async dispatch(target, eventName, detail) {
     const event = new CustomEvent(eventName, {
       composed: false,
       bubbles: true,
       detail,
     });
-    console.info('dispatching', event.type, target);
-    target.dispatchEvent(event);
+	  event.listenerPromises = [];
+      // console.info('dispatching', event.type, target);
+	  // console.log('!!! DISPATCH_START', eventName);
+
+      target.dispatchEvent(event);
+
+	  // By now, all listeners for the event should have registered their completion promises to us.
+	  if (event.listenerPromises.length) {
+		  await Promise.all(event.listenerPromises);
+	  }
+	  // console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static prettifyXml(source) {
@@ -409,13 +428,42 @@ export class Fore {
             }),
           );
         }
-        hostElement.appendChild(theFore);
-        theFore.classList.add('widget');
-        // return theFore;
-        // theFore.setAttribute('from-src', this.src);
-        // this.replaceWith(theFore);
+        const imported = document.importNode(theFore,true);
+        console.log(`########## loaded fore as component ##### ${hostElement.url}`);
+        imported.addEventListener(
+            'model-construct-done',
+            e => {
+              console.log('subcomponent ready', e.target);
+              const defaultInst = imported.querySelector('fx-instance');
+              // console.log('defaultInst', defaultInst);
+              if(hostElement.initialNode){
+                const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+                // Note: Clone the input to prevent the inner fore from editing the outer node
+                doc.firstElementChild.appendChild(hostElement.initialNode.cloneNode(true));
+                // defaultinst.setInstanceData(this.initialNode);
+                defaultInst.setInstanceData(doc);
+              }
+              // console.log('new data', defaultInst.getInstanceData());
+              // theFore.getModel().modelConstruct();
+              imported.getModel().updateModel();
+              imported.refresh();
+              return 'done';
+
+            },
+            { once: true },
+        );
+
+        const dummy = hostElement.querySelector('input');
+        if (hostElement.hasAttribute('shadow')) {
+          dummy.parentNode.removeChild(dummy);
+          hostElement.shadowRoot.appendChild(imported);
+        } else {
+          console.log(this, 'replacing widget with',theFore);
+          dummy.replaceWith(imported);
+          // this.appendChild(imported);
+        }
       })
-      .catch(error => {
+      /*.catch(error => {
         hostElement.dispatchEvent(
           new CustomEvent('error', {
             composed: false,
@@ -426,7 +474,7 @@ export class Fore {
             },
           }),
         );
-      });
+      });*/
   }
 
   /**

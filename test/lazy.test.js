@@ -103,7 +103,8 @@ describe('lazy initialize', () => {
       <fx-fore> </fx-fore>
     `);
 
-    // await elementUpdated(el);
+	  await oneEvent(el, 'refresh-done');
+
     const model = el.querySelector('fx-model');
     expect(model).to.exist;
     expect(model.instances).to.exist;
@@ -119,6 +120,8 @@ describe('lazy initialize', () => {
         </fx-group>
       </fx-fore>
     `);
+
+	  	  await oneEvent(el, 'refresh-done');
 
     // await oneEvent(el, 'model-construct-done');
     console.log('form  ', el);

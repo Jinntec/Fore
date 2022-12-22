@@ -47,8 +47,21 @@ const xhtmlNamespaceResolver = prefix => {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-    const allMatchingTargetObjects = fxEvaluateXPathToNodes(
-        'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
+	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+    /*
+        if (nodeName === 'fx-instance') {
+            // Instance elements can only be in the `model` element
+            // query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
+
+            const fore = Fore.getFore(sourceObject);
+            const instances = fore.getModel().instances;
+            const targetInstance = instances.find(i => i.id === id);
+            return targetInstance;
+        return document.getElementById(id);
+	}
+    */
+
+    const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
         sourceObject,
         null,
         {id},
@@ -749,19 +762,18 @@ const instance = (dynamicContext, string) => {
         {namespaceResolver: xhtmlNamespaceResolver},
     );
 
-    // console.log('fnInstance dynamicContext: ', dynamicContext);
-    // console.log('fnInstance string: ', string);
+    const inst = string
+        ? formElement.querySelector(`#${string}`)
+        : formElement.querySelector(`fx-instance`);
 
+/*
     const inst = string
         ? resolveId(string, formElement, 'fx-instance')
         : formElement.querySelector(`fx-instance`);
+*/
 
-    // const def = instance.getInstanceData();
     if (inst) {
-        const def = inst.getDefaultContext();
-        // console.log('target instance root node: ', def);
-
-        return def;
+        return inst.getDefaultContext();
     }
     return null;
 };

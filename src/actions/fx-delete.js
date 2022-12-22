@@ -22,7 +22,7 @@ class FxDelete extends AbstractAction {
      *
      * Will NOT perform delete if nodeset is pointing to document node, document fragment, root node or being readonly.
      */
-    perform() {
+    async perform() {
         console.log('##### fx-delete executing...');
         const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);

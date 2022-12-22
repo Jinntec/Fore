@@ -52,10 +52,8 @@ function _getInitialContext(node, ref) {
         }
         return model.getDefaultInstance().getDefaultContext();
     }
-    if (model.getDefaultInstance() !== null && model.inited) {
-        return model.getDefaultInstance().getDefaultContext();
-    }
-    return [];
+    // should always return default context if all other fails
+    return model.getDefaultInstance().getDefaultContext();
 }
 
 export default function getInScopeContext(node, ref) {

@@ -102,9 +102,9 @@ describe('fx-items tests', () => {
           <fx-instance
             id="default"
             src="/base/test/ling-checkboxes.xml"
-              xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+              xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">
@@ -149,9 +149,9 @@ describe('fx-items tests', () => {
             id="default"
             src="/base/test/ling-checkboxes.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">
@@ -198,9 +198,9 @@ describe('fx-items tests', () => {
             id="default"
             src="/base/test/ling-checkboxes.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-          />
+          ></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" />
+          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">

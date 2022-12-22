@@ -9,7 +9,7 @@ import {resolveId} from "../xpath-evaluation.js";
  *
  */
 class FxRefresh extends AbstractAction {
-  perform() {
+  async perform() {
     if (this.hasAttribute('self')) {
       const control = Fore.getClosest('fx-control', this);
       if (control) {
@@ -24,7 +24,7 @@ class FxRefresh extends AbstractAction {
     if(this.hasAttribute('control')){
       const targetId = this.getAttribute('control');
       const ctrl = resolveId(targetId, this);
-      if (Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
+      if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
         ctrl.refresh();
       }
       return;

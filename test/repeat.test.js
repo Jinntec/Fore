@@ -332,7 +332,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
     const repeat = el.querySelector('fx-repeat');
 
     expect(repeat).to.exist;
@@ -380,7 +380,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
     const repeat = el.querySelector('fx-repeat');
     expect(repeat.index).to.equal('3');
     // appended item should have repeatindex set
@@ -472,7 +472,7 @@ describe('repeat Tests', () => {
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#append');
-    append.performActions();
+   await append.performActions();
 
     const repeat = el.querySelector('#r-todos');
     expect(repeat).to.exist;
@@ -535,7 +535,7 @@ describe('repeat Tests', () => {
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#outerappend');
-    append.performActions();
+   await append.performActions();
 
     const repeat = el.querySelector('#r-todos');
     expect(repeat).to.exist;

@@ -1,6 +1,43 @@
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
+async function handleResponse(response) {
+  const { status } = response;
+  if (status >= 400) {
+    // console.log('response status', status);
+    alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
+    throw new Error(`failed to load data - status: ${status}`);
+  }
+  const responseContentType = response.headers.get('content-type').toLowerCase();
+  // console.log('********** responseContentType *********', responseContentType);
+  if (responseContentType.startsWith('text/html')) {
+    // const htmlResponse = response.text();
+    // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+    // return response.text();
+    return response.text().then(result =>
+      // console.log('xml ********', result);
+      new DOMParser().parseFromString(result, 'text/html'),
+    );
+  }
+  if (
+    responseContentType.startsWith('text/plain') ||
+    responseContentType.startsWith('text/markdown')
+  ) {
+    // console.log("********** inside  res plain *********");
+    return response.text();
+  }
+  if (responseContentType.startsWith('application/json')) {
+    // console.log("********** inside res json *********");
+    return response.json();
+  }
+  if (responseContentType.startsWith('application/xml')) {
+    const text = await response.text();
+    // console.log('xml ********', result);
+    return new DOMParser().parseFromString(text, 'application/xml');
+  }
+  return 'done';
+}
+
 /**
  * Container for data instances.
  *
@@ -59,16 +96,15 @@ export class FxInstance extends HTMLElement {
    */
   async init() {
     // console.log('fx-instance init');
-    await this._initInstance().then(() => {
-      this.dispatchEvent(
-        new CustomEvent('instance-loaded', {
-          composed: true,
-          bubbles: true,
-          detail: { instance: this },
-        }),
-      );
-      return this;
-    });
+    await this._initInstance();
+    this.dispatchEvent(
+      new CustomEvent('instance-loaded', {
+        composed: true,
+        bubbles: true,
+        detail: { instance: this },
+      }),
+    );
+    return this;
   }
 
   evalXPath(xpath) {
@@ -155,22 +191,21 @@ export class FxInstance extends HTMLElement {
 
   async _loadData() {
     const url = `${this.src}`;
-    const contentType = Fore.getContentType(this, 'get');
 
-    if(url.startsWith('localStore')){
-      const key = url.substring(url.indexOf(':')+1);
+    if (url.startsWith('localStore')) {
+      const key = url.substring(url.indexOf(':') + 1);
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       const root = doc.firstElementChild;
       this.instanceData = doc;
 
-      if(!key){
+      if (!key) {
         console.warn('no key specified for localStore');
         return;
       }
 
       const serialized = localStorage.getItem(key);
-      if(!serialized){
+      if (!serialized) {
         console.warn(`Data for key ${key} cannot be found`);
         this._useInlineData();
         return;
@@ -181,63 +216,28 @@ export class FxInstance extends HTMLElement {
       doc.firstElementChild.replaceWith(data.firstElementChild);
       return;
     }
+    const contentType = Fore.getContentType(this, 'get');
 
-    await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': contentType,
-      },
-    })
-      .then(response => {
-        const { status } = response;
-        if (status >= 400) {
-          // console.log('response status', status);
-          alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
-          throw new Error(`failed to load data - status: ${status}`);
-        }
-        const responseContentType = response.headers.get('content-type').toLowerCase();
-        // console.log('********** responseContentType *********', responseContentType);
-        if (responseContentType.startsWith('text/html')) {
-          // const htmlResponse = response.text();
-          // return new DOMParser().parseFromString(htmlResponse, 'text/html');
-          // return response.text();
-          return response.text().then(result =>
-            // console.log('xml ********', result);
-            new DOMParser().parseFromString(result, 'text/html'),
-          );
-        }
-        if (
-          responseContentType.startsWith('text/plain') ||
-          responseContentType.startsWith('text/markdown')
-        ) {
-          // console.log("********** inside  res plain *********");
-          return response.text();
-        }
-        if (responseContentType.startsWith('application/json')) {
-          // console.log("********** inside res json *********");
-          return response.json();
-        }
-        if (responseContentType.startsWith('application/xml')) {
-          return response.text().then(result =>
-            // console.log('xml ********', result);
-            new DOMParser().parseFromString(result, 'application/xml'),
-          );
-        }
-        return 'done';
-      })
-      .then(data => {
-        if (data.nodeType) {
-          this.instanceData = data;
-          console.log('instanceData loaded: ', this.id, this.instanceData);
-          return;
-        }
-        this.instanceData = data;
-      })
-      .catch(error => {
-        throw new Error(`failed loading data ${error}`);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': contentType,
+        },
       });
+      const { status } = response;
+      const data = await handleResponse(response);
+      if (data.nodeType) {
+        this.instanceData = data;
+        console.log('instanceData loaded: ', this.id, this.instanceData);
+        return;
+      }
+      this.instanceData = data;
+    } catch (error) {
+      throw new Error(`failed loading data ${error}`);
+    }
   }
 
   _getContentType() {

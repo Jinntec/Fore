@@ -47,7 +47,7 @@ describe('replace Tests', () => {
     expect(initial).to.exist;
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const replaced = fx.evaluateXPath('list', inst, null, {});
     expect(replaced).to.exist;
@@ -89,7 +89,7 @@ describe('replace Tests', () => {
     expect(initial).to.exist;
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     const replaced = fx.evaluateXPath('//value/@replaced', inst, null, {});
     expect(replaced).to.exist;

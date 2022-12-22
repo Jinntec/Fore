@@ -67,7 +67,9 @@ export class ModelItem {
   }
 
   addAlert(alert) {
-    this.alerts.push(alert);
+    if(!this.alerts.includes(alert)){
+      this.alerts.push(alert);
+    }
   }
 
   cleanAlerts() {

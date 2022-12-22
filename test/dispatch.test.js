@@ -30,7 +30,7 @@ describe('fx-dispatch tests', () => {
     });
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     expect(bar.innerText).to.equal('aString');
   });
@@ -64,7 +64,7 @@ describe('fx-dispatch tests', () => {
     });
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
   });
@@ -102,7 +102,7 @@ describe('fx-dispatch tests', () => {
     });
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
@@ -143,7 +143,7 @@ describe('fx-dispatch tests', () => {
     });
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+   await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
@@ -185,8 +185,7 @@ describe('fx-dispatch tests', () => {
         */
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
-    await oneEvent(control, 'value-changed');
+   await trigger.performActions();
 
     expect(bar.innerText).to.equal('foobar');
   });

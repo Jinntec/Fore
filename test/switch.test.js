@@ -81,7 +81,7 @@ describe('fx-switch Tests', () => {
 
     const trigger = el.querySelectorAll('fx-trigger');
 
-    trigger[1].performActions();
+   await trigger[1].performActions();
 
     const cases = el.querySelectorAll('fx-case');
     expect(cases[0].classList.contains('selected-case')).to.be.false;
@@ -89,13 +89,96 @@ describe('fx-switch Tests', () => {
     expect(cases[2].classList.contains('selected-case')).to.be.false;
   });
 
-  it('activates case that matches bound value', async () => {
+  it('dispatches initial select event', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
             <data>
-              <page>page3</page>
+              <page1></page1>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger id="t-one" label="page 1">
+          <paper-button>toggle page 1</paper-button>
+          <fx-toggle case="one"></fx-toggle>
+        </fx-trigger>
+        
+        <fx-switch>
+          <fx-case id="one" name="page1">
+            <fx-setvalue ref="page1" event="select">selected</fx-setvalue>
+          </fx-case>
+          <fx-case id="two" name="page2">
+            <fx-setvalue ref="item" event="select">page2</fx-setvalue>
+            some further content
+          </fx-case>
+          <fx-case id="three" name="page3">
+            some completely unneeded content
+          </fx-case>
+        </fx-switch>
+        <fx-output ref="page1"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const trigger1 = el.querySelector('#t-one');
+    trigger1.performActions();
+
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('selected');
+  });
+
+  it('dispatches select/deselect events after toggle', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <page1></page1>
+              <page2></page2>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger id="t-one" label="page 1">
+          <paper-button>toggle page 2</paper-button>
+          <fx-toggle case="two"></fx-toggle>
+        </fx-trigger>
+        
+        <fx-switch>
+          <fx-case id="one" name="page1">
+            <fx-setvalue ref="page1" event="select">deselected</fx-setvalue>
+          </fx-case>
+          <fx-case id="two" name="page2">
+            <fx-setvalue ref="page2" event="select">selected</fx-setvalue>
+            some further content
+          </fx-case>
+          <fx-case id="three" name="page3">
+            some completely unneeded content
+          </fx-case>
+        </fx-switch>
+        <fx-output ref="page1"></fx-output>
+        <fx-output ref="page2"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const trigger = el.querySelector('#t-one');
+    await trigger.performActions();
+
+    const output = el.querySelectorAll('fx-output');
+    expect(output[0].value).to.equal('deselected');
+    expect(output[1].value).to.equal('selected');
+  });
+
+  it('activates case that matches bound value and dispatches select event', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <page  select="">page3</page>
             </data>
           </fx-instance>
         </fx-model>
@@ -117,9 +200,11 @@ describe('fx-switch Tests', () => {
             <h2>Page 2</h2>
           </fx-case>
           <fx-case name="page3">
+            <fx-setvalue ref="@select" event="select">selected</fx-setvalue>
             <h2>Page 3</h2>
           </fx-case>
         </fx-switch>
+        <fx-output ref="page/@select"></fx-output>
       </fx-fore>
     `);
 
@@ -129,6 +214,9 @@ describe('fx-switch Tests', () => {
     expect(cases[0].classList.contains('selected-case')).to.be.false;
     expect(cases[1].classList.contains('selected-case')).to.be.false;
     expect(cases[2].classList.contains('selected-case')).to.be.true;
+
+    const out = el.querySelector('fx-output');
+    expect(out.value).to.equal('selected');
   });
 
   it('toggles on event', async () => {

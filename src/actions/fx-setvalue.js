@@ -40,7 +40,7 @@ export default class FxSetvalue extends AbstractAction {
         this.valueAttr = this.getAttribute('value');
     }
 
-    perform() {
+    async perform() {
         super.perform();
         let {value} = this;
         if (this.valueAttr !== null) {

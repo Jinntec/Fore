@@ -95,7 +95,7 @@ export class FxModel extends HTMLElement {
      * @event model-construct-done is fired once all instances have be loaded or after generating instance
      *
      */
-    modelConstruct() {
+    async modelConstruct() {
         // console.log('### <<<<< dispatching model-construct >>>>>');
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
@@ -109,17 +109,20 @@ export class FxModel extends HTMLElement {
                 promises.push(instance.init());
             });
 
-            Promise.all(promises).then(() => {
-                this.instances = Array.from(instances);
-                // console.log('_modelConstruct this.instances ', this.instances);
-                this.updateModel();
-                this.inited = true;
-                Fore.dispatch(this, 'model-construct-done', {model: this});
-            });
+			// Wait until all the instances are built
+			await Promise.all(promises);
+
+            this.instances = Array.from(instances);
+            // console.log('_modelConstruct this.instances ', this.instances);
+			// Await until the model-construct-done event is handled off
+
+            await Fore.dispatch(this, 'model-construct-done', {model: this});
+            this.inited = true;
+            this.updateModel();
             console.groupEnd();
         } else {
             // ### if there's no instance one will created
-            this.dispatchEvent(
+            await this.dispatchEvent(
                 new CustomEvent('model-construct-done', {
                     composed: false,
                     bubbles: true,
@@ -387,14 +390,6 @@ export class FxModel extends HTMLElement {
                         modelItem.constraint = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!compute) valid = false;
-                        // ### alerts are added only once during model-construct. Otherwise they would add up in each run of revalidate()
-                        if (!this.modelConstructed) {
-                            // todo: get alert from attribute or child element
-                            const alert = bind.getAlert();
-                            if (alert) {
-                                modelItem.addAlert(alert);
-                            }
-                        }
                     }
                 }
                 if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {

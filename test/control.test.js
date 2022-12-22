@@ -144,6 +144,36 @@ describe('control tests', () => {
     // expect(window.getComputedStyle(alert1, null).display).to.equal('none');
   });
 
+  it('creates modelitem alerts', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <b>Aa</b>
+            </data>
+          </fx-instance>
+          <fx-bind ref="b" constraint="string-length(.) = 1"
+                   alert="string must be exactly one character long"></fx-bind>
+        </fx-model>
+
+        <fx-control id="ctrl" label="B-label" ref="b">
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = document.getElementById('model1');
+
+
+    const ctrl = el.querySelector('#ctrl');
+    expect(ctrl.getModelItem()).to.exist;
+    expect(ctrl.getModelItem().alerts).to.exist;
+    expect(ctrl.getModelItem().alerts.length).to.equal(1);
+    expect(ctrl.getModelItem().alerts[0]).to.equal('string must be exactly one character long');
+
+  });
+
   it('has a control child with value "A"', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

@@ -17,7 +17,7 @@ export class FxShow extends FxAction {
     }
   }
 
-  perform() {
+  async perform() {
     const targetDlg = resolveId(this.dialog,this);
     if(!targetDlg){
       console.error('target dialog with given id does not exist',this.dialog);

@@ -52,7 +52,7 @@ export class FxDispatch extends AbstractAction {
 
 */
 
-  perform() {
+  async perform() {
     console.log('### fx-dispatch.perform ', this);
 
     const properties = this.querySelectorAll('fx-property');

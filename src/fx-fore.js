@@ -5,7 +5,6 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
-import {AbstractAction} from "./actions/abstract-action";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -15,9 +14,9 @@ import {AbstractAction} from "./actions/abstract-action";
  * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
  *
- * Main responsiblities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
+ * Main responsibilities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
  *
- * @event compute-exception - dispatched in case the dependency graph is cirular
+ * @event compute-exception - dispatched in case the dependency graph is circular
  * @event refresh-done - dispatched after a refresh() run
  * @event ready - dispatched after Fore has fully been initialized
  * @event error - dispatches error when template expression fails to evaluate
@@ -56,7 +55,7 @@ export class FxFore extends HTMLElement {
     constructor() {
         super();
         this.model = {};
-        this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // this.addEventListener('model-construct-done', this._handleModelConstructDone);
         this.addEventListener('message', this._displayMessage);
         this.addEventListener('error', this._displayError);
         window.addEventListener('compute-exception', e => {
@@ -68,19 +67,11 @@ export class FxFore extends HTMLElement {
 
         const style = `
             :host {
-                // display: none;
-                height:auto;
-                padding:var(--model-element-padding);
-                font-family:Roboto, sans-serif;
-                color:var(--paper-grey-900);
+                display: block;
             }
             :host ::slotted(fx-model){
                 display:none;
             }
-            // :host(.fx-ready){
-            //     animation: fadein .4s forwards;
-            //     display:block;
-            // }
 
             #modalMessage .dialogActions{
                 text-align:center;
@@ -144,14 +135,6 @@ export class FxFore extends HTMLElement {
             #messageContent{
                 margin-top:40px;
             }
-            @keyframes fadein {
-              0% {
-                  opacity:0;
-              }
-              100% {
-                  opacity:1;
-              }
-            }
         `;
 
         const html = `
@@ -183,7 +166,7 @@ export class FxFore extends HTMLElement {
 
     connectedCallback() {
         this.style.visibility = 'hidden';
-
+        console.time('init');
         /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -220,7 +203,7 @@ export class FxFore extends HTMLElement {
         }
 
         const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', event => {
+        slot.addEventListener('slotchange', async event => {
 
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
             if(this.hasAttribute('convert')){
@@ -239,19 +222,20 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
             }
             if (!modelElement.inited) {
-                    console.info(
-                        `%cFore is processing URL ${window.location.href}`,
-                        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
-                    );
+                console.info(
+                    `%cFore is processing URL ${window.location.href}`,
+                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+                );
 
                 if (this.src) {
                     console.log('########## FORE: loaded from ... ', this.src, '##########');
                 }
-                modelElement.modelConstruct();
+                await modelElement.modelConstruct();
+				this._handleModelConstructDone();
             }
             this.model = modelElement;
         });
-        this.addEventListener('path-mutated', e => {
+        this.addEventListener('path-mutated', () => {
             // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
@@ -300,7 +284,7 @@ export class FxFore extends HTMLElement {
 
                 // console.log('thefore', theFore)
                 if (!theFore) {
-                    Fore.dispatchEvent(this, 'error', {
+                    Fore.dispatch(this, 'error', {
                         detail: {
                             message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
                         },
@@ -324,8 +308,12 @@ export class FxFore extends HTMLElement {
      */
     handleIntersect(entries, observer) {
         console.time('refreshLazy');
+
         entries.forEach(entry => {
             const {target} = entry;
+
+            const fore = Fore.getFore(target);
+            if(fore.initialRun) return;
 
             if (entry.isIntersecting) {
                 console.log('in view', entry);
@@ -497,7 +485,18 @@ export class FxFore extends HTMLElement {
     }
 
     _processTemplateExpressions() {
-        for (const node of this.storedTemplateExpressionByNode.keys()) {
+        for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
+			if (node.nodeType === Node.ATTRIBUTE_NODE) {
+				// Attribute nodes are not contained by the document, but their owner elements are!
+				if (!node.ownerDocument.contains(node.ownerElement)) {
+					this.storedTemplateExpressionByNode.delete(node);
+					continue;
+				}
+			} else if (!node.ownerDocument.contains(node)) {
+				// For all other nodes, if the document does not contain them, they are dead
+				this.storedTemplateExpressionByNode.delete(node);
+				continue;
+			}
             this._processTemplateExpression({
                 node,
                 expr: this.storedTemplateExpressionByNode.get(node),
@@ -512,7 +511,7 @@ export class FxFore extends HTMLElement {
         const {expr} = exprObj;
         const {node} = exprObj;
         // console.log('expr ', expr);
-        this.evaluateTemplateExpression(expr, node, this);
+        this.evaluateTemplateExpression(expr, node);
     }
 
     /**
@@ -567,7 +566,7 @@ export class FxFore extends HTMLElement {
 
     /**
      * called when `model-construct-done` event is received to
-     * start initing of the UI.
+     * start initing the UI.
      *
      * @private
      */
@@ -583,7 +582,7 @@ export class FxFore extends HTMLElement {
                 && condition !== 'true'
                 && condition !== ''){
                 window.addEventListener('beforeunload', event => {
-                    const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
+                    const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
                         console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
@@ -747,7 +746,8 @@ export class FxFore extends HTMLElement {
         };
     */
 
-        await this.refresh();
+		// First refresh should be forced
+        await this.refresh(true);
         // this.style.display='block'
         this.classList.add('fx-ready');
         document.body.classList.add('fx-ready');
@@ -761,6 +761,7 @@ export class FxFore extends HTMLElement {
             `%cPage Initialization done`,
             "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
+        console.timeEnd('init');
         console.log('dataChanged', FxModel.dataChanged);
     }
 

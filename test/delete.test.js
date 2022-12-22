@@ -49,7 +49,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const buttons = el.querySelectorAll('fx-trigger');
-    buttons[2].performActions();
+   await buttons[2].performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -104,7 +104,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -149,7 +149,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -194,7 +194,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -241,7 +241,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -288,7 +288,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -335,7 +335,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -381,7 +381,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -428,7 +428,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-    button.performActions();
+   await button.performActions();
 
     const instance = el.querySelector('fx-instance[id="items"]');
     const items = evaluateXPathToNodes('item',instance.instanceData)
