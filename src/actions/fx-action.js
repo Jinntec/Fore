@@ -31,7 +31,7 @@ export class FxAction extends AbstractAction {
     `;
   }
 
-  perform() {
+  async perform() {
     super.perform();
     const { children } = this;
 
@@ -42,15 +42,14 @@ export class FxAction extends AbstractAction {
       script.src = this.src;
       this.appendChild(script);
     } else {
-      Array.from(children).forEach(actionOrVar => {
-        if (actionOrVar.localName === 'fx-var') {
-          return;
-        }
-        const action = actionOrVar;
-        action.detail = this.detail;
-        action.perform();
-        // action.execute();
-      });
+		for (const actionOrVar of children) {
+			if (actionOrVar.localName === 'fx-var') {
+				continue;
+			}
+			const action = actionOrVar;
+			action.detail = this.detail;
+        await action.execute();
+      }
       this.dispatchActionPerformed();
       this.needsUpdate = true;
     }

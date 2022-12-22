@@ -188,7 +188,7 @@
                 <fx-message event="submit-error" value="instance('default')/current || '.md cannot be loaded'"></fx-message>
             </fx-submission>
 
-            <fx-function signature="local:markdown($input as xs:string?) as xs:string"
+            <fx-function signature="markdown($input as xs:string?) as xs:string"
                          type="text/javascript">
                 const source = $input;
                 const converted = markdown(source);
@@ -239,11 +239,13 @@
                         </fx-action>
                     </summary>
                     <div class="details">
-                        <fx-output id="source" value="local:markdown(./text())" mediatype="markdown"></fx-output>
+<!--                        <fx-output id="source" ref="." mediatype="markdown"></fx-output>-->
+                        <fx-output id="source" value="markdown(./text())"></fx-output>
                     </div>
                 </details>
             </template>
         </fx-repeat>
+<!--        <fx-inspector open></fx-inspector>-->
     </fx-fore>
 
 </div>

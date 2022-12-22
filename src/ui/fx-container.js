@@ -37,7 +37,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all state properties to this control.
    */
-  refresh(force) {
+  async refresh(force) {
     if (!force && this.hasAttribute('refresh-on-view')) return;
     // console.log('### FxContainer.refresh on : ', this);
 
@@ -47,21 +47,20 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
       }
-
-      // this.value = this.modelItem.value;
-    }
-
-    // await this.updateComplete;
-
-    // state change event do not fire during init phase (initial refresh)
-    if (this._getForm().ready) {
       this.handleModelItemProperties();
     }
-    Fore.refreshChildren(this, force);
+
+    // state change event do not fire during init phase (initial refresh)
+    // if (this._getForm().ready) {
+    //   this.handleModelItemProperties();
+    // }
+    // Fore.refreshChildren(this, force);
   }
 
+  /**
+   * anly relevance is processed for container controls
+   */
   handleModelItemProperties() {
-    this.handleReadonly();
     this.handleRelevant();
   }
 
@@ -69,28 +68,25 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     return this.getModel().parentNode;
   }
 
-  handleReadonly() {
-    // console.log('mip readonly', this.modelItem.isReadonly);
-    if (this.isReadonly() !== this.modelItem.readonly) {
-      if (this.modelItem.readonly) {
-        this.setAttribute('readonly', 'readonly');
-        this.dispatchEvent(new CustomEvent('readonly', {}));
-      }
-      if (!this.modelItem.readonly) {
-        this.removeAttribute('readonly');
-        this.dispatchEvent(new CustomEvent('readwrite', {}));
-      }
-    }
-  }
-
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
-    if (!this.modelItem) return;
+    if (!this.modelItem) {
+      console.log('container is not relevant');
+      this.removeAttribute('relevant','');
+      this.setAttribute('nonrelevant','');
+      this.dispatchEvent(new CustomEvent('disabled', {}));
+      return;
+    }
 
     if (this.isEnabled() !== this.modelItem.enabled) {
-      if (this.modelItem.enabled) {
+      if (this.modelItem.relevant) {
+        // this.style.display = 'block';
+        this.removeAttribute('nonrelevant','');
+        this.setAttribute('relevant','');
         this.dispatchEvent(new CustomEvent('enabled', {}));
       } else {
+        this.removeAttribute('relevant','');
+        this.setAttribute('nonrelevant','');
         this.dispatchEvent(new CustomEvent('disabled', {}));
       }
     }

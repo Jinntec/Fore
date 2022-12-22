@@ -1,0 +1,1044 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title data-template="config:app-title">Perf sample page</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
+    <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico"/>
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon-16.png" sizes="16x16"/>
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon-24.png" sizes="24x24"/>
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon-32.png" sizes="32x32"/>
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon-64.png" sizes="64x64"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald"/>
+    <link rel="stylesheet" href="theme.css"/>
+    <link rel="stylesheet" href="../../resources/fore.css"/>
+    <link rel="stylesheet" href="edep-theme2.css"/>
+
+
+
+
+    <style>
+        .valid {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 1rem;
+            background: red;
+            color: white;
+        }
+
+        select {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <fx-fore>
+
+        <!-- ### if get called with an id param we load the data via submission ### -->
+<!--        <fx-setfocus control="title" event="ready"></fx-setfocus>-->
+
+        <fx-model>
+<!--            <fx-action event="model-construct-done" if="exists(instance('params')/id)">-->
+            <fx-action event="model-construct-done">
+                <fx-send submission="s-login" if="instance('vars')/loggedin != 'true'" />
+                <fx-send submission="s-load-inscription"></fx-send>
+<!--                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>-->
+            </fx-action>
+
+            <fx-instance id="default" src="data/HD025278.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-bind ref="instance('default')">
+                <fx-bind ref=".//fileDesc/titleStmt/title" required="true()" constraint="string-length(.) != 0">
+                </fx-bind>
+
+                <fx-bind ref=".//history/provenance">
+                    <fx-bind ref="./@when" constraint="checkDate(.)"></fx-bind>
+                    <fx-bind ref="./@notBefore" constraint="checkDate(.)"></fx-bind>
+                    <fx-bind ref="./@notAfter" constraint="checkDate(.)"></fx-bind>
+                </fx-bind>
+                <fx-bind ref=".//history/origin/origDate">
+                    <fx-bind ref="./@when-custom" constraint="checkDate(.)"></fx-bind>
+                    <fx-bind ref="./@notBefore-custom" constraint="checkDate(.)"></fx-bind>
+                    <fx-bind ref="./@notAfter-custom" constraint="checkDate(.)"></fx-bind>
+                </fx-bind>
+            </fx-bind>
+
+
+            <fx-instance id="typeins" src="data/typeins.json" type="json">
+
+            </fx-instance>
+            <fx-instance id="objtyp" src="data/objtyp.json" type="json">
+
+            </fx-instance>
+
+            <fx-instance id="material" src="data/material.json" type="json"></fx-instance>
+
+            <fx-instance id="palaeo" src="data/palaeographie.xml">
+                <data/>
+            </fx-instance>
+
+            <fx-instance id="mspart" src="data/mspart-tmpl.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+
+            </fx-instance>
+
+            <fx-instance id="templates" src="data/templates.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+
+            </fx-instance>
+
+            <fx-instance id="vars">
+                <data>
+                    <display-leiden>hidden</display-leiden>
+                    <can-delete>false</can-delete>
+                    <parent></parent>
+                    <uuid></uuid>
+                    <geoid></geoid>
+                    <loggedin>hidden</loggedin>
+                    <xml-valid></xml-valid>
+                    <history-term></history-term>
+                    <geography-term></geography-term>
+                    <military-term></military-term>
+                    <languages>
+                        <lang code="cel">Celtic</lang>
+                        <lang code="gre">Greek</lang>
+                        <lang code="heb">Hebrew</lang>
+                        <lang code="xib">Iberian</lang>
+                        <lang code="ita">Italien</lang>
+                        <lang code="lat">Latin</lang>
+                        <lang code="nxm">Numidian</lang>
+                        <lang code="xxx">Palmyrenic</lang>
+                        <lang code="xpu">Phoenician-Punic</lang>
+                    </languages>
+                </data>
+            </fx-instance>
+            <fx-bind ref="instance('vars')/can-delete" relevant="index('parts') gt 1"></fx-bind>
+            <fx-bind ref="instance('vars')/loggedin" relevant=".='true'"></fx-bind>
+            <fx-bind ref="instance('vars')/xml-valid" calculate="editorsValid()" constraint=".='true'"></fx-bind>
+
+
+            <fx-instance xmlns="http://www.tei-c.org/ns/1.0" id="epidoc-editor" src="data/epidoc-snippet.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <!-- this instance holds queryString params from the Url of this page -->
+            <fx-instance id="params" src="#querystring">
+                <data></data>
+            </fx-instance>
+
+            <fx-submission id="s-load-inscription"
+                           url="data/HD025278.xml"
+                           method="get"
+                           replace="instance"
+                           validate="false">
+                <fx-message event="submit-error">Failed to load Inscription</fx-message>
+
+                <fx-action event="submit-done">
+                    <!--
+                    ### initializing state for 30) 31) 32) dummy switches
+                    -->
+                    <fx-setvalue ref="instance('vars')/history-term"
+                                 value="if(exists(instance('default')//term[@ref='#social-economic-legal-history'])) then 'true' else 'false'"></fx-setvalue>
+
+                    <fx-setvalue ref="instance('vars')/geography-term"
+                                 value="if(exists(instance('default')//term[@ref='#geography'])) then 'true' else 'false'"></fx-setvalue>
+
+                    <fx-setvalue ref="instance('vars')/military-term"
+                                 value="if(exists(instance('default')//term[@ref='#military'])) then 'true' else 'false'"></fx-setvalue>
+
+                </fx-action>
+            </fx-submission>
+
+            <fx-submission id="s-create"
+                           url="api/inscription"
+                           method="post"
+                           replace="instance">
+                <fx-message event="submit-done">Daten wurden gespeichert</fx-message>
+
+                <fx-action event="submit-error">
+                    <fx-message>Daten konnten nicht gespeichert werden.</fx-message>
+                    <fx-action src="resources/scripts/showErrors.js"/>
+                </fx-action>
+            </fx-submission>
+
+            <fx-submission id="s-save"
+                           url="api/inscription?id={instance('params')/id}"
+                           method="post"
+                           replace="instance">
+                <fx-message event="submit-done">Daten wurden aktualisiert</fx-message>
+                <fx-action event="submit-error">
+                    <fx-message>Daten konnten nicht gespeichert werden.</fx-message>
+                    <fx-action src="resources/scripts/showErrors.js"/>
+                </fx-action>
+            </fx-submission>
+
+            <!-- todo:            -->
+            <fx-instance id="geodata" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-submission id="s-load-geodata"
+                           url="data/geo.xml"
+                           method="get"
+                           replace="instance"
+                           instance="geodata"
+                           validate="false">
+            </fx-submission>
+
+            <fx-function signature="gen-id() as xs:string" type="text/javascript">
+                return createUUID();
+            </fx-function>
+
+            <fx-instance id="login" type="json">{}</fx-instance>
+
+            <fx-submission id="s-login" ref="instance('login')?*"
+                           url="data/login.json" method="get" replace="instance"
+                           instance="login" validate="false">
+                <fx-setvalue ref="instance('vars')/loggedin" event="submit-error">false</fx-setvalue>
+                <fx-setvalue ref="instance('vars')/loggedin" event="submit-done">true</fx-setvalue>
+            </fx-submission>
+
+            <fx-function signature="editorsValid() as xs:boolean" type="text/javascript">
+                const editors = form.querySelectorAll('jinn-xml-editor[valid="false"],jinn-epidoc-editor[valid="false"]');
+                if(editors.length !== 0){
+                return false;
+                }else{
+                return true;
+                }
+            </fx-function>
+
+            <fx-function signature="checkDate($value as xs:string) as xs:boolean" type="text/javascript">
+                return checkDate($value);
+            </fx-function>
+
+        </fx-model>
+
+        <fx-group ref="teiHeader">
+            <h1>EDEp Editor</h1>
+            <fx-control id="title" class="title" ref="fileDesc/titleStmt/title">
+                <label>Titel</label>
+            </fx-control>
+
+            <!--            <span>Sprachselector hier</span>-->
+            <fx-group class="group-1">
+                <!-- 3) -->
+
+                <fx-output ref=".//msDesc/msIdentifier/idno">
+                    <label slot="label">EDEp ID: </label>
+                </fx-output>
+
+                <!-- 16a) -->
+                <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType/@ref" update-event="change">
+                    <label>Inschriftträger</label>
+                    <select ref="instance('objtyp')?*" class="widget" selection="open">
+                        <template>
+                            <option value="{?value}">{?name}</option>
+                        </template>
+                    </select>
+                </fx-control>
+
+                <!-- 16b) -->
+                <fx-control ref="//physDesc/objectDesc/supportDesc/support/note">
+                    <label>Beschreibung Inschriftträger</label>
+                </fx-control>
+
+                <!-- there's no 17) -->
+
+                <!-- 18) -->
+                <fx-control ref="//physDesc/objectDesc/supportDesc/support/material/@ref" update-event="change"
+                            class="orange">
+                    <label>Material</label>
+                    <select ref="instance('material')?*" class="widget" selection="open">
+                        <template>
+                            <option value="{?value}">{?name}</option>
+                        </template>
+                    </select>
+                </fx-control>
+            </fx-group>
+
+            <fx-repeat id="parts" ref=".//msPart">
+                <template>
+                    <div class="fragment" data-nr="Fragment-{count(./preceding-sibling::msPart) + 1}">
+                        <fx-group class="group-2">
+                            <!-- 4) -->
+                            <fx-control ref="msIdentifier/idno">
+                                <label>TM-Nummer</label>
+                            </fx-control>
+
+                            <div class="block findspot">
+                                <h3>Fundort</h3>
+                                <fx-var name="corresp" value="history/origin/origPlace/@corresp"></fx-var>
+                                <fx-control ref="$corresp">
+                                    <label>GeoId</label>
+                                    <fx-action event="value-changed">
+                                        <fx-setvalue ref="instance('vars')/geoid" value="$corresp"></fx-setvalue>
+                                        <fx-send submission="s-load-geodata"/>
+                                    </fx-action>
+                                </fx-control>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/region[@type='province']">
+                                    <label slot="label">Provinz/augusteische Region</label>
+                                </fx-output>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/country">
+                                    <label slot="label">Land</label>
+                                </fx-output>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/region[@type='region']">
+                                    <label slot="label">Region</label>
+                                </fx-output>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/placeName[@type='ancient']">
+                                    <label slot="label">Fundort (antik)</label>
+                                </fx-output>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/placeName[@type='modern']">
+                                    <label slot="label">Fundort (modern)</label>
+                                </fx-output>
+
+                                <fx-output ref="instance('geodata')/place[@xml:id=$corresp]/placeName[@type='findspot']">
+                                    <label slot="label">Fundstelle</label>
+                                </fx-output>
+
+                                <fx-control ref="history/provenance/note[@type='context']">
+                                    <label>Fundkontext</label>
+                                    <textarea rows="4" class="widget"></textarea>
+                                </fx-control>
+                            </div>
+
+                            <!-- 11) -->
+
+                            <!-- YYYY ->  matches(//title,'^-?[1-9]\d*$')-->
+                            <!-- YYYY-MM-DD -> matches(//title,'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$')    -->
+                            <div class="block">
+                                <h3>Fundjahr/-datum</h3>
+                                <fx-control ref="history/provenance/@when">
+                                    <label>Zeitpunkt</label>
+                                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                                    <fx-alert>
+                                        <iron-icon icon="warning"></iron-icon>
+                                        Ungültiges Datum
+                                    </fx-alert>
+                                </fx-control>
+                                <fx-control ref="history/provenance/@notBefore">
+                                    <label>nach</label>
+                                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                                    <fx-alert>
+                                        <iron-icon icon="warning"></iron-icon>
+                                        Ungültiges Datum
+                                    </fx-alert>
+                                </fx-control>
+                                <fx-control ref="history/provenance/@notAfter">
+                                    <label>vor</label>
+                                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                                    <fx-alert>
+                                        <iron-icon icon="warning"></iron-icon>
+                                        Ungültiges Datum
+                                    </fx-alert>
+                                </fx-control>
+                                <fx-control ref="history/provenance/@when-custom">
+                                    <label>freie Angabe</label>
+                                </fx-control>
+                            </div>
+
+                            <!-- 12a) -->
+                            <fx-control ref="msIdentifier/repository">
+                                <label>Aufbewahrung</label>
+                            </fx-control>
+
+                            <!-- 12c) Überlieferung -->
+                            <div>
+                                <legend>
+                                    <label>Überlieferung</label>
+                                    <fx-trigger class="add">
+                                        <iron-icon icon="add-circle-outline" title="Überlieferung hinzufügen"></iron-icon>
+
+                                        <fx-insert context="msContents/msItem/listBibl[@type='transmission']"
+                                                   ref="bibl"
+                                                   origin="instance('templates')//bibl"/>
+                                    </fx-trigger>
+                                </legend>
+                                <fx-repeat class="nested-repeat" id="bib"
+                                           ref="msContents/msItem/listBibl[@type='transmission']/bibl">
+                                    <template>
+                                        <fx-var name="current" value="count(./preceding-sibling::bibl) + 1"></fx-var>
+
+                                        <div>
+                                            <fx-control ref="ptr/@target">
+                                                <label>Referenz</label>
+                                            </fx-control>
+                                            <fx-control ref="note">
+                                                <label>Freie Eingabe</label>
+                                            </fx-control>
+                                        </div>
+                                        <fx-trigger>
+                                            <iron-icon icon="remove-circle-outline" title="Überlieferung löschen"></iron-icon>
+                                            <fx-delete ref="."/>
+                                        </fx-trigger>
+
+                                    </template>
+                                </fx-repeat>
+                            </div>
+
+                            <div class="block">
+                                <h3>Verifizierung</h3>
+                                <!-- 12b-12e missing -->
+                                <fx-control ref="msContents/msItem/note[@type='verification']/@subtype">
+                                    <label>Verifizierungsgrundlage</label>
+                                    <input list="verificationbase" class="widget"/>
+                                    <datalist id="verificationbase">
+                                        <option value="autopsy">Autopsie</option>
+                                        <option value="squeeze">Abklatsch</option>
+                                        <option value="photo">Foto</option>
+                                        <option value="drawing">Zeichnung</option>
+                                        <option value="not seen">nicht gesehen</option>
+                                    </datalist>
+                                </fx-control>
+                                <fx-control
+                                        ref="msContents/msItem/note[@type='verification']/date/@when">
+                                    <label>Datum der Verifizierung</label>
+                                    <input placeholder="YYYY-MM-DD" class="widget"/>
+                                </fx-control>
+                            </div>
+                        </fx-group>
+
+                        <fx-group class="group-3">
+
+                            <!-- 13) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/condition">
+                                <label>Erhaltung</label>
+                                <select class="widget">
+                                    <option value="complete">vollständig</option>
+                                    <option value="fragmentary">fragmentarisch</option>
+                                </select>
+                            </fx-control>
+
+                            <!-- 14) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/rs/@ref" update-event="input">
+                                <label>Dekor</label>
+                                <select class="widget">
+                                    <option value="https://www.eagle-network.eu/voc/decor/lod/2000">Ja</option>
+                                    <option value="https://www.eagle-network.eu/voc/decor/lod/1000">Nein</option>
+                                    <option value="uncertain">unsicher</option>
+                                </select>
+                            </fx-control>
+
+                            <!-- 15) -->
+                            <fx-control ref="msContents/msItem/@class">
+                                <label>Inschriftengattung</label>
+                                <select ref="instance('typeins')?*" class="widget" selection="open">
+                                    <template>
+                                        <option value="{?value}">{?name}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+
+                            <!--                        <fx-group>-->
+                            <!--                            <label>Inschriftträger</label>-->
+                            <!-- 19) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/width">
+                                <label>Breite</label>
+                            </fx-control>
+                            <!-- 38) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/height">
+                                <label>Höhe</label>
+                            </fx-control>
+                            <!-- 20) -->
+                            <fx-control ref="physDesc/objectDesc/supportDesc/support/dimensions/depth">
+                                <label>Tiefe</label>
+                            </fx-control>
+                            <!--                        </fx-group>-->
+
+                            <fx-group class="group-9">
+                                <!-- 34) -->
+                                <fx-control ref="physDesc/objectDesc/layoutDesc/layout/rs[@type='palaeography']/@ref">
+                                    <label>Paläographie</label>
+                                    <select ref="instance('palaeo')/item" class="widget" selection="open">
+                                        <template>
+                                            <option value="{.}">{.}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                            </fx-group>
+                        </fx-group>
+                        <fx-group class="group-4">
+                            <label>Inschriftfeld</label>
+                            <!-- 21) -->
+                            <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/height">
+                                <label>Höhe</label>
+                            </fx-control>
+                            <!-- 22) -->
+                            <fx-control ref="physDesc/objectDesc/layoutDesc/layout/dimensions/width">
+                                <label>Breite</label>
+                            </fx-control>
+                            <!-- 23) -->
+                            <fx-control ref="physDesc/handDesc/handNote/dimensions/height">
+                                <label>Buchstabenhöhe</label>
+                            </fx-control>
+                        </fx-group>
+
+
+                        <fx-group class="group-5">
+                            <!-- 24) -->
+                            <fx-control ref="//layoutDesc/layout/rs[@type='metric']">
+                                <label>Metrik</label>
+                                <select class="widget">
+                                    <option value="yes">Ja</option>
+                                    <option value="no">Nein</option>
+                                    <option value="partim">Partim</option>
+                                </select>
+                            </fx-control>
+                            <!-- 25) -->
+                            <fx-control ref="msContents/msItem/textLang/@mainLang">
+                                <label>Sprache</label>
+                                <fx-items ref="instance('vars')/languages/lang" class="widget">
+                                    <template>
+                                                    <span class="fx-checkbox">
+                                                        <input type="checkbox" value="{@code}"/>
+                                                        <label>{.}</label>
+                                                    </span>
+                                    </template>
+                                </fx-items>
+                            </fx-control>
+                        </fx-group>
+
+                        <fx-var name="frag" value="'#' || ./@xml:id"></fx-var>
+
+                        <fx-group class="group-6 padded">
+                            <label>Referenzen</label>
+
+                            <!-- 35a) Ältere Editionen -->
+                            <fieldset>
+                                <legend>
+                                    <label>Ältere Editionen</label>
+                                    <fx-trigger class="add">
+                                        <iron-icon icon="add-circle-outline" title="add Bibliographie"></iron-icon>
+
+                                        <fx-insert context="msContents/msItem/listBibl[@type='previousEditions']"
+                                                   ref="bibl"
+                                                   origin="instance('templates')//bibl"/>
+                                    </fx-trigger>
+                                </legend>
+                                <fx-repeat class="nested-repeat" id="bib"
+                                           ref="msContents/msItem/listBibl[@type='previousEditions']/bibl">
+                                    <template>
+                                        <fx-var name="current" value="count(./preceding-sibling::bibl) + 1"></fx-var>
+
+                                        <!--
+                                        Would be nice to link the control directly to body section but this cause the refresh to drop out.
+                                        Controls not yet recognize if they depend on some other control.
+
+                                        <fx-control ref="//div[@type='edition']/div[@corresp = $frag][$current]" as="node" update-event="update">-->
+                                        <fx-control ref="ptr/@target">
+                                            <label>Referenz</label>
+                                        </fx-control>
+
+                                        <fx-trigger>
+                                            <iron-icon icon="remove-circle-outline" title="delete Bibliographie"></iron-icon>
+                                            <fx-delete ref="."/>
+                                        </fx-trigger>
+
+                                    </template>
+                                </fx-repeat>
+                            </fieldset>
+
+                            <!-- 35b) -->
+                            <fieldset>
+                                <legend>
+                                    <label>Bibliographie</label>
+                                    <fx-trigger class="add">
+                                        <iron-icon icon="add-circle-outline" title="add edition"></iron-icon>
+
+                                        <!-- ##### when a new entry is created.. ##### -->
+                                        <!-- ##### 1. store away the value of the xml:id of this part as fx-var is failing here for some reason ##### -->
+                                        <!--
+                                                                        <fx-setvalue ref="instance('vars')/parent"
+                                                                                     value="instance()//msPart[index('parts')]/@xml:id"></fx-setvalue>
+                                        -->
+
+                                        <!-- ##### 2. insert a new bibl element ##### -->
+                                        <fx-insert context="msContents/msItem/listBibl[@type='bibliography']"
+                                                   ref="bibl"
+                                                   origin="instance('templates')//bibl"></fx-insert>
+                                    </fx-trigger>
+                                </legend>
+                                <fx-repeat class="nested-repeat" id="bib"
+                                           ref="msContents/msItem/listBibl[@type='bibliography']/bibl">
+                                    <template>
+                                        <fx-var name="current" value="count(./preceding-sibling::bibl) + 1"></fx-var>
+
+                                        <!--
+                                        Would be nice to link the control directly to body section but this cause the refresh to drop out.
+                                        Controls not yet recognize if they depend on some other control.
+
+                                        <fx-control ref="//div[@type='edition']/div[@corresp = $frag][$current]" as="node" update-event="update">-->
+                                        <fx-control ref="ptr/@target">
+                                            <label>Referenz</label>
+                                        </fx-control>
+
+                                        <fx-trigger>
+                                            <iron-icon icon="remove-circle-outline" title="Bibliographie löschen"></iron-icon>
+                                            <fx-delete ref="."/>
+                                        </fx-trigger>
+
+                                    </template>
+                                </fx-repeat>
+
+                            </fieldset>
+
+                            <!-- 35c) Bilder: Verweis auf Literatur, in der Abbildung vorhanden -->
+                            <fieldset>
+                                <legend>
+                                    <label>Bilder</label>
+                                    <fx-trigger class="add">
+                                        <iron-icon icon="add-circle-outline" title="add image"></iron-icon>
+
+                                        <fx-insert context="msContents/msItem/listBibl[@type='images']"
+                                                   ref="bibl"
+                                                   origin="instance('templates')//bibl"/>
+                                    </fx-trigger>
+                                </legend>
+                                <fx-repeat class="nested-repeat" id="bib"
+                                           ref="msContents/msItem/listBibl[@type='images']/bibl">
+                                    <template>
+                                        <div>
+                                            <fx-control ref="ptr/@target">
+                                                <label>Referenz</label>
+                                            </fx-control>
+                                            <fx-control ref="note">
+                                                <label>Freie Eingabe</label>
+                                            </fx-control>
+                                        </div>
+                                        <fx-trigger>
+                                            <iron-icon icon="remove-circle-outline" title="delete image"></iron-icon>
+                                            <fx-delete ref="."/>
+                                        </fx-trigger>
+
+                                    </template>
+                                </fx-repeat>
+                            </fieldset>
+
+                            <!-- 35d) Abbildungen -->
+                            <fieldset>
+                                <legend>
+                                    <label>Abbildungen</label>
+                                    <fx-trigger class="add">
+                                        <iron-icon icon="add-circle-outline" title="add image"></iron-icon>
+
+                                        <fx-insert context="facsimile"
+                                                   ref="graphic"
+                                                   origin="instance('mspart')//facsimile/graphic"></fx-insert>
+                                    </fx-trigger>
+                                </legend>
+                                <fx-repeat class="nested-repeat" ref="facsimile/graphic">
+                                    <template>
+                                        <fx-control ref="@url">
+                                            <label>URL</label>
+                                        </fx-control>
+
+                                        <fx-trigger>
+                                            <iron-icon icon="remove-circle-outline" title="delete image"></iron-icon>
+                                            <fx-delete ref="."></fx-delete>
+                                        </fx-trigger>
+
+                                    </template>
+                                </fx-repeat>
+                            </fieldset>
+                        </fx-group>
+                        <fx-group class="group-7 padded">
+                            <label>Transkription</label>
+                            <fx-control class="transcription" ref="div[@type='textpart']" as="node" update-event="blur">
+                                <jinn-epidoc-editor id="transcriptionEditor" schema="resources/scripts/epidoc.json"
+                                                    unwrap="unwrap" class="widget">
+                                    <div slot="leiden-toolbar">
+                                        <button data-command="expan" data-mode="leiden_plus">(a(bcd))</button>
+                                        <button data-command="erasure" data-mode="leiden_plus">〚abc〛</button>
+                                        <button data-command="unclear" data-mode="leiden_plus">ạ</button>
+                                        <button data-command="div" data-mode="leiden_plus">&lt;=...</button>
+                                        <button data-command="part" data-mode="leiden_plus">&lt;D=.A.part...</button>
+                                        <button data-command="recto" data-mode="leiden_plus">&lt;D=.r...</button>
+                                        <button data-command="verso" data-mode="leiden_plus">&lt;D=.v...</button>
+                                        <button data-command="erasure" data-mode="edcs">〚abc〛</button>
+                                        <button data-command="gap" data-mode="edcs">[...]</button>
+                                        <button data-command="convert" data-mode="edcs">Convert to Leiden+</button>
+                                    </div>
+                                    <div slot="xml-toolbar">
+                                        <button data-command="selectElement"
+                                                title="Select element around current cursor position">&lt;|&gt;
+                                        </button>
+                                        <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                                        <button data-command="removeEnclosing" title="Remove enclosing tags" class="sep">
+                                            &lt;X&gt;
+                                        </button>
+                                        <button data-command="snippet" data-params='&lt;ab&gt;$|_|&lt;/ab&gt;'
+                                                title="Insert ab">&lt;ab&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;supplied reason="lost"&gt;$|_|&lt;/supplied&gt;'
+                                                title="Insert supplied">&lt;supplied&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;expan&gt;&lt;abbr&gt;$|1|&lt;/abbr&gt;&lt;ex&gt;$|2|&lt;/ex&gt;&lt;/expan&gt;$|3|'
+                                                title="Insert expan/abbr">&lt;expan&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;gap reason="lost" extent="unknown" unit="character"/&gt;$|1|'
+                                                title="Gap extent unknown">&lt;gap/unknown&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;gap reason="lost" quantity="$|1|" unit="$|2:line|"/&gt;$|3|'
+                                                title="Gap extent known">&lt;gap&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;persName key="$|1|"&gt;$|_|&lt;/persName&gt;'
+                                                title="persName">&lt;persName&gt;
+                                        </button>
+                                    </div>
+                                </jinn-epidoc-editor>
+                            </fx-control>
+                        </fx-group>
+                        <fx-group class="group-8 padded">
+                            <label>Apparatus</label>
+                            <!-- 36) Apparatus für 1. Fragment: @corresp referenziert msPart - eingefügt aus jinn-codemirror -->
+                            <fx-control class="apparatus" ref="div[@type='apparatus']" as="node" update-event="blur">
+                                <jinn-xml-editor id="apparatus" class="widget" unwrap="unwrap"
+                                                 namespace="http://www.tei-c.org/ns/1.0">
+                                    <div slot="toolbar">
+                                        <button data-command="selectElement"
+                                                title="Select element around current cursor position">&lt;|>
+                                        </button>
+                                        <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                                        <button data-command="removeEnclosing" title="Remove enclosing tags"
+                                                class="sep">&lt;X>
+                                        </button>
+                                        <button data-command="snippet" data-params="&lt;listApp>$|_|&lt;/listApp>"
+                                                title="Insert apparatus list">&lt;listApp&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;app loc="$|1|">&lt;note>$|_|&lt;/note>&lt;/app>'
+                                                title="Insert apparatus entry">&lt;app&gt;
+                                        </button>
+                                    </div>
+                                </jinn-xml-editor>
+                            </fx-control>
+                        </fx-group>
+
+                        <fx-group class="group-8-1 padded">
+                            <fx-control ref="//handDesc/handNote/rs">
+                                <label>Ligatur</label>
+                                <select class="widget">
+                                    <option value="yes">Ja</option>
+                                    <option value="no">Nein</option>
+                                </select>
+                            </fx-control>
+                        </fx-group>
+
+                        <fx-group class="group-9 padded">
+                            <label>Übersetzung</label>
+                            <!-- 42) Übersetzung: @corresp referenziert msPart; @resp = Kürzel des Übersetzers - eingefügt aus jinn-codemirror -->
+                            <fx-control class="translation" ref="div[@type='translation']" as="node"
+                                        update-event="blur">
+                                <jinn-xml-editor id="translation" unwrap="unwrap" class="widget"
+                                                 namespace="http://www.tei-c.org/ns/1.0">
+                                    <div slot="toolbar">
+                                        <button data-command="selectElement"
+                                                title="Select element around current cursor position">&lt;|&gt;
+                                        </button>
+                                        <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                                        <button data-command="removeEnclosing" title="Remove enclosing tags"
+                                                class="sep">&lt;X&gt;
+                                        </button>
+                                        <button data-command="snippet" data-params="&lt;p&gt;$|_|&lt;/p&gt;"
+                                                title="Insert paragraph">&lt;p&gt;
+                                        </button>
+                                        <button data-command="snippet"
+                                                data-params='&lt;persName key="$|1|"&gt;$|_|&lt;/persName&gt;'
+                                                title="persName">&lt;persName&gt;
+                                        </button>
+                                    </div>
+                                </jinn-xml-editor>
+                            </fx-control>
+                            <!-- 43) Übersetzer/in -->
+                            <fx-control class="translator" ref="div[@type='translation']/@resp">
+                                <label>Übersetzer/in: </label>
+                            </fx-control>
+                        </fx-group>
+                    </div>
+                    <!--
+                                                <div class="repeat-caption">
+                                                    <label>Edition</label>
+                                                    <fx-trigger class="add">
+                                                        <iron-icon icon="add-circle-outline" title="add Bibliographie"/>
+
+                                                    </fx-trigger>
+                                                </div>
+                    -->
+
+                    <!--                    </div>-->
+
+
+                    <fx-trigger class="delete {if(count(./preceding-sibling::msPart) = 0) then 'hidden' else ''}">
+                        <button>Löschen</button>
+                        <!--                        <fx-confirm message="really delete?">-->
+                        <fx-delete ref="."></fx-delete>
+                        <!--                        </fx-confirm>-->
+                        <!--                            <fx-delete ref="."></fx-delete>-->
+                    </fx-trigger>
+
+
+                </template>
+            </fx-repeat>
+            <!-- #####
+            option 3: without fx-control just catching the event and using replace action to update node
+
+            moved this out of repeat to ensure it's not id clashing
+            ##### -->
+            <!--            <fx-replace ref="instance('default')//body/div[@type='edition']/div[fn:last()]" -->
+            <!--
+                        <fx-replace ref="instance('templates')/epidoc"
+                                    with="parse(event('content'))"
+                                    event="update"
+                                    target="epidoc-editor3"></fx-replace>
+                        <fx-refresh event="update" force="force" target="epidoc-editor3"></fx-refresh>
+                        <jinn-epidoc-editor id="epidoc-editor3" class="widget" schema="resources/scripts/epidoc.json"/>
+            -->
+
+
+            <fx-trigger class="add">
+                <button>Hinzufügen</button>
+                <fx-action>
+                    <!-- insert a new msPart  -->
+                    <fx-insert ref="//msPart" origin="instance('mspart')"/>
+                    <!-- update and refresh so the repeat index is updated -->
+                    <fx-update/>
+                    <fx-refresh/>
+                    <!-- setting generated id on new msPart -->
+                    <fx-var name="uuid" value="gen-id()"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/@xml:id" value="$uuid"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/div[@type='textpart']/@corresp" value="'#' || $uuid"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/div[@type='apparatus']/@corresp" value="'#' || $uuid"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/div[@type='translation']/@corresp" value="'#' || $uuid"/>
+                    <fx-setvalue ref="//msPart[index('parts')]/facsimile/@corresp" value="'#' || $uuid"/>
+
+                    <!-- add required textpart to edition
+                    <fx-insert ref="//body/div[@type='edition']/div" origin="instance('templates')//div[@type='edition']/div"/>
+                    <fx-update/>
+                    <fx-refresh/>
+                    <fx-setvalue ref="//body/div[@type='edition']/div[fn:last()]/@corresp" value="$uuid"/>
+                    -->
+                </fx-action>
+            </fx-trigger>
+
+            <!--
+                        <fx-group class="group-10 padded">
+                            <label>Kommentar</label>
+                            <fx-control class="commentary"
+                                        ref="instance('default')//body/div[@type='commentary']" as="node" update-event="update">
+                                <jinn-xml-editor class="widget" unwrap="unwrap" namespace="http://www.tei-c.org/ns/1.0">
+                                    <div slot="toolbar">
+                                        <button data-command="selectElement" title="Select element around current cursor position">&lt;|></button>
+                                        <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;</button>
+                                        <button data-command="removeEnclosing" title="Remove enclosing tags" class="sep">&lt;X></button>
+                                        <button data-command="snippet" data-params="&lt;p>$|_|&lt;/p>" title="Insert paragraph">&lt;p&gt;</button>
+                                    </div>
+                                </jinn-xml-editor>
+                            </fx-control>
+                        </fx-group>
+            -->
+
+            <!--
+            This won't call the update-cycle for each event as the replace action in its current form does not
+            call it. The control will refresh the UI when the control looses focus (onblur).
+            -->
+            <fx-group class="group-10 padded">
+                <label>Kommentar</label>
+                <fx-control class="commentary" ref="instance('default')//body/div[@type='commentary']" as="node"
+                            update-event="blur">
+                    <jinn-xml-editor id="commentary" class="widget" unwrap="unwrap"
+                                     namespace="http://www.tei-c.org/ns/1.0">
+                        <div slot="toolbar">
+                            <button data-command="selectElement" title="Select element around current cursor position">
+                                &lt;|&gt;
+                            </button>
+                            <button data-command="encloseWith" title="Enclose selection in new element">&lt;...&gt;
+                            </button>
+                            <button data-command="removeEnclosing" title="Remove enclosing tags" class="sep">&lt;X&gt;
+                            </button>
+                            <button data-command="snippet" data-params="&lt;p&gt;$|_|&lt;/p&gt;"
+                                    title="Insert paragraph">&lt;p&gt;
+                            </button>
+                            <button data-command="snippet" data-params='&lt;persName key="$|1|"&gt;$|_|&lt;/persName&gt;'
+                                    title="persName">&lt;persName&gt;
+                            </button>
+                        </div>
+                    </jinn-xml-editor>
+                </fx-control>
+
+                <!--fx-replace ref="instance('default')//body/div[@type='commentary']"
+                            with="parse(event('content'))"
+                            target="commentary"
+                            event="update"></fx-replace-->
+            </fx-group>
+
+
+            <!-- 26) -->
+            <fx-group ref="//msDesc" class="group-6">
+                <!-- 26), 27)-->
+                <fx-control ref="history/origin/origDate/@when-custom">
+                    <label>Zeitpunkt</label>
+                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                    <fx-alert>
+                        <iron-icon icon="warning"></iron-icon>
+                        Ungültiges Datum
+                    </fx-alert>
+                </fx-control>
+                <fx-control ref="history/origin/origDate/@notBefore-custom">
+                    <label>nach</label>
+                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                    <fx-alert>
+                        <iron-icon icon="warning"></iron-icon>
+                        Ungültiges Datum
+                    </fx-alert>
+                </fx-control>
+                <fx-control ref="history/origin/origDate/@notAfter-custom">
+                    <label>vor</label>
+                    <input placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" class="widget"/>
+                    <fx-alert>
+                        <iron-icon icon="warning"></iron-icon>
+                        Ungültiges Datum
+                    </fx-alert>
+                </fx-control>
+                <fx-control ref="history/origin/origDate">
+                    <label>Freie Angabe</label>
+                </fx-control>
+            </fx-group>
+
+            <fx-group ref="profileDesc" class="group-7">
+                <!-- 28)  -->
+                <fx-control ref="textClass/keywords/term/@ref">
+                    <label>Religion</label>
+                    <select class="widget">
+                        <option value=""/>
+                        <option value="#pagan">pagan</option>
+                        <option value="#jewish">jüdisch</option>
+                        <option value="#christian">christlich</option>
+                    </select>
+                </fx-control>
+                <!-- 29) missing -->
+                <!-- 30) -->
+                <!-- dummy switch to insert or delete 'term' elements in main instance -->
+                <fx-control ref="instance('vars')/history-term" value-prop="checked" update-event="input">
+                    <label for="historyTerm">Sozial-,Wirschafts-/Rechtsgeschichte</label>
+                    <input id="historyTerm" type="checkbox" class="widget"/>
+                    <fx-insert event="value-changed"
+                               if="context()/text()='true'"
+                               context="instance()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               ref="term"
+                               origin="instance('templates')/term[@ref='#social-economic-legal-history']"></fx-insert>
+
+                    <fx-delete event="value-changed"
+                               if="context()/text()='false'"
+                               ref="instance('default')//term[@ref='#social-economic-legal-history']"></fx-delete>
+                </fx-control>
+
+                <!-- 31) -->
+                <!-- dummy switch to insert or delete 'term' elements in main instance -->
+                <fx-control ref="instance('vars')/geography-term" value-prop="checked" update-event="input">
+                    <label for="geographyTerm">Geographie</label>
+                    <input id="geographyTerm" type="checkbox" class="widget"/>
+                    <fx-insert event="value-changed"
+                               if="context()/text()='true'"
+                               context="instance()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               ref="term"
+                               origin="instance('templates')/term[@ref='#geography']"></fx-insert>
+
+                    <fx-delete event="value-changed"
+                               if="context()/text()='false'"
+                               ref="instance('default')//term[@ref='#geography']"></fx-delete>
+                </fx-control>
+
+                <!-- 32) -->
+                <!-- dummy switch to insert or delete 'term' elements in main instance -->
+                <fx-control ref="instance('vars')/military-term" value-prop="checked" update-event="input">
+                    <label for="militaryTerm">Militär</label>
+                    <input id="militaryTerm" type="checkbox" class="widget"/>
+                    <fx-insert event="value-changed"
+                               if="context()/text()='true'"
+                               context="instance()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               ref="term"
+                               origin="instance('templates')/term[@ref='#military']"></fx-insert>
+
+                    <fx-delete event="value-changed"
+                               if="context()/text()='false'"
+                               ref="instance('default')//term[@ref='#military']"></fx-delete>
+                </fx-control>
+
+            </fx-group>
+
+            <fx-group class="group-8">
+                <!-- 33) -->
+                <fx-control ref="revisionDesc/@status">
+                    <label>Stand der Bearbeitung</label>
+                    <select class="widget">
+                        <option value="draft">intern</option>
+                        <option value="public">öffentlich</option>
+                    </select>
+                </fx-control>
+            </fx-group>
+
+            <!-- 35b) -->
+            <!-- 35a) -->
+            <!-- 35c) -->
+            <!-- 35d) -->
+
+
+            <!-- 47) -->
+            <!-- 45) -->
+
+            <section class="buttonBar">
+                <fx-trigger class="saveBtn" debounce="1000">
+                    <button>Speichern</button>
+                    <fx-action if="not(exists(instance('params')/id))">
+                        <fx-send submission="s-login"/>
+                        <fx-send submission="s-create"/>
+                    </fx-action>
+                    <fx-action if="exists(instance('params')/id)">
+                        <fx-send submission="s-login"/>
+                        <fx-send submission="s-save"/>
+                    </fx-action>
+                </fx-trigger>
+                <fx-trigger>
+                    <a href="edit.html">Neuer Eintrag</a>
+                </fx-trigger>
+                <fx-trigger>
+                    <a href="index.html">Zur Liste</a>
+                </fx-trigger>
+            </section>
+
+            <fx-control ref="instance('vars')/xml-valid" class="valid-warning">
+                <fx-alert>Bitte XML korrigieren, um zu speichern.</fx-alert>
+                <input style="display:none;"></input>
+            </fx-control>
+        </fx-group>
+        <fx-inspector></fx-inspector>
+    </fx-fore></div>
+<script src="./util.js" type="text/javascript"></script>
+<script type="module" src="../demo.js"></script>
+<script type="module" src="./jinn-codemirror-bundle.js"></script>
+<script type="module">
+    import '@polymer/iron-icon/iron-icon.js';
+    import '@polymer/iron-icons/iron-icons.js';
+</script>
+
+</body>
+
+</html>

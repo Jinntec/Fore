@@ -48,6 +48,7 @@
     <demo-snippet>
         <template>
             <fx-fore>
+                <fx-message event="ready">Hey it's ready</fx-message>
 
                 <fx-model>
                     <fx-instance>
@@ -71,7 +72,6 @@
                         <fx-message event="submit-done">have submitted</fx-message>
                         <fx-message event="submit-error">Error occured</fx-message>
                     </fx-submission>
-                    <fx-message event="ready">Hey it's ready</fx-message>
                 </fx-model>
                 <fx-group collapse="true">
                     <h1>Submission Event Hooks</h1>

@@ -59,6 +59,9 @@
         #three {
             background: #aeea00;
         }
+        fx-control{
+            display: block;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -74,6 +77,17 @@
     <demo-snippet>
         <template>
             <fx-fore>
+<!--
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item1>a bound item</item1>
+                            <item2>a bound item</item2>
+                            <item3>a bound item</item3>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+-->
 
                 <fx-trigger label="page 1">
                     <paper-button>toggle page 1</paper-button>
@@ -91,14 +105,31 @@
                 </fx-trigger>
 
                 <fx-switch>
-                    <fx-case id="one" name="page1">
+                    <fx-case id="one">
+                        <fx-message event="select">Tab one selected</fx-message>
+                        <fx-message event="deselect">Tab one deselected</fx-message>
                         some exclusive content
+<!--
+                        <fx-control ref="item1">
+                            <label>Item1</label>
+                        </fx-control>
+-->
                     </fx-case>
-                    <fx-case id="two" name="page2">
+                    <fx-case id="two">
                         some further content
+<!--
+                        <fx-control ref="item2">
+                            <label>Item1</label>
+                        </fx-control>
+-->
                     </fx-case>
-                    <fx-case id="three" name="page3">
+                    <fx-case id="three">
                         some completely unneeded content
+<!--
+                        <fx-control ref="item3">
+                            <label>Item1</label>
+                        </fx-control>
+-->
                     </fx-case>
                 </fx-switch>
             </fx-fore>
@@ -141,6 +172,8 @@
                 <h2>Page 2</h2>
             </fx-case>
             <fx-case name="page3">
+                <fx-message event="select">page 3 selected</fx-message>
+                <fx-message event="deselect">page 3 deselected</fx-message>
                 <h2>Page 3</h2>
             </fx-case>
         </fx-switch>

@@ -58,7 +58,7 @@ class FxAppend extends AbstractAction {
    * behavior should be needed for some reason later on, it can be added easier by a providing an 'duplicate' action.
    *
    */
-  perform() {
+  async perform() {
     super.perform();
 
     this._dataFromTemplate();

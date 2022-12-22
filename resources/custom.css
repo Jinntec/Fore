@@ -1,0 +1,20 @@
+
+:host{
+    background: orange;
+}
+/*
+fx-fore.widget button{
+    background: #00b0ff;
+    color:white;
+}
+*/
+fx-fore.widget fx-control{
+    display: block;
+}
+fx-fore.widget fx-repeatitem{
+    display: block;
+}
+#to fx-fore.widget button{
+    background: #00b0ff;
+    color:white;
+}

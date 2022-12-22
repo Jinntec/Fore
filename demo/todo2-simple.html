@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>todo</title>
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="todo.css">
+    <script type="module" src="./demo.js"></script>
+</head>
+<body unresolved="unresolved">
+    <div class="wrapper">
+        <fx-fore id="todo" convert>
+            <send submission="load" event="model-construct-done"></send>
+            <setvalue ref="instance('helper')/changed" event="value-changed">true</setvalue>
+
+            <model id="record">
+                <instance>
+                    <data>
+                        <show-completed>false</show-completed>
+                    </data>
+                </instance>
+                <bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
+                    <bind ref="./text()" required="true()"></bind>
+                </bind>
+                <submission id="save"
+                               url="localStore:todos"
+                               method="post">
+                    <message event="submit-done">Changes have been stored</message>
+                </submission>
+                <submission id="load"
+                               url="localStore:todos"
+                               method="get">
+                    <message event="submit-done">Todos loaded from localStorage</message>
+                </submission>
+
+                <submission id="clear"
+                               url="localStore:todos"
+                               method="consume">
+                    <message event="submit-done">Todos loaded from localStorage</message>
+                </submission>
+
+                <instance id="helper">
+                    <data>
+                        <template>
+                            <task complete="false" due=""></task>
+                        </template>
+                    </data>
+                </instance>
+            </model>
+
+            <h1>Todo
+                <trigger class="btn add">
+                    <button>+</button>
+                    <insert ref="task" origin="instance('helper')/template/task"></insert>
+                </trigger>
+            </h1>
+            <div class="info">
+                You have {count(instance()/task[@complete='true'])} completed tasks
+            </div>
+
+            <div class="info open">
+                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+            </div>
+
+            <div class="info big">
+                {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+            </div>
+
+<!--            <setfocus target="#document" control="task" event="value-changed"></setfocus>-->
+            <repeat id="r-task" ref="task">
+                <template>
+                    <div>
+                        <action event="value-changed">
+                            <send submission="save"></send>
+                        </action>
+
+                        <control ref="@complete" value-prop="checked" update-event="input">
+                            <input class="widget" type="checkbox">
+                        </control>
+                        <control id="task" class="complete {@complete}" ref="."></control>
+                        <control ref="@due">
+                            <input type="date">
+                        </control>
+                        <trigger class="btn delete">
+                            <button>x</button>
+                            <delete ref="."></delete>
+                        </trigger>
+                    </div>
+                </template>
+            </repeat>
+
+            <control id="switch" ref="show-completed" value-prop="checked" update-event="input">
+                <label for="showcompleted">show completed</label>
+                <input id="showcompleted" type="checkbox" class="widget">
+            </control>
+
+            <trigger>
+                <button>clear your data</button>
+                <send submission="clear"></send>
+            </trigger>
+            <fx-inspector></fx-inspector>
+        </fx-fore>
+
+    </div>
+
+</body>
+</html>

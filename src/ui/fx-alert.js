@@ -13,7 +13,6 @@ export class FxAlert extends AbstractControl {
         font-size: 0.8em;
         font-weight: 400;
         color: red;
-        display: none;
       }
     `;
 

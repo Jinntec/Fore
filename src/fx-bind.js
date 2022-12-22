@@ -61,7 +61,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    */
   init(model) {
     this.model = model;
-    console.log('init binding ', this);
+    // console.log('init binding ', this);
     this.instanceId = this._getInstanceId();
     this.bindType = this.getModel().getInstance(this.instanceId).type;
     // console.log('binding type ', this.bindType);
@@ -319,6 +319,11 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       targetNode,
       this,
     );
+
+    const alert = this.getAlert();
+    if (alert) {
+      newItem.addAlert(alert);
+    }
 
     this.getModel().registerModelItem(newItem);
   }

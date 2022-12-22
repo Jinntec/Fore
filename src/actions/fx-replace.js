@@ -32,7 +32,7 @@ export default class FxReplace extends AbstractAction {
     this.with = this.getAttribute('with');
   }
 
-  perform() {
+  async perform() {
     super.perform();
     console.log('replace action');
     // console.log('replace action variables', this.inScopeVariables);

@@ -47,8 +47,21 @@ const xhtmlNamespaceResolver = prefix => {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-    const allMatchingTargetObjects = fxEvaluateXPathToNodes(
-        'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]',
+	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+    /*
+        if (nodeName === 'fx-instance') {
+            // Instance elements can only be in the `model` element
+            // query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
+
+            const fore = Fore.getFore(sourceObject);
+            const instances = fore.getModel().instances;
+            const targetInstance = instances.find(i => i.id === id);
+            return targetInstance;
+        return document.getElementById(id);
+	}
+    */
+
+    const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
         sourceObject,
         null,
         {id},
@@ -146,6 +159,30 @@ export function resolveId(id, sourceObject, nodeName = null) {
 // Make namespace resolving use the `instance` element that is related to here
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
+function findInstanceReferences(xpathQuery) {
+	if (!xpathQuery.includes('instance')) {
+		// No call to the instance function anyway: short-circuit and prevent AST processing
+		return [];
+	}
+    const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
+    const instanceReferences = fxEvaluateXPathToStrings(
+        `descendant::xqx:functionCallExpr
+				[xqx:functionName = "instance"]
+				/xqx:arguments
+				/xqx:stringConstantExpr
+				/xqx:value`,
+        xpathAST,
+        null,
+        {},
+        {
+            namespaceResolver: prefix =>
+                prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+        },
+    );
+
+	return instanceReferences;
+}
+
 /**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
  * XPath in which the namespace is being resolved. The prefix will be resolved by using the
@@ -165,25 +202,12 @@ function createNamespaceResolver(xpathQuery, formElement) {
     if (cachedResolver) {
         return cachedResolver;
     }
-
-    const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
-    let instanceReferences = fxEvaluateXPathToStrings(
-        `descendant::xqx:functionCallExpr
-				[xqx:functionName = "instance"]
-				/xqx:arguments
-				/xqx:stringConstantExpr
-				/xqx:value`,
-        xpathAST,
-        null,
-        {},
-        {
-            namespaceResolver: prefix =>
-                prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-        },
-    );
+	let instanceReferences = findInstanceReferences(xpathQuery);
     if (instanceReferences.length === 0) {
         // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
-        const ancestorComponent = fxEvaluateXPathToFirstNode('ancestor::*[@ref][1]', formElement);
+        const ancestorComponent = formElement.parentNode &&
+			  formElement.parentNode.nodeType === formElement.ELEMENT &&
+			  formElement.parentNode.closest('[ref]');
         if (ancestorComponent) {
             const resolver = createNamespaceResolver(
                 ancestorComponent.getAttribute('ref'),
@@ -738,19 +762,18 @@ const instance = (dynamicContext, string) => {
         {namespaceResolver: xhtmlNamespaceResolver},
     );
 
-    // console.log('fnInstance dynamicContext: ', dynamicContext);
-    // console.log('fnInstance string: ', string);
+    const inst = string
+        ? formElement.querySelector(`#${string}`)
+        : formElement.querySelector(`fx-instance`);
 
+/*
     const inst = string
         ? resolveId(string, formElement, 'fx-instance')
         : formElement.querySelector(`fx-instance`);
+*/
 
-    // const def = instance.getInstanceData();
     if (inst) {
-        const def = inst.getDefaultContext();
-        // console.log('target instance root node: ', def);
-
-        return def;
+        return inst.getDefaultContext();
     }
     return null;
 };

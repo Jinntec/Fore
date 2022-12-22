@@ -16,8 +16,31 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.required = false;
     this.readonly = false;
     this.widget = null;
+    this.visited = false;
+    this.force = false;
     // this.attachShadow({ mode: 'open' });
   }
+
+
+  // todo: discuss - this is a hack to circumvent that modelItems in toRefresh diverge from the modelItems in
+  // the model in some situations. This code first looks for refresh
+/*
+  getModelItem() {
+    console.log('toRefreshModelItems', this.getOwnerForm().toRefresh);
+    const s = this.modelItem.path;
+    console.log('toRefreshModelItems path', s);
+
+    const toRefresh = this.getOwnerForm().toRefresh;
+    let mi;
+    if(toRefresh){
+      mi = this.getOwnerForm().toRefresh.find(m => m.path === s);
+    }
+
+    return mi? mi: super.getModelItem();
+    // console.log('toRefreshModelItems realitem', mi);
+
+  }
+*/
 
   // eslint-disable-next-line class-methods-use-this
   getWidget() {
@@ -27,7 +50,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   /**
    * (re)apply all modelItem state properties to this control. model -> UI
    */
-  async refresh() {
+  async refresh(force) {
+    if(force) this.force=true;
     // console.log('### AbstractControl.refresh on : ', this);
 
     const currentVal = this.value;
@@ -40,6 +64,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.oldVal = this.nodeset ? this.nodeset : null;
     this.evalInContext();
 
+    // todo this if should be removed - see above
     if (this.isBound()) {
       // this.control = this.querySelector('#control');
 
@@ -49,6 +74,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       }
 
       this.modelItem = this.getModelItem();
+      // console.log('refresh modelItem', this.modelItem);
 
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
@@ -94,11 +120,17 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        if (currentVal !== this.value) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path });
+        if (currentVal !== this.value ) {
+          // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
+        // if (currentVal !== this.value && this.visited) {
+          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
         }
       }
     }
+  }
+
+  refreshFromModelItem(modelItem){
+
   }
 
   /**
@@ -135,24 +167,71 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
-    // if (this.required !== this.modelItem.required) {
-    if (this.isRequired() !== this.modelItem.required) {
-      if (this.modelItem.required) {
-        if (this.getOwnerForm().ready){
-          if(this.widget.value === ''){
-            this.classList.add('isRequiredFalse');
-          }else{
-            this.classList.remove('isRequiredFalse');
-          }
-        }
-        this.widget.setAttribute('required', '');
-        this.setAttribute('required', '');
-        this._dispatchEvent('required');
-      } else {
-        this.widget.removeAttribute('required');
-        this.removeAttribute('required');
+
+    if(!this.modelItem.required){
+      this.widget.removeAttribute('required');
+      this.removeAttribute('required');
+      if (this.isRequired() !== this.modelItem.required){
         this._dispatchEvent('optional');
       }
+      return;
+    }
+
+    // ### modelItem is required
+    if (this.visited || this.force) {
+      if (this.modelItem.value === '') {
+        this.classList.add('isEmpty');
+        this._toggleValid(false);
+      } else {
+        this.classList.remove('isEmpty');
+        this._toggleValid(true);
+      }
+    }
+    this.widget.setAttribute('required', '');
+    this.setAttribute('required', '');
+    if (this.isRequired() !== this.modelItem.required) {
+      this._dispatchEvent('required');
+    }
+
+/*
+    if (this.isRequired() !== this.modelItem.required) {
+      this._updateRequired();
+    }
+*/
+  }
+
+
+  _updateRequired() {
+    if (this.modelItem.required) {
+      // if (this.getOwnerForm().ready){
+      if (this.visited || this.force) {
+      // if (this.visited ) {
+      //   if (this.widget.value === '') {
+        if (this.modelItem.value === '') {
+          this.classList.add('isEmpty');
+          this._toggleValid(false);
+        } else {
+          this.classList.remove('isEmpty');
+          this._toggleValid(true);
+        }
+      }
+      this.widget.setAttribute('required', '');
+      this.setAttribute('required', '');
+      this._dispatchEvent('required');
+    } else {
+      this.widget.removeAttribute('required');
+      this.removeAttribute('required');
+      this._dispatchEvent('optional');
+    }
+  }
+
+  _toggleValid(valid){
+    if(valid){
+      this.removeAttribute('invalid');
+      this.setAttribute('valid','');
+    }else{
+      this.removeAttribute('valid');
+      this.setAttribute('invalid','');
     }
   }
 
@@ -177,28 +256,35 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // console.log('mip valid', this.modelItem.required);
     const alert = this.querySelector('fx-alert');
 
+    const mi = this.getModelItem();
+    // console.log('late modelItem', mi);
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {
-        if (alert) alert.style.display = 'none';
+        // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
+        this.setAttribute('valid','');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
+        this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
+/*
         if (alert) {
           alert.style.display = 'block';
         }
+*/
         if (this.modelItem.alerts.length !== 0) {
-          const { alerts } = this.modelItem;
-          // console.log('alerts from bind: ', alerts);
 
           const controlAlert = this.querySelector('fx-alert');
           if (!controlAlert) {
+            const { alerts } = this.modelItem;
+            // console.log('alerts from bind: ', alerts);
             alerts.forEach(modelAlert => {
               const newAlert = document.createElement('fx-alert');
+              // const newAlert = document.createElement('span');
               newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
-              newAlert.style.display = 'block';
+              // newAlert.style.display = 'block';
             });
           }
         }

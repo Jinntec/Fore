@@ -1,0 +1,115 @@
+
+<?xml-stylesheet href="../../xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://www.w3.org/1999/xhtml"
+      xmlns:ev="http://www.w3.org/2001/xml-events">
+<head>
+    <title>Basic map</title>
+
+    <style type="text/css">
+        .map, .mouse {
+            height: 512px; width: 512px; line-height: 0;
+            white-space: nowrap; overflow: hidden;
+        }
+        .mouse {position: absolute; top: 0; left: 0;}
+        .space {height: 512px; width: 512px;}
+        #root {position: relative;}
+        .xforms-repeat-item {display: inline}
+    </style>
+
+    <model xmlns="http://www.w3.org/2002/xforms">
+        <instance id="map">
+            <map xmlns="">
+                <zoom>10</zoom>
+                <lasty>22058667</lasty><lastx>34477602</lastx>
+                <posx/><posy/>
+                <x/><y/>
+                <tilesize>256</tilesize>
+                <scale/>
+                <maxpos/>
+                <maxzoom>19</maxzoom>
+                <offx/><offy/><offsets/>
+                <site>http://tile.openstreetmap.org/</site>
+                <row y="-1"><url x="-1"/><url x="0"/><url x="1"/></row>
+                <row y="0"><url x="-1"/><url x="0"/><url x="1"/></row>
+                <row y="1" ><url x="-1"/><url x="0"/><url x="1"/></row>
+                <mouse>
+                    <x>0</x>
+                    <y>0</y>
+                    <state>up</state>
+                    <cursor/>
+                    <start><x/><y/></start>
+                    <end><x/><y/></end>
+                    <move><x/><y/></move>
+                </mouse>
+            </map>
+        </instance>
+        <bind ref="scale" calculate="power(2, 26 - ../zoom)"/>
+        <bind ref="maxpos" calculate="power(2, 26)"/>
+        <bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"/>
+        <bind ref="posy" calculate="(../lasty - (../mouse/move/y * (../scale div ../tilesize))) mod ../maxpos"/>
+        <bind ref="x" calculate="floor(../posx div ../scale)"/>
+        <bind ref="y" calculate="floor(../posy div ../scale)"/>
+
+        <bind ref="row/url" calculate="concat(/map/site, /map/zoom, '/',
+				     /map/x + @x, '/', /map/y + ../@y, '.png')"/>
+        <bind ref="offx" calculate="floor(((../posx - ../x * ../scale) div ../scale)*../tilesize)" />
+        <bind ref="offy" calculate="floor(((../posy - ../y * ../scale) div ../scale)*../tilesize)" />
+        <bind ref="offsets" calculate="concat('margin-left: ', 0 - (../offx), 'px; margin-top: ', 0 - (../offy), 'px;')" />
+
+        <bind ref="mouse/cursor" calculate="if(../state = 'up', 'pointer', 'move')"/>
+        <bind ref="mouse/end/x" calculate="if(../../state = 'down', ../../x, .)"/>
+        <bind ref="mouse/end/y" calculate="if(../../state = 'down', ../../y, .)"/>
+        <bind ref="mouse/move/x" calculate="../../end/x - ../../start/x"/>
+        <bind ref="mouse/move/y" calculate="../../end/y - ../../start/y"/>
+    </model>
+</head>
+<body>
+<!-- The two divs 'map' and 'mouse' are positioned over each other by the CSS -->
+
+<div id="root" class="map" style="cursor: {mouse/cursor}">
+    <div style="{offsets}">
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <repeat ref="row">
+                <repeat ref="url">
+                    <output ref="." mediatype="image/*"/>
+                </repeat>
+            </repeat>
+        </group>
+    </div>
+    <div class="mouse">
+        <div style="cursor: {mouse/cursor}">
+            <group class="space" xmlns="http://www.w3.org/2002/xforms">
+                <action ev:event="mousemove">
+                    <setvalue ref="mouse/x" value="event('clientX')"/>
+                    <setvalue ref="mouse/y" value="event('clientY')"/>
+                </action>
+                <action ev:event="mousedown" ev:defaultAction="cancel">
+                    <setvalue ref="mouse/state">down</setvalue>
+                    <setvalue ref="mouse/start/x" value="event('clientX')"/>
+                    <setvalue ref="mouse/start/y" value="event('clientY')"/>
+                </action>
+                <action ev:event="mouseup" ev:defaultAction="cancel">
+                    <setvalue ref="mouse/state">up</setvalue>
+                    <setvalue ref="lastx" value="../posx"/>
+                    <setvalue ref="lasty" value="../posy"/>
+                    <setvalue ref="mouse/start/x" value="../../end/x"/>
+                    <setvalue ref="mouse/start/y" value="../../end/y"/>
+                    <!-- Not sure why this is necessary;
+                         either something to do with the recalc algorithm that I have forgotten, or a bug :-) -->
+                    <setvalue ref="mouse/move/x" value="0"/>
+                    <setvalue ref="mouse/move/y" value="0"/>
+                </action>
+                <action ev:event="dblclick" ev:defaultAction="cancel">
+                    <setvalue ref="zoom" value="if(. &gt;= ../maxzoom, ../maxzoom, . + 1)"/>
+                </action>
+                <action ev:event="mousewheel" ev:defaultAction="cancel">
+                    <setvalue ref="zoom"
+                              value="if(event('wheelDelta') &gt; 0, if(. &gt;= ../maxzoom, ../maxzoom, . + 1), if(. &lt;= 0, 0, . - 1))"/>
+                </action>
+            </group>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -152,7 +152,6 @@
                             <button>Start</button>
                             <fx-message delay="1000" while="true()">{.}</fx-message>
                         </fx-trigger>
-                        {counter}
                         <fx-trigger>
                             <button class="deletebtn">X</button>
                             <fx-delete ref="."></fx-delete>
@@ -164,7 +163,7 @@
                     <button>insert a new one</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
-
+<fx-inspector open></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>

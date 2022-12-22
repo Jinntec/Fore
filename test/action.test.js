@@ -1,4 +1,4 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent, elementUpdated } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -60,7 +60,7 @@ describe('action Tests', () => {
     expect(control.getModelItem().value).to.equal('A');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
@@ -93,7 +93,7 @@ describe('action Tests', () => {
     expect(control.getModelItem().value).to.equal('A');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
     expect(control.value).to.equal('My variable value');
     expect(control.getModelItem().value).to.equal('My variable value');
@@ -126,7 +126,7 @@ describe('action Tests', () => {
     expect(control.getModelItem().value).to.equal('A');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
     expect(control.value).to.equal('A');
     expect(control.getModelItem().value).to.equal('A');
@@ -153,16 +153,26 @@ describe('action Tests', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
+
+    const trigger = el.querySelector('fx-trigger');
+
+    // const setval = el.querySelector('fx-trigger');
+    trigger.addEventListener('action-performed', () => {
+      console.log('action is received ################');
+      const control = el.querySelector('fx-control');
+      expect(control.value).to.equal('B');
+      expect(control.getModelItem().value).to.equal('B');
+    });
 
     const control = el.querySelector('fx-control');
     expect(control.value).to.equal('A');
     expect(control.getModelItem().value).to.equal('A');
 
-    const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
-    expect(control.value).to.equal('B');
-    expect(control.getModelItem().value).to.equal('B');
+    // await oneEvent (setval,'action-performed');
+    console.log('now its done');
   });
 
   it('truthy condition performs the action, with variables', async () => {
@@ -193,7 +203,10 @@ describe('action Tests', () => {
     expect(control.getModelItem().value).to.equal('A');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
+
+    const setval = el.querySelector('fx-setvalue');
+    await (setval, 'action-performed');
 
     expect(control.value).to.equal('B');
     expect(control.getModelItem().value).to.equal('B');
@@ -238,7 +251,7 @@ describe('action Tests', () => {
     );
 
     const firstTrigger = firstDiv.querySelector('fx-trigger');
-    firstTrigger.performActions();
+    await firstTrigger.performActions();
 
     expect(firstControl.value).to.equal('X');
     expect(firstControl.getModelItem().value).to.equal('X');
@@ -248,7 +261,7 @@ describe('action Tests', () => {
     expect(secondControl.getModelItem().value).to.equal('B');
 
     const secondTrigger = secondDiv.querySelector('fx-trigger');
-    secondTrigger.performActions();
+    await secondTrigger.performActions();
 
     expect(secondControl.value).to.equal('B', 'As the "if" did not match, nothing should happen');
     expect(secondControl.getModelItem().value).to.equal(
@@ -292,7 +305,7 @@ describe('action Tests', () => {
     expect(control2.getModelItem().value).to.equal('false');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
     expect(control1.value).to.equal('B');
     expect(control1.getModelItem().value).to.equal('B');
@@ -337,7 +350,7 @@ describe('action Tests', () => {
     expect(control2.getModelItem().value).to.equal('NIL');
 
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
+    await trigger.performActions();
 
     expect(control1.value).to.equal('B');
     expect(control1.getModelItem().value).to.equal('B');
@@ -366,10 +379,7 @@ describe('action Tests', () => {
 
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
-
-    const setval = document.getElementById('setval');
-    await oneEvent(setval, 'action-performed');
+    await trigger.performActions();
 
     const control1 = el.querySelector('fx-output');
     expect(control1.value).to.equal('10');
@@ -403,10 +413,7 @@ describe('action Tests', () => {
 
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    trigger.performActions();
-
-    const setval = document.getElementById('setval');
-    await oneEvent(setval, 'action-performed');
+    await trigger.performActions();
 
     const control1 = el.querySelector('fx-output');
     expect(control1.value).to.equal('10');
@@ -442,23 +449,14 @@ describe('action Tests', () => {
     await oneEvent(el, 'refresh-done');
     const [firstDiv, secondDiv] = el.querySelectorAll('div');
     const firstTrigger = firstDiv.querySelector('fx-trigger');
-    firstTrigger.performActions();
-
-    const firstSetval = firstDiv.querySelector('#setval');
-    await oneEvent(el, 'refresh-done');
-
-    /*
-    for (let i = 0; i < 10; ++i) {
-      await oneEvent(firstSetval, 'action-performed');
-    }
-*/
+    await firstTrigger.performActions();
 
     const firstControl = firstDiv.querySelector('fx-output');
     expect(firstControl.value).to.equal('10');
 
     /*
     const secondTrigger = secondDiv.querySelector('fx-trigger');
-    secondTrigger.performActions();
+   await secondTrigger.performActions();
 
     const secondSetval = secondDiv.querySelector('#setval');
 
@@ -497,20 +495,12 @@ describe('action Tests', () => {
       </fx-fore>
     `);
 
+    // waiting for Fore to dispatch refresh-done for the first time
     await oneEvent(el, 'refresh-done');
     const [firstDiv, secondDiv] = el.querySelectorAll('div');
 
     const secondTrigger = secondDiv.querySelector('fx-trigger');
-    secondTrigger.performActions();
-
-    const secondSetval = secondDiv.querySelector('#setval');
-    await oneEvent(el, 'refresh-done');
-
-    /*
-    for (let i = 0; i < 10; ++i) {
-      await oneEvent(secondSetval, 'action-performed');
-    }
-*/
+    await secondTrigger.performActions();
 
     const secondControl = secondDiv.querySelector('fx-output');
     expect(secondControl.value).to.equal('15');

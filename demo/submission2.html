@@ -114,6 +114,13 @@
                                    replace="redirect">
                     </fx-submission>
 
+                    <fx-submission id="submission9"
+                                   url="https://.."
+                                   method="get"
+                                   replace="redirect">
+                        <fx-message event="submit-error" value="event('error')"></fx-message>
+                    </fx-submission>
+
                 </fx-model>
                 <fx-group collapse="true">
 
@@ -188,6 +195,13 @@
                     <fx-trigger>
                         <button>network error</button>
                         <fx-send submission="submission5"></fx-send>
+                    </fx-trigger>
+
+                    <h2>Statuscode</h2>
+                    <p>If something goes wrong the 'submit-error' event and set status code and message</p>
+                    <fx-trigger>
+                        <button>network error</button>
+                        <fx-send submission="submission9"></fx-send>
                     </fx-trigger>
 
                 </fx-group>

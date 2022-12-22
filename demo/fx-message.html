@@ -12,7 +12,9 @@
         .sticky-message{
             background: red;
             color:white;
-
+        }
+        a, a:visited, a:link{
+            color:inherit;
         }
     </style>
 </head>
@@ -27,7 +29,7 @@
          <li>`level="modal" displays a modal message.</li>
      </ul>
 
-    <p>Also refer to the <a href="controls/fx-dialog.html">fx-dialog</a> if more complex
+    <p>Also refer to <a href="controls/fx-dialog.html">fx-dialog</a> if more complex
     messages are wanted, styled content or button logic is required.</p>
     <demo-snippet>
         <template>
@@ -43,6 +45,10 @@
                 <fx-trigger>
                     <button>modal</button>
                     <fx-message level="modal">Modal Message</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>with dynamic content</button>
+                    <fx-message class="{'compound'||'-class'}">Message that was created at {current-dateTime()}</fx-message>
                 </fx-trigger>
             </fx-fore>        </template>
     </demo-snippet>

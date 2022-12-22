@@ -16,6 +16,9 @@ async function wait(howLong) {
  * @demo demo/index.html
  */
 export class AbstractAction extends foreElementMixin(HTMLElement) {
+  static outermostHandler = null;
+  static dataChanged = false;
+
   static get properties() {
     return {
       ...super.properties,
@@ -114,33 +117,65 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
+    let resolveThisEvent = () => {};
+    if (e && e.listenerPromises) {
+      e.listenerPromises.push(
+        new Promise(resolve => {
+          resolveThisEvent = resolve;
+        }),
+      );
+    }
+
     // console.log('executing', this);
+
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
-    if(e && e.code){
+    if (AbstractAction.outermostHandler === null) {
+      console.time('outermostHandler');
+      console.info(
+        `%coutermost Action `,
+        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
+      );
+      // console.log('starting outermost handler',this);
+      AbstractAction.outermostHandler = this;
+    }
+
+    if (AbstractAction.outermostHandler !== this) {
+      console.info(
+        `%cAction `,
+        'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
+      );
+    }
+    // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
+
+    if (e && e.code) {
       const vars = new Map();
-      vars.set('code',e.code);
+      vars.set('code', e.code);
       // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
     }
 
     if (e && e.detail) {
       this.detail = e.detail;
       const vars = new Map();
-      Object.keys(e.detail).forEach(function(key,index) {
+      Object.keys(e.detail).forEach(function(key, index) {
         // key: the name of the object key
         // index: the ordinal position of the key within the object
-        vars.set(key,e.detail[key]);
+        vars.set(key, e.detail[key]);
       });
-      console.log("event detail vars", vars);
-      this.setInScopeVariables(new Map([...vars, ...this.inScopeVariables]));
+      if (vars.size !== 0) {
+        console.log('event detail vars', vars);
+      }
+      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
     }
     this.needsUpdate = false;
 
-    try{
+    try {
       this.evalInContext();
-    }catch (error){
-      console.warn('evaluation faild',error);
+    } catch (error) {
+      console.warn('evaluation faild', error);
     }
     if (this.targetElement && this.targetElement.nodeset) {
       this.nodeset = this.targetElement.nodeset;
@@ -148,6 +183,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     // First check if 'if' condition is true - otherwise exist right away
     if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
+      this._finalizePerform(resolveThisEvent);
       return;
     }
 
@@ -171,13 +207,20 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this.perform();
 
         // Go for one more iteration
+        if (this.delay) {
+          // If we have a delay, fire and forget this.
+          // Otherwise, if we have no delay, keep waiting for all iterations to be done.
+          // The while is then uninteruptable and immediate
+          loop();
+          return;
+        }
         await loop();
       };
 
       // After loop is done call actionPerformed to update the model and UI
       await loop();
-      this.actionPerformed();
-      Fore.dispatch(this, 'while-performed', {});
+
+      this._finalizePerform(resolveThisEvent);
       return;
     }
 
@@ -187,21 +230,39 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       if (!this.ownerDocument.contains(this)) {
         // We are no longer in the document. Stop working
         this.actionPerformed();
+        resolveThisEvent();
         return;
       }
     }
 
-    this.perform();
+    await this.perform();
+    this._finalizePerform(resolveThisEvent);
+
+  }
+
+  _finalizePerform(resolveThisEvent) {
     this.actionPerformed();
+    if (AbstractAction.outermostHandler === this) {
+      AbstractAction.outermostHandler = null;
+      console.info(
+        `%coutermost Action done`,
+        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
+      );
+      console.timeEnd('outermostHandler');
+
+    }
+    resolveThisEvent();
   }
 
   /**
    * Template method to be implemented by each action that is called by execute() as part of
    * the processing.
    *
-   * todo: review - this could probably just be empty or throw error signalling that extender needs to implement it
+   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
-  perform() {
+  async perform() {
+    //todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
@@ -211,13 +272,36 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * calls the update cycle if action signalled that update is needed.
    */
   actionPerformed() {
+    const model = this.getModel();
+    if(!model){
+      return;
+    }
+    if (!model.inited) {
+      return;
+    }
+    if (
+      AbstractAction.outermostHandler &&
+      !AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
+    ) {
+      // The old outermosthandler fell out of the document. An error has happened.
+      // Just remove the old one and act like we are starting anew.
+      console.warn('Unsetting outermost handler');
+      AbstractAction.outermostHandler = null;
+    }
     // console.log('actionPerformed action parentNode ', this.parentNode);
-    if (this.needsUpdate) {
-      const model = this.getModel();
+    if (
+      this.needsUpdate &&
+      (AbstractAction.outermostHandler === this || !AbstractAction.outermostHandler)
+    ) {
+      console.log('Running actionperformed');
       model.recalculate();
       model.revalidate();
       model.parentNode.refresh(true);
       this.dispatchActionPerformed();
+    } else if (this.needsUpdate) {
+      // We need an update, but the outermost action handler may not. Make this clear!
+      AbstractAction.outermostHandler.needsUpdate = true;
+      console.log('Update surpressed!');
     }
   }
 
@@ -227,7 +311,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
-    console.log('action-performed ', this);
+    // console.log('action-performed ', this);
     Fore.dispatch(this, 'action-performed', {});
   }
 }

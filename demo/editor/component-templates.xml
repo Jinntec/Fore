@@ -1,0 +1,9 @@
+<data>
+    <fx-model>
+        <fx-bind ref=""></fx-bind>
+
+        <fx-instance id=""></fx-instance>
+        <fx-function signature="" type=""></fx-function>
+        <fx-submission id="" url="" method="" replace=""></fx-submission>
+    </fx-model>
+</data>

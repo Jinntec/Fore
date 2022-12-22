@@ -40,7 +40,7 @@ export default class FxSetvalue extends AbstractAction {
         this.valueAttr = this.getAttribute('value');
     }
 
-    perform() {
+    async perform() {
         super.perform();
         let {value} = this;
         if (this.valueAttr !== null) {
@@ -52,16 +52,17 @@ export default class FxSetvalue extends AbstractAction {
         }
         console.log('value', value);
         if (value.nodeType === Node.ATTRIBUTE_NODE) {
-            console.log('value', value.nodeValue);
+            // console.log('value', value.nodeValue);
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
         this.setValue(mi, value);
+        // todo: check this again - logically needsUpate should be set but makes tests fail
+        //  this.needsUpdate = true;
+
     }
 
     setValue(modelItem, newVal) {
-        console.log('setvalue[1]  ', modelItem, newVal);
-
         const item = modelItem;
         if (!item) return;
 
@@ -69,7 +70,6 @@ export default class FxSetvalue extends AbstractAction {
             item.value = newVal;
             this.getModel().changed.push(modelItem);
             this.needsUpdate = true;
-            console.log('setvalue[2] ', item, newVal);
         }
     }
 }

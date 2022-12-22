@@ -81,7 +81,7 @@ export class FxInsert extends AbstractAction {
     return targetSequence.length;
   }
 
-  perform() {
+  async perform() {
     // super.perform();
 
     /*

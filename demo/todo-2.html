@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>todo</title>
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link rel="stylesheet" href="todo.css">
+    <script type="module" src="./demo.js"></script>
+</head>
+<body unresolved="unresolved">
+    <div class="wrapper">
+        <fx-fore>
+            <fx-model>
+
+                <fx-instance>
+                    <data>
+                        <task complete="false" due=""></task>
+                    </data>
+                </fx-instance>
+
+                <fx-instance id="helper">
+                    <data>
+                        <template>
+                            <task complete="false" due=""></task>
+                        </template>
+                        <show-completed>false</show-completed>
+                        <dummy></dummy>
+                    </data>
+                </fx-instance>
+
+                <fx-bind ref="task" relevant="./@complete='false' or instance('helper')/show-completed='true'">
+                    <fx-bind ref="./text()" required="true()"></fx-bind>
+                </fx-bind>
+
+                <fx-submission id="save"
+                               url="localStore:todos"
+                               method="post">
+                    <fx-message event="submit-done">stored</fx-message>
+                </fx-submission>
+
+                <fx-submission id="load"
+                               url="localStore:todos"
+                               method="get"
+                                replace="instance"></fx-submission>
+
+                <fx-submission id="clear"
+                               url="localStore:todos"
+                               method="consume">
+                </fx-submission>
+
+                <fx-send submission="load" event="model-construct-done"></fx-send>
+
+            </fx-model>
+            <h1>Todo
+            </h1>
+            <div class="info">
+                You have {count(instance()/task[@complete='true'])} completed tasks
+            </div>
+
+            <div class="info open">
+                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+            </div>
+
+            <div class="info big">
+                {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
+            </div>
+
+
+            <fx-repeat id="r-task" ref="task">
+
+                <template>
+                    <div>
+                        <fx-action event="value-changed">
+                            <fx-send submission="save"></fx-send>
+                        </fx-action>
+                        <fx-control ref="@complete" value-prop="checked" update-event="input">
+                            <input class="widget" type="checkbox">
+                        </fx-control>
+                        <fx-control id="task" class="complete {@complete}" ref=".">
+                        </fx-control>
+                        <fx-control ref="@due">
+                            <input type="date">
+                        </fx-control>
+                        <fx-trigger class="btn delete">
+                            <button>x</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </div>
+                </template>
+
+            </fx-repeat>
+            <fx-trigger class="btn add">
+                <button>+</button>
+                <fx-insert id="doInsert" ref="task" origin="instance('helper')/template/task"></fx-insert>
+                <fx-setfocus control="task" event="action-performed"></fx-setfocus>
+            </fx-trigger>
+
+            <fx-setfocus target="#document" control="task" event="ready"></fx-setfocus>
+            <fx-control id="switch" ref="instance('helper')/show-completed" value-prop="checked" update-event="input">
+                <label for="showcompleted">show completed</label>
+                <input id="showcompleted" type="checkbox" class="widget">
+            </fx-control>
+
+            <hr style="margin-top:3rem;">
+            <fx-trigger>
+                <button>clear your data</button>
+                <fx-send submission="clear"></fx-send>
+            </fx-trigger>
+<!--<fx-inspector></fx-inspector>-->
+        </fx-fore>
+    </div>
+
+</body>
+</html>

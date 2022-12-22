@@ -100,6 +100,10 @@ export const foreElementMixin = superclass =>
      */
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
+      const model = this.getModel();
+      if(!model){
+        return;
+      }
       let inscopeContext;
       if (this.hasAttribute('context')) {
         inscopeContext = getInScopeContext(this.getAttributeNode('context') || this, this.context);

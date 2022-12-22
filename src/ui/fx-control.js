@@ -7,6 +7,8 @@ import {
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import {ModelItem} from "../modelitem.js";
+import {debounce} from "../events.js";
+import {FxModel} from "../fx-model";
 
 const WIDGETCLASS = 'widget';
 
@@ -20,7 +22,8 @@ const WIDGETCLASS = 'widget';
  * @demo demo/index.html
  */
 
-function debounce(func, timeout = 300) {
+/*
+function debounce( func, timeout = 300) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
@@ -29,6 +32,7 @@ function debounce(func, timeout = 300) {
     }, timeout);
   };
 }
+*/
 export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
@@ -72,10 +76,16 @@ export default class FxControl extends XfAbstractControl {
         listenOn = target;
       }
     }
+
+
+    this.addEventListener('keyup', event => {
+      FxModel.dataChanged = true;
+    });
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
       this.widget.addEventListener('keyup', event => {
         if (event.keyCode === 13) {
+          // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
           event.preventDefault();
           this.setValue(this.widget[this.valueProp]);
@@ -86,14 +96,15 @@ export default class FxControl extends XfAbstractControl {
     if (this.debounceDelay) {
       listenOn.addEventListener(
         this.updateEvent,
-        debounce(() => {
-          console.log('eventlistener ', this.updateEvent);
+        debounce(this,() => {
+          // console.log('eventlistener ', this.updateEvent);
+          // console.info('handling Event:', event.type, listenOn);
           this.setValue(this.widget[this.valueProp]);
         }, this.debounceDelay),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, () => {
-        console.log('eventlistener ', this.updateEvent);
+        // console.info('handling Event:', event.type, listenOn);
         this.setValue(this.widget[this.valueProp]);
       });
     }
@@ -125,6 +136,8 @@ export default class FxControl extends XfAbstractControl {
     });
 
     this.template = this.querySelector('template');
+    this.boundInitialized = false;
+    this.static = this.widget.hasAttribute('static')? true:false;
     // console.log('template',this.template);
   }
 
@@ -150,6 +163,8 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
     const modelitem = this.getModelItem();
 
+    this.classList.add('visited');
+
     if (modelitem?.readonly){
       console.warn('attempt to change readonly node', modelitem);
       return; // do nothing when modelItem is readonly
@@ -161,6 +176,7 @@ export default class FxControl extends XfAbstractControl {
       replace.replace(this.nodeset, this.getWidget().value);
       if (modelitem && widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;
+        FxModel.dataChanged = true;
         replace.actionPerformed();
       }
       return;
@@ -173,6 +189,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     setval.actionPerformed();
+    this.visited = true;
   }
 
   _replaceNode(node) {
@@ -268,7 +285,7 @@ export default class FxControl extends XfAbstractControl {
         widget.value = this.nodeset.cloneNode(true);
         // todo: should be more like below but that can cause infinite loop when controll trigger update event due to calling a setter for property
         // widget[this.valueProp] = this.nodeset.cloneNode(true);
-        console.log('passed value to widget', widget.value);
+        // console.log('passed value to widget', widget.value);
       }
 
       return;
@@ -277,6 +294,7 @@ export default class FxControl extends XfAbstractControl {
     // ### when there's a url Fore is used as widget and will be loaded from external file
     if (this.url && !this.loaded) {
       // ### evaluate initial data if necessary
+
       if (this.initial) {
         this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
         console.log('initialNodes', this.initialNode);
@@ -315,7 +333,11 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   async _loadForeFromUrl() {
-    console.log('########## loading Fore from ', this.src, '##########');
+    console.log('########## loading Fore from ', this.url, '##########');
+    console.info(
+        `%cFore is processing URL ${this.url}`,
+        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+    );
     try {
       const response = await fetch(this.url, {
         method: 'GET',
@@ -325,6 +347,7 @@ export default class FxControl extends XfAbstractControl {
           'Content-Type': 'text/html',
         },
       });
+
       const responseContentType = response.headers.get('content-type').toLowerCase();
       console.log('********** responseContentType *********', responseContentType);
       let data;
@@ -338,37 +361,42 @@ export default class FxControl extends XfAbstractControl {
       }
       // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
       const theFore = data.querySelector('fx-fore');
+      const imported = document.importNode(theFore,true);
+
       // console.log('thefore', theFore)
-      theFore.classList.add('widget'); // is the new widget
+      imported.classList.add('widget'); // is the new widget
+      console.log(`########## loaded fore as component ##### ${this.url}`);
+      imported.addEventListener(
+          'model-construct-done',
+          e => {
+            console.log('subcomponent ready', e.target);
+            const defaultInst = imported.querySelector('fx-instance');
+            // console.log('defaultInst', defaultInst);
+            if(this.initialNode){
+              const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
+              // Note: Clone the input to prevent the inner fore from editing the outer node
+              doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+              // defaultinst.setInstanceData(this.initialNode);
+              defaultInst.setInstanceData(doc);
+            }
+            // console.log('new data', defaultInst.getInstanceData());
+            // theFore.getModel().modelConstruct();
+            imported.getModel().updateModel();
+            imported.refresh();
+          },
+          { once: true },
+      );
+
       const dummy = this.querySelector('input');
       if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
-        this.shadowRoot.appendChild(theFore);
+        this.shadowRoot.appendChild(imported);
       } else {
-        dummy.replaceWith(theFore);
+        console.log(this, 'replacing widget with',theFore);
+        dummy.replaceWith(imported);
+        // this.appendChild(imported);
       }
 
-      console.log(`########## loaded fore as component ##### ${this.url}`);
-      theFore.addEventListener(
-        'model-construct-done',
-        e => {
-          console.log('subcomponent ready', e.target);
-          const defaultInst = theFore.querySelector('fx-instance');
-          console.log('defaultInst', defaultInst);
-          if(this.initialNode){
-            const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-            // Note: Clone the input to prevent the inner fore from editing the outer node
-            doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-            // defaultinst.setInstanceData(this.initialNode);
-            defaultInst.setInstanceData(doc);
-          }
-          console.log('new data', defaultInst.getInstanceData());
-          // theFore.getModel().modelConstruct();
-          theFore.getModel().updateModel();
-          theFore.refresh();
-        },
-        { once: true },
-      );
 
       if (!theFore) {
         this.dispatchEvent(
@@ -414,6 +442,8 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   _handleBoundWidget(widget) {
+    if(this.boundInitialized && this.static) return;
+
     if (widget && widget.hasAttribute('ref')) {
       // ### eval nodeset for list control
       const ref = widget.getAttribute('ref');
@@ -451,18 +481,36 @@ export default class FxControl extends XfAbstractControl {
 
         if (nodeset.length) {
           // console.log('nodeset', nodeset);
+          const fragment = document.createDocumentFragment();
+          // console.time('offscreen');
+/*
           Array.from(nodeset).forEach(node => {
             // console.log('#### node', node);
             const newEntry = this.createEntry();
+            this.template.parentNode.appendChild(newEntry);
+            // ### initialize new entry
+            // ### set value
+            this.updateEntry(newEntry, node);
+          });
+*/
+          // this should actually perform better than the above but does not seem to make a measurable difference.
+          Array.from(nodeset).forEach(node => {
+            // console.log('#### node', node);
+            const newEntry = this.createEntry();
+            fragment.appendChild(newEntry);
 
             // ### initialize new entry
             // ### set value
             this.updateEntry(newEntry, node);
           });
+          this.template.parentNode.appendChild(fragment);
+          // console.timeEnd('offscreen');
         } else {
           const newEntry = this.createEntry();
+          this.template.parentNode.appendChild(newEntry);
           this.updateEntry(newEntry, nodeset);
         }
+        this.boundInitialized = true;
       }
     }
   }
@@ -491,10 +539,12 @@ export default class FxControl extends XfAbstractControl {
   }
 
   createEntry() {
-    const content = this.template.content.firstElementChild.cloneNode(true);
-    const newEntry = document.importNode(content, true);
-    this.template.parentNode.appendChild(newEntry);
-    return newEntry;
+    return this.template.content.firstElementChild.cloneNode(true);
+    // const content = this.template.content.firstElementChild.cloneNode(true);
+    // return content;
+    // const newEntry = document.importNode(content, true);
+    // this.template.parentNode.appendChild(newEntry);
+    // return newEntry;
   }
 
   // eslint-disable-next-line class-methods-use-this

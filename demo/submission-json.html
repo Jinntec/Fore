@@ -30,6 +30,10 @@
             margin:1rem 0;
         }
 
+        fx-output label{
+            padding:1rem;
+            display: inline-block;
+        }
         h2 {
             margin-top: 2rem;
         }
@@ -103,6 +107,11 @@
                         <label slot="label">This message comes from replaced instance:</label>
                     </fx-output>
                 </fx-group>
+
+                <p class="note">
+                    you can inspect the instance data with the 'Data Inspector' on the right. Expand the entries to see
+                    the live data.
+                </p>
                 <fx-inspector open></fx-inspector>
 
             </fx-fore>

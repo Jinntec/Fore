@@ -17,32 +17,34 @@ html{
     pointer-events: none;
     cursor: default;
 }
-input[readonly]{
-    background: lightgrey;
+[refresh-on-view]{
+    /*opacity: 0;*/
 }
+/*
+    defaults for relevance
 
-/* fx-fore{ */
-/*     opacity: 0; */
-/* } */
-/* fx-fore.fx-ready{ */
-/*     opacity: 1; */
-/* } */
-fx-group, fx-switch, fx-repeat, fx-dialog{
+    You can overwrite these matchers to use transistions
+*/
+[nonrelevant]{
+    display: none;
+}
+[relevant]{
     display: block;
 }
-fx-trigger a[disabled] {
-    color:lightgrey;
-}
-fx-trigger img[disabled]{
-    filter:blur(2px);
+
+[required]:after {
+    content: "*";
+    display: inline;
+    color: red;
 }
 
-.error{
-    background: var(--paper-red-500);
-}
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
+    display: none;
+}
+.visited[invalid] fx-alert{
+    display: block;
 }
 
 /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
@@ -50,36 +52,18 @@ fx-case{
     display: none;
 }
 
-fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
-    display:none;
+fx-output[readonly] img{
+    background: inherit;
 }
 
-fx-control, fx-trigger{
+.error{
+    background: var(--paper-red-500);
+}
+
+fx-control, fx-trigger , .fx-checkbox{
     white-space: nowrap;
     /* position: relative; */
 }
-.fx-checkbox{
-    white-space: nowrap;
-}
-fx-hint{
-    display: none;
-}
-fx-repeatitem{
-    position:relative;
-    /*
-    opacity:1;
-    -webkit-transition: opacity 3s;
-    -moz-transition: opacity 3s;
-    transition: opacity 3s;
-    */
-}
-.hidden {
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 2s, opacity 2s linear;
-}
-
-/* fx-inspector styles */
 
 /* ### FX-DIALOG STYLES ### */
 /* ### FX-DIALOG STYLES ### */
@@ -87,7 +71,11 @@ fx-repeatitem{
 fx-dialog{
     display: none;
     opacity: 0;
+    width:100vw;
+    height: 100vh;
     transition: opacity 1s linear;
+    z-index: -1;
+    transition: none;
 }
 fx-dialog.show{
     display: block;
@@ -96,7 +84,7 @@ fx-dialog.show{
     opacity: 1;
     background:rgba(0,0,0,0.5);
     z-index: 10;
-    transition: opacity 2s linear;
+    transition: opacity 0.4s linear;
 }
 
 fx-dialog.show .dialog-content{
@@ -126,48 +114,59 @@ fx-dialog .action{
     display: block;
 }
 
+/* fx-fore{ */
+/*     opacity: 0; */
+/* } */
+/* fx-fore.fx-ready{ */
+/*     opacity: 1; */
+/* } */
 
 
-/*
-.visible {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 2s linear;
-}
-*/
-
-.required:after {
-    content: '*';
-    color: red;
-    padding-left: 4px;
-    right:3px;
-    top:3px;
-    z-index: 1;
-}
-
-[required]:after {
-    content: "*";
-    display: inline;
-    color: red;
-}
-.logtree details{
-    padding:0.1rem 1rem;
-    margin:0;
-}
-.logtree details summary{
-
-}
-.non-relevant{
-    opacity: 0;
-    height: 0;
-    transition: opacity 1s;
-}
-.vertical label{
+fx-group, fx-switch, fx-repeat, fx-dialog{
     display: block;
 }
-[refresh-on-view]{
-    /*opacity: 0;*/
+
+fx-hint{
+    display: none;
 }
+
+fx-model,
+fx-model *,
+fx-model ::slotted(fx-instance),
+fx-instance,
+fx-action,
+fx-setvalue{
+    display:none;
+}
+
+fx-trigger a[disabled] {
+    color:lightgrey;
+}
+fx-trigger img[disabled]{
+    filter:blur(2px);
+}
+
+
+fx-repeatitem{
+    position:relative;
+    opacity:1;
+    /*
+    -webkit-transition: opacity 3s;
+    -moz-transition: opacity 3s;
+    transition: opacity 3s;
+    */
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 2s, opacity 2s linear;
+}
+
+.isEmpty.visited .widget{
+    background: lightpink;
+}
+
 .loaded{
     animation: fadein 0.3s forwards;
 }
@@ -176,6 +175,35 @@ fx-dialog .action{
     animation: none;
     opacity: 1;
 }
+
+.logtree details{
+    padding:0.1rem 1rem;
+    margin:0;
+}
+.logtree details summary{
+
+}
+
+/*
+.nonrelevant{
+    opacity: 0;
+    height: 0;
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    transition: opacity 0.4s;
+}
+*/
+
+
+.submit-validation-failed .isEmpty .widget{
+    background: lightpink;
+}
+.vertical label{
+    display: block;
+}
+
 /* @keyframes fadein { */
 /*     0% { */
 /*         opacity:0; */

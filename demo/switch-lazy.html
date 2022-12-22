@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Switch is lazy</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        :host{
+            display:none;
+        }
+        .dynamic {
+            background: #76ff03;
+        }
+
+        /*
+                fx-model{
+                    display: none;
+                }
+        */
+        .blue{
+            background: lightblue;
+        }
+        .orange{
+            background: #ffca28;
+        }
+        .green{
+            background: #aeea00;
+        }
+        fx-case {
+            width: 600px;
+            height: 400px;
+            background: lightblue;
+            padding: 10px;
+        }
+        .second fx-case{
+            background: black;
+        }
+        .second fx-case h2{
+            color:white;
+        }
+
+        fx-trigger {
+            display: inline-block;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-control{
+            display: block;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <h1>Switch is lazy</h1>
+    <p>Switch can be used to limit the amount of the user interface to be refreshed as it only updates
+        the children of the selected <code>fx-case</code> element.
+    </p>
+
+    <p>Watching the console when using a dev version of Fore will reveal that only the needed parts
+    are affected by a <code>refresh</code> when you toggle a case.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-toggle event="model-construct-done" case="two"></fx-toggle>
+                    <fx-instance>
+                        <data>
+                            <item1>a bound item</item1>
+                            <item2>second bound item</item2>
+                            <item3>third bound item</item3>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger label="page 1" class="orange">
+                    <paper-button>toggle page 1</paper-button>
+                    <fx-toggle case="one"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 2" raised="raised" class="green">
+                    <paper-button>toggle page 2</paper-button>
+                    <fx-toggle case="two"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger label="page 3" raised="raised" class="blue">
+                    <paper-button>toggle page 3</paper-button>
+                    <fx-toggle case="three"></fx-toggle>
+                </fx-trigger>
+
+                <fx-switch>
+                    <fx-case id="one" class="orange">
+                        some exclusive content
+                        <fx-control ref="item1">
+                            <label>Item1</label>
+                        </fx-control>
+                    </fx-case>
+                    <fx-case id="two" class="green">
+                        some further content
+                        <fx-control ref="item2">
+                            <label>Item1</label>
+                        </fx-control>
+                    </fx-case>
+                    <fx-case id="three" class="blue">
+                        some completely unneeded content
+                        <fx-control ref="item3">
+                            <label>Item1</label>
+                        </fx-control>
+                    </fx-case>
+                </fx-switch>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+
+
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

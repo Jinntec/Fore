@@ -48,16 +48,14 @@
     <p>Note the <code>ref</code> attribute. <code>ref</code> stands for 'reference' and is a pointer
     to some data node. Currently Fore supports XML and JSON as its data formats. </p>
 
-    <h3>What is happening here?</h3>
+    <p>What is happening here?</p>
     <p>When the page is loaded the Fore element will start initialization. If it does not find a <code>fx-model</code>
     one will get generated with a default instance.</p>
     <p>Fore will look for elements having a <code>ref</code> and create data nodes using the value of the
     reference as name for the property and its content as value.</p>
 
-
     <p>This is what is auto-generated for you:</p>
 
-<!--
     <demo-snippet>
         <template>
             <fx-fore>
@@ -72,7 +70,6 @@
             </fx-fore>
         </template>
     </demo-snippet>
--->
 <!--
     <fx-output ref="greeting">
         <label slot="label">Hi - </label>

@@ -1,0 +1,347 @@
+/* Due to a safari issue, relative paths to background images won't work as variables, so we list them here */
+
+.logo {
+    background-image: url("../images/tei-publisher-logo-contrast-color.svg");
+}
+
+.splash {
+    background-image: url("../images/tei-publisher-logo-color.svg");
+}
+
+.menubar {
+    background-image: none;
+}
+
+.toolbar {
+    background-image: none;
+}
+
+app-header {
+    background-image: none;
+}
+
+body {
+    --pb-splash-image-size: 360px auto;
+    --pb-splash-background-color: var(--pb-color-inverse);
+    --pb-logo-image-width: 140px;
+    --pb-logo-image-height: 60px;
+    --pb-base-font-family: 'Roboto', 'Noto', sans-serif;
+    --pb-base-font-size: 16px;
+    --pb-base-line-height: 1.42857143;
+    --pb-base-font-weight: 300;
+    --pb-base-font: var(--pb-base-font-weight) var(--pb-base-font-size)/var(--pb-base-line-height) var(--pb-base-font-family);
+    --pb-serif-font-family: "Junicode", Georgia, "Times New Roman", serif;
+    --pb-content-font-family: var(--pb-serif-font-family);
+    --pb-content-font-size: 20px;
+    --pb-heading-font-family: "Oswald", Verdana, "Helvetica", sans-serif;
+    --pb-heading-font-weight: 400 !important;
+    --pb-heading-line-height: 1.2;
+    --pb-breadcrumbs-font-size: 18px;
+    --pb-color-primary: #303030;
+    --pb-color-inverse: #F0F0F0;
+    --pb-color-lighter: #35424b;
+    --pb-color-focus: #f6a623;
+    --pb-drawer-background-color: var(--pb-color-inverse);
+    --pb-menubar-background-color: #35424b;
+    --pb-menubar-color: var(--pb-color-inverse);
+    --pb-toolbar-background-color: #d1dae0;
+    --pb-toolbar-color: var(--pb-color-primary);
+    --paper-tooltip-delay-in: 200;
+    --pb-footnote-font-size: 13px;
+    --pb-footnote-font-family: var(--pb-content-font-family);
+    --pb-footnote-font-weight: var(--pb-content-font-weight);
+    --pb-footnote-color: #303030;
+    --pb-footnote-padding: 0 0 0 .25em;
+    --pb-popover-theme: "light-border";
+    --pb-popover-max-width: 480px;
+    --pb-popover-font-size: 16px;
+    --pb-popover-line-height: 1.2;
+    --pb-popover-placement: "bottom";
+    --pb-popover-fallback-placement: "top right left";
+    --pb-lang-input-color: var(--pb-color-inverse);
+    --pb-lang-label-color: var(--pb-color-inverse);
+    --pb-link-color: black;
+    --pb-link-font-family: var(--pb-serif-font-family);
+    --pb-highlight-color: #F9E976;
+    --paper-input-container-focus-color: var(--pb-color-focus);
+    --pb-view-max-width: 920px;
+    font: var(--pb-base-font);
+    color: var(--pb-color-primary);
+    margin: 0;
+}
+
+*:focus {
+    outline: none;
+}
+
+.splash {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    visibility: hidden;
+    opacity: 0;
+    background-color: #ffffff;
+    background-position: center center;
+    background-size: var(--pb-splash-image-size);
+    background-repeat: no-repeat;
+    transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
+pb-page[unresolved]~.splash {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+app-toolbar {
+    --app-toolbar-font-size: 16px;
+}
+
+app-toolbar pb-search {
+    --pb-search-label-color: var(--pb-menubar-color);
+    --pb-search-input-color: var(--pb-menubar-color);
+    --pb-search-focus-color: var(--pb-color-focus);
+    padding-left: 20px;
+}
+
+app-toolbar .menuitem {
+    display: inherit;
+}
+
+app-drawer {
+    --pb-lang-item-color: var(--pb-color-primary);
+    --pb-lang-input-color: var(--pb-color-primary);
+    --pb-lang-label-color: var(--paper-grey-600);
+}
+
+.drawer-content {
+    overflow: auto;
+    height: 100%;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.drawer-content pb-collapse h3 {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.drawer-content paper-listbox {
+    margin: 0;
+}
+
+app-drawer .settings, app-drawer pb-collapse {
+    display: flex;
+    flex-direction: column;
+}
+
+app-drawer paper-listbox {
+    width: 100%;
+}
+
+app-drawer a, app-drawer a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+app-drawer-layout:not([narrow]) [drawer-toggle] {
+    display: none;
+}
+
+.caveat-content {
+    overflow: auto;
+    height: 100%;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: smaller;
+}
+
+.toolbar {
+    justify-content: space-between;
+    background-color: var(--pb-toolbar-background-color);
+    color: var(--pb-toolbar-color);
+}
+
+.toolbar a {
+    color: inherit;
+    text-decoration: none;
+}
+
+[drawer-toggle] {
+    padding-right: 0;
+}
+
+.menubar {
+    justify-content: space-between;
+    background-color: var(--pb-menubar-background-color);
+    color: var(--pb-menubar-color);
+    --pb-search-suggestions-color: var(--pb-menubar-color);
+    --pb-search-suggestions-background: var(--pb-menubar-background-color);
+}
+
+.menubar pb-media-query {
+    flex: 1 0;
+}
+
+.menubar a, .menubar paper-menu-button {
+    margin: auto 8px;
+    display: block;
+    color: var(--pb-menubar-color);
+    text-decoration: none;
+}
+
+.menubar .logo {
+    margin: 0 16px 0 0;
+}
+
+.menubar .gitlab {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.menubar .gitlab img {
+    height: 32px;
+}
+
+.menubar pb-login {}
+
+.menubar pb-lang {
+    text-align: right;
+    flex: 1 0;
+    --pb-lang-item-color: var(--pb-menubar-color);
+}
+
+.menubar paper-item a {
+    color: var(--pb-color-primary);
+    margin: 0;
+}
+
+[main-title] {
+    display: inline-block;
+}
+
+.logo {
+    background-repeat: no-repeat;
+    background-size: auto auto;
+    background-position: left center;
+    width: var(--pb-logo-image-width);
+    height: var(--pb-logo-image-height);
+    cursor: pointer;
+}
+
+pb-progress {
+    width: 100%;
+}
+
+pb-view-type {
+    font-size: .75em;
+}
+
+@media (max-width: 768px) {
+    #downloadDialog {
+        width: 100%;
+    }
+}
+
+@media (min-width: 769px) {
+    #downloadDialog {
+        width: 50%;
+    }
+}
+
+.breadcrumbs {
+    margin: 10px 0 0 20px;
+}
+
+pb-view, pb-view-annotate {
+    font-family: var(--pb-content-font-family);
+    font-size: var(--pb-content-font-size);
+    margin: 0 16px;
+    position: relative;
+}
+
+.breadcrumbs pb-view {
+    font-weight: 400;
+    font-size: var(--pb-breadcrumbs-font-size);
+    max-width: none;
+}
+
+@media (min-width: 769px) {
+    pb-view, pb-view-annotate {
+        max-width: var(--pb-view-max-width);
+    }
+}
+
+pb-popover {
+    text-align: left !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--pb-heading-font-family);
+    font-weight: var(--pb-heading-font-weight);
+    line-height: var(--pb-heading-line-height);
+}
+
+pb-drawer {
+    top: 128px;
+    background-color: var(--pb-drawer-background-color);
+    overflow: auto;
+    height: calc(100vh - 128px);
+}
+
+.toc ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.toc ul ul {
+    margin-left: 28px;
+}
+
+.toc li {
+    margin-bottom: .5em;
+}
+
+.toc li:first-child {
+    margin-top: .5em;
+}
+
+.toc pb-link {
+    display: block;
+}
+
+.toc li>pb-link {
+    margin-left: 28px;
+}
+
+.toc pb-link {
+    font-family: var(--pb-link-font-family);
+    padding: 4px 8px;
+}
+
+.toc pb-link a {
+    color: var(--pb-link-color);
+    text-decoration: var(--pb-link-text-decoration);
+}
+
+.toc h1, .toc h2, .toc h3, .toc h4, .toc h5 {
+    font-family: var(--pb-link-font-family);
+}
+
+.toc [slot=collapse-trigger] pb-link {
+    margin-left: 0px;
+}
+
+.version {
+    text-align: right;
+    font-size: 0.85em;
+    padding: 1em;
+    color: var(--pb-color-lighter);
+}
+
+.version span {
+    font-weight: bold;
+}

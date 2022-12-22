@@ -18,7 +18,8 @@ describe('bind Tests', () => {
       </fx-fore>
     `);
 
-    await elementUpdated(el);
+//      await elementUpdated(el);
+	  await oneEvent(el, 'ready');
     const bind = document.getElementById('b-greeting');
     expect(bind).to.exist;
     expect(bind.instanceId).to.equal('default');

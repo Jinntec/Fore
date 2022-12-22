@@ -1,14 +1,12 @@
 import * as fx from 'fontoxpath';
 
-/**
- * Checks wether the specified path expression is an absolute path.
- *
- * @param path the path expression.
- * @return <code>true</code> if specified path expression is an absolute
- * path, otherwise <code>false</code>.
- */
-
 export class XPathUtil {
+
+  /**
+   * returns next bound element upwards in tree
+   * @param start where to start the search
+   * @returns {*|null}
+   */
   static getParentBindingElement(start) {
     /*    if (start.parentNode.host) {
       const { host } = start.parentNode;
@@ -25,32 +23,19 @@ export class XPathUtil {
     return null;
   }
 
+  /**
+   * Checks whether the specified path expression is an absolute path.
+   *
+   * @param path the path expression.
+   * @return <code>true</code> if specified path expression is an absolute
+   * path, otherwise <code>false</code>.
+   */
   static isAbsolutePath(path) {
     return path != null && (path.startsWith('/') || path.startsWith('instance('));
   }
 
   static isSelfReference(ref) {
     return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
-  }
-
-  static getDefaultInstance(boundElement) {
-    // const fore = boundElement.closest('fx-fore');
-    const fore = XPathUtil.getForeElement(boundElement);
-    const defaultInstance = fore.querySelector('fx-instance');
-    if (!defaultInstance) {
-      throw new Error('no default instance present');
-    }
-    return defaultInstance;
-  }
-
-  static getForeElement(start) {
-    if (start.nodeName === 'FX-FORE') {
-      return start;
-    }
-    if (start.parentNode) {
-      return XPathUtil.getForeElement(start.parentNode);
-    }
-    throw new Error('no Fore element present');
   }
 
   /**
@@ -74,6 +59,19 @@ export class XPathUtil {
       return result.substring(1, result.indexOf(')') - 1);
     }
     return null;
+  }
+
+  static resolveInstance(boundElement){
+    const instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+    if(instanceId !== null){
+      return instanceId;
+    }
+
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if(parentBinding){
+      return this.resolveInstance(parentBinding);
+    }
+    return 'default';
   }
 
   // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
