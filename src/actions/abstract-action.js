@@ -131,6 +131,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing e', e);
     // console.log('executing e phase', e.eventPhase);
     if (AbstractAction.outermostHandler === null) {
+      console.time('outermostHandler');
       console.info(
         `%coutermost Action `,
         'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
@@ -236,6 +237,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     await this.perform();
     this._finalizePerform(resolveThisEvent);
+
   }
 
   _finalizePerform(resolveThisEvent) {
@@ -247,6 +249,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
+      console.timeEnd('outermostHandler');
+
     }
     resolveThisEvent();
   }

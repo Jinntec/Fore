@@ -67,7 +67,7 @@ export class FxTrigger extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    console.log('trigger update', this);
+    // console.log('trigger update', this);
     return null;
   }
 

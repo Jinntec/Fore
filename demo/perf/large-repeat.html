@@ -8,6 +8,14 @@
     <style>
         fx-repeatitem{
             display: block;
+            content-visibility: auto;
+            contain-intrinsic-size: 100px;
+        }
+        fx-control{
+            content-visibility: auto;
+        }
+        .fx-ready fx-repeatitem{
+            content-visibility: auto;
         }
         fx-div{
             width: 280px;
@@ -30,6 +38,7 @@
         </fx-model>
 
         <fx-repeat ref="item">
+<!--
             <template>
                 <fx-div tabindex="0">
                     <label>item</label> {.}
@@ -50,6 +59,7 @@
                     <label>prop5</label> {@prop5}
                 </fx-div>
             </template>
+-->
 <!--
             <template>
                 <fx-output ref=".">
@@ -72,7 +82,6 @@
                 </fx-output>
             </template>
 -->
-<!--
             <template>
                 <fx-control ref=".">
                     <label>item</label>
@@ -93,7 +102,6 @@
                     <label>prop5</label>
                 </fx-control>
             </template>
--->
         </fx-repeat>
     </fx-fore>
 <!--</div>-->

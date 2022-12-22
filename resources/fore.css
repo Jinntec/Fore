@@ -130,7 +130,12 @@ fx-hint{
     display: none;
 }
 
-fx-model, fx-model *, fx-model ::slotted(fx-instance), fx-instance{
+fx-model,
+fx-model *,
+fx-model ::slotted(fx-instance),
+fx-instance,
+fx-action,
+fx-setvalue{
     display:none;
 }
 
