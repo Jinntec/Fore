@@ -5,7 +5,6 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
-import {AbstractAction} from "./actions/abstract-action";
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -15,9 +14,9 @@ import {AbstractAction} from "./actions/abstract-action";
  * fx-fore is the outermost container for each form. A form can have exactly one model
  * with arbitrary number of instances.
  *
- * Main responsiblities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
+ * Main responsibilities are initialization and updating of model and instances, update of UI (refresh) and global messaging.
  *
- * @event compute-exception - dispatched in case the dependency graph is cirular
+ * @event compute-exception - dispatched in case the dependency graph is circular
  * @event refresh-done - dispatched after a refresh() run
  * @event ready - dispatched after Fore has fully been initialized
  * @event error - dispatches error when template expression fails to evaluate
@@ -68,19 +67,11 @@ export class FxFore extends HTMLElement {
 
         const style = `
             :host {
-                // display: none;
-                height:auto;
-                padding:var(--model-element-padding);
-                font-family:Roboto, sans-serif;
-                color:var(--paper-grey-900);
+                display: block;
             }
             :host ::slotted(fx-model){
                 display:none;
             }
-            // :host(.fx-ready){
-            //     animation: fadein .4s forwards;
-            //     display:block;
-            // }
 
             #modalMessage .dialogActions{
                 text-align:center;
@@ -143,14 +134,6 @@ export class FxFore extends HTMLElement {
             }
             #messageContent{
                 margin-top:40px;
-            }
-            @keyframes fadein {
-              0% {
-                  opacity:0;
-              }
-              100% {
-                  opacity:1;
-              }
             }
         `;
 
@@ -252,7 +235,7 @@ export class FxFore extends HTMLElement {
             }
             this.model = modelElement;
         });
-        this.addEventListener('path-mutated', e => {
+        this.addEventListener('path-mutated', () => {
             // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
@@ -301,7 +284,7 @@ export class FxFore extends HTMLElement {
 
                 // console.log('thefore', theFore)
                 if (!theFore) {
-                    Fore.dispatchEvent(this, 'error', {
+                    Fore.dispatch(this, 'error', {
                         detail: {
                             message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
                         },
@@ -325,8 +308,12 @@ export class FxFore extends HTMLElement {
      */
     handleIntersect(entries, observer) {
         console.time('refreshLazy');
+
         entries.forEach(entry => {
             const {target} = entry;
+
+            const fore = Fore.getFore(target);
+            if(fore.initialRun) return;
 
             if (entry.isIntersecting) {
                 console.log('in view', entry);
@@ -524,7 +511,7 @@ export class FxFore extends HTMLElement {
         const {expr} = exprObj;
         const {node} = exprObj;
         // console.log('expr ', expr);
-        this.evaluateTemplateExpression(expr, node, this);
+        this.evaluateTemplateExpression(expr, node);
     }
 
     /**
@@ -579,7 +566,7 @@ export class FxFore extends HTMLElement {
 
     /**
      * called when `model-construct-done` event is received to
-     * start initing of the UI.
+     * start initing the UI.
      *
      * @private
      */
@@ -595,7 +582,7 @@ export class FxFore extends HTMLElement {
                 && condition !== 'true'
                 && condition !== ''){
                 window.addEventListener('beforeunload', event => {
-                    const mustDisplay = evaluateXPathToBoolean(showConfirm, this.getModel().getDefaultContext(), this)
+                    const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
                         console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
