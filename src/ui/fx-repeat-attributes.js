@@ -23,6 +23,27 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,
+      index: {
+        type: Number,
+      },
+      template: {
+        type: Object,
+      },
+      focusOnCreate: {
+        type: String,
+      },
+      initDone: {
+        type: Boolean,
+      },
+      repeatIndex: {
+        type: Number,
+      },
+      repeatSize:{
+        type:Number,
+      },
+      nodeset: {
+        type: Array,
+      },
     };
   }
 
@@ -42,7 +63,6 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   get repeatSize() {
-    // return this.querySelectorAll(':scope > fx-repeatitem').length;
     return this.querySelectorAll(':scope > .fx-repeatitem').length;
   }
 
@@ -54,7 +74,8 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   setIndex(index) {
     // console.log('new repeat index ', index);
     this.index = index;
-    const rItems = this.querySelectorAll(':scope > *');
+    const refd = this.querySelector('[data-ref]');
+    const rItems = refd.querySelectorAll(':scope > *');
     this.applyIndex(rItems[this.index - 1]);
   }
 
@@ -73,6 +94,10 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     this.setAttribute('index', idx);
   }
 
+  _getRepeatedItems(){
+    const refd = this.querySelector('[data-ref]');
+    return refd.children;
+  }
   async connectedCallback() {
     console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
@@ -82,8 +107,9 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     this.addEventListener('item-changed', e => {
       console.log('handle index event ', e);
       const { item } = e.detail;
-      const idx = Array.from(this.children).indexOf(item);
-      this.applyIndex(this.children[idx]);
+      const repeatedItems = this._getRepeatedItems();
+      const idx = Array.from(repeatedItems).indexOf(item);
+      this.applyIndex(repeatedItems[idx]);
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
@@ -249,6 +275,10 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         clonedTemplate.classList.add('fx-repeatitem');
         clonedTemplate.setAttribute('index',position);
 
+        clonedTemplate.addEventListener('click', this._dispatchIndexChange);
+        // this.addEventListener('focusin', this._handleFocus);
+        clonedTemplate.addEventListener('focusin', this._dispatchIndexChange);
+
 
         // this._initVariables(clonedTemplate);
 
@@ -282,6 +312,13 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     console.timeEnd('repeat-refresh');
 
     console.groupEnd();
+  }
+
+  _dispatchIndexChange() {
+    // console.log('_dispatchIndexChange on index ', this.index);
+      this.dispatchEvent(
+          new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
+      );
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -342,6 +379,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     this.shadowRoot.appendChild(this.template);
   }
 
+/*
   _initRepeatItems() {
     console.log('_initRepeatItems', this.nodeset);
     // const model = this.getModel();
@@ -350,7 +388,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
 
       const clone = this._clone();
       this.appendChild(clone);
-/*
+/!*
       this.appendChild(repeatItem);
 
       if (item.index === 1) {
@@ -358,9 +396,10 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
       }
 
       this._initVariables(item);
-*/
+*!/
     });
   }
+*/
 
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
@@ -385,7 +424,8 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   _removeIndexMarker() {
-    Array.from(this.children).forEach(item => {
+    const refd = this.querySelector('[data-ref]');
+    Array.from(refd.children).forEach(item => {
       item.removeAttribute('repeat-index');
     });
   }

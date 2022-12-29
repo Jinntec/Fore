@@ -567,4 +567,70 @@ describe('repeat Tests', () => {
     const rItems = el.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(10);
   });
+
+  it('handles simple table via attributes and handles change of index', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>
+                <field name="a">a</field>
+                <field name="b">b</field>
+                <field name="c">c</field>
+                <field name="d">d</field>
+                <field name="e">e</field>
+                <field name="f">f</field>
+              </item>
+              <item>
+                <field name="a">g</field>
+                <field name="b">h</field>
+                <field name="c">i</field>
+                <field name="d">j</field>
+                <field name="e">k</field>
+                <field name="f">l</field>
+              </item>
+              <item>
+                <field name="a">m</field>
+                <field name="b">n</field>
+                <field name="c">o</field>
+                <field name="d">p</field>
+                <field name="e">q</field>
+                <field name="f">r</field>
+              </item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <table data-ref="item">
+          <template>
+            <tr>
+              <td><fx-output ref="field[@name='a']"></fx-output></td>
+              <td><fx-output ref="field[@name='b']"></fx-output></td>
+              <td><fx-output ref="field[@name='c']"></fx-output></td>
+              <td><fx-output ref="field[@name='d']"></fx-output></td>
+              <td><fx-output ref="field[@name='e']"></fx-output></td>
+              <td><fx-output ref="field[@name='f']"></fx-output></td>
+            </tr>
+          </template>
+        </table>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('fx-repeat-attributes');
+    expect(repeat).to.exist;
+    expect(repeat.index).to.equal('1');
+
+    const rItems = el.querySelectorAll('.fx-repeatitem');
+    expect(rItems.length).to.equal(3);
+    expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
+
+    rItems[1].click();
+    // await oneEvent(repeat, 'item-changed');
+    expect(rItems[0].hasAttribute('repeat-index')).to.be.false;
+    expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
+    expect(repeat.index).to.equal('2');
+
+  });
 });
