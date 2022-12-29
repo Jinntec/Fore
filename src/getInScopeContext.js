@@ -1,4 +1,4 @@
-import {evaluateXPathToFirstNode} from './xpath-evaluation.js';
+import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 import {Fore} from './fore.js';
 
 import {XPathUtil} from './xpath-util.js';
@@ -78,6 +78,22 @@ export default function getInScopeContext(node, ref) {
         }
         return repeatItem.nodeset;
     }
+
+  // ### check for repeatitems created by fx-repeat-attributes - this could possibly be unified with standard repeats
+  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  const repeatItemFromAttrs = parentElement.closest('.fx-repeatitem');
+
+  if (repeatItemFromAttrs) {
+    // ### determine correct inscopecontext by determining the index of the repeatitem in its parent list and
+    // ### using that as an index on the repeat nodeset
+    const parent = repeatItemFromAttrs.parentNode;
+    const index = Array.from(parent.children).indexOf(repeatItemFromAttrs);
+
+    // ### fetching nodeset from fx-repeat-attributes element
+    const repeatFromAttributes = Fore.getClosest('fx-repeat-attributes', parentElement);
+    return repeatFromAttributes.nodeset[index];
+  }
 
     if (parentElement.hasAttribute('context')) {
         const initialContext = _getInitialContext(parentElement.parentNode, ref);

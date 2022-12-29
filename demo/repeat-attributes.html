@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem{
+            display: block;
+            background:lightblue;
+        }
+        th, td{
+            border:thin solid;
+        }
+    </style>
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <item>
+                    <field name="a">a</field>
+                    <field name="b">b</field>
+                    <field name="c">c</field>
+                    <field name="d">d</field>
+                    <field name="e">e</field>
+                    <field name="f">f</field>
+                </item>
+                <item>
+                    <field name="a">g</field>
+                    <field name="b">h</field>
+                    <field name="c">i</field>
+                    <field name="d">j</field>
+                    <field name="e">k</field>
+                    <field name="f">l</field>
+                </item>
+                <item>
+                    <field name="a">m</field>
+                    <field name="b">n</field>
+                    <field name="c">o</field>
+                    <field name="d">p</field>
+                    <field name="e">q</field>
+                    <field name="f">r</field>
+                </item>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-repeat ref="item">
+        <template>
+            <span>{./field[@name="a"]}</span>
+        </template>
+    </fx-repeat>
+
+
+    <h2>Simple Table via attributes</h2>
+    <table data-ref="item">
+        <template>
+            <tr>
+                <td><fx-output ref="field[@name='a']"></fx-output></td>
+                <td><fx-output ref="field[@name='b']"></fx-output></td>
+                <td><fx-output ref="field[@name='c']"></fx-output></td>
+                <td><fx-output ref="field[@name='d']"></fx-output></td>
+                <td><fx-output ref="field[@name='e']"></fx-output></td>
+                <td><fx-output ref="field[@name='f']"></fx-output></td>
+            </tr>
+        </template>
+    </table>
+
+    <h2>Table with header via attributes</h2>
+    <table>
+        <thead>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+                <th>x</th>
+        </thead>
+        <tbody data-ref="item">
+            <template>
+                <tr>
+                    <td><fx-output ref="field[@name='a']"></fx-output></td>
+                    <td><fx-output ref="field[@name='b']"></fx-output></td>
+                    <td><fx-output ref="field[@name='c']"></fx-output></td>
+                    <td><fx-output ref="field[@name='d']"></fx-output></td>
+                    <td><fx-output ref="field[@name='e']"></fx-output></td>
+                    <td><fx-output ref="field[@name='f']"></fx-output></td>
+                    <td>
+                        <fx-trigger>
+                            <button>del</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+    <fx-trigger>
+        <button>append</button>
+        <fx-insert ref="item" keep-values></fx-insert>
+    </fx-trigger>
+
+    <h2>Output all field in a list</h2>
+    <ul data-ref="//field">
+        <template>
+            <li><fx-output ref="."></fx-output></li>
+        </template>
+    </ul>
+
+    <h2>Table using template expressions</h2>
+    <table data-ref="item">
+        <template>
+            <tr>
+                <td>{field[@name="a"]}</td>
+                <td>{field[@name="b"]}</td>
+                <td>{field[@name="c"]}</td>
+                <td>{field[@name="d"]}</td>
+                <td>{field[@name="e"]}</td>
+                <td>{field[@name="f"]}</td>
+            </tr>
+        </template>
+    </table>
+
+
+    <h2>Table with header using template expressions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+            </tr>
+        </thead>
+        <tbody data-ref="item">
+        <template>
+            <tr>
+                <td>{field[@name='a']}</td>
+                <td>{field[@name='b']}</td>
+                <td>{field[@name='c']}</td>
+                <td>{field[@name='d']}</td>
+                <td>{field[@name='e']}</td>
+                <td>{field[@name='f']}</td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
+
+    <h2>table with header and nested repeat within a cell</h2>
+    <table>
+        <thead>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+        <th>F</th>
+        <th>x</th>
+        </thead>
+        <tbody data-ref="item">
+        <template>
+            <tr>
+                <td>
+                    <fx-repeat ref="field">
+                        <template>
+                            <span>{.}</span>
+                        </template>
+                    </fx-repeat>
+                    <!--                        <fx-output ref="field[@name='a']"></fx-output></td>-->
+                <td><fx-output ref="field[@name='b']"></fx-output></td>
+                <td><fx-output ref="field[@name='c']"></fx-output></td>
+                <td><fx-output ref="field[@name='d']"></fx-output></td>
+                <td><fx-output ref="field[@name='e']"></fx-output></td>
+                <td><fx-output ref="field[@name='f']"></fx-output></td>
+                <td>
+                    <fx-trigger>
+                        <button>del</button>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
+
+    <!--
+        <ul data-ref="field">
+            <template>
+                <li>
+                    {field[@name="a"]} | {field[@name="b"]}
+                </li>
+            </template>
+        </ul>
+    -->
+</fx-fore>
+<script type="module" src="../index.js"></script>
+</body>
+</html>
