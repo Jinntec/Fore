@@ -17,11 +17,11 @@ a, a:link, a:visited {
 body{
     padding:0;
     /*font-family:'Roboto','Noto', 'sans-serif';*/
-    font-family:"Kimberley", "Montserrat", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    font-family: "Montserrat", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
     /*background: var(--paper-blue-grey-200);*/
 }
 code{
-    font-weight: 700;
+    font-weight: 500;
     white-space: nowrap;
     padding:0 0.3rem;
 }
@@ -70,9 +70,11 @@ h2{
 }
 .note{
     /*background: var(--paper-amber-300);*/
-    background: var(--paper-blue-grey-200);
+    background: var(--paper-blue-100);
     padding:10px;
     font-size: 1rem;
+    border-radius: 0.2rem;
+    line-height: 1.5;
 }
 p{
     font-size:1.4rem;

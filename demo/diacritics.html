@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Diacritics</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+
+
+    <style>
+
+        .correct, fx-fore{
+            /* removing the line below causes Chrome to render wrong chars for diacritics. */
+            font-family: 'Arial';
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chrome not showing diacritics properly</h1>
+
+<h2>div with no explicit font setting</h2>
+<div>Semʹi︠a︡ Ulʹi︠a︡novykh : tetralogii︠a︡ ; Ocherki i statʹi o Lenine : 1935-1981 / Mariėtta Shagini︠a︡n.</div>
+
+<h2>div with font-family 'Arial'</h2>
+<div class="correct">Semʹi︠a︡ Ulʹi︠a︡novykh : tetralogii︠a︡ ; Ocherki i statʹi o Lenine : 1935-1981 / Mariėtta Shagini︠a︡n.</div>
+
+<h2>Issue unrelated to Fore</h2>
+<p>Even if Fore is completely removed from the page the Chrome font issue remains.</p>
+<fx-fore>
+    <fx-model>
+        <fx-instance src="data/catalog.xml">
+        </fx-instance>
+    </fx-model>
+
+    <fx-repeat id="repeat-catalog" ref=".">
+        <template>
+            <div class="row">
+                <div class="catalog-entry col">
+                    <a href="{a/@href}" target="_blank">
+                        <fx-output value="a"></fx-output>
+                    </a>
+                </div>
+            </div>
+        </template>
+    </fx-repeat>
+</fx-fore>
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

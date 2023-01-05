@@ -23,16 +23,22 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     return {
       ...super.properties,
       /**
+       * can be either 'cancel' or 'perform' (default)
+       */
+      defaultAction:{
+        type: String
+      },
+      /**
+       * delay before executing action in milliseconds
+       */
+      delay: {
+        type: Number,
+      },
+      /**
        * detail - event detail object
        */
       detail: {
         type: Object,
-      },
-      /**
-       * wether nor not an action needs to run the update cycle
-       */
-      needsUpdate: {
-        type: Boolean,
       },
       /**
        * event to listen for
@@ -40,11 +46,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       event: {
         type: Object,
       },
-      /**
-       * id of target element to attach listener to
-       */
-      target: {
-        type: String,
+      handler:{
+        type:Object,
       },
       /**
        * boolean XPath expression. If true the action will be executed.
@@ -53,17 +56,36 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         type: String,
       },
       /**
+       * wether nor not an action needs to run the update cycle
+       */
+      needsUpdate: {
+        type: Boolean,
+      },
+      /**
+       * The observer if given is the element on which an event is triggered. It must be an ancestor of the target
+       * element of an event.
+       */
+      observer:{
+        type:Object,
+      },
+      /**
+       * can be either 'stop' or 'continue' (default)
+       */
+      propagate:{
+        type: String,
+      },
+      /**
+       * id of target element to attach listener to
+       */
+      target: {
+        type: String,
+      },
+      /**
        * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
        * to actually run the action.
        */
       whileExpr: {
         type: String,
-      },
-      /**
-       * delay before executing action in milliseconds
-       */
-      delay: {
-        type: Number,
       },
     };
   }
@@ -76,6 +98,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
   connectedCallback() {
     this.style.display = 'none';
+    this.propagate = this.hasAttribute('propagate')? this.getAttribute('propagate'):'continue';
     this.repeatContext = undefined;
 
     if (this.hasAttribute('event')) {
@@ -117,6 +140,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
+    if(this.propagate === 'stop'){
+      console.log('event propagation stopped', e)
+      e.stopPropagation();
+    }
+
     let resolveThisEvent = () => {};
     if (e && e.listenerPromises) {
       e.listenerPromises.push(
@@ -219,8 +247,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
       // After loop is done call actionPerformed to update the model and UI
       await loop();
-
       this._finalizePerform(resolveThisEvent);
+
       return;
     }
 
@@ -237,7 +265,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     await this.perform();
     this._finalizePerform(resolveThisEvent);
-
   }
 
   _finalizePerform(resolveThisEvent) {

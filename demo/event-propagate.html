@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Event propagation</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <style>
+        div{
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Event Propagation</h1>
+
+<p>Events can be stopped on their way through the DOM.</p>
+
+<p>While the first button will trigger a bubbling event and not the stopped, the second will execute and stop.</p>
+<p>Note the <code>propagate="stop" on the second setvalue action.</code></p>
+<demo-snippet>
+    <template>
+        <fx-fore>
+            <fx-model>
+                <fx-instance>
+                    <data>
+                        <value></value>
+                    </data>
+                </fx-instance>
+            </fx-model>
+            <fx-group>
+                <fx-setvalue id="group" ref="value" event="click">bubbled</fx-setvalue>
+                <div>
+                    <fx-trigger>
+                        <button>dispatch click</button>
+                        <fx-setvalue ref="value" event="click">div</fx-setvalue>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>stopping propagation</button>
+                        <fx-setvalue ref="value" event="click" propagate="stop">stopped</fx-setvalue>
+                    </fx-trigger>
+                </div>
+                <div id="result">{value}</div>
+            </fx-group>
+            <fx-inspector open></fx-inspector>
+        </fx-fore>
+    </template>
+</demo-snippet>
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
