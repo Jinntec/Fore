@@ -32,7 +32,6 @@
     </style>
 </head>
 <body>
-
 <div class="wrapper">
     <fx-fore>
         <fx-model>
@@ -86,6 +85,7 @@
 
 
         <h2>Simple Table via attributes</h2>
+        <p class="note">All tables below bind to the same nodeset so adding/deleting items in one table will update the others.</p>
         <p>To bind data nodes the <code>data-ref</code> attribute is used instead of the usual <code>ref</code> found
         on the Fore elements.</p>
         <p>You still have to wrap the repeated content in a <code>template</code> as with usual repeats.</p>
@@ -114,6 +114,20 @@
                             </td>
                         </tr>
                     </template>
+                </table>
+            </template>
+        </demo-snippet>
+        <h2>Repeating <code>td</code> elements in a single row</h2>
+        <demo-snippet>
+            <template>
+                <table>
+                    <tr data-ref="item[3]/field">
+                        <template>
+                            <td>
+                                <fx-output ref="@name"></fx-output>
+                            </td>
+                        </template>
+                    </tr>
                 </table>
             </template>
         </demo-snippet>
@@ -167,6 +181,19 @@
                     <button>append</button>
                     <fx-insert ref="item" keep-values></fx-insert>
                 </fx-trigger>
+                <fx-trigger>
+                    <button>delete second</button>
+                    <fx-delete ref="item[2]"></fx-delete>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert before second</button>
+                    <fx-insert ref="item" at="2" position="before"></fx-insert>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>insert after second with values</button>
+                    <fx-insert ref="item" at="2" keep-values></fx-insert>
+                </fx-trigger>
+
             </template>
         </demo-snippet>
 
@@ -204,7 +231,6 @@
             </template>
         </demo-snippet>
 
-
         <h2>Table with header using template expressions</h2>
         <demo-snippet>
             <template>
@@ -235,7 +261,7 @@
             </template>
         </demo-snippet>
 
-        <h2>table with header and nested repeat within a cell</h2>
+        <h2>Table with header and nested repeat within a cell</h2>
         <demo-snippet>
             <template>
                 <table>
@@ -248,10 +274,11 @@
                     <th>F</th>
                     <th>x</th>
                     </thead>
-                    <tbody data-ref="item">
+                    <tbody data-ref="item" class="outer">
                     <template>
                         <tr>
                             <td>
+<!--
                                 <fx-repeat ref="field">
                                     <template>
                                         <span>{.}</span>
