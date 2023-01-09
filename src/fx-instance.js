@@ -30,12 +30,14 @@ async function handleResponse(response) {
     // console.log("********** inside res json *********");
     return response.json();
   }
-  if (responseContentType.startsWith('application/xml')) {
+  if (responseContentType.startsWith('application/xml') ||
+      responseContentType.startsWith('text/xml')) {
+    // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
     // console.log('xml ********', result);
     return new DOMParser().parseFromString(text, 'application/xml');
   }
-  return 'done';
+  throw new Error(`unable to handle response content type: ${responseContentType}`);
 }
 
 /**
