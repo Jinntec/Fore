@@ -1,5 +1,6 @@
 import {AbstractAction} from "./abstract-action";
 import {resolveId} from "../xpath-evaluation";
+import {Fore} from '../fore.js';
 
 /**
  * `fx-setfocus`
@@ -18,10 +19,11 @@ export class FxSetfocus extends AbstractAction {
       // super.perform();
       const selector = '#'+this.control;
 
-      let targetElement = this.getOwnerForm().querySelector(selector);;
+      let targetElement = this.getOwnerForm().querySelector(selector);
+
 
       // ### focus action is itself hosted within a repeat
-      const parentIItem = this.closest('fx-repeatitem');
+      const parentIItem = targetElement.closest('fx-repeatitem');
       if(parentIItem){
           console.log('parentRepeat',parentIItem);
           targetElement = parentIItem.querySelector(selector);
@@ -29,6 +31,10 @@ export class FxSetfocus extends AbstractAction {
           return;
       }
 
+      if(!targetElement) {
+          console.warn('targetElement of setfocus action does not exist (yet)', selector);
+          return;
+      }
       // ### the target element is hosted within a repeat
       const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
       if(repeatitem){
@@ -45,8 +51,12 @@ export class FxSetfocus extends AbstractAction {
   }
 
     _focus(targetElement){
-        if(targetElement){
+        console.log('focus', targetElement)
+        if(targetElement && typeof targetElement.getWidget === 'function'){
             targetElement.getWidget().focus();
+        }
+        if(targetElement){
+            targetElement.click();
         }
     }
 

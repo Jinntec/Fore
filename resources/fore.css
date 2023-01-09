@@ -21,12 +21,10 @@ html{
     /*opacity: 0;*/
 }
 /*
-    defaults for relevance
-
-    You can overwrite these matchers to use transistions
+    nonrelevant must always be hidden
 */
 [nonrelevant]{
-    display: none;
+    display: none !important;
 }
 [relevant]{
     display: block;
