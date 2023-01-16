@@ -63,7 +63,7 @@ export default function getInScopeContext(node, ref) {
         return parentElement.getModel().getDefaultInstance().getDefaultContext();
     }
     const parentBind = Fore.getClosest('[ref]', parentElement.parentNode);
-    if (parentBind && parentBind.nodeName === 'FX-GROUP') {
+    if (parentBind && (parentBind.nodeName === 'FX-GROUP' || parentBind.nodeName === 'FX-CONTROL')) {
         return parentBind.nodeset;
     }
 

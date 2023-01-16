@@ -215,6 +215,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       return;
     }
 
+    // console.log('performing action', this);
+
     if (this.whileExpr) {
       // While: while the condition is true, delay a bit and execute the action
       const loop = async () => {

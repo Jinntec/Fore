@@ -542,7 +542,8 @@ export class FxFore extends HTMLElement {
             // Templates are special: they use the namespace configuration from the place where they are
             // being defined
             const instanceId = XPathUtil.getInstanceId(naked);
-            const inst = this.getModel().getInstance(instanceId);
+            // todo: check back with Martin
+            const inst = this.getModel().getInstance(instanceId)?this.getModel().getInstance(instanceId):this.getModel().getDefaultInstance();
             try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {

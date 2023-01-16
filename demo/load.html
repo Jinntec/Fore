@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrapper">
+    <h1>The <code>fx-load</code> action</h1>
+
+    <p>The load action fetches some content from a URL. As the URL may contain template expressions
+    it will be fully dynamic and work in context of its usage.</p>
+
+    <p>Responses can</p>
+    <ul>
+        <li>replace the content of the current viewport (like a link target _self)</li>
+        <li>send the content to a new tab (like a link target _blank)</li>
+        <li>send the content to an element with given id. Id must be prefixed with '#'.</li>
+    </ul>
+    <h2>Using an idref</h2>
+    <p>Ids will be resolved automatically when used in a repeat.</p>
+    <p>Here the load fires on 'ready' event and inlines the loaded content.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-load event="ready" url="load-snippet.html" attach-to="#thetarget"></fx-load>
+                <div id="thetarget"></div>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Replacing current browser tab with content</h2>
+    <p>Leaving out the <code>attach-to</code> attribute will default to using '_blank' as
+    default target. This will replace the current window with the content loaded from <code>url</code>.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-trigger>
+                    <button>navigate to URL</button>
+                    <fx-load url="load-snippet.html"></fx-load>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Opening new browser tab with content</h2>
+    <p>By using '_blank' for the <code>attach-to</code> attribute a new browser window will be opened with
+        the content.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-trigger>
+                    <button>load in new tab</button>
+                    <fx-load url="load-snippet.html" attach-to="_blank"></fx-load>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Replacing current browser tab with confirmation</h2>
+    <p>The load action also respects the <code>show-confirmation</code> attribute
+    and will ask for confirmation if data have changed before replacing the current tab.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore show-confirmation>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <value></value>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-trigger>
+                    <button>navigate to Url</button>
+                    <fx-load url="load-snippet.html" attach-to="_self"></fx-load>
+                </fx-trigger>
+                <fx-control ref="value">
+                    <label>a Value</label>
+                </fx-control>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

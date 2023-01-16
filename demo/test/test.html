@@ -10,107 +10,20 @@
 <div class="wrapper">
     <fx-fore>
         <fx-model>
-            <fx-action event="model-construct-done" if="exists(instance('query-params')/project)">
-<!--                <fx-message>hey {instance('projects')/project[./@id=instance('query-params')/project]}</fx-message>-->
-<!--                <fx-toggle case="c-form"></fx-toggle>-->
-                <fx-setvalue ref="project" value="instance('projects')/project[./@id=instance('query-params')/project]/string()"></fx-setvalue>
-            </fx-action>
-
             <fx-instance>
-                <record id="">
-                    <project></project>
-                </record>
+                <data>
+                    <ptr target="target"></ptr>
+                    <check></check>
+                </data>
             </fx-instance>
-
-            <fx-instance id="projects">
-                <projects>
-                    <project id="3b9f4db8-9353-4003-96e3-b69ca727bd50" client-id="a6ebb16c-e659-468a-ae78-3d18678f2e7b" active="true" budget="4080" currency="EUR" earned="4080" exceeded="exceeded" percent-used="575">ACDH Support</project>
-                    <project id="f524cc5b-6b46-4ebf-b7a1-0a70b9f8814a" client-id="7b05a308-0ede-4395-b9cc-7638eccb7bf9" active="true" budget="12000" currency="EUR" earned="12000" exceeded="exceeded" percent-used="110">Andersen</project>
-                    <project id="b5078ae5-70c0-47af-8c92-05a6dcad0078" client-id="0c9f832e-a4dd-4268-956b-5a8f7519a8b8" active="true" budget="9000" currency="EUR" earned="9000" exceeded="exceeded" percent-used="155">archives-online Server</project>
-                    <project id="454b6f73-b3a1-4450-b236-468854a3d96e" client-id="695a9b8d-ebd5-4e12-a878-6b193028fa9d" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Bernoulli</project>
-                    <project id="3f9d3ee7-742a-461d-ae25-d5e360b2c481" client-id="067aed39-a877-480e-b146-ce3ccff3f632" active="true" budget="15000" currency="EUR" earned="15000" exceeded="exceeded" percent-used="131">BetaMasaheft</project>
-                    <project id="4cd5c170-59a4-4e39-acdc-a9b5359f909e" client-id="a2a6c5e6-d306-4a60-ae1b-7a1828175b4f" active="true" budget="12750" currency="EUR" earned="12750" exceeded="exceeded" percent-used="335">Digital Mishnah</project>
-                    <project id="46781a49-f870-4ca7-be10-ab219c4df219" client-id="5a181a59-d168-4f5c-a406-426197b5318a" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">dipf support</project>
-                    <project id="bbb6cf6c-ac66-488b-a144-0cfb6e1bd9de" client-id="3bf6bfb2-fdf2-4d12-abce-e47959690fe0" active="true" budget="30720" currency="EUR" earned="29798" exceeded="" percent-used="97">EDEp</project>
-                    <project id="ce9c8b59-5bea-4ef3-9ee9-2240ed2fe748" client-id="e33b7f3f-5739-42b9-bdfe-57f1bbd15491" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Eisenbibliothek</project>
-                    <project id="037d319c-8586-4514-9bdd-9cc7bde67ffc" client-id="a6f99fd1-a90d-46af-86a5-759a68f38075" active="true" budget="3000" currency="EUR" earned="3000" exceeded="exceeded" percent-used="114">Elisabeth Montagu</project>
-                    <project id="afe3f699-20da-455c-8a90-ec91ecb69445" client-id="0c9f832e-a4dd-4268-956b-5a8f7519a8b8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Escher Edition</project>
-                    <project id="934bf1b5-e611-4858-9fe0-0173847abbd0" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">eXist Solutions admin</project>
-                    <project id="22d0ed4e-afe1-44f6-a796-4a3ee650b43d" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">eXist Solutions dev</project>
-                    <project id="24b15ca5-6045-4956-bcff-62a3758366fe" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">eXist Solutions marketing</project>
-                    <project id="b8d7bd47-5518-4185-8f7c-73dae3cfbed1" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">eXistdb Core</project>
-                    <project id="7d7e5765-f6a7-4349-a431-6d4bf25aa0f8" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">FINANCE</project>
-                    <project id="ab88a642-2493-46c2-8411-eab1521b0a6a" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Fore</project>
-                    <project id="09a165ba-34bb-43e7-b8ce-93de9b9456dd" client-id="75f55a13-20d8-48d3-9a2c-71e90a708d55" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Ginzberg Edition</project>
-                    <project id="3f989913-2658-4700-b391-4e43b1f1f61c" client-id="772496d1-9b44-4c95-99fe-495b537376be" active="true" budget="8500" currency="EUR" earned="8500" exceeded="exceeded" percent-used="484">gsk-16-08</project>
-                    <project id="23dc12e6-a9c2-42cf-9485-026bc18e16eb" client-id="4fc4f950-3b9d-41c1-98bd-b499ae75e268" active="true" budget="12480" currency="EUR" earned="12480" exceeded="exceeded" percent-used="198">IB Publishing Support (SOW Jt 001)</project>
-                    <project id="1f18080c-91e5-4664-a021-693653a62d55" client-id="4fc4f950-3b9d-41c1-98bd-b499ae75e268" active="true" budget="5200" currency="EUR" earned="4108" exceeded="" percent-used="79">ib-cms</project>
-                    <project id="ca582f81-a5b8-4822-b8bb-6b48f6856824" client-id="4fc4f950-3b9d-41c1-98bd-b499ae75e268" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">ib-legacy-existdb</project>
-                    <project id="83e7f0fe-ca8f-46d2-a3a8-5d5ff7ac9e0f" client-id="4fc4f950-3b9d-41c1-98bd-b499ae75e268" active="true" budget="19500" currency="EUR" earned="14625" exceeded="" percent-used="75">ib-maintenance-support-SOW Jt 002</project>
-                    <project id="ddabf95b-c612-4106-9ba8-6dd45d7020e1" client-id="941b0002-e64b-431c-ad26-2111031945a9" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">insee</project>
-                    <project id="2e2aafe6-de6d-4372-822c-b6f4abe08a95" client-id="8c4bad15-b1f3-4630-99d4-dc3dcd018095" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Invisible East</project>
-                    <project id="d206677d-d886-4501-9c57-1c0ee53572e6" client-id="82b8dd8a-4a69-4dab-9338-ac5972a9319a" active="true" budget="1000" currency="EUR" earned="0" exceeded="" percent-used="0">Johann Conrad Fischer</project>
-                    <project id="7996e0b0-d5bf-49da-90cf-a7606d45fe2d" client-id="15df9392-d823-44f0-b0ef-278eff603f95" active="true" budget="10000" currency="EUR" earned="0" exceeded="" percent-used="0">Karl Barth Edition</project>
-                    <project id="4b7a7ea8-43be-4deb-bfbe-80f8386ca9ba" client-id="15df9392-d823-44f0-b0ef-278eff603f95" active="true" budget="6300" currency="EUR" earned="0" exceeded="" percent-used="0">Karl Barth Webdesign</project>
-                    <project id="ebfcdb33-dfc3-4ce7-a6ba-f8d2a858602d" client-id="15df9392-d823-44f0-b0ef-278eff603f95" active="true" budget="5000" currency="EUR" earned="0" exceeded="" percent-used="0">Karl Barth Word Add-in</project>
-                    <project id="6ed715af-e4b5-46ac-a3cb-fe19bb83d18e" client-id="15df9392-d823-44f0-b0ef-278eff603f95" active="true" budget="13900" currency="EUR" earned="417" exceeded="" percent-used="3">Karl-Barth-Git</project>
-                    <project id="89f555cd-32ee-461d-bfa2-2b2611ce245c" client-id="c85d0cde-42ec-46f8-8149-2e6a284351ac" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">kgparl</project>
-                    <project id="1012246a-6c4f-45ec-8e51-b4cd9bfd003d" client-id="c9db6dcb-82bd-4b15-934c-290735b27921" active="true" budget="3000" currency="EUR" earned="1500" exceeded="" percent-used="50">kudo-2022</project>
-                    <project id="79eb4933-860e-4fc1-bcfd-fb05ccbfc444" client-id="482911c4-8944-4f64-a0ef-fc97081c1687" active="true" budget="16800" currency="EUR" earned="672" exceeded="" percent-used="4">Lausanne</project>
-                    <project id="3f7d7220-b958-4bfb-b341-50a9c3946425" client-id="4fc4f950-3b9d-41c1-98bd-b499ae75e268" active="true" budget="15000" currency="EUR" earned="15000" exceeded="exceeded" percent-used="145">Lazy PDF generation Dev Iteration</project>
-                    <project id="e775bf2e-9529-42ff-85fa-d3bddeb9ae56" client-id="8c4bad15-b1f3-4630-99d4-dc3dcd018095" active="true" budget="0" currency="Euro" earned="0" exceeded="" percent-used="0">LGPN</project>
-                    <project id="7ec44923-2b59-445a-8f11-a73679984dbc" client-id="e371fa36-092e-48af-816a-a10056585422" active="true" budget="47900" currency="EUR" earned="47900" exceeded="exceeded" percent-used="119">LGPN-Ling 2017</project>
-                    <project id="9462f692-50c4-4715-9d92-ceecb2452b65" client-id="a2a6c5e6-d306-4a60-ae1b-7a1828175b4f" active="true" budget="30000" currency="EUR" earned="0" exceeded="" percent-used="0">LJN Lexicon Jewish Names</project>
-                    <project id="e75ef81e-e955-4edc-82a6-a7dd9e71828c" client-id="10b91863-871d-41e9-9624-b6d3eed8a1a7" active="true" budget="1875.00" currency="EUR" earned="1875" exceeded="exceeded" percent-used="208">Mahle Consulting 1</project>
-                    <project id="a7add6b4-cf01-4793-9712-629e1eb6e9d0" client-id="0011b3f1-b49e-4d62-9be7-777df618e7ec" active="true" budget="6720" currency="EUR" earned="739" exceeded="" percent-used="11">Mark Twain Project</project>
-                    <project id="d461a00d-3163-4900-b3cc-dfdabcaaa62c" client-id="a2a6c5e6-d306-4a60-ae1b-7a1828175b4f" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">New Mishnah (graph)</project>
-                    <project id="aefb7736-3560-47ad-b454-fdf89dfefd26" client-id="8a8455a8-cb50-41eb-9eef-9c7c13daddb8" active="true" budget="1000" currency="EUR" earned="880" exceeded="" percent-used="88">nuemeta</project>
-                    <project id="7e4b6dbf-eaa7-4f7f-8baf-c2dce5d7553a" client-id="e276701b-75dd-4b9b-a953-23a7bb2dc153" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">prohd-workshop</project>
-                    <project id="9997ec17-0f14-4db9-9e26-7bed0bd6211f" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="10000" currency="EUR" earned="2400" exceeded="" percent-used="24">PublisherPolymer3</project>
-                    <project id="6a2bc1be-573a-4fea-959e-452303259879" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">sales</project>
-                    <project id="90fa57f8-14e2-49b8-8f19-91123fe3b154" client-id="3c946115-045e-4d43-b373-9e2a5de69a0c" active="true" budget="18000" currency="EUR" earned="0" exceeded="" percent-used="0">Slowenian Academy</project>
-                    <project id="0c56175a-5b5c-4051-b54c-8eed761773a1" client-id="8df6bae3-f8a4-42db-8561-5083738a24dc" active="true" budget="45050.00" currency="EUR" earned="36491" exceeded="" percent-used="81">SSRQ M1</project>
-                    <project id="493f3d95-2022-4f59-9a00-763d38a6a49a" client-id="8df6bae3-f8a4-42db-8561-5083738a24dc" active="true" budget="9600" currency="EUR" earned="9600" exceeded="exceeded" percent-used="227">SSRQ-PB6-Update</project>
-                    <project id="22b1cfb6-13a0-49b4-b18f-9bb7e425d488" client-id="772496d1-9b44-4c95-99fe-495b537376be" active="true" budget="4000" currency="EUR" earned="4000" exceeded="exceeded" percent-used="114">St. Galler Missiven</project>
-                    <project id="7c78e9fc-7a5d-465d-b2ae-5a99bf0b28a5" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">State-Gov-Airtable</project>
-                    <project id="766d3ac6-19c7-4079-83e8-8531ac49ae04" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="8990" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-Annotation-entity-creation-aids</project>
-                    <project id="ab14a4d2-d52b-45b0-9837-4b9ba4c7090b" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">State-Gov-CMS-Year-4</project>
-                    <project id="2ff797f6-1b68-4620-9859-6c49e1aaad33" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">state-gov-data-in-rest</project>
-                    <project id="a5f783f2-b612-4235-b7c1-046569244b92" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="5120" currency="USD" earned="5120" exceeded="exceeded" percent-used="396">State-Gov-eXistdb-issues</project>
-                    <project id="b8ca04fe-0911-4ccf-9d60-c2d53ba9f118" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">state-gov-facets</project>
-                    <project id="fca225cd-43d7-4ce3-98a9-4c8fb23c48c7" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="3045" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-Facets-interface-Improvement</project>
-                    <project id="37b1b933-b29d-426a-ba8a-ff5b56321c48" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="7540" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-FRUS-TEI-migration-facility</project>
-                    <project id="7a908426-b3e9-49b7-a523-8bb81423ef94" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">state-gov-handover</project>
-                    <project id="5ab3f469-de57-45a6-adcc-ff16402c634f" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="6090" currency="USD" earned="1157" exceeded="" percent-used="19">state-gov-HSG-Annotate-deployment-to-CMS-server</project>
-                    <project id="6040a385-d0cc-44ce-8bf4-e7b368a191d4" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">State-Gov-HSG-Year-4</project>
-                    <project id="9d01ec62-d1bd-4582-968e-e983455a61e7" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="8410" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-Index-entry-composition-aids</project>
-                    <project id="06dc2790-0a92-4b4e-9a4c-152acaa38d67" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">State-Gov-Maintenance</project>
-                    <project id="9d816ef1-6999-4739-a459-dc54c9e38940" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="3770" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-Minor-enhancements-to-HSG-Annotate</project>
-                    <project id="995a0e05-727e-4d4c-ab16-d3cc28f0bcd3" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="31900" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-NER-improvements</project>
-                    <project id="93a42706-e5c4-42fc-a414-f65930fe170f" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="12180" currency="USD" earned="0" exceeded="" percent-used="0">state-gov-NER-Integration</project>
-                    <project id="06dc2790-0a92-4b4e-92a4c-132acaa38d67" client-id="0d4eb17d-1b08-488d-aa04-08f44caa3fb8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">State-Gov-Project-Management</project>
-                    <project id="f240d968-bca8-4b0d-a2ab-06fd271fa83b" client-id="8c4bad15-b1f3-4630-99d4-dc3dcd018095" active="true" budget="3750" currency="Euro" earned="3750" exceeded="exceeded" percent-used="180">TEI Processing Model</project>
-                    <project id="b5e4c9f7-c120-4e90-8d68-1f590cc7c7c4" client-id="ca2873fd-095f-4605-b27e-a23a9d374bdd" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">TEI Publisher 8 - Göhner Stiftung</project>
-                    <project id="e3cd6925-d081-49fb-b8c0-886ed835bf6d" client-id="e7555a0e-f26a-4890-a24d-13f82e9be8de" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">TEI Publisher Infrastructure</project>
-                    <project id="041c4000-8f12-436f-babd-60324a764013" client-id="1895e080-2ccb-4ded-b292-e96700054440" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">TEI-Publisher</project>
-                    <project id="3efe2d35-1af7-406b-9bcd-4d67d0c7f584" client-id="e276701b-75dd-4b9b-a953-23a7bb2dc153" active="true" budget="6000" currency="EUR" earned="0" exceeded="" percent-used="0">TELOTA</project>
-                    <project id="ec18813d-eb0a-4964-b4c9-2ce0415e87b2" client-id="76058f3b-2ebe-4e52-95cb-282dcf50c690" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Wiborada</project>
-                    <project id="69c7b74f-17b4-4d45-a45b-bac21111492e" client-id="0c9f832e-a4dd-4268-956b-5a8f7519a8b8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Zürcher Portal</project>
-                    <project id="87a24b4e-99df-481b-b55d-21a9aad9ab5f" client-id="0c9f832e-a4dd-4268-956b-5a8f7519a8b8" active="true" budget="0" currency="EUR" earned="0" exceeded="" percent-used="0">Zürcher Rechtsquellen</project>
-                </projects>
-            </fx-instance>
-
-            <fx-instance id="query-params" src="#querystring">
-                <data></data>
-            </fx-instance>
-
         </fx-model>
-        Found: {instance('projects')/project[./@id=instance('query-params')/project]}
-        <fx-repeat ref="instance('projects')/project">
-            <template>
-                <div><a href="test.html?project={@id}">{.}</a></div>
-            </template>
-        </fx-repeat>
+        <fx-control ref="ptr/@target">
+            <label>Referenz {.}</label>
+            <fx-action event="init"  if="string-length(.) != 0">
+                <fx-setvalue ref="../../check">ok</fx-setvalue>
+            </fx-action>
+        </fx-control>
+        <fx-output ref="check"></fx-output>
         <fx-inspector></fx-inspector>
     </fx-fore>
 

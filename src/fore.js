@@ -1,3 +1,6 @@
+import getInScopeContext from "./getInScopeContext";
+import {evaluateXPathToString} from "./xpath-evaluation";
+
 export class Fore {
   static READONLY_DEFAULT = false;
 
@@ -256,6 +259,59 @@ export class Fore {
     return null;
   }
 
+  static async handleResponse(response) {
+    const { status } = response;
+    if (status >= 400) {
+      // console.log('response status', status);
+      alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
+      throw new Error(`failed to load data - status: ${status}`);
+    }
+    const responseContentType = response.headers.get('content-type').toLowerCase();
+    // console.log('********** responseContentType *********', responseContentType);
+    if (responseContentType.startsWith('text/html')) {
+      // const htmlResponse = response.text();
+      // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+      // return response.text();
+      return response.text().then(result =>
+          // console.log('xml ********', result);
+          new DOMParser().parseFromString(result, 'text/html'),
+      );
+    }
+    if (
+        responseContentType.startsWith('text/plain') ||
+        responseContentType.startsWith('text/markdown')
+    ) {
+      // console.log("********** inside  res plain *********");
+      return response.text();
+    }
+    if (responseContentType.startsWith('application/json')) {
+      // console.log("********** inside res json *********");
+      return response.json();
+    }
+    if (responseContentType.startsWith('application/xml')) {
+      const text = await response.text();
+      // console.log('xml ********', result);
+      return new DOMParser().parseFromString(text, 'application/xml');
+    }
+    return 'done';
+  }
+
+  static evaluateAttributeTemplateExpression(expr, node) {
+    const matches = expr.match(/{[^}]*}/g);
+    if (matches) {
+      matches.forEach(match => {
+        console.log('match ', match);
+        const naked = match.substring(1, match.length - 1);
+        const inscope = getInScopeContext(node, naked);
+        const result = evaluateXPathToString(naked, inscope, node.getOwnerForm());
+        const replaced = expr.replaceAll(match, result);
+        console.log('replacing ', expr, ' with ', replaced);
+        expr = replaced;
+      });
+    }
+    return expr;
+  }
+
   static fadeInElement(element) {
     const duration = 600;
     let fadeIn = () => {
@@ -303,7 +359,7 @@ export class Fore {
       detail,
     });
 	  event.listenerPromises = [];
-      // console.info('dispatching', event.type, target);
+      console.info('dispatching', event.type, target);
 	  // console.log('!!! DISPATCH_START', eventName);
 
       target.dispatchEvent(event);

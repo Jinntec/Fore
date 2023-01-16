@@ -119,6 +119,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.handleModelItemProperties();
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
+        if(this.getOwnerForm().initialRun){
+          Fore.dispatch(this,'init',{});
+        }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value ) {
           // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
