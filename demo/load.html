@@ -25,7 +25,8 @@
     <p>Here the load fires on 'ready' event and inlines the loaded content.</p>
     <demo-snippet>
         <template>
-            <fx-fore>
+	        <fx-fore>
+				<fx-message event="url-loaded">The HTML page with the url {event('url')} is loaded</fx-message>
                 <fx-load event="ready" url="load-snippet.html" attach-to="#thetarget"></fx-load>
                 <div id="thetarget"></div>
             </fx-fore>

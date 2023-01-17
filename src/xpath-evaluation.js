@@ -47,7 +47,7 @@ const xhtmlNamespaceResolver = prefix => {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+	const query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
     /*
         if (nodeName === 'fx-instance') {
             // Instance elements can only be in the `model` element
@@ -350,10 +350,19 @@ function getVariablesInScope(formElement) {
     const variables = {};
     if (closestActualFormElement.inScopeVariables) {
         for (const key of closestActualFormElement.inScopeVariables.keys()) {
-            const varElement = closestActualFormElement.inScopeVariables.get(key);
-            if(varElement){
-                variables[key] = varElement.value;
-            }
+            const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
+            if (!varElementOrValue) {
+				continue;
+
+			}
+			if (varElementOrValue.nodeType) {
+				// We are a var element, set the value to the value computed there
+                variables[key] = varElementOrValue.value;
+			} else {
+				// We are a direct value. This is used to leak in event variables
+                variables[key] = varElementOrValue;
+			}
+
         }
     }
     return variables;
@@ -829,21 +838,28 @@ registerCustomXPathFunction(
     (dynamicContext, arg) => {
         if (!arg) return [];
 
+		const {event} = window;
+		if (event[arg]) {
+			// The window.event property points to the event that's currently being fired. Note this
+			// does not work anymore when we mix in async steps in an action for an event.
+			return event[arg];
+		}
+
         if (dynamicContext.currentContext.variables) {
             const payload = dynamicContext.currentContext.variables[arg];
-            if (payload.nodeType) {
+            if (payload && payload.nodeType) {
                 console.log('got some node as js object');
             }
             if (payload) {
                 return dynamicContext.currentContext.variables[arg];
             }
         }
-
-        if (dynamicContext.currentContext.formElement.inScopeVariables) {
-            console.log('event()', dynamicContext.currentContext.formElement.inScopeVariables);
-            console.log('event()', dynamicContext.currentContext.formElement.inScopeVariables.get(arg));
+		const inscopeVariables = getVariablesInScope(dynamicContext.currentContext.formElement);
+        if (inscopeVariables) {
+            console.log('event()', inscopeVariables);
+            console.log('event()', inscopeVariables[arg] || "");
             // dynamicContext.currentContext.variables = dynamicContext.currentContext.formElement.inScopeVariables;
-            return dynamicContext.currentContext.formElement.inScopeVariables.get(arg);
+            return inscopeVariables[arg];
         }
 
         return [];
