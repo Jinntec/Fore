@@ -153,7 +153,9 @@ export class FxOutput extends XfAbstractControl {
 
     if(this.mediatype === 'image'){
       const img = document.createElement('img');
-      img.setAttribute('src',this.value);
+		img.setAttribute('src',this.value);
+		// Reset the output before adding the image
+		this.innerHTML = '';
       this.appendChild(img);
       return;
     }

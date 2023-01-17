@@ -185,6 +185,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
     }
 
+	  		if (e instanceof MouseEvent) {
+				// also set all mouseevent-related things
+				const eventVars = new Map();
+				      eventVars.set('x', e.x);
+				      eventVars.set('y', e.y);
+				      eventVars.set('clientX', e.clientX);
+				      eventVars.set('clientY', e.clientY);
+      this.setInScopeVariables(new Map([...this.inScopeVariables, ...eventVars]));
+
+		}
+
+
     if (e && e.detail) {
       this.detail = e.detail;
       const vars = new Map();
