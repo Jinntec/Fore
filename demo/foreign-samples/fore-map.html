@@ -17,7 +17,11 @@
         .mouse {position: absolute; top: 0; left: 0;}
         .space {height: 512px; width: 512px;}
         #root {position: relative;}
-        .fx-repeatitem {display: inline}
+        fx-repeatitem {display: inline;}
+
+        fx-repeatitem fx-repeatitem{
+            display: inline-block;
+        }
 
 
     </style>
@@ -87,7 +91,7 @@
                         <fx-bind ref="maxpos" calculate="math:pow(2, 26)"></fx-bind>
                         <fx-bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"></fx-bind>
                         <fx-bind ref="posy" calculate="(../lasty - (../mouse/move/y * (../scale div ../tilesize))) mod ../maxpos"></fx-bind>
-                        <fx-bind ref="x" calculate="floor(trace(../posx,'!!!' ) div ../scale)"></fx-bind>
+                        <fx-bind ref="x" calculate="floor(../posx div ../scale)"></fx-bind>
                         <fx-bind ref="y" calculate="floor(../posy div ../scale)"></fx-bind>
 <!-- This madness is needed because we see to have a bug in `bind`: the bind should apply to all results of the query-->
                         <fx-bind ref="row[1]/url[1]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
@@ -111,8 +115,10 @@
                         <fx-bind ref="mouse/move/y" calculate="../../end/y - ../../start/y"></fx-bind>
         </fx-model>
         <div id="root" class="map" style="cursor: {mouse/cursor};">
-            <div style="{offsets}">
-                <fx-group xmlns="http://www.w3.org/2002/xforms">
+<!--            <div style="{offsets}">-->
+            <div style="">
+                <fx-group>
+
                     <fx-repeat ref="row">
                         <template>
                             <fx-repeat ref="url">
