@@ -277,18 +277,20 @@ export class FxInstance extends HTMLElement {
     }
   }
 
-  _handleResponse() {
-    console.log('_handleResponse ');
-    const ajax = this.shadowRoot.getElementById('loader');
-    const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
-    this.instanceData = instanceData;
-    console.log('data: ', this.instanceData);
-  }
+  // _handleResponse() {
+  //   console.log('_handleResponse ');
+  //   const ajax = this.shadowRoot.getElementById('loader');
+  //   const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
+  //   this.instanceData = instanceData;
+  //   console.log('data: ', this.instanceData);
+  // }
 
+/*
   _handleError() {
     const loader = this.shadowRoot.getElementById('loader');
     console.log('_handleResponse ', loader.lastError);
   }
+*/
 }
 if (!customElements.get('fx-instance')) {
   customElements.define('fx-instance', FxInstance);

@@ -35,10 +35,12 @@ class FxMessage extends AbstractAction {
     `;
   }
 
+/*
   disconnectedCallback() {
     // super.disconnectedCallback();
     this.targetElement.removeEventListener(this.event, e => this.execute(e));
   }
+*/
 
   // eslint-disable-next-line class-methods-use-this
   renderHTML() {
