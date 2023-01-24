@@ -207,7 +207,6 @@ export class FxFore extends HTMLElement {
 
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', async event => {
-
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
@@ -223,6 +222,9 @@ export class FxFore extends HTMLElement {
                 const generatedModel = document.createElement('fx-model');
                 this.appendChild(generatedModel);
                 modelElement = generatedModel;
+				// We are going to get a new slotchange event immediately, because we changed a slot.
+				// so cancel this one.
+				return;
             }
             if (!modelElement.inited) {
                 console.info(
@@ -542,12 +544,14 @@ export class FxFore extends HTMLElement {
             // Templates are special: they use the namespace configuration from the place where they are
             // being defined
             const instanceId = XPathUtil.getInstanceId(naked);
-            // todo: check back with Martin
-            const inst = this.getModel().getInstance(instanceId)?this.getModel().getInstance(instanceId):this.getModel().getDefaultInstance();
-            try {
+
+			// If there is an instance referred
+            const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
+
+			try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable expr');
+                console.log('ignoring unparseable expr', error);
                 return match;
             }
         });

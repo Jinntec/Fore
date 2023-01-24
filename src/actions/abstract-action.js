@@ -178,25 +178,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
     // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
 
-    if (e && e.code) {
-      const vars = new Map();
-      vars.set('code', e.code);
-      // this.setInScopeVariables(vars);
-      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
-    }
-
-    if (e && e.detail) {
-      this.detail = e.detail;
-      const vars = new Map();
-      Object.keys(e.detail).forEach(function(key, index) {
-        // key: the name of the object key
-        // index: the ordinal position of the key within the object
-        vars.set(key, e.detail[key]);
-      });
-      if (vars.size !== 0) {
-        console.log('event detail vars', vars);
-      }
-      this.setInScopeVariables(new Map([...this.inScopeVariables, ...vars]));
+    if (e) {
+		this.currentEvent = e;
     }
     this.needsUpdate = false;
 
@@ -269,7 +252,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     this._finalizePerform(resolveThisEvent);
   }
 
-  _finalizePerform(resolveThisEvent) {
+	_finalizePerform(resolveThisEvent) {
+		this.currentEvent = null;
     this.actionPerformed();
     if (AbstractAction.outermostHandler === this) {
       AbstractAction.outermostHandler = null;

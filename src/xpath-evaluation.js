@@ -47,7 +47,7 @@ const xhtmlNamespaceResolver = prefix => {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-	let query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+	const query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
     /*
         if (nodeName === 'fx-instance') {
             // Instance elements can only be in the `model` element
@@ -60,6 +60,22 @@ export function resolveId(id, sourceObject, nodeName = null) {
         return document.getElementById(id);
 	}
     */
+	if (sourceObject.nodeType === Node.TEXT_NODE) {
+		sourceObject = sourceObject.parentNode;
+	}
+	if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
+		sourceObject = sourceObject.ownerElement;
+	}
+	const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
+	const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
+	if (elementsWithId.length === 1) {
+        // A single one is found. Assume no ID reuse.
+        const targetObject = elementsWithId[0];
+        if (nodeName && targetObject.localName !== nodeName) {
+            return null;
+        }
+        return targetObject;
+	}
 
     const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
         sourceObject,
@@ -159,10 +175,15 @@ export function resolveId(id, sourceObject, nodeName = null) {
 // Make namespace resolving use the `instance` element that is related to here
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
+const instanceReferencesByQuery = new Map();
+
 function findInstanceReferences(xpathQuery) {
 	if (!xpathQuery.includes('instance')) {
 		// No call to the instance function anyway: short-circuit and prevent AST processing
 		return [];
+	}
+	if (instanceReferencesByQuery.has(xpathQuery)) {
+	  	return instanceReferencesByQuery.get(xpathQuery);
 	}
     const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
     const instanceReferences = fxEvaluateXPathToStrings(
@@ -179,6 +200,8 @@ function findInstanceReferences(xpathQuery) {
                 prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
         },
     );
+
+	instanceReferencesByQuery.set(xpathQuery, instanceReferences);
 
 	return instanceReferences;
 }
@@ -350,10 +373,19 @@ function getVariablesInScope(formElement) {
     const variables = {};
     if (closestActualFormElement.inScopeVariables) {
         for (const key of closestActualFormElement.inScopeVariables.keys()) {
-            const varElement = closestActualFormElement.inScopeVariables.get(key);
-            if(varElement){
-                variables[key] = varElement.value;
-            }
+            const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
+            if (!varElementOrValue) {
+				continue;
+
+			}
+			if (varElementOrValue.nodeType) {
+				// We are a var element, set the value to the value computed there
+                variables[key] = varElementOrValue.value;
+			} else {
+				// We are a direct value. This is used to leak in event variables
+                variables[key] = varElementOrValue;
+			}
+
         }
     }
     return variables;
@@ -827,26 +859,21 @@ registerCustomXPathFunction(
     ['xs:string?'],
     'item()?',
     (dynamicContext, arg) => {
-        if (!arg) return [];
+        if (!arg) return null;
 
-        if (dynamicContext.currentContext.variables) {
-            const payload = dynamicContext.currentContext.variables[arg];
-            if (payload.nodeType) {
-                console.log('got some node as js object');
-            }
-            if (payload) {
-                return dynamicContext.currentContext.variables[arg];
-            }
-        }
+		for (let ancestor = dynamicContext.currentContext.formElement;
+			 ancestor;
+			 ancestor = ancestor.parentNode) {
+			if (!ancestor.currentEvent) {
+				continue;
+			}
 
-        if (dynamicContext.currentContext.formElement.inScopeVariables) {
-            console.log('event()', dynamicContext.currentContext.formElement.inScopeVariables);
-            console.log('event()', dynamicContext.currentContext.formElement.inScopeVariables.get(arg));
-            // dynamicContext.currentContext.variables = dynamicContext.currentContext.formElement.inScopeVariables;
-            return dynamicContext.currentContext.formElement.inScopeVariables.get(arg);
-        }
+			// We have a current event. read the property either from detail, or from the event
+			// itself.
+			return ancestor.currentEvent.detail[arg] || ancestor.currentEvent[arg] || null;
 
-        return [];
+		}
+        return null;
     },
 );
 
