@@ -46,6 +46,11 @@ export default class FxReplace extends AbstractAction {
     this.replace(this.nodeset, target);
   }
 
+  actionPerformed() {
+    this.getModel().rebuild();
+    super.actionPerformed();
+  }
+
   replace(toReplace, replaceWith) {
     console.log('replace', toReplace, replaceWith);
     if (!toReplace || !replaceWith) return; // bail out silently
