@@ -1,6 +1,5 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { Fore } from './fore.js';
 import {
   evaluateXPath,
   evaluateXPathToFirstNode,
@@ -160,7 +159,7 @@ export const foreElementMixin = superclass =>
         return this.getAttribute('ref');
       }
       // try to get closest parent bind
-      const parent = Fore.getClosest('[ref]', this.parentNode);
+      const parent = XPathUtil.getClosest('[ref]', this.parentNode);
       if (!parent) {
         return 'instance()'; // the default instance
       }
@@ -199,7 +198,7 @@ export const foreElementMixin = superclass =>
         this.modelItem = mi;
       }
 
-      const repeated = Fore.getClosest('fx-repeatitem', this);
+      const repeated = XPathUtil.getClosest('fx-repeatitem', this);
       let existed;
       if (repeated) {
         const { index } = repeated;

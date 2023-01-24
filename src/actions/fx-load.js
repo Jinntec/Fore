@@ -1,7 +1,7 @@
 import {AbstractAction} from './abstract-action.js';
 import {evaluateXPathToString, resolveId} from "../xpath-evaluation";
-import {Fore} from "../fore";
 import getInScopeContext from '../getInScopeContext.js';
+import {XPathUtil} from "../xpath-util";
 
 /**
  * `fx-message`
@@ -64,7 +64,7 @@ class FxLoad extends AbstractAction {
 
         // this.getOwnerForm().evaluateTemplateExpression(this.urlContent, this);
 
-        this.url = Fore.evaluateAttributeTemplateExpression(this.getAttribute('url'),this);
+        this.url = this._evaluateTemplateExpression(this.getAttribute('url'),this);
         if(this.attachTo === '_blank'){
             window.open(this.url);
         }
@@ -114,24 +114,63 @@ class FxLoad extends AbstractAction {
         );
     }
 
-/*
-    _getValue() {
-        if (this.hasAttribute('value')) {
-            const valAttr = this.getAttribute('value');
-            try {
-                const inscopeContext = getInScopeContext(this, valAttr);
-                return evaluateXPathToString(valAttr, inscopeContext, this);
-            } catch (error) {
-                console.error(error);
-                Fore.dispatch(this, 'error', {message: error});
+    _evaluateTemplateExpression(expr, node) {
+        const replaced = expr.replace(/{[^}]*}/g, match => {
+            if (match === '{}') return match;
+            const naked = match.substring(1, match.length - 1);
+            const inscope = getInScopeContext(node, naked);
+            if (!inscope) {
+                const errNode =
+                    node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
+                        ? node.parentNode
+                        : node;
+                console.warn('no inscope context for ', errNode);
+                return match;
             }
+            // Templates are special: they use the namespace configuration from the place where they are
+            // being defined
+            const instanceId = XPathUtil.getInstanceId(naked);
+
+            // If there is an instance referred
+            const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
+
+            try {
+                return evaluateXPathToString(naked, inscope, node, null, inst);
+            } catch (error) {
+                console.log('ignoring unparseable expr', error);
+                return match;
+            }
+        });
+
+        if (node.nodeType === Node.ATTRIBUTE_NODE) {
+            const parent = node.ownerElement;
+            parent.setAttribute(node.nodeName, replaced);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            node.textContent = replaced;
         }
-        if (this.textContent) {
-            return this.textContent;
-        }
-        return null;
     }
-*/
+
+
+    /*
+        _getValue() {
+            if (this.hasAttribute('value')) {
+                const valAttr = this.getAttribute('value');
+                try {
+                    const inscopeContext = getInScopeContext(this, valAttr);
+                    return evaluateXPathToString(valAttr, inscopeContext, this);
+                } catch (error) {
+                    console.error(error);
+                    Fore.dispatch(this, 'error', {message: error});
+                }
+            }
+            if (this.textContent) {
+                return this.textContent;
+            }
+            return null;
+        }
+    */
+
+
 
 }
 

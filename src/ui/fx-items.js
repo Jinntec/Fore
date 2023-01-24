@@ -1,6 +1,7 @@
 import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
+import { XPathUtil} from "../xpath-util.js";
 
 /**
  * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
@@ -46,7 +47,7 @@ export class FxItems extends FxControl {
       this.setAttribute('value', val.trim());
 
       // ### check for parent control
-      const parentBind = Fore.getClosest('[ref]', this.parentNode);
+      const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
       if (!parentBind) return;
       const modelitem = parentBind.getModelItem();
       const setval = this.shadowRoot.getElementById('setvalue');
@@ -62,7 +63,7 @@ export class FxItems extends FxControl {
   async updateWidgetValue() {
     // console.log('setting items value');
 
-    const parentBind = Fore.getClosest('[ref]', this.parentNode);
+    const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
     if (parentBind) {
       this.value = parentBind.value;
     }

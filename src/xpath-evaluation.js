@@ -10,7 +10,6 @@ import {
     registerCustomXPathFunction,
     registerXQueryModule,
 } from 'fontoxpath';
-import {Fore} from './fore.js';
 
 import {XPathUtil} from './xpath-util.js';
 

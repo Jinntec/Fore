@@ -5,7 +5,6 @@ import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
-// import {FxRepeat} from "./ui/fx-repeat";
 import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
 
 /**

@@ -3,6 +3,23 @@ import * as fx from 'fontoxpath';
 export class XPathUtil {
 
   /**
+   * Alternative to `closest` that respects subcontrol boundaries
+   */
+  static getClosest(querySelector, start) {
+    while (!start.matches(querySelector)) {
+      if (start.matches('fx-fore')) {
+        // Subform reached. Bail out
+        return null;
+      }
+      start = start.parentNode;
+      if (!start) {
+        return null;
+      }
+    }
+    return start;
+  }
+
+  /**
    * returns next bound element upwards in tree
    * @param start where to start the search
    * @returns {*|null}
