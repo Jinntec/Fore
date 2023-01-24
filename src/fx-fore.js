@@ -547,7 +547,7 @@ export class FxFore extends HTMLElement {
             try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable expr');
+                console.error(`ignoring unparseable expr: ${expr}`);
                 return match;
             }
         });
