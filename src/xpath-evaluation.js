@@ -836,33 +836,21 @@ registerCustomXPathFunction(
     ['xs:string?'],
     'item()?',
     (dynamicContext, arg) => {
-        if (!arg) return [];
+        if (!arg) return null;
 
-		const {event} = window;
-		if (event[arg]) {
-			// The window.event property points to the event that's currently being fired. Note this
-			// does not work anymore when we mix in async steps in an action for an event.
-			return event[arg];
+		for (let ancestor = dynamicContext.currentContext.formElement;
+			 ancestor;
+			 ancestor = ancestor.parentNode) {
+			if (!ancestor.currentEvent) {
+				continue;
+			}
+
+			// We have a current event. read the property either from detail, or from the event
+			// itself.
+			return ancestor.currentEvent.detail[arg] || ancestor.currentEvent[arg] || null;
+
 		}
-
-        if (dynamicContext.currentContext.variables) {
-            const payload = dynamicContext.currentContext.variables[arg];
-            if (payload && payload.nodeType) {
-                console.log('got some node as js object');
-            }
-            if (payload) {
-                return dynamicContext.currentContext.variables[arg];
-            }
-        }
-		const inscopeVariables = getVariablesInScope(dynamicContext.currentContext.formElement);
-        if (inscopeVariables) {
-            console.log('event()', inscopeVariables);
-            console.log('event()', inscopeVariables[arg] || "");
-            // dynamicContext.currentContext.variables = dynamicContext.currentContext.formElement.inScopeVariables;
-            return inscopeVariables[arg];
-        }
-
-        return [];
+        return null;
     },
 );
 
