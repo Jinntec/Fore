@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import {AbstractAction} from './abstract-action.js';
-import {evaluateXPath} from '../xpath-evaluation.js';
+import {evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
 
 /**
  * `fx-setvalue`
@@ -67,7 +67,17 @@ export default class FxSetvalue extends AbstractAction {
         if (!item) return;
 
         if (item.value !== newVal) {
-            item.value = newVal;
+
+            if(newVal.nodeType){
+                if(newVal.nodeType === Node.ELEMENT_NODE){
+                    item.value = newVal.textContent;
+                }
+                if(newVal.nodeType === Node.ATTRIBUTE_NODE){
+                    item.value = newVal.getValue()
+                }
+            }else{
+                item.value = newVal;
+            }
             this.getModel().changed.push(modelItem);
             this.needsUpdate = true;
         }

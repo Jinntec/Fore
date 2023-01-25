@@ -9,22 +9,16 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model>
+        <fx-model id="model1">
             <fx-instance>
                 <data>
-                    <ptr target="target"></ptr>
-                    <check></check>
+                    <a></a>
                 </data>
             </fx-instance>
+            <fx-bind ref="a" required="true()"></fx-bind>
         </fx-model>
-        <fx-control ref="ptr/@target">
-            <label>Referenz {.}</label>
-            <fx-action event="init"  if="string-length(.) != 0">
-                <fx-setvalue ref="../../check">ok</fx-setvalue>
-            </fx-action>
-        </fx-control>
-        <fx-output ref="check"></fx-output>
-        <fx-inspector></fx-inspector>
+
+        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
     </fx-fore>
 
 </div>

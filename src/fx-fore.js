@@ -390,10 +390,10 @@ export class FxFore extends HTMLElement {
 
         // ### refresh Fore UI elements
         // console.time('refreshChildren');
-        console.log('toRefresh', this.toRefresh);
 
         // if (!this.initialRun && this.toRefresh.length !== 0) {
         if (!force && !this.initialRun && this.toRefresh.length !== 0) {
+            console.log('toRefresh', this.toRefresh);
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
@@ -430,6 +430,12 @@ export class FxFore extends HTMLElement {
                 console.log('no dependants to refresh');
             }
         } else {
+            // ### resetting visited state for controls to refresh
+            const visited = this.parentNode.querySelectorAll('.visited');
+            Array.from(visited).forEach(v =>{
+                v.classList.remove('visited');
+            });
+
             Fore.refreshChildren(this, true);
             // console.timeEnd('refreshChildren');
         }

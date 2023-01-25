@@ -21,6 +21,10 @@ export class FxSetfocus extends AbstractAction {
 
       let targetElement = this.getOwnerForm().querySelector(selector);
 
+      if(!targetElement) {
+          console.warn('targetElement of setfocus action does not exist (yet)', selector);
+          return;
+      }
 
       // ### focus action is itself hosted within a repeat
       const parentIItem = targetElement.closest('fx-repeatitem');
@@ -31,10 +35,6 @@ export class FxSetfocus extends AbstractAction {
           return;
       }
 
-      if(!targetElement) {
-          console.warn('targetElement of setfocus action does not exist (yet)', selector);
-          return;
-      }
       // ### the target element is hosted within a repeat
       const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
       if(repeatitem){

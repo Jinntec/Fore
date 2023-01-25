@@ -312,9 +312,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       model.parentNode.refresh(true);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
-      // We need an update, but the outermost action handler may not. Make this clear!
+      // We need an update, but the outermost action handler is not done yet. Make this clear!
       AbstractAction.outermostHandler.needsUpdate = true;
-      console.log('Update surpressed!');
+      console.log('Update delayed!');
     }
   }
 

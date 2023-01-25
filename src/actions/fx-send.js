@@ -26,6 +26,8 @@ class FxSend extends AbstractAction {
     super.perform();
 
     console.log('submitting ', this.submission);
+    // reset CSS class that signalled validation error during last submit
+    this.getOwnerForm().classList.remove('submit-validation-failed');
     // console.log('submitting model', this.getModel());
 
     // if not exists signal error
