@@ -26,7 +26,7 @@
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-message event="url-loaded">url {trace(event('url'))}</fx-message>
+                <fx-message event="url-loaded">url {event('url')}</fx-message>
 
                 <fx-load event="ready" url="load-snippet.html" attach-to="#thetarget"></fx-load>
                 <div id="thetarget"></div>

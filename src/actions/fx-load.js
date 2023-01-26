@@ -2,6 +2,7 @@ import {AbstractAction} from './abstract-action.js';
 import {evaluateXPathToString, resolveId} from "../xpath-evaluation";
 import getInScopeContext from '../getInScopeContext.js';
 import {XPathUtil} from "../xpath-util";
+import {Fore} from "../fore";
 
 /**
  * `fx-message`
@@ -42,9 +43,7 @@ class FxLoad extends AbstractAction {
         <style>
             ${style}
         </style>
-        ${this.renderHTML()}
-        this.urlContent = this.url;
-    `;
+        ${this.renderHTML()}`;
     }
 
     disconnectedCallback() {
@@ -64,12 +63,12 @@ class FxLoad extends AbstractAction {
 
         // this.getOwnerForm().evaluateTemplateExpression(this.urlContent, this);
 
-        this.url = this._evaluateTemplateExpression(this.getAttribute('url'),this);
-        if(this.attachTo === '_blank'){
+        this.url = this._evaluateUrlExpression();
+        if (this.attachTo === '_blank') {
             window.open(this.url);
         }
 
-        if(this.attachTo === '_self'){
+        if (this.attachTo === '_self') {
             window.location.href = this.url;
         }
 
@@ -88,43 +87,36 @@ class FxLoad extends AbstractAction {
             const data = await response.text();
             // console.log('data loaded: ', data);
 
-            if(!this.attachTo){
+            if (!this.attachTo) {
                 this.innerHtml = data;
             }
             if (this.attachTo.startsWith('#')) {
                 const targetId = this.attachTo.substring(1);
-                const resolved = resolveId(targetId,this);
+                const resolved = resolveId(targetId, this);
                 resolved.innerHTML = '';
                 resolved.innerHTML = data;
             }
 
 
+            Fore.dispatch(this, 'url-loaded', {url: this.url})
 
         } catch (error) {
             throw new Error(`failed loading data ${error}`);
         }
-
-
-        this.dispatchEvent(
-            new CustomEvent('url-loaded', {
-                composed: true,
-                bubbles: true,
-                detail: {url: this.url},
-            }),
-        );
     }
 
-    _evaluateTemplateExpression(expr, node) {
-        const replaced = expr.replace(/{[^}]*}/g, match => {
+    _evaluateUrlExpression() {
+        const url = this.getAttribute('url');
+        if (!url) {
+            throw new Error('url not specified');
+        }
+
+        const replaced = url.replace(/{[^}]*}/g, match => {
             if (match === '{}') return match;
             const naked = match.substring(1, match.length - 1);
-            const inscope = getInScopeContext(node, naked);
+            const inscope = getInScopeContext(this, naked);
             if (!inscope) {
-                const errNode =
-                    node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-                        ? node.parentNode
-                        : node;
-                console.warn('no inscope context for ', errNode);
+                console.warn('no inscope context for ', this);
                 return match;
             }
             // Templates are special: they use the namespace configuration from the place where they are
@@ -133,21 +125,14 @@ class FxLoad extends AbstractAction {
 
             // If there is an instance referred
             const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
-
             try {
-                return evaluateXPathToString(naked, inscope, node, null, inst);
+                return evaluateXPathToString(naked, inscope, this, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable expr', error);
+                console.log('ignoring unparseable url', error);
                 return match;
             }
         });
-
-        if (node.nodeType === Node.ATTRIBUTE_NODE) {
-            const parent = node.ownerElement;
-            parent.setAttribute(node.nodeName, replaced);
-        } else if (node.nodeType === Node.TEXT_NODE) {
-            node.textContent = replaced;
-        }
+        return replaced;
     }
 
 
@@ -169,7 +154,6 @@ class FxLoad extends AbstractAction {
             return null;
         }
     */
-
 
 
 }
