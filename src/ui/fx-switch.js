@@ -15,6 +15,10 @@ class FxSwitch extends FxContainer {
       }
     */
 
+  constructor() {
+    super();
+    this.formerCase = {};
+  }
   connectedCallback() {
     if (super.connectedCallback) {
       super.connectedCallback();
@@ -58,13 +62,20 @@ class FxSwitch extends FxContainer {
       selectedCase = this.querySelector(':scope > .selected-case');
       // if none is selected select the first as default
       if (!selectedCase) {
-        selectedCase = cases[0];
+        selectedCase = cases[0]; // if nothing is selected use the first case
         Fore.dispatch(selectedCase,'select',{});
         selectedCase.classList.add('selected-case');
       }
     }
+    if(this.formerCase !== selectedCase){
+      const visited = selectedCase.querySelectorAll('.visited');
+      Array.from(visited).forEach(v =>{
+        v.classList.remove('visited');
+      });
+    }
 
     Fore.refreshChildren(selectedCase,force);
+    this.formerCase = selectedCase;
   }
 
   toggle(caseElement) {

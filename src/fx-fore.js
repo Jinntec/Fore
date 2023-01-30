@@ -431,10 +431,12 @@ export class FxFore extends HTMLElement {
             }
         } else {
             // ### resetting visited state for controls to refresh
+/*
             const visited = this.parentNode.querySelectorAll('.visited');
             Array.from(visited).forEach(v =>{
                 v.classList.remove('visited');
             });
+*/
 
             Fore.refreshChildren(this, true);
             // console.timeEnd('refreshChildren');
@@ -740,6 +742,7 @@ export class FxFore extends HTMLElement {
     async _initUI() {
         console.log('### _initUI()');
         if (!this.initialRun) return;
+        this.classList.add('initialRun');
         await this._lazyCreateInstance();
 
         // console.log('registering variables!');

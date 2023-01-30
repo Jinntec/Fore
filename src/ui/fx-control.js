@@ -135,6 +135,12 @@ export default class FxControl extends XfAbstractControl {
       this._replaceNode(newNodes);
     });
 
+    this.widget.addEventListener('focus', e =>{
+      if(!this.classList.contains('visited')){
+        this.classList.add('visited');
+      }
+    });
+
     this.template = this.querySelector('template');
     this.boundInitialized = false;
     this.static = this.widget.hasAttribute('static')? true:false;
@@ -163,7 +169,13 @@ export default class FxControl extends XfAbstractControl {
   setValue(val) {
     const modelitem = this.getModelItem();
 
-    this.classList.add('visited');
+/*
+    if(this.getAttribute('class')){
+      this.classList.add('visited');
+    }else{
+      this.setAttribute('class','visited');
+    }
+*/
 
     if (modelitem?.readonly){
       console.warn('attempt to change readonly node', modelitem);
