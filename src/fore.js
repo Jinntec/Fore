@@ -335,22 +335,26 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
+    if (!target.ownerDocument.contains(target)) {
+      // The target is gone from the document. This happens when we are done with a refresh that removed the component
+      return;
+    }
     const event = new CustomEvent(eventName, {
       composed: false,
       bubbles: true,
       detail,
     });
-	  event.listenerPromises = [];
-      console.info('dispatching', event.type, target);
-	  // console.log('!!! DISPATCH_START', eventName);
+    event.listenerPromises = [];
+    console.info('dispatching', event.type, target);
+    // console.log('!!! DISPATCH_START', eventName);
 
-      target.dispatchEvent(event);
+    target.dispatchEvent(event);
 
-	  // By now, all listeners for the event should have registered their completion promises to us.
-	  if (event.listenerPromises.length) {
-		  await Promise.all(event.listenerPromises);
-	  }
-	  // console.log('!!! DISPATCH_DONE', eventName);
+    // By now, all listeners for the event should have registered their completion promises to us.
+    if (event.listenerPromises.length) {
+      await Promise.all(event.listenerPromises);
+    }
+    // console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static prettifyXml(source) {
