@@ -335,12 +335,13 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
-    // Events 'on' the fx-fore root should _never_ bubble outside of that elements
-    // this is ready, refresh-done and error
-    const shouldBubble = target.localName !== 'fx-fore';
+    if (!target.ownerDocument.contains(target)) {
+      // The target is gone from the document. This happens when we are done with a refresh that removed the component
+      return;
+    }
     const event = new CustomEvent(eventName, {
       composed: false,
-      bubbles: shouldBubble,
+      bubbles: true,
       detail,
     });
     event.listenerPromises = [];
