@@ -869,7 +869,13 @@ registerCustomXPathFunction(
 
 			// We have a current event. read the property either from detail, or from the event
 			// itself.
-			return ancestor.currentEvent.detail[arg] || ancestor.currentEvent[arg] || null;
+			// Check detail for custom events! This is how that is passed along
+			if (ancestor.currentEvent.detail && arg in ancestor.currentEvent.detail) {
+				return ancestor.currentEvent.detail[arg];
+			}
+
+			// arg might be `code`, so currentEvent.code should work
+			return ancestor.currentEvent[arg] || null;
 
 		}
         return null;
