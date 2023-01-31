@@ -335,22 +335,25 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
+    // Events 'on' the fx-fore root should _never_ bubble outside of that elements
+    // this is ready, refresh-done and error
+    const shouldBubble = target.localName !== 'fx-fore';
     const event = new CustomEvent(eventName, {
       composed: false,
-      bubbles: true,
+      bubbles: shouldBubble,
       detail,
     });
-	  event.listenerPromises = [];
-      console.info('dispatching', event.type, target);
-	  // console.log('!!! DISPATCH_START', eventName);
+    event.listenerPromises = [];
+    console.info('dispatching', event.type, target);
+    // console.log('!!! DISPATCH_START', eventName);
 
-      target.dispatchEvent(event);
+    target.dispatchEvent(event);
 
-	  // By now, all listeners for the event should have registered their completion promises to us.
-	  if (event.listenerPromises.length) {
-		  await Promise.all(event.listenerPromises);
-	  }
-	  // console.log('!!! DISPATCH_DONE', eventName);
+    // By now, all listeners for the event should have registered their completion promises to us.
+    if (event.listenerPromises.length) {
+      await Promise.all(event.listenerPromises);
+    }
+    // console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static prettifyXml(source) {
