@@ -257,9 +257,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   // todo - review alert handling altogether. There could be potentially multiple ones in model
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
-    const alert = this.querySelector('fx-alert');
 
-    const mi = this.getModelItem();
     // console.log('late modelItem', mi);
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {

@@ -1,4 +1,3 @@
-import { html } from 'lit-element';
 import { Fore } from '../fore.js';
 // import XfAbstractControl from "./fx-abstract-control";
 import { FxContainer } from './fx-container.js';
@@ -36,7 +35,7 @@ class FxGroup extends FxContainer {
   }
 
   render() {
-    return html`
+    return `
       <slot></slot>
     `;
   }

@@ -391,7 +391,6 @@ export class Fore {
     var wsexp = / *(.*) +\n/g;
     var contexp = /(<.+>)(.+\n)/g;
     xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
-    var pad = 0;
     var formatted = '';
     var lines = xml.split('\n');
     var indent = 0;

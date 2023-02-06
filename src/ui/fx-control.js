@@ -78,7 +78,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
 
-    this.addEventListener('keyup', event => {
+    this.addEventListener('keyup', () => {
       FxModel.dataChanged = true;
     });
     // ### convenience marker event
@@ -135,7 +135,7 @@ export default class FxControl extends XfAbstractControl {
       this._replaceNode(newNodes);
     });
 
-    this.widget.addEventListener('focus', e =>{
+    this.widget.addEventListener('focus', () =>{
       if(!this.classList.contains('visited')){
         this.classList.add('visited');
       }

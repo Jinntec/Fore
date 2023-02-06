@@ -56,7 +56,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         type: String,
       },
       /**
-       * wether nor not an action needs to run the update cycle
+       * whether nor not an action needs to run the update cycle
        */
       needsUpdate: {
         type: Boolean,
@@ -191,7 +191,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     try {
       this.evalInContext();
     } catch (error) {
-      console.warn('evaluation faild', error);
+      console.warn('evaluation failed', error);
     }
     if (this.targetElement && this.targetElement.nodeset) {
       this.nodeset = this.targetElement.nodeset;
@@ -228,7 +228,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         if (this.delay) {
           // If we have a delay, fire and forget this.
           // Otherwise, if we have no delay, keep waiting for all iterations to be done.
-          // The while is then uninteruptable and immediate
+          // The while is then uninterruptable and immediate
           loop();
           return;
         }
@@ -301,7 +301,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       AbstractAction.outermostHandler &&
       !AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
     ) {
-      // The old outermosthandler fell out of the document. An error has happened.
+      // The old outermostHandler fell out of the document. An error has happened.
       // Just remove the old one and act like we are starting anew.
       console.warn('Unsetting outermost handler');
       AbstractAction.outermostHandler = null;
@@ -324,7 +324,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   }
 
   /**
-   * dispathes action-performed event
+   * dispatches action-performed event
    *
    * @event action-performed - whenever an action has been run
    */

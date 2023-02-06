@@ -198,7 +198,6 @@ export class FxInstance extends HTMLElement {
       const key = url.substring(url.indexOf(':') + 1);
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      const root = doc.firstElementChild;
       this.instanceData = doc;
 
       if (!key) {
@@ -214,7 +213,6 @@ export class FxInstance extends HTMLElement {
       }
       const data = new DOMParser().parseFromString(serialized, 'application/xml');
       // let data = this._parse(serialized, instance);
-      // root.appendChild(data);
       doc.firstElementChild.replaceWith(data.firstElementChild);
       return;
     }
@@ -229,7 +227,6 @@ export class FxInstance extends HTMLElement {
           'Content-Type': contentType,
         },
       });
-      const { status } = response;
       const data = await handleResponse(response);
       if (data.nodeType) {
         this.instanceData = data;

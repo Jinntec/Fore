@@ -83,7 +83,6 @@ class FxLoad extends AbstractAction {
                         },
                 */
             });
-            const {status} = response;
             const data = await response.text();
             // console.log('data loaded: ', data);
 

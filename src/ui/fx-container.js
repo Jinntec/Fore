@@ -1,5 +1,4 @@
 import '../fx-model.js';
-import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 
 /**
@@ -58,7 +57,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   }
 
   /**
-   * anly relevance is processed for container controls
+   * relevance is processed for container controls only
    */
   handleModelItemProperties() {
     this.handleRelevant();

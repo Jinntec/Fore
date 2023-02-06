@@ -1,6 +1,4 @@
 import {AbstractAction} from "./abstract-action";
-import {resolveId} from "../xpath-evaluation";
-import {Fore} from '../fore.js';
 
 /**
  * `fx-setfocus`

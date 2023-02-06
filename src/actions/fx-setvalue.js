@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import {AbstractAction} from './abstract-action.js';
-import {evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
+import {evaluateXPath} from '../xpath-evaluation.js';
 
 /**
  * `fx-setvalue`

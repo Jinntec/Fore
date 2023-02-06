@@ -2,7 +2,6 @@
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
-import getInScopeContext from "../getInScopeContext";
 
 /**
  * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.

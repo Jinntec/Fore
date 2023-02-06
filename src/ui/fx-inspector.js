@@ -112,7 +112,7 @@ export class FxInspector extends HTMLElement {
             <slot></slot>
             <span class="handle"></span>
                 ${instances.map(
-                  (instance, index) => `
+                  (instance) => `
                   <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
@@ -125,7 +125,6 @@ export class FxInspector extends HTMLElement {
     const handle = this.shadowRoot.querySelector('.handle');
     handle.addEventListener('click', e => {
       // console.log('toggling');
-      const { target } = e;
       if (this.hasAttribute('open')) {
         this.removeAttribute('open');
       } else {

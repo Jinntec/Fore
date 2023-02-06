@@ -1,6 +1,5 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 import { foreElementMixin } from './ForeElementMixin.js';
-import { Fore } from './fore.js';
 import { ModelItem } from './modelitem.js';
 import {
   evaluateXPathToBoolean,
@@ -304,9 +303,9 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     const path = XPathUtil.getPath(node);
     // const shortPath = this.shortenPath(path);
 
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
     // const newItem = new ModelItem(shortPath,
     const newItem = new ModelItem(
       path,

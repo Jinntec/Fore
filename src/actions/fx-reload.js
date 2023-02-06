@@ -1,6 +1,5 @@
 import { Fore } from '../fore.js';
 import { AbstractAction } from './abstract-action.js';
-import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-reload`
@@ -14,7 +13,7 @@ export class FxReload extends AbstractAction {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('reload', event => {
+    this.addEventListener('reload', () => {
       window.location.reload();
     },{once:true});
   }
