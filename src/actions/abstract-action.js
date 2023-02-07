@@ -69,6 +69,12 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         type:Object,
       },
       /**
+       * can be either 'capture' or 'default' (default)
+       */
+      phase:{
+        type: String,
+      },
+      /**
        * can be either 'stop' or 'continue' (default)
        */
       propagate:{
@@ -106,20 +112,30 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     } else {
       this.event = 'activate';
     }
+    if (this.hasAttribute('defaultAction')) {
+      this.defaultAction = this.getAttribute('defaultAction');
+    } else {
+      this.defaultAction = 'perform';
+    }
+    if (this.hasAttribute('phase')) {
+      this.phase = this.getAttribute('phase');
+    } else {
+      this.phase = 'default';
+    }
 
     this.target = this.getAttribute('target');
     if (this.target) {
       if (this.target === '#window') {
-        window.addEventListener(this.event, e => this.execute(e));
+          window.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
       } else if (this.target === '#document') {
-        document.addEventListener(this.event, e => this.execute(e));
+          document.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
       } else {
         this.targetElement = resolveId(this.target, this);
-        this.targetElement.addEventListener(this.event, e => this.execute(e));
+          this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
       }
     } else {
       this.targetElement = this.parentNode;
-      this.targetElement.addEventListener(this.event, e => this.execute(e));
+		this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
       // console.log('adding listener for ', this.event , ` to `, this);
     }
 
@@ -148,6 +164,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if(this.propagate === 'stop'){
       console.log('event propagation stopped', e)
       e.stopPropagation();
+    }
+    if (this.defaultAction === 'cancel') {
+      e.preventDefault();
     }
 
     let resolveThisEvent = () => {};

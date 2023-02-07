@@ -160,7 +160,7 @@
                         </fx-action>
                         <fx-action event="mousewheel" defaultAction="cancel">
                             <fx-setvalue ref="zoom"
-                                      value="string(if(event('wheelDelta') &gt; 0) then if(. &gt;= ../maxzoom) then ../maxzoom else . + 1 else if(. &lt;= 0) then 0 else . - 1)"></fx-setvalue>
+                                      value="string(if(event('wheelDelta') &gt; 0) then if(number(.) &gt;= ../maxzoom) then ../maxzoom else . + 1 else if(. &lt;= 0) then 0 else . - 1)"></fx-setvalue>
                         </fx-action>
                     </fx-group>
                 </div>

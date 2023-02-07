@@ -247,4 +247,77 @@ describe('Event Tests', () => {
     const div = el.querySelector('#result');
     expect(div.innerText).to.equal('div');
   });
+
+  it('makes events fire on "capture" if phase is set to "capture"', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <value></value>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-group>
+          <div>
+            <fx-setvalue ref="value" event="click" value="event('eventPhase')" phase="capture"></fx-setvalue>
+            <fx-trigger id="t">
+              <button>dispatch click</button>
+            </fx-trigger>
+          </div>
+          <div id="result">{value}</div>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    // const button = el.querySelector('button');
+    // button.click();
+
+    // const trigger = el.querySelector('fx-trigger');
+    // await trigger.performActions();
+    el.querySelector('button').click();
+    await oneEvent(el, 'refresh-done');
+
+      const div = el.querySelector('#result');
+	  // Event phase 1 is 'capture'
+    expect(div.innerText).to.equal('1');
+  });
+
+	  it('makes events fire on "bubbling" if phase is set to "default"', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <value></value>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-group>
+          <div>
+            <fx-setvalue ref="value" event="click" value="event('eventPhase')" phase="default"></fx-setvalue>
+            <fx-trigger id="t">
+              <button>dispatch click</button>
+            </fx-trigger>
+          </div>
+          <div id="result">{value}</div>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    // const button = el.querySelector('button');
+    // button.click();
+
+    // const trigger = el.querySelector('fx-trigger');
+    // await trigger.performActions();
+    el.querySelector('button').click();
+    await oneEvent(el, 'refresh-done');
+
+      const div = el.querySelector('#result');
+	  // Event phase 3 is 'bubble'
+    expect(div.innerText).to.equal('3');
+  });
+
 });
