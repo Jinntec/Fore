@@ -106,6 +106,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     } else {
       this.event = 'activate';
     }
+    if (this.hasAttribute('defaultAction')) {
+      this.defaultAction = this.getAttribute('defaultAction');
+    } else {
+      this.defaultAction = 'perform';
+    }
 
     this.target = this.getAttribute('target');
     if (this.target) {
@@ -148,6 +153,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if(this.propagate === 'stop'){
       console.log('event propagation stopped', e)
       e.stopPropagation();
+    }
+    if (this.defaultAction === 'cancel') {
+      e.preventDefault();
     }
 
     let resolveThisEvent = () => {};
