@@ -183,12 +183,8 @@ export default class FxControl extends XfAbstractControl {
     }
 
     if (this.getAttribute('as') === 'node') {
-      // const widgetValue = this.getWidget().value;
-      const widgetValue = this.getWidget()[this.valueProp];
-
-
       const replace = this.shadowRoot.getElementById('replace');
-      // replace.replace(this.nodeset, this.getWidget().value);
+      const widgetValue = this.getWidget()[this.valueProp];
       replace.replace(this.nodeset, widgetValue);
       if (modelitem && widgetValue && widgetValue !== modelitem.value) {
         modelitem.value = widgetValue;

@@ -63,7 +63,6 @@ class FxLoad extends AbstractAction {
 
         // this.getOwnerForm().evaluateTemplateExpression(this.urlContent, this);
 
-/*
         const template = this.querySelector('template');
         if(template){
             const clone = template.content.cloneNode(true);
@@ -82,7 +81,6 @@ class FxLoad extends AbstractAction {
             Fore.dispatch(this, 'loaded', {})
             return;
         }
-*/
 
         this.url = this._evaluateUrlExpression();
         if (this.attachTo === '_blank') {
