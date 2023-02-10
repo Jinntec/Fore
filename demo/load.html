@@ -85,6 +85,59 @@
             </fx-fore>
         </template>
     </demo-snippet>
+    <h2>Control loading of content with template element</h2>
+    <p>Sometimes you want to control WHEN a certain snippet comes into life. In that situations you can
+    wrap that content into an HTML <code>template</code> element which will make it inert (browser ignores it). When
+    <code>fx-load</code> is triggered it will clone the template and attach it to the DOM.</p>
+    <p>This either makes sure you don't pay the cost of loading content you probably don't need and you can be sure
+    that Fore is initialized before children can act.</p>
+    <p>It's also suitable to control the sequence of content loaded into the page.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item>foo</item>
+                            <item2>bar</item2>
+                            <item3>baz</item3>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <div id="lazyControl"></div>
+                <div id="lazyControl2"></div>
+                <div id="lazyControl3"></div>
+                <fx-trigger>
+                    <button>hit to clone from template</button>
+                        <fx-load attach-to="#lazyControl" id="first">
+                            <template>
+                                <fx-control ref="item">
+                                    <label>an item:</label>
+                                </fx-control>
+                                <fx-output ref="item"></fx-output>
+                            </template>
+                        </fx-load>
+                        <fx-load id="second"
+                                 event="action-performed"
+                                 attach-to="#lazyControl2" target="first" delay="400"></fx-load>
+                        <fx-load event="action-performed" attach-to="#lazyControl3" target="second" delay="400">
+                            <template>
+                                <fx-control ref="item3">
+                                    <label>Created after the second one</label>
+                                </fx-control>
+                            </template>
+                        </fx-load>
+                </fx-trigger>
+                <template id="view2">
+                    <template>
+                        <fx-control ref="item2">
+                            <label>Created after the first one</label>
+                        </fx-control>
+                    </template>
+                </template>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
 </div>
 <script type="module" src="./demo.js"></script>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>pb-page example</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+
+        pb-page {
+            position: relative;
+        }
+
+        pb-view {
+            height: 45vh;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 769px) {
+            #view1, footer {
+                max-width: 60vw;
+            }
+        }
+
+        footer {
+            position: relative;
+            margin-top: 10px;
+            bottom: 0;
+            background-color: #f2f2f2;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        pb-navigation[disabled] {
+            display: block;
+            visibility: hidden;
+        }
+
+        pb-navigation[direction="forward"] {
+            float: right;
+        }
+        pb-view{
+            height: auto;
+        }
+
+    </style>
+    <script type="module" src="../../index.js"></script>
+
+    <script type="module">
+        import 'https://unpkg.com/@teipublisher/pb-components@1.43.2/dist/pb-components-bundle.js';
+    </script>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <page>
+                    <endpoint>http://localhost:8080/exist/apps/tei-publisher</endpoint>
+                    <feature name="highlight2">.tei-foreign,pb-highlight,pb-popover</feature>
+                    <feature name="norm2">.choice,.choice-alternate,br</feature>
+                    <wrapper>
+                        <div>foo</div>
+                    </wrapper>
+                </page>
+            </fx-instance>
+        </fx-model>
+        <fx-replace ref="wrapper" with="event('root')" event="pb-update" target="view1"></fx-replace>
+
+        <fx-action event="ready"  id="sec1">
+            <fx-load attach-to="#transcript">
+                <template>
+                    <pb-view id="view1" src="document1" view="page" append-footnotes animation
+                             subscribe="transcription" emit="transcription"></pb-view>
+                </template>
+            </fx-load>
+        </fx-action>
+        <fx-load attach-to="#transcript2" event="action-performed" target="sec1" delay="500">
+            <template>
+                <pb-view id="view2" src="document1" view="page" append-footnotes animation
+                         subscribe="transcription" emit="transcription"></pb-view>
+            </template>
+        </fx-load>
+<!--
+        <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
+            <template>
+                <footer>
+                    &lt;!&ndash; Navigate to next page &ndash;&gt;
+                    <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
+                        <paper-button>
+                            <iron-icon icon="icons:chevron-right"></iron-icon>
+                        </paper-button>
+                    </pb-navigation>
+                    &lt;!&ndash; Navigate to previous page &ndash;&gt;
+                    <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
+                        <paper-button>
+                            <iron-icon icon="icons:chevron-left"></iron-icon>
+                        </paper-button>
+                    </pb-navigation>
+                </footer>
+            </template>
+        </fx-load>
+-->
+
+
+
+
+        <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher">
+
+<!--            <fx-setvalue ref="wrapper/div" value="event('root')" event="pb-update"></fx-setvalue>-->
+
+
+            <pb-document id="document1" path="test/kant_rvernunft_1781.TEI-P5.xml" odd="dta"></pb-document>
+
+            <pb-progress subscribe="transcription"></pb-progress>
+            <!-- Output the document title -->
+            <pb-view src="document1" xpath="//teiHeader/fileDesc/titleStmt/title"
+                     subscribe="transcription">
+                <pb-param name="header" value="short"/>
+            </pb-view>
+
+<!--
+            <pb-view id="view1" src="document1" view="page" append-footnotes animation
+                     subscribe="transcription" emit="transcription"></pb-view>
+-->
+            <div id="transcript"></div>
+            <div id="transcript2"></div>
+<!--            <div id="footer"></div>-->
+            <footer>
+                <!-- Navigate to next page -->
+                <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
+                    <paper-button>
+                        <iron-icon icon="icons:chevron-right"></iron-icon>
+                    </paper-button>
+                </pb-navigation>
+                <!-- Navigate to previous page -->
+                <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
+                    <paper-button>
+                        <iron-icon icon="icons:chevron-left"></iron-icon>
+                    </paper-button>
+                </pb-navigation>
+            </footer>
+        </pb-page>
+        <fx-output ref="wrapper" mediatype="html"></fx-output>
+
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+
+</div>
+</body>
+</html>

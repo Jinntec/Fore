@@ -225,6 +225,7 @@ export class Fore {
    * returns the proper content-type for instance.
    *
    * @param instance an fx-instance element
+   * @param contentType - the contentType
    * @returns {string|null}
    */
   static getContentType(instance, contentType) {
