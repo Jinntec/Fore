@@ -57,8 +57,13 @@
         pb-navigation[direction="forward"] {
             float: right;
         }
-        pb-view{
+
+        pb-view {
             height: auto;
+        }
+
+        fx-repeatitem {
+            display: block;
         }
 
     </style>
@@ -88,18 +93,16 @@
                     </content>
                 </data>
             </fx-instance>
-            <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" id="content">
-                <data></data>
-            </fx-instance>
+<!--            <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" src="view.html" id="content" type="html"></fx-instance>-->
+            <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" id="content" src="view.html"></fx-instance>
         </fx-model>
 
-<!--        <fx-replace ref="wrapper" with="event('root')" event="pb-update"></fx-replace>-->
-<!--        <fx-replace ref="instance('content')" with="event('root')" event="pb-update" if="event('target')"></fx-replace>-->
+        <!--        <fx-replace ref="wrapper" with="event('root')" event="pb-update"></fx-replace>-->
+        <!--        <fx-replace ref="instance('content')" with="event('root')" event="pb-update" if="event('target')"></fx-replace>-->
         <fx-replace ref="instance('content')" with="event('root')" event="pb-update"></fx-replace>
         <!-- todo: investigate - does not work the same as with replace above     -->
-<!--        <fx-insert ref="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
-        <fx-action event="ready"  id="sec1">
-
+        <!--        <fx-insert ref="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
+        <fx-action event="ready" id="sec1">
             <fx-load attach-to="#transcript">
                 <template>
                     <pb-view id="view1" src="document1" view="page" append-footnotes animation
@@ -113,33 +116,31 @@
                          subscribe="transcription" emit="transcription"></pb-view>
             </template>
         </fx-load>
-<!--
-        <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
-            <template>
-                <footer>
-                    &lt;!&ndash; Navigate to next page &ndash;&gt;
-                    <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
-                        <paper-button>
-                            <iron-icon icon="icons:chevron-right"></iron-icon>
-                        </paper-button>
-                    </pb-navigation>
-                    &lt;!&ndash; Navigate to previous page &ndash;&gt;
-                    <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
-                        <paper-button>
-                            <iron-icon icon="icons:chevron-left"></iron-icon>
-                        </paper-button>
-                    </pb-navigation>
-                </footer>
-            </template>
-        </fx-load>
--->
-
-
+        <!--
+                <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
+                    <template>
+                        <footer>
+                            &lt;!&ndash; Navigate to next page &ndash;&gt;
+                            <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
+                                <paper-button>
+                                    <iron-icon icon="icons:chevron-right"></iron-icon>
+                                </paper-button>
+                            </pb-navigation>
+                            &lt;!&ndash; Navigate to previous page &ndash;&gt;
+                            <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
+                                <paper-button>
+                                    <iron-icon icon="icons:chevron-left"></iron-icon>
+                                </paper-button>
+                            </pb-navigation>
+                        </footer>
+                    </template>
+                </fx-load>
+        -->
 
 
         <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher">
 
-<!--            <fx-setvalue ref="wrapper/div" value="event('root')" event="pb-update"></fx-setvalue>-->
+            <!--            <fx-setvalue ref="wrapper/div" value="event('root')" event="pb-update"></fx-setvalue>-->
 
 
             <pb-document id="document1" path="test/kant_rvernunft_1781.TEI-P5.xml" odd="dta"></pb-document>
@@ -151,13 +152,13 @@
                 <pb-param name="header" value="short"/>
             </pb-view>
 
-<!--
-            <pb-view id="view1" src="document1" view="page" append-footnotes animation
-                     subscribe="transcription" emit="transcription"></pb-view>
--->
+            <!--
+                        <pb-view id="view1" src="document1" view="page" append-footnotes animation
+                                 subscribe="transcription" emit="transcription"></pb-view>
+            -->
             <div id="transcript"></div>
             <div id="transcript2"></div>
-<!--            <div id="footer"></div>-->
+            <!--            <div id="footer"></div>-->
             <footer>
                 <!-- Navigate to next page -->
                 <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
@@ -173,16 +174,17 @@
                 </pb-navigation>
             </footer>
         </pb-page>
-<!--        <fx-output ref="content" mediatype="html"></fx-output>-->
+        <!--        <fx-output ref="content" mediatype="html"></fx-output>-->
         <div>{instance('content')//span[@class='tei-hi1 document_g']}</div>
-<!-- todo: investigate why output does not produce same result as template expression here       -->
-        <fx-ouput ref="string(instance('content')//span[@class='tei-hi1 document_g'])" style="display: block;padding: 1rem 0;"></fx-ouput>
+        <!-- todo: investigate why output does not produce same result as template expression here       -->
+        <fx-ouput ref="string(instance('content')//span[@class='tei-hi1 document_g'])"
+                  style="display: block;padding: 1rem 0;"></fx-ouput>
         <fx-repeat ref="instance('content')//p">
             <template>
                 <div>{.}</div>
             </template>
         </fx-repeat>
-
+<!--        <fx-output ref="instance('content')/*[1]" mediatype="html"></fx-output>-->
         <fx-inspector open></fx-inspector>
     </fx-fore>
 

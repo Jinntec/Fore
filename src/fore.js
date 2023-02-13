@@ -177,8 +177,8 @@ export class Fore {
     this.convertFromSimple(inputElement,newFore);
     newFore.removeAttribute('convert');
     console.log('converted', newFore);
-    return newFore;
     console.timeEnd('convert');
+    return newFore;
   }
   static convertFromSimple(startElement,targetElement){
     const children = startElement.childNodes;
@@ -336,7 +336,7 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
-    if (!target.ownerDocument.contains(target)) {
+    if (!target?.ownerDocument.contains(target)) {
       // The target is gone from the document. This happens when we are done with a refresh that removed the component
       return;
     }

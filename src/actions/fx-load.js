@@ -82,6 +82,18 @@ class FxLoad extends AbstractAction {
             return;
         }
 
+        if(!this.url){
+            // for authoring errors we log errors directly to DOM
+            this.dispatchEvent(
+                new CustomEvent('log', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable:true,
+                    detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},
+                }),
+            );
+            return;
+        }
         this.url = this._evaluateUrlExpression();
         if (this.attachTo === '_blank') {
             window.open(this.url);

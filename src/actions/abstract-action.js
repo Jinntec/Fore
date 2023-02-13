@@ -110,7 +110,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
     } else {
-      this.event = 'activate';
+      this.event = 'click';
     }
     if (this.hasAttribute('defaultAction')) {
       this.defaultAction = this.getAttribute('defaultAction');
@@ -162,6 +162,17 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
+    // todo - check for right eventPhase?
+    // if(e.eventPhase === 0) return;
+    if(e && e.type !== this.event){
+      console.log('execute phase', e.eventPhase);
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    console.log('execute',this,e);
+    console.log('execute',this.event);
+
 
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
       // Event originates from a sub-component. Ignore it!

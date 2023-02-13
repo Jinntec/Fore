@@ -109,7 +109,8 @@
                             <fx-control ref="selected" update-event="change">
                                 <label>Country</label>
                                 <select class="widget"
-                                        ref="instance('countries')//country[@continent = instance('default')/continent]">
+                                        ref="instance('countries')//country[@continent = instance('default')/continent]"
+                                        selection="open">
                                     <template>
                                         <option value="{@code}">{.}</option>
                                     </template>
