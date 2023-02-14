@@ -11,6 +11,7 @@ jobs:
                 node-version:
                     - 14
                     - 16
+                    # - 18 
         steps:
             - uses: actions/checkout@v2
             - name: Use Node.js ${{ matrix.node-version }}
@@ -21,5 +22,7 @@ jobs:
               run: npm ci
             - name: Build Fore
               run: npm run build
-            - name: Run tests
+            - name: Run component tests
               run: npm test --headless
+            - name: Run e2e tests
+              run: npx cypress run  
