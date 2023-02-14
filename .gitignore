@@ -8,3 +8,6 @@ assets/
 **/.DS_Store
 out/
 dist/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
