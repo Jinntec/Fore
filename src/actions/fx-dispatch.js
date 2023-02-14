@@ -69,7 +69,7 @@ export class FxDispatch extends AbstractAction {
         if (value) {
           throw new Error('if "expr" is given there must not be a "value" attribute');
         }
-        const [result] = evaluateXPath(expr, this.getInScopeContext(), this.getOwnerForm());
+        const [result] = evaluateXPath(expr, this.getInScopeContext(), this);
 
         let serialized = null;
         if (result.nodeName) {

@@ -33,6 +33,10 @@ class FxLoad extends AbstractAction {
     connectedCallback() {
         super.connectedCallback();
         this.attachTo = this.hasAttribute('attach-to') ? this.getAttribute('attach-to') : '_self';
+
+		// Add a 'doneEvent' to block the action chain untill the event fired on the element we're
+		// loading something into.
+        this.doneEvent = this.hasAttribute('done-event') ? this.getAttribute('done-event') : '';
         // this.url = this.hasAttribute('url') ? this.getAttribute('url') : '';
         const style = `
         :host{
@@ -71,14 +75,36 @@ class FxLoad extends AbstractAction {
             if (this.attachTo.startsWith('#')) {
                 const targetId = this.attachTo.substring(1);
                 const resolved = resolveId(targetId, this);
-                //remove all children
+                // remove all children
                 while (resolved.firstChild) {
                     resolved.removeChild(resolved.firstChild);
                 }
+				if (this.doneEvent) {
+					let resolveEvent;
+					const waitForEvent = new Promise((resolve, _reject) => {
+						resolveEvent = resolve;
+					});
+					const eventListener = () => {
+						resolveEvent();
+						resolved.removeEventListener(this.doneEvent, eventListener);
+					};
+
+					resolved.appendChild(content);
+					resolved.addEventListener(this.doneEvent, eventListener);
+
+					await waitForEvent;
+
+					this.needsUpdate  = true;
+
+					Fore.dispatch(this, 'loaded', {});
+					return;
+				}
+
                 resolved.appendChild(content);
+
+				this.needsUpdate  = true;
             }
-            this.needsUpdate  = true;
-            Fore.dispatch(this, 'loaded', {})
+            Fore.dispatch(this, 'loaded', {});
             return;
         }
 

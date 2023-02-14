@@ -103,21 +103,24 @@
         <!-- todo: investigate - does not work the same as with replace above     -->
         <!--        <fx-insert ref="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
         <fx-action event="ready" id="sec1">
-            <fx-load attach-to="#transcript">
-                <template>
+            <fx-load attach-to="#transcript" done-event="pb-update">
+              <template>
                     <pb-view id="view1" src="document1" view="page" append-footnotes animation
                              subscribe="transcription" emit="transcription"></pb-view>
                 </template>
             </fx-load>
-        </fx-action>
-        <fx-load attach-to="#transcript2" event="action-performed" target="sec1" delay="500">
-            <template>
+			<!-- <fx-set-value ref="()" while="id('#view1)/@done => not()" delay="1"></fx-set-value> -->
+			<!-- <fx-wait-for-event event="pb-update" target="#transcript"/> -->
+			<fx-load attach-to="#transcript2" target="sec1" done-event="pb-update">
+              <template>
                 <pb-view id="view2" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>
-            </template>
-        </fx-load>
+              </template>
+			</fx-load>
+
+        </fx-action>
         <!--
-                <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
+            <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
                     <template>
                         <footer>
                             &lt;!&ndash; Navigate to next page &ndash;&gt;

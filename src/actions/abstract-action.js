@@ -162,14 +162,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
-    // todo - check for right eventPhase?
-    // if(e.eventPhase === 0) return;
-    if(e && e.type !== this.event){
-      console.log('execute phase', e.eventPhase);
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
     console.log('execute',this,e);
     console.log('execute',this.event);
 
