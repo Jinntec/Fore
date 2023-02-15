@@ -166,11 +166,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     console.log('execute',this.event);
 
 
+/* todo: investigate This bit is breaking...
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
       // Event originates from a sub-component. Ignore it!
       // No need to stop propagation. All other listeners will also ignore it from here
       return;
     }
+*/
     if(this.propagate === 'stop'){
       console.log('event propagation stopped', e)
       e.stopPropagation();

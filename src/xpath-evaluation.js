@@ -875,12 +875,23 @@ registerCustomXPathFunction(
 			}
 
 			// arg might be `code`, so currentEvent.code should work
+            if(arg.includes('.')){
+                return _propertyLookup(ancestor.currentEvent, arg);
+            }
 			return ancestor.currentEvent[arg] || null;
 
 		}
         return null;
     },
 );
+
+function _propertyLookup(obj,path){
+    const parts = path.split(".");
+    if (parts.length==1){
+        return obj[parts[0]];
+    }
+    return _propertyLookup(obj[parts[0]], parts.slice(1).join("."));
+}
 
 // Implement the XForms standard functions here.
 registerXQueryModule(`

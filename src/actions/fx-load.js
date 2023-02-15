@@ -36,7 +36,7 @@ class FxLoad extends AbstractAction {
 
 		// Add a 'doneEvent' to block the action chain untill the event fired on the element we're
 		// loading something into.
-        this.doneEvent = this.hasAttribute('done-event') ? this.getAttribute('done-event') : '';
+        this.awaitEvent = this.hasAttribute('await') ? this.getAttribute('await') : '';
         // this.url = this.hasAttribute('url') ? this.getAttribute('url') : '';
         const style = `
         :host{
@@ -79,24 +79,24 @@ class FxLoad extends AbstractAction {
                 while (resolved.firstChild) {
                     resolved.removeChild(resolved.firstChild);
                 }
-				if (this.doneEvent) {
+				if (this.awaitEvent) {
 					let resolveEvent;
 					const waitForEvent = new Promise((resolve, _reject) => {
 						resolveEvent = resolve;
 					});
 					const eventListener = () => {
 						resolveEvent();
-						resolved.removeEventListener(this.doneEvent, eventListener);
+						resolved.removeEventListener(this.awaitEvent, eventListener);
 					};
 
 					resolved.appendChild(content);
-					resolved.addEventListener(this.doneEvent, eventListener);
+					resolved.addEventListener(this.awaitEvent, eventListener);
 
 					await waitForEvent;
 
 					this.needsUpdate  = true;
 
-					Fore.dispatch(this, 'loaded', {});
+					Fore.dispatch(this, 'loaded', {attachPoint:this.attachTo, content:content});
 					return;
 				}
 
