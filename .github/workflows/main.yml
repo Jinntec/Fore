@@ -13,18 +13,19 @@ jobs:
                     - 16
                     # - 18 
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
             - name: Install dependencies
               run: npm ci
             - name: Build Fore
               run: npm run build
             - name: Run component tests
-              run: npm test --headless
-            - name: Start dev server
-              run: npm start   
+              run: npm test --headless  
             - name: Run e2e tests
-              run: npx cypress run  
+              run: |
+                npm start & 
+                npx cypress run  
