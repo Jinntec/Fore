@@ -33,6 +33,10 @@ class FxLoad extends AbstractAction {
     connectedCallback() {
         super.connectedCallback();
         this.attachTo = this.hasAttribute('attach-to') ? this.getAttribute('attach-to') : '_self';
+
+		// Add a 'doneEvent' to block the action chain untill the event fired on the element we're
+		// loading something into.
+        this.doneEvent = this.hasAttribute('done-event') ? this.getAttribute('done-event') : '';
         // this.url = this.hasAttribute('url') ? this.getAttribute('url') : '';
         const style = `
         :host{
@@ -63,6 +67,59 @@ class FxLoad extends AbstractAction {
 
         // this.getOwnerForm().evaluateTemplateExpression(this.urlContent, this);
 
+        const template = this.querySelector('template');
+        if(template){
+            const clone = template.content.cloneNode(true);
+            const content = document.importNode(clone, true);
+            // this._attachToElement(content);
+            if (this.attachTo.startsWith('#')) {
+                const targetId = this.attachTo.substring(1);
+                const resolved = resolveId(targetId, this);
+                // remove all children
+                while (resolved.firstChild) {
+                    resolved.removeChild(resolved.firstChild);
+                }
+				if (this.doneEvent) {
+					let resolveEvent;
+					const waitForEvent = new Promise((resolve, _reject) => {
+						resolveEvent = resolve;
+					});
+					const eventListener = () => {
+						resolveEvent();
+						resolved.removeEventListener(this.doneEvent, eventListener);
+					};
+
+					resolved.appendChild(content);
+					resolved.addEventListener(this.doneEvent, eventListener);
+
+					await waitForEvent;
+
+					this.needsUpdate  = true;
+
+					Fore.dispatch(this, 'loaded', {});
+					return;
+				}
+
+                resolved.appendChild(content);
+
+				this.needsUpdate  = true;
+            }
+            Fore.dispatch(this, 'loaded', {});
+            return;
+        }
+
+        if(!this.url){
+            // for authoring errors we log errors directly to DOM
+            this.dispatchEvent(
+                new CustomEvent('log', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable:true,
+                    detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},
+                }),
+            );
+            return;
+        }
         this.url = this._evaluateUrlExpression();
         if (this.attachTo === '_blank') {
             window.open(this.url);
@@ -89,18 +146,30 @@ class FxLoad extends AbstractAction {
             if (!this.attachTo) {
                 this.innerHtml = data;
             }
+/*
             if (this.attachTo.startsWith('#')) {
                 const targetId = this.attachTo.substring(1);
                 const resolved = resolveId(targetId, this);
                 resolved.innerHTML = '';
                 resolved.innerHTML = data;
             }
+*/
+            this._attachToElement(data);
 
 
-            Fore.dispatch(this, 'url-loaded', {url: this.url})
+            Fore.dispatch(this, 'loaded', {url: this.url})
 
         } catch (error) {
             throw new Error(`failed loading data ${error}`);
+        }
+    }
+
+    _attachToElement(content){
+        if (this.attachTo.startsWith('#')) {
+            const targetId = this.attachTo.substring(1);
+            const resolved = resolveId(targetId, this);
+            resolved.innerHTML = '';
+            resolved.innerHTML = content;
         }
     }
 

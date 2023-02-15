@@ -52,7 +52,7 @@ export class FxInsert extends AbstractAction {
         // this.setInScopeVariables(this.detail);
 
         // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
-        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this.getOwnerForm());
+        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
         if (Array.isArray(originTarget) && originTarget.length === 0) {
           console.warn('invalid origin for this insert action - ignoring...', this);
           originSequenceClone = null;
@@ -76,7 +76,7 @@ export class FxInsert extends AbstractAction {
       return null;
     }
     if (this.hasAttribute('at')) {
-      return evaluateXPathToNumber(this.getAttribute('at'), inscope, this.getOwnerForm());
+      return evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
     }
     return targetSequence.length;
   }
@@ -104,10 +104,10 @@ export class FxInsert extends AbstractAction {
 
     if (this.hasAttribute('ref')) {
       if (inscope) {
-        targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+        targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
       } else {
         inscope = getInScopeContext(this.getAttributeNode('ref'), this.ref);
-        targetSequence = evaluateXPathToNodes(this.ref, inscope, this.getOwnerForm());
+        targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
       }
     }
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
@@ -132,7 +132,7 @@ export class FxInsert extends AbstractAction {
         // index = this.at;
         // insertLocationNode = targetSequence[this.at - 1];
 
-        index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this.getOwnerForm());
+        index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
         insertLocationNode = targetSequence[index - 1];
       } else {
         // this.at = targetSequence.length;

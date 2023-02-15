@@ -95,8 +95,13 @@ export class FxTrigger extends XfAbstractControl {
     for (let i = 0; i < this.children.length; i += 1) {
       const child = this.children[i];
       if (typeof child.execute === 'function') {
+        if (e) {
+          // We are handling the event. Stop it from going further
+          e.preventDefault();
+          e.stopPropagation();
+        }
         // eslint-disable-next-line no-await-in-loop
-        await child.execute(e);
+        await child.execute();
         // child.execute(e);
       }
     }

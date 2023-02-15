@@ -57,8 +57,10 @@ export class FxFore extends HTMLElement {
         super();
         this.model = {};
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // todo: refactoring - these should rather go into connectedcallback
         this.addEventListener('message', this._displayMessage);
         this.addEventListener('error', this._displayError);
+        this.addEventListener('log', this._logError);
         window.addEventListener('compute-exception', e => {
             console.error('circular dependency: ', e);
         });
@@ -136,13 +138,18 @@ export class FxFore extends HTMLElement {
             #messageContent{
                 margin-top:40px;
             }
+            .warning{
+                background:orange;
+            }
         `;
 
         const html = `
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
-           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom"></jinn-toast>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
+           <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" close="true" position="left" gravity="bottom"></jinn-toast>
            <slot></slot>
+           <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
                 <div class="popup">
                    <h2></h2>
@@ -167,6 +174,8 @@ export class FxFore extends HTMLElement {
     }
 
     connectedCallback() {
+        this.addEventListener('warn', this._displayWarning);
+
         this.style.visibility = 'hidden';
         console.time('init');
         /*
@@ -559,6 +568,7 @@ export class FxFore extends HTMLElement {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {
                 console.log('ignoring unparseable expr', error);
+
                 return match;
             }
         });
@@ -819,6 +829,31 @@ export class FxFore extends HTMLElement {
         // this._showMessage('modal', msg);
         const toast = this.shadowRoot.querySelector('#error');
         toast.showToast(msg);
+    }
+
+    _logError(e) {
+        const div = document.createElement('div');
+        div.setAttribute('slot','messages');
+        div.setAttribute('data-level',e.detail.level);
+
+        const id = document.createElement('div');
+        id.textContent = `"${e.detail.id}"`;
+        div.appendChild(id);
+
+        const path = document.createElement('div');
+        path.textContent = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        div.appendChild(path);
+
+        const message = document.createElement('div');
+        message.textContent = e.detail.message;
+        div.appendChild(message);
+
+        /*
+                const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+                div.innerText = `${path} :: ${e.detail.message}`;
+        */
+        this.appendChild(div);
+        div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
     }
 
     _showMessage(level, msg) {

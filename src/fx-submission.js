@@ -108,7 +108,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 console.log('match ', match);
                 const naked = match.substring(1, match.length - 1);
                 const inscope = getInScopeContext(node, naked);
-                const result = evaluateXPathToString(naked, inscope, this.getOwnerForm());
+                const result = evaluateXPathToString(naked, inscope, this);
                 const replaced = expr.replaceAll(match, result);
                 console.log('replacing ', expr, ' with ', replaced);
                 expr = replaced;
@@ -164,7 +164,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                     Fore.dispatch(this, 'submit-error', {message: `Error reading key ${key} from localstorage`});
                     return;
                 }
-                let data = this._parse(serialized, instance);
+                const data = this._parse(serialized, instance);
                 this._handleResponse(data);
                 if (this.method === 'consume') {
                     localStorage.removeItem(key);

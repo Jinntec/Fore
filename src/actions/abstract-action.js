@@ -110,7 +110,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
     } else {
-      this.event = 'activate';
+      this.event = 'click';
     }
     if (this.hasAttribute('defaultAction')) {
       this.defaultAction = this.getAttribute('defaultAction');
@@ -123,25 +123,31 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.phase = 'default';
     }
 
-    this.target = this.getAttribute('target');
-    if (this.target) {
-      if (this.target === '#window') {
-          window.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      } else if (this.target === '#document') {
-          document.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      } else {
-        this.targetElement = resolveId(this.target, this);
-          this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      }
-    } else {
-      this.targetElement = this.parentNode;
-		this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      // console.log('adding listener for ', this.event , ` to `, this);
-    }
-
     this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
     this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
     this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')) : 0;
+
+    this._addUpdateListener();
+
+  }
+
+  _addUpdateListener() {
+    this.target = this.getAttribute('target');
+    if (this.target) {
+      if (this.target === '#window') {
+        window.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+      } else if (this.target === '#document') {
+        document.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+      } else {
+        this.targetElement = resolveId(this.target, this);
+        if(!this.targetElement) return; //does not or does not yet exist
+        this?.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+      }
+    } else {
+      this.targetElement = this.parentNode;
+      this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+      // console.log('adding listener for ', this.event , ` to `, this);
+    }
   }
 
   /**
@@ -156,6 +162,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
+    console.log('execute',this,e);
+    console.log('execute',this.event);
+
+
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
       // Event originates from a sub-component. Ignore it!
       // No need to stop propagation. All other listeners will also ignore it from here

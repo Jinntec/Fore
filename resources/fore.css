@@ -35,6 +35,49 @@ html{
     display: inline;
     color: red;
 }
+[slot=messages]{
+    margin:0 auto;
+    width: 100%;
+    padding: 2rem 0 1rem;
+    background: white;
+    /*border:thin solid black;*/
+    border-radius: 0.5rem;
+    position: relative;
+}
+[slot=messages]::before{
+    content: attr(data-level);
+    padding: 0.5rem;
+    background: darkred;
+    color:white;
+    display: block;
+    /*position: absolute;*/
+    /*top:0.5rem;*/
+    /*left:0;*/
+}
+[slot=messages] div{
+    color:black;
+    padding: 0.25rem;
+    border:thin solid #efefef;
+}
+[slot=messages] div::before{
+    width:6rem;
+    display: inline-block;
+
+}
+[slot=messages] div:nth-child(1)::before{
+    content:'Id:';
+}
+[slot=messages] div:nth-child(2)::before{
+    content:'Path:';
+}
+[slot=messages] div:nth-child(3)::before{
+    content:'Message:';
+}
+/*
+[slot=messages][data-level='Error']{
+    color:darkred;
+}
+*/
 
 fx-alert{
     color:darkred;

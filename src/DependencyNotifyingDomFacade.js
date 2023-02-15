@@ -128,8 +128,7 @@ export class DependencyNotifyingDomFacade {
    * Get the parent of this element.
    * An implementation of IDomFacade is free to interpret the bucket to skip returning nodes that do not match the bucket, or use this information to its advantage.
    *
-   * @param  node -
-   * @param  bucket - The bucket that matches the attribute that will be used.
+   * @param  node - the starting node
    */
   // eslint-disable-next-line class-methods-use-this
   getParentNode(node) {
