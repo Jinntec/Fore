@@ -80,7 +80,8 @@
     "test:bs": "karma start karma.bs.config.js --coverage",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
-    "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open"
+    "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
+    "postinstall": "cd demo && npm i"
   },
   "keywords": [
     "Fore",
