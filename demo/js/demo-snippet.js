@@ -79,7 +79,6 @@ Polymer({
         background-color: #f5f5f5;
         font-size: 13px;
         overflow: auto;
-        position: relative;
         padding: 0 20px;
         z-index: -1;
         @apply --demo-snippet-code;
