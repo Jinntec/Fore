@@ -97,45 +97,54 @@
 
 <!--        <fx-replace ref="instance('content')" with="event('root')" event="pb-update"></fx-replace>-->
 <!--        <fx-refresh event="pb-update"></fx-refresh>-->
-                <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>
-        <fx-action event="ready" id="sec1">
-<!--            <fx-load attach-to="#transcript" done-event="pb-update">-->
-            <fx-load attach-to="#transcript" done-event="pb-update">
+
+        <fx-message event="loaded" target="load1">loaded fired on {event('attached')}</fx-message>
+
+        <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>
+
+
+        <fx-action event="ready">
+            <fx-load id="load1" attach-to="#transcript" done-event="pb-update">
               <template>
                     <pb-view id="view1" src="document1" view="page" append-footnotes animation
                              subscribe="transcription" emit="transcription"></pb-view>
                 </template>
             </fx-load>
-			<fx-load attach-to="#transcript2" target="sec1" done-event="pb-update" delay="2000">
+<!--
+            <fx-message>First view loaded</fx-message>
+			<fx-load attach-to="#transcript2" done-event="pb-update" delay="2000">
               <template>
                 <pb-view id="view2" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>
               </template>
 			</fx-load>
+            <fx-message>Second view loaded</fx-message>
+-->
+
+<!--
+            <fx-load attach-to="#footer" done-event="pb-update" delay="500">
+                <template>
+                    <footer>
+                        &lt;!&ndash; Navigate to next page &ndash;&gt;
+                        <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
+                            <paper-button>
+                                <iron-icon icon="icons:chevron-right"></iron-icon>
+                            </paper-button>
+                        </pb-navigation>
+                        &lt;!&ndash; Navigate to previous page &ndash;&gt;
+                        <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
+                            <paper-button>
+                                <iron-icon icon="icons:chevron-left"></iron-icon>
+                            </paper-button>
+                        </pb-navigation>
+                    </footer>
+                </template>
+            </fx-load>
+-->
         </fx-action>
-        <!--
-            <fx-load attach-to="#footer" event="action-performed" target="sec1" delay="500">
-                    <template>
-                        <footer>
-                            &lt;!&ndash; Navigate to next page &ndash;&gt;
-                            <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
-                                <paper-button>
-                                    <iron-icon icon="icons:chevron-right"></iron-icon>
-                                </paper-button>
-                            </pb-navigation>
-                            &lt;!&ndash; Navigate to previous page &ndash;&gt;
-                            <pb-navigation direction="backward" keyboard="left" subscribe="transcription" emit="transcription">
-                                <paper-button>
-                                    <iron-icon icon="icons:chevron-left"></iron-icon>
-                                </paper-button>
-                            </pb-navigation>
-                        </footer>
-                    </template>
-                </fx-load>
-        -->
 
 
-        <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher">
+        <pb-page endpoint="{endpoint}">
 
             <!--            <fx-setvalue ref="wrapper/div" value="event('root')" event="pb-update"></fx-setvalue>-->
 
@@ -155,7 +164,7 @@
             -->
             <div id="transcript"></div>
             <div id="transcript2"></div>
-            <!--            <div id="footer"></div>-->
+<!--            <div id="footer"></div>-->
             <footer>
                 <!-- Navigate to next page -->
                 <pb-navigation direction="forward" keyboard="right" subscribe="transcription" emit="transcription">
