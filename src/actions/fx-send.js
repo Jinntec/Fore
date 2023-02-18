@@ -36,6 +36,7 @@ class FxSend extends AbstractAction {
     // const submission = fore.querySelector(`#${this.submission}`);
     const submission = this.getModel().querySelector(`#${this.submission}`);
     if (submission === null) {
+/*
       this.dispatchEvent(
         new CustomEvent('error', {
           composed: true,
@@ -43,6 +44,16 @@ class FxSend extends AbstractAction {
           detail: { message: `fx-submission element with id: '${this.submission}' not found` },
         }),
       );
+*/
+      this.dispatchEvent(
+          new CustomEvent('log', {
+            composed: false,
+            bubbles: true,
+            cancelable:true,
+            detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},
+          }),
+      );
+
       throw new Error(`submission with id: ${this.submission} not found`);
     }
     console.log('submission', submission);

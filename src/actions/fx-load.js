@@ -28,6 +28,7 @@ class FxLoad extends AbstractAction {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.url='';
     }
 
     connectedCallback() {
@@ -37,17 +38,17 @@ class FxLoad extends AbstractAction {
 		// Add a 'doneEvent' to block the action chain untill the event fired on the element we're
 		// loading something into.
         this.awaitEvent = this.hasAttribute('await') ? this.getAttribute('await') : '';
-        // this.url = this.hasAttribute('url') ? this.getAttribute('url') : '';
+        this.url = this.hasAttribute('url') ? this.getAttribute('url') : '';
         const style = `
-        :host{
-            display:none;
-        }
-    `;
+            :host{
+                display:none;
+            }
+        `;
         this.shadowRoot.innerHTML = `
-        <style>
-            ${style}
-        </style>
-        ${this.renderHTML()}`;
+            <style>
+                ${style}
+            </style>
+            ${this.renderHTML()}`;
     }
 
     disconnectedCallback() {
@@ -110,9 +111,10 @@ class FxLoad extends AbstractAction {
 
         if(!this.url){
             // for authoring errors we log errors directly to DOM
+
             this.dispatchEvent(
                 new CustomEvent('log', {
-                    composed: true,
+                    composed: false,
                     bubbles: true,
                     cancelable:true,
                     detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},

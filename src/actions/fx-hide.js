@@ -11,6 +11,7 @@ import { resolveId } from '../xpath-evaluation.js';
  */
 export class FxHide extends AbstractAction {
   connectedCallback() {
+    super.connectedCallback();
     this.dialog = this.getAttribute('dialog');
     if (!this.dialog) {
       Fore.dispatch(this, 'error', { message: 'dialog does not exist' });

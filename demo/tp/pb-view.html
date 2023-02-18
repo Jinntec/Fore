@@ -16,9 +16,9 @@
         }
 
         .wrap {
-            /*margin:0 auto;*/
-            max-width: 1280px;
-            margin-left: 5rem;
+            width:92%;
+
+            padding-left: 5rem;
         }
 
         pb-page {
@@ -67,10 +67,16 @@
         }
 
         fx-inspector {
-            position: fixed;
+            position: relative;
             height: 100vh;
-            top: 0;
+            width:400px;
+            /*top: 0;*/
 
+        }
+
+        fx-fore{
+            display: grid;
+            grid-template-columns: auto 400px;
         }
 
     </style>
@@ -109,7 +115,7 @@
     <fx-message level="sticky" event="pb-update" if="event('target.id')">pb-update fired on {event('target.id')}
     </fx-message>
 
-    <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>
+<!--    <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
 
 
     <fx-action event="ready">

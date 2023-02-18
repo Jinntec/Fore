@@ -23,23 +23,20 @@
     <h2>Using an idref</h2>
     <p>Ids will be resolved automatically when used in a repeat.</p>
     <p>Here the load fires on 'ready' event and inlines the loaded content.</p>
-    <!--
         <demo-snippet>
             <template>
                 <fx-fore>
-                    <fx-message event="url-loaded">url {event('url')}</fx-message>
-
                     <fx-load event="ready" url="load-snippet.html" attach-to="#thetarget"></fx-load>
+                    <fx-message event="loaded">url {event('url')}</fx-message>
+
                     <div id="thetarget"></div>
                 </fx-fore>
             </template>
         </demo-snippet>
-    -->
 
     <h2>Replacing current browser tab with content</h2>
     <p>Leaving out the <code>attach-to</code> attribute will default to using '_blank' as
         default target. This will replace the current window with the content loaded from <code>url</code>.</p>
-    <!--
         <demo-snippet>
             <template>
                 <fx-fore>
@@ -50,12 +47,10 @@
                 </fx-fore>
             </template>
         </demo-snippet>
-    -->
 
     <h2>Opening new browser tab with content</h2>
     <p>By using '_blank' for the <code>attach-to</code> attribute a new browser window will be opened with
         the content.</p>
-    <!--
         <demo-snippet>
             <template>
                 <fx-fore>
@@ -66,12 +61,10 @@
                 </fx-fore>
             </template>
         </demo-snippet>
-    -->
 
     <h2>Replacing current browser tab with confirmation</h2>
     <p>The load action also respects the <code>show-confirmation</code> attribute
         and will ask for confirmation if data have changed before replacing the current tab.</p>
-    <!--
         <demo-snippet>
             <template>
                 <fx-fore show-confirmation>
@@ -92,7 +85,6 @@
                 </fx-fore>
             </template>
         </demo-snippet>
-    -->
     <h2>Control loading of content with template element</h2>
     <p>Sometimes you want to control WHEN a certain snippet comes into life. In that situations you can
         wrap that content into an HTML <code>template</code> element which will make it inert (browser ignores it). When
@@ -140,6 +132,49 @@
                                 <label>Created after the second one</label>
                             </fx-control>
                         </template>
+                    </fx-load>
+                </fx-trigger>
+                <!--
+                                <template id="view2">
+                                    <template>
+                                        <fx-control ref="item2">
+                                            <label>Created after the first one</label>
+                                        </fx-control>
+                                    </template>
+                                </template>
+                -->
+            </fx-fore>
+        </template>
+    </demo-snippet>
+    <h2>Showing error if no template nor url given</h2>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item>foo</item>
+                            <item2>bar</item2>
+                            <item3>baz</item3>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <div id="lazyControl"></div>
+                <div id="lazyControl2"></div>
+                <div id="lazyControl3"></div>
+                <fx-trigger>
+                    <button>hit to clone from template</button>
+                    <fx-load attach-to="#lazyControl" id="first">
+                        <template>
+                            <fx-control ref="item">
+                                <label>an item:</label>
+                            </fx-control>
+                            <fx-output ref="item"></fx-output>
+                        </template>
+                    </fx-load>
+                    <fx-load id="second"
+                             event="action-performed"
+                             attach-to="#lazyControl2" target="first" delay="400">
                     </fx-load>
                 </fx-trigger>
                 <!--
