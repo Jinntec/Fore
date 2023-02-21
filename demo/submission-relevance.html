@@ -41,6 +41,21 @@
 
             }
 
+            #adi-wrapper{
+                width: 600px;
+            }
+
+
+            .explorer{
+                position: fixed;
+                top:0;
+                right: 0;
+                z-index: 10001;
+                color:blue;
+                text-decoration: none;
+                border:0;
+                padding:0.3rem;
+            }
 
         </style>
     </custom-style>
@@ -54,12 +69,15 @@
             color:darkred;
         }
     </style>
-
+    <link rel="stylesheet" href="../resources/scripts/dom-inspector/dom-inspector.css">
+    <link rel="stylesheet" href="../resources/scripts/dom-inspector/acid-dom.css">
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
+<!--
     <demo-snippet>
         <template>
+-->
             <fx-fore>
                 <fx-model>
                     <fx-instance>
@@ -85,6 +103,8 @@
                                     url="#echo"
                                     replace="instance">
                         <fx-message event="submit-done">Submitted with non-relevant nodes being removed (default)</fx-message>
+                        <fx-refresh force></fx-refresh>
+
                     </fx-submission>
 
                     <fx-submission id="empty"
@@ -148,11 +168,24 @@
                         {log('default')}
         </pre>
 
+                <fx-inspector open></fx-inspector>
             </fx-fore>
+<!--
         </template>
     </demo-snippet>
+-->
 </div>
-<script type="module" src="./demo.js"></script>
+<a href="#" class="explorer" onclick="toggleVisibilityUI()"><img src="../resources/scripts/dom-inspector/img/lookup.png"></a>
+<script src="../resources/scripts/dom-inspector/acid_dom.js"></script>
+<script>
+    function toggleVisibilityUI(){
+        ADI.toggle();
+    }
 
+    document.addEventListener('handle-active', e => {
+        console.log('got handle-active event', e.detail);
+    });
+</script>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>

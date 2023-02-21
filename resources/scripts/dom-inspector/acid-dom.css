@@ -1,0 +1,341 @@
+body {
+    -webkit-animation: bugfix infinite 1s
+}
+
+@-webkit-keyframes bugfix {
+    from {
+        padding: 0
+    }
+    to {
+        padding: 0
+    }
+}
+
+#adi-wrapper {
+    position: fixed;
+    height: 100%;
+    top: 0;
+    background: #fafafa;
+    font-family: "Segoe UI", Arial;
+    font-size: 1rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+#adi-wrapper.left {
+    left: 0
+}
+
+#adi-wrapper.right {
+    right: 0
+}
+
+#adi-wrapper.transparent {
+    background: rgba(250, 250, 250, 0.8)
+}
+
+#adi-panel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 24px;
+    background: #d4d4d4;
+    border-top: 1px solid #bbc5c9
+}
+
+#adi-panel .adi-path-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80%;
+    height: 24px;
+    padding: 0 13px 0 18px;
+    line-height: 24px;
+    overflow: hidden;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box
+}
+
+#adi-panel .adi-path-wrap.adi-overflowing .adi-path-left, #adi-panel .adi-path-wrap.adi-overflowing .adi-path-right {
+    display: block
+}
+
+#adi-panel .adi-path {
+    height: 24px;
+    overflow: hidden;
+    white-space: nowrap
+}
+
+#adi-panel .adi-path-left, #adi-panel .adi-path-right {
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: .7
+}
+
+#adi-panel .adi-path-left:hover, #adi-panel .adi-path-right:hover {
+    opacity: 1
+}
+
+#adi-panel .adi-path-left {
+    left: 7px;
+    background-image: url('img/left_shift.png')
+}
+
+#adi-panel .adi-path-right {
+    right: 2px;
+    background-image: url('img/right_shift.png')
+}
+
+#adi-panel .adi-menu-wrap {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50px;
+    height: 24px
+}
+
+#adi-panel .adi-menu-lookup, #adi-panel .adi-menu-config {
+    display: block;
+    float: left;
+    width: 24px;
+    height: 24px;
+    border-left: 1px solid #bbc5c9;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: .7;
+    border-radius: 0
+}
+
+#adi-panel .adi-menu-lookup:hover, #adi-panel .adi-menu-config:hover {
+    background-color: #c5d9d8;
+    opacity: 1
+}
+
+#adi-panel .adi-menu-lookup.adi-active, #adi-panel .adi-menu-config.adi-active {
+    background-color: #fafafa;
+    opacity: 1
+}
+
+#adi-panel .adi-menu-lookup {
+    background-image: url('img/lookup.png')
+}
+
+#adi-panel .adi-menu-config {
+    background-image: url('img/config.png')
+}
+
+#adi-dom-view {
+    height: 50%
+}
+
+#adi-dom-view ul {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+#adi-dom-view ul[data-open=true] {
+    display: block
+}
+
+#adi-dom-view ul[data-open=false] {
+    display: none
+}
+
+#adi-dom-view ul ul {
+    margin: 4px 0
+}
+
+#adi-dom-view ul li {
+    margin: 4px 0;
+    padding-left: 15px
+}
+
+#adi-dom-view .adi-normal-node, #adi-dom-view .adi-end-node {
+    margin-right: 5px;
+    padding: 0 6px 0px;
+    background: #d2e8ff;
+    border-radius: 8px;
+    cursor: default
+}
+
+#adi-dom-view .adi-normal-node:hover, #adi-dom-view .adi-normal-node.hover, #adi-dom-view .adi-end-node:hover, #adi-dom-view .adi-end-node.hover {
+    background: #ffcc62
+}
+
+#adi-dom-view .adi-normal-node:hover ~ span, #adi-dom-view .adi-normal-node.hover ~ span, #adi-dom-view .adi-end-node:hover ~ span, #adi-dom-view .adi-end-node.hover ~ span {
+    background: #ffcc62
+}
+
+#adi-dom-view .adi-normal-node.adi-active-node, #adi-dom-view .adi-end-node.adi-active-node {
+    background: #ff7e7e
+}
+
+#adi-dom-view .adi-normal-node.adi-active-node ~ span, #adi-dom-view .adi-end-node.adi-active-node ~ span {
+    background: #ff7e7e;
+}
+
+#adi-dom-view .adi-text-node, #adi-dom-view .adi-comment-node {
+    display: block;
+    padding: 3px 8px;
+    color: #444;
+    background: #fff;
+    border-radius: 8px
+}
+
+#adi-dom-view .adi-text-node:after, #adi-dom-view .adi-comment-node:after {
+    content: '"'
+}
+
+#adi-dom-view .adi-text-node:before, #adi-dom-view .adi-comment-node:before {
+    content: '"'
+}
+
+#adi-dom-view .adi-comment-node {
+    color: #999;
+    font-style: italic
+}
+
+#adi-dom-view .adi-trigger {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px 0 -13px;
+    opacity: .7
+}
+
+#adi-dom-view .adi-trigger.closed {
+    background: url('img/node_closed.png') no-repeat
+}
+
+#adi-dom-view .adi-trigger.opened {
+    background: url('img/node_opened.png') no-repeat
+}
+
+#adi-dom-view .adi-trigger:hover {
+    opacity: 1
+}
+
+#adi-opts-view {
+    position: relative;
+    height: 100%;
+    padding: 0 15px;
+    background: #fff
+}
+
+#adi-opts-view.adi-hidden {
+    display: none
+}
+
+#adi-opts-view .adi-opt-heading, #adi-opts-view .adi-opt {
+    display: block;
+    padding: 5px 0
+}
+
+#adi-opts-view .adi-opt-heading {
+    padding: 20px 0 10px;
+    font-size: 15px
+}
+
+#adi-opts-view .adi-opt-heading:first-child {
+    padding-top: 10px
+}
+
+#adi-opts-view .adi-opt input {
+    margin-right: 6px
+}
+
+#adi-opts-view .adi-opt-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+    background: url('img/options_close.png') no-repeat;
+    opacity: .7
+}
+
+#adi-opts-view .adi-opt-close:hover {
+    opacity: 1
+}
+
+#adi-attr-view {
+    height: 50%
+}
+
+#adi-attr-view .adi-attr {
+    display: block;
+    padding: 5px 0
+}
+
+#adi-attr-view hr {
+    height: 1px;
+    border: none
+}
+
+#adi-attr-view input[type=text] {
+    width: 100%;
+    margin-top: 3px;
+    padding: 2px
+}
+
+#adi-horiz-split {
+    height: 4px;
+    cursor: n-resize;
+    border-width: 0 0 1px 0;
+    background: #bbc5c9;
+    border-color: #768285;
+    border-style: solid;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+#adi-horiz-split:hover {
+    background: #c5d9d8
+}
+
+#adi-vert-split {
+    position: fixed;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    cursor: e-resize;
+    border-width: 0 1px 0 0;
+    background: #bbc5c9;
+    border-color: #768285;
+    border-style: solid;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+#adi-vert-split:hover {
+    background: #c5d9d8
+}
+
+.adi-content {
+    position: relative;
+    padding: 10px 15px;
+    overflow: auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 100% !important;
+}
+
+
+.fore-node{
+    background: lawngreen;
+}
+.adi-active-node.fore-node{
+    background: #ff7e7e !important;
+}
