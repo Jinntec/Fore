@@ -12,7 +12,7 @@ import {
 } from 'fontoxpath';
 
 import {XPathUtil} from './xpath-util.js';
-
+import {prettifyXml} from './functions/common-function.js';
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
@@ -661,7 +661,7 @@ registerCustomXPathFunction(
                 // return JSON.stringify(instance.getDefaultContext());
             } else {
                 const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-                return Fore.prettifyXml(def);
+                return prettifyXml(def);
             }
         }
         return null;

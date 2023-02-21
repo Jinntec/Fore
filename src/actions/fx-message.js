@@ -61,7 +61,7 @@ class FxMessage extends AbstractAction {
 
     this.dispatchEvent(
       new CustomEvent('message', {
-        composed: true,
+        composed: false,
         bubbles: true,
         detail: { level: this.level, message },
       }),

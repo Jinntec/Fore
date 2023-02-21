@@ -1,5 +1,6 @@
 @import 'toastify.css';
 @import 'vars.css';
+/*@import url('dev.css');*/
 
 html{
     --inspector-bg:var(--paper-grey-300);
@@ -8,7 +9,6 @@ html{
     --inspector-instance-height:200px;
     --inspector-handle-bg: var(--paper-blue-500);
     --inspector-handle-width: 30px;
-
 }
 [unresolved]{
     display: none;
@@ -30,7 +30,7 @@ html{
     display: block;
 }
 
-[required]:after {
+fx-control[required]:after {
     content: "*";
     display: inline;
     color: red;
@@ -40,7 +40,6 @@ html{
     width: 100%;
     padding: 2rem 0 1rem;
     background: white;
-    /*border:thin solid black;*/
     border-radius: 0.5rem;
     position: relative;
 }
@@ -50,9 +49,6 @@ html{
     background: darkred;
     color:white;
     display: block;
-    /*position: absolute;*/
-    /*top:0.5rem;*/
-    /*left:0;*/
 }
 [slot=messages] div{
     color:black;
@@ -62,7 +58,6 @@ html{
 [slot=messages] div::before{
     width:6rem;
     display: inline-block;
-
 }
 [slot=messages] div:nth-child(1)::before{
     content:'Id:';
@@ -73,12 +68,19 @@ html{
 [slot=messages] div:nth-child(3)::before{
     content:'Message:';
 }
-/*
-[slot=messages][data-level='Error']{
-    color:darkred;
-}
-*/
 
+.fore-error{
+    height:2rem;
+    background: darkred;
+    width:100%;
+    display:block !important;
+    color:white;
+}
+.fore-error::before{
+    content:'right-click to inspect';
+    display: flex;
+    flex-align:center;
+}
 fx-alert{
     color:darkred;
     font-size: 0.9rem;
@@ -155,14 +157,6 @@ fx-dialog .action{
     display: block;
 }
 
-/* fx-fore{ */
-/*     opacity: 0; */
-/* } */
-/* fx-fore.fx-ready{ */
-/*     opacity: 1; */
-/* } */
-
-
 fx-group, fx-switch, fx-repeat, fx-dialog{
     display: block;
 }
@@ -172,8 +166,6 @@ fx-hint{
 }
 
 fx-model,
-fx-model *,
-fx-model ::slotted(fx-instance),
 fx-instance,
 fx-action,
 fx-setvalue{
@@ -187,15 +179,9 @@ fx-trigger img[disabled]{
     filter:blur(2px);
 }
 
-
 fx-repeatitem{
     position:relative;
     opacity:1;
-    /*
-    -webkit-transition: opacity 3s;
-    -moz-transition: opacity 3s;
-    transition: opacity 3s;
-    */
 }
 
 .hidden {
@@ -221,22 +207,6 @@ fx-repeatitem{
     padding:0.1rem 1rem;
     margin:0;
 }
-.logtree details summary{
-
-}
-
-/*
-.nonrelevant{
-    opacity: 0;
-    height: 0;
-    display: block;
-    padding: 0;
-    margin: 0;
-    border: none;
-    transition: opacity 0.4s;
-}
-*/
-
 
 .submit-validation-failed .isEmpty .widget{
     background: lightpink;
@@ -244,12 +214,3 @@ fx-repeatitem{
 .vertical label{
     display: block;
 }
-
-/* @keyframes fadein { */
-/*     0% { */
-/*         opacity:0; */
-/*     } */
-/*     100% { */
-/*         opacity:1; */
-/*     } */
-/* } */

@@ -177,7 +177,6 @@
                     <h3>Properties</h3>
 
                     <fx-repeat class="properties" ref="?properties">
-					    <!-- TODO: Fix the table here. It needs to be repeated but with a correct content model -->
                          <table slot="header">
                              <tr>
                                  <td>Name</td>
@@ -186,14 +185,6 @@
                                  <td>Default</td>
                              </tr>
                          </table>
-
-<!--
-                        <div slot="header">
-                            <div class="name">Name</div>
-                            <div class="type">Type</div>
-                            <div class="default">Default</div>
-                        </div>
--->
 
                         <template>
                             <div class="name">{?name}</div>

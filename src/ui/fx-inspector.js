@@ -1,4 +1,4 @@
-import { Fore } from '../fore.js';
+import { prettifyXml } from '../functions/common-function.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
@@ -140,7 +140,7 @@ export class FxInspector extends HTMLElement {
     }
     // console.log('serializeDOM', data);
     const ser = new XMLSerializer().serializeToString(data);
-    return Fore.prettifyXml(ser);
+    return prettifyXml(ser);
   }
 }
 

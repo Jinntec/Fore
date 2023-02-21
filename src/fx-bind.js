@@ -234,7 +234,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     // console.log('#### ', thi+s.nodeset);
 
     if (Array.isArray(this.nodeset)) {
-      // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
       Array.from(this.nodeset).forEach(n => {
@@ -323,6 +322,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (alert) {
       newItem.addAlert(alert);
     }
+
 
     this.getModel().registerModelItem(newItem);
   }

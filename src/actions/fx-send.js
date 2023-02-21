@@ -50,11 +50,12 @@ class FxSend extends AbstractAction {
             composed: false,
             bubbles: true,
             cancelable:true,
-            detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},
+            detail: { id:this.id, message: `fx-submission element with id: '${this.submission}' not found`, level:'Error'},
           }),
       );
+      return;
 
-      throw new Error(`submission with id: ${this.submission} not found`);
+      // throw new Error(`submission with id: ${this.submission} not found`);
     }
     console.log('submission', submission);
       await submission.submit();

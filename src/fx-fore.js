@@ -2,7 +2,7 @@ import {Fore} from './fore.js';
 import './fx-instance.js';
 import {FxModel} from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
+import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToFirstNode, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
 import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
@@ -844,7 +844,9 @@ export class FxFore extends HTMLElement {
         div.appendChild(id);
 
         const path = document.createElement('div');
-        path.textContent = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        const pathExpr = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        console.log('pathExpr',pathExpr)
+        path.textContent = pathExpr;
         div.appendChild(path);
 
         const message = document.createElement('div');
@@ -857,6 +859,12 @@ export class FxFore extends HTMLElement {
         */
         this.appendChild(div);
         div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+
+        const errorElement = evaluateXPathToFirstNode(`/${pathExpr}`,document,null);
+        errorElement.classList.add('fore-error');
+
+
     }
 
     _showMessage(level, msg) {

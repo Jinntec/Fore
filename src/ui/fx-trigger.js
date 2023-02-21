@@ -99,7 +99,7 @@ export class FxTrigger extends XfAbstractControl {
           // We are handling the event. Stop it from going further
           e.preventDefault();
           e.stopPropagation();
-          if(e.type && e.type !== child.event) return;
+          if(e.type && child.event && e.type !== child.event) return;
         }
         // eslint-disable-next-line no-await-in-loop
         await child.execute(e);
