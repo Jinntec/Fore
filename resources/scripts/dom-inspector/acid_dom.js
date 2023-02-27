@@ -491,7 +491,6 @@
 						tagStart.textContent = node.textContent;
 					}
 				} else {
-
 					addClass(tagStart, 'adi-normal-node');
 					if (node.nodeType !== Node.DOCUMENT_NODE) {
 						// tagStart.textContent = '<' + node.nodeName.toLowerCase() + '>';
@@ -499,8 +498,12 @@
 
 						if(node.nodeName === 'FX-BIND'){
 							tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
-						}else if(node.nodeName === 'FX-INSTANCE' || node.nodeName === 'FX-SUBMISSION'){
+						}else if(node.nodeName === 'FX-INSTANCE'){
 							tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.id}">`;
+						}else if(node.nodeName === 'FX-CONTROL'){
+							tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
+						}else if(node.nodeName === 'FX-SEND'){
+							tagStart.textContent = `<${node.nodeName.toLowerCase()} submission="${node.getAttribute('submission')}">`;
 						}else{
 							tagStart.textContent = `<${node.nodeName.toLowerCase()}>`;
 						}
@@ -679,15 +682,20 @@
 			naviButtons.appendChild(naviConfig);
 			naviWrap.appendChild(domPathWrap);
 			naviWrap.appendChild(naviButtons);
+			wrapper.appendChild(naviWrap);
 			wrapper.appendChild(optionsView);
 			wrapper.appendChild(domViewWrap);
 			wrapper.appendChild(horizSplit);
 			wrapper.appendChild(attrViewWrap);
-			wrapper.appendChild(naviWrap);
+			// wrapper.appendChild(naviWrap);
 			wrapper.appendChild(vertSplit);
 
 			// cache UI object and append to the DOM
+
+			// #### here it attaches to the body
 			document.getElementsByTagName('body')[0].appendChild(wrapper);
+			// document.querySelector('#inspector').appendChild(wrapper);
+
 			uiView = wrapper;
 			menuView = naviWrap;
 			domView = uiView.querySelector('#adi-dom-view');
@@ -733,7 +741,6 @@
 			domView.style.height = options.split + '%';
 			attrView.style.height = (100 - options.split) + '%';
 			domView.querySelector('.adi-content').style.height = domView.clientHeight + 'px';
-
 			attrView.querySelector('.adi-content').style.height = (attrView.clientHeight - menuView.clientHeight) + 'px';
 			addClass(uiView, options.align);
 		}
@@ -752,7 +759,16 @@
 		// Helper function for attributes view
 		function drawAttrRow(attrName, attrValue) {
 			var row = newElement('span', { class: 'adi-attr' });
-			row.innerHTML = '<label>' + attrName + ': <input type="text" data-attr="' + attrName + '" value="' + attrValue + '"></label>';
+			switch (attrName.toLowerCase()) {
+				case 'defaultaction':
+					row.innerHTML = '<label>' + attrName + ': <select data-attr="' + attrName + '" value="' + attrValue + '"><option>perform</option><option>cancel</option></label>';
+					break;
+				case 'delay':
+					row.innerHTML = '<label>' + attrName + ': <input type="number" data-attr="' + attrName + '" value="' + attrValue + '"></label>';
+					break;
+				default:
+					row.innerHTML = '<label>' + attrName + ': <input type="text" data-attr="' + attrName + '" value="' + attrValue + '"></label>';
+			}
 			return row;
 		}
 
@@ -760,14 +776,12 @@
 		function drawAttrs(elem) {
 
 			//todo: hook element-def.json in here
-
+			if(elem.nodeName.startsWith('FX-')){
+				console.log('got a fore element')
+			}
 
 			if (typeof elem !== 'object') {
 				throw "drawAttrs: Expected argument elem of type object, " + typeof elem + " given.";
-			}
-
-			if(elem.nodeName.startsWith('FX-')){
-				return;
 			}
 
 			var content = attrView.querySelector('.adi-content'),
@@ -800,6 +814,33 @@
 				}
 			}
 
+			if(elem.nodeName.startsWith('FX-')){
+				switch (elem.nodeName) {
+					case 'FX-BIND':
+						attrsOther['calculate'] = attrsOther['calculate'] || '';
+						attrsOther['constraint'] = attrsOther['constraint'] || '';
+						attrsOther['readonly'] = attrsOther['readonly'] || '';
+						attrsOther['relevant'] = attrsOther['relevant'] || '';
+						attrsOther['required'] = attrsOther['required'] || '';
+						break;
+					case 'FX-MESSAGE':
+					case 'FX-SEND':
+					case 'FX-ACTION':
+						attrsOther['defaultaction'] = attrsOther['defaultaction'] || '';
+						attrsOther['delay'] = attrsOther['delay'] || '';
+						attrsOther['event'] = attrsOther['event'] || '';
+						attrsOther['handler'] = attrsOther['handler'] || '';
+						attrsOther['if'] = attrsOther['if'] || '';
+						attrsOther['phase'] = attrsOther['phase'] || '';
+						attrsOther['propagate'] = attrsOther['propagate'] || '';
+						attrsOther['target'] = attrsOther['target'] || '';
+						attrsOther['while'] = attrsOther['while'] || '';
+						break;
+					default:
+						attrsOther[attr.nodeName.toLowerCase()] = attr.nodeValue;
+				}
+			}
+
 			// sort attributes
 			for (var key in attrsOther) {
 				keys.push(key);
@@ -810,24 +851,6 @@
 			content.appendChild(drawAttrRow('id', attrsMain['id']));
 			content.appendChild(drawAttrRow('class', attrsMain['class']));
 			content.appendChild(drawAttrRow('style', attrsMain['style']));
-
-			if(elem.nodeName === 'FX-BIND'){
-				content.appendChild(drawAttrRow('calculate', attrsOther['calculate']));
-				content.appendChild(drawAttrRow('constraint', attrsOther['constraint']));
-				content.appendChild(drawAttrRow('ref', attrsOther['ref']));
-				content.appendChild(drawAttrRow('readonly', attrsOther['readonly']));
-				content.appendChild(drawAttrRow('required', attrsOther['required']));
-				content.appendChild(drawAttrRow('relevant', attrsOther['required']));
-
-			}
-			if(elem.nodeName === 'FX-INSTANCE'){
-				content.appendChild(drawAttrRow('src', attrsOther['src']));
-				content.appendChild(drawAttrRow('type', attrsMain['type']));
-
-			}
-
-
-
 			content.appendChild(newElement('hr'));
 
 			for (i = 0, len = keys.length; i < len; ++i) {
@@ -973,6 +996,10 @@
 
 			checkPathOverflow();
 			drawAttrs(getSelected());
+			const fore = document.createElement('fx-fore');
+			fore.setAttribute('src','inspector/inspector.html');
+			// const detailsView = document.getElementById('detailsView');
+			// detailsView.appendChild(fore);
 		}
 
 		// Checks if pathView is overflowing or not

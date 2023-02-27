@@ -37,6 +37,7 @@
         <fx-model>
             <fx-instance>
                 <data>
+                    <bound>a</bound>
                     <item>
                         <field name="a">a</field>
                         <field name="b">b</field>
@@ -212,6 +213,21 @@
             </template>
         </demo-snippet>
 
+        <h2>Building a dynamic datalist</h2>
+        <p>To actually see the dynamic list delete the bound value from the control and hit space or click arrow.</p>
+        <demo-snippet>
+            <template>
+                <fx-control ref="bound">
+                <input list="datalist">
+                <datalist id="datalist" data-ref="//field">
+                    <template>
+                        <option>{.}</option>
+                    </template>
+                </datalist>
+                </fx-control>
+            </template>
+        </demo-snippet>
+
         <h2>Table using template expressions</h2>
         <p>Template Expressions work as expected within repeated content.</p>
         <demo-snippet>
@@ -333,6 +349,7 @@
                 </template>
             </ul>
         -->
+        <fx-inspector open></fx-inspector>
     </fx-fore>
 </div>
 

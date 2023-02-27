@@ -268,6 +268,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         // add new repeatitem
 
         const clonedTemplate = this._clone();
+        if(!clonedTemplate) return;
 
         // ### cloned templates are always appended to the binding element - the one having the data-ref
         const bindingElement = this.querySelector('[data-ref]');
@@ -364,6 +365,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     this.template = this.querySelector('template');
     console.log('### init template for repeat ', this.id, this.template);
 
+/*
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);
       // todo: catch this on form element
@@ -374,6 +376,11 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
           detail: { message: `no template found for repeat:${this.id}` },
         }),
       );
+    }
+*/
+    if(!this.template) {
+      console.log('no template found');
+      return;
     }
 
     this.shadowRoot.appendChild(this.template);
@@ -417,6 +424,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
+    if(!this.template) return;
     // this.template = this.querySelector('template');
     // const content = this.template.content.cloneNode(true);
     // return document.importNode(content, true);

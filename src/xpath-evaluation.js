@@ -615,6 +615,12 @@ const currentFunction = (dynamicContext, string) => {
     return null;
 };
 
+const elementFunction = (dynamicContext, string) => {
+    const caller = dynamicContext.currentContext.formElement;
+    const newElement = document.createElement(string);
+    return newElement;
+};
+
 /**
  * @param id as string
  * @return instance data for given id serialized to string.
@@ -642,6 +648,13 @@ registerCustomXPathFunction(
     ['xs:string'],
     'item()?',
     currentFunction,
+);
+
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'element'},
+    ['xs:string'],
+    'item()?',
+    elementFunction,
 );
 
 /**

@@ -906,6 +906,7 @@ export class FxFore extends HTMLElement {
                     );
                 }
 */
+
                 const table = item.parentNode.closest('table');
                 let host;
                 if(table){

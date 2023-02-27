@@ -365,7 +365,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
-
+      console.log('*********repeat item created', repeatItem.nodeset)
+      Fore.dispatch(this,'item-created',{nodeset:repeatItem.nodeset, pos:index+1});
       this._initVariables(repeatItem);
     });
   }

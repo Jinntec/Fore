@@ -4,7 +4,7 @@
     {
       "name": "fx-action",
       "path": "./src/actions/fx-action.js",
-      "description": "`fx-action`\nan action to wrap other actions and defers the update cycle until the end of the block.",
+      "description": "`fx-action` an action to wrap other actions and defers the update cycle until the end of the block.",
       "attributes": [
         {
           "name": "defaultAction",
@@ -87,7 +87,7 @@
           "name": "repeat",
           "description": "the repeat this action is appending to.",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "defaultAction",
@@ -356,7 +356,7 @@
         {
           "name": "to",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "defaultAction",
@@ -411,7 +411,7 @@
           "name": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         }
       ],
       "properties": [
@@ -452,7 +452,7 @@
           "attribute": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "inScopeVariables",
@@ -1765,7 +1765,7 @@
         {
           "name": "with",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "defaultAction",
@@ -1898,7 +1898,7 @@
           "name": "with",
           "attribute": "with",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "outermostHandler"
@@ -2332,7 +2332,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "outermostHandler"
@@ -2643,7 +2643,7 @@
         {
           "name": "valueAttr",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "defaultAction",
@@ -2731,8 +2731,8 @@
           "name": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
-        },
+          "default": ""
+        }
       ],
       "properties": [
         {
@@ -2813,7 +2813,7 @@
           "attribute": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "inScopeVariables",
@@ -4151,12 +4151,12 @@
         {
           "name": "name",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "valueQuery",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "value"
@@ -4268,7 +4268,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "display",
@@ -4403,7 +4403,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "display",
@@ -4697,7 +4697,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "required",
@@ -4765,7 +4765,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "nodeset",
@@ -4831,7 +4831,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "widget"
@@ -4896,7 +4896,7 @@
           "name": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         }
       ],
       "properties": [
@@ -4972,13 +4972,13 @@
         {
           "name": "focusOnCreate",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         }
       ],
       "properties": [
@@ -5029,7 +5029,7 @@
           "attribute": "ref",
           "description": "XPath binding expression pointing to bound node",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "inScopeVariables",
@@ -5163,7 +5163,7 @@
         {
           "name": "value",
           "type": "string",
-          "default": "\"\""
+          "default": ""
         },
         {
           "name": "readonly",
