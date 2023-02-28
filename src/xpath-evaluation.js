@@ -13,6 +13,7 @@ import {
 
 import {XPathUtil} from './xpath-util.js';
 import {prettifyXml} from './functions/common-function.js';
+
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
@@ -131,7 +132,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
         {namespaceResolver: xhtmlNamespaceResolver},
     )) {
         const foundTargetObjects = allMatchingTargetObjects.filter(to =>
-            ancestorRepeatItem.contains(to),
+            XPathUtil.contains(ancestorRepeatItem, to),
         );
         switch (foundTargetObjects.length) {
             case 0:

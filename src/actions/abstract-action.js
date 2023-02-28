@@ -2,6 +2,7 @@ import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPathToBoolean, resolveId } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
+import { XPathUtil } from '../xpath-util.js';
 
 async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
@@ -242,7 +243,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // Start by waiting
         await wait(this.delay || 0);
 
-        if (!this.ownerDocument.contains(this)) {
+        if (!XPathUtil.contains(this.getOwnerForm(), this)) {
           // We are no longer in the document. Stop working
           return;
         }
@@ -276,7 +277,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (this.delay) {
       // Delay further execution until the delay is done
       await wait(this.delay);
-      if (!this.ownerDocument.contains(this)) {
+	  if (!XPathUtil.contains(this.getOwnerForm(), this)) {
         // We are no longer in the document. Stop working
         this.actionPerformed();
         resolveThisEvent();
@@ -330,7 +331,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
     if (
       AbstractAction.outermostHandler &&
-      !AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
+			!AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
     ) {
       // The old outermostHandler fell out of the document. An error has happened.
       // Just remove the old one and act like we are starting anew.

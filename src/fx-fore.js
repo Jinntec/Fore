@@ -515,12 +515,12 @@ export class FxFore extends HTMLElement {
         for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
 			if (node.nodeType === Node.ATTRIBUTE_NODE) {
 				// Attribute nodes are not contained by the document, but their owner elements are!
-				if (!node.ownerDocument.contains(node.ownerElement)) {
+				if (!XPathUtil.contains(this, node.ownerElement)) {
 					this.storedTemplateExpressionByNode.delete(node);
 					continue;
 				}
-			} else if (!node.ownerDocument.contains(node)) {
-				// For all other nodes, if the document does not contain them, they are dead
+			} else if (!XPathUtil.contains(this, node)) {
+				// For all other nodes, if this `fore` element does not contain them, they are dead
 				this.storedTemplateExpressionByNode.delete(node);
 				continue;
 			}

@@ -1,5 +1,6 @@
 import getInScopeContext from "./getInScopeContext";
 import {evaluateXPathToString} from "./xpath-evaluation";
+import { XPathUtil } from "./xpath-util.js";
 
 export class Fore {
   static READONLY_DEFAULT = false;
@@ -334,7 +335,7 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
-    if (!target?.ownerDocument.contains(target)) {
+      if (!XPathUtil.contains(target?.ownerDocument, target)) {
       // The target is gone from the document. This happens when we are done with a refresh that removed the component
       return;
     }

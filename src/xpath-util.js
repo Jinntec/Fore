@@ -2,11 +2,35 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
 
+	/**
+	 * Alternative to `contains` that respects shadowroots
+	 */
+	static contains(ancestor, descendant) {
+		while (descendant) {
+			if (descendant === ancestor) {
+				return true;
+			}
+
+			if (descendant.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+				// We are passing a shadow root boundary
+				descendant = descendant.host;
+			} else {
+				descendant = descendant.parentNode;
+			}
+		}
+		return false;
+	}
+
   /**
    * Alternative to `closest` that respects subcontrol boundaries
    */
   static getClosest(querySelector, start) {
-    while (!start.matches(querySelector)) {
+    while (!start.matches || !start.matches(querySelector)) {
+      if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        // We are passing a shadow root boundary
+        start = start.host;
+        continue;
+      }
       if (start.matches('fx-fore')) {
         // Subform reached. Bail out
         return null;
