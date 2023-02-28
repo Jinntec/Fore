@@ -14,7 +14,7 @@ export class ForeComponent extends HTMLElement {
         `;
 
         const html = `
-          <fx-fore>
+          <fx-fore src="">
             <fx-message event="ready">hey from component</fx-message>
                 <fx-model>
                     <fx-instance>

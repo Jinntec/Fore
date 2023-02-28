@@ -1,0 +1,1 @@
+window.ADI.toggle();
