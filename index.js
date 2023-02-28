@@ -12,6 +12,7 @@ import './src/ui/fx-action-log.js';
 import './src/ui/fx-alert.js';
 import './src/ui/fx-control.js';
 import './src/ui/fx-container.js';
+// import './src/ui/fx-dom-inspector.js';
 import './src/ui/fx-group.js';
 import './src/ui/fx-hint.js';
 import './src/ui/fx-output.js';

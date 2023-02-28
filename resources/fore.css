@@ -271,7 +271,7 @@ fx-fore.action-log{
     content:'instance :: ' attr(id);
 }
 .action-log fx-submission::before{
-    content:'submission :: ' attr(id);
+    content:'submission ::' attr(id);
 }
 
 .action-log .action-log-debug::before{
@@ -280,4 +280,5 @@ fx-fore.action-log{
 .action-log .action-log-debug .target{
     cursor: pointer;
 }
+
 

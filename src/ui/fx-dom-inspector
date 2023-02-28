@@ -1,31 +1,37 @@
-/**
- * AcID Dom Inspector 1.0.1
- *
- * @file        acid_dom.js
- * @author      Jan Myler <info@janmyler.com>
- * @copyright   Copyright 2013, Jan Myler (http://janmyler.com)
- * @license     MIT License (http://www.opensource.org/licenses/mit-license.php)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- */
+import AbstractControl from './abstract-control.js';
 
-(function(window, document, undefined) {
-	'use strict';
+export class FxDomInspector extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.delegatedEvents = [];
+  }
 
-	var delegatedEvents = [];
+  connectedCallback() {
+    this.render();
+  }
 
-	// Console compatibility shim.
-	function consoleShim() {
-		// missing console workaround
-		if (typeof window.console === 'undefined') {
-			var console = {};
-			console.log = console.error = console.warn = console.dir = function() {};
-		}
-	}
+  render(){
+      const style = `
+        :host {
+          display:block;
+        }
+      `;
+
+      const html = `
+        <slot></slot>
+      `;
+
+      this.shadowRoot.innerHTML = `
+          <style>
+              ${style}
+          </style>
+          ${html}
+      `;
+  }
 
 	// Node types shim -- creates Node type constants if necessary
-	function nodeTypesShim() {
+	nodeTypesShim() {
 		if (!window.Node) {
 			return {
 				ELEMENT_NODE                :  1,
@@ -44,8 +50,7 @@
 		}
 	}
 
-	// Simple cross-browser event handler.
-	function addEvent(elem, evt, fn, capture) {
+	addEvent(elem, evt, fn, capture) {
 		if (typeof elem !== 'object') {
 			throw "addEvent: Expected argument elem of type object, " + typeof elem + " given.";
 		}
@@ -69,7 +74,8 @@
 	// Exclude parameter will exclude the particular element and all of its children, this works
 	// only for id selectors.
 	// Selector formats: tag name ("div"), class name (".my-class"), id ("#my-id") and any ("*").
-	function addEventDelegate(elem, evt, fn, capture, selector, store, exclude) {
+
+	addEventDelegate(elem, evt, fn, capture, selector, store, exclude) {
 		// custom event handler is registered
 		var handler = function(e) {
 			// check if target corresponds to the selector
@@ -119,34 +125,33 @@
 		addEvent(elem, evt, handler, capture);
 	}
 
-	// Simple cross-browser event removing
-	function removeEvent(elem, evt, fn, wasDelegated) {
-		if (typeof elem !== 'object') {
-			throw "addEvent: Expected argument elem of type object, " + typeof elem + " given.";
-		}
+		// Simple cross-browser event removing
+    	removeEvent(elem, evt, fn, wasDelegated) {
+    		if (typeof elem !== 'object') {
+    			throw "addEvent: Expected argument elem of type object, " + typeof elem + " given.";
+    		}
 
-		// try to find stored delegated event
-		var stored = null;
-		if (wasDelegated) {
-			for (var i = 0, len = delegatedEvents.length; i < len; ++i) {
-				stored = delegatedEvents[i];
-				if (stored.elem === elem && stored.evt === evt && stored.fn === fn) {
-					fn = stored.handle;
-					delegatedEvents.splice(i, 1);
-					break;
-				}
-			}
-		}
+    		// try to find stored delegated event
+    		var stored = null;
+    		if (wasDelegated) {
+    			for (var i = 0, len = delegatedEvents.length; i < len; ++i) {
+    				stored = delegatedEvents[i];
+    				if (stored.elem === elem && stored.evt === evt && stored.fn === fn) {
+    					fn = stored.handle;
+    					delegatedEvents.splice(i, 1);
+    					break;
+    				}
+    			}
+    		}
 
-		if (window.addEventListener) {
-			elem.removeEventListener(evt, fn, false);
-		} else {
-			elem.dettachEvent('on' + evt, fn);
-		}
-	}
-
+    		if (window.addEventListener) {
+    			elem.removeEventListener(evt, fn, false);
+    		} else {
+    			elem.dettachEvent('on' + evt, fn);
+    		}
+    	}
 	// Stops event propagation and also prevents the default behavior.
-	function pauseEvent(e){
+	 pauseEvent(e){
 		if(e.stopPropagation) {
 			e.stopPropagation();
 		}
@@ -162,7 +167,7 @@
 	}
 
 	// Create element wrapper -- allows to set attributes using the config object.
-	function newElement(elem, attrs) {
+	 newElement(elem, attrs) {
 		var el = document.createElement(elem);
 
 		attrs = attrs || {};
@@ -180,7 +185,7 @@
 	// Cls parameter may be either a string or an array listing multiple classes.
 	// Implementation uses modern element.classList API if available, dummy shim provided for older
 	// browsers.
-	function addClass(elem, cls) {
+	 addClass(elem, cls) {
 		if (typeof elem !== 'object') {
 			throw "addClass: Expected argument elem of type object, " + typeof elem + " given.";
 		}
@@ -207,7 +212,7 @@
 	// Cls parameter may be either a string or an array listing multiple classes.
 	// Implementation uses modern element.classList API if available, dummy shim provided for older
 	// browsers.
-	function removeClass(elem, cls) {
+	 removeClass(elem, cls) {
 		if (typeof elem !== 'object') {
 			throw "removeClass: Expected argument elem of type object, " + typeof elem + " given.";
 		}
@@ -230,7 +235,7 @@
 	}
 
 	// Functions checks whether the feature is supported.
-	function supported(key) {
+	 supported(key) {
 		switch (key) {
 			case 'localStorage':
 				try {
@@ -247,7 +252,6 @@
 				throw "supported: Unknown or unsupported key.";
 		}
 	}
-
 
 	// AcID DOM Inspector definition (using module pattern).
 	var ADI = (function() {
@@ -1235,9 +1239,8 @@
 		};
 	})();
 
-	// Application entry point
-	function appInit() {
-		consoleShim();
+
+	 appInit() {
 		// make public API visible to the global scope
 		window.ADI = ADI;
 
@@ -1245,4 +1248,8 @@
 
 	// Launch the app when the DOM is ready and all assets are loaded
 	addEvent(window, 'load', appInit, false);
-})(this, document);
+
+}
+if (!customElements.get('fx-dom-inspector')) {
+  customElements.define('fx-dom-inspector', FxDomInspector);
+}

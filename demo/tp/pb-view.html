@@ -127,7 +127,7 @@
             </template>
         </fx-load>
         <fx-message level="sticky">First view loaded</fx-message>
-        <fx-load attach-to="#transcript2" await="pb-update">
+        <fx-load attach-to="#transcript2" await="pb-update"  delay="1000">
             <template>
                 <pb-view id="view2" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>

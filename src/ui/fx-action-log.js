@@ -27,10 +27,19 @@ export class FxActionLog extends HTMLElement {
       }
       label{
         margin-right:0.5rem;
-        border:thin solid #efefef;
         white-space:nowrap;
         width:12rem;
         display:inline-block;
+      }
+      .log-row.empty-row summary{
+        position:relative;
+      }
+      .log-row.empty-row summary{
+        list-style:none;
+        padding-left:1rem;
+      }
+      .log-row.empty-row summary::-webkit-details-marker {
+        display: none;
       }
     `;
 
@@ -43,8 +52,8 @@ export class FxActionLog extends HTMLElement {
 
     const html = `
       <details open>
-        <summary>Action Log <span class="buttons"><button id="del"">del</a></button></span></summary>
-        <details id="filter" open>
+        <summary>Event Log <span class="buttons"><button id="del"">del</a></button></span></summary>
+        <details id="filter">
             <summary>filter <button id="reset">reset filters</button></summary>
             <div class="boxes"></div>
         </details>
@@ -77,6 +86,7 @@ export class FxActionLog extends HTMLElement {
 
     this.listenTo.forEach(item =>{
       const lbl = document.createElement('label');
+      lbl.setAttribute('title',item.description);
       lbl.innerText = item.name;
       const cbx = document.createElement('input');
       cbx.setAttribute('type', 'checkbox');
@@ -120,45 +130,56 @@ export class FxActionLog extends HTMLElement {
 
   _defaultSettings(){
     this.listenTo=[
-      {name:"action-performed",show:true},
-      {name:"deleted",show:true},
-      {name:"dialog-shown",show:true},
-      {name:"dialog-hidden",show:true},
-      {name:"error",show:true},
-      {name:"init",show:false},
-      {name:"invalid",show:true},
-      {name:"index-changed",show:true},
-      {name:"item-created",show:false},
-      {name:"loaded",show:true},
-      {name:"model-construct",show:true},
-      {name:"model-construct-done",show:true},
-      {name:"nonrelevant",show:true},
-      {name:"optional",show:true},
-      {name:"path-mutated", show:true},
-      {name:"refresh-done", show:true},
-      {name:"readonly",show:true},
-      {name:"readwrite",show:true},
-      {name:"rebuild-done",show:true},
-      {name:"required",show:true},
-      {name:"ready",show:true},
-      {name:"reload",show:true},
-      {name:"select",show:true},
-      {name:"deselect",show:true},
-      {name:"submit",show:true},
-      {name:"submit-error",show:true},
-      {name:"submit-done",show:true},
-      {name:"valid",show:false},
-      {name:"value-changed",show:true}
+      {name:"action-performed",show:true,description:'fired after an action has been performed'},
+      {name:"click",show:true,description:''},
+      {name:"deleted",show:true,description:'fired after a delete action has been executed'},
+      {name:"dialog-shown",show:true,description:'fired when a dialog has been shown'},
+      {name:"dialog-hidden",show:true,description:''},
+      {name:"error",show:true,description:''},
+      {name:"init",show:false,description:''},
+      {name:"invalid",show:true,description:''},
+      {name:"index-changed",show:true,description:''},
+      {name:"instance-loaded",show:true,description:''},
+      {name:"item-created",show:false,description:''},
+      {name:"loaded",show:true,description:''},
+      {name:"model-construct",show:true,description:''},
+      {name:"model-construct-done",show:true,description:''},
+      {name:"nonrelevant",show:true,description:''},
+      {name:"optional",show:false,description:''},
+      {name:"path-mutated", show:true,description:''},
+      {name:"refresh-done", show:true,description:''},
+      {name:"readonly",show:true,description:''},
+      {name:"readwrite",show:true,description:''},
+      {name:"rebuild-done",show:true,description:''},
+      {name:"required",show:true,description:''},
+      {name:"ready",show:true,description:''},
+      {name:"recalculate-done",show:true,description:''},
+      {name:"relevant",show:false,description:''},
+      {name:"reload",show:true,description:''},
+      {name:"select",show:true,description:''},
+      {name:"deselect",show:true,description:''},
+      {name:"submit",show:true,description:''},
+      {name:"submit-error",show:true,description:''},
+      {name:"submit-done",show:true,description:''},
+      {name:"valid",show:false,description:''},
+      {name:"value-changed",show:true, description: ''}
     ]
   }
 
   _log(e, log) {
+    if(e.target.nodeName === 'FX-ACTION-LOG') return;
     e.preventDefault();
     e.stopPropagation();
 
     const row = document.createElement('div');
     row.classList.add('log-row');
     const logRow = this._logDetails(e);
+    if(e.detail &&
+        Object.keys(e.detail).length === 0 &&
+        Object.getPrototypeOf(e.detail) === Object.prototype){
+      row.classList.add('empty-row');
+    }
+
     row.innerHTML = logRow;
 
     log.append(row);
@@ -193,19 +214,57 @@ export class FxActionLog extends HTMLElement {
   }
 
   _logDetails(e){
-    return `
-<!--      <div class="log-row">-->
-        <span class="event-name">
-          <label></label>
-          <span>${e.type}</span>
-        </span>
-        -->
-        <a href="#>"<span class="target">
-          <label></label>
-          <span class="targetNode">${e.target.nodeName}</span>
-        </span></a>
-<!--      </div>-->
+/*    if(e.detail &&
+       Object.keys(e.detail).length === 0 &&
+       Object.getPrototypeOf(e.detail) === Object.prototype){
+      console.log('e.detail empty', e.detail);
+      return `
+        <div>
+          <span class="event-name">
+            <label></label>
+            <span>${e.type}</span>
+          </span>
+          -->
+          <a href="#>"<span class="target">
+            <label></label>
+            <span class="targetNode">${e.target.nodeName}</span>
+          </span></a>
+        </div>
     `;
+    }else{*/
+      console.log('e.detail', e.type, e.detail);
+      return `
+        <details>
+          <summary>
+            <span class="event-name">
+              <label></label>
+              <span>${e.type}</span>
+            </span>
+            -->
+            <a href="#>"<span class="target">
+              <label></label>
+              <span class="targetNode">${e.target.nodeName}</span>
+            </span></a>
+          </summary>
+          ${this._listAttributes(e)}
+        </details>
+    `;
+    // }
+  }
+
+  _listAttributes(e){
+    console.log('_listAttributes',e)
+    return ``;
+    // return `${e.detail.model.id}`;
+/*
+    if(e.detail &&
+        Object.keys(e.detail).length === 0 &&
+        Object.getPrototypeOf(e.detail) === Object.prototype){
+      return ``;
+    }else{
+      return `${e.detail.map((item) => `<span>${item}</span>`)}`;
+    }
+*/
   }
 
   _highlight(element) {

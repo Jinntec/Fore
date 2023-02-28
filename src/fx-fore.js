@@ -56,6 +56,7 @@ export class FxFore extends HTMLElement {
     constructor() {
         super();
         this.model = {};
+        this.inited=false;
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
         // todo: refactoring - these should rather go into connectedcallback
         this.addEventListener('message', this._displayMessage);
@@ -216,6 +217,7 @@ export class FxFore extends HTMLElement {
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            if(this.inited) return;
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
                 // Fore.copyDom(this);
@@ -249,6 +251,7 @@ export class FxFore extends HTMLElement {
             this.model = modelElement;
 
             this._createRepeatsFromAttributes();
+            this.inited = true;
 
         });
         this.addEventListener('path-mutated', () => {
