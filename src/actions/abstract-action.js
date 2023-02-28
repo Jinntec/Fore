@@ -331,7 +331,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
     if (
       AbstractAction.outermostHandler &&
-			!AbstractAction.outermostHandler.ownerDocument.contains(AbstractAction.outermostHandler)
+			!XPathUtil.contains(AbstractAction.outermostHandler.ownerDocument, AbstractAction.outermostHandler)
     ) {
       // The old outermostHandler fell out of the document. An error has happened.
       // Just remove the old one and act like we are starting anew.
