@@ -1,4 +1,6 @@
 import '../../index.js';
+
+
 export class ForeComponent extends HTMLElement {
     constructor() {
         super();
@@ -14,21 +16,7 @@ export class ForeComponent extends HTMLElement {
         `;
 
         const html = `
-          <fx-fore src="">
-            <fx-message event="ready">hey from component</fx-message>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <greeting>Hello Universe</greeting>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-
-                <div class="static {greeting}">Greeting: {greeting}</div>
-                <fx-control ref="greeting" update-event="input">
-                    <label>Hey!</label>
-                </fx-control>
-<!--                <slot></slot>-->
+          <fx-fore src="/src/lab/template.html">
             </fx-fore>
         `;
 
