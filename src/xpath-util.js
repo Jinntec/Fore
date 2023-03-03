@@ -55,11 +55,16 @@ export class XPathUtil {
         return host;
       }
     } else */
-    if (start.parentNode && start.parentNode.nodeType !== Node.DOCUMENT_NODE) {
+    if (start.parentNode &&
+        (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) ) {
+/*
       if (start.parentNode.hasAttribute('ref')) {
         return start.parentNode;
       }
       return XPathUtil.getParentBindingElement(start.parentNode);
+*/
+
+      return start.parentNode.closest('[ref]');
     }
     return null;
   }

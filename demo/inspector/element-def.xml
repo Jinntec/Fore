@@ -6,30 +6,31 @@
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
-                <value></value>
+                <default>perform</default>
             </attribute>
             <attribute>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <name>handler</name>
+                <description></description>
                 <type>object</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
@@ -38,25 +39,25 @@
                 </description>
                 <name>observer</name>
                 <type>object</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
-                <value></value>
+                <default></default>
             </attribute>
             <attribute>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
@@ -65,7 +66,7 @@
                 </description>
                 <name>whileExpr</name>
                 <type>string</type>
-                <value></value>
+                <default></default>
             </attribute>
         </attributes>
         <description>`fx-action`
@@ -98,31 +99,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <default/>
+                <default></default>
                 <description>the repeat this action is appending to.</description>
                 <name>repeat</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
@@ -136,21 +142,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -159,27 +169,25 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
-                <default>{}</default>
+                <default></default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
@@ -191,7 +199,6 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -230,30 +237,36 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -262,21 +275,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -285,39 +302,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -386,34 +400,42 @@
         <attributes>
             <attribute>
                 <default/>
+                <description></description>
                 <name>to</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -422,21 +444,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -445,7 +471,7 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <default/>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -512,30 +538,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -544,21 +577,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -567,39 +604,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -671,30 +705,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -703,21 +744,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -726,39 +771,37 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <attribute>model</attribute>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -830,30 +873,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -862,21 +912,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -885,39 +939,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -938,32 +989,30 @@
         <path>./src/actions/fx-hide.js</path>
         <properties>
             <property>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this property</description>
                 <name>nodeset</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this property</description>
                 <name>model</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -979,30 +1028,36 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1011,21 +1066,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1046,16 +1105,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -1068,39 +1130,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -1165,38 +1224,49 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>attachTo</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>url</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1205,21 +1275,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1228,39 +1302,37 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
+                <default></default>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -1323,30 +1395,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1355,21 +1434,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1378,39 +1461,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -1482,30 +1562,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1514,21 +1601,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1537,39 +1628,36 @@
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -1591,36 +1679,37 @@
         <path>./src/actions/fx-refresh.js</path>
         <properties>
             <property>
-                <attribute>defaultAction</attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>delay</attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </property>
             <property>
-                <attribute>event</attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>handler</attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>ifExpr</attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>observer</attribute>
+                <default></default>
                 <description>The observer if given is the property on which an event is triggered. It must be an
                     ancestor of the target
                     property of an event.
@@ -1629,25 +1718,25 @@
                 <type>object</type>
             </property>
             <property>
-                <attribute>phase</attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>propagate</attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>target</attribute>
+                <default></default>
                 <description>id of target property to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>whileExpr</attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1656,13 +1745,13 @@
                 <type>string</type>
             </property>
             <property>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>inScopeVariables</attribute>
+                <default></default>
                 <name>inScopeVariables</name>
             </property>
         </properties>
@@ -1670,30 +1759,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1702,21 +1798,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1737,16 +1837,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -1759,39 +1862,35 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -1820,7 +1919,7 @@
                 <type>boolean</type>
             </property>
             <property>
-                <attribute>defaultAction</attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
@@ -1899,38 +1998,49 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>replaceNode</name>
+                <type></type>
             </attribute>
             <attribute>
                 <default/>
+                <description></description>
                 <name>with</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -1939,21 +2049,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -1974,16 +2088,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -1996,39 +2113,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -2146,30 +2260,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -2178,21 +2299,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -2213,16 +2338,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -2235,39 +2363,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -2384,30 +2509,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -2416,21 +2548,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -2451,16 +2587,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -2473,39 +2612,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -2623,30 +2759,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -2655,21 +2798,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -2690,16 +2837,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -2712,39 +2862,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -2853,34 +3000,41 @@
         <attributes>
             <attribute>
                 <default/>
+                <description></description>
                 <name>valueAttr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -2889,21 +3043,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -2924,16 +3082,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -2946,7 +3107,7 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <default/>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -2977,7 +3138,7 @@
                 <type>boolean</type>
             </property>
             <property>
-                <attribute>defaultAction</attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
@@ -3057,30 +3218,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -3089,21 +3257,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -3124,16 +3296,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -3146,39 +3321,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -3286,30 +3458,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -3318,21 +3497,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -3353,16 +3536,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -3375,39 +3561,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -3513,30 +3696,37 @@
     <element>
         <attributes>
             <attribute>
+                <default>perform</default>
                 <description>can be either 'cancel' or 'perform' (default)</description>
                 <name>defaultAction</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>delay before executing action in milliseconds</description>
                 <name>delay</name>
                 <type>number</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>event to listen for</description>
                 <name>event</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>handler</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>The observer if given is the attribute on which an event is triggered. It must be an
                     ancestor of the target
                     attribute of an event.
@@ -3545,21 +3735,25 @@
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'capture' or 'default' (default)</description>
                 <name>phase</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>can be either 'stop' or 'continue' (default)</description>
                 <name>propagate</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>id of target attribute to attach listener to</description>
                 <name>target</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>boolean XPath expression. If true loop will be executed. If an ifExpr is present this also
                     needs to be true
                     to actually run the action.
@@ -3580,16 +3774,19 @@
                 <type>boolean</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -3602,39 +3799,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -3743,16 +3937,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -3765,39 +3962,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4010,6 +4204,7 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>Setting this marker attribute will refresh the UI in a lazy fashion just updating
                     attributes being
                     in viewport.
@@ -4021,11 +4216,13 @@
             </attribute>
             <attribute>
                 <default>{}</default>
+                <description></description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
                 <default>false</default>
+                <description></description>
                 <name>ready</name>
                 <type>boolean</type>
             </attribute>
@@ -4113,16 +4310,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -4135,39 +4335,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4182,25 +4379,24 @@
                 <name>name</name>
             </property>
             <property>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this property</description>
                 <name>nodeset</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this property</description>
                 <name>model</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4208,13 +4404,13 @@
                 <type>object</type>
             </property>
             <property>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
             </property>
             <property>
-                <attribute>inScopeVariables</attribute>
+                <default></default>
                 <name>inScopeVariables</name>
             </property>
         </properties>
@@ -4302,16 +4498,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -4324,39 +4523,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4409,16 +4605,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -4431,39 +4630,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4528,16 +4724,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -4550,39 +4749,37 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
+                <default></default>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4629,7 +4826,7 @@
                 <type>boolean</type>
             </property>
             <property>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this property</description>
                 <name>nodeset</name>
                 <type>object</type>
@@ -4669,16 +4866,19 @@
     <element>
         <attributes>
             <attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
@@ -4691,39 +4891,36 @@
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>detail</attribute>
                 <default>{}</default>
                 <description>detail - event detail object</description>
                 <name>detail</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>needsUpdate</attribute>
                 <default>false</default>
                 <description>whether nor not an action needs to run the update cycle</description>
                 <name>needsUpdate</name>
                 <type>boolean</type>
             </attribute>
             <attribute>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this attribute</description>
                 <name>nodeset</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>model</attribute>
+                <default></default>
                 <description>the model of this attribute</description>
                 <name>model</name>
                 <type>object</type>
             </attribute>
             <attribute>
-                <attribute>modelItem</attribute>
                 <default>{}</default>
                 <description>The modelitem object associated to the bound node holding the evaluated state.
                 </description>
@@ -4816,7 +5013,7 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -4871,25 +5068,25 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>as</attribute>
+                <default></default>
                 <description>with value 'node' passes bound content as node</description>
                 <name>as</name>
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>update-event</attribute>
+                <default></default>
                 <description>The widget event triggering update of model</description>
                 <name>update-event</name>
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>value-prop</attribute>
+                <default></default>
                 <description>The name of the widget property to bind to</description>
                 <name>value-prop</name>
                 <type>string</type>
@@ -4972,7 +5169,7 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -5036,7 +5233,7 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -5100,12 +5297,14 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>valueAttr</name>
                 <type>string</type>
             </attribute>
@@ -5164,19 +5363,22 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>mediatype</attribute>
+                <default></default>
                 <description>mediatype</description>
                 <name>mediatype</name>
                 <type>string</type>
             </attribute>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
             </attribute>
             <attribute>
+                <default></default>
+                <description></description>
                 <name>valueAttr</name>
+                <type></type>
             </attribute>
         </attributes>
         <description>todo: review placing of value. should probably work with value attribute and not allow slotted
@@ -5234,21 +5436,24 @@
         <attributes>
             <attribute>
                 <default>false</default>
+                <description></description>
                 <name>focusOnCreate</name>
                 <type>string</type>
             </attribute>
             <attribute>
                 <default>1</default>
+                <description></description>
                 <name>index</name>
                 <type>number</type>
             </attribute>
             <attribute>
                 <default>0</default>
+                <description></description>
                 <name>repeatSize</name>
                 <type>number</type>
             </attribute>
             <attribute>
-                <default/>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
@@ -5359,20 +5564,20 @@
         <path>./src/ui/fx-repeat.js</path>
         <properties>
             <property>
-                <attribute>repeatIndex</attribute>
                 <default>1</default>
                 <name>repeatIndex</name>
                 <type>number</type>
             </property>
             <property>
-                <attribute>index</attribute>
                 <default>1</default>
                 <name>index</name>
                 <type>number</type>
             </property>
             <property>
                 <default>0</default>
+                <description></description>
                 <name>repeatSize</name>
+                <type></type>
             </property>
             <property>
                 <attribute>nodeset</attribute>
@@ -5428,13 +5633,13 @@
         <path>./src/ui/fx-repeatitem.js</path>
         <properties>
             <property>
-                <attribute>nodeset</attribute>
+                <default></default>
                 <description>the node(s) bound by this property</description>
                 <name>nodeset</name>
                 <type>object</type>
             </property>
             <property>
-                <attribute>context</attribute>
+                <default></default>
                 <description>context object for evaluation</description>
                 <name>context</name>
                 <type>object</type>
@@ -5528,7 +5733,7 @@
     <element>
         <attributes>
             <attribute>
-                <attribute>ref</attribute>
+                <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
                 <type>string</type>
