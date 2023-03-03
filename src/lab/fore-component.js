@@ -2,6 +2,10 @@ import '../../index.js';
 
 /**
  * a simple component that wraps a Fore page and puts it into shadowDom.
+ *
+ * HTML link elements passed as children will be used to construct a CSSStyleSheet that is passed
+ * to the shadowDOM.
+ * @customElement
  */
 export class ForeComponent extends HTMLElement {
     constructor() {
@@ -17,7 +21,6 @@ export class ForeComponent extends HTMLElement {
             display:block;
           }
         `;
-
         const html = `
           <fx-fore src="${this.src}"></fx-fore>
           <slot></slot>
@@ -30,6 +33,9 @@ export class ForeComponent extends HTMLElement {
             ${html}
         `;
 
+        /*
+         * wait for slotchange, then filter document.stylesheets to construct CSSStyleSheet
+         */
         const slot = this.shadowRoot.querySelector('slot');
         slot.addEventListener('slotchange', async event => {
             const children = event.target.assignedElements();
@@ -40,8 +46,6 @@ export class ForeComponent extends HTMLElement {
             const allCSS = [...document.styleSheets]
                 .map((styleSheet) => {
                     if(hostedStylesheet.find(sh => sh.href === styleSheet.href)){
-                    // if(styleSheet.ownerNode.hasAttribute('data-shadow')){
-                        console.log('doc style', styleSheet);
                         try {
                             return [...styleSheet.cssRules]
                                 .map((rule) => rule.cssText)
