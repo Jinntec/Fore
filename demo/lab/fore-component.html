@@ -31,22 +31,74 @@
         fx-output {
             display: block;
         }
+        fore-component.first{
+            margin-bottom: 1rem;
+            display: block;
+        }
     </style>
+<!--    <link rel="stylesheet" href="../../resources/fore.css">-->
+<!--    <link rel="alternate stylesheet" href="../clock.css">-->
+<!--    <link rel="alternate stylesheet" href="../clock.css" data-shadow="">-->
+
+    <!--
+        <link rel="stylesheet" href="../todo.css">-->
+<!--    <link rel="alternate stylesheet" href="../clock.css">-->
+
+<!--    <link rel="stylesheet" href="../clock.css">-->
+
+    <script type="module">
+        import 'https://unpkg.com/construct-style-sheets-polyfill';
+        import '../node_modules/@polymer/prism-element/prism-highlighter.js';
+
+    </script>
+
 </head>
 <body unresolved="unresolved">
 <div class="wrapper">
+
+    <h1>Wrapping Fore pages into a web component</h1>
+
+    <p class="note">constructable CSSStylesSheets are new and need to be polyfilled on some browsers like Safari.</p>
+
+    <p>If you prefer to encapsulate Fore pages into shadowDOM or modularize your page and hiding complex
+    sub-sections you can use the generic <code>fore-component</code>. This takes a link to the page to load plus
+    optionally some <code>link</code> elements to inject CSS into the shadowDOM.</p>
+
+    <p>This page shows two seperate Fore pages (clock and todo) assembled in one page.</p>
 <!--
     <demo-snippet>
         <template>
+-->
+            <fore-component id="clock" src="clock2.html" class="first">
+                <link rel="stylesheet" href="../../resources/fore.css">
+                <link rel="stylesheet" href="../clock.css">
+            </fore-component>
 
-
+            <fore-component src="../todo2.html" >
+                <link rel="stylesheet" href="../../resources/fore.css">
+                <link rel="stylesheet" href="../todo.css">
+<!--
+                <fore-component id="clock" src="clock2.html" class="first">
+                    <link rel="stylesheet" href="../../resources/fore.css">
+                    <link rel="stylesheet" href="../clock.css">
+                </fore-component>
+-->
+            </fore-component>
+<!--
         </template>
     </demo-snippet>
 -->
-    <fore-component></fore-component>
+
+
+
 </div>
 <script type="module" src="../demo.js"></script>
 <script type="module" src="../../src/lab/fore-component.js"></script>
-
+<!--
+<script>
+    const tmpl = document.getElementById('foo').content.cloneNode(true);
+    document.body.appendChild(tmpl);
+</script>
+-->
 </body>
 </html>
