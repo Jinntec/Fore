@@ -37,6 +37,7 @@ demo-snippet .code-container{
 .demos h1{
     /*color:var(--paper-grey-700);*/
     color:white;
+    font-size: 2rem;
 }
 h2, h3, h4{
     /*color:var(--paper-orange-900);*/
@@ -77,8 +78,9 @@ h2{
     line-height: 1.5;
 }
 p{
-    font-size:1.4rem;
+    font-size:1rem;
     font-weight: 300;
+    line-height: 1.35;
 }
 .wrapper{
     max-width: 800px;

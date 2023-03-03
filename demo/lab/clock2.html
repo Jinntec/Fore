@@ -20,6 +20,9 @@
                     <fx-setvalue ref="time" value="now()"></fx-setvalue>
                     <fx-update></fx-update>
                     <fx-refresh></fx-refresh>
+                    <fx-dispatch name="clock">
+                        <fx-property name="time" expr="time/string()"></fx-property>
+                    </fx-dispatch>
                 </fx-action>
 
                 <fx-model>

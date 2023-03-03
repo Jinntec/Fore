@@ -1,0 +1,159 @@
+.add{
+    display: inline-flex;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    margin-left: 1rem;
+}
+.add button{
+    cursor: pointer;
+    padding: 0;
+}
+.btn button{
+    border-radius: 50%;
+    border: 1px solid var(--paper-grey-500);
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+}
+#clock{
+    color:var(--paper-blue-700);
+    padding: 1rem 0;
+    font-size: 1.4rem;
+}
+fx-trigger.btn.add, fx-trigger.btn.add button{
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2rem;
+}
+fx-trigger .btn.add button:focus{
+    border:3px;
+}
+.btn button:hover{
+    background: rgba(255,255,255,0.5);
+}
+
+fx-control {
+    display: inline-block;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+fx-control[required]::after {
+    content:'*';
+    color:red;
+    margin-left:-4pt;
+}
+fx-control[readonly]::before {
+    content:'!';
+    color:blue;
+    margin-left:-4pt;
+}
+
+[label=add] {
+    background: #29B6F6;
+}
+
+fx-fore{
+    position: relative;
+}
+
+input{
+    background: rgba(255,255,255,0.3);
+    border:none;
+    padding: 0.3rem;
+    border-radius: 0.2rem;
+    font-size: 1.2rem;
+}
+
+
+fx-repeat {
+    display: block;
+    height: auto;
+}
+fx-repeatitem{
+    display: block;
+    padding: 1rem;
+
+}
+fx-repeatitem > div {
+    display: block;
+    display: grid;
+    grid-template-columns: 10% auto 30% 10%;
+    align-items: center;
+    grid-gap:0.5rem;
+}
+fx-repeatitem fx-trigger.btn.add{
+    display: none;
+}
+fx-repeatitem[repeat-index] fx-trigger.btn.add{
+    display: block;
+    position: absolute;
+    right: 0.5rem;
+}
+
+fx-trigger{
+    display: inline-block;
+}
+h1{
+    display: flex;
+    align-items: center;
+}
+.info{
+    font-size: 1.2rem;
+}
+.info.big{
+    font-size:1.4rem;
+    padding: 0.5rem 0;
+    color:var(--paper-green-500)
+}
+.info.open{
+    color:var(--paper-orange-500);
+}
+input[type=text]{
+    width: 100%;
+    font-weight: 300;
+    color:var(--paper-grey-900);
+    border-bottom: 1px solid;
+}
+input[type=checkbox]{
+    font-size: 1.4rem;
+}
+
+.nonrelevant{
+    display: none;
+}
+[repeat-index] {
+    border-radius: 10px;
+    /*box-shadow: rgb(0 0 0 / 10%) 1px 1px 14px;*/
+    border: 1px solid var(--paper-grey-300);
+    background: rgba(255,255,255,0.5);
+}
+[repeat-index] input{
+    color:black;
+    font-weight: 500;
+}
+#task input{
+    text-decoration:none;
+    opacity: 1;
+    transition: all 1s;
+}
+#task.true input{
+    text-decoration:line-through;
+    opacity: 0.4;
+    color:green;
+}
+#task.false input{
+    color:orange;
+}
+.wrapper{
+    height:auto;
+    max-width:800px;
+    margin: 0 auto;
+    opacity: 0.95;
+    position: relative;
+    min-height:80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}

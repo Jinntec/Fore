@@ -59,7 +59,6 @@ export class ForeComponent extends HTMLElement {
             this.shadowRoot.adoptedStyleSheets = [sheet];
         });
 
-
     }
 
 }
