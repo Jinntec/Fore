@@ -381,6 +381,7 @@ function getVariablesInScope(formElement) {
 			if (varElementOrValue.nodeType) {
 				// We are a var element, set the value to the value computed there
                 variables[key] = varElementOrValue.value;
+                // variables[key] = varElementOrValue.inScopeVariables.get(key);
 			} else {
 				// We are a direct value. This is used to leak in event variables
                 variables[key] = varElementOrValue;
