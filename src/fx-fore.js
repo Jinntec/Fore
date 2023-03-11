@@ -145,11 +145,13 @@ export class FxFore extends HTMLElement {
         `;
 
         const html = `
+           <noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
+
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
            <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" close="true" position="left" gravity="bottom"></jinn-toast>
-           <slot></slot>
+           <slot id="default"></slot>
            <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
                 <div class="popup">
@@ -158,6 +160,7 @@ export class FxFore extends HTMLElement {
                     <div id="messageContent"></div>
                 </div>
            </div>
+           <slot name="event"></slot>
         `;
 
         this.attachShadow({mode: 'open'});
@@ -214,7 +217,7 @@ export class FxFore extends HTMLElement {
             return;
         }
 
-        const slot = this.shadowRoot.querySelector('slot');
+        const slot = this.shadowRoot.querySelector('slot#default');
         slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
             if(this.inited) return;

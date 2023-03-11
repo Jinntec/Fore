@@ -22,9 +22,9 @@
     font-size: 1.4rem;
 }
 fx-trigger.btn.add, fx-trigger.btn.add button{
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
 }
 fx-trigger .btn.add button:focus{
     border:3px;

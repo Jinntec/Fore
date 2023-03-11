@@ -22,8 +22,9 @@ export class ForeComponent extends HTMLElement {
           }
         `;
         const html = `
-          <fx-fore src="${this.src}"></fx-fore>
-          <slot></slot>
+          <fx-fore src="${this.src}">
+          </fx-fore>
+          <slot id="default"></slot>
         `;
 
         this.shadowRoot.innerHTML = `
@@ -36,7 +37,7 @@ export class ForeComponent extends HTMLElement {
         /*
          * wait for slotchange, then filter document.stylesheets to construct CSSStyleSheet
          */
-        const slot = this.shadowRoot.querySelector('slot');
+        const slot = this.shadowRoot.querySelector('#default');
         slot.addEventListener('slotchange', async event => {
             const children = event.target.assignedElements();
             const hostedStylesheet = children.filter(
@@ -62,6 +63,25 @@ export class ForeComponent extends HTMLElement {
             sheet.replaceSync(allCSS);
             this.shadowRoot.adoptedStyleSheets = [sheet];
         });
+
+/*
+        const eventSlot = this.shadowRoot.querySelector('slot[name="event"]');
+        eventSlot.addEventListener('slotchange', async event => {
+            const children = event.target.assignedElements();
+            console.log('events', children)
+        });
+*/
+        const eventTmpl = this.querySelector('fx-action');
+        if(eventTmpl){
+            // const clone = eventTmpl.content.cloneNode(true);
+            const clone = eventTmpl.cloneNode(true);
+            this.removeChild(eventTmpl);
+            // const content = document.importNode(clone, true);
+
+            const fore = this.shadowRoot.querySelector('fx-fore');
+            // fore.appendChild(content.firstElementChild);
+            fore.appendChild(clone);
+        }
 
     }
 

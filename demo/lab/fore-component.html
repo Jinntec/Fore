@@ -73,14 +73,17 @@
         <template>
 -->
             <fore-component id="clock" src="clock2.html" class="first">
-                <link rel="stylesheet" href="../../resources/fore.css">
-                <link rel="stylesheet" href="../clock.css">
-
+                <link rel="stylesheet" href="../../resources/fore.css"/>
+                <link rel="stylesheet" href="./clock.css"/>
             </fore-component>
 
+    <!--                            <fx-action slot="event" event="clock" target="#clock" if="string-length(instance('helper')/time) = 0">-->
                     <fore-component src="todo2.html" >
-                        <link rel="stylesheet" href="../../resources/fore.css">
-                        <link rel="stylesheet" href="todo.css">
+                        <link rel="stylesheet" href="../../resources/fore.css"/>
+                        <link rel="stylesheet" href="todo.css"/>
+                        <fx-action event="clock">
+                            <fx-message>{event('time')}</fx-message>
+                        </fx-action>
 
 <!--
                         <fore-component id="clock" src="clock2.html" class="first">
