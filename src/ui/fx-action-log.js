@@ -136,6 +136,7 @@ export class FxActionLog extends HTMLElement {
       {name:"dialog-shown",show:true,description:'fired when a dialog has been shown'},
       {name:"dialog-hidden",show:true,description:''},
       {name:"error",show:true,description:''},
+      {name:"execute-action",show:true,description:''},
       {name:"init",show:false,description:''},
       {name:"invalid",show:true,description:''},
       {name:"index-changed",show:true,description:''},
