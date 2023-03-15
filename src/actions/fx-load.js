@@ -1,8 +1,8 @@
 import {AbstractAction} from './abstract-action.js';
-import {evaluateXPathToString, resolveId} from "../xpath-evaluation";
+import {evaluateXPathToString, resolveId} from "../xpath-evaluation.js";
 import getInScopeContext from '../getInScopeContext.js';
-import {XPathUtil} from "../xpath-util";
-import {Fore} from "../fore";
+import {XPathUtil} from "../xpath-util.js";
+import {Fore} from "../fore.js";
 
 /**
  * `fx-message`
@@ -82,7 +82,7 @@ class FxLoad extends AbstractAction {
                 }
 				if (this.awaitEvent) {
 					let resolveEvent;
-					const waitForEvent = new Promise((resolve, _reject) => {
+					const waitForEvent = new Promise((resolve) => {
 						resolveEvent = resolve;
 					});
 					const eventListener = () => {
@@ -97,7 +97,7 @@ class FxLoad extends AbstractAction {
 
 					this.needsUpdate  = true;
 
-					Fore.dispatch(this, 'loaded', {attachPoint:this.attachTo, content:content});
+					Fore.dispatch(this, 'loaded', {attachPoint:this.attachTo, content});
 					return;
 				}
 

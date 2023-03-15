@@ -2,7 +2,6 @@
  * drawdown.js
  * (c) Adam Leggett
  */
-
 function markdown(src) {
   const rx_lt = /</g;
   const rx_gt = />/g;

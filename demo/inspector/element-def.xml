@@ -27,7 +27,8 @@
                 <default></default>
             </attribute>
             <attribute>
-                <description>boolean XPath expression. If true the action will be executed.</description>
+                <description>boolean XPath
+                    expression. If true the action will be executed.</description>
                 <name>ifExpr</name>
                 <type>string</type>
                 <default></default>

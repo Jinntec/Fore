@@ -19,8 +19,9 @@ import getInScopeContext from './getInScopeContext.js';
  * Note: why is fx-bind not extending BoundElement? Though fx-bind has a 'ref' attr it is not bound in the sense of
  * getting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by
  * BoundElements to track their state.
+ *
+ * @customElements
  */
-// export class FxBind extends HTMLElement {
 export class FxBind extends foreElementMixin(HTMLElement) {
   static READONLY_DEFAULT = false;
 

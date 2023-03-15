@@ -1,7 +1,12 @@
-import getInScopeContext from "./getInScopeContext";
-import {evaluateXPathToString} from "./xpath-evaluation";
+import getInScopeContext from "./getInScopeContext.js";
+import {evaluateXPathToString} from "./xpath-evaluation.js";
 import { XPathUtil } from "./xpath-util.js";
 
+/**
+ * Class hosting common utility functions used throughout all fore elements
+ *
+ * @example ../doc/demo.html
+ */
 export class Fore {
   static READONLY_DEFAULT = false;
 

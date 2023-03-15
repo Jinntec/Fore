@@ -6,14 +6,16 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {Fore} from './fore.js';
 
 /**
- * Mixin containing all general functions that are shared by all Fore element classes.
+ * foreElementMixin bla foo
+ * @mixin
  * @param superclass
- * @returns {{readonly properties: {ref: {type: StringConstructor}, context: {type: ObjectConstructor}, nodeset: {type: ObjectConstructor}, model: {type: ObjectConstructor}, inScopeVariables: {type: MapConstructor}, modelItem: {type: ObjectConstructor}}, new(): ForeElementMixin, context: null, model: null, modelItem: {}, ref: *|string, inScopeVariables: null, nodeset: *, prototype: ForeElementMixin}}
  */
 export const foreElementMixin = superclass =>
-  class ForeElementMixin extends superclass {
+
+    class ForeElementMixin extends superclass {
     static get properties() {
       return {
         /**

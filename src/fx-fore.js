@@ -542,10 +542,9 @@ export class FxFore extends HTMLElement {
     }
 
     /**
-     * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
-     * @param input The string to parse for expressions
+     * evaluate a template expression on a node either text- or attribute node.
+     * @param expr The string to parse for expressions
      * @param node the node which will get updated with evaluation result
-     * @param form the form element
      */
     evaluateTemplateExpression(expr, node) {
         const replaced = expr.replace(/{[^}]*}/g, match => {

@@ -1,4 +1,4 @@
-import {AbstractAction} from "./abstract-action";
+import {AbstractAction} from "./abstract-action.js";
 
 /**
  * `fx-setfocus`
@@ -8,7 +8,9 @@ import {AbstractAction} from "./abstract-action";
  */
 export class FxSetfocus extends AbstractAction {
   connectedCallback() {
-      super.connectedCallback();
+      if(super.connectedCallback){
+          super.connectedCallback();
+      }
       this.control = this.hasAttribute('control') ? this.getAttribute('control') : null;
   }
 

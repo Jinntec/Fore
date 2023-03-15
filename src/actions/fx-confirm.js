@@ -9,7 +9,9 @@ import {FxAction} from "./fx-action.js";
  */
 export class FxConfirm extends FxAction {
   connectedCallback() {
-    super.connectedCallback();
+    if(super.connectedCallback){
+      super.connectedCallback();
+    }
     this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
   }
 

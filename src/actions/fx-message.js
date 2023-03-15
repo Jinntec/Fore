@@ -1,6 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
-import {evaluateXPathToString} from "../xpath-evaluation";
-import {Fore} from "../fore";
+import {evaluateXPathToString} from "../xpath-evaluation.js";
+import {Fore} from "../fore.js";
 import getInScopeContext from '../getInScopeContext.js';
 
 /**

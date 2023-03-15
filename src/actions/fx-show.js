@@ -3,15 +3,17 @@ import { FxAction } from './fx-action.js';
 import { resolveId } from '../xpath-evaluation.js';
 
 /**
- * `fx-confirm`
+ * `fx-show`
  * Displays a simple confirmation before actually executing the nested actions.
  *
  * @customElement
- * @demo demo/project.html
+ * @event fx-show dispatched when dialog is shown
  */
 export class FxShow extends FxAction {
   connectedCallback() {
-    super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
     this.dialog = this.getAttribute('dialog');
     if (!this.dialog) {
       Fore.dispatch(this, 'error', { message: 'dialog does not exist' });

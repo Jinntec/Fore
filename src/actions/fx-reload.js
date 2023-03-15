@@ -12,7 +12,9 @@ import { AbstractAction } from './abstract-action.js';
 export class FxReload extends AbstractAction {
 
   connectedCallback() {
-    super.connectedCallback();
+    if(super.connectedCallback){
+      super.connectedCallback();
+    }
     this.addEventListener('reload', () => {
       window.location.reload();
     },{once:true});

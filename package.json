@@ -49,6 +49,8 @@
     "@webcomponents/webcomponentsjs": "^2.6.0",
     "deepmerge": "^4.2.2",
     "es-dev-server": "^2.1.0",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^8.16.0",
     "husky": "^8.0.1",
     "jsdoc": "^3.6.10",
@@ -81,7 +83,8 @@
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
-    "postinstall": "cd demo && npm i"
+    "postinstall": "cd demo && npm i",
+    "esdoc": "./node_modules/.bin/esdoc && open ./docs/index.html"
   },
   "keywords": [
     "Fore",
@@ -105,7 +108,11 @@
     "ignorePatterns": [
       "demo/**",
       "resources/**",
-      "doc/**/*"
+      "node_modules/**",
+      "doc/**/*",
+      "dist/**/*",
+      "src/lab/**",
+      "docs/**/*"
     ],
     "rules": {
       "no-console": "off",
