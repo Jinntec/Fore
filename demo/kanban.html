@@ -208,7 +208,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <fx-fore>
+    <fx-fore id="root">
         <fx-model>
             <fx-instance>
                 <data>
@@ -232,7 +232,6 @@
             </fx-instance>
         </fx-model>
         <h1>Kanban Board</h1>
-
         <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">
             <template>
                 <div class="header {@name}">
@@ -357,5 +356,8 @@
     // });
 </script>
 <script type="module" src="./demo.js"></script>
+			<fx-dom-inspector></fx-dom-inspector>
+
+
 </body>
 </html>

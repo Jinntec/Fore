@@ -67,9 +67,10 @@ export class FxActionLog extends HTMLElement {
         </style>
         ${html}
     `;
-    const fore = this.parentNode;
-    if(!fore || fore.nodeName !== 'FX-FORE'){
-      console.error('Fore not found. fx-fore element must be a direct parent of fx-action-log');
+
+    const fore = window.document.querySelector('fx-fore')	  ;
+    if (!fore || fore.nodeName !== 'FX-FORE') {
+      console.error('Fore not found. fx-fore element must be an ancestor of fx-action-log');
     }
     const log = this.shadowRoot.querySelector('#log');
     fore.classList.add('action-log');
@@ -80,7 +81,7 @@ export class FxActionLog extends HTMLElement {
           this._log(e,log);
         });
       }
-    })
+    });
 
     const boxes = this.shadowRoot.querySelector('.boxes');
 
@@ -96,36 +97,33 @@ export class FxActionLog extends HTMLElement {
       }
       lbl.append(cbx);
       cbx.addEventListener('click', e =>{
-        console.log('filter box ticked', e)
+          console.log('filter box ticked', e);
         if(!e.target.checked){
-          //remove event listener
+          // remove event listener
           const fore = document.querySelector('fx-fore');
           fore.removeEventListener(item.name,this._log);
           // e.preventDefault();
           // e.stopPropagation();
         }
         const t = this.listenTo.find(evt => evt.name === item.name);
-        e.target.checked ? t.show=true:t.show=false
+          e.target.checked ? t.show=true : t.show=false;
         // console.log('filter', this.listenTo);
         localStorage.setItem('fx-action-log-filters', JSON.stringify(this.listenTo));
-      })
+      });
       boxes.appendChild(lbl);
     });
 
-    //buttons
+    // buttons
     const del = this.shadowRoot.querySelector('#del');
     del.addEventListener('click', e => {
       this.shadowRoot.querySelector('#log').innerHTML = '';
-    })
+    });
     const reset = this.shadowRoot.querySelector('#reset');
     reset.addEventListener('click', e => {
       this._defaultSettings();
       localStorage.removeItem('fx-action-log-filters');
       window.location.reload();
     });
-
-
-
   }
 
   _defaultSettings(){
@@ -163,8 +161,10 @@ export class FxActionLog extends HTMLElement {
       {name:"submit-error",show:true,description:''},
       {name:"submit-done",show:true,description:''},
       {name:"valid",show:false,description:''},
-      {name:"value-changed",show:true, description: ''}
-    ]
+      {name:"value-changed",show:true, description: ''},
+      {name:"outermost-action-start",show:true, description: ''},
+      {name:"outermost-action-end",show:true, description: ''}
+    ];
   }
 
   _log(e, log) {
@@ -193,7 +193,7 @@ export class FxActionLog extends HTMLElement {
     logRowTarget.addEventListener('click', e => {
       const alreadyLogged = document.querySelectorAll('.fx-action-log-debug');
       alreadyLogged.forEach(logged => {
-        logged.classList.remove('fx-action-log-debug')
+          logged.classList.remove('fx-action-log-debug');
       });
 
       targetElement.dispatchEvent(
@@ -207,7 +207,7 @@ export class FxActionLog extends HTMLElement {
 
 
       targetElement.classList.add('fx-action-log-debug');
-      targetElement.setAttribute('data-name', targetElement.nodeName)
+		targetElement.setAttribute('data-name', targetElement.nodeName);
       this._highlight(targetElement);
 
     });
@@ -232,7 +232,7 @@ export class FxActionLog extends HTMLElement {
           </span></a>
         </div>
     `;
-    }else{*/
+    }else{ */
       console.log('e.detail', e.type, e.detail);
       return `
         <details>
@@ -247,7 +247,14 @@ export class FxActionLog extends HTMLElement {
               <span class="targetNode">${e.target.nodeName}</span>
             </span></a>
           </summary>
-          ${this._listAttributes(e)}
+          <details>${JSON.stringify(e.detail, (item) => {
+if (typeof item  === 'object') {
+if ('outerHTML' in item) {
+ return item.outerHTML;
+}
+}
+return item;
+})}</details>
         </details>
     `;
     // }
@@ -269,16 +276,15 @@ export class FxActionLog extends HTMLElement {
   }
 
   _highlight(element) {
-    let defaultBG = element.style.backgroundColor;
-    let defaultTransition = element.style.transition;
+    const defaultBG = element.style.backgroundColor;
+    const defaultTransition = element.style.transition;
 
     element.style.transition = "background 1s";
     element.style.backgroundColor = "#FDFF47";
 
-    setTimeout(function()
-    {
+    setTimeout(() => {
       element.style.backgroundColor = defaultBG;
-      setTimeout(function() {
+      setTimeout(() => {
         element.style.transition = defaultTransition;
       }, 400);
     }, 400);

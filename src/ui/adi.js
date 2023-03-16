@@ -10,8 +10,10 @@ import {
     drawAttrRow,
 } from './adi/helpers.js';
 
+const nodeByPath = new Map();
+
 class ADI {
-    constructor() {
+    constructor(rootElement) {
         this.uiView = null;
         this.menuView = null;
         this.domView = null;
@@ -42,7 +44,7 @@ class ADI {
             nodeTypes: [1, 3, 8, 9],
         };
 
-        this.drawUI();
+        this.drawUI(rootElement);
         this.registerEvents();
         this.drawDOM(document, this.domView.querySelector('.adi-tree-view'), true);
     }
@@ -54,14 +56,9 @@ class ADI {
         }
 
         let elem = document;
-        const path = JSON.parse(this.activeElement.getAttribute('data-js-path')) || [];
+        const path = this.activeElement.getAttribute('data-js-path');
 
-        if (path[0] !== '') {
-            for (let i = 0, len = path.length; i < len; i += 1) {
-                elem = elem.childNodes[path[i]];
-            }
-        }
-
+		elem = nodeByPath.get(path);
         return elem;
     }
 
@@ -136,6 +133,8 @@ class ADI {
                 'data-css-path': path.cssPath,
                 'data-js-path': JSON.stringify(path.jsPath),
             });
+
+			nodeByPath.set(JSON.stringify(path.jsPath), node);
             let tagEnd = null;
 
             if (containsOnlyText(node)) {
@@ -287,7 +286,7 @@ class ADI {
     }
 
     // Renders the UI
-    drawUI() {
+    drawUI(rootElement) {
         this.uiView = newElement('div', {
             id: 'adi-wrapper',
             class: this.options.transparent ? 'transparent' : '',
@@ -295,7 +294,10 @@ class ADI {
         this.domView = newElement('div', {id: 'adi-dom-view'});
         const domViewContent = newElement('div', {class: 'adi-content', id: 'detailsView'});
         this.attrView = newElement('div', {id: 'adi-attr-view'});
+		this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
+
         const attrViewContent = newElement('div', {class: 'adi-content'});
+
         const horizSplit = newElement('div', {id: 'adi-horiz-split'});
         const vertSplit = newElement('div', {id: 'adi-vert-split'});
         const domTree = newElement('ul', {class: 'adi-tree-view'});
@@ -307,6 +309,10 @@ class ADI {
         const naviButtons = newElement('div', {class: 'adi-menu-wrap'});
         const naviConfig = newElement('a', {class: 'adi-menu-config', title: 'Settings'});
         const naviLookup = newElement('a', {class: 'adi-menu-lookup', title: 'Lookup tool'});
+
+		this.vertSplit = vertSplit;
+		this.horizSplit = horizSplit;
+
         this.optsView = drawOptions();
 
         // put UI together
@@ -330,8 +336,7 @@ class ADI {
 
         // cache UI object and append to the DOM
 
-        // #### here it attaches to the body
-        document.getElementsByTagName('body')[0].appendChild(this.uiView);
+        rootElement.appendChild(this.uiView);
         // document.querySelector('#inspector').appendChild(wrapper);
 
         this.refreshUI(true);
@@ -601,10 +606,6 @@ class ADI {
 
         this.checkPathOverflow();
         this.drawAttrs(this.getSelected());
-        const fore = document.createElement('fx-fore');
-        fore.setAttribute('src', 'inspector/inspector.html');
-        // const detailsView = document.getElementById('detailsView');
-        // detailsView.appendChild(fore);
     }
 
     // Checks if pathView is overflowing or not
@@ -643,12 +644,9 @@ class ADI {
             target = target.parentNode.querySelector('.adi-normal-node');
         }
 
-        const path = JSON.parse(target.getAttribute('data-js-path')) || [];
+        const path = target.getAttribute('data-js-path');
 
-        // find the element
-        for (let i = 0, len = path.length; i < len; i += 1) {
-            node = node.childNodes[path[i]];
-        }
+		node = nodeByPath.get(path);
 
         if (node) {
             if (e.type === 'mouseover') {
@@ -834,20 +832,13 @@ class ADI {
             }
         }
 
-        if (window.addEventListener) {
-            elem.this.removeEventListener(evt, fn, false);
-        } else {
-            elem.dettachEvent(`on${evt}`, fn);
-        }
+        elem.dettachEvent(`on${evt}`, fn);
     }
 
     // Event registration
     registerEvents() {
-        const vertSplit = document.getElementById('adi-vert-split');
-        const horizSplit = document.getElementById('adi-horiz-split');
-
         // events for splitters
-        vertSplit.addEventListener(
+        this.vertSplit.addEventListener(
             'mousedown',
             e => {
                 e = e || window.event;
@@ -858,7 +849,7 @@ class ADI {
             false,
         );
 
-        horizSplit.addEventListener(
+        this.horizSplit.addEventListener(
             'mousedown',
             e => {
                 e = e || window.event;
@@ -994,6 +985,25 @@ class ADI {
             event => this.handleLookup(event),
             false,
         );
+
+		document.addEventListener('handle-active', (e) => {
+			if (e.detail.selected === this.getSelected()) {
+				// We caused this. ignore
+				return;
+			}
+			const {selected} = e.detail;
+			const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(build(selected))}']`);
+        // make it visible (scroll)
+        if (this.options.makeVisible) {
+            const wrap = this.domView.querySelector('.adi-content');
+            if (target.offsetTop >= wrap.clientHeight || target.offsetTop <= wrap.scrollTop) {
+                wrap.scrollTop = target.offsetTop - Math.floor(wrap.clientHeight / 2);
+            }
+        }
+
+        this.checkPathOverflow();
+        this.drawAttrs(this.getSelected());
+		});
 
         // options events
         this.addEventDelegate(this.optsView, 'change', (event) => this.changeOption(event), false, 'input');

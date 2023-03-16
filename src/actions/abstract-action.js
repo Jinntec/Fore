@@ -8,6 +8,24 @@ async function wait(howLong) {
   return new Promise(resolve => setTimeout(() => resolve(), howLong));
 }
 
+class ResolvableId {
+	get getValueSpace() {
+		window.querySelectorAll('[id]').map(ele =>ele.getAttribute('id'));
+	}
+}
+
+class Enum {
+	constructor (values) {
+		this._values = values;
+	}
+	get visualization () {
+		return 'select';
+	}
+	get getValueSpace() {
+		return this._values;
+	}
+}
+
 /**
  * Superclass for all action elements. Provides basic wiring of events to targets as well as
  * handle conditionals and loops of actions.
@@ -27,7 +45,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * can be either 'cancel' or 'perform' (default)
        */
       defaultAction:{
-        type: String
+		  type: new Enum(['cancel', 'perform'])
       },
       /**
        * delay before executing action in milliseconds
@@ -85,7 +103,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * id of target element to attach listener to
        */
       target: {
-        type: String,
+        type: ResolvableId,
       },
       /**
        * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
@@ -175,7 +193,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 */
     if(this.propagate === 'stop'){
-      console.log('event propagation stopped', e)
+      console.log('event propagation stopped', e);
       e.stopPropagation();
     }
     if (this.defaultAction === 'cancel') {
@@ -203,7 +221,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this,
       );
       // console.log('starting outermost handler',this);
-      AbstractAction.outermostHandler = this;
+		AbstractAction.outermostHandler = this;
+		this.dispatchEvent(new CustomEvent('outermost-action-start', {
+          composed: true,
+          bubbles: true,
+			cancelable:true, detail: {cause: e?.type}}));
     }
 
     if (AbstractAction.outermostHandler !== this) {
@@ -299,7 +321,12 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
-      console.timeEnd('outermostHandler');
+		console.timeEnd('outermostHandler');
+		this.dispatchEvent(new CustomEvent('outermost-action-end', {
+          composed: true,
+          bubbles: true,
+			cancelable:true}));
+
 
     }
     resolveThisEvent();
