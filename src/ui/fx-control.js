@@ -40,6 +40,15 @@ export default class FxControl extends XfAbstractControl {
     this.attachShadow({ mode: 'open' });
   }
 
+	static get properties() {
+		return {
+			...XfAbstractControl.properties,
+			initial: {
+				type: Boolean
+			}
+		};
+	}
+
   connectedCallback() {
     this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
     this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
@@ -143,7 +152,7 @@ export default class FxControl extends XfAbstractControl {
 
     this.template = this.querySelector('template');
     this.boundInitialized = false;
-    this.static = this.widget.hasAttribute('static')? true:false;
+    this.static = !!this.widget.hasAttribute('static');
     // console.log('template',this.template);
   }
 
