@@ -1,3 +1,4 @@
+import {XPathUtil} from "../xpath-util";
 
 export class FxActionLog extends HTMLElement {
   constructor() {
@@ -13,14 +14,41 @@ export class FxActionLog extends HTMLElement {
         display:block;
         margin-top:1rem;
         position:relative;
+        max-width:40em;
       }
       .buttons button{
         margin-right:0.5rem;
       }
+      .info{
+        padding:0.25em;
+      }
+      ol{
+        background: #efefef;
+        padding: 0.5em 1.5em;
+      }
+      li .info{
+        margin:0.25em 0;
+      }
+      .info{
+        display:grid;
+        grid-template-columns:repeat(2, 1fr);
+        background:orange;
+      }
+      .action.info{
+        background:lightblue;
+      }
+      
       .event-name{
         width:14rem;
         display:inline-block;
       }
+/*
+      .event-name::before{
+        content:'triggered by';
+        font-size:0.8em;
+        text-decoration:italic;
+      }
+*/
       #filter{
         padding:1rem;
         display:flex;
@@ -28,8 +56,12 @@ export class FxActionLog extends HTMLElement {
       label{
         margin-right:0.5rem;
         white-space:nowrap;
-        width:12rem;
         display:inline-block;
+      }
+      .log-row{
+        margin:0.25em 0;
+        padding:0.5em;
+        position:relative;
       }
       .log-row.empty-row summary{
         position:relative;
@@ -40,6 +72,9 @@ export class FxActionLog extends HTMLElement {
       }
       .log-row.empty-row summary::-webkit-details-marker {
         display: none;
+      }
+      .outermost{
+        background:lightsteelblue;
       }
     `;
 
@@ -67,9 +102,10 @@ export class FxActionLog extends HTMLElement {
         </style>
         ${html}
     `;
-    const fore = this.parentNode;
-    if(!fore || fore.nodeName !== 'FX-FORE'){
-      console.error('Fore not found. fx-fore element must be a direct parent of fx-action-log');
+
+    const fore = window.document.querySelector('fx-fore');
+    if(!fore){
+      console.error('fx-fore element not found in this page.');
     }
     const log = this.shadowRoot.querySelector('#log');
     fore.classList.add('action-log');
@@ -80,7 +116,7 @@ export class FxActionLog extends HTMLElement {
           this._log(e,log);
         });
       }
-    })
+    });
 
     const boxes = this.shadowRoot.querySelector('.boxes');
 
@@ -96,7 +132,7 @@ export class FxActionLog extends HTMLElement {
       }
       lbl.append(cbx);
       cbx.addEventListener('click', e =>{
-        console.log('filter box ticked', e)
+        console.log('filter box ticked', e);
         if(!e.target.checked){
           //remove event listener
           const fore = document.querySelector('fx-fore');
@@ -105,18 +141,26 @@ export class FxActionLog extends HTMLElement {
           // e.stopPropagation();
         }
         const t = this.listenTo.find(evt => evt.name === item.name);
-        e.target.checked ? t.show=true:t.show=false
+        e.target.checked ? t.show=true:t.show=false;
         // console.log('filter', this.listenTo);
         localStorage.setItem('fx-action-log-filters', JSON.stringify(this.listenTo));
       })
       boxes.appendChild(lbl);
     });
 
+        document.addEventListener('outermost-action-start', e => {
+            this.outermost = true;
+        },{capture:true});
+        document.addEventListener('outermost-action-end', e => {
+            this.outermost = false;
+            this.outermostAppender = null;
+        },{capture:true});
+
     //buttons
     const del = this.shadowRoot.querySelector('#del');
     del.addEventListener('click', e => {
       this.shadowRoot.querySelector('#log').innerHTML = '';
-    })
+    });
     const reset = this.shadowRoot.querySelector('#reset');
     reset.addEventListener('click', e => {
       this._defaultSettings();
@@ -136,6 +180,7 @@ export class FxActionLog extends HTMLElement {
       {name:"dialog-shown",show:true,description:'fired when a dialog has been shown'},
       {name:"dialog-hidden",show:true,description:''},
       {name:"error",show:true,description:''},
+      {name: "execute-action", show: true, description: ''},
       {name:"init",show:false,description:''},
       {name:"invalid",show:true,description:''},
       {name:"index-changed",show:true,description:''},
@@ -162,14 +207,19 @@ export class FxActionLog extends HTMLElement {
       {name:"submit-error",show:true,description:''},
       {name:"submit-done",show:true,description:''},
       {name:"valid",show:false,description:''},
-      {name:"value-changed",show:true, description: ''}
-    ]
+            {name: "value-changed", show: true, description: ''},
+            {name: "outermost-action-start", show: true, description: ''},
+            {name: "outermost-action-end", show: true, description: ''}
+        ];
   }
 
   _log(e, log) {
     if(e.target.nodeName === 'FX-ACTION-LOG') return;
     e.preventDefault();
     e.stopPropagation();
+
+
+
 
     const row = document.createElement('div');
     row.classList.add('log-row');
@@ -182,12 +232,25 @@ export class FxActionLog extends HTMLElement {
 
     row.innerHTML = logRow;
 
-    log.append(row);
+    if(this.outermost){
+      /*
+      outermost-action-start and outermost-action-end are use as marker events only to start/end a list.
+      They don't have aditional information to log.
+       */
+      if(e.type === 'outermost-action-start') return; // we don't want this event to actualy log something
+      if(!this.outermostAppender){
+        this.outermostAppender = document.createElement('ol');
+        log.append(this.outermostAppender);
+      }
+      const li = document.createElement('li');
+      li.innerHTML = logRow;
+      this.outermostAppender.append(li);
+    }else{
+      log.append(row);
+    }
+    const logRowTarget = row.querySelector('.event-target');
+    if(!logRowTarget) return;
 
-    // const parser = new DOMParser();
-    // const logElements =  parser.parseFromString(logRow, 'text/html')
-    // const logRowTarget = logElements.querySelector('.target');
-    const logRowTarget = row.querySelector('.target');
     const targetElement = e.target;
     logRowTarget.addEventListener('click', e => {
       const alreadyLogged = document.querySelectorAll('.fx-action-log-debug');
@@ -214,41 +277,48 @@ export class FxActionLog extends HTMLElement {
   }
 
   _logDetails(e){
-/*    if(e.detail &&
-       Object.keys(e.detail).length === 0 &&
-       Object.getPrototypeOf(e.detail) === Object.prototype){
-      console.log('e.detail empty', e.detail);
-      return `
-        <div>
-          <span class="event-name">
-            <label></label>
-            <span>${e.type}</span>
-          </span>
-          -->
-          <a href="#>"<span class="target">
-            <label></label>
-            <span class="targetNode">${e.target.nodeName}</span>
-          </span></a>
+     const {type} = e;
+     // console.log('>>>> event type', type)
+    const path = XPathUtil.getPath(e.target);
+    switch (type){
+      case 'outermost-action-start':
+        return `start`;
+        break;
+      case 'outermost-action-end':
+        return ``;
+        break;
+      case 'execute-action':
+        const stripped = e.detail.action.nodeName.split('-')[1];
+
+        switch (e.detail.action.nodeName){
+          case 'FX-SEND':
+            return `
+              <div class="info action"
+                  <label class="action-name">${stripped} ${e.detail.action.getAttribute('submission')}</label>
+                  <a href="#" class="event-name">${e.detail.event}</a>
+              </div>
+            `;
+            break;
+          default:
+            return `
+              <div class="info action">
+                  <label class="action-name">${stripped}</label>
+                  <a href="#" class="event-name">${e.detail.event}</a>
+              </div>
+            `;
+        }
+        break;
+      default:
+        return `
+        <div class="info event"
+            <label class="event-name">${e.type}</label>
+            <a href="#" class="event-target" title="${path}">${e.target.nodeName.toLowerCase()}</a>
+          ${this._listAttributes(e)}
         </div>
     `;
-    }else{*/
-      console.log('e.detail', e.type, e.detail);
-      return `
-        <details>
-          <summary>
-            <span class="event-name">
-              <label></label>
-              <span>${e.type}</span>
-            </span>
-            -->
-            <a href="#>"<span class="target">
-              <label></label>
-              <span class="targetNode">${e.target.nodeName}</span>
-            </span></a>
-          </summary>
-          ${this._listAttributes(e)}
-        </details>
-    `;
+
+    }
+
     // }
   }
 
@@ -268,16 +338,15 @@ export class FxActionLog extends HTMLElement {
   }
 
   _highlight(element) {
-    let defaultBG = element.style.backgroundColor;
-    let defaultTransition = element.style.transition;
+        const defaultBG = element.style.backgroundColor;
+        const defaultTransition = element.style.transition;
 
     element.style.transition = "background 1s";
     element.style.backgroundColor = "#FDFF47";
 
-    setTimeout(function()
-    {
+        setTimeout(() => {
       element.style.backgroundColor = defaultBG;
-      setTimeout(function() {
+            setTimeout(() => {
         element.style.transition = defaultTransition;
       }, 400);
     }, 400);

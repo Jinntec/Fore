@@ -204,6 +204,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       );
       // console.log('starting outermost handler',this);
       AbstractAction.outermostHandler = this;
+		this.dispatchEvent(new CustomEvent('outermost-action-start', {
+          composed: true,
+          bubbles: true,
+			cancelable:true, detail: {cause: e?.type}}));
     }
 
     if (AbstractAction.outermostHandler !== this) {
@@ -300,6 +304,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this,
       );
       console.timeEnd('outermostHandler');
+		this.dispatchEvent(new CustomEvent('outermost-action-end', {
+          composed: true,
+          bubbles: true,
+			cancelable:true}));
+
 
     }
     resolveThisEvent();
@@ -312,6 +321,17 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event},
+        }),
+    );
+
+    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
+
     //todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
