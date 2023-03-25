@@ -12,6 +12,8 @@ export class FxDomInspector extends HTMLElement {
 
   render(){
       const style = `
+      @import '../../resources/fore.css';
+      
         :host {
           display:block;
         }
