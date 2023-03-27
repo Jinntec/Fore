@@ -19,6 +19,15 @@ export class FxHide extends AbstractAction {
   }
 
   async perform() {
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event},
+        }),
+    );
+
     const dialog = resolveId(this.dialog, this);
     dialog.hide();
     Fore.dispatch(dialog,'dialog-hidden',{})
