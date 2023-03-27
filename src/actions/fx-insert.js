@@ -83,16 +83,6 @@ export class FxInsert extends AbstractAction {
 
   async perform() {
     // super.perform();
-    // as we're overwriting the superclass we need to dispatch the execute-action ourselves
-    this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
-    );
-
 
     /*
          todo: !!! calling super here does not correctly give the nodeset - it's likely still a bug in ForeElementMixin !!!

@@ -19,15 +19,6 @@ export class FxReload extends AbstractAction {
   }
 
   async perform() {
-    this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
-    );
-
     Fore.dispatch(this, 'reload', {});
   }
 }

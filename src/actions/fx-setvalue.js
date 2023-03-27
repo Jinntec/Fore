@@ -60,21 +60,9 @@ export default class FxSetvalue extends AbstractAction {
         // todo: check this again - logically needsUpate should be set but makes tests fail
         //  this.needsUpdate = true;
 
-
-
     }
 
-    _dispatchExecute() {}
-
     setValue(modelItem, newVal) {
-        this.dispatchEvent(
-            new CustomEvent('execute-action', {
-                composed: true,
-                bubbles: true,
-                cancelable:true,
-                detail: { action: this, event:this.event, value:newVal},
-            }),
-        );
         const item = modelItem;
         if (!item) return;
 

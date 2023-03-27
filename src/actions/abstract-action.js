@@ -321,17 +321,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
-    this._dispatchExecute();
-
-    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-    //todo: review - this evaluation seems redundant as we already evaluated in execute
-    if (this.isBound() || this.nodeName === 'FX-ACTION') {
-      this.evalInContext();
-    }
-  }
-
-  _dispatchExecute(){
     this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,
@@ -340,6 +329,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
           detail: { action: this, event:this.event},
         }),
     );
+
+    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
+
+    //todo: review - this evaluation seems redundant as we already evaluated in execute
+    if (this.isBound() || this.nodeName === 'FX-ACTION') {
+      this.evalInContext();
+    }
   }
 
   /**

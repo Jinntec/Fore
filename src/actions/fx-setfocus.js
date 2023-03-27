@@ -14,15 +14,6 @@ export class FxSetfocus extends AbstractAction {
 
   async perform() {
       console.log('setting focus', this.control);
-      this.dispatchEvent(
-          new CustomEvent('execute-action', {
-              composed: true,
-              bubbles: true,
-              cancelable:true,
-              detail: { action: this, event:this.event},
-          }),
-      );
-
       // super.perform();
       const selector = '#'+this.control;
 
