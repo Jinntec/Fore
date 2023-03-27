@@ -135,16 +135,15 @@ class FxLoad extends AbstractAction {
             const response = await fetch(this.url, {
                 method: 'GET',
                 mode: 'cors',
-                // credentials: 'include',
-                /*
-                        headers: {
-                          'Content-Type': contentType,
-                        },
-                */
+                credentials: 'include',
+                headers: {
+                  'Content-Type': "text/html",
+                },
             });
             const data = await response.text();
             // console.log('data loaded: ', data);
 
+            // todo: if data contain '<template' element as first child instanciate and insert it
             if (!this.attachTo) {
                 this.innerHtml = data;
             }

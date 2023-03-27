@@ -11,6 +11,15 @@ import {XPathUtil} from "../xpath-util.js";
  */
 class FxRefresh extends AbstractAction {
   async perform() {
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event},
+        }),
+    );
+
     if (this.hasAttribute('self')) {
       const control = XPathUtil.getClosest('fx-control', this);
       if (control) {

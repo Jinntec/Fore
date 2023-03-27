@@ -45,7 +45,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * can be either 'cancel' or 'perform' (default)
        */
       defaultAction:{
-		  type: new Enum(['cancel', 'perform'])
+        type: String
       },
       /**
        * delay before executing action in milliseconds
@@ -103,7 +103,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * id of target element to attach listener to
        */
       target: {
-        type: ResolvableId,
+        type: String,
       },
       /**
        * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
@@ -193,7 +193,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 */
     if(this.propagate === 'stop'){
-      console.log('event propagation stopped', e);
+      console.log('event propagation stopped', e)
       e.stopPropagation();
     }
     if (this.defaultAction === 'cancel') {
@@ -221,7 +221,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this,
       );
       // console.log('starting outermost handler',this);
-		AbstractAction.outermostHandler = this;
+      AbstractAction.outermostHandler = this;
 		this.dispatchEvent(new CustomEvent('outermost-action-start', {
           composed: true,
           bubbles: true,
@@ -321,7 +321,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
-		console.timeEnd('outermostHandler');
+      console.timeEnd('outermostHandler');
 		this.dispatchEvent(new CustomEvent('outermost-action-end', {
           composed: true,
           bubbles: true,
@@ -339,6 +339,17 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
+    this._dispatchExecute();
+
+    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
+
+    //todo: review - this evaluation seems redundant as we already evaluated in execute
+    if (this.isBound() || this.nodeName === 'FX-ACTION') {
+      this.evalInContext();
+    }
+  }
+
+  _dispatchExecute(){
     this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,
@@ -347,13 +358,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
           detail: { action: this, event:this.event},
         }),
     );
-
-    await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-    //todo: review - this evaluation seems redundant as we already evaluated in execute
-    if (this.isBound() || this.nodeName === 'FX-ACTION') {
-      this.evalInContext();
-    }
   }
 
   /**

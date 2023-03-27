@@ -227,6 +227,16 @@ fx-repeatitem {
     padding: 0.1rem 1rem;
     margin: 0;
 }
+noscript{
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: darkorange;
+    color:white;
+    position: absolute;
+    top:0;
+    left:0;
+}
 
 .submit-validation-failed .isEmpty .widget {
     background: lightpink;
@@ -277,7 +287,7 @@ fx-fore.action-log{
 .action-log .action-log-debug::before{
     content: attr(data-name);
 }
-.action-log .action-log-debug .target{
+.action-log .action-log-debug .targetd{
     cursor: pointer;
 }
 

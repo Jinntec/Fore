@@ -66,21 +66,24 @@
     <p>This page shows two separate Fore pages (clock and todo) assembled in one page.</p>
     <p>Though properly isolated from each other and each using it's own CSS they still can communicate
     via global events. The clock emits a 'clock' event which passes on the time. The todo page will listen
-    for that an display the time in its own shadowDOM. Note the time displayed in blue.</p>
+    for that and display the time in its own shadowDOM. Note the time displayed in blue.</p>
 
 <!--
     <demo-snippet>
         <template>
 -->
             <fore-component id="clock" src="clock2.html" class="first">
-                <link rel="stylesheet" href="../../resources/fore.css">
-                <link rel="stylesheet" href="../clock.css">
-
+                <link rel="stylesheet" href="../../resources/fore.css"/>
+                <link rel="stylesheet" href="./clock.css"/>
             </fore-component>
 
+    <!--                            <fx-action slot="event" event="clock" target="#clock" if="string-length(instance('helper')/time) = 0">-->
                     <fore-component src="todo2.html" >
-                        <link rel="stylesheet" href="../../resources/fore.css">
-                        <link rel="stylesheet" href="todo.css">
+                        <link rel="stylesheet" href="../../resources/fore.css"/>
+                        <link rel="stylesheet" href="todo.css"/>
+                        <fx-action event="clock">
+                            <fx-message>{event('time')}</fx-message>
+                        </fx-action>
 
 <!--
                         <fore-component id="clock" src="clock2.html" class="first">
