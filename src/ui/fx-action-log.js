@@ -13,10 +13,12 @@ export class FxActionLog extends HTMLElement {
       :host {
         display:block;
         position:relative;
-        max-width:40em;
+        width:100%;
         border:thin solid #efefef;
         background:white;
         font-family: Verdana, Sans;
+        padding:1rem;
+        background:#efefef;
       }
       a{
         position:relative;
@@ -38,11 +40,22 @@ export class FxActionLog extends HTMLElement {
       
       
       .boxes{
-        column-width:10em;
+        column-width:14rem;
+      }
+      .boxes > span{
+        display:inline-block;
+        width:14rem;
       }
       
       .boxes label{
         width:10em;
+      }
+      .buttons{
+        display:inline-block;
+        width:100%;
+        position:absolute;
+        top:1.2rem;
+        right:0;
       }
       .buttons button{
         margin-right:0.5rem;
@@ -75,11 +88,13 @@ export class FxActionLog extends HTMLElement {
       .info a{
         grid-area:right;
       }
+/*
       .info .details{
         height:0;
         opacity:0;
        
       }
+*/
       
       .info:hover{
         outline:3px solid lightblue;       
@@ -96,7 +111,7 @@ export class FxActionLog extends HTMLElement {
 
       ol{
         background: #efefef;
-        padding: 0.5em 1.5em;
+        padding: 0.5em 0 0 2.5rem;
         border-left:3px solid;
       }
       li .info{
@@ -104,8 +119,6 @@ export class FxActionLog extends HTMLElement {
       }
       .action.info{
         background: white;
-        border: 1px black solid;
-        border-collapse: collapse;
       }
       
       .event-name{
@@ -140,6 +153,9 @@ export class FxActionLog extends HTMLElement {
       }
        summary{
         padding:1em;
+      }
+      .outer-details > summary{
+        font-size:1.2rem;
       }
     `;
 
@@ -190,6 +206,9 @@ export class FxActionLog extends HTMLElement {
     build the list of checkboxes for the filtering settings
      */
     this.listenTo.forEach(item =>{
+      const wrapper = document.createElement('span');
+      boxes.append(wrapper);
+
       const lbl = document.createElement('label');
       lbl.setAttribute('title',item.description);
       lbl.setAttribute('for',item.name);
@@ -203,7 +222,9 @@ export class FxActionLog extends HTMLElement {
       if(item.show){
         cbx.setAttribute('checked','');
       }
-      boxes.append(cbx);
+      wrapper.append(cbx);
+      wrapper.append(lbl);
+
       cbx.addEventListener('click', e =>{
         console.log('filter box ticked', e);
         if(!e.target.checked){
@@ -218,7 +239,7 @@ export class FxActionLog extends HTMLElement {
         // console.log('filter', this.listenTo);
         localStorage.setItem('fx-action-log-filters', JSON.stringify(this.listenTo));
       })
-      boxes.appendChild(lbl);
+      // boxes.appendChild(lbl);
     });
 
         document.addEventListener('outermost-action-start', e => {
@@ -247,42 +268,42 @@ export class FxActionLog extends HTMLElement {
 
   _defaultSettings(){
     this.listenTo = [
-      {name: "action-performed", show: false, description: 'fired after an action has been performed'},
+      {name: "action-performed", show: false, description: 'fires after an action has been performed'},
       {name: "click", show: false, description: ''},
-      {name: "deleted", show: false, description: 'fired after a delete action has been executed'},
+      {name: "deleted", show: false, description: 'fires after a delete action has been executed'},
+      {name: "deselect", show: false, description: 'fires when fx-case is deselected'},
+      {name: "dialog-hidden", show: false, description: 'fires after fx-dialog has been hidden'},
       {name: "dialog-shown", show: false, description: 'fired when a dialog has been shown'},
-      {name: "dialog-hidden", show: false, description: ''},
-      {name: "error", show: false, description: ''},
-      {name: "execute-action", show: true, description: ''},
-      {name: "init", show: false, description: ''},
-      {name: "invalid", show: false, description: ''},
-      {name: "index-changed", show: false, description: ''},
-      {name: "instance-loaded", show: false, description: ''},
-      {name: "item-created", show: false, description: ''},
-      {name: "loaded", show: false, description: ''},
-      {name: "model-construct", show: false, description: ''},
-      {name: "model-construct-done", show: false, description: ''},
-      {name: "nonrelevant", show: false, description: ''},
-      {name: "optional", show: false, description: ''},
-      {name: "path-mutated", show: false, description: ''},
-      {name: "refresh-done", show: false, description: ''},
-      {name: "readonly", show: false, description: ''},
-      {name: "readwrite", show: false, description: ''},
-      {name: "rebuild-done", show: false, description: ''},
-      {name: "required", show: false, description: ''},
-      {name: "ready", show: false, description: ''},
-      {name: "recalculate-done", show: false, description: ''},
-      {name: "relevant", show: false, description: ''},
-      {name: "reload", show: false, description: ''},
-      {name: "select", show: false, description: ''},
-      {name: "deselect", show: false, description: ''},
-      {name: "submit", show: false, description: ''},
-      {name: "submit-error", show: false, description: ''},
-      {name: "submit-done", show: false, description: ''},
-      {name: "valid", show: false, description: ''},
-      {name: "value-changed", show: false, description: ''},
-      {name: "outermost-action-start", show: false, description: ''},
-      {name: "outermost-action-end", show: false, description: ''}
+      {name: "error", show: false, description: 'fires after an error occurred'},
+      {name: "execute-action", show: true, description: 'fires when an action executes'},
+      {name: "init", show: false, description: 'fires when a control initializes'},
+      {name: "index-changed", show: false, description: 'fires when the repeat index changes'},
+      {name: "instance-loaded", show: false, description: 'fires after an fx-instance has been loaded'},
+      {name: "invalid", show: false, description: 'fires after a control became invalid'},
+      {name: "item-created", show: false, description: 'fires when a repeat item was created'},
+      {name: "loaded", show: false, description: 'fires after a fx-load has loaded'},
+      {name: "model-construct", show: false, description: 'fires when a model gets constructed'},
+      {name: "model-construct-done", show: false, description: 'fires after model initialization'},
+      {name: "nonrelevant", show: false, description: 'fires after an fx-control became nonrelevant'},
+      {name: "optional", show: false, description: 'fires after an fx-control became optional'},
+      {name: "outermost-action-end", show: false, description: 'fires when an outermost action block is finished'},
+      {name: "outermost-action-start", show: false, description: 'fires when an outermost action block is started'},
+      {name: "path-mutated", show: false, description: 'fires when a path in a repeat has been mutated'},
+      {name: "readonly", show: false, description: 'fires after an fx-control became readonly'},
+      {name: "readwrite", show: false, description: 'fires after an fx-control became readwrite'},
+      {name: "ready", show: false, description: 'fires after a fx-fore page has been completely initialized'},
+      {name: "rebuild-done", show: false, description: 'fires after a rebuild has taken place'},
+      {name: "recalculate-done", show: false, description: 'fires after a recalculate has taken place'},
+      {name: "refresh-done", show: false, description: 'fires after a refresh has been done'},
+      {name: "relevant", show: false, description: 'fires after a fx-control has become relevant'},
+      {name: "reload", show: false, description: 'fires when a fx-reload action executes'},
+      {name: "required", show: false, description: 'fires after an fx-control has become required'},
+      {name: "select", show: false, description: 'fires when an fx-case has been selected'},
+      {name: "submit", show: false, description: 'fires before a submission takes place'},
+      {name: "submit-done", show: false, description: 'fires after a submission has successfully been executed'},
+      {name: "submit-error", show: false, description: 'fires when a submission returned an error'},
+      {name: "valid", show: false, description: 'fires after a fx-control has become valid'},
+      {name: "value-changed", show: false, description: 'fires after a fx-control has changed its value'}
     ];
   }
 
