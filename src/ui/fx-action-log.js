@@ -17,8 +17,12 @@ export class FxActionLog extends HTMLElement {
         border:thin solid #efefef;
         background:white;
         font-family: Verdana, Sans;
-        padding:1rem;
+        font-size:0.8em;
+        padding:0.25em;
         background:#efefef;
+      }
+      a,a:link,a:visited{
+        color:black;
       }
       a{
         position:relative;
@@ -37,7 +41,18 @@ export class FxActionLog extends HTMLElement {
         white-space:nowrap;
         overflow-wrap:break-word;
       }
-      
+      .attr-name{
+        width:30%;
+        display:inline-block;
+        min-width:5rem;
+        border-bottom:1px solid #ddd;
+        background:#efefef;
+      }
+      .attr-value{
+        display:inline-block;
+        width:70%;
+        border-bottom:1px solid #ddd;
+      }
       
       .boxes{
         column-width:14rem;
@@ -54,7 +69,7 @@ export class FxActionLog extends HTMLElement {
         display:inline-block;
         width:100%;
         position:absolute;
-        top:1.2rem;
+        top:0;
         right:0;
       }
       .buttons button{
@@ -71,64 +86,70 @@ export class FxActionLog extends HTMLElement {
         cursor:pointer;
       }
       .info{
-        padding:0.5em;
+        padding:0 0.5em;
         margin:0.1rem 0;
         background:#f5f5f5;
         position:relative;
         display:grid;
-        grid-gap:0.5em;
         grid-template-areas: "left right"
                     "bottom .";
-        grid-template-columns: 50% 50%;
-
+        grid-template-columns: 75% 25%;
       }
       .info label{
         grid-area:left;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .info a{
         grid-area:right;
+        justify-self:end;
+        padding-right:0.5em;
       }
-/*
-      .info .details{
-        height:0;
-        opacity:0;
-       
+      .info .attributes{
+        display:flex;
+        flex-wrap:wrap;
+        padding:0.5em 0;
       }
-*/
+      .details header{
+        width:100%;
+        border-bottom:1px solid;
+      }
       
       .info:hover{
         outline:3px solid lightblue;       
+        transition:height 0.4s;
       }
 
-      .info:hover .details{
+/*
+      .info:hover .details{ 
         grid-area:bottom;
         display:grid;
         grid-template-columns:50% 50%;
-        transition: all .6s;
+        transition: all .8s;
         opacity:1;   
         height:auto;  
       }
+*/
+      
 
       ol{
         background: #efefef;
-        padding: 0.5em 0 0 2.5rem;
+        padding: 0.5em 0 0 2em;
         border-left:3px solid;
       }
       li .info{
-        margin:0.25em 0;
+        margin-left:0.2em;
       }
       .action.info{
         background: white;
       }
       
       .event-name{
-        width:14rem;
         display:inline-block;
       }
       #filter{
-        padding:1rem;
+        padding:0 1em;
         display:flex;
-        margin-bottom:1rem;
         border:thin solid #efefef;
       }
       label{
@@ -141,6 +162,13 @@ export class FxActionLog extends HTMLElement {
         padding:0;
         position:relative;
       }
+      .log-row summary{
+        display:flex;
+        flew-wrap:wrap;
+        justify-content:space-between;
+        padding:0.5em 0;
+        cursor:pointer;
+      }
       .log-row.empty-row summary{
         position:relative;
       }
@@ -151,11 +179,28 @@ export class FxActionLog extends HTMLElement {
       .log-row.empty-row summary::-webkit-details-marker {
         display: none;
       }
+      .log-row.nested{
+        margin-left:1em;
+      }
+      .nested .event-name{
+        display:none;
+      }
+      
+      .setvalue .value{
+        background:lightyellow;
+      }
        summary{
         padding:1em;
       }
       .outer-details > summary{
-        font-size:1.2rem;
+        font-size:1em;
+      }
+      ul{
+        list-style:none;
+        padding:0;
+        margin:0.5em 0;
+        border-left:3px solid steelblue;
+        padding:0.01em 0;
       }
     `;
 
@@ -308,12 +353,10 @@ export class FxActionLog extends HTMLElement {
   }
 
   _log(e, log) {
-    if(e.target.nodeName === 'FX-ACTION-LOG') return;
+    const elementName = e.target.nodeName;
+    if(elementName === 'FX-ACTION-LOG') return;
     e.preventDefault();
     e.stopPropagation();
-
-
-
 
     const row = document.createElement('div');
     row.classList.add('log-row');
@@ -325,7 +368,6 @@ export class FxActionLog extends HTMLElement {
     }
 
     row.innerHTML = logRow;
-
     if(this.outermost){
       /*
       outermost-action-start and outermost-action-end are use as marker events only to start/end a list.
@@ -333,15 +375,22 @@ export class FxActionLog extends HTMLElement {
        */
       if(e.type === 'outermost-action-start') return; // we don't want this event to actualy log something
       if(!this.outermostAppender){
-        this.outermostAppender = document.createElement('ol');
+        this.outermostAppender = document.createElement('ul');
         log.append(this.outermostAppender);
       }
       const li = document.createElement('li');
-      li.innerHTML = logRow;
+      // li.innerHTML = logRow;
+      li.append(row);
       this.outermostAppender.append(li);
     }else{
       log.append(row);
     }
+
+    if(this.parentPath && elementName !== 'FX-ACTION'){
+      row.classList.add('nested');
+    }
+
+
     const logRowTarget = row.querySelector('.event-target');
     if(!logRowTarget) return;
 
@@ -378,6 +427,10 @@ export class FxActionLog extends HTMLElement {
     const xpath = "/" + cut;
     const short = cut.replaceAll('fx-','');
 
+
+    if(this.parentPath && !xpath.startsWith(this.parentPath)){
+      this.parentPath = null;
+    }
     switch (type){
       case 'outermost-action-start':
         return `start`;
@@ -389,23 +442,37 @@ export class FxActionLog extends HTMLElement {
         const stripped = e.detail.action.nodeName.split('-')[1];
 
         switch (e.detail.action.nodeName){
-
+          case 'FX-ACTION':
+            this.parentPath = xpath;
+            return `
+                <div class="info action action-action">
+                    <label class="action-name">${stripped}</label>
+                    <a href="#" class="event-name" alt="${short}" data-path="${xpath}" tabindex="-1">${e.detail.event}</a>
+                    <div class="details">
+                    </div>
+                </div>
+            `;
+            break;
           case 'FX-SEND':
             const submission = document.querySelector('#'  + e.detail.action.getAttribute('submission'));
-
             return `
-              <div class="info action">
-                  <label class="action-name">${stripped}</label>
-                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
-                  <div class="details">
-                    ${Array.from(submission.attributes).map((item) => {
-                      return `
-                        <span class="attr-name">${item.nodeName}</span>
-                        <span class="attr-value">${item.nodeValue}</span>
-                      `;
-                    }).join('')}                 
-                  </div>
-              </div>
+                <details class="info action send">
+                    <summary>
+                      <span class="action-name"><a href="#" alt="${short}" data-path="${xpath}">${stripped}</a> ${submission.id}</span>
+                      <span class="event-name">${e.detail.event}</span>                    
+                    </summary>
+                    <section class="details">
+                      <header>Submission</header>
+                      <section class="attributes">
+                      ${Array.from(submission.attributes).map((item) => {
+                          return `
+                                                <span class="attr-name">${item.nodeName}</span>
+                                                <span class="attr-value">${item.nodeValue}</span>
+                                              `;
+                        }).join('')}                 
+                      </section>  
+                    </section>
+                </details>
             `;
             break;
           case 'FX-SETVALUE':
@@ -420,9 +487,11 @@ export class FxActionLog extends HTMLElement {
             `;
             }else{
 */
-              return `
-              <div class="info action">
-                  <label class="action-name">${stripped} ${e.detail.action.getAttribute('ref')} - '${e.detail.value}'</label>
+            const instPath = XPathUtil.getPath(e.target.nodeset);
+
+            return `
+              <div class="info action setvalue">
+                  <label class="action-name">${stripped} ${instPath} <span class="value">${e.detail.value}</span></label>
                   <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
                   <div class="details">
                   </div>
