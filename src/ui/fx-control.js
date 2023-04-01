@@ -149,10 +149,12 @@ export default class FxControl extends XfAbstractControl {
         this.classList.add('visited');
       }
     });
+/*
     this.widget.addEventListener('click', (event) =>{
       event.preventDefault();
       event.stopPropagation();
     });
+*/
 
     this.template = this.querySelector('template');
     this.boundInitialized = false;

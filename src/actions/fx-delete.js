@@ -3,6 +3,7 @@ import {Fore} from '../fore.js';
 import {evaluateXPathToNodes} from "../xpath-evaluation.js";
 import {XPathUtil} from "../xpath-util.js";
 import getInScopeContext from '../getInScopeContext.js';
+import * as fx from "fontoxpath";
 
 /**
  * `fx-delete`
@@ -39,6 +40,7 @@ class FxDelete extends AbstractAction {
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
 
         console.log('delete nodeset ', this.nodeset);
+        const path = XPathUtil.getPath(this.nodeset[0]);
 
         const nodesToDelete = this.nodeset;
         let parent;
@@ -55,7 +57,8 @@ class FxDelete extends AbstractAction {
 
         const instanceId = XPathUtil.resolveInstance(this);
         const instance = this.getModel().getInstance(instanceId);
-        Fore.dispatch(instance, 'deleted', {deletedNodes:nodesToDelete});
+
+        Fore.dispatch(instance, 'deleted', {ref:path,deletedNodes:nodesToDelete});
         this.needsUpdate = true;
     }
 

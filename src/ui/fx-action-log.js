@@ -41,14 +41,14 @@ export class FxActionLog extends HTMLElement {
         white-space:nowrap;
         overflow-wrap:break-word;
       }
-      .attr-name{
-        width:30%;
+      .key{
+        width:29%;
         display:inline-block;
         min-width:5rem;
         border-bottom:1px solid #ddd;
         background:#efefef;
       }
-      .attr-value{
+      .value{
         display:inline-block;
         width:70%;
         border-bottom:1px solid #ddd;
@@ -85,10 +85,10 @@ export class FxActionLog extends HTMLElement {
         height:2.25rem;
         cursor:pointer;
       }
-      .info{
+     .info{
         padding:0 0.5em;
         margin:0.1rem 0;
-        background:#f5f5f5;
+        background:white;
         position:relative;
         display:grid;
         grid-template-areas: "left right"
@@ -103,9 +103,8 @@ export class FxActionLog extends HTMLElement {
       .info a{
         grid-area:right;
         justify-self:end;
-        padding-right:0.5em;
       }
-      .info .attributes{
+      .details > section{
         display:flex;
         flex-wrap:wrap;
         padding:0.5em 0;
@@ -140,9 +139,6 @@ export class FxActionLog extends HTMLElement {
       li .info{
         margin-left:0.2em;
       }
-      .action.info{
-        background: white;
-      }
       
       .event-name{
         display:inline-block;
@@ -164,10 +160,18 @@ export class FxActionLog extends HTMLElement {
       }
       .log-row summary{
         display:flex;
-        flew-wrap:wrap;
-        justify-content:space-between;
+        flex-wrap:wrap;
         padding:0.5em 0;
         cursor:pointer;
+      }
+      .log-name, .event-name, .event-target{
+        width:10em;
+      }
+      .short-info{
+        flex:3;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
       }
       .log-row.empty-row summary{
         position:relative;
@@ -191,6 +195,9 @@ export class FxActionLog extends HTMLElement {
       }
        summary{
         padding:1em;
+      }
+      .outer-details{
+        width:calc(100% - 1.5em);
       }
       .outer-details > summary{
         font-size:1em;
@@ -427,11 +434,37 @@ export class FxActionLog extends HTMLElement {
     const xpath = "/" + cut;
     const short = cut.replaceAll('fx-','');
 
+    const actionElement = e.detail.action;
 
     if(this.parentPath && !xpath.startsWith(this.parentPath)){
       this.parentPath = null;
     }
     switch (type){
+      case 'deleted':
+        const deletedNodes = e.detail.deletedNodes;
+        const s = new XMLSerializer();
+        let serialized='';
+        deletedNodes.forEach(node =>{
+          serialized += s.serializeToString(node);
+        });
+
+        return `
+        <details class="info">
+            <summary>
+              <span class="log-name">${e.type}</span>
+              <span class="short-info">${e.detail.ref}</span>
+              <a href="#" class="event-target" alt="${short} "data-path"${xpath}">${e.target.nodeName.toLowerCase()}</a>
+            </summary>  
+            <section class="details">
+                <header>Details</header>
+                <section>
+                    <span class="key">Deleted Nodes</span>
+                    <textarea class="value" rows="5">${serialized.trim()}</textarea>
+                </section>
+            </section>
+        </details>
+        `;
+        break;
       case 'outermost-action-start':
         return `start`;
         break;
@@ -439,84 +472,19 @@ export class FxActionLog extends HTMLElement {
         return ``;
         break;
       case 'execute-action':
-        const stripped = e.detail.action.nodeName.split('-')[1];
-
-        switch (e.detail.action.nodeName){
-          case 'FX-ACTION':
-            this.parentPath = xpath;
-            return `
-                <div class="info action action-action">
-                    <label class="action-name">${stripped}</label>
-                    <a href="#" class="event-name" alt="${short}" data-path="${xpath}" tabindex="-1">${e.detail.event}</a>
-                    <div class="details">
-                    </div>
-                </div>
-            `;
-            break;
-          case 'FX-SEND':
-            const submission = document.querySelector('#'  + e.detail.action.getAttribute('submission'));
-            return `
-                <details class="info action send">
-                    <summary>
-                      <span class="action-name"><a href="#" alt="${short}" data-path="${xpath}">${stripped}</a> ${submission.id}</span>
-                      <span class="event-name">${e.detail.event}</span>                    
-                    </summary>
-                    <section class="details">
-                      <header>Submission</header>
-                      <section class="attributes">
-                      ${Array.from(submission.attributes).map((item) => {
-                          return `
-                                                <span class="attr-name">${item.nodeName}</span>
-                                                <span class="attr-value">${item.nodeValue}</span>
-                                              `;
-                        }).join('')}                 
-                      </section>  
-                    </section>
-                </details>
-            `;
-            break;
-          case 'FX-SETVALUE':
-/*
-            if(event.target.nodeName === "FX-CONTROL"){
-              const control = event.target;
-              return `
-              <div class="info control">
-                  <label class="control-name">CONTROL ${control.getAttribute('ref')} - '${control.value}'</label>
-                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
-              </div>
-            `;
-            }else{
-*/
-            const instPath = XPathUtil.getPath(e.target.nodeset);
-
-            return `
-              <div class="info action setvalue">
-                  <label class="action-name">${stripped} ${instPath} <span class="value">${e.detail.value}</span></label>
-                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
-                  <div class="details">
-                  </div>
-              </div>
-            `;
-            // }
-            break;
-          default:
-            return `
-              <div class="info action">
-                  <label class="action-name">${stripped}</label>
-                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
-                  <div class="details">
-                  </div>
-              </div>
-            `;
-        }
+        return this._renderAction(actionElement, xpath, short, e);
         break;
       default:
         return `
-        <div class="info event"
-            <label class="event-name">${e.type}</label>
-            <a href="#" class="event-target" alt="${short} "data-path"${xpath}">${e.target.nodeName.toLowerCase()}</a>
-          ${this._listAttributes(e)}
-        </div>
+        <details class="info event">
+            <summary>
+              <label class="event-name">${e.type}</label>
+              <a href="#" class="event-target" alt="${short} "data-path"${xpath}">${e.target.nodeName.toLowerCase()}</a>
+            </summary>
+            <section class="details">
+              ${this._listEventDetails(e)}
+            </section>
+        </details>
     `;
 
     }
@@ -524,7 +492,114 @@ export class FxActionLog extends HTMLElement {
     // }
   }
 
+  _renderAction(actionElement, xpath, short, e) {
+    const stripped = actionElement.nodeName.split('-')[1];
+    switch (actionElement.nodeName) {
+      case 'FX-ACTION':
+        this.parentPath = xpath;
+        return `
+                <details class="info action-action">
+                    <summary>
+                      <span class="log-name"><a href="#" alt="${short}" data-path="${xpath}">${stripped}</a></span>
+                      <span class="short-info"></span>
+                      <span class="event-name">${e.detail.event}</span>                    
+                    </summary>
+                    <section class="details">
+                      <header>Attributes</header>
+                      <section>
+                      ${Array.from(actionElement.attributes).map((item) => {
+          return `
+                            <span class="key">${item.nodeName}</span>
+                            <span class="value">${item.nodeValue}</span>
+                          `;
+        }).join('')}                 
+                      </section>  
+                    </section>
+                </details>
+            `;
+        // break;
+      case 'FX-MESSAGE':
+        const message = e.detail.action.messageTextContent;
+        return `
+                <details class="info send">
+                    <summary>
+                      <span class="log-name"><a href="#" alt="${short}" data-path="${xpath}">${stripped}</a></span>
+                      <span class="short-info">${message}</span>
+                      <span class="event-name">${e.detail.event}</span>                    
+                    </summary>
+                    <section class="details">
+                        <span>${message}</span>
+                    </section>
+                </details>
+            `;
+        // break;
+      case 'FX-SEND':
+        const submission = document.querySelector('#' + e.detail.action.getAttribute('submission'));
+        return `
+                <details class="info send">
+                    <summary>
+                      <span class="log-name"><a href="#" alt="${short}" data-path="${xpath}">${stripped}</a></span>
+                      <span class="short-info"> ${submission.id}</span>
+                      <span class="event-name">${e.detail.event}</span>                    
+                    </summary>
+                    <section class="details">
+                      <header>Submission</header>
+                      <section class="attributes">
+                      ${Array.from(submission.attributes).map((item) => {
+          return `
+                                                <span class="key">${item.nodeName}</span>
+                                                <span class="value">${item.nodeValue}</span>
+                                              `;
+        }).join('')}                 
+                      </section>  
+                    </section>
+                </details>
+            `;
+        // break;
+      case 'FX-SETVALUE':
+        /*
+                    if(event.target.nodeName === "FX-CONTROL"){
+                      const control = event.target;
+                      return `
+                      <div class="info control">
+                          <label class="control-name">CONTROL ${control.getAttribute('ref')} - '${control.value}'</label>
+                          <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
+                      </div>
+                    `;
+                    }else{
+        */
+        const instPath = XPathUtil.getPath(e.target.nodeset);
 
+        return `
+              <div class="info setvalue">
+                  <label class="log-name">${stripped} ${instPath} <span class="value">${e.detail.value}</span></label>
+                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
+                  <div class="details">
+                  </div>
+              </div>
+            `;
+        // break;
+      default:
+        return `
+              <div class="info">
+                  <label class="log-name">${stripped}</label>
+                  <a href="#" class="event-name" alt="${short}" data-path="${xpath}">${e.detail.event}</a>
+                  <div class="details">
+                  </div>
+              </div>
+            `;
+    }
+  }
+
+  _listEventDetails(e){
+    if(e.detail &&
+        Object.keys(e.detail).length === 0 &&
+        Object.getPrototypeOf(e.detail) === Object.prototype){
+      return ``;
+    }else{
+      return `${e.detail.map((item) => `<span>${item}</span>`)}`;
+    }
+  }
 
   _listAttributes(e){
     console.log('_listAttributes',e)

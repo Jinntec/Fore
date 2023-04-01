@@ -20,6 +20,7 @@ class FxMessage extends AbstractAction {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
+    this.message = '';
 
 	this.messageTextContent = this.textContent;
     const style = `
@@ -51,19 +52,18 @@ class FxMessage extends AbstractAction {
 
   async perform() {
     super.perform();
-    let message;
     if (this.hasAttribute('value')) {
-      message = this._getValue();
+      this.message = this._getValue();
     } else {
 		this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
-      message = this.textContent;
+      this.message = this.textContent;
     }
 
     this.dispatchEvent(
       new CustomEvent('message', {
         composed: false,
         bubbles: true,
-        detail: { level: this.level, message },
+        detail: { level: this.level, message:this.message },
       }),
     );
   }

@@ -256,6 +256,7 @@ fx-fore.action-log{
     min-height: 3rem;
     background: var(--paper-orange-500);
 }
+/*
 .action-log fx-model{
     display: block;
     min-height: 1rem;
@@ -263,6 +264,7 @@ fx-fore.action-log{
 .action-log fx-model::before{
     content:'model';
 }
+*/
 
 .action-log fx-instance,
 .action-log fx-bind,
