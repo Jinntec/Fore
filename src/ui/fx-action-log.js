@@ -366,8 +366,8 @@ export class FxActionLog extends HTMLElement {
     _log(e, log) {
         const elementName = e.target.nodeName;
         if (elementName === 'FX-ACTION-LOG') return;
-        e.preventDefault();
-        e.stopPropagation();
+        // e.preventDefault();
+        // e.stopPropagation();
 
         const row = document.createElement('div');
         row.classList.add('log-row');
