@@ -6,15 +6,23 @@
 
     <title>Clock</title>
 
-    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="clock.css" rel="stylesheet">
 <!--    <link href="clock.css" rel="stylesheet">-->
+    <script type="module">
+        import 'jinn-window/dist/jinn-window.js';
+    </script>
+    <link href="../node_modules/jspanel4/es6module/jspanel.css" rel="stylesheet">
+
+    <style>
+        jinn-window{
+            width: 65vw;
+        }
+    </style>
+
 </head>
 <body>
 <div class="wrapper">
-<!--
-    <demo-snippet>
-        <template>
--->
             <fx-fore>
                 <fx-action event="ready" while="true()" delay="1000">
                     <fx-setvalue ref="time" value="now()"></fx-setvalue>
@@ -64,15 +72,14 @@
                     <div style="transform:rotate({h-deg}deg);" class="hour"></div>
                   <div style="transform:rotate({min-deg}deg);" class="minute"></div>
                 </div>
-<!--                <fx-action-log></fx-action-log>-->
 
             </fx-fore>
-<!--
-        </template>
-    </demo-snippet>
--->
+
+    <jinn-window title="Action Log" position="right-top" open size="450 600">
+        <fx-action-log></fx-action-log>
+    </jinn-window>
 
 </div>
-<script type="module" src="./demo.js"></script>
+<script type="module" src="../demo.js"></script>
 </body>
 </html>

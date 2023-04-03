@@ -41,6 +41,7 @@ export class FxTrigger extends XfAbstractControl {
         );
       } else {
         element.addEventListener('click', e => this.performActions(e));
+        // element.addEventListener('activate', e => this.performActions(e));
       }
       this.widget = element;
       // # terrible hack but browser behaves strange - seems to fire a 'click' for a button when it receives a

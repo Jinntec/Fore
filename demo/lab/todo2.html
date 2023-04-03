@@ -56,9 +56,15 @@
                         <template>
                             <task complete="false" due=""></task>
                         </template>
+                        <foo></foo>
                     </data>
                 </fx-instance>
             </fx-model>
+
+            <fx-trigger>
+                <button>foobar</button>
+                <fx-setvalue ref="instance('helper')/foo">bar</fx-setvalue>
+            </fx-trigger>
 
             <h1>Todo
                 <fx-trigger class="btn add">

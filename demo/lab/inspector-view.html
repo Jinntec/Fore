@@ -1,23 +1,21 @@
 <fx-fore>
-  <fx-instance src="localStore:inspector"></fx-instance>
+    <fx-instance src="localStore:inspector"></fx-instance>
     <section class="tab-controls">
-        <fx-trigger>
-            <button>Action log</button>
-            <fx-toggle case="actionlog"></fx-toggle>
-        </fx-trigger>
         <fx-trigger>
             <button>Attributes</button>
             <fx-toggle case="attributes"></fx-toggle>
         </fx-trigger>
     </section>
     <fx-switch>
-        <fx-case id="actionlog"><fx-action-log selector="root"> </fx-action-log>
+        <fx-case id="attributes">
+            <header>Attributes</header>
+        </fx-case>
         <fx-case id="attributes">attrs!</fx-case>
-</fx-case>
+
     </fx-switch>
 
-	<fx-action event="handle-active" target="#document">
-	  <fx-message>{event('selected')/name()}</fx-message>
-	</fx-action>
+    <fx-action event="handle-active" target="#document">
+        <fx-message>{event('selected')/name()}</fx-message>
+    </fx-action>
 
 </fx-fore>

@@ -6,13 +6,20 @@
 
     <title>Submission Relevance Processing</title>
 
-<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
-
     <link rel="stylesheet" href="../resources/demo.css">
 
+    <script type="module">
+        import 'jinn-window/dist/jinn-window.js';
+    </script>
+    <link href="./node_modules/jspanel4/es6module/jspanel.css" rel="stylesheet">
 
+    <style>
+        jinn-window{
+            width: 65vw;
+        }
+    </style>
 
-
+<!--
     <custom-style>
         <style is="custom-style">
             .dynamic {
@@ -59,6 +66,7 @@
 
         </style>
     </custom-style>
+-->
     <style>
         pre{
             background:#333;
@@ -68,17 +76,21 @@
         .important{
             color:darkred;
         }
+        .left-top {width: 400px;
+            height: 300px}
     </style>
 <!--    <link rel="stylesheet" href="../resources/scripts/dom-inspector/dom-inspector.css">-->
-    <link rel="stylesheet" href="../resources/scripts/dom-inspector/acid-dom.css">
+<!--    <link rel="stylesheet" href="../resources/scripts/dom-inspector/acid-dom.css">-->
 </head>
-<body unresolved="unresolved">
+<body>
+
 <div class="wrapper">
 <!--
     <demo-snippet>
         <template>
 -->
-            <fx-fore>
+    <h1>Content</h1>
+    <fx-fore>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -169,13 +181,20 @@
         </pre>
 
             </fx-fore>
-<!--
-        </template>
-    </demo-snippet>
--->
-</div>
-<fx-dom-inspector></fx-dom-inspector>
 
+    <jinn-window title="Action Log" position="left-top" open size="450 50vh">
+        <fx-action-log></fx-action-log>
+    </jinn-window>
+
+    <!--
+            </template>
+        </demo-snippet>
+    -->
+</div>
+
+<!--<jinn-window title="DOM Inspector" position="right-top" open size="650 100vh">-->
+    <fx-dom-inspector></fx-dom-inspector>
+<!--</jinn-window>-->
 <script type="module" src="./demo.js"></script>
 <!--<fx-fore src="inspector/inspector.html"></fx-fore>-->
 <!--

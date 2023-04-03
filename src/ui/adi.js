@@ -294,7 +294,7 @@ class ADI {
         this.domView = newElement('div', {id: 'adi-dom-view'});
         const domViewContent = newElement('div', {class: 'adi-content', id: 'detailsView'});
         this.attrView = newElement('div', {id: 'adi-attr-view'});
-		this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
+		// this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
 
         const attrViewContent = newElement('div', {class: 'adi-content'});
 

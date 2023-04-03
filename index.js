@@ -9,6 +9,7 @@ import './src/fx-var.js';
 
 // ui classes
 import './src/ui/fx-action-log.js';
+import './src/ui/fx-log-item.js';
 import './src/ui/fx-alert.js';
 import './src/ui/fx-control.js';
 import './src/ui/fx-container.js';
