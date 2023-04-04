@@ -10,7 +10,16 @@ import { resolveId } from '../xpath-evaluation.js';
  * @demo demo/project.html
  */
 export class FxHide extends AbstractAction {
-  connectedCallback() {
+    static get properties() {
+        return {
+            ...super.properties,
+            dialog: {
+                type: String,
+            },
+        };
+    }
+
+	connectedCallback() {
     super.connectedCallback();
     this.dialog = this.getAttribute('dialog');
     if (!this.dialog) {

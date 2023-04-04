@@ -8,6 +8,15 @@ import {FxAction} from "./fx-action.js";
  * @demo demo/project.html
  */
 export class FxConfirm extends FxAction {
+	static get properties () {
+		return {
+			...FxAction.properties,
+			message: {
+				type:String
+			}
+		};
+	}
+
   connectedCallback() {
     if(super.connectedCallback){
       super.connectedCallback();

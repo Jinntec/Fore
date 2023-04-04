@@ -13,7 +13,25 @@ import {
  * @customElement
  */
 export class FxInsert extends AbstractAction {
-  constructor() {
+    static get properties() {
+        return {
+            ...super.properties,
+            at: {
+                type: Number,
+            },
+            position: {
+                type: Number,
+            },
+            origin: {
+                type: Object,
+            },
+            keepValues: {
+                type: Boolean,
+            },
+        };
+    }
+
+	constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }

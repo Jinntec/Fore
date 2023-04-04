@@ -1,9 +1,9 @@
+import * as fx from "fontoxpath";
 import {AbstractAction} from './abstract-action.js';
 import {Fore} from '../fore.js';
 import {evaluateXPathToNodes, evaluateXPathToString} from "../xpath-evaluation.js";
 import {XPathUtil} from "../xpath-util.js";
 import getInScopeContext from '../getInScopeContext.js';
-import * as fx from "fontoxpath";
 
 /**
  * `fx-delete`
@@ -14,11 +14,14 @@ import * as fx from "fontoxpath";
  * @demo demo/todo.html
  */
 class FxDelete extends AbstractAction {
-/*
-    constructor() {
-        super();
+    static get properties() {
+        return {
+            ...super.properties,
+            ref: {
+                type: String,
+            },
+        };
     }
-*/
 
     /**
      * deletes nodes from instance data.
