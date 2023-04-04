@@ -41,11 +41,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
   static get properties() {
     return {
       ...super.properties,
-      /**
-       * can be either 'cancel' or 'perform' (default)
-       */
-      defaultAction:{
-        type: String
+
+	defaultAction: {
+        type: String,
+        valueSpace: ['cancel', 'perform'],
+		readonly: true|false,
+		description: "can be either 'cancel' or 'perform' (default)",
+		attribute: 'defaultAction',
+		default: 'perform'
       },
       /**
        * delay before executing action in milliseconds
@@ -57,7 +60,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * detail - event detail object
        */
       detail: {
-        type: Object,
+          type: Object,
+		  hidden:true
       },
       /**
        * event to listen for
@@ -103,7 +107,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
        * id of target element to attach listener to
        */
       target: {
-        type: String,
+          type: String,
+		  get valueSpace () {
+			 return [...window.document.querySelectorAll('[id]')].map(ele =>ele.getAttribute('id'));
+		  }
       },
       /**
        * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
@@ -125,6 +132,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     this.style.display = 'none';
     this.propagate = this.hasAttribute('propagate')? this.getAttribute('propagate'):'continue';
     this.repeatContext = undefined;
+
+	  // Object.keys(this.constructor.properties).forEach((propertyName) => {
+	  // 	  const property = this.constructor.properties[propertyName];
+	  // 	  const attribute = property.attribute || propertyName;
+	  // 	  const value = this.getAttribute(attribute) || property.default;
+	  // 	  const typedValue = property.type(value);
+	  // 	  this[propertyName] = typedValue;
+	  // });
 
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');

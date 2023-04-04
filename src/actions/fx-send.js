@@ -15,11 +15,24 @@ class FxSend extends AbstractAction {
     this.value = '';
   }
 
+	static get properties () {
+		return {
+			submission: {
+				type: 'referencedNode'
+			},
+			...AbstractAction.properties,
+		};
+	}
+
+	get submission () {
+		return this.getModel().querySelector(`#${this._submission}`);
+	}
+
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     // console.log('connectedCallback ', this);
-    this.submission = this.getAttribute('submission');
+    this._submission = this.getAttribute('submission');
   }
 
   async perform() {
@@ -34,7 +47,7 @@ class FxSend extends AbstractAction {
     // todo: instead of relying on model just use pure dom to find submission as the context could be broken due to a delete action
     // const fore = this.closest('fx-fore');
     // const submission = fore.querySelector(`#${this.submission}`);
-    const submission = this.getModel().querySelector(`#${this.submission}`);
+      const {submission} = this;
     if (submission === null) {
 /*
       this.dispatchEvent(

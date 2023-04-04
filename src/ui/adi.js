@@ -7,13 +7,12 @@ import {
     getElemPaths,
     drawOptions,
     pauseEvent,
-    drawAttrRow,
 } from './adi/helpers.js';
 
 const nodeByPath = new Map();
 
 class ADI {
-    constructor(rootElement) {
+    constructor(rootElement, document = window.document) {
         this.uiView = null;
         this.menuView = null;
         this.domView = null;
@@ -31,8 +30,6 @@ class ADI {
 
         this.options = {
             align: 'right', // NOTE: left is not supported in this version
-            width: 500,
-            minWidth: 260,
             split: 50,
             minSplit: 30,
             visible: true,
@@ -96,6 +93,7 @@ class ADI {
                 }
             }
         }
+
 
         return false;
     }
@@ -225,6 +223,7 @@ class ADI {
 
             if (this.hasRequiredNodes(root)) {
                 newNode.appendChild(newElement('ul', {'data-open': true}));
+				
                 addClass(newNode.querySelector('.adi-trigger'), 'opened');
             }
 
@@ -299,7 +298,6 @@ class ADI {
         const attrViewContent = newElement('div', {class: 'adi-content'});
 
         const horizSplit = newElement('div', {id: 'adi-horiz-split'});
-        const vertSplit = newElement('div', {id: 'adi-vert-split'});
         const domTree = newElement('ul', {class: 'adi-tree-view'});
         const domPathWrap = newElement('div', {class: 'adi-path-wrap'});
         this.pathView = newElement('div', {class: 'adi-path'});
@@ -310,7 +308,6 @@ class ADI {
         const naviConfig = newElement('a', {class: 'adi-menu-config', title: 'Settings'});
         const naviLookup = newElement('a', {class: 'adi-menu-lookup', title: 'Lookup tool'});
 
-		this.vertSplit = vertSplit;
 		this.horizSplit = horizSplit;
 
         this.optsView = drawOptions();
@@ -332,7 +329,6 @@ class ADI {
         this.uiView.appendChild(horizSplit);
         this.uiView.appendChild(this.attrView);
         // wrapper.appendChild(naviWrap);
-        this.uiView.appendChild(vertSplit);
 
         // cache UI object and append to the DOM
 
@@ -373,8 +369,6 @@ class ADI {
         // UI appearance refresh
         this.uiView.className = this.options.transparent ? 'transparent' : '';
         this.uiView.style.display = this.options.visible ? 'block' : 'none';
-        this.uiView.style.width = `${this.options.width}px`;
-        this.menuView.style.width = `${this.options.width}px`;
         this.domView.style.height = `${this.options.split}%`;
         this.attrView.style.height = `${100 - this.options.split}%`;
         this.domView.querySelector('.adi-content').style.height = `${this.domView.clientHeight}px`;
@@ -396,88 +390,73 @@ class ADI {
 
     // Renders the attribute view
     drawAttrs(elem) {
+        const content = this.attrView.querySelector('.adi-content');
+        // prepare attributes
+        content.innerHTML = '';
+
         // todo: hook element-def.json in here
         if (elem.nodeName.startsWith('FX-')) {
             console.log('got a fore element');
-        }
+			const { properties } = elem.constructor;
+			Object.keys(properties).forEach(propertyName => {
 
-        if (typeof elem !== 'object') {
-            throw new Error(`drawAttrs: Expected argument elem of type object, ${typeof elem} given.`);
-        }
+				const property = properties[propertyName];
+				if (!property || property.hidden) {
+					return;
+				}
+				const row = content.appendChild(newElement('span', {class:'adi-attr'}));
 
-        const content = this.attrView.querySelector('.adi-content');
-        const attrsMain = {
-            id: '',
-            class: '',
-            style: '',
-        };
-        const attrsOther = {};
-        const keys = [];
-        let attr;
-        let i;
-        let len;
+				switch(property.type) {
+					case 'referencedNode': {
+						row.innerHTML = `<label>${propertyName}: <button>${elem[propertyName]?.nodeName}</button></label>`;
+						const button = row.querySelector('button');
+						button.addEventListener(
+							'click', () => this.handleLookup({detail:{target: elem[propertyName]}})
+						);
+						break;
+					}
+					case Number: {
+						row.innerHTML = `<label>${propertyName}: <input type="number" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
+						break;
+					}
+					case String: {
+						if (property.valueSpace) {
+							row.innerHTML = `<label>${propertyName}: <select data-attr="${propertyName}" value="${elem[propertyName]}">${property.valueSpace.map(value => `<option>${value}</option>`)}</label>`;
+						break;
 
-        // prepare attributes
-        content.innerHTML = '';
-        for (i = 0, len = elem.attributes.length; i < len; i += 1) {
-            attr = elem.attributes[i];
+						}
+						row.innerHTML = `<label>${propertyName}: <input type="text" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
+						break;
+					}
+					case Boolean: {
+						if (property.valueSpace) {
+							row.innerHTML = `<label>${propertyName}: <input type="checkbox" data-attr="${propertyName}" value="${elem[propertyName]}"></input></label>`;
 
-            switch (attr.nodeName.toLowerCase()) {
-                case 'id':
-                    attrsMain.id = attr.nodeValue;
-                    break;
-                case 'class':
-                    attrsMain.class = attr.nodeValue;
-                    break;
-                case 'style':
-                    attrsMain.style = this.styleBackup;
-                    break;
-                default:
-                    attrsOther[attr.nodeName.toLowerCase()] = attr.nodeValue;
-            }
-        }
+						}
+						break;
+					}
+					case Object: {
+						try {
+							row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
+						} catch (err) {
+							row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
+						}
+						break;
+					}
+					case Map: {
+						try {
+							row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
+						} catch (err) {
+							row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
+						}
+						break;
+					}
+					default: {
+						row.innerHTML = `<label>${propertyName}: Unknown type ${property.type}</label>`;
+					}
+				}
+			});
 
-        if (elem.nodeName.startsWith('FX-')) {
-            switch (elem.nodeName) {
-                case 'FX-BIND':
-                    attrsOther.calculate = attrsOther.calculate || '';
-                    attrsOther.constraint = attrsOther.constraint || '';
-                    attrsOther.readonly = attrsOther.readonly || '';
-                    attrsOther.relevant = attrsOther.relevant || '';
-                    attrsOther.required = attrsOther.required || '';
-                    break;
-                case 'FX-MESSAGE':
-                case 'FX-SEND':
-                case 'FX-ACTION':
-                    attrsOther.defaultaction = attrsOther.defaultaction || '';
-                    attrsOther.delay = attrsOther.delay || '';
-                    attrsOther.event = attrsOther.event || '';
-                    attrsOther.handler = attrsOther.handler || '';
-                    attrsOther.if = attrsOther.if || '';
-                    attrsOther.phase = attrsOther.phase || '';
-                    attrsOther.propagate = attrsOther.propagate || '';
-                    attrsOther.target = attrsOther.target || '';
-                    attrsOther.while = attrsOther.while || '';
-                    break;
-                default:
-                    attrsOther[attr.nodeName.toLowerCase()] = attr.nodeValue;
-            }
-        }
-
-        // sort attributes
-        for (const key of Object.keys(attrsOther)) {
-            keys.push(key);
-        }
-        keys.sort();
-
-        // render the content
-        content.appendChild(drawAttrRow('id', attrsMain.id));
-        content.appendChild(drawAttrRow('class', attrsMain.class));
-        content.appendChild(drawAttrRow('style', attrsMain.style));
-        content.appendChild(newElement('hr'));
-
-        for (i = 0, len = keys.length; i < len; i += 1) {
-            content.appendChild(drawAttrRow(keys[i], attrsOther[keys[i]]));
         }
     }
 
@@ -572,7 +551,7 @@ class ADI {
 
     // Handles active element selection
     handleActive(e) {
-        let target = e ? e.target : window.event.srcElement;
+        let target = e ? e.detail?.target || e.target : window.event.srcElement;
         const active = this.domView.querySelector('.adi-active-node');
 
         if (active) {
@@ -662,7 +641,7 @@ class ADI {
 
     // Handles element lookup on page
     handleLookup(e) {
-        const target = e ? e.target : window.event.srcElement;
+        const target = e ?e.detail?.target ||  e.target : window.event.srcElement;
 
         if (target.className.indexOf('adi-menu-lookup') !== -1) {
             // enable/disable interactive lookup
@@ -832,23 +811,12 @@ class ADI {
             }
         }
 
-        elem.dettachEvent(`on${evt}`, fn);
+        // elem.detachEvent(`on${evt}`, fn);
     }
 
     // Event registration
     registerEvents() {
         // events for splitters
-        this.vertSplit.addEventListener(
-            'mousedown',
-            e => {
-                e = e || window.event;
-                pauseEvent(e);
-                this.vertResizing = true;
-                this.xPos = e.clientX;
-            },
-            false,
-        );
-
         this.horizSplit.addEventListener(
             'mousedown',
             e => {
@@ -879,7 +847,7 @@ class ADI {
         document.addEventListener('keypress', event => this.processKey(event), false);
 
         // fore action events
-        document.addEventListener('execute-action', event => this.processExecuteAction(event),false);
+        document.addEventListener('log-active-element', event => this.handleLookup(event),false);
 
         // Dom view folding handler
         const handleFolding = e => {

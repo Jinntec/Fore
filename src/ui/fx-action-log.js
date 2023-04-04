@@ -277,7 +277,7 @@ export class FxActionLog extends HTMLElement {
             cbx.addEventListener('click', e => {
                 console.log('filter box ticked', e);
                 if (!e.target.checked) {
-                    //remove event listener
+                    // remove event listener
                     const fore = document.querySelector('fx-fore');
                     fore.removeEventListener(item.name, this._log);
                     // e.preventDefault();
@@ -299,7 +299,7 @@ export class FxActionLog extends HTMLElement {
             this.outermostAppender = null;
         }, {capture: true});
 
-        //buttons
+        // buttons
         const del = this.shadowRoot.querySelector('#del');
         del.addEventListener('click', e => {
             this.shadowRoot.querySelector('#log').innerHTML = '';
@@ -453,7 +453,7 @@ export class FxActionLog extends HTMLElement {
         const path = XPathUtil.getPath(e.target);
         const cut = path.substring(path.indexOf('/fx-fore'), path.length);
         ;
-        const xpath = "/" + cut;
+        const xpath = `/${  cut}`;
         const short = cut.replaceAll('fx-', '');
 
 
@@ -462,7 +462,7 @@ export class FxActionLog extends HTMLElement {
         }
         switch (eventType) {
             case 'deleted':
-                const deletedNodes = e.detail.deletedNodes;
+                const {deletedNodes} = e.detail;
                 const s = new XMLSerializer();
                 let serialized = '';
                 deletedNodes.forEach(node => {
@@ -524,12 +524,10 @@ export class FxActionLog extends HTMLElement {
                     <section class="details">
                       <header>Attributes</header>
                       <section>
-                      ${Array.from(actionElement.attributes).map((item) => {
-                      return `
+                      ${Array.from(actionElement.attributes).map((item) => `
                         <span class="key">${item.nodeName}</span>
                         <span class="value">${item.nodeValue}</span>
-                      `;
-                      }).join('')}                 
+                      `).join('')}                 
                       </section>
                     </section>
                 </fx-log-item>  
@@ -549,7 +547,7 @@ export class FxActionLog extends HTMLElement {
                 `;
             // break;
             case 'FX-SEND':
-                const submission = document.querySelector('#' + e.detail.action.getAttribute('submission'));
+                const submission = document.querySelector(`#${  e.detail.action.getAttribute('submission')}`);
                 return `
                 <fx-log-item short-name="SEND"
                              short-info="${submission.id}"
@@ -558,12 +556,10 @@ export class FxActionLog extends HTMLElement {
                         <section class="details">
                           <header>Submission</header>
                           <section class="attributes">
-                          ${Array.from(submission.attributes).map((item) => {
-                        return `
+                          ${Array.from(submission.attributes).map((item) => `
                             <span class="key">${item.nodeName}</span>
                             <span class="value">${item.nodeValue}</span>
-                          `;
-                          }).join('')}                 
+                          `).join('')}                 
                           </section>  
                         </section>
                </fx-log-item>
@@ -601,9 +597,9 @@ export class FxActionLog extends HTMLElement {
             Object.keys(e.detail).length === 0 &&
             Object.getPrototypeOf(e.detail) === Object.prototype) {
             return ``;
-        } else {
+        } 
             return `${Object.keys(e.detail).map((item) => `<span>${item}</span>`)}`;
-        }
+        
     }
 
     _listAttributes(e) {
@@ -634,6 +630,9 @@ export class FxActionLog extends HTMLElement {
                 element.style.transition = defaultTransition;
             }, 400);
         }, 400);
+
+		window.document.dispatchEvent(new CustomEvent('log-active-element', {detail:{target: element}}));
+
     }
 
 }

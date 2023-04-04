@@ -16,6 +16,19 @@ class FxMessage extends AbstractAction {
     this.attachShadow({ mode: 'open' });
   }
 
+	static get properties () {
+		return {
+			...AbstractAction.properties,
+			modelItem:undefined,
+			messageTextContent: {
+				type: String,
+				get value() {
+					return "here!";
+				}
+			}
+		};
+	}
+
   connectedCallback() {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';

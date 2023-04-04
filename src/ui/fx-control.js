@@ -8,7 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import {ModelItem} from "../modelitem.js";
 import {debounce} from "../events.js";
-import {FxModel} from "../fx-model";
+import {FxModel} from "../fx-model.js";
 
 const WIDGETCLASS = 'widget';
 

@@ -31,8 +31,7 @@ body {
 }
 
 #adi-wrapper {
-    position: fixed;
-    height: 100%;
+    height: 100vh;
     top: 0;
     background: #fafafa;
     font-family: "Segoe UI", Arial;
@@ -56,7 +55,6 @@ body {
 }
 
 #adi-panel {
-    position: fixed;
     top:0;
     /*bottom: 0;*/
     right: 0;
@@ -66,7 +64,6 @@ body {
 }
 
 #adi-panel .adi-path-wrap {
-    position: absolute;
     bottom: 0;
     left: 0;
     width: 80%;
@@ -110,11 +107,10 @@ body {
 
 #adi-panel .adi-path-right {
     right: 2px;
-    background-image: url('img/right_shift.png')
+    background-image: url('/resources/scripts/dom-inspector/img/right_shift.png')
 }
 
 #adi-panel .adi-menu-wrap {
-    position: absolute;
     bottom: 0;
     right: 24px;
     width: 50px;
@@ -144,11 +140,11 @@ body {
 }
 
 #adi-panel .adi-menu-lookup {
-    background-image: url('img/lookup.png')
+    background-image: url('/resources/scripts/dom-inspector/img/lookup.png')
 }
 
 #adi-panel .adi-menu-config {
-    background-image: url('img/config.png')
+    background-image: url('/resources/scripts/dom-inspector/img/config.png')
 }
 
 #adi-dom-view {
@@ -241,11 +237,11 @@ body {
 }
 
 #adi-dom-view .adi-trigger.closed {
-    background: url('img/node_closed.png') no-repeat
+    background: url('/resources/scripts/dom-inspector/img/node_closed.png') no-repeat
 }
 
 #adi-dom-view .adi-trigger.opened {
-    background: url('img/node_opened.png') no-repeat
+    background: url('/resources/scripts/dom-inspector/img/node_opened.png') no-repeat
 }
 
 #adi-dom-view .adi-trigger:hover {
@@ -287,7 +283,7 @@ body {
     right: 28px;
     width: 16px;
     height: 16px;
-    background: url('img/options_close.png') no-repeat;
+    background: url('/resources/scripts/dom-inspector/img/options_close.png') no-repeat;
     opacity: .7;
 }
 
@@ -333,26 +329,6 @@ body {
     background: #c5d9d8;
 }
 
-#adi-vert-split {
-    position: fixed;
-    top: 0;
-    width: 4px;
-    height: 100%;
-    cursor: e-resize;
-    border-width: 0 1px 0 0;
-    background: #bbc5c9;
-    border-color: #768285;
-    border-style: solid;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-#adi-vert-split:hover {
-    background: #c5d9d8;
-}
-
 .adi-content {
     position: relative;
     padding: 10px 15px;
@@ -361,7 +337,6 @@ body {
     -moz-box-sizing: border-box;
     height: 100% !important;
 }
-
 
 #adi-dom-view .adi-normal-node.fore-node{
     background: lawngreen;
