@@ -196,9 +196,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * @param e
    */
   async execute(e) {
-    console.log('execute',this,e);
-    console.log('execute',this.event);
-
 
 /* todo: investigate This bit is breaking...
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
@@ -230,12 +227,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing e phase', e.eventPhase);
     if (AbstractAction.outermostHandler === null) {
       console.time('outermostHandler');
-      console.info(
-        `%coutermost Action `,
-        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-        this,
-      );
-      // console.log('starting outermost handler',this);
       AbstractAction.outermostHandler = this;
 		this.dispatchEvent(new CustomEvent('outermost-action-start', {
           composed: true,

@@ -178,6 +178,7 @@ class ADI {
                 } else {
                     tagStart.textContent = node.nodeName.toLowerCase();
                 }
+
             }
 
             elem.appendChild(tagStart);
@@ -247,6 +248,8 @@ class ADI {
                             isOpen = true;
                         }
 
+                        if(node.nodeName === 'HEAD') isOpen = false;
+
                         if (node.nodeType === Node.DOCUMENT_NODE) {
                             newNode.appendChild(newElement('ul', {'data-open': isOpen}));
                         } else {
@@ -297,7 +300,7 @@ class ADI {
 
         const attrViewContent = newElement('div', {class: 'adi-content'});
 
-        const horizSplit = newElement('div', {id: 'adi-horiz-split'});
+        // const horizSplit = newElement('div', {id: 'adi-horiz-split'});
         const domTree = newElement('ul', {class: 'adi-tree-view'});
         const domPathWrap = newElement('div', {class: 'adi-path-wrap'});
         this.pathView = newElement('div', {class: 'adi-path'});
@@ -308,13 +311,15 @@ class ADI {
         const naviConfig = newElement('a', {class: 'adi-menu-config', title: 'Settings'});
         const naviLookup = newElement('a', {class: 'adi-menu-lookup', title: 'Lookup tool'});
 
-		this.horizSplit = horizSplit;
+		// this.horizSplit = horizSplit;
 
         this.optsView = drawOptions();
 
         // put UI together
         domViewContent.appendChild(domTree);
+        this.domView.appendChild(this.menuView);
         this.domView.appendChild(domViewContent);
+
         this.attrView.appendChild(attrViewContent);
         domPathWrap.appendChild(this.pathView);
         domPathWrap.appendChild(domPathScrollLeft);
@@ -323,10 +328,10 @@ class ADI {
         naviButtons.appendChild(naviConfig);
         this.menuView.appendChild(domPathWrap);
         this.menuView.appendChild(naviButtons);
-        this.uiView.appendChild(this.menuView);
+        // this.uiView.appendChild(this.menuView);
         this.uiView.appendChild(this.optsView);
         this.uiView.appendChild(this.domView);
-        this.uiView.appendChild(horizSplit);
+        // this.uiView.appendChild(horizSplit);
         this.uiView.appendChild(this.attrView);
         // wrapper.appendChild(naviWrap);
 
@@ -368,7 +373,7 @@ class ADI {
 
         // UI appearance refresh
         this.uiView.className = this.options.transparent ? 'transparent' : '';
-        this.uiView.style.display = this.options.visible ? 'block' : 'none';
+        this.uiView.style.display = this.options.visible ? 'grid' : 'none';
         this.domView.style.height = `${this.options.split}%`;
         this.attrView.style.height = `${100 - this.options.split}%`;
         this.domView.querySelector('.adi-content').style.height = `${this.domView.clientHeight}px`;
@@ -393,6 +398,10 @@ class ADI {
         const content = this.attrView.querySelector('.adi-content');
         // prepare attributes
         content.innerHTML = '';
+
+        const header = document.createElement('header');
+        header.innerText = 'Attributes';
+        content.appendChild(header);
 
         // todo: hook element-def.json in here
         if (elem.nodeName.startsWith('FX-')) {
@@ -817,6 +826,7 @@ class ADI {
     // Event registration
     registerEvents() {
         // events for splitters
+/*
         this.horizSplit.addEventListener(
             'mousedown',
             e => {
@@ -826,6 +836,7 @@ class ADI {
             },
             false,
         );
+*/
 
         document.addEventListener(
             'mouseup',
@@ -960,7 +971,7 @@ class ADI {
 				return;
 			}
 			const {selected} = e.detail;
-			const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(build(selected))}']`);
+			const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(selected)}']`);
         // make it visible (scroll)
         if (this.options.makeVisible) {
             const wrap = this.domView.querySelector('.adi-content');

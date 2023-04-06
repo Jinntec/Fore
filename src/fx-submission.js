@@ -72,7 +72,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
     async _submit() {
-        console.log('submitting....', this.getAttribute('id'));
         this.evalInContext();
         const model = this.getModel();
 
@@ -90,7 +89,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 return;
             }
         }
-        console.log('model updated....');
         await this._serializeAndSend();
     }
 

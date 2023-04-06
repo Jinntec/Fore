@@ -38,10 +38,8 @@ class FxSend extends AbstractAction {
   async perform() {
     super.perform();
 
-    console.log('submitting ', this.submission);
     // reset CSS class that signalled validation error during last submit
     this.getOwnerForm().classList.remove('submit-validation-failed');
-    // console.log('submitting model', this.getModel());
 
     // if not exists signal error
     // todo: instead of relying on model just use pure dom to find submission as the context could be broken due to a delete action
@@ -70,7 +68,6 @@ class FxSend extends AbstractAction {
 
       // throw new Error(`submission with id: ${this.submission} not found`);
     }
-    console.log('submission', submission);
       await submission.submit();
 /*
     if(submission.replace === 'instance'){

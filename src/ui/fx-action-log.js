@@ -19,8 +19,8 @@ export class FxActionLog extends HTMLElement {
         background:white;
         font-family: Verdana, Sans;
         font-size:0.8em;
-        padding:0.25em;
         background:#efefef;
+        margin:0;
       }
       a,a:link,a:visited{
         color:black;
@@ -32,8 +32,8 @@ export class FxActionLog extends HTMLElement {
         content:attr(alt);
         position:absolute; 
         left:0;
-        top:1em;
-        border.thin solid;
+        bottom:-0.5em;
+        border:thin solid;
         padding:0.5em;
         background:white;
         z-index:1;
@@ -56,18 +56,14 @@ export class FxActionLog extends HTMLElement {
       }
       .boxes{
         column-width:14rem;
+        overflow:auto;
       }
       .boxes > span{
         display:inline-block;
         width:14rem;
       }
       
-      .boxes label{
-        width:10em;
-      }
       .buttons{
-        display:inline-block;
-        width:100%;
         position:absolute;
         top:0;
         right:0;
@@ -78,7 +74,7 @@ export class FxActionLog extends HTMLElement {
       button{
         float:right;
       }
-      button#del{
+      button{
         border:none;
         background:transparent;
         width:2.25rem;
@@ -95,11 +91,6 @@ export class FxActionLog extends HTMLElement {
                     "bottom .";
         grid-template-columns: 75% 25%;
       }
-      .info label{
-        grid-area:left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
       .info a{
         grid-area:right;
         justify-self:end;
@@ -109,9 +100,11 @@ export class FxActionLog extends HTMLElement {
         flex-wrap:wrap;
         padding:0.5em 0;
       }
-      .details header{
+      header{
+        padding:0.5rem;
+        margin:0;
         width:100%;
-        border-bottom:1px solid;
+        border-bottom:2px solid #ddd;
       }
       
       .info:hover{
@@ -140,15 +133,20 @@ export class FxActionLog extends HTMLElement {
       .event-name{
         display:inline-block;
       }
-      #filter{
-        padding:0 1em;
-        display:flex;
-        border:thin solid #efefef;
+      #settings{
+        display:none;
       }
-      label{
-        margin-right:0.5rem;
-        white-space:nowrap;
-        display:inline-block;
+      #settings.open{
+        display:block;
+        height:100%;
+        position:absolute;
+        top:2rem;
+        left:0;
+        height:100%;
+        width:100%;
+        z-index:1;
+        background:#efefef;
+        overflow:auto;
       }
       .log-row{
         margin:0;
@@ -163,6 +161,9 @@ export class FxActionLog extends HTMLElement {
       }
       .log-name, .event-name, .event-target{
         width:10em;
+      }
+      .log-name{
+        position:relative;
       }
       .short-info{
         flex:3;
@@ -192,10 +193,21 @@ export class FxActionLog extends HTMLElement {
       }
        summary{
         padding:1em;
+        border-bottom:2px solid #ddd;
       }
       .outer-details{
-        width:calc(100% - 1.5em);
+        height:100%;
+        overflow:auto;
+        margin-top:2rem;
       }
+      
+      .outer-details > header{
+        position:absolute;
+        top:0;
+        width:calc(100% - 1rem);
+     }
+        
+      
       .outer-details > summary{
         font-size:1em;
       }
@@ -216,15 +228,23 @@ export class FxActionLog extends HTMLElement {
 
 
         const html = `
-      <details open class="outer-details">
-        <summary>Action Log <span class="buttons"><button id="del"">
-        <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a></button></span></summary>
-        <details id="filter">
-            <summary>show events <button id="reset">reset to default</button></summary>
+      <section open class="outer-details">
+        <header>Action Log 
+            <span class="buttons">
+                <button id="del"">
+                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
+                </button>
+                <button id="settingsBtn">
+                    <svg role="button" viewBox="0 0 24 24" style="width: 16px;height: 16px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g></svg>
+                </button>
+            </span>
+        </header>
+        <section id="settings">
+            <header>log settings <button id="reset">reset</button></header>
             <div class="boxes"></div>
-        </details>
+        </section>
         <div id="log"></div>
-      </details>
+      </section>
     `;
 
         this.shadowRoot.innerHTML = `
@@ -243,7 +263,7 @@ export class FxActionLog extends HTMLElement {
 
         this.listenTo.forEach(eventName => {
             if (eventName.show) {
-                fore.addEventListener(eventName.name, e => {
+                document.addEventListener(eventName.name, e => {
                     this._log(e, log);
                 });
             }
@@ -262,7 +282,6 @@ export class FxActionLog extends HTMLElement {
             lbl.setAttribute('title', item.description);
             lbl.setAttribute('for', item.name);
             lbl.innerText = item.name;
-
 
             const cbx = document.createElement('input');
             cbx.setAttribute('type', 'checkbox');
@@ -311,6 +330,12 @@ export class FxActionLog extends HTMLElement {
             window.location.reload();
         });
 
+        const settings = this.shadowRoot.querySelector('#settingsBtn');
+        settings.addEventListener('click', e => {
+            const settings = this.shadowRoot.querySelector('#settings');
+            settings.classList.toggle('open');
+        });
+
 
     }
 
@@ -328,6 +353,7 @@ export class FxActionLog extends HTMLElement {
             {name: "index-changed", show: false, description: 'fires when the repeat index changes'},
             {name: "instance-loaded", show: false, description: 'fires after an fx-instance has been loaded'},
             {name: "invalid", show: false, description: 'fires after a control became invalid'},
+            {name: "item-changed", show: false, description: 'fires when a repeat item was changed'},
             {name: "item-created", show: false, description: 'fires when a repeat item was created'},
             {name: "loaded", show: false, description: 'fires after a fx-load has loaded'},
             {name: "model-construct", show: false, description: 'fires when a model gets constructed'},
@@ -497,16 +523,15 @@ export class FxActionLog extends HTMLElement {
                 break;
             default:
                 return `
-        <fx-log-item event-name="${eventType}"
-                     xpath="${xpath}"
-                     short-name="${e.target.nodeName.toLowerCase()}">
-                     
-            <section class="details">
-              ${this._listEventDetails(e)}
-            </section>
-        </fx-log-item>
-    `;
-
+                <fx-log-item event-name="${eventType}"
+                             xpath="${xpath}"
+                             short-name="${e.target.nodeName.toLowerCase()}">
+                             
+                    <section class="details">
+                      ${this._listEventDetails(e)}
+                    </section>
+                </fx-log-item>
+            `;
         }
 
         // }
