@@ -1,5 +1,3 @@
-import AbstractControl from './abstract-control.js';
-import {XPathUtil} from "../xpath-util";
 
 export class FxLogItem extends HTMLElement {
 
@@ -79,6 +77,7 @@ export class FxLogItem extends HTMLElement {
       }
       .event-name{
         width:12em;
+        text-align:right;
         }
       .short-info{
         flex:3;
@@ -86,8 +85,6 @@ export class FxLogItem extends HTMLElement {
         white-space:nowrap;
         text-overflow:ellipsis;
       }
-
-
     `;
 
     this.eventName = this.getAttribute('event-name');
@@ -103,7 +100,7 @@ export class FxLogItem extends HTMLElement {
     const html = `
        <details class="info send">
               <summary>
-                <span class="log-name"><a href="#" alt="${shortPath}" data-path="${this.xpath}">${this.shortName}</a></span>
+                <span class="log-name"><a href="#" title="${shortPath}" data-path="${this.xpath}">${this.shortName}</a></span>
                 <span class="short-info">${this.shortInfo}</span>
                 <span class="event-name">${this.eventName}</span>                    
               </summary>

@@ -112,8 +112,7 @@ export default class FxControl extends XfAbstractControl {
         }, this.debounceDelay),
       );
     } else {
-      listenOn.addEventListener(this.updateEvent, () => {
-        // console.info('handling Event:', event.type, listenOn);
+      listenOn.addEventListener(this.updateEvent, (event) => {
         this.setValue(this.widget[this.valueProp]);
       });
     }

@@ -1,4 +1,4 @@
-import '../ui/fx-action-log.js';
+import './fx-action-log.js';
 export class FxDevtools extends HTMLElement {
   constructor() {
     super();
@@ -18,24 +18,7 @@ export class FxDevtools extends HTMLElement {
         document.addEventListener('mousemove', this._resizePanel.bind(this));
         document.addEventListener('mouseup', this._stopResize.bind(this));
 
-        this.vertResize1 = this.shadowRoot.querySelector('.vertDevider');
-        this.vertResize1.addEventListener('mousedown',this._startVertResize.bind(this));
-
     });
-  }
-
-  _startVertResize(event){
-      this.isResizing=true;
-      this.lastX = event.clientX;
-  }
-  _resizeVertical(event){
-      if(!this.isResizing) return;
-      console.log('resize' ,this)
-      const delta = event.clientX - this.lastX;
-
-      const mainPanel = this;
-      mainPanel.style.width = `${mainPanel.offsetWidth - delta}px`;
-      this.lastX = event.clientX;
   }
 
   _startResize(event){
@@ -45,25 +28,13 @@ export class FxDevtools extends HTMLElement {
 
   _resizePanel(event){
 
-
       if(!this.isResizing) return;
 
-      console.log('lastX', this.lastX);
       console.log('lastY', this.lastY);
 
-      if(this?.lastX && this.lastX !== event.clientX){
-          const delta = event.clientY - this.lastY;
-
-          const log = this.shadowRoot.querySelector('.log');
-
-          log.style.width = `${log.offsetHeight - delta}px`;
-          this.lastX = event.clientX;
-      }else{
-          console.log('resize' ,this)
-          const delta = event.clientY - this.lastY;
-          this.style.height = `${this.offsetHeight - delta}px`;
-          this.lastY = event.clientY;
-      }
+      const delta = event.clientY - this.lastY;
+      this.style.height = `${this.offsetHeight - delta}px`;
+      this.lastY = event.clientY;
 
   }
 
@@ -89,8 +60,8 @@ export class FxDevtools extends HTMLElement {
           height:var(--fx-devtools-height);
           font-style:inherit;
           font-family: 'Verdana' , 'Sans';
-          font-size:0.8em;
-          max-width:80vw;
+          font-size:1em;
+          max-width:100vw;
         }
         fx-action-log{
             height:100%;
@@ -113,6 +84,8 @@ export class FxDevtools extends HTMLElement {
             background:#efefef;
             padding:0.5rem;
             border-bottom:2px solid #ddd;
+            font-size:1rem;
+            height:1rem;
         }
         .instances{
             width:35%;

@@ -8,13 +8,9 @@ import './src/fx-header.js';
 import './src/fx-var.js';
 
 // ui classes
-import './src/ui/fx-action-log.js';
-import './src/ui/fx-log-item.js';
-import './src/tools/fx-devtools.js';
 import './src/ui/fx-alert.js';
 import './src/ui/fx-control.js';
 import './src/ui/fx-container.js';
-import './src/ui/fx-dom-inspector.js';
 import './src/ui/fx-group.js';
 import './src/ui/fx-hint.js';
 import './src/ui/fx-output.js';
@@ -26,6 +22,11 @@ import './src/ui/fx-case.js';
 import './src/ui/fx-inspector.js';
 import './src/ui/fx-dialog.js';
 import './src/ui/fx-items.js';
+
+import './src/tools/fx-action-log.js';
+import './src/tools/fx-log-item.js';
+import './src/tools/fx-devtools.js';
+import './src/tools/fx-dom-inspector.js';
 
 
 // import './src/ui/fx-checkbox-group.js';

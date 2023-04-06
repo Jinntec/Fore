@@ -18,7 +18,6 @@ export class FxActionLog extends HTMLElement {
         border:thin solid #efefef;
         background:white;
         font-family: Verdana, Sans;
-        font-size:0.8em;
         background:#efefef;
         margin:0;
       }
@@ -39,20 +38,24 @@ export class FxActionLog extends HTMLElement {
         z-index:1;
         min-width:5em;
         border:thin solid;
-        white-space:nowrap;
-        overflow-wrap:break-word;
+        max-width:90%;
       }
+     .details{
+        padding:0.25em 0;
+      }
+
       .key{
         width:20%;
         display:inline-block;
         min-width:5rem;
         border-bottom:1px solid #ddd;
         background:#efefef;
+        vertical-align:top;
       }
       .value{
         display:inline-block;
-        width:79%;
-        border-bottom:1px solid #ddd;
+        width:60%;
+        
       }
       .boxes{
         column-width:14rem;
@@ -69,7 +72,7 @@ export class FxActionLog extends HTMLElement {
         right:0;
       }
       .buttons button{
-        margin-right:0.5rem;
+        padding:0;
       }
       button{
         float:right;
@@ -80,6 +83,10 @@ export class FxActionLog extends HTMLElement {
         width:2.25rem;
         height:2.25rem;
         cursor:pointer;
+      }
+      button#reset{
+        padding:0;
+        height:1rem;
       }
      .info{
         padding:0 0.5em;
@@ -100,10 +107,11 @@ export class FxActionLog extends HTMLElement {
         flex-wrap:wrap;
         padding:0.5em 0;
       }
+      fx-log-item{
+      }
       header{
         padding:0.5rem;
         margin:0;
-        width:100%;
         border-bottom:2px solid #ddd;
       }
       
@@ -127,7 +135,7 @@ export class FxActionLog extends HTMLElement {
       ol{
         background: #efefef;
         padding: 0.5em 0 0 2em;
-        border-left:3px solid;
+        border-left:3px solid red;
       }
      
       .event-name{
@@ -142,7 +150,7 @@ export class FxActionLog extends HTMLElement {
         position:absolute;
         top:2rem;
         left:0;
-        height:100%;
+        height:calc(100% - 5rem);
         width:100%;
         z-index:1;
         background:#efefef;
@@ -152,6 +160,9 @@ export class FxActionLog extends HTMLElement {
         margin:0;
         padding:0;
         position:relative;
+        font-size:0.8em;
+        border-left:4px solid #ddd;
+        padding-left:3px;
       }
       .log-row summary{
         display:flex;
@@ -203,8 +214,11 @@ export class FxActionLog extends HTMLElement {
       
       .outer-details > header{
         position:absolute;
-        top:0;
+        top:-1px;
         width:calc(100% - 1rem);
+        border-bottom:2px solid #ddd;
+        font-size:1rem;
+        height:1rem;
      }
         
       
@@ -214,9 +228,12 @@ export class FxActionLog extends HTMLElement {
       ul{
         list-style:none;
         padding:0;
-        margin:0.5em 0;
+        margin:0.1em 0;
         border-left:3px solid steelblue;
-        padding:0.01em 0;
+        padding:0.1em 0;
+      }
+      ul .log-row{
+        padding-left:0;
       }
     `;
 
@@ -232,10 +249,10 @@ export class FxActionLog extends HTMLElement {
         <header>Action Log 
             <span class="buttons">
                 <button id="del"">
-                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
+                    <svg viewBox="0 0 24 24" style="width:24px;height:24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
                 </button>
                 <button id="settingsBtn">
-                    <svg role="button" viewBox="0 0 24 24" style="width: 16px;height: 16px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g></svg>
+                    <svg role="button" viewBox="0 0 24 24" style="width: 24px;height: 24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g></svg>
                 </button>
             </span>
         </header>

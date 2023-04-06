@@ -67,18 +67,18 @@ export default class FxSetvalue extends AbstractAction {
     _dispatchExecute() {}
 
     setValue(modelItem, newVal) {
-        this.dispatchEvent(
-            new CustomEvent('execute-action', {
-                composed: true,
-                bubbles: true,
-                cancelable:true,
-                detail: { action: this, event:this.event, value:newVal},
-            }),
-        );
         const item = modelItem;
         if (!item) return;
 
         if (item.value !== newVal) {
+            this.dispatchEvent(
+                new CustomEvent('execute-action', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable:true,
+                    detail: { action: this, event:this.event, value:newVal},
+                }),
+            );
 
             if(newVal.nodeType){
                 if(newVal.nodeType === Node.ELEMENT_NODE){

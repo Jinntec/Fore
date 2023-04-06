@@ -7,7 +7,7 @@ import {
     getElemPaths,
     drawOptions,
     pauseEvent,
-} from './adi/helpers.js';
+} from './helpers.js';
 
 const nodeByPath = new Map();
 
