@@ -46,7 +46,14 @@ export class FxLogItem extends HTMLElement {
         margin:0.1rem 0;
         background:white;
         position:relative;
+        border:1px solid #ddd;
+        border-radius:1em;       
       }
+      :host(.action) .info{
+        border-radius:0;
+        border-color:steelblue;
+      }
+
       .info label{
         grid-area:left;
         overflow: hidden;
@@ -67,14 +74,16 @@ export class FxLogItem extends HTMLElement {
         flex-wrap:wrap;
         padding:0.5em 0;
         cursor:pointer;
-
+        gap:0.25em;
       }
+/*
       .log-name{
         font-size:1.2em;
       }
       .log-name, .short-info{
         width:10em;
       }
+*/
       .event-name{
         width:12em;
         text-align:right;

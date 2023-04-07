@@ -32,7 +32,6 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-wrapper {
-            height: 200px;
             top: 0;
             background: #fafafa;
             font-family: "Segoe UI", Arial;
@@ -43,6 +42,7 @@ export class FxDomInspector extends HTMLElement {
             user-select: none;
             display:grid;
             grid-template-columns:70% auto;   
+            position:relative;
         }
         
         #adi-wrapper.left {
@@ -177,7 +177,6 @@ export class FxDomInspector extends HTMLElement {
         
         
         #adi-dom-view {
-            height: 50%;
             border-right:2px solid #ddd;
         }
         
@@ -321,8 +320,10 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-attr-view {
-            height: 48%;
-            overflow: auto;
+            position:absolute;
+            top:0;
+            right:0;
+            width:30%;
         }
         
         #adi-attr-view .adi-attr {

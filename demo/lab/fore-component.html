@@ -6,7 +6,7 @@
 
     <title>Fore as component</title>
 
-<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <link href="../../resources/demo.css" rel="stylesheet">
     <style>
         fx-control {
@@ -31,12 +31,14 @@
         fx-output {
             display: block;
         }
-        fore-component.first{
+
+        fore-component.first {
             margin-bottom: 1rem;
             display: block;
         }
-        a,a:link, a:visited{
-            color:black;
+
+        a, a:link, a:visited {
+            color: black;
         }
     </style>
 
@@ -51,56 +53,49 @@
     <h1>Fore Component wraps a Fore page in a Web Component</h1>
 
     <p>With <code>fore-component</code> you can wrap a complete and standalone HTML page containing
-    an arbitrarily complex Fore section and put it into shadowDOM.</p>
+        an arbitrarily complex Fore section and put it into shadowDOM.</p>
 
     <p>Fore Component is completely generic - you don't need to wrap each of your pages individually
-    but instead just pass the link to the HTML page. Fore Component will then import the <code>fx-fore</code> element
-    from that page.</p>
+        but instead just pass the link to the HTML page. Fore Component will then import the <code>fx-fore</code>
+        element
+        from that page.</p>
 
     <p>As this encapsulates the pages you need a way to inject CSS into their shadowDOM. By passing
-    the respective <code>link</code> elements as children you can import those into the rendered page.</p>
+        the respective <code>link</code> elements as children you can import those into the rendered page.</p>
 
-    <p class="note">constructable CSSStylesSheets are new and need to be polyfilled on some browsers like Safari. If you inspect
-    this page you find the polyfill import in the <code>head</code> section.</p>
+    <p class="note">constructable CSSStylesSheets are new and need to be polyfilled on some browsers like Safari. If you
+        inspect
+        this page you find the polyfill import in the <code>head</code> section.</p>
 
     <p>This page shows two separate Fore pages (clock and todo) assembled in one page.</p>
     <p>Though properly isolated from each other and each using it's own CSS they still can communicate
-    via global events. The clock emits a 'clock' event which passes on the time. The todo page will listen
-    for that and display the time in its own shadowDOM. Note the time displayed in blue.</p>
+        via global events. The clock emits a 'clock' event which passes on the time. The todo page will listen
+        for that and display the time in its own shadowDOM. Note the time displayed in blue.</p>
 
-<!--
-    <demo-snippet>
-        <template>
--->
-            <fore-component id="clock" src="clock2.html" class="first">
-                <link rel="stylesheet" href="../../resources/fore.css"/>
-                <link rel="stylesheet" href="./clock.css"/>
-            </fore-component>
+    <fore-component id="clock" src="clock2.html" class="first">
+        <link rel="stylesheet" href="../../resources/fore.css"/>
+        <link rel="stylesheet" href="./clock.css"/>
+    </fore-component>
 
-    <!--                            <fx-action slot="event" event="clock" target="#clock" if="string-length(instance('helper')/time) = 0">-->
-                    <fore-component src="todo2.html" >
-                        <link rel="stylesheet" href="../../resources/fore.css"/>
-                        <link rel="stylesheet" href="todo.css"/>
-                        <fx-action event="clock">
-                            <fx-message>{event('time')}</fx-message>
-                        </fx-action>
 
+    <fore-component src="todo2.html">
 <!--
-                        <fore-component id="clock" src="clock2.html" class="first">
-                            <link rel="stylesheet" href="../../resources/fore.css">
-                            <link rel="stylesheet" href="../clock.css">
-                        </fore-component>
--->
-            </fore-component>
-<!--
-        </template>
-    </demo-snippet>
+        <fx-action event="clock" target="#document">
+            <fx-setvalue ref="instance('helper')/time" value="event('time')"></fx-setvalue>
+        </fx-action>
 -->
 
+        <link rel="stylesheet" href="../../resources/fore.css"/>
+        <link rel="stylesheet" href="todo.css"/>
+    </fore-component>
 
-    <p class="note">Unfortunately the <code>demo-snippet</code> component does not handle Fore Component correcty so the source
-        cannot be shown here directly. This is not a bug in the implementation but a limitation in demo-snippet. You can find the source at
-        <a href="https://github.com/Jinntec/Fore/blob/dev/demo/lab/fore-component.html" target="_blank">Github</a></p>
+
+    <p class="note">Unfortunately the <code>demo-snippet</code> component does not handle Fore Component correcty so
+        the source
+        cannot be shown here directly. This is not a bug in the implementation but a limitation in demo-snippet. You
+        can find the source at
+        <a href="https://github.com/Jinntec/Fore/blob/dev/demo/lab/fore-component.html" target="_blank">Github</a>
+    </p>
 
 </div>
 <script type="module" src="../demo.js"></script>

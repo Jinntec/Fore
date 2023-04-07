@@ -12,14 +12,9 @@
     <div class="wrapper">
         <fx-fore id="todo">
             <fx-send submission="load" event="model-construct-done"></fx-send>
-<!--            <fx-message event="clock" target="#document">{event('time')}</fx-message>-->
-            <!--            <fx-action event="clock" target="#document" debounce="1000">-->
-<!--
             <fx-action event="clock" target="#document" if="string-length(instance('helper')/time) = 0">
                 <fx-setvalue ref="instance('helper')/time" value="event('time')"></fx-setvalue>
             </fx-action>
--->
-
 
             <fx-model id="record">
                 <fx-instance>
@@ -128,10 +123,10 @@
                         <fx-message event="log-action">{event('target.nodeName')}</fx-message>
                         <fx-message event="log-action">{event('eventPhase')}</fx-message>
             -->
+<!--            <fx-inspector open></fx-inspector>-->
         </fx-fore>
-        <fx-action-log style="height:200px;"></fx-action-log>
-<!--        <fx-devtools style="height:40vh;"></fx-devtools>-->
-
+<!--        <fx-action-log style="height:200px;overflow:auto;"></fx-action-log>-->
+        <fx-devtools></fx-devtools>
     </div>
 
 </body>

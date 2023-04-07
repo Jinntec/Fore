@@ -60,6 +60,7 @@ export class FxActionLog extends HTMLElement {
       .boxes{
         column-width:14rem;
         overflow:auto;
+        margin-bottom:5em;
       }
       .boxes > span{
         display:inline-block;
@@ -156,13 +157,19 @@ export class FxActionLog extends HTMLElement {
         background:#efefef;
         overflow:auto;
       }
+      #log{
+        margin-bottom:10em;
+        margin-right:1em;
+      }
       .log-row{
         margin:0;
         padding:0;
         position:relative;
         font-size:0.8em;
-        border-left:4px solid #ddd;
-        padding-left:3px;
+        border-left:4px solid transparent;
+        padding-left:5px;
+        width:calc(100% - 2em);
+        margin-bottom:0.25em;
       }
       .log-row summary{
         display:flex;
@@ -170,9 +177,10 @@ export class FxActionLog extends HTMLElement {
         padding:0.5em 0;
         cursor:pointer;
       }
-      .log-name, .event-name, .event-target{
-        width:10em;
+      .log-row summary > span {
+        width:calc(90% div 3);
       }
+
       .log-name{
         position:relative;
       }
@@ -233,7 +241,8 @@ export class FxActionLog extends HTMLElement {
         padding:0.1em 0;
       }
       ul .log-row{
-        padding-left:0;
+        padding-left:3px;
+        width:calc(100% - 2em + 2px);
       }
     `;
 
@@ -276,7 +285,7 @@ export class FxActionLog extends HTMLElement {
             console.error('fx-fore element not found in this page.');
         }
         const log = this.shadowRoot.querySelector('#log');
-        fore.classList.add('action-log');
+        // fore.classList.add('action-log');
 
         this.listenTo.forEach(eventName => {
             if (eventName.show) {
@@ -368,6 +377,7 @@ export class FxActionLog extends HTMLElement {
             {name: "execute-action", show: true, description: 'fires when an action executes'},
             {name: "init", show: false, description: 'fires when a control initializes'},
             {name: "index-changed", show: false, description: 'fires when the repeat index changes'},
+            {name: "insert", show: false, description: 'fires when an fx-insert is executed'},
             {name: "instance-loaded", show: false, description: 'fires after an fx-instance has been loaded'},
             {name: "invalid", show: false, description: 'fires after a control became invalid'},
             {name: "item-changed", show: false, description: 'fires when a repeat item was changed'},
@@ -562,7 +572,7 @@ export class FxActionLog extends HTMLElement {
                 return `
                 <fx-log-item event-name="${e.detail.event}"
                              xpath="${xpath}"
-                             short-name="ACTION">
+                             short-name="ACTION" class="action">
                     <section class="details">
                       <header>Attributes</header>
                       <section>
@@ -581,7 +591,7 @@ export class FxActionLog extends HTMLElement {
                     <fx-log-item event-name="${e.detail.event}"
                                  xpath="${xpath}"
                                  short-name="MESSAGE"
-                                 short-info="${message}">
+                                 short-info="${message}" class="action">
                         <section class="details">
                             <span>${message}</span>
                         </section>
@@ -594,7 +604,7 @@ export class FxActionLog extends HTMLElement {
                 <fx-log-item short-name="SEND"
                              short-info="${submission.id}"
                              event-name="${e.detail.event}"
-                             xpath="${xpath}">
+                             xpath="${xpath}" class="action">
                         <section class="details">
                           <header>Submission</header>
                           <section class="attributes">
@@ -614,7 +624,7 @@ export class FxActionLog extends HTMLElement {
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
                              event-name="${listensOn}"
-                             xpath="${xpath}">
+                             xpath="${xpath}" class="action">
                       <section class="details">
                           <span class="key">value</span>
                           <span class="value">${e.detail.value}</span>
@@ -624,9 +634,10 @@ export class FxActionLog extends HTMLElement {
             // break;
             default:
                 return `
-                    <fx-log-item short-name="${e.target.nodeName}"
-                             xpath="${xpath}"
-                             event-name="${e.detail.event}">
+                    <fx-log-item event-name="${e.detail.event}" 
+                                short-name="${e.target.nodeName}"
+                                xpath="${xpath}"
+                                class="action">
                           <section class="details">
                           </section>
                     </fx-log-item>

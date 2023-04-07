@@ -23,6 +23,7 @@ export class ForeComponent extends HTMLElement {
         `;
         const html = `
           <fx-fore src="${this.src}">
+            <slot name="action"></slot>
           </fx-fore>
           <slot id="default"></slot>
         `;

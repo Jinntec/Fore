@@ -5,6 +5,8 @@ import {
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
+import {XPathUtil} from "../xpath-util";
+import {Fore} from '../fore.js';
 
 /**
  * `fx-insert`
@@ -56,6 +58,31 @@ export class FxInsert extends AbstractAction {
     this.position = this.hasAttribute('position') ? this.getAttribute('position') : 'after';
     this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
     this.keepValues = !!this.hasAttribute('keep-values');
+  }
+
+  _getOriginSequence(inscope, targetSequence){
+    let originSequence;
+    if (this.origin) {
+      // ### if there's an origin attribute use it
+      let originTarget;
+      try {
+        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
+        if (Array.isArray(originTarget) && originTarget.length === 0) {
+          console.warn('invalid origin for this insert action - ignoring...', this);
+          originSequence = null;
+        }
+        originSequence = originTarget;
+      } catch (error) {
+        console.warn('invalid origin for this insert action - ignoring...', this);
+      }
+    } else if (targetSequence) {
+      // ### use last item of targetSequence
+      originSequence = targetSequence;
+      if (originSequence && !this.keepValues) {
+        this._clear(originSequence);
+      }
+    }
+    return originSequence;
   }
 
   _cloneOriginSequence(inscope, targetSequence) {
@@ -207,9 +234,17 @@ export class FxInsert extends AbstractAction {
     // console.log('insert context item ', insertLocationNode);
     // console.log('parent ', insertLocationNode.parentNode);
     // console.log('instance ', this.getModel().getDefaultContext());
+    // Fore.dispatch()
 
-    console.log('<<<<<<< at', this.at);
-    console.log('<<<<<<< index', index);
+    const inst = this.getModel().getInstance(XPathUtil.resolveInstance(this));
+    console.log('<<<<<<< resolved instance', inst);
+
+    Fore.dispatch(inst,'insert',{
+      'inserted-nodes':originSequenceClone,
+      'insert-location-node': insertLocationNode,
+      'position':this.position
+    });
+
     // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
       // new CustomEvent('insert', {

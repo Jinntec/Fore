@@ -374,8 +374,8 @@ class ADI {
         // UI appearance refresh
         this.uiView.className = this.options.transparent ? 'transparent' : '';
         this.uiView.style.display = this.options.visible ? 'grid' : 'none';
-        this.domView.style.height = `${this.options.split}%`;
-        this.attrView.style.height = `${100 - this.options.split}%`;
+        // this.domView.style.height = `${this.options.split}%`;
+        // this.attrView.style.height = `${100 - this.options.split}%`;
         this.domView.querySelector('.adi-content').style.height = `${this.domView.clientHeight}px`;
         this.attrView.querySelector('.adi-content').style.height = `${this.attrView.clientHeight -
         this.menuView.clientHeight}px`;
