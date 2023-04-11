@@ -85,8 +85,8 @@ export class FxDevtools extends HTMLElement {
         event.preventDefault();
         event.stopPropagation();
         this.isResizing = false;
-        document.body.style.height = 'inherit'; //reset before calculating scrollheight
-        document.body.style.width = 'inherit'; //reset before calculating scrollheight
+        document.body.style.height = 'inherit'; // reset before calculating scrollheight
+        document.body.style.width = 'inherit'; // reset before calculating scrollheight
         const newHeight = document.body.scrollHeight + this.offsetHeight;
         document.body.style.height = `${newHeight}px`;
     }
@@ -214,9 +214,7 @@ export class FxDevtools extends HTMLElement {
                         <fx-dom-inspector></fx-dom-inspector>
                     </section>
                     <section class="instances">
-                        <header>Data</header>
-                        <header>default</header>
-                        <header>second</header>
+<fx-dom-inspector instance="default"/>
                     </section>
                     <section id="options">
                         centralized options

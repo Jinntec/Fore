@@ -88,12 +88,11 @@ export function getElemPaths(elem) {
 
   let css = '';
   let js = '';
-  let parent = '';
   let i;
   let len;
 
-  while (elem !== document) {
-    parent = elem.parentNode;
+	while (elem.parentNode) {
+		const parent = elem.parentNode;
 
     // javascript selector
     for (i = 0, len = parent.childNodes.length; i < len; i += 1) {

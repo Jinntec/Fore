@@ -7,12 +7,13 @@ import {
     getElemPaths,
     drawOptions,
     pauseEvent,
+	drawAttrRow
 } from './helpers.js';
 
 const nodeByPath = new Map();
 
 class ADI {
-    constructor(rootElement, document = window.document) {
+    constructor(rootElement, instanceId='#document') {
         this.uiView = null;
         this.menuView = null;
         this.domView = null;
@@ -41,9 +42,19 @@ class ADI {
             nodeTypes: [1, 3, 8, 9],
         };
 
+		this.instanceId = instanceId;
+		if (this.instanceId === '#document') {
+			this.document = window.document;
+		} else {
+		  const instance  = window.document.querySelector(`#${this.instanceId}`);
+			if (!instance  || instance.localName !== 'fx-instance') {
+				console.error('No instance found!');
+			}
+			this.document = instance.getInstanceData();
+		}
         this.drawUI(rootElement);
         this.registerEvents();
-        this.drawDOM(document, this.domView.querySelector('.adi-tree-view'), true);
+        this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
     }
 
     // Returns selected element or null
@@ -465,8 +476,11 @@ class ADI {
 					}
 				}
 			});
-
-        }
+        } else {
+			[...elem.attributes].forEach(attr => {
+				content.appendChild(drawAttrRow(attr.name, attr.value));
+			})
+		}
     }
 
     // Handles attribute changes
@@ -635,6 +649,11 @@ class ADI {
         const path = target.getAttribute('data-js-path');
 
 		node = nodeByPath.get(path);
+
+		if (node.ownerDocument !== window.document) {
+			// Not in HTML: ignore
+			return;
+		}
 
         if (node) {
             if (e.type === 'mouseover') {
@@ -838,6 +857,21 @@ class ADI {
         );
 */
 
+		document.addEventListener('instance-loaded', () => {
+			if (this.instanceId !== '#document') {
+		  const instance  = window.document.querySelector(`#${this.instanceId}`);
+				this.document = instance.getInstanceData();
+			}
+			this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
+		});
+		document.addEventListener('value-changed', () => {
+			if (this.instanceId !== '#document') {
+		  const instance  = window.document.querySelector(`#${this.instanceId}`);
+				this.document = instance.getInstanceData();
+			}
+			this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
+		});
+
         document.addEventListener(
             'mouseup',
             () => {
@@ -849,8 +883,8 @@ class ADI {
         );
 
         document.addEventListener('mousemove', event => this.verticalResize(event), false);
-        document.addEventListener('mousemove', event => this.horizontalResize(event), false);
-
+        document.addEventListener('mousemove', event => this.horizontalResize(event), false)
+;
         // window resize
         window.addEventListener('resize', event => this.refreshUI(event), false);
 

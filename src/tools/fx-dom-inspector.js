@@ -3,10 +3,13 @@ import ADI from './adi.js';
 export class FxDomInspector extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
+      this.attachShadow({ mode: 'open' });
+
+	  this.instanceName = null;
   }
 
-  connectedCallback() {
+	connectedCallback() {
+		this.instanceName = this.getAttribute('instance');
     this.render();
   }
 
@@ -438,7 +441,7 @@ export class FxDomInspector extends HTMLElement {
           ${html}
       `;
 
-	  this.adiInstance = new ADI(this.shadowRoot);
+	  this.adiInstance = new ADI(this.shadowRoot, this.instanceName || '#document');
   }
 
     verticalResize(e) {
