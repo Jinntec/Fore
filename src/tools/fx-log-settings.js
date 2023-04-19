@@ -19,11 +19,13 @@ export class FxLogSettings extends HTMLElement {
         font-family: Verdana, Sans;
         background:#efefef;
         margin:0;
+        border:thin solid #ddd;
       }
       .boxes{
         column-width:14rem;
         overflow:auto;
         margin-bottom:5em;
+        padding:1em;
       }
       .boxes > span{
         display:inline-block;
@@ -63,7 +65,8 @@ export class FxLogSettings extends HTMLElement {
         if (localStorage.getItem('fx-log-settings')) {
             this.listenTo = JSON.parse(localStorage.getItem('fx-log-settings'));
         } else {
-            this._defaultSettings();
+            // this._defaultSettings();
+            this.listenTo = FxLogSettings.defaultSettings();
         }
 
 
@@ -130,15 +133,15 @@ export class FxLogSettings extends HTMLElement {
         // buttons
         const reset = this.shadowRoot.querySelector('#reset');
         reset.addEventListener('click', e => {
-            this._defaultSettings();
+            // this._defaultSettings();
             localStorage.removeItem('fx-log-settings');
             window.location.reload();
         });
 
     }
 
-    _defaultSettings() {
-        this.listenTo = [
+    static defaultSettings() {
+        return [
             {name: "action-performed", show: false, description: 'fires after an action has been performed'},
             {name: "click", show: false, description: ''},
             {name: "deleted", show: false, description: 'fires after a delete action has been executed'},

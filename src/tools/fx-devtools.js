@@ -44,6 +44,7 @@ export class FxDevtools extends HTMLElement {
         optionsTrigger.addEventListener('click', () => {
             const tr = this.shadowRoot.querySelector('#options');
             tr.classList.toggle('open');
+            tr.classList.contains('open')? optionsTrigger.style.background = 'lightsteelblue': optionsTrigger.style.background = 'transparent';
         });
 
         const caption = this.shadowRoot.querySelector('.fx-devtools');
@@ -146,6 +147,11 @@ export class FxDevtools extends HTMLElement {
             width:35%;
             border-left:1px solid #999;
         }
+        #optionsTrigger{
+            background:transparent;
+            border-radius:0.25em;
+            padding:0.25em;
+        }
         .panels{
             display:grid;
             grid-template-columns:20% 40% 40%;
@@ -169,9 +175,10 @@ export class FxDevtools extends HTMLElement {
             z-index:10;
             left:0;
             top:3em;
-            width:100vw;
             height:100%;
             display:block;
+            padding:1em;
+            background:#efefef;
         }
         .resizer{
             width:100vw;
@@ -183,9 +190,11 @@ export class FxDevtools extends HTMLElement {
         }
         summary{
             padding:0.5em;
-            border-bottom:thin solid #ddd;
+            border-bottom:2px solid #ddd;
             display:flex;
             justify-content:space-between;
+            align-items:center;
+            
         }
         .wrapper{
             height:100%;

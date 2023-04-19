@@ -1,5 +1,6 @@
 import {XPathUtil} from "../xpath-util";
 import "./fx-log-item.js";
+import {FxLogSettings} from './fx-log-settings.js';
 
 export class FxActionLog extends HTMLElement {
     constructor() {
@@ -57,15 +58,6 @@ export class FxActionLog extends HTMLElement {
         width:60%;
         
       }
-      .boxes{
-        column-width:14rem;
-        overflow:auto;
-        margin-bottom:5em;
-      }
-      .boxes > span{
-        display:inline-block;
-        width:14rem;
-      }
       
       .buttons{
         position:absolute;
@@ -121,18 +113,6 @@ export class FxActionLog extends HTMLElement {
         transition:height 0.4s;
       }
 
-/*
-      .info:hover .details{ 
-        grid-area:bottom;
-        display:grid;
-        grid-template-columns:50% 50%;
-        transition: all .8s;
-        opacity:1;   
-        height:auto;  
-      }
-*/
-      
-
       ol{
         background: #efefef;
         padding: 0.5em 0 0 2em;
@@ -141,21 +121,6 @@ export class FxActionLog extends HTMLElement {
      
       .event-name{
         display:inline-block;
-      }
-      #settings{
-        display:none;
-      }
-      #settings.open{
-        display:block;
-        height:100%;
-        position:absolute;
-        top:2rem;
-        left:0;
-        height:calc(100% - 5rem);
-        width:100%;
-        z-index:1;
-        background:#efefef;
-        overflow:auto;
       }
       #log{
         margin-bottom:10em;
@@ -228,8 +193,6 @@ export class FxActionLog extends HTMLElement {
         font-size:1rem;
         height:1rem;
      }
-        
-      
       .outer-details > summary{
         font-size:1em;
       }
@@ -249,9 +212,14 @@ export class FxActionLog extends HTMLElement {
         if (localStorage.getItem('fx-action-log-filters')) {
             this.listenTo = JSON.parse(localStorage.getItem('fx-action-log-filters'));
         } else {
-            this._defaultSettings();
+            this.listenTo = FxLogSettings.defaultSettings()
         }
 
+        if (localStorage.getItem('fx-log-settings')) {
+            this.listenTo = JSON.parse(localStorage.getItem('fx-log-settings'));
+        } else {
+            this.listenTo = FxLogSettings.defaultSettings();
+        }
 
         const html = `
       <section open class="outer-details">
@@ -260,15 +228,8 @@ export class FxActionLog extends HTMLElement {
                 <button id="del"">
                     <svg viewBox="0 0 24 24" style="width:24px;height:24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
                 </button>
-                <button id="settingsBtn">
-                    <svg role="button" viewBox="0 0 24 24" style="width: 24px;height: 24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g></svg>
-                </button>
             </span>
         </header>
-        <section id="settings">
-            <header>log settings <button id="reset">reset</button></header>
-            <div class="boxes"></div>
-        </section>
         <div id="log"></div>
       </section>
     `;
@@ -295,46 +256,48 @@ export class FxActionLog extends HTMLElement {
             }
         });
 
-        const boxes = this.shadowRoot.querySelector('.boxes');
+        // const boxes = this.shadowRoot.querySelector('.boxes');
 
         /*
         build the list of checkboxes for the filtering settings
          */
-        this.listenTo.forEach(item => {
-            const wrapper = document.createElement('span');
-            boxes.append(wrapper);
+        /*
+                this.listenTo.forEach(item => {
+                    const wrapper = document.createElement('span');
+                    boxes.append(wrapper);
 
-            const lbl = document.createElement('label');
-            lbl.setAttribute('title', item.description);
-            lbl.setAttribute('for', item.name);
-            lbl.innerText = item.name;
+                    const lbl = document.createElement('label');
+                    lbl.setAttribute('title', item.description);
+                    lbl.setAttribute('for', item.name);
+                    lbl.innerText = item.name;
 
-            const cbx = document.createElement('input');
-            cbx.setAttribute('type', 'checkbox');
-            cbx.setAttribute('name', item.name);
-            cbx.setAttribute('id', item.name);
-            if (item.show) {
-                cbx.setAttribute('checked', '');
-            }
-            wrapper.append(cbx);
-            wrapper.append(lbl);
+                    const cbx = document.createElement('input');
+                    cbx.setAttribute('type', 'checkbox');
+                    cbx.setAttribute('name', item.name);
+                    cbx.setAttribute('id', item.name);
+                    if (item.show) {
+                        cbx.setAttribute('checked', '');
+                    }
+                    wrapper.append(cbx);
+                    wrapper.append(lbl);
 
-            cbx.addEventListener('click', e => {
-                console.log('filter box ticked', e);
-                if (!e.target.checked) {
-                    // remove event listener
-                    const fore = document.querySelector('fx-fore');
-                    fore.removeEventListener(item.name, this._log);
-                    // e.preventDefault();
-                    // e.stopPropagation();
-                }
-                const t = this.listenTo.find(evt => evt.name === item.name);
-                e.target.checked ? t.show = true : t.show = false;
-                // console.log('filter', this.listenTo);
-                localStorage.setItem('fx-action-log-filters', JSON.stringify(this.listenTo));
-            })
-            // boxes.appendChild(lbl);
-        });
+                    cbx.addEventListener('click', e => {
+                        console.log('filter box ticked', e);
+                        if (!e.target.checked) {
+                            // remove event listener
+                            const fore = document.querySelector('fx-fore');
+                            fore.removeEventListener(item.name, this._log);
+                            // e.preventDefault();
+                            // e.stopPropagation();
+                        }
+                        const t = this.listenTo.find(evt => evt.name === item.name);
+                        e.target.checked ? t.show = true : t.show = false;
+                        // console.log('filter', this.listenTo);
+                        localStorage.setItem('fx-action-log-filters', JSON.stringify(this.listenTo));
+                    })
+                    // boxes.appendChild(lbl);
+                });
+        */
 
         document.addEventListener('outermost-action-start', e => {
             this.outermost = true;
@@ -349,20 +312,6 @@ export class FxActionLog extends HTMLElement {
         del.addEventListener('click', e => {
             this.shadowRoot.querySelector('#log').innerHTML = '';
         });
-        const reset = this.shadowRoot.querySelector('#reset');
-        reset.addEventListener('click', e => {
-            this._defaultSettings();
-            localStorage.removeItem('fx-action-log-filters');
-            window.location.reload();
-        });
-
-        const settings = this.shadowRoot.querySelector('#settingsBtn');
-        settings.addEventListener('click', e => {
-            const settings = this.shadowRoot.querySelector('#settings');
-            settings.classList.toggle('open');
-        });
-
-
     }
 
     _defaultSettings() {
@@ -455,7 +404,7 @@ export class FxActionLog extends HTMLElement {
         }
 
         const targetElement = e.target;
-        row.addEventListener('click', (ev) =>{
+        row.addEventListener('click', (ev) => {
             console.log('clicked inspect item', targetElement);
             console.log('clicked inspect item', ev.target.getAttribute('xpath'));
 
@@ -506,7 +455,7 @@ export class FxActionLog extends HTMLElement {
         const path = XPathUtil.getPath(e.target);
         const cut = path.substring(path.indexOf('/fx-fore'), path.length);
         ;
-        const xpath = `/${  cut}`;
+        const xpath = `/${cut}`;
         const short = cut.replaceAll('fx-', '');
 
 
@@ -599,7 +548,7 @@ export class FxActionLog extends HTMLElement {
                 `;
             // break;
             case 'FX-SEND':
-                const submission = document.querySelector(`#${  e.detail.action.getAttribute('submission')}`);
+                const submission = document.querySelector(`#${e.detail.action.getAttribute('submission')}`);
                 return `
                 <fx-log-item short-name="SEND"
                              short-info="${submission.id}"
@@ -650,9 +599,9 @@ export class FxActionLog extends HTMLElement {
             Object.keys(e.detail).length === 0 &&
             Object.getPrototypeOf(e.detail) === Object.prototype) {
             return ``;
-        } 
-            return `${Object.keys(e.detail).map((item) => `<span>${item}</span>`)}`;
-        
+        }
+        return `${Object.keys(e.detail).map((item) => `<span>${item}</span>`)}`;
+
     }
 
     _listAttributes(e) {
@@ -684,7 +633,7 @@ export class FxActionLog extends HTMLElement {
             }, 400);
         }, 400);
 
-		window.document.dispatchEvent(new CustomEvent('log-active-element', {detail:{target: element}}));
+        window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: element}}));
 
     }
 

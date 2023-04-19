@@ -182,6 +182,7 @@ export class FxDomInspector extends HTMLElement {
         
         #adi-dom-view {
             border-right:2px solid #ddd;
+            overflow:auto;
         }
         
         #adi-dom-view ul {
@@ -331,6 +332,10 @@ export class FxDomInspector extends HTMLElement {
             border-left:1px solid #ddd;
             overflow:auto;
             
+        }
+        #adi-attr-view > .adi-content{
+            height:calc(100% - 5em);
+            overflow:auto;
         }
         
         #adi-attr-view .adi-attr {
