@@ -119,7 +119,6 @@ export class FxDevtools extends HTMLElement {
         fx-dom-inspector{
             max-height:100%;
             height:100%;
-            overflow:auto;
             position:relative;
         }
         body {
@@ -210,14 +209,16 @@ export class FxDevtools extends HTMLElement {
                         <fx-action-log selector="${this.selector}"></fx-action-log>
                     </section>
                     <section class="dom">
-                        <header>Document</header>
-                        <fx-dom-inspector></fx-dom-inspector>
+                        <fx-dom-inspector>
+                            <header slot="header">Document</header>
+                        </fx-dom-inspector>
                     </section>
                     <section class="instances">
-<fx-dom-inspector instance="default"/>
+                        <header>Data</header>
+                        <fx-dom-inspector instance="default"/>
                     </section>
                     <section id="options">
-                        centralized options
+                        <fx-log-settings></fx-log-settings>
                     </section>
                 </section>
             </details>

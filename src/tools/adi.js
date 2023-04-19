@@ -730,6 +730,7 @@ class ADI {
         }
 
         // open the whole path in DOM view
+        if(!active.parentNode) return;
         let node = active.parentNode;
         let tmp;
 
@@ -756,6 +757,7 @@ class ADI {
                 wrap.scrollTop = active.offsetTop - Math.floor(wrap.clientHeight / 2);
             }
         }
+        target.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     }
 
     // Simple cross-browser event handler that enables simple event delegation.

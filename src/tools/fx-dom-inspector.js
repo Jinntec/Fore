@@ -46,6 +46,7 @@ export class FxDomInspector extends HTMLElement {
             display:grid;
             grid-template-columns:70% auto;   
             position:relative;
+            height:calc(100% - 5rem);
         }
         
         #adi-wrapper.left {
@@ -324,14 +325,17 @@ export class FxDomInspector extends HTMLElement {
         
         #adi-attr-view {
             position:absolute;
-            top:0;
+            top:-2rem;
             right:0;
             width:30%;
+            border-left:1px solid #ddd;
+            overflow:auto;
+            
         }
         
         #adi-attr-view .adi-attr {
             display: block;
-            padding: 5px 0;
+            padding: 0.25em;
         }
         
         #adi-attr-view hr {
@@ -340,7 +344,7 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-attr-view input[type=text] {
-            width: 100%;
+            width: calc(100% - 0.5em);
             margin-top: 3px;
             padding: 2px;
         }
@@ -431,6 +435,7 @@ export class FxDomInspector extends HTMLElement {
       `;
 
       const html = `
+        <slot name="header"></slot>
         <slot></slot>
       `;
 
