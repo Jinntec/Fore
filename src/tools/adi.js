@@ -415,6 +415,7 @@ class ADI {
         content.appendChild(header);
 
         // todo: hook element-def.json in here
+/*
         if (elem.nodeName.startsWith('FX-')) {
             console.log('got a fore element');
             const {properties} = elem.constructor;
@@ -477,10 +478,13 @@ class ADI {
                 }
             });
         } else {
+*/
             [...elem.attributes].forEach(attr => {
-                content.appendChild(drawAttrRow(attr.name, attr.value));
+                if(attr.name !== 'style'){
+                    content.appendChild(drawAttrRow(attr.name, attr.value));
+                }
             })
-        }
+        // }
     }
 
     // Handles attribute changes
