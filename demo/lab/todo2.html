@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="../demo.js"></script>
+    <script type="module" src="../../node_modules/leader-line/leader-line.min.js"></script>
 </head>
 <body unresolved="unresolved">
     <div class="wrapper">
@@ -129,6 +130,13 @@
 <!--        <fx-action-log style="height:200px;overflow:auto;"></fx-action-log>-->
         <fx-devtools></fx-devtools>
     </div>
-
+<script>
+    // const def = document.querySelector('#default');
+    // const devtool = document.querySelector('fx-devtools');
+    // const domInspector = devtool.shadowRoot.querySelector('.instances fx-dom-inspector');
+    // const instView = domInspector.shadowRoot.querySelector('.adi-wrapper');
+    // new LeaderLine(dev,instView);
+    new LeaderLine(document.getElementById('task'),document.getElementById('switch'));
+</script>
 </body>
 </html>

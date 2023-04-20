@@ -1,20 +1,19 @@
 import ADI from './adi.js';
 
 export class FxDomInspector extends HTMLElement {
-  constructor() {
-    super();
-      this.attachShadow({ mode: 'open' });
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.instanceName = null;
+    }
 
-	  this.instanceName = null;
-  }
+    connectedCallback() {
+        this.instanceName = this.getAttribute('instance');
+        this.render();
+    }
 
-	connectedCallback() {
-		this.instanceName = this.getAttribute('instance');
-    this.render();
-  }
-
-  render(){
-      const style = `
+    render() {
+        const style = `
       @import '../../resources/fore.css';
       
         :host {
@@ -325,13 +324,10 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-attr-view {
-            position:absolute;
             top:-2rem;
             right:0;
-            width:30%;
             border-left:1px solid #ddd;
             overflow:auto;
-            
         }
         #adi-attr-view > .adi-content{
             height:calc(100% - 5em);
@@ -439,20 +435,20 @@ export class FxDomInspector extends HTMLElement {
         }
       `;
 
-      const html = `
+        const html = `
         <slot name="header"></slot>
         <slot></slot>
       `;
 
-      this.shadowRoot.innerHTML = `
+        this.shadowRoot.innerHTML = `
           <style>
               ${style}
           </style>
           ${html}
       `;
-
-	  this.adiInstance = new ADI(this.shadowRoot, this.instanceName || '#document');
-  }
+        const inst = this.hasAttribute('instance') ? this.getAttribute('instance'):'#document';
+        this.adiInstance = new ADI(this.shadowRoot, inst);
+    }
 
     verticalResize(e) {
         if (!this.vertResizing) {
@@ -473,6 +469,7 @@ export class FxDomInspector extends HTMLElement {
     }
 
 }
+
 if (!customElements.get('fx-dom-inspector')) {
-  customElements.define('fx-dom-inspector', FxDomInspector);
+    customElements.define('fx-dom-inspector', FxDomInspector);
 }

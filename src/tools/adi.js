@@ -7,13 +7,13 @@ import {
     getElemPaths,
     drawOptions,
     pauseEvent,
-	drawAttrRow
+    drawAttrRow
 } from './helpers.js';
 
 const nodeByPath = new Map();
 
 class ADI {
-    constructor(rootElement, instanceId='#document') {
+    constructor(rootElement, instanceId) {
         this.uiView = null;
         this.menuView = null;
         this.domView = null;
@@ -42,16 +42,16 @@ class ADI {
             nodeTypes: [1, 3, 8, 9],
         };
 
-		this.instanceId = instanceId;
-		if (this.instanceId === '#document') {
-			this.document = window.document;
-		} else {
-		  const instance  = window.document.querySelector(`#${this.instanceId}`);
-			if (!instance  || instance.localName !== 'fx-instance') {
-				console.error('No instance found!');
-			}
-			this.document = instance.getInstanceData();
-		}
+        this.instanceId = instanceId;
+        if (this.instanceId === '#document') {
+            this.document = window.document;
+        } else {
+            const instance = window.document.querySelector(`#${this.instanceId}`);
+            if (!instance || instance.localName !== 'fx-instance') {
+                console.error('No instance found!');
+            }
+            this.document = instance.getInstanceData();
+        }
         this.drawUI(rootElement);
         this.registerEvents();
         this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
@@ -66,7 +66,7 @@ class ADI {
         let elem = document;
         const path = this.activeElement.getAttribute('data-js-path');
 
-		elem = nodeByPath.get(path);
+        elem = nodeByPath.get(path);
         return elem;
     }
 
@@ -143,7 +143,7 @@ class ADI {
                 'data-js-path': JSON.stringify(path.jsPath),
             });
 
-			nodeByPath.set(JSON.stringify(path.jsPath), node);
+            nodeByPath.set(JSON.stringify(path.jsPath), node);
             let tagEnd = null;
 
             if (containsOnlyText(node)) {
@@ -235,7 +235,7 @@ class ADI {
 
             if (this.hasRequiredNodes(root)) {
                 newNode.appendChild(newElement('ul', {'data-open': true}));
-				
+
                 addClass(newNode.querySelector('.adi-trigger'), 'opened');
             }
 
@@ -259,7 +259,7 @@ class ADI {
                             isOpen = true;
                         }
 
-                        if(node.nodeName === 'HEAD') isOpen = false;
+                        if (node.nodeName === 'HEAD') isOpen = false;
 
                         if (node.nodeType === Node.DOCUMENT_NODE) {
                             newNode.appendChild(newElement('ul', {'data-open': isOpen}));
@@ -307,7 +307,7 @@ class ADI {
         this.domView = newElement('div', {id: 'adi-dom-view'});
         const domViewContent = newElement('div', {class: 'adi-content', id: 'detailsView'});
         this.attrView = newElement('div', {id: 'adi-attr-view'});
-		// this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
+        // this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
 
         const attrViewContent = newElement('div', {class: 'adi-content'});
 
@@ -322,7 +322,7 @@ class ADI {
         const naviConfig = newElement('a', {class: 'adi-menu-config', title: 'Settings'});
         const naviLookup = newElement('a', {class: 'adi-menu-lookup', title: 'Lookup tool'});
 
-		// this.horizSplit = horizSplit;
+        // this.horizSplit = horizSplit;
 
         this.optsView = drawOptions();
 
@@ -417,70 +417,70 @@ class ADI {
         // todo: hook element-def.json in here
         if (elem.nodeName.startsWith('FX-')) {
             console.log('got a fore element');
-			const { properties } = elem.constructor;
-			Object.keys(properties).forEach(propertyName => {
+            const {properties} = elem.constructor;
+            Object.keys(properties).forEach(propertyName => {
 
-				const property = properties[propertyName];
-				if (!property || property.hidden) {
-					return;
-				}
-				const row = content.appendChild(newElement('span', {class:'adi-attr'}));
+                const property = properties[propertyName];
+                if (!property || property.hidden) {
+                    return;
+                }
+                const row = content.appendChild(newElement('span', {class: 'adi-attr'}));
 
-				switch(property.type) {
-					case 'referencedNode': {
-						row.innerHTML = `<label>${propertyName}: <button>${elem[propertyName]?.nodeName}</button></label>`;
-						const button = row.querySelector('button');
-						button.addEventListener(
-							'click', () => this.handleLookup({detail:{target: elem[propertyName]}})
-						);
-						break;
-					}
-					case Number: {
-						row.innerHTML = `<label>${propertyName}: <input type="number" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
-						break;
-					}
-					case String: {
-						if (property.valueSpace) {
-							row.innerHTML = `<label>${propertyName}: <select data-attr="${propertyName}" value="${elem[propertyName]}">${property.valueSpace.map(value => `<option>${value}</option>`)}</label>`;
-						break;
+                switch (property.type) {
+                    case 'referencedNode': {
+                        row.innerHTML = `<label>${propertyName}: <button>${elem[propertyName]?.nodeName}</button></label>`;
+                        const button = row.querySelector('button');
+                        button.addEventListener(
+                            'click', () => this.handleLookup({detail: {target: elem[propertyName]}})
+                        );
+                        break;
+                    }
+                    case Number: {
+                        row.innerHTML = `<label>${propertyName}: <input type="number" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
+                        break;
+                    }
+                    case String: {
+                        if (property.valueSpace) {
+                            row.innerHTML = `<label>${propertyName}: <select data-attr="${propertyName}" value="${elem[propertyName]}">${property.valueSpace.map(value => `<option>${value}</option>`)}</label>`;
+                            break;
 
-						}
-						row.innerHTML = `<label>${propertyName}: <input type="text" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
-						break;
-					}
-					case Boolean: {
-						if (property.valueSpace) {
-							row.innerHTML = `<label>${propertyName}: <input type="checkbox" data-attr="${propertyName}" value="${elem[propertyName]}"></input></label>`;
+                        }
+                        row.innerHTML = `<label>${propertyName}: <input type="text" data-attr="${propertyName}" value="${elem[propertyName]}"></label>`;
+                        break;
+                    }
+                    case Boolean: {
+                        if (property.valueSpace) {
+                            row.innerHTML = `<label>${propertyName}: <input type="checkbox" data-attr="${propertyName}" value="${elem[propertyName]}"></input></label>`;
 
-						}
-						break;
-					}
-					case Object: {
-						try {
-							row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
-						} catch (err) {
-							row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
-						}
-						break;
-					}
-					case Map: {
-						try {
-							row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
-						} catch (err) {
-							row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
-						}
-						break;
-					}
-					default: {
-						row.innerHTML = `<label>${propertyName}: Unknown type ${property.type}</label>`;
-					}
-				}
-			});
+                        }
+                        break;
+                    }
+                    case Object: {
+                        try {
+                            row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
+                        } catch (err) {
+                            row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
+                        }
+                        break;
+                    }
+                    case Map: {
+                        try {
+                            row.innerHTML = `<label>${propertyName}: <code>${JSON.stringify(elem[propertyName])}</code></label>`;
+                        } catch (err) {
+                            row.innerHTML = `<label>${propertyName}: <code>Unserializable</code></label>`;
+                        }
+                        break;
+                    }
+                    default: {
+                        row.innerHTML = `<label>${propertyName}: Unknown type ${property.type}</label>`;
+                    }
+                }
+            });
         } else {
-			[...elem.attributes].forEach(attr => {
-				content.appendChild(drawAttrRow(attr.name, attr.value));
-			})
-		}
+            [...elem.attributes].forEach(attr => {
+                content.appendChild(drawAttrRow(attr.name, attr.value));
+            })
+        }
     }
 
     // Handles attribute changes
@@ -568,7 +568,7 @@ class ADI {
         }
     }
 
-    processExecuteAction(e){
+    processExecuteAction(e) {
         console.log('Fore executes action', e.detail);
     }
 
@@ -648,12 +648,12 @@ class ADI {
 
         const path = target.getAttribute('data-js-path');
 
-		node = nodeByPath.get(path);
+        node = nodeByPath.get(path);
 
-		if (node.ownerDocument !== window.document) {
-			// Not in HTML: ignore
-			return;
-		}
+        if (node.ownerDocument !== window.document) {
+            // Not in HTML: ignore
+            return;
+        }
 
         if (node) {
             if (e.type === 'mouseover') {
@@ -669,7 +669,7 @@ class ADI {
 
     // Handles element lookup on page
     handleLookup(e) {
-        const target = e ?e.detail?.target ||  e.target : window.event.srcElement;
+        const target = e ? e.detail?.target || e.target : window.event.srcElement;
 
         if (target.className.indexOf('adi-menu-lookup') !== -1) {
             // enable/disable interactive lookup
@@ -730,7 +730,7 @@ class ADI {
         }
 
         // open the whole path in DOM view
-        if(!active.parentNode) return;
+        if (!active.parentNode) return;
         let node = active.parentNode;
         let tmp;
 
@@ -757,7 +757,7 @@ class ADI {
                 wrap.scrollTop = active.offsetTop - Math.floor(wrap.clientHeight / 2);
             }
         }
-        target.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+        target.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
     }
 
     // Simple cross-browser event handler that enables simple event delegation.
@@ -847,32 +847,32 @@ class ADI {
     // Event registration
     registerEvents() {
         // events for splitters
-/*
-        this.horizSplit.addEventListener(
-            'mousedown',
-            e => {
-                e = e || window.event;
-                pauseEvent(e);
-                this.horizResizing = true;
-            },
-            false,
-        );
-*/
+        /*
+                this.horizSplit.addEventListener(
+                    'mousedown',
+                    e => {
+                        e = e || window.event;
+                        pauseEvent(e);
+                        this.horizResizing = true;
+                    },
+                    false,
+                );
+        */
 
-		document.addEventListener('instance-loaded', () => {
-			if (this.instanceId !== '#document') {
-		  const instance  = window.document.querySelector(`#${this.instanceId}`);
-				this.document = instance.getInstanceData();
-			}
-			this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
-		});
-		document.addEventListener('value-changed', () => {
-			if (this.instanceId !== '#document') {
-		  const instance  = window.document.querySelector(`#${this.instanceId}`);
-				this.document = instance.getInstanceData();
-			}
-			this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
-		});
+        document.addEventListener('instance-loaded', () => {
+            if (this.instanceId !== '#document') {
+                const instance = window.document.querySelector(`#${this.instanceId}`);
+                this.document = instance.getInstanceData();
+            }
+            this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
+        });
+        document.addEventListener('value-changed', () => {
+            if (this.instanceId !== '#document') {
+                const instance = window.document.querySelector(`#${this.instanceId}`);
+                this.document = instance.getInstanceData();
+            }
+            this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
+        });
 
         document.addEventListener(
             'mouseup',
@@ -886,7 +886,7 @@ class ADI {
 
         document.addEventListener('mousemove', event => this.verticalResize(event), false);
         document.addEventListener('mousemove', event => this.horizontalResize(event), false)
-;
+        ;
         // window resize
         window.addEventListener('resize', event => this.refreshUI(event), false);
 
@@ -894,7 +894,7 @@ class ADI {
         document.addEventListener('keypress', event => this.processKey(event), false);
 
         // fore action events
-        document.addEventListener('log-active-element', event => this.handleLookup(event),false);
+        document.addEventListener('log-active-element', event => this.handleLookup(event), false);
 
         // Dom view folding handler
         const handleFolding = e => {
@@ -1001,24 +1001,24 @@ class ADI {
             false,
         );
 
-		document.addEventListener('handle-active', (e) => {
-			if (e.detail.selected === this.getSelected()) {
-				// We caused this. ignore
-				return;
-			}
-			const {selected} = e.detail;
-			const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(selected)}']`);
-        // make it visible (scroll)
-        if (this.options.makeVisible) {
-            const wrap = this.domView.querySelector('.adi-content');
-            if (target.offsetTop >= wrap.clientHeight || target.offsetTop <= wrap.scrollTop) {
-                wrap.scrollTop = target.offsetTop - Math.floor(wrap.clientHeight / 2);
+        document.addEventListener('handle-active', (e) => {
+            if (e.detail.selected === this.getSelected()) {
+                // We caused this. ignore
+                return;
             }
-        }
+            const {selected} = e.detail;
+            const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(selected)}']`);
+            // make it visible (scroll)
+            if (this.options.makeVisible) {
+                const wrap = this.domView.querySelector('.adi-content');
+                if (target.offsetTop >= wrap.clientHeight || target.offsetTop <= wrap.scrollTop) {
+                    wrap.scrollTop = target.offsetTop - Math.floor(wrap.clientHeight / 2);
+                }
+            }
 
-        this.checkPathOverflow();
-        this.drawAttrs(this.getSelected());
-		});
+            this.checkPathOverflow();
+            this.drawAttrs(this.getSelected());
+        });
 
         // options events
         this.addEventDelegate(this.optsView, 'change', (event) => this.changeOption(event), false, 'input');

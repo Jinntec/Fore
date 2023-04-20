@@ -24,7 +24,7 @@ export class FxDevtools extends HTMLElement {
 
         this.isResizing = false;
         this.lastY = 0;
-        this.defaultHeight = '30vh';
+        this.defaultHeight = '40vh';
     }
 
     connectedCallback() {
@@ -58,7 +58,7 @@ export class FxDevtools extends HTMLElement {
                 this.style.height='3em';
             }else{
                 this.setAttribute('open','');
-                this.style.height= this.lastHeight ? this.lastHeight: '30vh';
+                this.style.height= this.lastHeight ? this.lastHeight: '40vh';
             }
         });
 
@@ -111,7 +111,7 @@ export class FxDevtools extends HTMLElement {
           height:3em;
         }
         :host(.open){
-            height:30vh;
+            height:40vh;
         }
         
         fx-action-log{
@@ -224,7 +224,7 @@ export class FxDevtools extends HTMLElement {
                     </section>
                     <section class="instances">
                         <header>Data</header>
-                        <fx-dom-inspector instance="default"/>
+                        <fx-dom-inspector instance="default"></fx-dom-inspector>
                     </section>
                     <section id="options">
                         <fx-log-settings></fx-log-settings>
