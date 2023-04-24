@@ -92,6 +92,7 @@
     <p>This either makes sure you don't pay the cost of loading content you probably don't need and you can be sure
         that Fore is initialized before children can act.</p>
     <p>It's also suitable to control the sequence of content loaded into the page.</p>
+    <h2>Showing error if no template nor url given</h2>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -125,14 +126,7 @@
                                 <label>Created after the first one</label>
                             </fx-control>
                         </template>
-                    </fx-load>
-                    <fx-load event="action-performed" attach-to="#lazyControl3" target="second" delay="800">
-                        <template>
-                            <fx-control ref="item3">
-                                <label>Created after the second one</label>
-                            </fx-control>
-                        </template>
-                    </fx-load>
+                        </fx-load>
                 </fx-trigger>
                 <!--
                                 <template id="view2">
@@ -146,7 +140,8 @@
             </fx-fore>
         </template>
     </demo-snippet>
-    <h2>Showing error if no template nor url given</h2>
+    <h2>Done another way</h2>
+    <p>Here the first event will dispatch an event to the second control once it has done it's loading.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -171,21 +166,19 @@
                             </fx-control>
                             <fx-output ref="item"></fx-output>
                         </template>
+                        <fx-dispatch name="first-loaded" targetid="second" event="action-performed"></fx-dispatch>
                     </fx-load>
                     <fx-load id="second"
-                             event="action-performed"
-                             attach-to="#lazyControl2" target="first" delay="400">
+                             event="first-loaded"
+                             attach-to="#lazyControl2" delay="400">
+                        <template>
+                            <fx-control ref="item2">
+                                <label>another item:</label>
+                            </fx-control>
+                            <fx-output ref="item2"></fx-output>
+                        </template>
                     </fx-load>
                 </fx-trigger>
-                <!--
-                                <template id="view2">
-                                    <template>
-                                        <fx-control ref="item2">
-                                            <label>Created after the first one</label>
-                                        </fx-control>
-                                    </template>
-                                </template>
-                -->
             </fx-fore>
         </template>
     </demo-snippet>
