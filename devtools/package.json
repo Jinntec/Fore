@@ -1,0 +1,7 @@
+{
+  "name": "devtools",
+  "version": "1.0.0",
+  "dependencies": {
+    "jsonpath-picker-vanilla": "^1.2.4"
+  }
+}
