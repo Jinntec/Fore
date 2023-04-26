@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-connection</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+            <fx-connection ref="instance()" url="ws://localhost:8088" message-format="xml">
+                <fx-message event="open">connection open</fx-message>
+                <fx-message event="channel-message">connection message {event('message')}</fx-message>
+                <fx-message event="close">connection close</fx-message>
+<!--                <fx-message event="error">connection error {event('detail')}</fx-message>-->
+            </fx-connection>
+            <fx-instance>
+                <data>
+                    <item>Item1</item>
+                    <message></message>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-control ref="message">
+            <label>Message</label>
+        </fx-control>
+    </fx-fore>
+
+</div>
+<script type="module">
+    import './demo.js';
+</script>
+</body>
+</html>
