@@ -1,5 +1,4 @@
-import '../../index.js';
-
+import '../index.js';
 /**
  * a simple component that wraps a Fore page and puts it into shadowDom.
  *
