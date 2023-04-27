@@ -9,16 +9,23 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model1">
+        <fx-model>
             <fx-instance>
                 <data>
-                    <a></a>
+                    <ptr target="target"></ptr>
+                    <check></check>
                 </data>
             </fx-instance>
-            <fx-bind ref="a" required="true()"></fx-bind>
+            <fx-instance id="var">
+                <data>
+                    <var1>aValue</var1>
+                </data>
+            </fx-instance>
         </fx-model>
-
-        <fx-control id="input1" label="A-label" ref="a"> </fx-control>
+        <fx-control ref="instance('var')/var1">
+            <label>{.}</label>
+        </fx-control>
+        <fx-output ref="check"></fx-output>
     </fx-fore>
 
 </div>

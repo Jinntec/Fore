@@ -110,8 +110,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
-    } else {
-      this.event = 'click';
     }
     if (this.hasAttribute('defaultAction')) {
       this.defaultAction = this.getAttribute('defaultAction');
@@ -123,6 +121,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     } else {
       this.phase = 'default';
     }
+
+/*
+    this.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+*/
 
     this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
     this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;

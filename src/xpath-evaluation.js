@@ -42,6 +42,9 @@ const xhtmlNamespaceResolver = prefix => {
     }
     return undefined;
 };
+export function isInShadow(node) {
+    return node.getRootNode() instanceof ShadowRoot;
+}
 
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
@@ -66,6 +69,9 @@ export function resolveId(id, sourceObject, nodeName = null) {
 	if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
 		sourceObject = sourceObject.ownerElement;
 	}
+    if(sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+        sourceObject = sourceObject.parentNode.host;
+    }
 	const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
 	const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
 	if (elementsWithId.length === 1) {

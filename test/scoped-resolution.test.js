@@ -428,5 +428,45 @@ describe('scoped resolution tests', () => {
 
 
   });
+  it('resolves correctly when a fx-control binds with the instance() function', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <ptr target="target"></ptr>
+              <check></check>
+            </data>
+          </fx-instance>
+          <fx-instance id="var">
+            <data>
+              <var1>aValue</var1>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="instance('var')/var1">
+          <label>{.}</label>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
+
+    const control = el.querySelector('fx-control');
+    expect(control).to.exist;
+    control.getWidget().click();
+
+    const label = el.querySelector('label');
+    expect(label).to.exist;
+    expect(label.textContent).to.equal('aValue');
+
+    // await oneEvent(el, 'refresh-done');
+    // const output = el.querySelector('fx-output');
+    // expect(output).to.exist;
+    // expect(output.value).to.equal('ok');
+
+
+  });
 
 });
