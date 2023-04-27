@@ -63,6 +63,15 @@
                     <flavor></flavor>
                 </data>
             </fx-instance>
+            <fx-instance id="i-flavors">
+                <data>
+                    <flavor>Chocolate</flavor>
+                    <flavor>Coconut</flavor>
+                    <flavor>Mint</flavor>
+                    <flavor>Strawberry</flavor>
+                    <flavor>Vanilla</flavor>
+                </data>
+            </fx-instance>
             <fx-bind ref="item"></fx-bind>
             <fx-bind ref="checked" type="boolean"></fx-bind>
             <fx-bind ref="listitem"></fx-bind>
@@ -207,6 +216,27 @@
                                 <option value="Mint">Mint</option>
                                 <option value="Strawberry">Strawberry</option>
                                 <option value="Vanilla">Vanilla</option>
+                            </datalist>
+                        </fx-control>
+
+                        Selected value is:
+                        <fx-output ref="flavor"></fx-output>
+
+                    </template>
+                </demo-snippet>
+            </section>
+            <section>
+                <h3>Datalist (autocomplete) - dynamic</h3>
+                <demo-snippet>
+                    <template>
+
+                        <fx-control ref="flavor" update-event="input">
+                            <label slot="label">input with datalist</label>
+                            <input list="flavors">
+                            <datalist id="flavors" data-ref="instance('i-flavors')/flavor">
+                                    <template>
+                                        <option>{.}</option>
+                                    </template>
                             </datalist>
                         </fx-control>
 
