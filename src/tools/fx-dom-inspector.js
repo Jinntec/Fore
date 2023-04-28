@@ -23,6 +23,7 @@ export class FxDomInspector extends HTMLElement {
       
         :host {
           display:block;
+          background:#efefef;
         }
         body {
             -webkit-animation: bugfix infinite 1s;
@@ -383,7 +384,7 @@ export class FxDomInspector extends HTMLElement {
         }
         .adi-content header{
             padding:0.5rem;
-            background:#efefef;
+            // background:rgba(255, 255, 255, 0.2);
             border-bottom:2px solid #ddd;
             border-collapse:collapse;
         }
@@ -439,6 +440,9 @@ export class FxDomInspector extends HTMLElement {
         }
         input, select{
             display: block;
+        }
+        header{
+            background:rgba(255, 255, 255, 0.2);
         }
       `;
 

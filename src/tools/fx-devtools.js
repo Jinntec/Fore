@@ -46,11 +46,12 @@ export class FxDevtools extends HTMLElement {
                 header.textContent = 'Data ';
                 this.instances.forEach(instance => {
                     const btn = document.createElement('button');
+                    btn.setAttribute('type','button');
                     btn.textContent = instance.id;
                     header.appendChild(btn);
                     btn.addEventListener('click', e => {
                        console.log('button for instance', e.target.textContent);
-                       this._toggleInstancePanel(e.target.textContent);
+                       this._toggleInstancePanel(e);
                     });
                 });
             });
@@ -98,13 +99,14 @@ export class FxDevtools extends HTMLElement {
           bottom:0;
           left:0;
           width:100vw;
-          background:#efefef;
           height:var(--fx-devtools-height);
           font-style:inherit;
           font-family: 'Verdana' , 'Sans';
           font-size:1em;
           max-width:100vw;
           height:3em;
+          background: rgb(119,119,119);
+          background: linear-gradient(0deg, rgba(119,119,119,1) 0%, rgba(56,154,252,1) 0%, rgba(255,255,255,1) 100%);
         }
         :host(.open){
             height:40vh;
@@ -121,9 +123,9 @@ export class FxDevtools extends HTMLElement {
         body {
         }
         button{
-            border:none;
-            padding:0;
-            margin:0;
+            // border:none;
+            // padding:0;
+            // margin:0;
         }
         details{
             height:100%;
@@ -133,7 +135,6 @@ export class FxDevtools extends HTMLElement {
             border-left:1px solid #999;
         }
         header{
-            background:rgba(255, 255, 255, 0.2);
             padding:0.5rem;
             border-bottom:2px solid #ddd;
             font-size:1rem;
@@ -148,9 +149,18 @@ export class FxDevtools extends HTMLElement {
         header button:hover{
             background:white;
         }
+        
+        header button.selected-btn{
+            background:steelblue;
+            color:white;
+        }
         .instances{
             width:35%;
             border-left:1px solid #999;
+        }
+        .instance-panel{
+            height:100%;
+            overflow:auto;
         }
         #optionsTrigger{
             background:transparent;
@@ -163,10 +173,11 @@ export class FxDevtools extends HTMLElement {
             height:100%;
             width:100%;
             max-height:100%;
+            border-top:thin solid #ddd;
         }
         .panels > section {
             min-height:20rem;
-            background:white;
+            background:#efefef;
             position:relative;
             display:inline-block;
             height:100%;
@@ -201,11 +212,19 @@ export class FxDevtools extends HTMLElement {
             justify-content:space-between;
             align-items:center;
             color:rgba(0,0,0,0.7);
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(235, 255, 255, 0.2);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            
+            background: linear-gradient(90deg, rgba(0,85,159,0.75) 0%, rgba(56,154,252,0.3) 50%, rgba(255,255,255,0.1) 100%);
+            color:white;
+            font-weight:300;
+        }
+        summary button{
+            padding:0;
+            border:0;
         }
         .wrapper{
             height:100%;
@@ -294,14 +313,20 @@ export class FxDevtools extends HTMLElement {
         console.log('that works')
         document.body.style.height = '';
     }
-
-    _toggleInstancePanel(instanceId) {
+    _toggleInstancePanel(event) {
         const instancePanel = this.shadowRoot.querySelector('.instance-panel');
         instancePanel.innerHTML = "";
 
+        const selectedBtn = this.shadowRoot.querySelector('.selected-btn');
+        if(selectedBtn){
+            selectedBtn.classList.remove('selected-btn');
+        }
+
+        event.target.classList.add('selected-btn');
+
         this.instances = this.fore.querySelectorAll('fx-instance');
 
-        const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
+        const instance = Array.from(this.instances).find(inst => inst.id === event.target.textContent);
         console.log('wanted instance', instance);
 
         const panelContent = this._renderInstancePanel(instance);

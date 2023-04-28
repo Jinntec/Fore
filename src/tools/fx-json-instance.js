@@ -25,6 +25,7 @@ class FxJsonInstance extends HTMLElement {
         :host {
           display:block;
           font-size:0.8em;
+          background:rgba(250, 250, 250, 0.9);
         }
         .container{
             margin-left:1em;
