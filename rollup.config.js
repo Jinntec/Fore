@@ -43,11 +43,6 @@ export default [
     input: './index.js',
     output: [
       {
-        file: `dist/fore-dev.${buildNumber}.js`,
-        format: 'es',
-        sourcemap: true,
-      },
-      {
         file: `dist/fore-dev.js`,
         format: 'es',
         sourcemap: true,

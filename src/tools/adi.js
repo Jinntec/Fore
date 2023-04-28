@@ -167,16 +167,18 @@ class ADI {
                         tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute(
                             'ref',
                         )}">`;
+                    } else if (node.nodeName === 'FX-INSERT') {
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
                     } else if (node.nodeName === 'FX-INSTANCE') {
                         tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.id}">`;
                     } else if (node.nodeName === 'FX-CONTROL') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute(
-                            'ref',
-                        )}">`;
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
                     } else if (node.nodeName === 'FX-SEND') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} submission="${node.getAttribute(
-                            'submission',
-                        )}">`;
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} submission="${node.getAttribute('submission')}">`;
+                    } else if (node.nodeName === 'FX-SETVALUE') {
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
+                    } else if (node.nodeName === 'FX-SUBMISSION') {
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.getAttribute('id')}">`;
                     } else {
                         tagStart.textContent = `<${node.nodeName.toLowerCase()}>`;
                     }

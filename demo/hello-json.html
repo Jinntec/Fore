@@ -16,6 +16,9 @@
         .dynamic {
             background: #76ff03;
         }
+        header{
+            margin-left:-1em;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -24,14 +27,16 @@
 
 <p>JSON can be addressed via the XPATH3 support for JSON using the maps and arrays operators.</p>
 <p>See examples inline.</p>
+<!--
 <demo-snippet>
     <template>
+-->
 
 <fx-fore>
     <fx-message event="refresh-done">refresh has been done</fx-message>
 
     <fx-model id="model1">
-        <fx-instance id="instance1" type="json">
+        <fx-instance type="json">
             {
                 "automobiles": [
                     {
@@ -93,8 +98,15 @@
     <fx-inspector></fx-inspector>
 </fx-fore>
 
+
+<fx-json-instance>
+    <span slot="header">mY FOOBAR</span>
+</fx-json-instance>
+
+<!--
     </template>
 </demo-snippet>
+-->
 </div>
 <script type="module" src="./demo.js"></script>
 

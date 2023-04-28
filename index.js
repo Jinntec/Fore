@@ -29,7 +29,7 @@ import './src/tools/fx-log-item.js';
 import './src/tools/fx-devtools.js';
 import './src/tools/fx-dom-inspector.js';
 import './src/fore-component.js';
-// import './src/tools/fx-json-instance.js';
+import './src/tools/fx-json-instance.js';
 
 
 // import './src/ui/fx-checkbox-group.js';
