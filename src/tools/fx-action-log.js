@@ -106,6 +106,7 @@ export class FxActionLog extends HTMLElement {
         padding:0.5rem;
         margin:0;
         border-bottom:2px solid #ddd;
+        background:rgba(255, 255, 255, 0.2);    
       }
       
       .info:hover{

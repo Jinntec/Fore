@@ -67,6 +67,17 @@ class ADI {
         const path = this.activeElement.getAttribute('data-js-path');
 
         elem = nodeByPath.get(path);
+        console.log('getSelected', elem);
+/*
+        document.dispatchEvent(
+            new CustomEvent('path-touched', {
+                composed: true,
+                bubbles: true,
+                detail: {path: elem.modelItem.path},
+            }),
+        );
+*/
+
         return elem;
     }
 
@@ -596,6 +607,7 @@ class ADI {
         addClass(target, 'adi-active-node');
         this.pathView.textContent = target.getAttribute('data-css-path');
 
+/*
         e.target.dispatchEvent(
             new CustomEvent('handle-active', {
                 composed: true,
@@ -603,6 +615,7 @@ class ADI {
                 detail: {active: this.activeElement, selected: this.getSelected()},
             }),
         );
+*/
 
         // make it visible (scroll)
         if (this.options.makeVisible) {
@@ -645,6 +658,7 @@ class ADI {
 
     // Highlights an element on page
     highlightElement(e) {
+        // console.log('highlight',e);
         let target = e ? e.target : window.event.srcElement;
         let node = document;
 
@@ -731,6 +745,7 @@ class ADI {
         const active = this.domView.querySelector(`[data-js-path='${JSON.stringify(path.jsPath)}']`);
 
         // activate it
+        if(!active) return;
         if (active) {
             active.click();
         }
@@ -872,7 +887,8 @@ class ADI {
             }
             this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
         });
-        document.addEventListener('value-changed', () => {
+        document.addEventListener('value-changed', (e) => {
+            console.log('adi handling value-changed',e )
             if (this.instanceId !== '#document') {
                 const instance = window.document.querySelector(`#${this.instanceId}`);
                 this.document = instance.getInstanceData();

@@ -1,9 +1,19 @@
 import './fx-action-log.js';
+import './fx-dom-inspector.js';
+import './fx-json-instance.js';
 
 export class FxDevtools extends HTMLElement {
 
     static get properties() {
         return {
+            fore:{
+                type:Object,
+                description:"The fx-fore element the devtools are attached to"
+            },
+            instances:{
+                type:Array,
+                description:"Instances of selected Fore element"
+            },
             selector: {
                 type: String,
                 description: "optional selector to attach to a certain fx-fore element with given id",
@@ -25,45 +35,33 @@ export class FxDevtools extends HTMLElement {
         this.isResizing = false;
         this.lastY = 0;
         this.defaultHeight = '40vh';
+
+        window.addEventListener("DOMContentLoaded", (event) => {
+            console.log("DOM fully loaded and parsed");
+            this.fore = document.querySelector('fx-fore');
+            this.fore.addEventListener('model-construct-done', () => {
+                this.instances = [...this.fore.getModel().instances];
+                console.log('instances',this.instances);
+                const header = this.shadowRoot.querySelector('.instances header');
+                header.textContent = 'Data ';
+                this.instances.forEach(instance => {
+                    const btn = document.createElement('button');
+                    btn.textContent = instance.id;
+                    header.appendChild(btn);
+                    btn.addEventListener('click', e => {
+                       console.log('button for instance', e.target.textContent);
+                       this._toggleInstancePanel(e.target.textContent);
+                    });
+                });
+            });
+        });
     }
 
-    connectedCallback() {
-        // window.addEventListener("DOMContentLoaded", (event) => {
 
+
+    connectedCallback() {
         this.render();
         // document.body.style.height = document.body.scrollHeight + 320 + 'px';
-
-        this.resizer = this.shadowRoot.querySelector('.resizer');
-        this.resizer.addEventListener('mousedown', this._startResize.bind(this));
-
-        document.addEventListener('mousemove', this._resizePanel.bind(this));
-        document.addEventListener('mouseup', this._stopResize.bind(this));
-
-
-        const optionsTrigger = this.shadowRoot.querySelector('#optionsTrigger');
-        optionsTrigger.addEventListener('click', () => {
-            const tr = this.shadowRoot.querySelector('#options');
-            tr.classList.toggle('open');
-            tr.classList.contains('open')? optionsTrigger.style.background = 'lightsteelblue': optionsTrigger.style.background = 'transparent';
-        });
-
-        const caption = this.shadowRoot.querySelector('.fx-devtools');
-        caption.addEventListener('click', ev => {
-            if(ev.target.nodeName === 'DIV' && ev.target.classList.contains('resizer')) {
-                return;
-            }
-            if(ev.target.parentNode.open){
-               this.removeAttribute('open');
-                this.lastHeight = this.style.height;
-                this.style.height='3em';
-            }else{
-                this.setAttribute('open','');
-                this.style.height= this.lastHeight ? this.lastHeight: '40vh';
-            }
-        });
-
-        this.classList.add('open');
-        // });
     }
 
     _startResize(event) {
@@ -72,14 +70,12 @@ export class FxDevtools extends HTMLElement {
     }
 
     _resizePanel(event) {
-
         if (!this.isResizing) return;
         console.log('lastY', this.lastY);
         const delta = event.clientY - this.lastY;
         this.style.height = `${this.offsetHeight - delta}px`;
         this.lastHeight = this.style.height;
         this.lastY = event.clientY;
-
     }
 
     _stopResize(event) {
@@ -137,11 +133,20 @@ export class FxDevtools extends HTMLElement {
             border-left:1px solid #999;
         }
         header{
-            background:#efefef;
+            background:rgba(255, 255, 255, 0.2);
             padding:0.5rem;
             border-bottom:2px solid #ddd;
             font-size:1rem;
             height:1rem;
+        }
+        header button{
+            margin:0 0.5em;
+            border:thin solid #999;
+            padding:0 0.5em;
+            cursor:pointer;
+        }
+        header button:hover{
+            background:white;
         }
         .instances{
             width:35%;
@@ -183,10 +188,11 @@ export class FxDevtools extends HTMLElement {
         .resizer{
             width:100vw;
             height:6px;
-            background:#ddd;
+            background:rgba(215,220,235,0.3);
             cursor: ns-resize;
             position:absolute;
             top:0;
+            
         }
         summary{
             padding:0.5em;
@@ -194,7 +200,12 @@ export class FxDevtools extends HTMLElement {
             display:flex;
             justify-content:space-between;
             align-items:center;
-            
+            color:rgba(0,0,0,0.7);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .wrapper{
             height:100%;
@@ -206,13 +217,14 @@ export class FxDevtools extends HTMLElement {
             cursor: ew-resize;
         }
       `;
+        console.log('render instances',this.instances);
 
         const html = `
         <section class="wrapper">
             <slot></slot>
             <details class="fx-devtools" open>
                 <div class="resizer"></div>
-                <summary>Fore Devtools <button><img id="optionsTrigger" src="../../resources/images/settings.svg"></button></summary>
+                <summary>Fore Glass <button><img id="optionsTrigger" src="../../resources/images/settings.svg"></button></summary>
                 <section class="panels">
                     <section class="log">
                         <fx-action-log selector="${this.selector}"></fx-action-log>
@@ -223,8 +235,10 @@ export class FxDevtools extends HTMLElement {
                         </fx-dom-inspector>
                     </section>
                     <section class="instances">
-                        <header>Data</header>
-                        <fx-dom-inspector instance="default"></fx-dom-inspector>
+                        <header></header>
+                        <div class="instance-panel">
+                            <fx-dom-inspector instance="default"></fx-dom-inspector>
+                        </div>
                     </section>
                     <section id="options">
                         <fx-log-settings></fx-log-settings>
@@ -241,6 +255,39 @@ export class FxDevtools extends HTMLElement {
           ${html}
       `;
 
+        this.resizer = this.shadowRoot.querySelector('.resizer');
+        this.resizer.addEventListener('mousedown', this._startResize.bind(this));
+
+        document.addEventListener('mousemove', this._resizePanel.bind(this));
+        document.addEventListener('mouseup', this._stopResize.bind(this));
+
+        const optionsTrigger = this.shadowRoot.querySelector('#optionsTrigger');
+        optionsTrigger.addEventListener('click', () => {
+            const tr = this.shadowRoot.querySelector('#options');
+            tr.classList.toggle('open');
+            tr.classList.contains('open')? optionsTrigger.style.background = 'lightsteelblue': optionsTrigger.style.background = 'transparent';
+        });
+
+        const caption = this.shadowRoot.querySelector('.fx-devtools');
+        caption.addEventListener('click', ev => {
+            if(ev.target.nodeName === 'DIV' && ev.target.classList.contains('resizer')) {
+                return;
+            }
+            if(ev.target.parentNode.open){
+                this.removeAttribute('open');
+                this.lastHeight = this.style.height;
+                this.style.height='3em';
+            }else{
+                this.setAttribute('open','');
+                this.style.height= this.lastHeight ? this.lastHeight: '40vh';
+            }
+        });
+
+        this.classList.add('open');
+        document.addEventListener('value-changed', e =>{
+            console.log('value-changed hitting glass', e.target);
+        })
+
     }
 
     _handleOpen(ev){
@@ -248,6 +295,48 @@ export class FxDevtools extends HTMLElement {
         document.body.style.height = '';
     }
 
+    _toggleInstancePanel(instanceId) {
+        const instancePanel = this.shadowRoot.querySelector('.instance-panel');
+        instancePanel.innerHTML = "";
+
+        this.instances = this.fore.querySelectorAll('fx-instance');
+
+        const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
+        console.log('wanted instance', instance);
+
+        const panelContent = this._renderInstancePanel(instance);
+        console.log('panelContent', panelContent);
+        // instancePanel.innerHTML = panelContent;
+        instancePanel.append(panelContent)
+
+    }
+
+    _renderInstancePanel(instance){
+        if(instance.type === 'xml'){
+            const domInpector = document.createElement('fx-dom-inspector');
+            domInpector.setAttribute('instance', instance.id);
+            return domInpector;
+
+            /*
+                        return
+                            `<fx-dom-inspector instance="${instance.id}"> </fx-dom-inspector>`
+            */
+        }else if(instance.type === 'json'){
+            const jsonInspector = document.createElement('fx-json-instance');
+            jsonInspector.setAttribute('instance',instance.id);
+            const span = document.createElement('span');
+            span.setAttribute('slot','header');
+            jsonInspector.append(span);
+            return jsonInspector;
+/*
+            return `
+                <fx-json-instance instance="${instance.id}">
+                    <span slot="header"></span>
+                </fx-json-instance>
+            `
+*/
+        }
+    }
 }
 
 if (!customElements.get('fx-devtools')) {

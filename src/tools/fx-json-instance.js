@@ -26,8 +26,11 @@ class FxJsonInstance extends HTMLElement {
           display:block;
           font-size:0.8em;
         }
+        .container{
+            margin-left:1em;
+        }
         .header{
-            margin-left:-1em;
+            margin-left:0;
         }
 
         ::slot[name='header']{
@@ -113,7 +116,7 @@ class FxJsonInstance extends HTMLElement {
           ${html}
       `;
 
-        fore.addEventListener('ready', e => {
+        // fore.addEventListener('ready', e => {
 
             const instanceElement = document.querySelector(`#${instanceId}`);
             if(!instanceElement || instanceElement.nodeName !== 'FX-INSTANCE' || instanceElement.getAttribute('type') !== 'json'){
@@ -132,7 +135,7 @@ class FxJsonInstance extends HTMLElement {
                toggle.addEventListener('click', this._handleToggleEvent.bind(this));
             });
             // container.addEventListener('click', (event) => this._handleToggleEvent);
-        });
+        // });
     }
 
 
@@ -310,13 +313,14 @@ class FxJsonInstance extends HTMLElement {
     }
 
 
+/*
     setup() {
         // Create shadow DOM
 
         // Add styles to shadow DOM
         const style = document.createElement('style');
         style.textContent = `
-    /* add your CSS styles here */
+    /!* add your CSS styles here *!/
   `;
         shadowRoot.appendChild(style);
 
@@ -368,6 +372,7 @@ class FxJsonInstance extends HTMLElement {
         this.updateTree(JSON.stringify(data));
 
     }
+*/
 
 
     static get observedAttributes() {

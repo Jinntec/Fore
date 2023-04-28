@@ -12,6 +12,11 @@ export class FxDomInspector extends HTMLElement {
         this.render();
     }
 
+    disconnectedCallback(){
+        this.adiInstance = null;
+
+    }
+
     render() {
         const style = `
       @import '../../resources/fore.css';
