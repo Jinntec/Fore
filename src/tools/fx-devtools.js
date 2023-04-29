@@ -54,6 +54,8 @@ export class FxDevtools extends HTMLElement {
                        this._toggleInstancePanel(e);
                     });
                 });
+                const firstInstanceButton = this.shadowRoot.querySelector('header button');
+                firstInstanceButton.click();
             });
         });
     }
@@ -105,8 +107,6 @@ export class FxDevtools extends HTMLElement {
           font-size:1em;
           max-width:100vw;
           height:3em;
-          background: rgb(119,119,119);
-          background: linear-gradient(0deg, rgba(119,119,119,1) 0%, rgba(56,154,252,1) 0%, rgba(255,255,255,1) 100%);
         }
         :host(.open){
             height:40vh;
@@ -122,13 +122,9 @@ export class FxDevtools extends HTMLElement {
         }
         body {
         }
-        button{
-            // border:none;
-            // padding:0;
-            // margin:0;
-        }
         details{
             height:100%;
+            background:#ebf6ff;
         }
         .dom{
             width:45%;
@@ -177,7 +173,9 @@ export class FxDevtools extends HTMLElement {
         }
         .panels > section {
             min-height:20rem;
+/*
             background:#efefef;
+*/
             position:relative;
             display:inline-block;
             height:100%;
@@ -193,8 +191,9 @@ export class FxDevtools extends HTMLElement {
             top:3em;
             height:100%;
             display:block;
-            padding:1em;
-            background:#efefef;
+            padding:0;
+            background:rgba(255,255,255,0.95);
+            width:100%;
         }
         .resizer{
             width:100vw;
@@ -218,9 +217,11 @@ export class FxDevtools extends HTMLElement {
             -webkit-backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             
-            background: linear-gradient(90deg, rgba(0,85,159,0.75) 0%, rgba(56,154,252,0.3) 50%, rgba(255,255,255,0.1) 100%);
             color:white;
             font-weight:300;
+                      background: rgb(119,119,119);
+          background: linear-gradient(90deg, rgba(0,85,159,0.75) 0%, rgba(56,154,252,0.5) 50%, rgba(255,255,255,0.1) 100%);
+
         }
         summary button{
             padding:0;
@@ -256,7 +257,6 @@ export class FxDevtools extends HTMLElement {
                     <section class="instances">
                         <header></header>
                         <div class="instance-panel">
-                            <fx-dom-inspector instance="default"></fx-dom-inspector>
                         </div>
                     </section>
                     <section id="options">
@@ -274,12 +274,13 @@ export class FxDevtools extends HTMLElement {
           ${html}
       `;
 
+        // resizing handler
         this.resizer = this.shadowRoot.querySelector('.resizer');
         this.resizer.addEventListener('mousedown', this._startResize.bind(this));
-
         document.addEventListener('mousemove', this._resizePanel.bind(this));
         document.addEventListener('mouseup', this._stopResize.bind(this));
 
+        // setup handler for option button on the right of the panel
         const optionsTrigger = this.shadowRoot.querySelector('#optionsTrigger');
         optionsTrigger.addEventListener('click', () => {
             const tr = this.shadowRoot.querySelector('#options');
@@ -287,6 +288,7 @@ export class FxDevtools extends HTMLElement {
             tr.classList.contains('open')? optionsTrigger.style.background = 'lightsteelblue': optionsTrigger.style.background = 'transparent';
         });
 
+        // opening/closing the devtools
         const caption = this.shadowRoot.querySelector('.fx-devtools');
         caption.addEventListener('click', ev => {
             if(ev.target.nodeName === 'DIV' && ev.target.classList.contains('resizer')) {
@@ -303,6 +305,7 @@ export class FxDevtools extends HTMLElement {
         });
 
         this.classList.add('open');
+
         document.addEventListener('value-changed', e =>{
             console.log('value-changed hitting glass', e.target);
         })
@@ -325,7 +328,6 @@ export class FxDevtools extends HTMLElement {
         event.target.classList.add('selected-btn');
 
         this.instances = this.fore.querySelectorAll('fx-instance');
-
         const instance = Array.from(this.instances).find(inst => inst.id === event.target.textContent);
         console.log('wanted instance', instance);
 
@@ -346,7 +348,7 @@ export class FxDevtools extends HTMLElement {
                         return
                             `<fx-dom-inspector instance="${instance.id}"> </fx-dom-inspector>`
             */
-        }else if(instance.type === 'json'){
+        } else if(instance.type === 'json'){
             const jsonInspector = document.createElement('fx-json-instance');
             jsonInspector.setAttribute('instance',instance.id);
             const span = document.createElement('span');

@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToBoolean, resolveId } from '../xpath-evaluation.js';
+import { evaluateXPathToBoolean, evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
@@ -353,9 +353,17 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
+    // this._dispatchExecute();
   }
 
   _dispatchExecute(){
+
+/*
+    let detail = { action: this, event:this.event};
+    if(this.nodeset){
+      const path = evaluateXPathToString('path',this.nodeset,this);
+    }
+*/
     this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,

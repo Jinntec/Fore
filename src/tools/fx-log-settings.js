@@ -17,7 +17,7 @@ export class FxLogSettings extends HTMLElement {
         width:100%;
         border:thin solid #efefef;
         font-family: Verdana, Sans;
-        background:#efefef;
+
         margin:0;
         border:thin solid #ddd;
       }
@@ -58,6 +58,9 @@ export class FxLogSettings extends HTMLElement {
         padding:0.5rem;
         margin:0;
         border-bottom:2px solid #ddd;
+      }
+      #settings{
+        padding:1em;
       }
       
     `;

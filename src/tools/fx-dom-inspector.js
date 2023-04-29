@@ -23,7 +23,7 @@ export class FxDomInspector extends HTMLElement {
       
         :host {
           display:block;
-          background:#efefef;
+          background:transparent;
         }
         body {
             -webkit-animation: bugfix infinite 1s;
@@ -41,17 +41,19 @@ export class FxDomInspector extends HTMLElement {
         
         #adi-wrapper {
             top: 0;
-            background: #fafafa;
             font-family: "Segoe UI", Arial;
             font-size: 1rem;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+/*
             display:grid;
             grid-template-columns:70% auto;   
+*/
             position:relative;
             height:calc(100% - 5rem);
+            display:flex;
         }
         
         #adi-wrapper.left {
@@ -188,6 +190,7 @@ export class FxDomInspector extends HTMLElement {
         #adi-dom-view {
             border-right:2px solid #ddd;
             overflow:auto;
+            flex-grow:3;
         }
         
         #adi-dom-view ul {

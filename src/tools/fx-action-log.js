@@ -2,6 +2,7 @@ import {XPathUtil} from "../xpath-util";
 import "./fx-log-item.js";
 import {FxLogSettings} from './fx-log-settings.js';
 
+
 export class FxActionLog extends HTMLElement {
     constructor() {
         super();
@@ -17,10 +18,10 @@ export class FxActionLog extends HTMLElement {
         position:relative;
         width:100%;
         border:thin solid #efefef;
-        background:white;
+        background:transparent;
         font-family: Verdana, Sans;
-        background:#efefef;
         margin:0;
+        padding:0.25rem;
       }
       a,a:link,a:visited{
         color:black;
@@ -124,7 +125,7 @@ export class FxActionLog extends HTMLElement {
       }
       #log{
         margin-bottom:10em;
-        margin-right:1em;
+        margin-right:2em;
       }
       .log-row{
         margin:0;
@@ -188,7 +189,7 @@ export class FxActionLog extends HTMLElement {
       .outer-details > header{
         position:absolute;
         top:-1px;
-        width:calc(100% - 1rem);
+        width:calc(100% - 2rem);
         border-bottom:2px solid #ddd;
         font-size:1rem;
         height:1rem;
@@ -205,7 +206,7 @@ export class FxActionLog extends HTMLElement {
       }
       ul .log-row{
         padding-left:3px;
-        width:calc(100% - 2em + 2px);
+        width:calc(100% - 1em);
       }
     `;
 

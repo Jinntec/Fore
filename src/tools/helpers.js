@@ -179,10 +179,10 @@ export function drawAttrRow(attrName, attrValue) {
       row.innerHTML = `<label>${attrName}: <select data-attr="${attrName}" value="${attrValue}"><option>perform</option><option>cancel</option></label>`;
       break;
     case 'delay':
-      row.innerHTML = `<label>${attrName}: <input type="number" data-attr="${attrName}" value="${attrValue}"></label>`;
+      row.innerHTML = `<label>${attrName}: <input type="number" data-attr="${attrName}" value="${attrValue}" readonly="readonly"></label>`;
       break;
     default:
-      row.innerHTML = `<label>${attrName}: <input type="text" data-attr="${attrName}" value="${attrValue}"></label>`;
+      row.innerHTML = `<label>${attrName}: <input type="text" data-attr="${attrName}" value="${attrValue}" readonly="readonly"></label>`;
   }
   return row;
 }
