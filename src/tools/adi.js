@@ -55,6 +55,8 @@ class ADI {
         }
         this.drawUI(rootElement);
         this.registerEvents();
+
+		// We're updating here, but we're doing that again later, when the UI is read (the 'ready' event fires)
         this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
     }
 
@@ -885,21 +887,20 @@ class ADI {
                 );
         */
 
-        document.addEventListener('instance-loaded', () => {
+		const redrawUi = () => {
             if (this.instanceId !== '#document') {
                 const instance = window.document.querySelector(`#${this.instanceId}`);
                 this.document = instance.getInstanceData();
             }
             this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
-        });
-        document.addEventListener('value-changed', (e) => {
-            console.log('adi handling value-changed',e )
-            if (this.instanceId !== '#document') {
-                const instance = window.document.querySelector(`#${this.instanceId}`);
-                this.document = instance.getInstanceData();
-            }
-            this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
-        });
+		};
+
+		// Update UI when something with instances changed
+		document.addEventListener('instance-loaded', redrawUi);
+		// Update UI when some value changes
+        document.addEventListener('value-changed', redrawUi);
+		// Update UI when we're done loading and all repeats are done
+		document.addEventListener('ready', redrawUi);
 
         document.addEventListener(
             'mouseup',
