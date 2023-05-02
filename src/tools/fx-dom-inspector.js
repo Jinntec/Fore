@@ -460,7 +460,9 @@ export class FxDomInspector extends HTMLElement {
           </style>
           ${html}
       `;
-        const inst = this.hasAttribute('instance') ? this.getAttribute('instance'):'#document';
+        const inst = this.hasAttribute('instance') ?
+		  this.getAttribute('instance') :
+		  '#document';
         this.adiInstance = new ADI(this.shadowRoot, inst);
     }
 

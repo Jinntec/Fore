@@ -24,8 +24,8 @@ export class Fore {
 
     while (currentNode.parentNode) {
       const parent = currentNode.parentNode;
-      if (parent.children && parent.children.length > 0) {
-        const index = [...parent.children].indexOf(currentNode);
+      if (parent.childNodes && parent.childNodes.length > 0) {
+        const index = [...parent.childNodes].indexOf(currentNode);
         indexes.unshift(index);
       }
       currentNode = parent;

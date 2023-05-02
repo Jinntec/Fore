@@ -74,60 +74,23 @@ export function drawOptionRow(optionCode, optionText) {
   return row;
 }
 
-// Returns CSS and JS paths to the element
-// Result is an object with two letiables (cssPath, jsPath) where cssPath is a string
-// which holds the css path starting from the HTML element, and jsPath is an array which
-// contains indexes for childNodes arrays (starting at document object).
-//
-// Inspired by the selector function from Rochester Oliveira's jQuery plugin
-// http://rockingcode.com/tutorial/element-dom-tree-jquery-plugin-firebug-like-functionality/
+/**
+* Generates an array with the path to the given element, in terms of offsets in the childNodes of
+* their parent
+*/
 export function getElemPaths(elem) {
   if (typeof elem !== 'object') {
     throw new Error(`getElemPaths: Expected argument elem of type object, ${typeof elem} given.`);
   }
 
-  let css = '';
-  let js = '';
-  let i;
-  let len;
-
-	while (elem.parentNode) {
-		const parent = elem.parentNode;
-
-    // javascript selector
-    for (i = 0, len = parent.childNodes.length; i < len; i += 1) {
-      if (parent.childNodes[i] === elem) {
-        js = `${i},${js}`;
-        break;
-      }
-    }
-
-    // CSS selector
-    let cssTmp = elem.nodeName;
-
-    if (elem.id) {
-      cssTmp += `#${elem.id}`;
-    }
-
-    if (elem.className) {
-      // use classList if available
-      const classList = elem.classList || elem.className.split(' ');
-
-      for (i = 0, len = classList.length; i < len; i += 1) {
-        cssTmp += `.${classList[i]}`;
-      }
-    }
-
-    css = `${cssTmp} ${css}`;
+  const js = [];
+  while (elem.parentNode) {
+    const parent = elem.parentNode;
+    js.unshift(`${Array.from(parent.childNodes).indexOf(elem)}`);
     elem = elem.parentNode;
   }
 
-  js = js.slice(0, -1).split(',');
-
-  return {
-    cssPath: css.toLowerCase(),
-    jsPath: js,
-  };
+  return js;
 }
 
 // Renders the options panel

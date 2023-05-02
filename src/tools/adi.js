@@ -9,17 +9,16 @@ import {
     pauseEvent,
     drawAttrRow
 } from './helpers.js';
-import {Fore} from '../fore.js';
 
-const nodeByPath = new Map();
 
 class ADI {
     constructor(rootElement, instanceId) {
+		this.nodeByPath = new Map();
+
         this.uiView = null;
         this.menuView = null;
         this.domView = null;
         this.attrView = null;
-        this.pathView = null;
         this.optsView = null;
         this.activeElement = null;
         this.vertResizing = false;
@@ -69,7 +68,7 @@ class ADI {
         let elem = document;
         const path = this.activeElement.getAttribute('data-js-path');
 
-        elem = nodeByPath.get(path);
+        elem = this.nodeByPath.get(path);
         console.log('getSelected', elem);
 /*
         document.dispatchEvent(
@@ -152,16 +151,12 @@ class ADI {
 
         if (!omit) {
             const path = getElemPaths(node);
-            const dataPath = Fore.getDomNodeIndexString(node);
-            console.log('adi + fore index', path, dataPath);
 
             const tagStart = newElement('span', {
-                'data-css-path': path.cssPath,
-                'data-js-path': JSON.stringify(path.jsPath),
-                'data-path':dataPath
+                'data-js-path': JSON.stringify(path),
             });
 
-            nodeByPath.set(JSON.stringify(path.jsPath), node);
+            this.nodeByPath.set(JSON.stringify(path), node);
             let tagEnd = null;
 
             if (containsOnlyText(node)) {
@@ -306,7 +301,6 @@ class ADI {
             removeClass(this.optsView, 'adi-hidden');
         } else {
             addClass(this.optsView, 'adi-hidden');
-            this.pathView.textContent = '';
             this.attrView.querySelector('.adi-content').innerHTML = '';
             this.refreshUI();
             this.drawDOM(document, this.domView.querySelector('.adi-tree-view'), true);
@@ -334,7 +328,6 @@ class ADI {
         // const horizSplit = newElement('div', {id: 'adi-horiz-split'});
         const domTree = newElement('ul', {class: 'adi-tree-view'});
         const domPathWrap = newElement('div', {class: 'adi-path-wrap'});
-        this.pathView = newElement('div', {class: 'adi-path'});
         const domPathScrollLeft = newElement('span', {class: 'adi-path-left'});
         const domPathScrollRight = newElement('span', {class: 'adi-path-right'});
         this.menuView = newElement('div', {id: 'adi-panel'});
@@ -352,7 +345,6 @@ class ADI {
         this.domView.appendChild(domViewContent);
 
         this.attrView.appendChild(attrViewContent);
-        domPathWrap.appendChild(this.pathView);
         domPathWrap.appendChild(domPathScrollLeft);
         domPathWrap.appendChild(domPathScrollRight);
         naviButtons.appendChild(naviLookup);
@@ -572,7 +564,6 @@ class ADI {
             this.saveOptions();
         }
 
-        this.checkPathOverflow();
     }
 
     // Horizontal splitter resize handler
@@ -612,7 +603,6 @@ class ADI {
 
         this.activeElement = target;
         addClass(target, 'adi-active-node');
-        this.pathView.textContent = target.getAttribute('data-css-path');
 
 /*
         e.target.dispatchEvent(
@@ -631,37 +621,18 @@ class ADI {
                 wrap.scrollTop = target.offsetTop - Math.floor(wrap.clientHeight / 2);
             }
         }
+		const selected = this.getSelected();
+        this.drawAttrs(selected);
 
-        this.checkPathOverflow();
-        this.drawAttrs(this.getSelected());
+		if (selected.getModelItem && selected.getModelItem()?.node) {
+			let selectedElement = selected.modelItem.node;
+			if (selectedElement.nodeType === Node.ATTRIBUTE_NODE) {
+				selectedElement = selectedElement.ownerElement;
+			}
+			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
+		}
     }
 
-    // Checks if pathView is overflowing or not
-    checkPathOverflow() {
-        if (this.pathView.scrollWidth > this.pathView.clientWidth) {
-            addClass(this.pathView.parentNode, 'adi-overflowing');
-        } else {
-            removeClass(this.pathView.parentNode, 'adi-overflowing');
-        }
-    }
-
-    // Handles scroll behavior for overflowing pathView
-    scrollPathView(e) {
-        const target = e ? e.target : window.event.srcElement;
-        const maxScroll = this.pathView.scrollWidth - this.pathView.clientWidth;
-        const scroll = this.pathView.scrollLeft;
-        const change = 5;
-
-        if (target.classList.contains('adi-path-right')) {
-            this.pathView.scrollLeft = scroll <= maxScroll - change ? scroll + change : maxScroll;
-        } else {
-            this.pathView.scrollLeft = scroll - change >= 0 ? scroll - change : 0;
-        }
-
-        if (!this.pathScrolling) {
-            this.pathScrolling = setInterval(this.scrollPathView, 20, e);
-        }
-    }
 
     // Highlights an element on page
     highlightElement(e) {
@@ -675,9 +646,9 @@ class ADI {
 
         const path = target.getAttribute('data-js-path');
 
-        node = nodeByPath.get(path);
+        node = this.nodeByPath.get(path);
 
-        if (node.ownerDocument !== window.document) {
+        if (!node || node.ownerDocument !== window.document) {
             // Not in HTML: ignore
             return;
         }
@@ -697,6 +668,11 @@ class ADI {
     // Handles element lookup on page
     handleLookup(e) {
         const target = e ? e.detail?.target || e.target : window.event.srcElement;
+
+		if (!this.document.contains(target)) {
+			// Targetted at somewhere else!!!
+			return;
+		}
 
         if (target.className.indexOf('adi-menu-lookup') !== -1) {
             // enable/disable interactive lookup
@@ -749,7 +725,7 @@ class ADI {
 
         // find corresponding node in the DOM view
         const path = getElemPaths(target);
-        const active = this.domView.querySelector(`[data-js-path='${JSON.stringify(path.jsPath)}']`);
+        const active = this.domView.querySelector(`[data-js-path='${JSON.stringify(path)}']`);
 
         // activate it
         if(!active) return;
@@ -946,41 +922,6 @@ class ADI {
         // active element
         this.addEventDelegate(this.domView, 'click', (event) => this.handleActive(event), false, '.adi-normal-node');
         this.addEventDelegate(this.domView, 'click', (event) => this.handleActive(event), false, '.adi-end-node');
-        // path view scrolling
-        this.addEventDelegate(
-            this.pathView.parentNode,
-            'mousedown',
-            this.scrollPathView,
-            false,
-            '.adi-path-left',
-        );
-        this.addEventDelegate(
-            this.pathView.parentNode,
-            'mousedown',
-            this.scrollPathView,
-            false,
-            '.adi-path-right',
-        );
-        this.addEventDelegate(
-            this.pathView.parentNode,
-            'mouseup',
-            () => {
-                clearInterval(this.pathScrolling);
-                this.pathScrolling = false;
-            },
-            false,
-            '.adi-path-left',
-        );
-        this.addEventDelegate(
-            this.pathView.parentNode,
-            'mouseup',
-            () => {
-                clearInterval(this.pathScrolling);
-                this.pathScrolling = false;
-            },
-            false,
-            '.adi-path-right',
-        );
 
         // matching tag highlighting
         this.addEventDelegate(
@@ -1044,7 +985,6 @@ class ADI {
                 }
             }
 
-            this.checkPathOverflow();
             this.drawAttrs(this.getSelected());
         });
 

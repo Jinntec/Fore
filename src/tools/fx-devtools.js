@@ -317,6 +317,7 @@ export class FxDevtools extends HTMLElement {
         console.log('that works')
         document.body.style.height = '';
     }
+
     _toggleInstancePanel(event) {
         const instancePanel = this.shadowRoot.querySelector('.instance-panel');
         instancePanel.innerHTML = "";
@@ -349,7 +350,7 @@ export class FxDevtools extends HTMLElement {
                         return
                             `<fx-dom-inspector instance="${instance.id}"> </fx-dom-inspector>`
             */
-        } else if(instance.type === 'json'){
+        } if(instance.type === 'json'){
             const jsonInspector = document.createElement('fx-json-instance');
             jsonInspector.setAttribute('instance',instance.id);
             const span = document.createElement('span');
