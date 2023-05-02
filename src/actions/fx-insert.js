@@ -129,14 +129,6 @@ export class FxInsert extends AbstractAction {
   async perform() {
     // super.perform();
     // as we're overwriting the superclass we need to dispatch the execute-action ourselves
-    this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
-    );
 
 
     /*
@@ -238,6 +230,16 @@ export class FxInsert extends AbstractAction {
 
     const inst = this.getModel().getInstance(XPathUtil.resolveInstance(this));
     console.log('<<<<<<< resolved instance', inst);
+
+    const path = Fore.getDomNodeIndexString(this.nodeset);
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event,path:path},
+        }),
+    );
 
     Fore.dispatch(inst,'insert',{
       'inserted-nodes':originSequenceClone,

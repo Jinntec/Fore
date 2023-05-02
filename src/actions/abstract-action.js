@@ -143,8 +143,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
-    } else {
-      this.event = 'click';
     }
     if (this.hasAttribute('defaultAction')) {
       this.defaultAction = this.getAttribute('defaultAction');
@@ -345,7 +343,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
    */
   async perform() {
-    this._dispatchExecute();
+    // this._dispatchExecute();
 
     // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
 
@@ -353,17 +351,20 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
-    // this._dispatchExecute();
+
+    this.dispatchExecute();
   }
 
-  _dispatchExecute(){
+  dispatchExecute(){
 
-/*
     let detail = { action: this, event:this.event};
     if(this.nodeset){
-      const path = evaluateXPathToString('path',this.nodeset,this);
+      // const path = XPathUtil.getPath(this.nodeset);
+      const path = Fore.getDomNodeIndexString(this.nodeset);
+      detail = {...detail,path:path};
+      console.log('instance path', this.nodeset, path)
     }
-*/
+
     this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,

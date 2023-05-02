@@ -226,6 +226,7 @@ export class FxDevtools extends HTMLElement {
         summary button{
             padding:0;
             border:0;
+            background:transparent;
         }
         .wrapper{
             height:100%;

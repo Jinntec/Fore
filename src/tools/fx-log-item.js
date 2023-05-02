@@ -18,6 +18,7 @@ export class FxLogItem extends HTMLElement {
         height: auto;
         font-size: 0.8em;
         font-weight: 400;
+
       }
 
       a,a:link,a:visited{
@@ -48,6 +49,7 @@ export class FxLogItem extends HTMLElement {
         position:relative;
         border:1px solid #ddd;
         border-radius:1em;       
+        box-shadow: 1px 1px 5px 0px rgba(79, 136, 183, 0.8);
       }
       :host(.action) .info{
         border-radius:0;

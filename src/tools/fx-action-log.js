@@ -184,6 +184,7 @@ export class FxActionLog extends HTMLElement {
         height:100%;
         overflow:auto;
         margin-top:2rem;
+        background:rgba(250, 250, 250, 0.9);
       }
       
       .outer-details > header{
@@ -522,7 +523,9 @@ export class FxActionLog extends HTMLElement {
                 return `
                 <fx-log-item event-name="${e.detail.event}"
                              xpath="${xpath}"
-                             short-name="ACTION" class="action">
+                             short-name="ACTION"
+                              data-path="${e.detail.path}" 
+                              class="action">
                     <section class="details">
                       <header>Attributes</header>
                       <section>
@@ -554,7 +557,8 @@ export class FxActionLog extends HTMLElement {
                 <fx-log-item short-name="SEND"
                              short-info="${submission.id}"
                              event-name="${e.detail.event}"
-                             xpath="${xpath}" class="action">
+                             xpath="${xpath}" class="action"
+                             data-path="${e.detail.path}" >
                         <section class="details">
                           <header>Submission</header>
                           <section class="attributes">
@@ -574,7 +578,8 @@ export class FxActionLog extends HTMLElement {
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
                              event-name="${listensOn}"
-                             xpath="${xpath}" class="action">
+                             xpath="${xpath}"
+                             data-path="${e.detail.path}" class="action">
                       <section class="details">
                           <span class="key">value</span>
                           <span class="value">${e.detail.value}</span>
@@ -587,6 +592,7 @@ export class FxActionLog extends HTMLElement {
                     <fx-log-item event-name="${e.detail.event}" 
                                 short-name="${e.target.nodeName}"
                                 xpath="${xpath}"
+                                data-path="${e.detail.path}" 
                                 class="action">
                           <section class="details">
                           </section>

@@ -9,6 +9,7 @@ import {
     pauseEvent,
     drawAttrRow
 } from './helpers.js';
+import {Fore} from '../fore.js';
 
 const nodeByPath = new Map();
 
@@ -149,9 +150,13 @@ class ADI {
 
         if (!omit) {
             const path = getElemPaths(node);
+            const dataPath = Fore.getDomNodeIndexString(node);
+            console.log('adi + fore index', path, dataPath);
+
             const tagStart = newElement('span', {
                 'data-css-path': path.cssPath,
                 'data-js-path': JSON.stringify(path.jsPath),
+                'data-path':dataPath
             });
 
             nodeByPath.set(JSON.stringify(path.jsPath), node);

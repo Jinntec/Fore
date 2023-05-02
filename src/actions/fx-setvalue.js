@@ -2,6 +2,7 @@
 import '../fx-model.js';
 import {AbstractAction} from './abstract-action.js';
 import {evaluateXPath} from '../xpath-evaluation.js';
+import {Fore} from '../fore.js';
 
 /**
  * `fx-setvalue`
@@ -71,12 +72,16 @@ export default class FxSetvalue extends AbstractAction {
         if (!item) return;
 
         if (item.value !== newVal) {
+            // const path = XPathUtil.getPath(modelItem.node);
+            const path = Fore.getDomNodeIndexString(modelItem.node)
+            console.log('instance path', path)
+
             this.dispatchEvent(
                 new CustomEvent('execute-action', {
                     composed: true,
                     bubbles: true,
                     cancelable:true,
-                    detail: { action: this, event:this.event, value:newVal},
+                    detail: { action: this, event:this.event, value:newVal, path:path},
                 }),
             );
 

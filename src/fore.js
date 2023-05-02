@@ -18,6 +18,24 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  static getDomNodeIndexString(node) {
+    const indexes = [];
+    let currentNode = node;
+
+    while (currentNode.parentNode) {
+      const parent = currentNode.parentNode;
+      if (parent.children && parent.children.length > 0) {
+        const index = [...parent.children].indexOf(currentNode);
+        indexes.unshift(index);
+      }
+      currentNode = parent;
+    }
+
+    return indexes.join('.');
+  }
+
+
+
   /**
    * returns the next `fx-fore` element upwards in tree
    *
