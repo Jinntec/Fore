@@ -2,6 +2,8 @@ import './fx-action-log.js';
 import './fx-dom-inspector.js';
 import './fx-json-instance.js';
 
+import {resolveInstance} from '../xpath-evaluation';
+
 export class FxDevtools extends HTMLElement {
 
     static get properties() {
@@ -36,6 +38,8 @@ export class FxDevtools extends HTMLElement {
         this.lastY = 0;
         this.defaultHeight = '40vh';
 
+		this.buttonByInstanceId = new Map();
+
         window.addEventListener("DOMContentLoaded", (event) => {
             console.log("DOM fully loaded and parsed");
             this.fore = document.querySelector('fx-fore');
@@ -49,18 +53,50 @@ export class FxDevtools extends HTMLElement {
                     btn.setAttribute('type','button');
                     btn.textContent = instance.id;
                     header.appendChild(btn);
-                    btn.addEventListener('click', e => {
-                       console.log('button for instance', e.target.textContent);
-                       this._toggleInstancePanel(e);
-                    });
+					this.buttonByInstanceId.set(instance.id, btn);
+                    btn.addEventListener('click', () => this.selectInstance(instance.id));
                 });
-                const firstInstanceButton = this.shadowRoot.querySelector('header button');
-                firstInstanceButton.click();
+                this.selectInstance(this.instances[0].id);
             });
         });
+
+		window.document.addEventListener('log-active-element', (e) => {
+			const target = e ? e.detail?.target || e.target : window.event.srcElement;
+
+			const instance = this.instances.find(
+				instance => instance.instanceData.contains(target));
+
+			if (instance) {
+				this.selectInstance(instance.id);
+			}
+		});
     }
 
+	selectInstance (instanceId) {
+		const button = this.buttonByInstanceId.get(instanceId);
+		if (button.classList.contains('selected-btn')) {
+			return;
+		}
 
+		const selectedBtn = this.shadowRoot.querySelector('.selected-btn');
+        if(selectedBtn){
+            selectedBtn.classList.remove('selected-btn');
+        }
+
+        button.classList.add('selected-btn');
+
+        const instancePanel = this.shadowRoot.querySelector('.instance-panel');
+        instancePanel.innerHTML = "";
+
+        this.instances = [...this.fore.querySelectorAll('fx-instance')];
+        const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
+        console.log('wanted instance', instance);
+
+        const panelContent = this._renderInstancePanel(instance);
+        console.log('panelContent', panelContent);
+        // instancePanel.innerHTML = panelContent;
+        instancePanel.append(panelContent);
+	}
 
     connectedCallback() {
         this.render();
@@ -318,28 +354,6 @@ export class FxDevtools extends HTMLElement {
         document.body.style.height = '';
     }
 
-    _toggleInstancePanel(event) {
-        const instancePanel = this.shadowRoot.querySelector('.instance-panel');
-        instancePanel.innerHTML = "";
-
-        const selectedBtn = this.shadowRoot.querySelector('.selected-btn');
-        if(selectedBtn){
-            selectedBtn.classList.remove('selected-btn');
-        }
-
-        event.target.classList.add('selected-btn');
-
-        this.instances = this.fore.querySelectorAll('fx-instance');
-        const instance = Array.from(this.instances).find(inst => inst.id === event.target.textContent);
-        console.log('wanted instance', instance);
-
-        const panelContent = this._renderInstancePanel(instance);
-        console.log('panelContent', panelContent);
-        // instancePanel.innerHTML = panelContent;
-        instancePanel.append(panelContent)
-
-    }
-
     _renderInstancePanel(instance){
         if(instance.type === 'xml'){
             const domInpector = document.createElement('fx-dom-inspector');
@@ -352,7 +366,7 @@ export class FxDevtools extends HTMLElement {
             */
         } if(instance.type === 'json'){
             const jsonInspector = document.createElement('fx-json-instance');
-            jsonInspector.setAttribute('instance',instance.id);
+            jsonInspector.setAttribute('instance', instance.id);
             const span = document.createElement('span');
             span.setAttribute('slot','header');
             jsonInspector.append(span);
