@@ -183,7 +183,7 @@ function findInstanceReferences(xpathQuery) {
 		return [];
 	}
 	if (instanceReferencesByQuery.has(xpathQuery)) {
-	  	return instanceReferencesByQuery.get(xpathQuery);
+		return instanceReferencesByQuery.get(xpathQuery);
 	}
     const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
     const instanceReferences = fxEvaluateXPathToStrings(
@@ -207,6 +207,49 @@ function findInstanceReferences(xpathQuery) {
 }
 
 /**
+ * Resolve to which instance a component binds
+ * Do it statically, without evaluating any XPaths
+ *
+ * @returns  {FxInsstance}  The actual fx-instance element, or null
+ */
+export function resolveInstance (xpathQuery, formElement) {
+	let instanceReferences = findInstanceReferences(xpathQuery);
+    if (instanceReferences.length === 0) {
+        // No instance functions. Look up further in the hierarchy to see if we can deduce the
+        // intended context from there
+        const ancestorComponent = formElement.parentNode &&
+            formElement.parentNode.nodeType === formElement.ELEMENT &&
+            formElement.parentNode.closest('[ref]');
+        if (ancestorComponent) {
+            const resolvedInstanceFromAncestry = resolveInstance(
+                ancestorComponent.getAttribute('ref'),
+                ancestorComponent,
+            );
+            return resolvedInstanceFromAncestry;
+        }
+        // Nothing found: let's just assume we're supposed to use the `default` instance
+        instanceReferences = ['default'];
+    }
+
+    if (instanceReferences.length !== 1) {
+		return null;
+	}
+
+    if (instanceReferences[0] === 'default') {
+        const actualForeElement = fxEvaluateXPathToFirstNode(
+            'ancestor-or-self::fx-fore[1]',
+            formElement,
+            null,
+            null,
+            {namespaceResolver: xhtmlNamespaceResolver},
+        );
+
+        return actualForeElement && actualForeElement.querySelector('fx-instance');
+    }
+    return resolveId(instanceReferences[0], formElement, 'fx-instance');
+}
+
+/**
  * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
  * XPath in which the namespace is being resolved. The prefix will be resolved by using the
  * ancestry of said element.
@@ -225,61 +268,22 @@ function createNamespaceResolver(xpathQuery, formElement) {
     if (cachedResolver) {
         return cachedResolver;
     }
-	let instanceReferences = findInstanceReferences(xpathQuery);
-    if (instanceReferences.length === 0) {
-        // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
-        const ancestorComponent = formElement.parentNode &&
-			  formElement.parentNode.nodeType === formElement.ELEMENT &&
-			  formElement.parentNode.closest('[ref]');
-        if (ancestorComponent) {
-            const resolver = createNamespaceResolver(
-                ancestorComponent.getAttribute('ref'),
-                ancestorComponent,
-            );
-            setCachedNamespaceResolver(xpathQuery, formElement, resolver);
-            return resolver;
-        }
-        // Nothing found: let's just assume we're supposed to use the `default` instance
-        instanceReferences = ['default'];
-    }
-
-    if (instanceReferences.length === 1) {
-        // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
-        let instance;
-        if (instanceReferences[0] === 'default') {
-            const actualForeElement = fxEvaluateXPathToFirstNode(
-                'ancestor-or-self::fx-fore[1]',
-                formElement,
-                null,
-                null,
-                {namespaceResolver: xhtmlNamespaceResolver},
-            );
-
-            instance = actualForeElement && actualForeElement.querySelector('fx-instance');
-        } else {
-            instance = resolveId(instanceReferences[0], formElement, 'fx-instance');
-        }
-        if (instance && instance.hasAttribute('xpath-default-namespace')) {
-            const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-            /*
-            console.log(
-              `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
-            );
-      */
-            const resolveNamespacePrefix = prefix => {
-                if (!prefix) {
-                    return xpathDefaultNamespace;
-                }
-                return undefined;
-            };
-            setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
-            return resolveNamespacePrefix;
-        }
-    }
-    if (instanceReferences.length > 1) {
-        console.warn(
-            `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
-        );
+	const instance = resolveInstance(xpathQuery, formElement);
+    if (instance && instance.hasAttribute('xpath-default-namespace')) {
+        const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
+        /*
+          console.log(
+          `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
+          );
+		*/
+        const resolveNamespacePrefix = prefix => {
+            if (!prefix) {
+                return xpathDefaultNamespace;
+            }
+            return undefined;
+        };
+        setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+        return resolveNamespacePrefix;
     }
 
     const xpathDefaultNamespace =
