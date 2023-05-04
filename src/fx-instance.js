@@ -230,7 +230,6 @@ export class FxInstance extends HTMLElement {
       const data = await handleResponse(response);
       if (data.nodeType) {
         this.instanceData = data;
-        console.log('instanceData loaded: ', this.id, this.instanceData);
         return;
       }
       this.instanceData = data;

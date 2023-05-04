@@ -2,8 +2,6 @@ import './fx-action-log.js';
 import './fx-dom-inspector.js';
 import './fx-json-instance.js';
 
-import {resolveInstance} from '../xpath-evaluation';
-
 export class FxDevtools extends HTMLElement {
 
     static get properties() {
@@ -63,8 +61,10 @@ export class FxDevtools extends HTMLElement {
 		window.document.addEventListener('log-active-element', (e) => {
 			const target = e ? e.detail?.target || e.target : window.event.srcElement;
 
+
 			const instance = this.instances.find(
 				instance => instance.instanceData.contains(target));
+            // const instance = this._getInstanceForTarget(target);
 
 			if (instance) {
 				this.selectInstance(instance.id);
@@ -72,6 +72,16 @@ export class FxDevtools extends HTMLElement {
 		});
     }
 
+    _getInstanceForTarget(node){
+        this.instances.forEach(instance => {
+            if(instance.type === 'xml' && instance.instanceData.contains(node)){
+                return instance;
+            }
+            if(instance.type === 'json'){
+                return instance;
+            }
+        });
+    }
 	selectInstance (instanceId) {
 		const button = this.buttonByInstanceId.get(instanceId);
 		if (button.classList.contains('selected-btn')) {

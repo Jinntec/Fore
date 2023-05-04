@@ -396,10 +396,17 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-dom-view .adi-normal-node.fore-node{
-            background: var(--paper-blue-400);
+            background: var(--paper-blue-700);
             font-size:1em;
              color:white;
         }
+        #adi-dom-view .adi-node.fx-fore{
+            background:var(--paper-blue-grey-50); 
+        }
+        #adi-dom-view .adi-node.fx-model{
+            background:var(--paper-blue-grey-100); 
+            padding:0.25em 0;
+        }            
         #adi-dom-view .adi-normal-node.fore-node:hover{
             background: var(--paper-grey-700);
             color:white;
@@ -413,7 +420,7 @@ export class FxDomInspector extends HTMLElement {
         /*    background: #ff7e7e !important;*/
         /*}*/
         #adi-dom-view .adi-end-node.fore-node{
-            background: var(--paper-blue-400);
+            background: var(--paper-blue-700);
             font-size:1em;
             color:white;
         }

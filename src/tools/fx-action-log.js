@@ -227,7 +227,7 @@ export class FxActionLog extends HTMLElement {
       <section open class="outer-details">
         <header>Log 
             <span class="buttons">
-                <button id="del"">
+                <button id="del"" title="empty log - Ctrl+d">
                     <svg viewBox="0 0 24 24" style="width:24px;height:24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
                 </button>
             </span>
@@ -313,6 +313,11 @@ export class FxActionLog extends HTMLElement {
         const del = this.shadowRoot.querySelector('#del');
         del.addEventListener('click', e => {
             this.shadowRoot.querySelector('#log').innerHTML = '';
+        });
+        document.addEventListener('keydown', event => {
+            if (event.ctrlKey && event.key === 'd') {
+                this.shadowRoot.querySelector('#log').innerHTML = '';
+            }
         });
     }
 
@@ -521,7 +526,7 @@ export class FxActionLog extends HTMLElement {
             case 'FX-ACTION':
                 this.parentPath = xpath;
                 return `
-                <fx-log-item event-name="${e.detail.event}"
+                <fx-log-item event-name="${e.target.currentEvent.type}"
                              xpath="${xpath}"
                              short-name="ACTION"
                               data-path="${e.detail.path}" 
@@ -553,10 +558,11 @@ export class FxActionLog extends HTMLElement {
             // break;
             case 'FX-SEND':
                 const submission = document.querySelector(`#${e.detail.action.getAttribute('submission')}`);
+                const event = e.detail.event ? e.detail.event: '';
                 return `
                 <fx-log-item short-name="SEND"
                              short-info="${submission.id}"
-                             event-name="${e.detail.event}"
+                             event-name="${event}"
                              xpath="${xpath}" class="action"
                              data-path="${e.detail.path}" >
                         <section class="details">
@@ -577,7 +583,7 @@ export class FxActionLog extends HTMLElement {
                 return `
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
-                             event-name="${listensOn}"
+                             event-name="${e.target.currentEvent.type}"
                              xpath="${xpath}"
                              data-path="${e.detail.path}" class="action">
                       <section class="details">
@@ -588,8 +594,9 @@ export class FxActionLog extends HTMLElement {
                 `;
             // break;
             default:
+                const ev = e.target.currentEvent ? e.target.currentEvent.type : e.detail.event ? e.detail.event:'' ;
                 return `
-                    <fx-log-item event-name="${e.detail.event}" 
+                    <fx-log-item event-name="${ev}" 
                                 short-name="${e.target.nodeName}"
                                 xpath="${xpath}"
                                 data-path="${e.detail.path}" 
