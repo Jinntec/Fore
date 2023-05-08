@@ -3,6 +3,7 @@ import {Relevance} from './relevance.js';
 import {foreElementMixin} from './ForeElementMixin.js';
 import {evaluateXPathToString, evaluateXPath} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {XPathUtil} from "./xpath-util";
 
 /**
  * todo: validate='false'
@@ -46,7 +47,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             : 'xml';
 
         // if (!this.hasAttribute('url')) throw new Error(`url is required for submission: ${this.id}`);
-        if (!this.hasAttribute('url')) console.warn(`url is required for submission: ${this.id}`);
+        if (!this.hasAttribute('url')){
+            Fore.dispatch(this, 'error', { message: `url is required for submission: ${this.id}`});
+        }
+
+
         this.url = this.getAttribute('url');
 
         this.targetref = this.hasAttribute('targetref') ? this.getAttribute('targetref') : null;
@@ -124,7 +129,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const resolvedUrl = this._evaluateAttributeTemplateExpression(this.url, this);
 
         const instance = this.getInstance();
-        console.log('instance type', instance.type);
+        // const instance = XPathUtil.resolveInstance(this);
+        // console.log('instance type', instance.type);
 
         let serialized;
         if (this.serialization === 'none') {
@@ -313,6 +319,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         // ### set content-type header according to type of instance
         const instance = this.getInstance();
+        // const instance = XPathUtil.resolveInstance(this);
+
         const contentType = Fore.getContentType(instance, this.serialization);
         headers.append('Content-Type', contentType);
         // ### needed to overwrite browsers' setting of 'Accept' header
