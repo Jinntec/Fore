@@ -251,7 +251,9 @@ describe('insert Tests', () => {
   it('inserts from origin', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
+          
         <fx-model id="record">
+          <fx-insert event="model-construct-done" ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
           <fx-instance>
             <data>
               <task></task>
@@ -273,20 +275,20 @@ describe('insert Tests', () => {
           </template>
         </fx-repeat>
 
-        <fx-trigger>
-          <button>insert at end</button>
-          <fx-insert ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
-        </fx-trigger>
       </fx-fore>
     `);
     await oneEvent(el, 'refresh-done');
-    const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    // const trigger = el.querySelector('fx-trigger');
+   // await trigger.click();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
-    const tasks = fx.evaluateXPathToNodes('//foo', inst, null, {});
+    // await oneEvent(el, 'insert');
 
+    const tasks = fx.evaluateXPathToNodes('//foo', inst, null, {});
+// console.log('inst', el.querySelector('fx-instance'));
+// console.log('inst', el.querySelector('instance().instanceData'));
+// console.log('tasks', tasks)
     expect(tasks.length).to.equal(1);
   });
 
