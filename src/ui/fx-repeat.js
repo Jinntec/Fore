@@ -101,7 +101,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
-      console.log('handle index event ', e);
       const { item } = e.detail;
       const idx = Array.from(this.children).indexOf(item);
       this.applyIndex(this.children[idx]);
@@ -111,7 +110,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     document.addEventListener('index-changed', e => {
       e.stopPropagation();
       if (!e.target === this) return;
-      console.log('handle index event ', e);
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
       const { index } = e.detail;
@@ -128,13 +126,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // if (this.getOwnerForm().lazyRefresh) {
     this.mutationObserver = new MutationObserver(mutations => {
-      console.log('mutations', mutations);
+      // console.log('mutations', mutations);
 
       if (mutations[0].type === 'childList') {
         const added = mutations[0].addedNodes[0];
         if (added) {
           const path = XPathUtil.getPath(added);
-          console.log('path mutated', path);
+          // console.log('path mutated', path);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;
           // const prev = mutations[0].previousSibling.previousElementSibling;

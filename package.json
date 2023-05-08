@@ -50,8 +50,6 @@
     "build-number-generator": "^2.0.4",
     "deepmerge": "^4.2.2",
     "es-dev-server": "^2.1.0",
-    "esdoc": "^1.1.0",
-    "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^8.16.0",
     "husky": "^8.0.1",
     "jsdoc": "^3.6.10",

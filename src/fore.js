@@ -22,7 +22,7 @@ export class Fore {
     const indexes = [];
     let currentNode = node;
 
-    while (currentNode.parentNode) {
+    while (currentNode && currentNode.parentNode) {
       const parent = currentNode.parentNode;
       if (parent.childNodes && parent.childNodes.length > 0) {
         const index = [...parent.childNodes].indexOf(currentNode);
