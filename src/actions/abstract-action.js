@@ -203,7 +203,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     }
 */
     if(this.propagate === 'stop'){
-      console.log('event propagation stopped', e)
+      // console.log('event propagation stopped', e)
       e.stopPropagation();
     }
     if (this.defaultAction === 'cancel') {
@@ -362,7 +362,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       // const path = XPathUtil.getPath(this.nodeset);
       const path = Fore.getDomNodeIndexString(this.nodeset);
       detail = {...detail,path:path};
-      console.log('instance path', this.nodeset, path)
+      // console.log('instance path', this.nodeset, path)
     }
 
     this.dispatchEvent(
@@ -400,7 +400,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.needsUpdate &&
       (AbstractAction.outermostHandler === this || !AbstractAction.outermostHandler)
     ) {
-      console.log('Running actionperformed');
+      // console.log('Running actionperformed');
       model.recalculate();
       model.revalidate();
       model.parentNode.refresh(true);
@@ -409,6 +409,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       // We need an update, but the outermost action handler is not done yet. Make this clear!
       AbstractAction.outermostHandler.needsUpdate = true;
       console.log('Update delayed!');
+
+     //todo: bug around here - delaying eats up some necessary updates
+
+      model.parentNode.refresh(true);
+      this.dispatchActionPerformed();
     }
   }
 
