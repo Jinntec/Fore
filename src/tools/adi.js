@@ -10,6 +10,7 @@ import {
     drawAttrRow
 } from './helpers.js';
 
+import {Fore} from '../fore.js';
 
 class ADI {
     constructor(rootElement, instanceId) {
@@ -130,8 +131,13 @@ class ADI {
 
         const withChildren = this.hasRequiredNodes(node);
         let omit = false;
+        let adiNode = node.nodeName.startsWith('FX-') ? `adi-node ${node.nodeName.toLowerCase()}`:'';
+        if(node.nodeName.startsWith('FX-')){
+            adiNode = `adi-node ${node.nodeName.toLowerCase()}`;
+            adiNode += Fore.isActionElement(node.nodeName) ? ' action':'';
+        }
         const elem = newElement('li', {
-            class: withChildren ? 'adi-node' : '',
+            class: adiNode,
         });
 
         // do not show ADI DOM nodes in the DOM view
@@ -220,6 +226,7 @@ class ADI {
       */
             if (node.nodeName.startsWith('FX-')) {
                 tagStart.classList.add('fore-node');
+                tagStart.classList.add(node.nodeName.toLowerCase());
             }
 
             if (tagEnd) {
@@ -244,12 +251,15 @@ class ADI {
         let newNode = null;
         let isOpen = true;
 
+        const adiNode = elem.nodeName.startsWith('FX-') ? `adi-node ${node.nodeName.toLowerCase()}`:'';
+
         if (isRoot && this.options.nodeTypes.indexOf(root.nodeType) !== -1) {
             elem.innerHTML = '';
             newNode = this.newTreeNode(root);
 
             if (this.hasRequiredNodes(root)) {
-                newNode.appendChild(newElement('ul', {'data-open': true}));
+
+                newNode.appendChild(newElement('ul', {'data-open': true, class:adiNode}));
 
                 addClass(newNode.querySelector('.adi-trigger'), 'opened');
             }
@@ -277,9 +287,9 @@ class ADI {
                         if (node.nodeName === 'HEAD') isOpen = false;
 
                         if (node.nodeType === Node.DOCUMENT_NODE) {
-                            newNode.appendChild(newElement('ul', {'data-open': isOpen}));
+                            newNode.appendChild(newElement('ul', {'data-open': isOpen, class:adiNode}));
                         } else {
-                            newNode.insertBefore(newElement('ul', {'data-open': isOpen}), newNode.lastChild);
+                            newNode.insertBefore(newElement('ul', {'data-open': isOpen,class:adiNode}), newNode.lastChild);
                         }
 
                         addClass(newNode.querySelector('.adi-trigger'), isOpen ? 'opened' : 'closed');
