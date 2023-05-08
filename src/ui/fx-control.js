@@ -214,7 +214,12 @@ export default class FxControl extends XfAbstractControl {
 
   _replaceNode(node) {
     // Note: clone the node while replacing to prevent the instances to leak through
-    this.modelItem.node.replaceWith(node.cloneNode(true));
+    if(node.nodeType === Node.ATTRIBUTE_NODE){
+      this.modelItem.node.nodeValue = node.nodeValue;
+    }
+    if(node.nodeType === Node.ELEMENT_NODE){
+      this.modelItem.node.replaceWith(node.cloneNode(true));
+    }
     this.getOwnerForm().refresh();
   }
 
