@@ -66,7 +66,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
 	if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
 		sourceObject = sourceObject.ownerElement;
 	}
-	const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
+	const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : XPathUtil.getClosest('fx-fore', sourceObject);
 	const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
 	if (elementsWithId.length === 1) {
         // A single one is found. Assume no ID reuse.
@@ -804,12 +804,9 @@ const instance = (dynamicContext, string) => {
     // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
     // TODO: handle no string passed (null will be passed instead)
 
-    const formElement = fxEvaluateXPathToFirstNode(
-        'ancestor-or-self::fx-fore[1]',
+    const formElement = XPathUtil.getClosest(
+		'fx-fore',
         dynamicContext.currentContext.formElement,
-        null,
-        null,
-        {namespaceResolver: xhtmlNamespaceResolver},
     );
 
     const inst = string
