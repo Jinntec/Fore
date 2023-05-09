@@ -25,11 +25,19 @@ export class XPathUtil {
    * Alternative to `closest` that respects subcontrol boundaries
    */
   static getClosest(querySelector, start) {
-    while (!start.matches || !start.matches(querySelector)) {
+    while (start && !start.matches || !start.matches(querySelector)) {
       if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
         // We are passing a shadow root boundary
         start = start.host;
         continue;
+      }
+      if (start.nodeType === Node.ATTRIBUTE_NODE) {
+        // We are passing an attribute
+        start = start.ownerElement;
+        continue;
+      }
+      if (start.nodeType === Node.TEXT_NODE) {
+        start = start.parentNode;
       }
       if (start.matches('fx-fore')) {
         // Subform reached. Bail out

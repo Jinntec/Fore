@@ -222,17 +222,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     // console.log('executing', this);
 
     // console.log('executing e', e);
-    // console.log('executing e phase', e.eventPhase);
-    if (AbstractAction.outermostHandler === null) {
+      // console.log('executing e phase', e.eventPhase);
+	  const foreElement = this.getOwnerForm();
+    if (foreElement.outermostHandler === null) {
       console.time('outermostHandler');
-      AbstractAction.outermostHandler = this;
+      foreElement.outermostHandler = this;
 		this.dispatchEvent(new CustomEvent('outermost-action-start', {
           composed: true,
           bubbles: true,
 			cancelable:true, detail: {cause: e?.type}}));
     }
 
-    if (AbstractAction.outermostHandler !== this) {
+    if (foreElement.outermostHandler !== this) {
       console.info(
         `%cAction `,
         'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
@@ -317,9 +318,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
 	_finalizePerform(resolveThisEvent) {
 		this.currentEvent = null;
-    this.actionPerformed();
-    if (AbstractAction.outermostHandler === this) {
-      AbstractAction.outermostHandler = null;
+		this.actionPerformed();
+		const foreElement = this.getOwnerForm();
+    if (foreElement.outermostHandler === this) {
+      foreElement.outermostHandler = null;
       console.info(
         `%coutermost Action done`,
         'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
@@ -379,6 +381,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
    * calls the update cycle if action signalled that update is needed.
    */
   actionPerformed() {
+    const foreElement = this.getOwnerForm();
     const model = this.getModel();
     if(!model){
       return;
@@ -387,18 +390,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       return;
     }
     if (
-      AbstractAction.outermostHandler &&
-			!XPathUtil.contains(AbstractAction.outermostHandler.ownerDocument, AbstractAction.outermostHandler)
+      foreElement.outermostHandler &&
+        !XPathUtil.contains(foreElement.outermostHandler.ownerDocument, foreElement.outermostHandler)
     ) {
       // The old outermostHandler fell out of the document. An error has happened.
       // Just remove the old one and act like we are starting anew.
       console.warn('Unsetting outermost handler');
-      AbstractAction.outermostHandler = null;
+      foreElement.outermostHandler = null;
     }
     // console.log('actionPerformed action parentNode ', this.parentNode);
     if (
       this.needsUpdate &&
-      (AbstractAction.outermostHandler === this || !AbstractAction.outermostHandler)
+      (foreElement.outermostHandler === this || !foreElement.outermostHandler)
     ) {
       // console.log('Running actionperformed');
       model.recalculate();
@@ -407,7 +410,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // We need an update, but the outermost action handler is not done yet. Make this clear!
-      AbstractAction.outermostHandler.needsUpdate = true;
+      foreElement.outermostHandler.needsUpdate = true;
       console.log('Update delayed!');
 
      //todo: bug around here - delaying eats up some necessary updates
