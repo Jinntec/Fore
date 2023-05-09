@@ -231,20 +231,20 @@ export class FxInsert extends AbstractAction {
     const inst = this.getModel().getInstance(XPathUtil.resolveInstance(this));
     console.log('<<<<<<< resolved instance', inst);
 
-    const path = Fore.getDomNodeIndexString(this.nodeset);
+    const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,
           bubbles: true,
           cancelable:true,
-          detail: { action: this, event:this.event,path:path},
+          detail: { action: this, event:this.event, path },
         }),
     );
 
     Fore.dispatch(inst,'insert',{
-      'inserted-nodes':originSequenceClone,
+      'inserted-nodes': originSequenceClone,
       'insert-location-node': insertLocationNode,
-      'position':this.position
+      'position': this.position
     });
 
     // todo: this actually should dispatch to respective instance

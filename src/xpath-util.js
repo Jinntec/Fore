@@ -36,6 +36,9 @@ export class XPathUtil {
         start = start.ownerElement;
         continue;
       }
+      if (start.nodeType === Node.TEXT_NODE) {
+        start = start.parentNode;
+      }
       if (start.matches('fx-fore')) {
         // Subform reached. Bail out
         return null;
