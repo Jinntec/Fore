@@ -63,7 +63,13 @@ export class FxDevtools extends HTMLElement {
 
 
 			const instance = this.instances.find(
-				instance => instance.instanceData.contains(target));
+				instance => {
+					if (instance.type !== 'xml') {
+						// TODO: handle JSON instances!
+						return false;
+					}
+					return instance.instanceData.contains(target)
+				});
             // const instance = this._getInstanceForTarget(target);
 
 			if (instance) {
@@ -82,8 +88,12 @@ export class FxDevtools extends HTMLElement {
             }
         });
     }
+
 	selectInstance (instanceId) {
 		const button = this.buttonByInstanceId.get(instanceId);
+		if (!button) {
+			return;
+		}
 		if (button.classList.contains('selected-btn')) {
 			return;
 		}

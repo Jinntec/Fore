@@ -40,7 +40,7 @@ class ADI {
             omitEmptyText: true,
             makeVisible: true,
             foldText: true,
-            nodeTypes: [1, 3, 8, 9],
+            nodeTypes: [Node.ELEMENT_NODE, Node.TEXT_NODE, Node.COMMENT_NODE, Node.DOCUMENT_NODE],
         };
 
         this.instanceId = instanceId;
@@ -113,7 +113,8 @@ class ADI {
 
         if (node.hasChildNodes()) {
             for (let i = 0, len = node.childNodes.length; i < len; i += 1) {
-                if (this.options.nodeTypes.indexOf(node.childNodes[i].nodeType) !== -1) {
+				const child = node.childNodes[i];
+                if (this.options.nodeTypes.includes(child.nodeType)) {
                     return true;
                 }
             }
@@ -170,8 +171,6 @@ class ADI {
                     addClass(tagStart, 'adi-comment-node');
                     if (typeof tagStart.innerText === 'string') {
                         tagStart.innerText = `<!-- ${node.textContent} -->`;
-                    } else {
-                        tagStart.textContent = `<!-- ${node.textContent} -->`;
                     }
                 } else {
                     addClass(tagStart, 'adi-text-node');
@@ -199,7 +198,7 @@ class ADI {
                     } else if (node.nodeName === 'FX-SUBMISSION') {
                         tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.getAttribute('id')}">`;
                     } else {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()}>`;
+                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ${Array.from(node.attributes).map(attr => `${attr.name}="${attr.value}"`).join(' ')}>`;
                     }
 
                     if (withChildren) {

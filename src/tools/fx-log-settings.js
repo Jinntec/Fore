@@ -185,6 +185,7 @@ export class FxLogSettings extends HTMLElement {
             {name: "relevant", show: false, description: 'fires after a fx-control has become relevant'},
             {name: "reload", show: false, description: 'fires when a fx-reload action executes'},
             {name: "required", show: false, description: 'fires after an fx-control has become required'},
+            {name: "return", show: false, description: 'fires after a fx-return returned'},
             {name: "select", show: false, description: 'fires when an fx-case has been selected'},
             {name: "submit", show: false, description: 'fires before a submission takes place'},
             {name: "submit-done", show: false, description: 'fires after a submission has successfully been executed'},
