@@ -278,11 +278,17 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-dom-view .adi-trigger.closed {
-            background: url('/resources/scripts/dom-inspector/img/node_closed.png') no-repeat
+            // background: url('/resources/scripts/dom-inspector/img/node_closed.png') no-repeat;
+        }   
+        #adi-dom-view .adi-trigger.closed::before {
+            content:'\\25B8';
         }
         
         #adi-dom-view .adi-trigger.opened {
-            background: url('/resources/scripts/dom-inspector/img/node_opened.png') no-repeat
+            // background: url('/resources/scripts/dom-inspector/img/node_opened.png') no-repeat
+        }
+        #adi-dom-view .adi-trigger.opened::before{
+            content:'\\25BE';
         }
         
         #adi-dom-view .adi-trigger:hover {
@@ -422,7 +428,7 @@ export class FxDomInspector extends HTMLElement {
             color:white;
         }
         
-        #adi-dom-view .adi-active-node.fore-node{
+        #adi-dom-view .adi-active-node.fore-node[data-js-path]{
             background: var(--paper-grey-700);
             color:white;
         }

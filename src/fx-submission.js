@@ -224,17 +224,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 contentType.startsWith('text/markdown')
             ) {
                 const text = await response.text();
-                this._handleResponse(text);
+                this._handleResponse(text, resolvedUrl);
             } else if (contentType.startsWith('application/json')) {
                 const json = await response.json();
-                this._handleResponse(json);
+                this._handleResponse(json,resolvedUrl);
             } else if (contentType.startsWith('application/xml')) {
                 const text = await response.text();
                 const xml = new DOMParser().parseFromString(text, 'application/xml');
-                this._handleResponse(xml);
+                this._handleResponse(xml,resolvedUrl);
             } else {
                 const blob = await response.blob();
-                this._handleResponse(blob);
+                this._handleResponse(blob,resolvedUrl);
             }
 
             // this.dispatch('submit-done', {});
@@ -363,7 +363,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @param data
      * @private
      */
-    _handleResponse(data) {
+    _handleResponse(data, resolvedUrl) {
         console.log('_handleResponse ', data);
 
         /*
@@ -417,7 +417,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
 
         if (this.replace === 'all') {
-            document.getElementsByTagName('html')[0].innerHTML = data;
+            document.open();
+            document.write(data);
+            document.close();
+            window.location.href=resolvedUrl;
+            // document.getElementsByTagName('html')[0].innerHTML = data;
         }
         if (this.replace === 'target') {
             const target = this.getAttribute('target');

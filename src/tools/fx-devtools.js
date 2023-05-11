@@ -214,11 +214,6 @@ export class FxDevtools extends HTMLElement {
             height:100%;
             overflow:auto;
         }
-        #optionsTrigger{
-            background:transparent;
-            border-radius:0.25em;
-            padding:0.25em;
-        }
         .panels{
             display:grid;
             grid-template-columns:20% 40% 40%;
@@ -250,6 +245,9 @@ export class FxDevtools extends HTMLElement {
             padding:0;
             background:rgba(255,255,255,0.95);
             width:100%;
+        }
+        .optionsBtn{
+            font-size:2rem;
         }
         .resizer{
             width:100vw;
@@ -301,7 +299,7 @@ export class FxDevtools extends HTMLElement {
             <slot></slot>
             <details class="fx-devtools" open>
                 <div class="resizer"></div>
-                <summary>Fore Glass <button><img id="optionsTrigger" src="../../resources/images/settings.svg"></button></summary>
+                <summary>Fore Glass <button class="optionsBtn" id="optionsTrigger">&#9881;</button></summary>
                 <section class="panels">
                     <section class="log">
                         <fx-action-log selector="${this.selector}"></fx-action-log>
