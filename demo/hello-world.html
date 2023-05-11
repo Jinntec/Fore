@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Hello World</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+/*
+        fx-model{
+            display: none;
+        }
+*/
+        noscript{
+            padding: 1rem;
+            background: orange;
+            font-size: 2rem;
+        }
+        fx-devtools[open]{
+            --fx-devtools-height:30vh;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <noscript>Scripting is disabled - Sorry, can't process this page.</noscript>
+
+
+    <h1>A simple output</h1>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-message level="modal" event="ready">Hello World</fx-message>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+
+<script type="module" src="./demo.js"></script>
+
+<!--<fx-devtools></fx-devtools>-->
+
+</body>
+</html>

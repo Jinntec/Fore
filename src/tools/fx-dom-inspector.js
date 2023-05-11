@@ -338,7 +338,8 @@ export class FxDomInspector extends HTMLElement {
             border-left:1px solid #ddd;
             overflow:auto;
             padding:0.25em;
-            height: calc(70% - 1em);
+            height: calc(90% - 1em);
+            min-width:6rem;
         }
         #adi-attr-view > .adi-content{
             height:calc(100% - 5em);
