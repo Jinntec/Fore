@@ -1,6 +1,7 @@
 import './fx-action-log.js';
 import './fx-dom-inspector.js';
 import './fx-json-instance.js';
+// import './fx-minimap.js';
 
 export class FxDevtools extends HTMLElement {
 
@@ -185,6 +186,14 @@ export class FxDevtools extends HTMLElement {
         .dom{
             width:45%;
             border-left:1px solid #999;
+            position:relative
+        }
+        .dom fx-minimap{
+            position:absolute;
+            right:0;
+            top:0;
+            width:5rem;
+            height:6rem;
         }
         header{
             padding:0.5rem;
@@ -216,7 +225,7 @@ export class FxDevtools extends HTMLElement {
         }
         .panels{
             display:grid;
-            grid-template-columns:20% 40% 40%;
+            grid-template-columns:20% 50% 30%;
             height:100%;
             width:100%;
             max-height:100%;
@@ -248,6 +257,10 @@ export class FxDevtools extends HTMLElement {
         }
         .optionsBtn{
             font-size:2rem;
+            display:none;
+        }
+        details[open] .optionsBtn{
+            display:inline;
         }
         .resizer{
             width:100vw;
@@ -259,7 +272,8 @@ export class FxDevtools extends HTMLElement {
             
         }
         summary{
-            padding:0.5em;
+            height:3rem;
+            padding:0 1em;
             border-bottom:2px solid #ddd;
             display:flex;
             justify-content:space-between;

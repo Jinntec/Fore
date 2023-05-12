@@ -52,6 +52,8 @@ class ADI {
                 console.error('No instance found!');
             }
             this.document = instance.getInstanceData();
+            this.isInstanceViewer = true;
+            this.options.foldText = false;
         }
         this.drawUI(rootElement);
         this.registerEvents();
@@ -329,7 +331,7 @@ class ADI {
         });
         this.domView = newElement('div', {id: 'adi-dom-view'});
         const domViewContent = newElement('div', {class: 'adi-content', id: 'detailsView'});
-        this.attrView = newElement('div', {id: 'adi-attr-view'});
+            this.attrView = newElement('div', {id: 'adi-attr-view'});
         // this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
 
         const attrViewContent = newElement('div', {class: 'adi-content'});
@@ -364,7 +366,7 @@ class ADI {
         this.uiView.appendChild(this.optsView);
         this.uiView.appendChild(this.domView);
         // this.uiView.appendChild(horizSplit);
-        this.uiView.appendChild(this.attrView);
+            this.uiView.appendChild(this.attrView);
         // wrapper.appendChild(naviWrap);
 
         // cache UI object and append to the DOM
@@ -631,7 +633,7 @@ class ADI {
             }
         }
 		const selected = this.getSelected();
-        this.drawAttrs(selected);
+            this.drawAttrs(selected);
 
 		if (selected.getModelItem && selected.getModelItem()?.node) {
 			let selectedElement = selected.modelItem.node;
@@ -994,7 +996,7 @@ class ADI {
                 }
             }
 
-            this.drawAttrs(this.getSelected());
+                this.drawAttrs(this.getSelected());
         });
 
         // options events
@@ -1007,7 +1009,7 @@ class ADI {
         );
 
         // attributes events
-        this.addEventDelegate(this.attrView, 'change', this.changeAttribute, false, 'input');
+            this.addEventDelegate(this.attrView, 'change', this.changeAttribute, false, 'input');
     }
 }
 

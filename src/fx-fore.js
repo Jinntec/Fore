@@ -221,6 +221,8 @@ export class FxFore extends HTMLElement {
             return;
         }
 
+        this._injectDevtools();
+
         const slot = this.shadowRoot.querySelector('slot#default');
         slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
@@ -267,6 +269,14 @@ export class FxFore extends HTMLElement {
         });
     }
 
+    _injectDevtools(){
+        const search = window.location.search;
+        const urlParams = new URLSearchParams(search);
+        if(urlParams.has('inspect')){
+            const devtools = document.createElement('fx-devtools');
+            document.body.appendChild(devtools);
+        }
+    }
     addToRefresh(modelItem) {
         const found = this.toRefresh.find(mi => mi.path === modelItem.path);
         if (!found) {

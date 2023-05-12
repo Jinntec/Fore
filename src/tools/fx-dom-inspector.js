@@ -27,7 +27,7 @@ export class FxDomInspector extends HTMLElement {
         }
         body {
             -webkit-animation: bugfix infinite 1s;
-            font-size:0.8em;
+            font-size:1rem;
         }
         
         @-webkit-keyframes bugfix {
@@ -42,7 +42,7 @@ export class FxDomInspector extends HTMLElement {
         #adi-wrapper {
             top: 0;
             font-family: "Segoe UI", Arial;
-            font-size: 1rem;
+            font-size: 1.1rem;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -212,8 +212,10 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-dom-view ul li {
-            margin: 4px 0;
-            padding-left: 15px
+            padding-left: 1em;
+            padding-bottom: 0.125em;
+            margin: 0;
+            padding-top: 0.125em;        
         }
         
         #adi-dom-view .adi-normal-node, #adi-dom-view .adi-end-node {
@@ -313,7 +315,7 @@ export class FxDomInspector extends HTMLElement {
         
         #adi-opts-view .adi-opt-heading {
             padding: 20px 0 10px;
-            font-size: 15px
+            font-size: 1rem;
         }
         
         #adi-opts-view .adi-opt-heading:first-child {
@@ -345,7 +347,7 @@ export class FxDomInspector extends HTMLElement {
             overflow:auto;
             padding:0.25em;
             height: calc(90% - 1em);
-            min-width:6rem;
+            min-width:10rem;
         }
         #adi-attr-view > .adi-content{
             height:calc(100% - 5em);
@@ -406,7 +408,7 @@ export class FxDomInspector extends HTMLElement {
         
         #adi-dom-view .adi-normal-node.fore-node{
             background: var(--paper-blue-700);
-            font-size:1em;
+            font-size:1.1em;
              color:white;
         }
         #adi-dom-view .adi-node.fx-fore{
@@ -417,8 +419,13 @@ export class FxDomInspector extends HTMLElement {
             padding:0.25em 0;
         }       
         
+        
+        #adi-dom-view .adi-node.action{
+            // background:var(--paper-blue-grey-100);
+        }
         #adi-dom-view .adi-node.action [data-js-path]{
-            background:var(--paper-blue-500);
+            background:var(--paper-blue-grey-100);
+            color:black;
             font-family:monospace;
             
         }
@@ -441,7 +448,8 @@ export class FxDomInspector extends HTMLElement {
             color:white;
         }
         #adi-dom-view .action .adi-end-node.fore-node{
-            background:var(--paper-blue-500);
+            background:var(--paper-blue-grey-100);
+            color:black;
             font-family:monospace;
         }
         
