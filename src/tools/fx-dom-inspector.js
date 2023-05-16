@@ -10,6 +10,37 @@ export class FxDomInspector extends HTMLElement {
     connectedCallback() {
         this.instanceName = this.getAttribute('instance');
         this.render();
+
+        const focusButton = this.shadowRoot.querySelector('#focus-button');
+        let isFocussing = false;
+        const listener = (event) => {
+            window.document.body.removeEventListener('click', listener);
+            focusButton.classList.remove('selected-btn');
+            isFocussing = false;
+
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.target !== focusButton) {
+                // Do not 'click on the focusbutton. It's a cancel.
+                console.log('done', event.target);
+                window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: event.target}}));
+            }
+        };
+        focusButton.addEventListener('click', (clickEvent) => {
+            focusButton.classList.add('selected-btn');
+            if (isFocussing) {
+                window.document.body.removeEventListener('click', listener);
+                focusButton.classList.remove('selected-btn');
+                isFocussing = false;
+            } else {
+                isFocussing = true;
+                window.document.body.addEventListener('click', listener);
+            }
+
+            clickEvent.preventDefault();
+            clickEvent.stopPropagation();
+        });
+
     }
 
     disconnectedCallback(){
@@ -483,10 +514,13 @@ export class FxDomInspector extends HTMLElement {
         header{
             background:rgba(255, 255, 255, 0.2);
         }
+
+        .selected-btn { color: orange }
       `;
 
         const html = `
         <slot name="header"></slot>
+        <button id="focus-button">Focus</button>
         <slot></slot>
       `;
 
