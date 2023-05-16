@@ -39,29 +39,36 @@ export class FxDevtools extends HTMLElement {
 
 		this.buttonByInstanceId = new Map();
 
+        const attachToFore = (fore) => {
+            this.fore = fore;
+            this.instances = [...this.fore.getModel().instances];
+            console.log('instances',this.instances);
+            const header = this.shadowRoot.querySelector('.instances header');
+            header.textContent = 'Data ';
+            this.instances.forEach(instance => {
+                const btn = document.createElement('button');
+                btn.setAttribute('type','button');
+                btn.textContent = instance.id;
+                header.appendChild(btn);
+                this.buttonByInstanceId.set(instance.id, btn);
+                btn.addEventListener('click', () => this.selectInstance(instance.id));
+            });
+            this.selectInstance(this.instances[0].id);
+        };
+
         window.addEventListener("DOMContentLoaded", (event) => {
             console.log("DOM fully loaded and parsed");
             this.fore = document.querySelector('fx-fore');
-            this.fore.addEventListener('model-construct-done', () => {
-                this.instances = [...this.fore.getModel().instances];
-                console.log('instances',this.instances);
-                const header = this.shadowRoot.querySelector('.instances header');
-                header.textContent = 'Data ';
-                this.instances.forEach(instance => {
-                    const btn = document.createElement('button');
-                    btn.setAttribute('type','button');
-                    btn.textContent = instance.id;
-                    header.appendChild(btn);
-					this.buttonByInstanceId.set(instance.id, btn);
-                    btn.addEventListener('click', () => this.selectInstance(instance.id));
-                });
-                this.selectInstance(this.instances[0].id);
-            });
+            this.fore.addEventListener('model-construct-done', () => attachToFore(this.fore));
         });
 
 		window.document.addEventListener('log-active-element', (e) => {
 			const target = e ? e.detail?.target || e.target : window.event.srcElement;
 
+            const closestFore = target.closest('fx-fore');
+            if (closestFore && closestFore !== this.fore) {
+                attachToFore(closestFore);
+            }
 
 			const instance = this.instances.find(
 				instance => {

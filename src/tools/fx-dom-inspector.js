@@ -13,10 +13,15 @@ export class FxDomInspector extends HTMLElement {
 
         const focusButton = this.shadowRoot.querySelector('#focus-button');
         let isFocussing = false;
-        const listener = (event) => {
+        const styleElement = window.document.head.appendChild(document.createElement('style'));
+        const stopFocussing = () => {
             window.document.body.removeEventListener('click', listener);
             focusButton.classList.remove('selected-btn');
+            styleElement.innerHTML = '';
             isFocussing = false;
+        };
+        const listener = (event) => {
+            stopFocussing();
 
             event.preventDefault();
             event.stopPropagation();
@@ -29,10 +34,10 @@ export class FxDomInspector extends HTMLElement {
         focusButton.addEventListener('click', (clickEvent) => {
             focusButton.classList.add('selected-btn');
             if (isFocussing) {
-                window.document.body.removeEventListener('click', listener);
-                focusButton.classList.remove('selected-btn');
-                isFocussing = false;
+                stopFocussing();
             } else {
+                window.document.body.removeEventListener('click', listener);
+                styleElement.innerHTML = 'fx-fore::before { color:blue; content: "Sub fore!" } fx-fore {border: solid 1px blue}';
                 isFocussing = true;
                 window.document.body.addEventListener('click', listener);
             }
@@ -40,7 +45,6 @@ export class FxDomInspector extends HTMLElement {
             clickEvent.preventDefault();
             clickEvent.stopPropagation();
         });
-
     }
 
     disconnectedCallback(){
