@@ -199,7 +199,6 @@ export class FxDevtools extends HTMLElement {
             padding:0.5rem;
             border-bottom:2px solid #ddd;
             font-size:1rem;
-            height:1rem;
         }
         header button{
             margin:0 0.5em;

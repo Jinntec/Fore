@@ -49,6 +49,7 @@ class ADI {
         this.instanceId = instanceId;
         if (this.instanceId === '#document') {
             this.document = window.document;
+            this.isInstanceViewer = false;
         } else {
             const instance = window.document.querySelector(`#${this.instanceId}`);
             if (!instance || instance.localName !== 'fx-instance') {
@@ -336,10 +337,8 @@ class ADI {
         });
         this.domView = newElement('div', {id: 'adi-dom-view'});
         const domViewContent = newElement('div', {class: 'adi-content', id: 'detailsView'});
-            this.attrView = newElement('div', {id: 'adi-attr-view'});
         // this.attrView.appendChild(newElement('fx-fore', {src: './lab/inspector-view.html'}));
 
-        const attrViewContent = newElement('div', {class: 'adi-content'});
 
         // const horizSplit = newElement('div', {id: 'adi-horiz-split'});
         const domTree = newElement('ul', {class: 'adi-tree-view'});
@@ -360,7 +359,6 @@ class ADI {
         this.domView.appendChild(this.menuView);
         this.domView.appendChild(domViewContent);
 
-        this.attrView.appendChild(attrViewContent);
         domPathWrap.appendChild(domPathScrollLeft);
         domPathWrap.appendChild(domPathScrollRight);
         naviButtons.appendChild(naviLookup);
@@ -370,8 +368,14 @@ class ADI {
         // this.uiView.appendChild(this.menuView);
         this.uiView.appendChild(this.optsView);
         this.uiView.appendChild(this.domView);
-        // this.uiView.appendChild(horizSplit);
+        if (!this.isInstanceViewer) {
+            this.attrView = newElement('div', {id: 'adi-attr-view'});
+            const attrViewContent = newElement('div', {class: 'adi-content'});
+            this.attrView.appendChild(attrViewContent);
             this.uiView.appendChild(this.attrView);
+        }
+
+        // this.uiView.appendChild(horizSplit);
         // wrapper.appendChild(naviWrap);
 
         // cache UI object and append to the DOM
@@ -416,8 +420,11 @@ class ADI {
         // this.domView.style.height = `${this.options.split}%`;
         // this.attrView.style.height = `${100 - this.options.split}%`;
         this.domView.querySelector('.adi-content').style.height = `${this.domView.clientHeight}px`;
-        this.attrView.querySelector('.adi-content').style.height = `${this.attrView.clientHeight -
-        this.menuView.clientHeight}px`;
+        if (!this.isInstanceViewer) {
+            this.attrView.querySelector('.adi-content').style.height = `${this.attrView.clientHeight -
+                this.menuView.clientHeight}px`
+        }
+
         addClass(this.uiView, this.options.align);
     }
 
@@ -434,6 +441,9 @@ class ADI {
 
     // Renders the attribute view
     drawAttrs(elem) {
+        if (this.isInstanceViewer) {
+            return;
+        }
         const content = this.attrView.querySelector('.adi-content');
         // prepare attributes
         content.innerHTML = '';
@@ -769,10 +779,6 @@ class ADI {
         // make it visible (scroll)
         if (this.options.makeVisible) {
             active.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
-/*
-            if (active.offsetTop >= wrap.clientHeight || active.offsetTop <= wrap.scrollTop) {
-                wrap.scrollTop = active.offsetTop - Math.floor(wrap.clientHeight / 2);
-            }*/
         }
         target.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
     }
@@ -1011,7 +1017,9 @@ class ADI {
         );
 
         // attributes events
+        if(!this.isInstanceViewer) {
             this.addEventDelegate(this.attrView, 'change', this.changeAttribute, false, 'input');
+        }
     }
 }
 
