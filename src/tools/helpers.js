@@ -74,25 +74,6 @@ export function drawOptionRow(optionCode, optionText) {
   return row;
 }
 
-/**
-* Generates an array with the path to the given element, in terms of offsets in the childNodes of
-* their parent
-*/
-export function getElemPaths(elem) {
-  if (typeof elem !== 'object') {
-    throw new Error(`getElemPaths: Expected argument elem of type object, ${typeof elem} given.`);
-  }
-
-  const js = [];
-  while (elem.parentNode) {
-    const parent = elem.parentNode;
-    js.unshift(`${Array.from(parent.childNodes).indexOf(elem)}`);
-    elem = elem.parentNode;
-  }
-
-  return js;
-}
-
 // Renders the options panel
 export function drawOptions() {
   const ui = newElement('div', { id: 'adi-opts-view', class: 'adi-hidden' });

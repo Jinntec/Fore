@@ -4,7 +4,6 @@ import {
     isEmptyTextNode,
     containsOnlyText,
     newElement,
-    getElemPaths,
     drawOptions,
     pauseEvent,
     drawAttrRow
@@ -12,9 +11,13 @@ import {
 
 import {Fore} from '../fore.js';
 
+function isAttributeShown(name) {
+    return name === 'id' || name === 'ref';
+}
+
 class ADI {
     constructor(rootElement, instanceId) {
-		this.nodeByPath = new Map();
+		this.sourceNodeByInspectorNodeLookup = new Map();
 
         this.uiView = null;
         this.menuView = null;
@@ -69,9 +72,8 @@ class ADI {
         }
 
         let elem = document;
-        const path = this.activeElement.getAttribute('data-js-path');
 
-        elem = this.nodeByPath.get(path);
+        elem = this.sourceNodeByInspectorNodeLookup.get(this.activeElement);
         console.log('getSelected', elem);
 /*
         document.dispatchEvent(
@@ -127,24 +129,24 @@ class ADI {
     }
 
     // Creates a starting markup for a new DOM tree view node
-    newTreeNode(node) {
-        if (typeof node !== 'object') {
-            throw new Error(`newTreeNode: Expected argument node of type object, ${typeof node} given.`);
+    newTreeNode(sourceNode) {
+        if (typeof sourceNode !== 'object') {
+            throw new Error(`newTreeNode: Expected argument node of type object, ${typeof sourceNode} given.`);
         }
 
-        const withChildren = this.hasRequiredNodes(node);
+        const withChildren = this.hasRequiredNodes(sourceNode);
         let omit = false;
-        let adiNode = node.nodeName.startsWith('FX-') ? `adi-node ${node.nodeName.toLowerCase()}`:'';
-        if(node.nodeName.startsWith('FX-')){
-            adiNode = `adi-node ${node.nodeName.toLowerCase()}`;
-            adiNode += Fore.isActionElement(node.nodeName) ? ' action':'';
+        let adiNode = sourceNode.nodeName.startsWith('FX-') ? `adi-node ${sourceNode.nodeName.toLowerCase()}`:'';
+        if(sourceNode.nodeName.startsWith('FX-')){
+            adiNode = `adi-node ${sourceNode.nodeName.toLowerCase()}`;
+            adiNode += Fore.isActionElement(sourceNode.nodeName) ? ' action':'';
         }
         const elem = newElement('li', {
             class: adiNode,
         });
 
         // do not show ADI DOM nodes in the DOM view
-        if (node === this.uiView) {
+        if (sourceNode === this.uiView) {
             return null;
         }
 
@@ -154,62 +156,65 @@ class ADI {
         }
 
         // we can omit empty text nodes if allowed in options
-        if (this.options.omitEmptyText && node.nodeType === Node.TEXT_NODE) {
-            omit = isEmptyTextNode(node);
+        if (this.options.omitEmptyText && sourceNode.nodeType === Node.TEXT_NODE) {
+            omit = isEmptyTextNode(sourceNode);
         }
 
         if (!omit) {
-            const path = getElemPaths(node);
+            const tagStart = newElement('span');
 
-            const tagStart = newElement('span', {
-                'data-js-path': JSON.stringify(path),
-            });
+            this.sourceNodeByInspectorNodeLookup.set(tagStart, sourceNode);
+            this.sourceNodeByInspectorNodeLookup.set(sourceNode, tagStart);
 
-            this.nodeByPath.set(JSON.stringify(path), node);
             let tagEnd = null;
 
-            if (containsOnlyText(node)) {
-                if (node.nodeType === Node.COMMENT_NODE) {
+            if (containsOnlyText(sourceNode)) {
+                if (sourceNode.nodeType === Node.COMMENT_NODE) {
                     addClass(tagStart, 'adi-comment-node');
                     if (typeof tagStart.innerText === 'string') {
-                        tagStart.innerText = `<!-- ${node.textContent} -->`;
+                        tagStart.innerText = `<!-- ${sourceNode.textContent} -->`;
                     }
                 } else {
                     addClass(tagStart, 'adi-text-node');
-                    tagStart.textContent = node.textContent;
+                    tagStart.textContent = sourceNode.textContent;
                 }
             } else {
                 addClass(tagStart, 'adi-normal-node');
-                if (node.nodeType !== Node.DOCUMENT_NODE) {
+                if (sourceNode.nodeType !== Node.DOCUMENT_NODE) {
                     // tagStart.textContent = '<' + node.nodeName.toLowerCase() + '>';
 
-                    if (node.nodeName === 'FX-BIND') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute(
+                    if (sourceNode.nodeName === 'FX-BIND') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute(
                             'ref',
                         )}">`;
-                    } else if (node.nodeName === 'FX-INSERT') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
-                    } else if (node.nodeName === 'FX-INSTANCE') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.id}">`;
-                    } else if (node.nodeName === 'FX-CONTROL') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
-                    } else if (node.nodeName === 'FX-SEND') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} submission="${node.getAttribute('submission')}">`;
-                    } else if (node.nodeName === 'FX-SETVALUE') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
-                    } else if (node.nodeName === 'FX-SUBMISSION') {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.getAttribute('id')}">`;
+                    } else if (sourceNode.nodeName === 'FX-INSERT') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute('ref')}">`;
+                    } else if (sourceNode.nodeName === 'FX-INSTANCE') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} id="${sourceNode.id}">`;
+                    } else if (sourceNode.nodeName === 'FX-CONTROL') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute('ref')}">`;
+                    } else if (sourceNode.nodeName === 'FX-SEND') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} submission="${sourceNode.getAttribute('submission')}">`;
+                    } else if (sourceNode.nodeName === 'FX-SETVALUE') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute('ref')}">`;
+                    } else if (sourceNode.nodeName === 'FX-SUBMISSION') {
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} id="${sourceNode.getAttribute('id')}">`;
                     } else {
-                        tagStart.textContent = `<${node.nodeName.toLowerCase()} ${Array.from(node.attributes).map(attr => `${attr.name}="${attr.value}"`).join(' ')}>`;
+                        const attrString =  Array.from(sourceNode.attributes).filter(attr => isAttributeShown(attr.name)).map(attr => `${attr.name}="${attr.value}"`).join(' ');
+                        tagStart.textContent = `<${
+                            sourceNode.nodeName.toLowerCase()
+                        }${
+                           attrString ? (` ${attrString}`) : ''
+                        }>`;
                     }
 
                     if (withChildren) {
                         tagEnd = newElement('span');
                         addClass(tagEnd, 'adi-end-node');
-                        tagEnd.textContent = `</${node.nodeName.toLowerCase()}>`;
+                        tagEnd.textContent = `</${sourceNode.nodeName.toLowerCase()}>`;
                     }
                 } else {
-                    tagStart.textContent = node.nodeName.toLowerCase();
+                    tagStart.textContent = sourceNode.nodeName.toLowerCase();
                 }
 
             }
@@ -225,15 +230,15 @@ class ADI {
                       elem.appendChild(icon);
                       elem.appendChild(icon2);
       */
-            if (node.nodeName.startsWith('FX-')) {
+            if (sourceNode.nodeName.startsWith('FX-')) {
                 tagStart.classList.add('fore-node');
-                tagStart.classList.add(node.nodeName.toLowerCase());
+                tagStart.classList.add(sourceNode.nodeName.toLowerCase());
             }
 
             if (tagEnd) {
                 elem.appendChild(tagEnd);
 
-                if (node.nodeName.startsWith('FX-')) {
+                if (sourceNode.nodeName.startsWith('FX-')) {
                     tagEnd.classList.add('fore-node');
                 }
             }
@@ -628,9 +633,7 @@ class ADI {
         // make it visible (scroll)
         if (this.options.makeVisible) {
             const wrap = this.domView.querySelector('.adi-content');
-            if (target.offsetTop >= wrap.clientHeight || target.offsetTop <= wrap.scrollTop) {
-                wrap.scrollTop = target.offsetTop - Math.floor(wrap.clientHeight / 2);
-            }
+            wrap.scrollIntoView({block:'center', behavior: 'instant'})
         }
 		const selected = this.getSelected();
             this.drawAttrs(selected);
@@ -646,32 +649,29 @@ class ADI {
 
 
     // Highlights an element on page
-    highlightElement(e) {
+    highlightElement(event) {
         // console.log('highlight',e);
-        let target = e ? e.target : window.event.srcElement;
-        let node = document;
+        let sourceNode = event ? event.target : window.event.srcElement;
 
-        if (target.classList.contains('adi-end-node')) {
-            target = target.parentNode.querySelector('.adi-normal-node');
+        if (sourceNode.classList.contains('adi-end-node')) {
+            sourceNode = sourceNode.parentNode.querySelector('.adi-normal-node');
         }
 
-        const path = target.getAttribute('data-js-path');
+        const inspectorNode = this.sourceNodeByInspectorNodeLookup.get(sourceNode);
 
-        node = this.nodeByPath.get(path);
-
-        if (!node || node.ownerDocument !== window.document) {
+        if (!inspectorNode || inspectorNode.ownerDocument !== window.document) {
             // Not in HTML: ignore
             return;
         }
 
-        if (node) {
-            if (e.type === 'mouseover') {
-                this.styleBackup = node.getAttribute('style') || '';
-                node.setAttribute('style', `outline: 2px solid blue; ${this.styleBackup}`);
+        if (inspectorNode) {
+            if (event.type === 'mouseover') {
+                this.styleBackup = inspectorNode.getAttribute('style') || '';
+                inspectorNode.setAttribute('style', `outline: 2px solid blue; ${this.styleBackup}`);
             } else if (this.styleBackup === '') {
-                node.removeAttribute('style');
+                inspectorNode.removeAttribute('style');
             } else {
-                node.setAttribute('style', this.styleBackup);
+                inspectorNode.setAttribute('style', this.styleBackup);
             }
         }
     }
@@ -735,8 +735,7 @@ class ADI {
         pauseEvent(e);
 
         // find corresponding node in the DOM view
-        const path = getElemPaths(target);
-        const active = this.domView.querySelector(`[data-js-path='${JSON.stringify(path)}']`);
+        const active = this.sourceNodeByInspectorNodeLookup.get(target);
 
         // activate it
         if(!active) return;
@@ -755,8 +754,10 @@ class ADI {
         while (node !== this.domView.querySelector('.adi-content')) {
             if (node.className.indexOf('adi-node') !== -1) {
                 tmp = node.querySelector('.adi-trigger');
-                removeClass(tmp, 'closed');
-                addClass(tmp, 'opened');
+                if (tmp) {
+                    removeClass(tmp, 'closed');
+                    addClass(tmp, 'opened');
+                }
 
                 node = node.parentNode; // ul node
                 node.setAttribute('data-open', 'true');
@@ -767,12 +768,13 @@ class ADI {
 
         // make it visible (scroll)
         if (this.options.makeVisible) {
-            const wrap = this.domView.querySelector('.adi-content');
+            active.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
+/*
             if (active.offsetTop >= wrap.clientHeight || active.offsetTop <= wrap.scrollTop) {
                 wrap.scrollTop = active.offsetTop - Math.floor(wrap.clientHeight / 2);
-            }
+            }*/
         }
-        target.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        target.scrollIntoView({behavior: "instant", block: "nearest", inline: "nearest"});
     }
 
     // Simple cross-browser event handler that enables simple event delegation.
@@ -987,7 +989,7 @@ class ADI {
                 return;
             }
             const {selected} = e.detail;
-            const target = this.domView.querySelector(`[data-js-path='${JSON.stringify(selected)}']`);
+            const target = this.sourceNodeByInspectorNodeLookup.get(selected);
             // make it visible (scroll)
             if (this.options.makeVisible) {
                 const wrap = this.domView.querySelector('.adi-content');
@@ -1014,3 +1016,4 @@ class ADI {
 }
 
 export default ADI;
+

@@ -423,19 +423,19 @@ export class FxDomInspector extends HTMLElement {
         #adi-dom-view .adi-node.action{
             // background:var(--paper-blue-grey-100);
         }
-        #adi-dom-view .adi-node.action [data-js-path]{
+        #adi-dom-view .adi-node.action {
             background:var(--paper-blue-grey-100);
             color:black;
             font-family:monospace;
             
         }
              
-        #adi-dom-view .adi-normal-node.fore-node:hover{
+        #adi-dom-view .adi-normal-node.fore-node:hover {
             background: var(--paper-grey-700);
             color:white;
         }
         
-        #adi-dom-view .adi-active-node.fore-node[data-js-path]{
+        #adi-dom-view .adi-active-node.fore-node {
             background: var(--paper-grey-700);
             color:white;
         }
