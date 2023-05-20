@@ -73,6 +73,24 @@ export class FxDomInspector extends HTMLElement {
                 padding: 0
             }
         }
+        .adi-content {
+            position: relative;
+            overflow: auto;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            height: 100% !important;
+            padding:0;
+            font-size:0.8em;
+        }
+        .adi-content header{
+            padding:0.5rem;
+            // background:rgba(255, 255, 255, 0.2);
+            border-bottom:2px solid #ddd;
+            border-collapse:collapse;
+        }
+        .adi-content > * {
+            padding:0 0.25em;
+        }
         
         #adi-wrapper {
             top: 0;
@@ -82,12 +100,8 @@ export class FxDomInspector extends HTMLElement {
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-/*
-            display:grid;
-            grid-template-columns:70% auto;   
-*/
             position:relative;
-            height:calc(100% - 5rem);
+            height:calc(100% - 8rem);
             display:flex;
         }
         
@@ -126,7 +140,8 @@ export class FxDomInspector extends HTMLElement {
             -moz-box-sizing: border-box
         }
         
-        #adi-panel .adi-path-wrap.adi-overflowing .adi-path-left, #adi-panel .adi-path-wrap.adi-overflowing .adi-path-right {
+        #adi-panel .adi-path-wrap.adi-overflowing .adi-path-left, 
+        #adi-panel .adi-path-wrap.adi-overflowing .adi-path-right {
             display: block
         }
         
@@ -253,7 +268,14 @@ export class FxDomInspector extends HTMLElement {
             padding-top: 0.125em;        
         }
         
-        #adi-dom-view .adi-normal-node, #adi-dom-view .adi-end-node {
+        
+        
+        
+        
+        
+        
+        #adi-dom-view .adi-normal-node, 
+        #adi-dom-view .adi-end-node {
             margin-right: 5px;
             padding: 0 6px 0px;
             background: #d2e8ff;
@@ -261,38 +283,6 @@ export class FxDomInspector extends HTMLElement {
             cursor: default;
             font-size:0.8rem;
         }
-        
-        #adi-dom-view .adi-normal-node:hover, #adi-dom-view .adi-normal-node.hover, #adi-dom-view .adi-end-node:hover, #adi-dom-view .adi-end-node.hover {
-            /*background: #ffcc62*/
-            background: var(--paper-grey-700);
-            color:white;
-        
-        }
-        
-        #adi-dom-view .adi-normal-node:hover ~ span, #adi-dom-view .adi-normal-node.hover ~ span, #adi-dom-view .adi-end-node:hover ~ span, #adi-dom-view .adi-end-node.hover ~ span {
-            background: var(--paper-grey-700);
-            color:white;
-            /*background: #ffcc62*/
-        }
-        
-        #adi-dom-view .adi-normal-node.adi-active-node, #adi-dom-view .adi-end-node.adi-active-node {
-            background: var(--paper-grey-700);
-            color:white;
-        }
-        
-        #adi-dom-view .adi-normal-node.adi-active-node ~ span, #adi-dom-view .adi-end-node.adi-active-node ~ span {
-            background: var(--paper-grey-700);
-            color:white;
-        }
-        
-        #adi-dom-view .adi-text-node, #adi-dom-view .adi-comment-node {
-            display: block;
-            padding: 3px 8px;
-            color: #444;
-            background: #fff;
-            border-radius: 8px
-        }
-        
         #adi-dom-view .adi-text-node:after, #adi-dom-view .adi-comment-node:after {
             content: '"'
         }
@@ -305,6 +295,47 @@ export class FxDomInspector extends HTMLElement {
             color: #999;
             font-style: italic
         }
+        
+        #adi-dom-view .adi-text-node, #adi-dom-view .adi-comment-node {
+            display: block;
+            padding: 3px 8px;
+            color: #444;
+            background: #fff;
+            border-radius: 8px
+        }
+        
+        #adi-dom-view .adi-normal-node:hover, 
+        #adi-dom-view .adi-normal-node.hover, 
+        #adi-dom-view .adi-end-node:hover, 
+        #adi-dom-view .adi-end-node.hover {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        
+       #adi-dom-view .adi-normal-node:hover ~ span,
+       #adi-dom-view .adi-normal-node.hover ~ span,
+       #adi-dom-view .adi-end-node:hover ~ span,
+       #adi-dom-view .adi-end-node.hover ~ span {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        
+        #adi-dom-view .adi-normal-node.adi-active-node, 
+        #adi-dom-view .adi-end-node.adi-active-node {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        
+        #adi-dom-view .adi-normal-node.adi-active-node ~ span,
+        #adi-dom-view .adi-end-node.adi-active-node ~ span {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        
+        
+        
+        
+        
         
         #adi-dom-view .adi-trigger {
             display: inline-block;
@@ -422,30 +453,29 @@ export class FxDomInspector extends HTMLElement {
             background: #c5d9d8;
         }
         
-        .adi-content {
-            position: relative;
-            overflow: auto;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            height: 100% !important;
-            padding:0;
-            font-size:0.8em;
-        }
-        .adi-content header{
-            padding:0.5rem;
-            // background:rgba(255, 255, 255, 0.2);
-            border-bottom:2px solid #ddd;
-            border-collapse:collapse;
-        }
-        .adi-content > * {
-            padding:0 0.25em;
-        }
-        
-        #adi-dom-view .adi-normal-node.fore-node{
+        #adi-dom-view .fore-node{
             background: var(--paper-blue-700);
             font-size:1.1em;
              color:white;
         }
+        #adi-dom-view .adi-normal-node.fore-node:hover {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        #adi-dom-view .adi-end-node.fore-node{
+            background: var(--paper-blue-700);
+            font-size:1em;
+            color:white;
+       }
+
+        #adi-dom-view .adi-node .adi-active-node.fore-node,
+        #adi-dom-view .adi-node.action .adi-active-node.fore-node,
+        #adi-dom-view .adi-node.action .adi-active-node.fore-node ~ .adi-end-node
+         {
+            background: var(--paper-grey-700);
+            color:white;
+        }
+        
         #adi-dom-view .adi-node.fx-fore{
             background:var(--paper-blue-grey-50); 
         }
@@ -453,61 +483,13 @@ export class FxDomInspector extends HTMLElement {
             background:var(--paper-blue-grey-100); 
             padding:0.25em 0;
         }       
-        
-        
-        #adi-dom-view .adi-node.action{
-            // background:var(--paper-blue-grey-100);
-        }
-        #adi-dom-view .adi-node.action {
-            background:var(--paper-blue-grey-100);
-            color:black;
-            font-family:monospace;
-            
-        }
-             
-        #adi-dom-view .adi-normal-node.fore-node:hover {
-            background: var(--paper-grey-700);
-            color:white;
-        }
-        
-        #adi-dom-view .adi-active-node.fore-node {
-            background: var(--paper-grey-700);
-            color:white;
-        }
-        /*.adi-active-node.fore-node{*/
-        /*    background: #ff7e7e !important;*/
-        /*}*/
-        #adi-dom-view .adi-end-node.fore-node{
-            background: var(--paper-blue-700);
-            font-size:1em;
-            color:white;
-        }
-        #adi-dom-view .action .adi-end-node.fore-node{
+               
+        #adi-dom-view .adi-node.action .fore-node {
             background:var(--paper-blue-grey-100);
             color:black;
             font-family:monospace;
         }
-        
-        #adi-dom-view .adi-active-node.adi-end-node.fore-node{
-            background: var(--paper-blue-500);
-            color:white;
-        
-        }
-        /*
-        #adi-dom-view .fore-node.adi-normal-node:hover,
-        #adi-dom-view .fore-node.adi-normal-node.hover,
-        #adi-dom-view .fore-node.adi-end-node:hover,
-        #adi-dom-view .fore-node.adi-end-node.hover {
-            background: var(--paper-grey-700);
-            color:white;
-            !*background: #ffcc62*!
-        }
-        
-        #adi-dom-view .adi-normal-node:hover ~ span, #adi-dom-view .adi-normal-node.hover ~ span, #adi-dom-view .adi-end-node:hover ~ span, #adi-dom-view .adi-end-node.hover ~ span {
-            background: #ffcc62
-        }
-        */
-        
+                    
         .toggleView{
             /*width:20px;*/
             /*height: 20px;*/
