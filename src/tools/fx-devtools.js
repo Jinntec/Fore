@@ -319,7 +319,14 @@ export class FxDevtools extends HTMLElement {
             <slot></slot>
             <details class="fx-devtools" open>
                 <div class="resizer"></div>
-                <summary>Fore Glass <button class="optionsBtn" id="optionsTrigger">&#9881;</button></summary>
+                <summary>Fore Glass 
+                    <div>
+                        <svg preserveAspectRatio="xMidYMid meet" focusable="true" style="width: 24px;height: 24px; margin-bottom:-1px;" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <g role="button" id="find-in-page"><path d="M20 19.59V8l-6-6H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c.45 0 .85-.15 1.19-.4l-4.43-4.43c-.8.52-1.74.83-2.76.83-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5c0 1.02-.31 1.96-.83 2.75L20 19.59zM9 13c0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3-3 1.34-3 3z"></path></g>
+                        </svg>
+                        <button class="optionsBtn" id="optionsTrigger">&#9881;</button>                    
+                    </div>
+                </summary>
                 <section class="panels">
                     <section class="log">
                         <fx-action-log selector="${this.selector}"></fx-action-log>

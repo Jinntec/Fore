@@ -580,11 +580,11 @@ export class FxActionLog extends HTMLElement {
             // break;
             case 'FX-SETVALUE':
                 const instPath = XPathUtil.getPath(e.target.nodeset);
-                const listensOn = e.target.nodeName === 'FX-CONTROL' ? e.target.updateEvent : e.detail.event;
+                const listensOn = e.target.nodeName === 'FX-CONTROL' ? e.target.updateEvent : e.detail.event ? e.detail.event:'';
                 return `
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
-                             event-name="${e.target.currentEvent.type}"
+                             event-name="${listensOn}"
                              xpath="${xpath}"
                              data-path="${e.detail.path}" class="action">
                       <section class="details">

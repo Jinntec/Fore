@@ -292,6 +292,11 @@ class ADI {
                         }
 
                         if (node.nodeName === 'HEAD') isOpen = false;
+/*
+                        if(this.options.closedElements.includes(node.nodeName.toLowerCase())){
+                            isOpen = false;
+                        }
+*/
 
                         if (node.nodeType === Node.DOCUMENT_NODE) {
                             newNode.appendChild(newElement('ul', {'data-open': isOpen, class:adiNode}));

@@ -19,6 +19,7 @@ export class FxDomInspector extends HTMLElement {
             focusButton.classList.remove('selected-btn');
             styleElement.innerHTML = '';
             isFocussing = false;
+            document.body.style.cursor = 'auto';
         };
         const listener = (event) => {
             stopFocussing();
@@ -36,6 +37,8 @@ export class FxDomInspector extends HTMLElement {
             if (isFocussing) {
                 stopFocussing();
             } else {
+                document.body.style.cursor = 'crosshair';
+
                 window.document.body.removeEventListener('click', listener);
                 styleElement.innerHTML = 'fx-fore::before { color:blue; content: "Sub fore!" } fx-fore {border: solid 1px blue}';
                 isFocussing = true;
@@ -407,13 +410,16 @@ export class FxDomInspector extends HTMLElement {
         }
         
         #adi-attr-view {
-            top:-2rem;
-            right:0;
-            border-left:1px solid #ddd;
-            overflow:auto;
-            padding:0.25em;
+            top: 0.5rem;
+            border: 1px solid #ddd;
+            overflow: auto;
+            padding: 0.25em;
             height: calc(90% - 1em);
-            min-width:10rem;
+            min-width: 10rem;
+            position: absolute;
+            z-index: 10;
+            right: 0.5rem;
+            background:rgba(255,255,255,0.85);
         }
         #adi-attr-view > .adi-content{
             height:calc(100% - 5em);

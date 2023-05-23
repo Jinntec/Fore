@@ -7,61 +7,65 @@ import {AbstractAction} from "./abstract-action.js";
  * @customElement
  */
 export class FxSetfocus extends AbstractAction {
-  connectedCallback() {
-      if(super.connectedCallback){
-          super.connectedCallback();
-      }
-      this.control = this.hasAttribute('control') ? this.getAttribute('control') : null;
-  }
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        this.control = this.hasAttribute('control') ? this.getAttribute('control') : null;
+    }
 
-  async perform() {
-      console.log('setting focus', this.control);
-      this.dispatchEvent(
-          new CustomEvent('execute-action', {
-              composed: true,
-              bubbles: true,
-              cancelable:true,
-              detail: { action: this, event:this.event},
-          }),
-      );
+    async perform() {
+        console.log('setting focus', this.control);
 
-      // super.perform();
-      const selector = '#'+this.control;
+        console.log("hey");
+        this.dispatchEvent(
+            new CustomEvent('execute-action', {
+                composed: true,
+                bubbles: true,
+                cancelable: true,
+                detail: {action: this, event: this.event},
+            }),
+        );
 
-      let targetElement = this.getOwnerForm().querySelector(selector);
+        // super.perform();
+        const selector = '#' + this.control;
+        // const selector = '#findspot';
 
-      if(!targetElement) {
-          console.warn('targetElement of setfocus action does not exist (yet)', selector);
-          return;
-      }
 
-      // ### focus action is itself hosted within a repeat
-      const parentIItem = targetElement.closest('fx-repeatitem');
-      if(parentIItem){
-          console.log('parentRepeat',parentIItem);
-          targetElement = parentIItem.querySelector(selector);
-          this._focus(targetElement);
-          return;
-      }
+        let targetElement = document.querySelector(selector);
 
-      // ### the target element is hosted within a repeat
-      const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
-      if(repeatitem){
-        // targetElement is repeated
-        // get the active repeatitem (only for fx-repeat for now - todo: support repeat attributes
-        const repeat = repeatitem.parentNode;
-        targetElement = repeat.querySelector('[repeat-index] ' + selector);
-      }
+        if (!targetElement) {
+            console.warn('targetElement of setfocus action does not exist (yet)', selector);
+            return;
+        }
 
-      this._focus(targetElement);
-      if(this.hasAttribute('select')){
-          this._select(targetElement);
-      }
-  }
+        // ### focus action is itself hosted within a repeat
+        const parentIItem = targetElement.closest('fx-repeatitem');
+        if (parentIItem) {
+            console.log('parentRepeat', parentIItem);
+            targetElement = parentIItem.querySelector(selector);
+            this._focus(targetElement);
+            return;
+        }
 
-    _focus(targetElement){
+        // ### the target element is hosted within a repeat
+        const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
+        if (repeatitem) {
+            // targetElement is repeated
+            // get the active repeatitem (only for fx-repeat for now - todo: support repeat attributes
+            const repeat = repeatitem.parentNode;
+            targetElement = repeat.querySelector('[repeat-index] ' + selector);
+        }
+
+        this._focus(targetElement);
+        if (this.hasAttribute('select')) {
+            this._select(targetElement);
+        }
+    }
+
+    _focus(targetElement) {
         console.log('focus', targetElement)
-        if(targetElement && typeof targetElement.getWidget === 'function'){
+        if (targetElement && typeof targetElement.getWidget === 'function') {
             targetElement.getWidget().focus();
         }
         if(targetElement){
@@ -69,8 +73,8 @@ export class FxSetfocus extends AbstractAction {
         }
     }
 
-    _select(targetElement){
-        if(targetElement){
+    _select(targetElement) {
+        if (targetElement) {
             targetElement.getWidget().select();
         }
     }
@@ -79,5 +83,5 @@ export class FxSetfocus extends AbstractAction {
 
 
 if (!customElements.get('fx-setfocus')) {
-  window.customElements.define('fx-setfocus', FxSetfocus);
+    window.customElements.define('fx-setfocus', FxSetfocus);
 }
