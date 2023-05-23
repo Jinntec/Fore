@@ -24,6 +24,9 @@ class ADI {
         this.domView = null;
         this.attrView = null;
         this.optsView = null;
+		/**
+		 * The current active element. Note this is the element in the DOM view
+		 */
         this.activeElement = null;
         this.vertResizing = false;
         this.horizResizing = false;
@@ -311,6 +314,14 @@ class ADI {
                     }
 
                     elem.appendChild(newNode);
+
+					if (this.getSelected() === node) {
+						const span = newNode.querySelector('span.adi-normal-node');
+						span?.classList?.add('adi-active-node');
+						this.activeElement = span;
+						newNode.scrollIntoView({block:'closest', behavior: 'instant'});
+					}
+
 
                     if (withChildren) {
                         this.drawDOM(node, newNode.querySelector('ul'), false);
