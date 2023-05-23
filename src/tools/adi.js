@@ -201,7 +201,10 @@ class ADI {
                     } else if (sourceNode.nodeName === 'FX-SUBMISSION') {
                         tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} id="${sourceNode.getAttribute('id')}">`;
                     } else {
-                        const attrString =  Array.from(sourceNode.attributes).filter(attr => isAttributeShown(attr.name)).map(attr => `${attr.name}="${attr.value}"`).join(' ');
+                        const attrString =  Array.from(sourceNode.attributes)
+							  .filter(
+								  attr => this.isInstanceViewer ? true : isAttributeShown(attr.name))
+							  .map(attr => `${attr.name}="${attr.value}"`).join(' ');
                         tagStart.textContent = `<${
                             sourceNode.nodeName.toLowerCase()
                         }${
