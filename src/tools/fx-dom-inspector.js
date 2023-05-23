@@ -10,16 +10,58 @@ export class FxDomInspector extends HTMLElement {
     connectedCallback() {
         this.instanceName = this.getAttribute('instance');
         this.render();
+		if (this.instanceName) {
+			this.shadowRoot.querySelector('#focus-button').style = 'display: none';
+		} else {
+			this.setupFocusButton();
+		}
+    }
+
+    disconnectedCallback(){
+        this.adiInstance = null;
+
+    }
+
+	setupFocusButton () {
+		let styleBackup = '';
+		let focusedElement = null;
+		const removeFocus = () => {
+			if (styleBackup === '') {
+                focusedElement.removeAttribute('style');
+            } else {
+                focusedElement.setAttribute('style', styleBackup);
+            }
+			focusedElement = null;
+		};
+
+		const onHover = (event) => {
+			const {target} = event;
+            if (event.type === 'mouseover') {
+                styleBackup = target.getAttribute('style') || '';
+                target.setAttribute('style', `outline: 2px solid blue; ${styleBackup}`);
+				focusedElement = target;
+				return;
+            }
+			if (focusedElement) {
+				removeFocus();
+			}
+		};
 
         const focusButton = this.shadowRoot.querySelector('#focus-button');
         let isFocussing = false;
         const styleElement = window.document.head.appendChild(document.createElement('style'));
         const stopFocussing = () => {
+            isFocussing = false;
             window.document.body.removeEventListener('click', listener);
             focusButton.classList.remove('selected-btn');
             styleElement.innerHTML = '';
-            isFocussing = false;
             document.body.style.cursor = 'auto';
+
+			window.document.body.removeEventListener('mouseover', onHover);
+			window.document.body.removeEventListener('mouseout', onHover);
+			if (focusedElement) {
+				removeFocus();
+			}
         };
         const listener = (event) => {
             stopFocussing();
@@ -32,28 +74,38 @@ export class FxDomInspector extends HTMLElement {
                 window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: event.target}}));
             }
         };
-        focusButton.addEventListener('click', (clickEvent) => {
-            focusButton.classList.add('selected-btn');
-            if (isFocussing) {
-                stopFocussing();
-            } else {
-                document.body.style.cursor = 'crosshair';
+		const startFocussing = () => {
+            isFocussing = true;
+			focusButton.classList.add('selected-btn');
+            document.body.style.cursor = 'crosshair';
 
-                window.document.body.removeEventListener('click', listener);
-                styleElement.innerHTML = 'fx-fore::before { color:blue; content: "Sub fore!" } fx-fore {border: solid 1px blue}';
-                isFocussing = true;
-                window.document.body.addEventListener('click', listener);
-            }
+            window.document.body.removeEventListener('click', listener);
+            styleElement.innerHTML = 'fx-fore::before { color:blue; content: "Sub fore!" } fx-fore {border: solid 1px blue}';
+			window.document.body.addEventListener('click', listener);
 
-            clickEvent.preventDefault();
-            clickEvent.stopPropagation();
-        });
-    }
+			window.document.body.addEventListener('mouseover', onHover);
+			window.document.body.addEventListener('mouseout', onHover);
+		};
+		window.document.addEventListener('keyup', (event) => {
+			if (isFocussing && event.code === 'Escape') {
+				stopFocussing();
+				return;
+			}
+			if (!isFocussing && event.code === 'KeyI' && event.ctrlKey) {
+				startFocussing();
+			}
+		});
+		focusButton.addEventListener('click', (clickEvent) => {
+			if (isFocussing) {
+				stopFocussing();
+			} else {
+				startFocussing();
+			}
 
-    disconnectedCallback(){
-        this.adiInstance = null;
-
-    }
+			clickEvent.preventDefault();
+			clickEvent.stopPropagation();
+		});
+	}
 
     render() {
         const style = `
