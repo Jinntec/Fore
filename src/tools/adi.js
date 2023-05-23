@@ -319,7 +319,7 @@ class ADI {
 						const span = newNode.querySelector('span.adi-normal-node');
 						span?.classList?.add('adi-active-node');
 						this.activeElement = span;
-						newNode.scrollIntoView({block:'closest', behavior: 'instant'});
+						newNode.scrollIntoView({block:'nearest', behavior: 'instant'});
 					}
 
 
