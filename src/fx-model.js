@@ -208,7 +208,7 @@ export class FxModel extends HTMLElement {
         this.computes = 0;
 
         this.subgraph = new DepGraph(false);
-        if (this.changed.length !== 0) {
+        if (this.parentNode.ready && this.changed.length !== 0) {
             // ### build the subgraph
             this.changed.forEach(modelItem => {
                 this.subgraph.addNode(modelItem.path, modelItem.node);
@@ -427,6 +427,12 @@ export class FxModel extends HTMLElement {
         console.log('modelItems after revalidate: ', this.modelItems);
         console.groupEnd();
         return valid;
+    }
+
+    addChanged(modelItem){
+        if(this.inited){
+            this.changed.push(modelItem);
+        }
     }
 
     /**

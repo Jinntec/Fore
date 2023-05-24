@@ -67,6 +67,7 @@ class ADI {
 
 		// We're updating here, but we're doing that again later, when the UI is read (the 'ready' event fires)
         this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
+        document.addEventListener('execute-action', e => this.processExecuteAction)
     }
 
     // Returns selected element or null
@@ -629,7 +630,8 @@ class ADI {
     }
 
     processExecuteAction(e) {
-        console.log('Fore executes action', e.detail);
+        console.log('######################## Fore executes action', e.detail);
+        this.refreshUI();
     }
 
     // Handles active element selection
@@ -926,6 +928,8 @@ class ADI {
             false,
         );
 
+        document.addEventListener('focus',event => this.handleActive(event),{capture:true});
+
         document.addEventListener('mousemove', event => this.verticalResize(event), false);
         document.addEventListener('mousemove', event => this.horizontalResize(event), false)
         ;
@@ -1025,6 +1029,8 @@ class ADI {
 
                 this.drawAttrs(this.getSelected());
         });
+
+        document.addEventListener('execute-action',(e) => this.processExecuteAction);
 
         // options events
         this.addEventDelegate(this.optsView, 'change', (event) => this.changeOption(event), false, 'input');

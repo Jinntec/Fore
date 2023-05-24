@@ -68,7 +68,7 @@ export class FxSetfocus extends AbstractAction {
         if (targetElement && typeof targetElement.getWidget === 'function') {
             targetElement.getWidget().focus();
         }
-        if(targetElement){
+        if(targetElement && targetElement.nodeType === Node.ELEMENT_NODE){
             targetElement.click();
         }
     }

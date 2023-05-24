@@ -65,7 +65,11 @@ export default class FxSetvalue extends AbstractAction {
 
     }
 
-    _dispatchExecute() {}
+    /**
+     * need to overwrite default dispatchExecute to do it ourselves. This is necessary for tracking control value changes
+     * which call setvalue directly without perform().
+     */
+    dispatchExecute() {}
 
     setValue(modelItem, newVal) {
         const item = modelItem;
@@ -76,12 +80,14 @@ export default class FxSetvalue extends AbstractAction {
             const path = Fore.getDomNodeIndexString(modelItem.node)
             console.log('instance path', path)
 
-            this.dispatchEvent(
+            const ev = this.event;
+            const targetElem = this;
+            document.body.dispatchEvent(
                 new CustomEvent('execute-action', {
                     composed: true,
                     bubbles: true,
                     cancelable:true,
-                    detail: { action: this, event:this.event, value:newVal, path:path},
+                    detail: { action: targetElem, event:ev, value:newVal, path:path},
                 }),
             );
 
