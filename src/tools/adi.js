@@ -79,7 +79,6 @@ class ADI {
         let elem = document;
 
         elem = this.sourceNodeByInspectorNodeLookup.get(this.activeElement);
-        console.log('getSelected', elem);
 /*
         document.dispatchEvent(
             new CustomEvent('path-touched', {
@@ -630,7 +629,6 @@ class ADI {
     }
 
     processExecuteAction(e) {
-        console.log('######################## Fore executes action', e.detail);
         this.refreshUI();
     }
 
@@ -1030,7 +1028,7 @@ class ADI {
                 this.drawAttrs(this.getSelected());
         });
 
-        document.addEventListener('execute-action',(e) => this.processExecuteAction);
+        document.addEventListener('execute-action',(e) => this.processExecuteAction(event),{capture:true});
 
         // options events
         this.addEventDelegate(this.optsView, 'change', (event) => this.changeOption(event), false, 'input');
