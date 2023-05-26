@@ -75,11 +75,19 @@
 
 <div class="wrapper">
     <h1>Bindings are fore-ever</h1>
-    <p>Sorry for the pun - couldn't resist</p>
 
+    <h2>The <code>fx-bind</code> element</h2>
+
+    <p>With bindings you can attach constraints or calucations to certain items (nodes) in your data.
+    <code>fx-bind</code> elements create ModelItems which hold the state of a constraint or calculation for
+    a specific node.</p>
     <h2>ModelItems</h2>
     <p>In short model items attach constraints or calculations to the nodes of your data. </p>
     <img src="../resources/images/modelitem.svg" class="diagram">
+    <p>Assuming the grey circle to contain some hierarchical data with nodes holding values and the white circle
+        being a zoom on one of those nodes. The ModelItem properties (facets) are the colored circle representing a
+        state at runtime.
+    </p>
 
     <p>The <code>fx-bind</code> element allows you
     to use the following 'facets':</p>

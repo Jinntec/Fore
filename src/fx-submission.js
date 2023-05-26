@@ -85,7 +85,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.validate === 'true') {
             const valid = model.revalidate();
             if (!valid) {
-                console.log('validation failed. Submission stopped');
+                console.warn('validation failed. Submission stopped');
                 this.getOwnerForm().classList.add('submit-validation-failed');
                 // ### allow alerts to pop up
                 // this.dispatch('submit-error', {});
@@ -108,12 +108,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const matches = expr.match(/{[^}]*}/g);
         if (matches) {
             matches.forEach(match => {
-                console.log('match ', match);
+                // console.log('match ', match);
                 const naked = match.substring(1, match.length - 1);
                 const inscope = getInScopeContext(node, naked);
                 const result = evaluateXPathToString(naked, inscope, this);
                 const replaced = expr.replaceAll(match, result);
-                console.log('replacing ', expr, ' with ', replaced);
+                // console.log('replacing ', expr, ' with ', replaced);
                 expr = replaced;
             });
         }
@@ -195,7 +195,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         // ### setting headers
         const headers = this._getHeaders();
-        console.log('headers', headers);
 
         if (!this.methods.includes(this.method.toLowerCase())) {
             // this.dispatch('error', { message: `Unknown method ${this.method}` });
@@ -364,7 +363,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @private
      */
     _handleResponse(data, resolvedUrl) {
-        console.log('_handleResponse ', data);
+        // console.log('_handleResponse ', data);
 
         /*
         // ### responses need to be handled depending on their type.
@@ -382,18 +381,15 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                         targetInstance.instanceData.firstElementChild,
                         this,
                     );
-                    console.log('theTarget', theTarget);
                     const clone = data.firstElementChild;
                     const parent = theTarget.parentNode;
                     parent.replaceChild(clone, theTarget);
-                    console.log('finally ', parent);
                 } else if (this.into) {
                     const [theTarget] = evaluateXPath(
                         this.into,
                         targetInstance.instanceData.firstElementChild,
                         this,
                     );
-                    console.log('theTarget', theTarget);
                     if (data.nodeType === Node.DOCUMENT_NODE) {
                         theTarget.appendChild(data.firstElementChild);
                     } else {
@@ -402,8 +398,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 } else {
                     const instanceData = data;
                     targetInstance.instanceData = instanceData;
-                    console.log('### replaced instance ', this.getModel().instances);
-                    console.log('### replaced instance ', targetInstance.instanceData);
+                    // console.log('### replaced instance ', this.getModel().instances);
+                    // console.log('### replaced instance ', targetInstance.instanceData);
                 }
 
                 // Skip any refreshes if the model is not yet inited

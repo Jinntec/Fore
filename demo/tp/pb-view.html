@@ -110,30 +110,30 @@
     </fx-model>
 
     <fx-replace ref="instance('content')" with="event('root')" event="pb-update"></fx-replace>
+<!--
     <fx-message level="sticky" event="ready">Loading first view on ready</fx-message>
     <fx-message level="sticky" event="loaded">loaded fired on {event('attachPoint')}</fx-message>
-    <fx-message level="sticky" event="pb-update" if="event('target.id')">pb-update fired on {event('target.id')}
-    </fx-message>
+    <fx-message level="sticky" event="pb-update" if="event('target.id')">pb-update fired on {event('target.id')}</fx-message>
+-->
 
 <!--    <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
 
 
     <fx-action event="ready">
-<!--        <fx-load id="load1" attach-to="#transcript">-->
         <fx-load id="load1" attach-to="#transcript" await="pb-update">
             <template>
                 <pb-view id="view1" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>
             </template>
         </fx-load>
-        <fx-message level="sticky">First view loaded</fx-message>
+<!--        <fx-message level="sticky">First view loaded</fx-message>-->
         <fx-load attach-to="#transcript2" await="pb-update"  delay="1000">
             <template>
                 <pb-view id="view2" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>
             </template>
         </fx-load>
-        <fx-message level="sticky">Second view loaded with 1 second delay</fx-message>
+<!--        <fx-message level="sticky">Second view loaded with 1 second delay</fx-message>-->
         <fx-load attach-to="#shadowed">
             <template>
                 <fx-group id="shadow">
@@ -152,7 +152,7 @@
             </template>
         </fx-load>
         <fx-refresh force></fx-refresh>
-        <fx-message level="sticky">Fore view loaded with 1 seconds delay</fx-message>
+<!--        <fx-message level="sticky">Fore view loaded with 1 seconds delay</fx-message>-->
     </fx-action>
 
     <div class="wrap">
@@ -220,6 +220,7 @@
     <!--        <fx-output ref="content" mediatype="html"></fx-output>-->
     <!--        <fx-output ref="instance('content')/*[1]" mediatype="html"></fx-output>-->
     <fx-inspector open></fx-inspector>
+<!--    <fx-devtools></fx-devtools>-->
 </fx-fore>
 
 </body>

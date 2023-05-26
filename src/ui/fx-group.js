@@ -51,10 +51,10 @@ class FxGroup extends FxContainer {
 
   initializeChildren(node) {
     const children = Array.from(node.children);
-    console.log('_initializeChildren ', children);
+    // console.log('_initializeChildren ', children);
 
     children.forEach(child => {
-      console.log('child ', child);
+      // console.log('child ', child);
 
       if (Fore.isUiElement(child.nodeName)) {
         child.init(this.model);

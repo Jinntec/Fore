@@ -51,9 +51,7 @@ export default class FxSetvalue extends AbstractAction {
         } else {
             value = '';
         }
-        console.log('value', value);
         if (value.nodeType === Node.ATTRIBUTE_NODE) {
-            // console.log('value', value.nodeValue);
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
@@ -78,11 +76,10 @@ export default class FxSetvalue extends AbstractAction {
         if (item.value !== newVal) {
             // const path = XPathUtil.getPath(modelItem.node);
             const path = Fore.getDomNodeIndexString(modelItem.node)
-            console.log('instance path', path)
 
             const ev = this.event;
             const targetElem = this;
-            document.body.dispatchEvent(
+            this.dispatchEvent(
                 new CustomEvent('execute-action', {
                     composed: true,
                     bubbles: true,

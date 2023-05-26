@@ -1,29 +1,31 @@
-import { foreElementMixin } from '../ForeElementMixin.js';
-import { evaluateXPathToBoolean, evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
+import {foreElementMixin} from '../ForeElementMixin.js';
+import {evaluateXPathToBoolean, evaluateXPathToString, resolveId} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { Fore } from '../fore.js';
-import { XPathUtil } from '../xpath-util.js';
+import {Fore} from '../fore.js';
+import {XPathUtil} from '../xpath-util.js';
 
 async function wait(howLong) {
-  return new Promise(resolve => setTimeout(() => resolve(), howLong));
+    return new Promise(resolve => setTimeout(() => resolve(), howLong));
 }
 
 class ResolvableId {
-	get getValueSpace() {
-		window.querySelectorAll('[id]').map(ele =>ele.getAttribute('id'));
-	}
+    get getValueSpace() {
+        window.querySelectorAll('[id]').map(ele => ele.getAttribute('id'));
+    }
 }
 
 class Enum {
-	constructor (values) {
-		this._values = values;
-	}
-	get visualization () {
-		return 'select';
-	}
-	get getValueSpace() {
-		return this._values;
-	}
+    constructor(values) {
+        this._values = values;
+    }
+
+    get visualization() {
+        return 'select';
+    }
+
+    get getValueSpace() {
+        return this._values;
+    }
 }
 
 /**
@@ -35,402 +37,399 @@ class Enum {
  * @demo demo/index.html
  */
 export class AbstractAction extends foreElementMixin(HTMLElement) {
-  static outermostHandler = null;
-  static dataChanged = false;
+    static outermostHandler = null;
+    static dataChanged = false;
 
-  static get properties() {
-    return {
-      ...super.properties,
+    static get properties() {
+        return {
+            ...super.properties,
 
-	defaultAction: {
-        type: String,
-        valueSpace: ['cancel', 'perform'],
-		readonly: true|false,
-		description: "can be either 'cancel' or 'perform' (default)",
-		attribute: 'defaultAction',
-		default: 'perform'
-      },
-      /**
-       * delay before executing action in milliseconds
-       */
-      delay: {
-        type: Number,
-      },
-      /**
-       * detail - event detail object
-       */
-      detail: {
-          type: Object,
-		  hidden:true
-      },
-      /**
-       * event to listen for
-       */
-      event: {
-        type: Object,
-      },
-      handler:{
-        type:Object,
-      },
-      /**
-       * boolean XPath expression. If true the action will be executed.
-       */
-      ifExpr: {
-        type: String,
-      },
-      /**
-       * whether nor not an action needs to run the update cycle
-       */
-      needsUpdate: {
-        type: Boolean,
-      },
-      /**
-       * The observer if given is the element on which an event is triggered. It must be an ancestor of the target
-       * element of an event.
-       */
-      observer:{
-        type:Object,
-      },
-      /**
-       * can be either 'capture' or 'default' (default)
-       */
-      phase:{
-        type: String,
-      },
-      /**
-       * can be either 'stop' or 'continue' (default)
-       */
-      propagate:{
-        type: String,
-      },
-      /**
-       * id of target element to attach listener to
-       */
-      target: {
-          type: String,
-		  get valueSpace () {
-			 return [...window.document.querySelectorAll('[id]')].map(ele =>ele.getAttribute('id'));
-		  }
-      },
-      /**
-       * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
-       * to actually run the action.
-       */
-      whileExpr: {
-        type: String,
-      },
-    };
-  }
-
-  constructor() {
-    super();
-    this.detail = {};
-    this.needsUpdate = false;
-  }
-
-  connectedCallback() {
-    this.style.display = 'none';
-    this.propagate = this.hasAttribute('propagate')? this.getAttribute('propagate'):'continue';
-    this.repeatContext = undefined;
-
-	  // Object.keys(this.constructor.properties).forEach((propertyName) => {
-	  // 	  const property = this.constructor.properties[propertyName];
-	  // 	  const attribute = property.attribute || propertyName;
-	  // 	  const value = this.getAttribute(attribute) || property.default;
-	  // 	  const typedValue = property.type(value);
-	  // 	  this[propertyName] = typedValue;
-	  // });
-
-    if (this.hasAttribute('event')) {
-      this.event = this.getAttribute('event');
-    }
-    if (this.hasAttribute('defaultAction')) {
-      this.defaultAction = this.getAttribute('defaultAction');
-    } else {
-      this.defaultAction = 'perform';
-    }
-    if (this.hasAttribute('phase')) {
-      this.phase = this.getAttribute('phase');
-    } else {
-      this.phase = 'default';
+            defaultAction: {
+                type: String,
+                valueSpace: ['cancel', 'perform'],
+                readonly: true | false,
+                description: "can be either 'cancel' or 'perform' (default)",
+                attribute: 'defaultAction',
+                default: 'perform'
+            },
+            /**
+             * delay before executing action in milliseconds
+             */
+            delay: {
+                type: Number,
+            },
+            /**
+             * detail - event detail object
+             */
+            detail: {
+                type: Object,
+                hidden: true
+            },
+            /**
+             * event to listen for
+             */
+            event: {
+                type: Object,
+            },
+            handler: {
+                type: Object,
+            },
+            /**
+             * boolean XPath expression. If true the action will be executed.
+             */
+            ifExpr: {
+                type: String,
+            },
+            /**
+             * whether nor not an action needs to run the update cycle
+             */
+            needsUpdate: {
+                type: Boolean,
+            },
+            /**
+             * The observer if given is the element on which an event is triggered. It must be an ancestor of the target
+             * element of an event.
+             */
+            observer: {
+                type: Object,
+            },
+            /**
+             * can be either 'capture' or 'default' (default)
+             */
+            phase: {
+                type: String,
+            },
+            /**
+             * can be either 'stop' or 'continue' (default)
+             */
+            propagate: {
+                type: String,
+            },
+            /**
+             * id of target element to attach listener to
+             */
+            target: {
+                type: String,
+                get valueSpace() {
+                    return [...window.document.querySelectorAll('[id]')].map(ele => ele.getAttribute('id'));
+                }
+            },
+            /**
+             * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
+             * to actually run the action.
+             */
+            whileExpr: {
+                type: String,
+            },
+        };
     }
 
-    this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
-    this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
-    this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')) : 0;
-
-    this._addUpdateListener();
-
-  }
-
-  _addUpdateListener() {
-    this.target = this.getAttribute('target');
-    if (this.target) {
-      if (this.target === '#window') {
-        window.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      } else if (this.target === '#document') {
-        document.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      } else {
-        this.targetElement = resolveId(this.target, this);
-        if(!this.targetElement) return; //does not or does not yet exist
-        this?.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      }
-    } else {
-      this.targetElement = this.parentNode;
-      this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
-      // console.log('adding listener for ', this.event , ` to `, this);
+    constructor() {
+        super();
+        this.detail = {};
+        this.needsUpdate = false;
     }
-  }
 
-  /**
-   * executes the action.
-   *
-   * Will first evaluate ifExpr and continue only if it evaluates to 'true'. The 'whileExpr' will be executed
-   * considering the delay if present.
-   *
-   * After calling `perform' which actually implements the semantics of an concrete action
-   * `actionPerformed` will make sure that update cycle is run if 'needsUpdate' is true.
-   *
-   * @param e
-   */
-  async execute(e) {
+    connectedCallback() {
+        this.style.display = 'none';
+        this.propagate = this.hasAttribute('propagate') ? this.getAttribute('propagate') : 'continue';
+        this.repeatContext = undefined;
 
-/* todo: investigate This bit is breaking...
-    if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
-      // Event originates from a sub-component. Ignore it!
-      // No need to stop propagation. All other listeners will also ignore it from here
-      return;
+        // Object.keys(this.constructor.properties).forEach((propertyName) => {
+        // 	  const property = this.constructor.properties[propertyName];
+        // 	  const attribute = property.attribute || propertyName;
+        // 	  const value = this.getAttribute(attribute) || property.default;
+        // 	  const typedValue = property.type(value);
+        // 	  this[propertyName] = typedValue;
+        // });
+
+        if (this.hasAttribute('event')) {
+            this.event = this.getAttribute('event');
+        }
+        if (this.hasAttribute('defaultAction')) {
+            this.defaultAction = this.getAttribute('defaultAction');
+        } else {
+            this.defaultAction = 'perform';
+        }
+        if (this.hasAttribute('phase')) {
+            this.phase = this.getAttribute('phase');
+        } else {
+            this.phase = 'default';
+        }
+
+        this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
+        this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
+        this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')) : 0;
+
+        this._addUpdateListener();
+
     }
-*/
-    if(this.propagate === 'stop'){
-      // console.log('event propagation stopped', e)
-      e.stopPropagation();
+
+    _addUpdateListener() {
+        this.target = this.getAttribute('target');
+        if (this.target) {
+            if (this.target === '#window') {
+                window.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+            } else if (this.target === '#document') {
+                document.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+            } else {
+                this.targetElement = resolveId(this.target, this);
+                if (!this.targetElement) return; //does not or does not yet exist
+                this?.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+            }
+        } else {
+            this.targetElement = this.parentNode;
+            this.targetElement.addEventListener(this.event, e => this.execute(e), {capture: this.phase === 'capture'});
+            // console.log('adding listener for ', this.event , ` to `, this);
+        }
     }
-    if (this.defaultAction === 'cancel') {
-      e.preventDefault();
-    }
+
+    /**
+     * executes the action.
+     *
+     * Will first evaluate ifExpr and continue only if it evaluates to 'true'. The 'whileExpr' will be executed
+     * considering the delay if present.
+     *
+     * After calling `perform' which actually implements the semantics of an concrete action
+     * `actionPerformed` will make sure that update cycle is run if 'needsUpdate' is true.
+     *
+     * @param e
+     */
+    async execute(e) {
+
+        /* todo: investigate This bit is breaking...
+            if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
+              // Event originates from a sub-component. Ignore it!
+              // No need to stop propagation. All other listeners will also ignore it from here
+              return;
+            }
+        */
+        if (this.propagate === 'stop') {
+            // console.log('event propagation stopped', e)
+            e.stopPropagation();
+        }
+        if (this.defaultAction === 'cancel') {
+            e.preventDefault();
+        }
 
     let resolveThisEvent = () => {};
-    if (e && e.listenerPromises) {
-      e.listenerPromises.push(
-        new Promise(resolve => {
-          resolveThisEvent = resolve;
-        }),
-      );
-    }
-
-    // console.log('executing', this);
-
-    // console.log('executing e', e);
-      // console.log('executing e phase', e.eventPhase);
-	  const foreElement = this.getOwnerForm();
-    if (foreElement.outermostHandler === null) {
-      console.time('outermostHandler');
-      foreElement.outermostHandler = this;
-		this.dispatchEvent(new CustomEvent('outermost-action-start', {
-          composed: true,
-          bubbles: true,
-			cancelable:true, detail: {cause: e?.type}}));
-    }
-
-    if (foreElement.outermostHandler !== this) {
-      console.info(
-        `%cAction `,
-        'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-        this,
-      );
-    }
-    // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
-
-    if (e) {
-		this.currentEvent = e;
-    }
-    this.needsUpdate = false;
-
-    try {
-      this.evalInContext();
-    } catch (error) {
-      console.warn('evaluation failed', error);
-    }
-    if (this.targetElement && this.targetElement.nodeset) {
-      this.nodeset = this.targetElement.nodeset;
-    }
-
-    // First check if 'if' condition is true - otherwise exist right away
-    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
-      this._finalizePerform(resolveThisEvent);
-      return;
-    }
-
-    // console.log('performing action', this);
-
-    if (this.whileExpr) {
-      // While: while the condition is true, delay a bit and execute the action
-      const loop = async () => {
-        // Start by waiting
-        await wait(this.delay || 0);
-
-        if (!XPathUtil.contains(this.getOwnerForm(), this)) {
-          // We are no longer in the document. Stop working
-          return;
+        if (e && e.listenerPromises) {
+            e.listenerPromises.push(
+                new Promise(resolve => {
+                    resolveThisEvent = resolve;
+                }),
+            );
         }
 
-        if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
-          // Done with iterating
-          return;
+        // console.log('executing', this);
+
+        // console.log('executing e', e);
+        // console.log('executing e phase', e.eventPhase);
+        const foreElement = this.getOwnerForm();
+        if (foreElement.outermostHandler === null) {
+            console.time('outermostHandler');
+            foreElement.outermostHandler = this;
+            this.dispatchEvent(new CustomEvent('outermost-action-start', {
+                composed: true,
+                bubbles: true,
+                cancelable: true, detail: {cause: e?.type}
+            }));
         }
 
-        // Perform the action once
-        this.perform();
+        /*
+            if (foreElement.outermostHandler !== this) {
+              console.info(
+                `%cAction `,
+                'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+                this,
+              );
+            }
+        */
+        // console.log('>>> outermostHandler', AbstractAction.outermostHandler);
 
-        // Go for one more iteration
+        if (e) {
+            this.currentEvent = e;
+        }
+        this.needsUpdate = false;
+
+        try {
+            this.evalInContext();
+        } catch (error) {
+            console.warn('evaluation failed', error);
+        }
+        if (this.targetElement && this.targetElement.nodeset) {
+            this.nodeset = this.targetElement.nodeset;
+        }
+
+        // First check if 'if' condition is true - otherwise exist right away
+        if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
+            this._finalizePerform(resolveThisEvent);
+            return;
+        }
+
+        // console.log('performing action', this);
+
+        if (this.whileExpr) {
+            // While: while the condition is true, delay a bit and execute the action
+            const loop = async () => {
+                // Start by waiting
+                await wait(this.delay || 0);
+
+                if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+                    // We are no longer in the document. Stop working
+                    return;
+                }
+
+                if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
+                    // Done with iterating
+                    return;
+                }
+
+                // Perform the action once
+                this.perform();
+
+                // Go for one more iteration
+                if (this.delay) {
+                    // If we have a delay, fire and forget this.
+                    // Otherwise, if we have no delay, keep waiting for all iterations to be done.
+                    // The while is then uninterruptable and immediate
+                    loop();
+                    return;
+                }
+                await loop();
+            };
+
+            // After loop is done call actionPerformed to update the model and UI
+            await loop();
+            this._finalizePerform(resolveThisEvent);
+
+            return;
+        }
+
         if (this.delay) {
-          // If we have a delay, fire and forget this.
-          // Otherwise, if we have no delay, keep waiting for all iterations to be done.
-          // The while is then uninterruptable and immediate
-          loop();
-          return;
+            // Delay further execution until the delay is done
+            await wait(this.delay);
+            if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+                // We are no longer in the document. Stop working
+                this.actionPerformed();
+                resolveThisEvent();
+                return;
+            }
         }
-        await loop();
-      };
 
-      // After loop is done call actionPerformed to update the model and UI
-      await loop();
-      this._finalizePerform(resolveThisEvent);
-
-      return;
+        await this.perform();
+        this._finalizePerform(resolveThisEvent);
     }
 
-    if (this.delay) {
-      // Delay further execution until the delay is done
-      await wait(this.delay);
-	  if (!XPathUtil.contains(this.getOwnerForm(), this)) {
-        // We are no longer in the document. Stop working
+    _finalizePerform(resolveThisEvent) {
+        this.currentEvent = null;
         this.actionPerformed();
+        const foreElement = this.getOwnerForm();
+        if (foreElement.outermostHandler === this) {
+            foreElement.outermostHandler = null;
+            this.dispatchEvent(new CustomEvent('outermost-action-end', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable: true
+                }
+            ));
+        }
         resolveThisEvent();
-        return;
-      }
     }
 
-    await this.perform();
-    this._finalizePerform(resolveThisEvent);
-  }
+    /**
+     * Template method to be implemented by each action that is called by execute() as part of
+     * the processing.
+     *
+     * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
+     */
+    async perform() {
+        // this._dispatchExecute();
 
-	_finalizePerform(resolveThisEvent) {
-		this.currentEvent = null;
-		this.actionPerformed();
-		const foreElement = this.getOwnerForm();
-    if (foreElement.outermostHandler === this) {
-      foreElement.outermostHandler = null;
-      console.info(
-        `%coutermost Action done`,
-        'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-        this,
-      );
-      console.timeEnd('outermostHandler');
-		this.dispatchEvent(new CustomEvent('outermost-action-end', {
-          composed: true,
-          bubbles: true,
-			cancelable:true}));
+        // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
 
+        //todo: review - this evaluation seems redundant as we already evaluated in execute
+        if (this.isBound() || this.nodeName === 'FX-ACTION') {
+            this.evalInContext();
+        }
 
-    }
-    resolveThisEvent();
-  }
-
-  /**
-   * Template method to be implemented by each action that is called by execute() as part of
-   * the processing.
-   *
-   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
-   */
-  async perform() {
-    // this._dispatchExecute();
-
-    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-    //todo: review - this evaluation seems redundant as we already evaluated in execute
-    if (this.isBound() || this.nodeName === 'FX-ACTION') {
-      this.evalInContext();
+        this.dispatchExecute();
     }
 
-    this.dispatchExecute();
-  }
+    dispatchExecute() {
 
-  dispatchExecute(){
+        let detail = {action: this, event: this.event};
+        if (this.nodeset) {
+            // const path = XPathUtil.getPath(this.nodeset);
+            const path = Fore.getDomNodeIndexString(this.nodeset);
+            detail = {...detail, path: path};
+            // console.log('instance path', this.nodeset, path)
+        }
 
-    let detail = { action: this, event:this.event};
-    if(this.nodeset){
-      // const path = XPathUtil.getPath(this.nodeset);
-      const path = Fore.getDomNodeIndexString(this.nodeset);
-      detail = {...detail,path:path};
-      // console.log('instance path', this.nodeset, path)
+        this.dispatchEvent(
+            new CustomEvent('execute-action', {
+                composed: true,
+                bubbles: true,
+                cancelable: true,
+                detail: {action: this, event: this.event},
+            }),
+        );
     }
 
-    this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
-    );
-  }
+    /**
+     * calls the update cycle if action signalled that update is needed.
+     */
+    actionPerformed() {
+        const foreElement = this.getOwnerForm();
+        const model = this.getModel();
+        if (!model) {
+            return;
+        }
+        if (!model.inited) {
+            return;
+        }
+        if (
+            foreElement.outermostHandler &&
+            !XPathUtil.contains(foreElement.outermostHandler.ownerDocument, foreElement.outermostHandler)
+        ) {
+            // The old outermostHandler fell out of the document. An error has happened.
+            // Just remove the old one and act like we are starting anew.
+            console.warn('Unsetting outermost handler');
+            foreElement.outermostHandler = null;
+        }
+        // console.log('actionPerformed action parentNode ', this.parentNode);
+        if (
+            this.needsUpdate &&
+            (foreElement.outermostHandler === this || !foreElement.outermostHandler)
+        ) {
+            // console.log('Running actionperformed');
+            model.recalculate();
+            model.revalidate();
+            model.parentNode.refresh(true);
+            this.dispatchActionPerformed();
+        } else if (this.needsUpdate) {
+            // We need an update, but the outermost action handler is not done yet. Make this clear!
+            foreElement.outermostHandler.needsUpdate = true;
+            // console.log('Update delayed!');
 
-  /**
-   * calls the update cycle if action signalled that update is needed.
-   */
-  actionPerformed() {
-    const foreElement = this.getOwnerForm();
-    const model = this.getModel();
-    if(!model){
-      return;
-    }
-    if (!model.inited) {
-      return;
-    }
-    if (
-      foreElement.outermostHandler &&
-        !XPathUtil.contains(foreElement.outermostHandler.ownerDocument, foreElement.outermostHandler)
-    ) {
-      // The old outermostHandler fell out of the document. An error has happened.
-      // Just remove the old one and act like we are starting anew.
-      console.warn('Unsetting outermost handler');
-      foreElement.outermostHandler = null;
-    }
-    // console.log('actionPerformed action parentNode ', this.parentNode);
-    if (
-      this.needsUpdate &&
-      (foreElement.outermostHandler === this || !foreElement.outermostHandler)
-    ) {
-      // console.log('Running actionperformed');
-      model.recalculate();
-      model.revalidate();
-      model.parentNode.refresh(true);
-      this.dispatchActionPerformed();
-    } else if (this.needsUpdate) {
-      // We need an update, but the outermost action handler is not done yet. Make this clear!
-      foreElement.outermostHandler.needsUpdate = true;
-      console.log('Update delayed!');
+            //todo: bug around here - delaying eats up some necessary updates
 
-     //todo: bug around here - delaying eats up some necessary updates
-
-      model.parentNode.refresh(true);
-      this.dispatchActionPerformed();
+            model.parentNode.refresh(true);
+            this.dispatchActionPerformed();
+        }
     }
-  }
 
-  /**
-   * dispatches action-performed event
-   *
-   * @event action-performed - whenever an action has been run
-   */
-  dispatchActionPerformed() {
-    // console.log('action-performed ', this);
-    Fore.dispatch(this, 'action-performed', {});
-  }
+    /**
+     * dispatches action-performed event
+     *
+     * @event action-performed - whenever an action has been run
+     */
+    dispatchActionPerformed() {
+        // console.log('action-performed ', this);
+        Fore.dispatch(this, 'action-performed', {});
+    }
 }
 
 if (!customElements.get('abstract-action')) {
-  window.customElements.define('abstract-action', AbstractAction);
+    window.customElements.define('abstract-action', AbstractAction);
 }

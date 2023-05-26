@@ -70,12 +70,10 @@ export class FxDispatch extends AbstractAction {
   async perform() {
     super.perform();
 
-    console.log('### fx-dispatch.perform ', this);
-
     const properties = this.querySelectorAll('fx-property');
     const details = {};
     Array.from(properties).forEach(prop => {
-      console.log('prop ', prop);
+      // console.log('prop ', prop);
       const name = prop.getAttribute('name');
       const value = prop.getAttribute('value');
       const expr = prop.getAttribute('expr');
@@ -103,7 +101,7 @@ export class FxDispatch extends AbstractAction {
       }
     });
 
-    console.log('details ', details);
+    // console.log('details ', details);
 
     // ### when targetid is given dispatch to that if present (throw an error if not) - otherwise dispatch to document
     if (this.targetid) {
@@ -113,7 +111,6 @@ export class FxDispatch extends AbstractAction {
         // However, it may be that our target is elsewhere. Do a global search for that case
         target = document.getElementById(this.targetid);
       }
-      console.log('target', target);
       if (!target) {
         throw new Error(`targetid ${this.targetid} does not exist in document`);
       }

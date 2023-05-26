@@ -117,7 +117,7 @@ export class FxLogSettings extends HTMLElement {
             wrapper.append(lbl);
 
             cbx.addEventListener('click', e => {
-                console.log('filter box ticked', e);
+                // console.log('filter box ticked', e);
                 if (!e.target.checked) {
                     // remove event listener
                     const fore = document.querySelector('fx-fore');
@@ -235,8 +235,8 @@ export class FxLogSettings extends HTMLElement {
 
         const targetElement = e.target;
         row.addEventListener('click', (ev) =>{
-            console.log('clicked inspect item', targetElement);
-            console.log('clicked inspect item', ev.target.getAttribute('xpath'));
+            // console.log('clicked inspect item', targetElement);
+            // console.log('clicked inspect item', ev.target.getAttribute('xpath'));
 
             this._highlight(targetElement);
 
@@ -435,7 +435,7 @@ export class FxLogSettings extends HTMLElement {
     }
 
     _listAttributes(e) {
-        console.log('_listAttributes', e)
+        // console.log('_listAttributes', e)
         return ``;
         // return `${e.detail.model.id}`;
         /*

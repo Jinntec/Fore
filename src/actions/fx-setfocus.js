@@ -15,9 +15,7 @@ export class FxSetfocus extends AbstractAction {
     }
 
     async perform() {
-        console.log('setting focus', this.control);
 
-        console.log("hey");
         this.dispatchEvent(
             new CustomEvent('execute-action', {
                 composed: true,
@@ -42,7 +40,6 @@ export class FxSetfocus extends AbstractAction {
         // ### focus action is itself hosted within a repeat
         const parentIItem = targetElement.closest('fx-repeatitem');
         if (parentIItem) {
-            console.log('parentRepeat', parentIItem);
             targetElement = parentIItem.querySelector(selector);
             this._focus(targetElement);
             return;
@@ -64,7 +61,6 @@ export class FxSetfocus extends AbstractAction {
     }
 
     _focus(targetElement) {
-        console.log('focus', targetElement)
         if (targetElement && typeof targetElement.getWidget === 'function') {
             targetElement.getWidget().focus();
         }

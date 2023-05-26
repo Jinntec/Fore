@@ -30,11 +30,10 @@ class FxDelete extends AbstractAction {
      */
     async perform() {
 
-        console.log('##### fx-delete executing...');
         const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
 
-        console.log('delete nodeset ', this.nodeset);
+        // console.log('delete nodeset ', this.nodeset);
 
         const instanceId = XPathUtil.resolveInstance(this);
         const instance = this.getModel().getInstance(instanceId);

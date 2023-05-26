@@ -171,7 +171,6 @@ export class FxInsert extends AbstractAction {
       insertLocationNode = inscope;
       inscope.appendChild(originSequenceClone);
       index = 1;
-      console.log('appended', inscope);
     } else {
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
@@ -229,7 +228,7 @@ export class FxInsert extends AbstractAction {
     // Fore.dispatch()
 
     const inst = this.getModel().getInstance(XPathUtil.resolveInstance(this));
-    console.log('<<<<<<< resolved instance', inst);
+    // console.log('<<<<<<< resolved instance', inst);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(

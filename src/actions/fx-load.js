@@ -197,7 +197,7 @@ class FxLoad extends AbstractAction {
             try {
                 return evaluateXPathToString(naked, inscope, this, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable url', error);
+                console.warn('ignoring unparseable url', error);
                 return match;
             }
         });

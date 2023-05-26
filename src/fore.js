@@ -427,7 +427,7 @@ export class Fore {
   }
 
   static async loadForeFromUrl(hostElement, url) {
-    console.log('########## loading Fore from ', this.src, '##########');
+    // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -467,7 +467,7 @@ export class Fore {
         imported.addEventListener(
             'model-construct-done',
             e => {
-              console.log('subcomponent ready', e.target);
+              // console.log('subcomponent ready', e.target);
               const defaultInst = imported.querySelector('fx-instance');
               // console.log('defaultInst', defaultInst);
               if(hostElement.initialNode){
@@ -492,7 +492,7 @@ export class Fore {
           dummy.parentNode.removeChild(dummy);
           hostElement.shadowRoot.appendChild(imported);
         } else {
-          console.log(this, 'replacing widget with',theFore);
+          // console.log(this, 'replacing widget with',theFore);
           dummy.replaceWith(imported);
           // this.appendChild(imported);
         }

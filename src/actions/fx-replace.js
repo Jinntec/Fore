@@ -33,7 +33,6 @@ export default class FxReplace extends AbstractAction {
 
   async perform() {
     super.perform();
-    console.log('replace action');
     // console.log('replace action variables', this.inScopeVariables);
     // if (!this.nodeset) {
     //   return;
@@ -51,7 +50,6 @@ export default class FxReplace extends AbstractAction {
   }
 
   replace(toReplace, replaceWith) {
-    console.log('replace', toReplace, replaceWith);
     if (!toReplace || !replaceWith) return; // bail out silently
     if (!toReplace.nodeName || !replaceWith.nodeName) {
       console.warn('fx-replace: one argument is not a node');
@@ -62,7 +60,6 @@ export default class FxReplace extends AbstractAction {
       const { ownerElement } = toReplace;
       ownerElement.setAttribute(replaceWith.nodeName, replaceWith.textContent);
       ownerElement.removeAttribute(toReplace.nodeName);
-      console.log('owner', ownerElement);
     } else if (toReplace.nodeType === Node.ELEMENT_NODE) {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);

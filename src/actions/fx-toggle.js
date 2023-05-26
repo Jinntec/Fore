@@ -21,7 +21,6 @@ class FxToggle extends AbstractAction {
 
   async perform() {
     super.perform();
-    console.log('### fx-toggle.execute ');
     if (this.case) {
       const ownerForm = this.getOwnerForm();
       const caseElement = ownerForm.querySelector(`#${this.case}`);

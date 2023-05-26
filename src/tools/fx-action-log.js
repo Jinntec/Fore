@@ -413,8 +413,8 @@ export class FxActionLog extends HTMLElement {
 
         const targetElement = e.target;
         row.addEventListener('click', (ev) => {
-            console.log('clicked inspect item', targetElement);
-            console.log('clicked inspect item', ev.target.getAttribute('xpath'));
+            // console.log('clicked inspect item', targetElement);
+            // console.log('clicked inspect item', ev.target.getAttribute('xpath'));
 
             this._highlight(targetElement);
 
@@ -620,7 +620,7 @@ export class FxActionLog extends HTMLElement {
     }
 
     _listAttributes(e) {
-        console.log('_listAttributes', e)
+        // console.log('_listAttributes', e)
         return ``;
         // return `${e.detail.model.id}`;
         /*

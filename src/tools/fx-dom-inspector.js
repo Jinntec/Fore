@@ -70,7 +70,7 @@ export class FxDomInspector extends HTMLElement {
             event.stopPropagation();
             if (event.target !== focusButton) {
                 // Do not 'click on the focusbutton. It's a cancel.
-                console.log('done', event.target);
+                // console.log('done', event.target);
                 window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: event.target}}));
             }
         };

@@ -42,7 +42,7 @@ export class FxDevtools extends HTMLElement {
         const attachToFore = (fore) => {
             this.fore = fore;
             this.instances = [...this.fore.getModel().instances];
-            console.log('instances',this.instances);
+            // console.log('instances',this.instances);
             const header = this.shadowRoot.querySelector('.instances header');
             header.textContent = 'Data ';
             this.instances.forEach(instance => {
@@ -57,7 +57,7 @@ export class FxDevtools extends HTMLElement {
         };
 
         window.addEventListener("DOMContentLoaded", (event) => {
-            console.log("DOM fully loaded and parsed");
+            // console.log("DOM fully loaded and parsed");
             this.fore = document.querySelector('fx-fore');
             this.fore.addEventListener('model-construct-done', () => attachToFore(this.fore));
         });
@@ -118,10 +118,10 @@ export class FxDevtools extends HTMLElement {
 
         this.instances = [...this.fore.querySelectorAll('fx-instance')];
         const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
-        console.log('wanted instance', instance);
+        // console.log('wanted instance', instance);
 
         const panelContent = this._renderInstancePanel(instance);
-        console.log('panelContent', panelContent);
+        // console.log('panelContent', panelContent);
         // instancePanel.innerHTML = panelContent;
         instancePanel.append(panelContent);
 	}
@@ -138,7 +138,6 @@ export class FxDevtools extends HTMLElement {
 
     _resizePanel(event) {
         if (!this.isResizing) return;
-        console.log('lastY', this.lastY);
         const delta = event.clientY - this.lastY;
         this.style.height = `${this.offsetHeight - delta}px`;
         this.lastHeight = this.style.height;
@@ -312,7 +311,7 @@ export class FxDevtools extends HTMLElement {
             cursor: ew-resize;
         }
       `;
-        console.log('render instances',this.instances);
+        // console.log('render instances',this.instances);
 
         const html = `
         <section class="wrapper">
@@ -388,14 +387,17 @@ export class FxDevtools extends HTMLElement {
 
         this.classList.add('open');
 
+/*
         document.addEventListener('value-changed', e =>{
             console.log('value-changed hitting glass', e.target);
         })
+*/
 
     }
 
     _handleOpen(ev){
-        console.log('that works')
+        // console.log('that works')
+
         document.body.style.height = '';
     }
 

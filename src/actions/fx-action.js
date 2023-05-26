@@ -37,7 +37,6 @@ export class FxAction extends AbstractAction {
 
         if (this.src) {
             this.innerHTML = ''; // reset
-            console.log('### fx-script.perform ');
             const script = document.createElement('script');
             script.src = this.src;
             this.appendChild(script);

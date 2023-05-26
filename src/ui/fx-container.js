@@ -70,7 +70,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
     if (!this.modelItem) {
-      console.log('container is not relevant');
+      // console.log('container is not relevant');
       this.removeAttribute('relevant','');
       this.setAttribute('nonrelevant','');
       this.dispatchEvent(new CustomEvent('disabled', {}));

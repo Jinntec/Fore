@@ -86,7 +86,7 @@ export class FxTrigger extends XfAbstractControl {
     // todo: support readonly for trigger not executing the action
     const repeatedItem = this.closest('fx-repeatitem');
     if (repeatedItem) {
-      console.log('repeated click');
+      // console.log('repeated click');
       repeatedItem.click();
     }
 

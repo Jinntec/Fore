@@ -118,13 +118,14 @@ export default class FxControl extends XfAbstractControl {
     }
 
     this.addEventListener('return', e => {
-      console.log('catched return action on ', this);
-      console.log('return detail', e.detail);
+      // console.log('catched return action on ', this);
+      // console.log('return detail', e.detail);
 
-      console.log('return triggered on ', this);
-      console.log('this.ref', this.ref);
-      console.log('current outer instance', this.getInstance());
+      // console.log('return triggered on ', this);
+      // console.log('this.ref', this.ref);
+      // console.log('current outer instance', this.getInstance());
 
+/*
       console.log(
         '???? why ???? current nodeset should point to the node of the outer control',
         e.currentTarget.nodeset,
@@ -133,10 +134,11 @@ export default class FxControl extends XfAbstractControl {
         '???? why ???? current nodeset should point to the node of the outer control',
         this.nodeset,
       );
+*/
       const newNodes = e.detail.nodeset;
-      console.log('new nodeset', newNodes);
-      console.log('currentTarget', e.currentTarget);
-      console.log('target', e.target);
+      // console.log('new nodeset', newNodes);
+      // console.log('currentTarget', e.currentTarget);
+      // console.log('target', e.target);
 
       e.stopPropagation();
 
@@ -300,7 +302,7 @@ export default class FxControl extends XfAbstractControl {
         const oldVal = this.nodeset;
         if (widget.value) {
           if (oldVal !== this.widget.value) {
-            console.log('changed');
+            // console.log('changed');
             widget.value = this.nodeset.cloneNode(true);
             return;
           }
@@ -321,7 +323,7 @@ export default class FxControl extends XfAbstractControl {
 
       if (this.initial) {
         this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
-        console.log('initialNodes', this.initialNode);
+        // console.log('initialNodes', this.initialNode);
       }
 
       // ### load the markup from Url
@@ -373,7 +375,7 @@ export default class FxControl extends XfAbstractControl {
       });
 
       const responseContentType = response.headers.get('content-type').toLowerCase();
-      console.log('********** responseContentType *********', responseContentType);
+      // console.log('********** responseContentType *********', responseContentType);
       let data;
       if (responseContentType.startsWith('text/html')) {
         data = await response.text().then(result =>
@@ -389,7 +391,7 @@ export default class FxControl extends XfAbstractControl {
 
       // console.log('thefore', theFore)
       imported.classList.add('widget'); // is the new widget
-      console.log(`########## loaded fore as component ##### ${this.url}`);
+      // console.log(`########## loaded fore as component ##### ${this.url}`);
       imported.addEventListener(
           'model-construct-done',
           e => {
@@ -431,7 +433,6 @@ export default class FxControl extends XfAbstractControl {
           }),
         );
       }
-      console.log('loaded');
       this.dispatchEvent(new CustomEvent('loaded', { detail: { fore: theFore } }));
     } catch (error) {
       console.log('error', error);

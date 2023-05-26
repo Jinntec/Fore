@@ -95,7 +95,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   connectedCallback() {
-    console.log('connectedCallback',this);
+    // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     // this.ref = this._getRef();
@@ -287,7 +287,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
-    console.groupEnd();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -363,7 +362,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
-      console.log('*********repeat item created', repeatItem.nodeset)
+      // console.log('*********repeat item created', repeatItem.nodeset)
       Fore.dispatch(this,'item-created',{nodeset:repeatItem.nodeset, pos:index+1});
       this._initVariables(repeatItem);
     });
