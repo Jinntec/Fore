@@ -334,6 +334,7 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'current':
         case 'depends':
         case 'event':
+        case 'fore-attr':
         case 'index':
         case 'instance':
         case 'log':
@@ -686,6 +687,24 @@ registerCustomXPathFunction(
         return null;
     },
 );
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'fore-attr'},
+    ['xs:string?'],
+    'xs:string?',
+    (dynamicContext, string) => {
+        const {formElement} = dynamicContext.currentContext;
+
+        let parent = formElement;
+        if(formElement.nodeType === Node.TEXT_NODE){
+            parent = formElement.parentNode;
+        }
+        const foreElement = parent.closest('fx-fore');
+        if(foreElement.hasAttribute(string)){
+            return foreElement.getAttribute(string);
+        }
+        return null;
+    },
+);
 
 registerCustomXPathFunction(
     {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'parse'},
@@ -694,7 +713,6 @@ registerCustomXPathFunction(
     (dynamicContext, string) => {
         const parser = new DOMParser();
         const out = parser.parseFromString(string, "application/xml");
-        console.log('parse', out);
 
         /*
                 const {formElement} = dynamicContext.currentContext;
