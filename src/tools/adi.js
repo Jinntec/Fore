@@ -12,7 +12,7 @@ import {
 import {Fore} from '../fore.js';
 
 function isAttributeShown(name) {
-    return name === 'id' || name === 'ref';
+    return name === 'id' || name === 'ref' || name === 'event';
 }
 
 class ADI {
@@ -298,6 +298,8 @@ class ADI {
                         }
 
                         if (node.nodeName === 'HEAD') isOpen = false;
+                        if (node.nodeName === 'SELECT') isOpen = false;
+                        if (node.nodeName === 'FX-INSTANCE') isOpen = false;
 /*
                         if(this.options.closedElements.includes(node.nodeName.toLowerCase())){
                             isOpen = false;
@@ -665,9 +667,9 @@ class ADI {
             wrap.scrollIntoView({block:'center', behavior: 'instant'})
         }
 		const selected = this.getSelected();
-            this.drawAttrs(selected);
+        this.drawAttrs(selected);
 
-		if (selected.getModelItem && selected.getModelItem()?.node) {
+		if (selected && typeof selected.getModelItem === 'function' && selected.getModelItem()?.node) {
 			let selectedElement = selected.modelItem.node;
 			if (selectedElement.nodeType === Node.ATTRIBUTE_NODE) {
 				selectedElement = selectedElement.ownerElement;

@@ -227,7 +227,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // console.log('executing e phase', e.eventPhase);
         const foreElement = this.getOwnerForm();
         if (foreElement.outermostHandler === null) {
-            console.time('outermostHandler');
             foreElement.outermostHandler = this;
             this.dispatchEvent(new CustomEvent('outermost-action-start', {
                 composed: true,
@@ -411,9 +410,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // We need an update, but the outermost action handler is not done yet. Make this clear!
             foreElement.outermostHandler.needsUpdate = true;
             // console.log('Update delayed!');
-
             //todo: bug around here - delaying eats up some necessary updates
-
+            if(this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+                model.recalculate();
+                model.revalidate();
+            }
             model.parentNode.refresh(true);
             this.dispatchActionPerformed();
         }

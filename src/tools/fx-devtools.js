@@ -262,7 +262,6 @@ export class FxDevtools extends HTMLElement {
         }
         .optionsBtn{
             font-size:2rem;
-            display:none;
         }
         details[open] .optionsBtn{
             display:inline;
