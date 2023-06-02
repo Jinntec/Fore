@@ -418,14 +418,7 @@ export class FxFore extends HTMLElement {
 
     async refresh(force) {
         // refresh () {
-        console.info('%crefresh','font-style: italic; background: #8bc34a; color:white; padding:0.3rem 5rem 0.3rem 0.3rem; display:block; width:100%;');
-        console.group('refresh', force);
-
-        console.time('refresh');
-
         // ### refresh Fore UI elements
-        // console.time('refreshChildren');
-
         // if (!this.initialRun && this.toRefresh.length !== 0) {
         if (!force && !this.initialRun && this.toRefresh.length !== 0) {
             // console.log('toRefresh', this.toRefresh);
@@ -486,9 +479,6 @@ export class FxFore extends HTMLElement {
         }
         this._processTemplateExpressions();
 
-        console.timeEnd('refresh');
-
-        console.groupEnd();
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
