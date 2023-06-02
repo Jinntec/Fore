@@ -25,6 +25,8 @@ import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
  * @ts-check
  */
 export class FxFore extends HTMLElement {
+    static outermostHandler = null;
+
     static get properties() {
         return {
             /**
@@ -68,6 +70,10 @@ export class FxFore extends HTMLElement {
 
         this.ready = false;
         this.storedTemplateExpressionByNode = new Map();
+
+		// Stores the outer most action handler. If an action handler is already running, all
+		// updates are included in that one
+		this.outermostHandler = null;
 
         const style = `
             :host {

@@ -90,7 +90,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 return;
             }
         }
-        console.log('model updated....');
         await this._serializeAndSend();
     }
 
@@ -110,7 +109,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 const inscope = getInScopeContext(node, naked);
                 const result = evaluateXPathToString(naked, inscope, this);
                 const replaced = expr.replaceAll(match, result);
-                console.log('replacing ', expr, ' with ', replaced);
+                // console.log('replacing ', expr, ' with ', replaced);
                 expr = replaced;
             });
         }
@@ -191,7 +190,6 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         // ### setting headers
         const headers = this._getHeaders();
-        console.log('headers', headers);
 
         if (!this.methods.includes(this.method.toLowerCase())) {
             // this.dispatch('error', { message: `Unknown method ${this.method}` });
@@ -358,8 +356,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 } else {
                     const instanceData = data;
                     targetInstance.instanceData = instanceData;
-                    console.log('### replaced instance ', this.getModel().instances);
-                    console.log('### replaced instance ', targetInstance.instanceData);
+                    // console.log('### replaced instance ', this.getModel().instances);
+                    // console.log('### replaced instance ', targetInstance.instanceData);
                 }
 
                 // Skip any refreshes if the model is not yet inited
