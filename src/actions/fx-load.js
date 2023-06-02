@@ -135,7 +135,7 @@ class FxLoad extends AbstractAction {
             const response = await fetch(this.url, {
                 method: 'GET',
                 mode: 'cors',
-                credentials: 'include',
+                credentials: 'same-origin',
                 headers: {
                   'Content-Type': "text/html",
                 },
@@ -161,7 +161,10 @@ class FxLoad extends AbstractAction {
             Fore.dispatch(this, 'loaded', {url: this.url})
 
         } catch (error) {
-            throw new Error(`failed loading data ${error}`);
+            // throw new Error(`failed loading data ${error}`);
+            console.warn(`failed loading data ${error}`);
+            return;
+            // Fore.dispatch(this, 'load-error', {message: `failed loading data ${error}`})
         }
     }
 
