@@ -138,6 +138,7 @@ export const foreElementMixin = superclass =>
         this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+        if(!inscopeContext) return;
         const { nodeType } = inscopeContext;
         if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
