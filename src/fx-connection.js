@@ -1,4 +1,5 @@
 import {foreElementMixin} from './ForeElementMixin.js';
+import {Fore} from "./fore.js";
 
 class FxConnection extends foreElementMixin(HTMLElement) {
     constructor() {
@@ -76,7 +77,11 @@ class FxConnection extends foreElementMixin(HTMLElement) {
         }
     }
 
+
     send(data) {
+
+        this.evalInContext();
+        data = this.nodeset;
         if (this._socket && this._socket.readyState === WebSocket.OPEN) {
             let message;
             switch (this._messageFormat) {
@@ -87,7 +92,7 @@ class FxConnection extends foreElementMixin(HTMLElement) {
                     message = new XMLSerializer().serializeToString(data);
                     break;
                 case 'text':
-                    message = data.toString();
+                    message = data.textContent;
                     break;
                 default:
                     throw new Error(`Unsupported message format: ${this._messageFormat}`);
@@ -111,7 +116,7 @@ class FxConnection extends foreElementMixin(HTMLElement) {
     _disconnect() {
         if (this._socket) {
             this._socket.removeEventListener('open', this._onOpen.bind(this));
-            this._socket.removeEventListener('message', this._onMessage);
+            this._socket.removeEventListener('message', (event) => this._onMessage(event));
             this._socket.removeEventListener('close', this._onClose.bind(this));
             this._socket.close();
             this._socket = null;
@@ -142,7 +147,7 @@ class FxConnection extends foreElementMixin(HTMLElement) {
             default:
                 throw new Error(`Unsupported message format: ${this._messageFormat}`);
         }
-        this.dispatchEvent(new CustomEvent('channel-message', {"message": message}));
+        Fore.dispatch(this,'channel-message', {"message": message});
     }
 
     _onClose(event) {
