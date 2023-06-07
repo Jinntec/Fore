@@ -63,6 +63,7 @@ export class FxFore extends HTMLElement {
         // todo: refactoring - these should rather go into connectedcallback
         this.addEventListener('message', this._displayMessage);
         this.addEventListener('error', this._displayError);
+        this.addEventListener('warn', this._displayWarning);
         this.addEventListener('log', this._logError);
         window.addEventListener('compute-exception', e => {
             console.error('circular dependency: ', e);
@@ -156,7 +157,7 @@ export class FxFore extends HTMLElement {
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
-           <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" close="true" position="left" gravity="bottom"></jinn-toast>
+           <jinn-toast id="warn" text="warning" duration="-1" data-class="warning" close="true" position="left" gravity="bottom"></jinn-toast>
            <slot id="default"></slot>
            <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
@@ -184,8 +185,6 @@ export class FxFore extends HTMLElement {
     }
 
     connectedCallback() {
-        this.addEventListener('warn', this._displayWarning);
-
         this.style.visibility = 'hidden';
         console.time('init');
         /*
@@ -843,6 +842,14 @@ export class FxFore extends HTMLElement {
         toast.showToast(msg);
     }
 
+    _displayWarning(e){
+        const msg = e.detail.message;
+        // this._showMessage('modal', msg);
+        const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        const toast = this.shadowRoot.querySelector('#warn');
+        toast.showToast(`${path}:${msg}`);
+    }
+
     _logError(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -905,6 +912,7 @@ export class FxFore extends HTMLElement {
         const repeats = this.querySelectorAll('[data-ref]');
         if(repeats){
             Array.from(repeats).forEach(item =>{
+                if(item.closest('fx-control')) return;
 /*
                 const parentRepeat = item.closest('fx-repeat');
                 if(parentRepeat){

@@ -79,11 +79,30 @@
                     <fx-control ref="flavor" update-event="input">
                         <label slot="label">input with datalist</label>
                         <input list="ice-cream-flavors">
-                        <datalist id="ice-cream-flavors" ref="instance('flavors')/flavor">
+                        <datalist id="ice-cream-flavors" data-ref="instance('flavors')/flavor">
                             <template>
-                                <option value="{.}">{.}</option>
+                                <option value="{.}"></option>
                             </template>
                         </datalist>
+                    </fx-control>
+
+                    <fx-control ref="flavor" update-event="input">
+                        <label slot="label">input with datalist</label>
+                        <input list="ice-cream-flavors2">
+                        <datalist id="ice-cream-flavors2" data-ref="instance('flavors')/flavor">
+                            <template>
+                                <option value="{.}"></option>
+                            </template>
+                        </datalist>
+                    </fx-control>
+
+                    <fx-control ref="flavor" update-event="input">
+                        <label slot="label">input with datalist</label>
+                        <select data-ref="instance('flavors')/flavor" class="widget" selection="open">
+                            <template>
+                                <option value="{.}" >{.}</option>
+                            </template>
+                        </select>
                     </fx-control>
 
                     Selected value is:

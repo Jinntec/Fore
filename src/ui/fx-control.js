@@ -142,9 +142,10 @@ export default class FxControl extends XfAbstractControl {
     });
 
     this.template = this.querySelector('template');
+    // console.log('template',this.template);
+
     this.boundInitialized = false;
     this.static = this.widget.hasAttribute('static')? true:false;
-    // console.log('template',this.template);
   }
 
   _debounce(func, timeout = 300) {
@@ -442,7 +443,22 @@ export default class FxControl extends XfAbstractControl {
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
     this._handleBoundWidget(widget);
+    this._handleDataAttributeBinding();
     Fore.refreshChildren(this, force);
+  }
+
+
+  /**
+   * handle non-Fore elements like 'select' and 'datalist' which have a 'data-ref' attribute
+   * @private
+   */
+  _handleDataAttributeBinding(){
+    const dataRefd = this.querySelector('[data-ref]');
+    if(dataRefd){
+      this.boundList = dataRefd;
+      const ref=dataRefd.getAttribute('data-ref');
+      this._handleBoundWidget(dataRefd);
+    }
   }
 
   /**
@@ -456,16 +472,10 @@ export default class FxControl extends XfAbstractControl {
   _handleBoundWidget(widget) {
     if(this.boundInitialized && this.static) return;
 
-    if (widget && widget.hasAttribute('ref')) {
+    const ref = widget.hasAttribute('ref')?widget.getAttribute('ref'):widget.getAttribute('data-ref');
+    // if (widget && widget.hasAttribute('ref')) {
+    if (widget && ref){
       // ### eval nodeset for list control
-      const ref = widget.getAttribute('ref');
-      /*
-      actually a ref on a select or similar component should point to a different instance
-      with an absolute expr e.g. 'instance('theId')/...'
-
-      todo: even bail out if ref is not absolute?
-       */
-
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
@@ -482,11 +492,14 @@ export default class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      if (this.template) {
+      const template = this.template;
+      if (template) {
+        // ### handle 'selection'  open and insert an empty option in that case
         if(this.widget.nodeName === "SELECT" &&
             this.widget.hasAttribute('selection') &&
             this.widget.getAttribute('selection') === 'open'){
           const firstTemplateChild=this.template.firstElementChild;
+          // todo: create the element which is used in the template  instead of 'option'
           const option = document.createElement('option');
           this.widget.insertBefore(option,firstTemplateChild);
         }
@@ -495,23 +508,11 @@ export default class FxControl extends XfAbstractControl {
           // console.log('nodeset', nodeset);
           const fragment = document.createDocumentFragment();
           // console.time('offscreen');
-/*
           Array.from(nodeset).forEach(node => {
             // console.log('#### node', node);
-            const newEntry = this.createEntry();
-            this.template.parentNode.appendChild(newEntry);
             // ### initialize new entry
-            // ### set value
-            this.updateEntry(newEntry, node);
-          });
-*/
-          // this should actually perform better than the above but does not seem to make a measurable difference.
-          Array.from(nodeset).forEach(node => {
-            // console.log('#### node', node);
             const newEntry = this.createEntry();
             fragment.appendChild(newEntry);
-
-            // ### initialize new entry
             // ### set value
             this.updateEntry(newEntry, node);
           });
@@ -530,8 +531,13 @@ export default class FxControl extends XfAbstractControl {
   updateEntry(newEntry, node) {
     // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
 
-    if (this.widget.nodeName !== 'SELECT') return;
+    // if (this.widget.nodeName !== 'SELECT') return;
     const valueAttribute = this._getValueAttribute(newEntry);
+    if(!valueAttribute) {
+      Fore.dispatch(this,'warn',{message:'no value attribute specified for template entry.'});
+      return;
+    }
+
     const valueExpr = valueAttribute.value;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
     const evaluated = evaluateXPathToString(cutted, node, newEntry);
@@ -544,6 +550,7 @@ export default class FxControl extends XfAbstractControl {
     // ### set label
     const optionLabel = newEntry.textContent;
     const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+    if(!labelExpr) return;
 
     const label = evaluateXPathToString(labelExpr, node, newEntry);
     newEntry.textContent = label;
