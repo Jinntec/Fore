@@ -204,8 +204,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         try {
             const response = await fetch(resolvedUrl, {
                 method: this.method,
+/*
                 mode: 'cors',
                 credentials: 'include',
+*/
                 headers,
                 body: serialized,
             });

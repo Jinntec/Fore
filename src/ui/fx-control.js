@@ -366,8 +366,10 @@ export default class FxControl extends XfAbstractControl {
     try {
       const response = await fetch(this.url, {
         method: 'GET',
+/*
         mode: 'cors',
         credentials: 'include',
+*/
         headers: {
           'Content-Type': 'text/html',
         },
@@ -405,6 +407,7 @@ export default class FxControl extends XfAbstractControl {
           { once: true },
       );
 
+      console.log('sub fore ready')
       const dummy = this.querySelector('input');
       if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
@@ -412,6 +415,7 @@ export default class FxControl extends XfAbstractControl {
       } else {
         dummy.replaceWith(imported);
       }
+
 
 
       if (!theFore) {
@@ -444,7 +448,7 @@ export default class FxControl extends XfAbstractControl {
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
-    this._handleBoundWidget(widget);
+    this._handleBoundChild(widget);
     Fore.refreshChildren(this, force);
   }
 
@@ -456,7 +460,7 @@ export default class FxControl extends XfAbstractControl {
    * @param widget the widget to handle
    * @private
    */
-  _handleBoundWidget(widget) {
+  _handleBoundChild(widget) {
     if(this.boundInitialized && this.static) return;
 
     if (widget && widget.hasAttribute('ref')) {

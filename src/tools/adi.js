@@ -644,7 +644,8 @@ class ADI {
         }
 
         // clicked on normal-node or end-node?
-        if (target.classList.contains('adi-end-node')) {
+        if(!target || target.nodeType === Node.DOCUMENT_NODE) return;
+        if (target && target.classList && target.classList.contains('adi-end-node')) {
             target = target.parentNode.querySelector('.adi-normal-node');
         }
 
