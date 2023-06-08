@@ -157,7 +157,7 @@ export class FxFore extends HTMLElement {
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
-           <jinn-toast id="warn" text="warning" duration="-1" data-class="warning" close="true" position="left" gravity="bottom"></jinn-toast>
+           <jinn-toast id="warn" text="warning" duration="-1" data-class="warning" close="true" position="right" gravity="bottom"></jinn-toast>
            <slot id="default"></slot>
            <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
@@ -847,7 +847,7 @@ export class FxFore extends HTMLElement {
         // this._showMessage('modal', msg);
         const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
         const toast = this.shadowRoot.querySelector('#warn');
-        toast.showToast(`${path}:${msg}`);
+        toast.showToast(`WARN: ${path}:${msg}`);
     }
 
     _logError(e) {

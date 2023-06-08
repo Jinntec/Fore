@@ -345,7 +345,7 @@ export class Fore {
       detail,
     });
     event.listenerPromises = [];
-    console.info('dispatching', event.type, target);
+    // console.info('dispatching', event.type, target);
     // console.log('!!! DISPATCH_START', eventName);
 
     target.dispatchEvent(event);

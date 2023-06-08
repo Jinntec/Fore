@@ -69,6 +69,7 @@ export class FxInstance extends HTMLElement {
       this.type = this.getAttribute('type');
     } else {
       this.type = 'xml';
+      this.setAttribute('type',this.type);
     }
     const style = `
             :host {
@@ -221,8 +222,10 @@ export class FxInstance extends HTMLElement {
     try {
       const response = await fetch(url, {
         method: 'GET',
+/*
         mode: 'cors',
         credentials: 'include',
+*/
         headers: {
           'Content-Type': contentType,
         },

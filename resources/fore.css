@@ -1,5 +1,5 @@
-@import 'toastify.css';
 @import 'vars.css';
+@import 'toastify.css';
 /*@import url('dev.css');*/
 
 html {
@@ -291,4 +291,10 @@ fx-fore.action-log{
     cursor: pointer;
 }
 
+
+/* ### toastify customizations #### */
+
+.toastify.on.warning{
+    background: var(--paper-orange-500);
+}
 

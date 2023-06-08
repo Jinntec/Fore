@@ -29,10 +29,6 @@
     opacity: 1;
 }
 
-.toastify.on.warning{
-    background: var(--paper-orange-500);
-}
-
 .toast-close {
     opacity: 0.8;
     padding: 0 5px;
