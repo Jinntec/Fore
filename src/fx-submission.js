@@ -125,6 +125,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const resolvedUrl = this._evaluateAttributeTemplateExpression(this.url, this);
 
         const instance = this.getInstance();
+        if(!instance){
+            Fore.dispatch(this,'warn',{message:`instance not found ${instance.getAttribute('id')}`})
+        }
+        const instType = instance.getAttribute('type');
         console.log('instance type', instance.type);
 
         let serialized;
@@ -132,8 +136,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             serialized = undefined;
         } else {
             // const relevant = this.selectRelevant(instance.type);
-            const relevant = Relevance.selectRelevant(this, instance.type);
-            serialized = this._serialize(instance.type, relevant);
+            const relevant = Relevance.selectRelevant(this, instType);
+            serialized = this._serialize(instType, relevant);
         }
 
         // let serialized = serializer.serializeToString(relevant);
@@ -240,10 +244,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     _parse(serialized, instance) {
         let data = null;
-        if (serialized && instance.type === 'xml') {
+        if (serialized && instance.getAttribute('type') === 'xml') {
             data = new DOMParser().parseFromString(serialized, 'application/xml');
         }
-        if (serialized && instance.type === 'json') {
+        if (serialized && instance.getAttribute('type') === 'json') {
             data = JSON.parse(serialized);
         }
         return data;

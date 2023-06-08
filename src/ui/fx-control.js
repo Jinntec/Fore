@@ -207,7 +207,13 @@ export default class FxControl extends XfAbstractControl {
 
   _replaceNode(node) {
     // Note: clone the node while replacing to prevent the instances to leak through
-    this.modelItem.node.replaceWith(node.cloneNode(true));
+    if(node.nodeType === Node.ATTRIBUTE_NODE){
+      this.modelItem.node.nodeValue = node.nodeValue;
+    } else if(node.nodeType === Node.ELEMENT_NODE){
+      this.modelItem.node.replaceWith(node.cloneNode(true));
+    } else(
+        Fore.dispatch(this,"warn",{'message':'trying to replace a node that is neither an Attribute or Elmment'})
+    )
     this.getOwnerForm().refresh();
   }
 
@@ -534,7 +540,7 @@ export default class FxControl extends XfAbstractControl {
     // if (this.widget.nodeName !== 'SELECT') return;
     const valueAttribute = this._getValueAttribute(newEntry);
     if(!valueAttribute) {
-      Fore.dispatch(this,'warn',{message:'no value attribute specified for template entry.'});
+      // Fore.dispatch(this,'warn',{message:'no value attribute specified for template entry.'});
       return;
     }
 
@@ -552,7 +558,7 @@ export default class FxControl extends XfAbstractControl {
     const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
     if(!labelExpr) return;
 
-    const label = evaluateXPathToString(labelExpr, node, newEntry);
+    const label = evaluateXPathToString(labelExpr, node, this);
     newEntry.textContent = label;
     //  ### <<< needs rework
   }

@@ -455,7 +455,11 @@ export class FxModel extends HTMLElement {
         // console.log('instances array ',Array.from(this.instances));
 
         const instArray = Array.from(this.instances);
-        return instArray.find(inst => inst.id === id);
+        const found = instArray.find(inst => inst.id === id);
+        if(!found){
+            return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+        }
+        return found;
     }
 
     evalBinding(bindingExpr) {

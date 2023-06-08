@@ -369,7 +369,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             this.needsUpdate &&
             (FxFore.outermostHandler === this || !FxFore.outermostHandler)
         ) {
-            // console.log('running actionperformed for outermostHandler', this);
+            console.log('running update cycle for outermostHandler', this);
             model.recalculate();
             model.revalidate();
             model.parentNode.refresh(true);
