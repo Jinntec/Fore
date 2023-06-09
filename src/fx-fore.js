@@ -222,6 +222,8 @@ export class FxFore extends HTMLElement {
             return;
         }
 
+        this._injectDevtools();
+
         const slot = this.shadowRoot.querySelector('slot#default');
         slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
@@ -268,6 +270,14 @@ export class FxFore extends HTMLElement {
         });
     }
 
+    _injectDevtools(){
+        const search = window.location.search;
+        const urlParams = new URLSearchParams(search);
+        if(urlParams.has('inspect')){
+            const devtools = document.createElement('fx-devtools');
+            document.body.appendChild(devtools);
+        }
+    }
     addToRefresh(modelItem) {
         const found = this.toRefresh.find(mi => mi.path === modelItem.path);
         if (!found) {
@@ -318,6 +328,12 @@ export class FxFore extends HTMLElement {
                     });
                 }
                 theFore.setAttribute('from-src', this.src);
+                const thisAttrs = this.attributes;
+                Array.from(thisAttrs).forEach(attr =>{
+                    if(attr.name !== 'src'){
+                        theFore.setAttribute(attr.name,attr.value);
+                    }
+                });
                 this.replaceWith(theFore);
             })
             .catch(() => {
@@ -334,7 +350,7 @@ export class FxFore extends HTMLElement {
      * @param observer
      */
     handleIntersect(entries, observer) {
-        console.time('refreshLazy');
+        // console.time('refreshLazy');
 
         entries.forEach(entry => {
             const {target} = entry;
@@ -343,7 +359,7 @@ export class FxFore extends HTMLElement {
             if(fore.initialRun) return;
 
             if (entry.isIntersecting) {
-                console.log('in view', entry);
+                // console.log('in view', entry);
                 // console.log('repeat in view entry', entry.target);
                 // const target = entry.target;
                 // if(target.hasAttribute('refresh-on-view')){
@@ -352,17 +368,17 @@ export class FxFore extends HTMLElement {
 
                 // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
                 if (typeof target.refresh === 'function') {
-                    console.log('refreshing target', target);
+                    // console.log('refreshing target', target);
                     target.refresh(target, true);
                 } else {
-                    console.log('refreshing children', target);
+                    // console.log('refreshing children', target);
                     Fore.refreshChildren(target, true);
                 }
             }
         });
         entries[0].target.getOwnerForm().dispatchEvent(new CustomEvent('refresh-done'));
 
-        console.timeEnd('refreshLazy');
+        // console.timeEnd('refreshLazy');
     }
 
     evaluateToNodes(xpath, context) {
@@ -388,8 +404,8 @@ export class FxFore extends HTMLElement {
      *
      */
     async forceRefresh() {
-        console.time('refresh');
-        console.group('### forced refresh', this);
+        // console.time('refresh');
+        // console.group('### forced refresh', this);
 
         Fore.refreshChildren(this, true);
         this._updateTemplateExpressions();
@@ -397,23 +413,16 @@ export class FxFore extends HTMLElement {
         this._processTemplateExpressions();
         Fore.dispatch(this, 'refresh-done', {});
 
-        console.groupEnd();
-        console.timeEnd('refresh');
+        // console.groupEnd();
+        // console.timeEnd('refresh');
     }
 
     async refresh(force) {
         // refresh () {
-        console.info('%crefresh','font-style: italic; background: #8bc34a; color:white; padding:0.3rem 5rem 0.3rem 0.3rem; display:block; width:100%;');
-        console.group('refresh', force);
-
-        console.time('refresh');
-
         // ### refresh Fore UI elements
-        // console.time('refreshChildren');
-
         // if (!this.initialRun && this.toRefresh.length !== 0) {
         if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-            console.log('toRefresh', this.toRefresh);
+            // console.log('toRefresh', this.toRefresh);
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
@@ -446,9 +455,11 @@ export class FxFore extends HTMLElement {
                 }
             });
             this.toRefresh = [];
+/*
             if (!needsRefresh) {
                 console.log('no dependants to refresh');
             }
+*/
         } else {
             // ### resetting visited state for controls to refresh
 /*
@@ -469,9 +480,6 @@ export class FxFore extends HTMLElement {
         }
         this._processTemplateExpressions();
 
-        console.timeEnd('refresh');
-
-        console.groupEnd();
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
@@ -550,10 +558,9 @@ export class FxFore extends HTMLElement {
     }
 
     /**
-     * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
-     * @param input The string to parse for expressions
+     * evaluate a template expression on a node either text- or attribute node.
+     * @param expr The string to parse for expressions
      * @param node the node which will get updated with evaluation result
-     * @param form the form element
      */
     evaluateTemplateExpression(expr, node) {
         const replaced = expr.replace(/{[^}]*}/g, match => {
@@ -578,7 +585,7 @@ export class FxFore extends HTMLElement {
 			try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable expr', error);
+                console.warn('ignoring unparseable expr', error);
 
                 return match;
             }
@@ -623,21 +630,17 @@ export class FxFore extends HTMLElement {
                 window.addEventListener('beforeunload', event => {
                     const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
-                        console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                    console.log('do not display confirmation')
                 })
             }else{
                 window.addEventListener('beforeunload', event => {
                     // if(AbstractAction.dataChanged){
                     if(FxModel.dataChanged){
-                        console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                    console.log('do not display confirmation')
                 })
             }
         }
@@ -655,7 +658,7 @@ export class FxFore extends HTMLElement {
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
         if (model.instances.length === 0) {
-            console.log('### lazy creation of instance');
+            // console.log('### lazy creation of instance');
             const generatedInstance = document.createElement('fx-instance');
             model.appendChild(generatedInstance);
 
@@ -664,7 +667,7 @@ export class FxFore extends HTMLElement {
             this._generateInstance(this, generated.firstElementChild);
             generatedInstance.instanceData = generated;
             model.instances.push(generatedInstance);
-            console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
+            // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
         }
     }
 
@@ -677,11 +680,9 @@ export class FxFore extends HTMLElement {
             const ref = start.getAttribute('ref');
 
             if (ref.includes('/')) {
-                console.log('complex path to create ', ref);
+                // console.log('complex path to create ', ref);
                 const steps = ref.split('/');
                 steps.forEach(step => {
-                    console.log('step ', step);
-
                     // const generated = document.createElement(ref);
                     parent = this._generateNode(parent, step, start);
                 });
@@ -761,7 +762,7 @@ export class FxFore extends HTMLElement {
      * @private
      */
     async _initUI() {
-        console.log('### _initUI()');
+        // console.log('### _initUI()');
         if (!this.initialRun) return;
         this.classList.add('initialRun');
         await this._lazyCreateInstance();
@@ -797,12 +798,8 @@ export class FxFore extends HTMLElement {
         // console.log('### >>>>> dispatching ready >>>>>', this);
         // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
-        console.info(
-            `%cPage Initialization done`,
-            "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
-        );
+        // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
-        console.log('dataChanged', FxModel.dataChanged);
     }
 
     registerLazyElement(element) {
@@ -864,7 +861,7 @@ export class FxFore extends HTMLElement {
 
         const path = document.createElement('div');
         const pathExpr = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
-        console.log('pathExpr',pathExpr)
+        // console.log('pathExpr',pathExpr)
         path.textContent = pathExpr;
         div.appendChild(path);
 
