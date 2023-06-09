@@ -146,6 +146,30 @@ export const foreElementMixin = superclass =>
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
 
+    /**
+     * resolves template expressions for a single attribute
+     * @param expr an attribute value containing curly brackets containing XPath expressions to evaluate
+     * @param node the attribute node used for scoped resolution
+     * @returns {*}
+     * @private
+     */
+    evaluateAttributeTemplateExpression(expr, node) {
+      const matches = expr.match(/{[^}]*}/g);
+      if (matches) {
+        matches.forEach(match => {
+          // console.log('match ', match);
+          const naked = match.substring(1, match.length - 1);
+          const inscope = getInScopeContext(node, naked);
+          const result = evaluateXPathToString(naked, inscope, this);
+          const replaced = expr.replaceAll(match, result);
+          // console.log('replacing ', expr, ' with ', replaced);
+          expr = replaced;
+        });
+      }
+      return expr;
+    }
+
+
     isNotBound() {
       return !this.hasAttribute('ref');
     }

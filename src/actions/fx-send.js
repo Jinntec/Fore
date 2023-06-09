@@ -13,6 +13,7 @@ class FxSend extends AbstractAction {
   constructor() {
     super();
     this.value = '';
+    this.url = null;
   }
 
   connectedCallback() {
@@ -20,6 +21,7 @@ class FxSend extends AbstractAction {
     super.connectedCallback();
     // console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');
+    this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
   }
 
   async perform() {
@@ -57,8 +59,13 @@ class FxSend extends AbstractAction {
 
       // throw new Error(`submission with id: ${this.submission} not found`);
     }
+
+    if(this.url){
+      const resolved = this.evaluateAttributeTemplateExpression(this.url,this);
+      submission.parameters.set('url',resolved);
+    }
     console.log('submission', submission);
-      await submission.submit();
+    await submission.submit();
 /*
     if(submission.replace === 'instance'){
       this.getModel().updateModel();

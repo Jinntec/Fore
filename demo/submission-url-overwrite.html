@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Overwriting Url with Send</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+            h2{
+                color:inherit;
+            }
+
+            a,a:link,a:visited{
+                color: blue;
+            }
+            input{
+                width: 100%;
+            }
+            fx-output{
+                display: block;
+            }
+        </style>
+    </custom-style>
+
+</head>
+<body>
+<div class="wrapper">
+    <h1>Overwriting Submission Url with <code>fx-send</code> action</h1>
+    <p>
+        Sometimes you want to set a value to use in a submission URL somewhere in context of your UI. This requires you to create
+        a data node somewhere, set it's value in context of the UI and then use that on your submission URL. This may lead to redundant and repetitive
+        markup.
+    </p>
+
+    <h2><code>fx-send</code> with <code>url</code></h2>
+
+    <p>To simplify such scenarios you can specify the url on the <code>fx-send</code> action allowing
+    inscope values to modify the submission URL.</p>
+
+    <p>The control in the example below has a send action attached to it <code>value-changed</code> event. It
+    passes the URL to the submission 'sub1' </p>
+
+    <p>Intially the submission has an empty Url. Once you change the value of the control and hit Enter the send
+    action will evaluate the <code>url</code> attributes value inscope.</p>
+
+    <p>If you had given 'hello' as a message this resolves to:</p>
+    <code>
+        #echo?message=hello
+    </code>
+
+    <div class="note">
+        The send action will overwrite the Url just once for its execution. The original <code>url</code> attribute
+        on <code>fx-submission</code> stays untouched meaning that later executions will use its original Url
+        unless overwritten again.
+    </div>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-setfocus control="message" event="ready"></fx-setfocus>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <message></message>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="response">
+                        <data></data>
+                    </fx-instance>
+
+                    <fx-submission id="sub1"
+                                   url=""
+                                   method="post"
+                                   replace="instance"
+                                   instance="response">
+                    </fx-submission>
+                </fx-model>
+
+                <fx-control id="message" ref="message" update-event="enter">
+                    <label>Message</label>
+                    <input placeholder="please type a message and press Enter">
+                    <fx-send event="value-changed" submission="sub1" url="#echo?message={.}"></fx-send>
+                </fx-control>
+
+                <fx-output ref="instance('response')/message">
+                    <label slot="label">Response</label>
+                </fx-output>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
