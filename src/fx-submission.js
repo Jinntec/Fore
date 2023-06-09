@@ -3,6 +3,7 @@ import {Relevance} from './relevance.js';
 import {foreElementMixin} from './ForeElementMixin.js';
 import {evaluateXPathToString, evaluateXPath} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {XPathUtil} from "./xpath-util.js";
 
 /**
  * todo: validate='false'

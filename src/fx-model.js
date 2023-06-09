@@ -6,7 +6,13 @@ import {evaluateXPath, evaluateXPathToBoolean} from './xpath-evaluation.js';
 import {XPathUtil} from './xpath-util.js';
 
 /**
- * @ts-check
+ * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
+ * as required.
+ *
+ * The model is updatin by executing rebuild (as needed), recalculate and revalidate in turn.
+ *
+ * After the cycle is run all modelItems have updated their stete to reflect latest computations.
+ *
  */
 export class FxModel extends HTMLElement {
     static dataChanged = false;
@@ -103,7 +109,6 @@ export class FxModel extends HTMLElement {
         // console.time('instance-loading');
         const instances = this.querySelectorAll('fx-instance');
         if (instances.length > 0) {
-            console.group('init instances');
             const promises = [];
             instances.forEach(instance => {
                 promises.push(instance.init());
@@ -119,7 +124,6 @@ export class FxModel extends HTMLElement {
             await Fore.dispatch(this, 'model-construct-done', {model: this});
             this.inited = true;
             this.updateModel();
-            console.groupEnd();
         } else {
             // ### if there's no instance one will created
             await this.dispatchEvent(
@@ -145,17 +149,20 @@ export class FxModel extends HTMLElement {
     updateModel() {
         // console.time('updateModel');
         this.rebuild();
+/*
         if (this.skipUpdate){
             console.info('%crecalculate/revalidate skipped - no bindings', 'font-style: italic; background: #90a4ae; color:lightgrey; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
             return;
         }
+*/
         this.recalculate();
         this.revalidate();
+        console.log('updateModel finished with modelItems ', this.modelItems);
+
         // console.timeEnd('updateModel');
     }
 
     rebuild() {
-        console.info('%crebuild', 'font-style: italic; background: #90a4ae; color:white; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
         this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
         this.modelItems = [];
 
@@ -171,7 +178,7 @@ export class FxModel extends HTMLElement {
             bind.init(this);
         });
 
-        console.log(`mainGraph`, this.mainGraph);
+        // console.log(`mainGraph`, this.mainGraph);
         // console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
 
         // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
@@ -188,17 +195,13 @@ export class FxModel extends HTMLElement {
      * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
      */
     recalculate() {
-        console.info('%crecalculate', 'font-style: italic; background: #90a4ae; color:white; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
-
         if (!this.mainGraph) {
             return;
         }
 
-        console.group('### recalculate');
-        console.log('changed nodes ', this.changed);
+        // console.log('changed nodes ', this.changed);
 
 
-        console.time('recalculate');
         this.computes = 0;
 
         this.subgraph = new DepGraph(false);
@@ -246,22 +249,16 @@ export class FxModel extends HTMLElement {
             const toRefresh = [...this.changed];
             this.formElement.toRefresh = toRefresh;
             this.changed = [];
-            console.log('subgraph', this.subgraph);
-            this.dispatchEvent(
-                new CustomEvent('recalculate-done', {detail: {subgraph: this.subgraph}}),
-            );
+            Fore.dispatch(this,'recalculate-done',{graph:this.subgraph})
         } else {
             const v = this.mainGraph.overallOrder(false);
             v.forEach(path => {
                 const node = this.mainGraph.getNodeData(path);
                 this.compute(node, path);
             });
+            Fore.dispatch(this,'recalculate-done',{graph:this.mainGraph})
         }
-        console.log(`recalculated ${this.computes} modelItems`);
-
-        console.timeEnd('recalculate');
-        console.log('recalculate finished with modelItems ', this.modelItems);
-        console.groupEnd();
+        // console.log('recalculate finished with modelItems ', this.modelItems);
     }
 
     /*
@@ -363,11 +360,9 @@ export class FxModel extends HTMLElement {
      *
      */
     revalidate() {
-        console.info('%crevalidate', 'font-style: italic; background: #90a4ae; color:white; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
 
         if (this.modelItems.length === 0) return true;
 
-        console.group('### revalidate');
         console.time('revalidate');
 
         // reset submission validation
@@ -400,7 +395,7 @@ export class FxModel extends HTMLElement {
                         modelItem.required = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!modelItem.node.textContent) {
-                            console.log('modelItem required check failed: ');
+                            // console.log('modelItem required check failed: ');
                             valid = false;
                         }
                         // if (!compute) valid = false;
@@ -417,10 +412,14 @@ export class FxModel extends HTMLElement {
                 }
             }
         });
-        console.timeEnd('revalidate');
-        console.log('modelItems after revalidate: ', this.modelItems);
-        console.groupEnd();
+        // console.log('modelItems after revalidate: ', this.modelItems);
         return valid;
+    }
+
+    addChanged(modelItem){
+        if(this.inited){
+            this.changed.push(modelItem);
+        }
     }
 
     /**

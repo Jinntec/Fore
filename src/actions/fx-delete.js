@@ -1,7 +1,8 @@
+import * as fx from "fontoxpath";
 import {AbstractAction} from './abstract-action.js';
 import {Fore} from '../fore.js';
-import {evaluateXPathToNodes} from "../xpath-evaluation.js";
-import {XPathUtil} from "../xpath-util";
+import {evaluateXPathToNodes, evaluateXPathToString} from "../xpath-evaluation.js";
+import {XPathUtil} from "../xpath-util.js";
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -13,8 +14,13 @@ import getInScopeContext from '../getInScopeContext.js';
  * @demo demo/todo.html
  */
 class FxDelete extends AbstractAction {
-    constructor() {
-        super();
+    static get properties() {
+        return {
+            ...super.properties,
+            ref: {
+                type: String,
+            },
+        };
     }
 
     /**
@@ -23,13 +29,30 @@ class FxDelete extends AbstractAction {
      * Will NOT perform delete if nodeset is pointing to document node, document fragment, root node or being readonly.
      */
     async perform() {
-        console.log('##### fx-delete executing...');
+
         const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
 
-        console.log('delete nodeset ', this.nodeset);
+        // console.log('delete nodeset ', this.nodeset);
+
+        const instanceId = XPathUtil.resolveInstance(this);
+        const instance = this.getModel().getInstance(instanceId);
+
+        // const path = instance && this.nodeset.length !== 0 ? evaluateXPathToString('path()', this.nodeset[0], instance) : '';
+
+        const path = Fore.getDomNodeIndexString(this.nodeset);
 
         const nodesToDelete = this.nodeset;
+
+        this.dispatchEvent(
+            new CustomEvent('execute-action', {
+                composed: true,
+                bubbles: true,
+                cancelable:true,
+                detail: { action: this, event:this.event, path:path},
+            }),
+        );
+
         let parent;
         if (Array.isArray(nodesToDelete)) {
             if(nodesToDelete.length === 0) return;
@@ -42,9 +65,8 @@ class FxDelete extends AbstractAction {
             this._deleteNode(parent, nodesToDelete);
         }
 
-        const instanceId = XPathUtil.resolveInstance(this);
-        const instance = this.getModel().getInstance(instanceId);
-        Fore.dispatch(instance, 'deleted', {deletedNodes:nodesToDelete});
+
+        await Fore.dispatch(instance, 'deleted', {ref:path,deletedNodes:nodesToDelete});
         this.needsUpdate = true;
     }
 

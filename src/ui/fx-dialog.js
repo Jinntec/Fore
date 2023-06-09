@@ -40,10 +40,12 @@ export class FxDialog extends HTMLElement {
       });
     }
 
+/*
     this.addEventListener('transitionend', () => {
       console.log('transitionend');
       // this.style.display = 'none';
     });
+*/
 
     this.focus();
   }

@@ -1,7 +1,12 @@
-import getInScopeContext from "./getInScopeContext";
-import {evaluateXPathToString} from "./xpath-evaluation";
+import getInScopeContext from "./getInScopeContext.js";
+import {evaluateXPathToString} from "./xpath-evaluation.js";
 import { XPathUtil } from "./xpath-util.js";
 
+/**
+ * Class hosting common utility functions used throughout all fore elements
+ *
+ * @example ../doc/demo.html
+ */
 export class Fore {
   static READONLY_DEFAULT = false;
 
@@ -12,6 +17,24 @@ export class Fore {
   static CONSTRAINT_DEFAULT = true;
 
   static TYPE_DEFAULT = 'xs:string';
+
+  static getDomNodeIndexString(node) {
+    const indexes = [];
+    let currentNode = node;
+
+    while (currentNode && currentNode.parentNode) {
+      const parent = currentNode.parentNode;
+      if (parent.childNodes && parent.childNodes.length > 0) {
+        const index = [...parent.childNodes].indexOf(currentNode);
+        indexes.unshift(index);
+      }
+      currentNode = parent;
+    }
+
+    return indexes.join('.');
+  }
+
+
 
   /**
    * returns the next `fx-fore` element upwards in tree
@@ -345,8 +368,6 @@ export class Fore {
       detail,
     });
     event.listenerPromises = [];
-    // console.info('dispatching', event.type, target);
-    // console.log('!!! DISPATCH_START', eventName);
 
     target.dispatchEvent(event);
 
@@ -406,7 +427,7 @@ export class Fore {
   }
 
   static async loadForeFromUrl(hostElement, url) {
-    console.log('########## loading Fore from ', this.src, '##########');
+    // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -446,7 +467,7 @@ export class Fore {
         imported.addEventListener(
             'model-construct-done',
             e => {
-              console.log('subcomponent ready', e.target);
+              // console.log('subcomponent ready', e.target);
               const defaultInst = imported.querySelector('fx-instance');
               // console.log('defaultInst', defaultInst);
               if(hostElement.initialNode){
@@ -471,7 +492,7 @@ export class Fore {
           dummy.parentNode.removeChild(dummy);
           hostElement.shadowRoot.appendChild(imported);
         } else {
-          console.log(this, 'replacing widget with',theFore);
+          // console.log(this, 'replacing widget with',theFore);
           dummy.replaceWith(imported);
           // this.appendChild(imported);
         }

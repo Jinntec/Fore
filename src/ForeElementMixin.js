@@ -6,6 +6,7 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {Fore} from './fore.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -136,6 +137,7 @@ export const foreElementMixin = superclass =>
         this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+        if(!inscopeContext) return;
         const { nodeType } = inscopeContext;
         if (nodeType) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);

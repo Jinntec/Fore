@@ -22,7 +22,6 @@ export class FxReturn extends AbstractAction {
 
   async perform() {
     super.perform();
-    console.log('performing return with nodes', this.nodeset);
 
     /*
     ### note that this event does not use Fore.dispatch as the event uses 'composed:true' to let the event travel

@@ -1,6 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
-import {evaluateXPathToString} from "../xpath-evaluation";
-import {Fore} from "../fore";
+import {evaluateXPathToString} from "../xpath-evaluation.js";
+import {Fore} from "../fore.js";
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -16,10 +16,24 @@ class FxMessage extends AbstractAction {
     this.attachShadow({ mode: 'open' });
   }
 
+	static get properties () {
+		return {
+			...AbstractAction.properties,
+			modelItem:undefined,
+			messageTextContent: {
+				type: String,
+				get value() {
+					return "here!";
+				}
+			}
+		};
+	}
+
   connectedCallback() {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
+    this.message = '';
 
 	this.messageTextContent = this.textContent;
     const style = `
@@ -51,19 +65,18 @@ class FxMessage extends AbstractAction {
 
   async perform() {
     super.perform();
-    let message;
     if (this.hasAttribute('value')) {
-      message = this._getValue();
+      this.message = this._getValue();
     } else {
 		this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
-      message = this.textContent;
+      this.message = this.textContent;
     }
 
     this.dispatchEvent(
       new CustomEvent('message', {
         composed: false,
         bubbles: true,
-        detail: { level: this.level, message },
+        detail: { level: this.level, message:this.message },
       }),
     );
   }

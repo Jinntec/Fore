@@ -252,9 +252,6 @@ export class FxFore extends HTMLElement {
                     "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
 
-                if (this.src) {
-                    console.log('########## FORE: loaded from ... ', this.src, '##########');
-                }
                 await modelElement.modelConstruct();
 				this._handleModelConstructDone();
             }
@@ -265,7 +262,6 @@ export class FxFore extends HTMLElement {
 
         });
         this.addEventListener('path-mutated', () => {
-            // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
     }
@@ -292,7 +288,7 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _loadFromSrc() {
-        console.log('########## loading Fore from ', this.src, '##########');
+        // console.log('########## loading Fore from ', this.src, '##########');
         fetch(this.src, {
             method: 'GET',
             mode: 'cors',

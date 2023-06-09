@@ -15,6 +15,7 @@ import { resolveId } from '../xpath-evaluation.js';
 class FxAppend extends AbstractAction {
   static get properties() {
     return {
+	  ...AbstractAction.properties,
       ref: {
         type: String,
       },
@@ -37,7 +38,6 @@ class FxAppend extends AbstractAction {
 
   connectedCallback() {
     super.connectedCallback();
-    console.log('connectedCallback ', this);
     this.ref = this.getAttribute('ref');
     this.repeat = this.getAttribute('repeat');
     // this.repeated = this.closest('fx-repeatitem');
@@ -120,7 +120,6 @@ class FxAppend extends AbstractAction {
    */
   _dispatch() {
     const targetRepeat = resolveId(this.repeat, this);
-    console.log('dispatching index change ', targetRepeat.nodeset.length);
     Fore.dispatch(targetRepeat, 'index-changed', { index: targetRepeat.nodeset.length });
   }
 

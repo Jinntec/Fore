@@ -8,7 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import {ModelItem} from "../modelitem.js";
 import {debounce} from "../events.js";
-import {FxModel} from "../fx-model";
+import {FxModel} from "../fx-model.js";
 
 const WIDGETCLASS = 'widget';
 
@@ -39,6 +39,15 @@ export default class FxControl extends XfAbstractControl {
     this.inited = false;
     this.attachShadow({ mode: 'open' });
   }
+
+	static get properties() {
+		return {
+			...XfAbstractControl.properties,
+			initial: {
+				type: Boolean
+			}
+		};
+	}
 
   connectedCallback() {
     this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
@@ -103,20 +112,20 @@ export default class FxControl extends XfAbstractControl {
         }, this.debounceDelay),
       );
     } else {
-      listenOn.addEventListener(this.updateEvent, () => {
-        // console.info('handling Event:', event.type, listenOn);
+      listenOn.addEventListener(this.updateEvent, (event) => {
         this.setValue(this.widget[this.valueProp]);
       });
     }
 
     this.addEventListener('return', e => {
-      console.log('catched return action on ', this);
-      console.log('return detail', e.detail);
+      // console.log('catched return action on ', this);
+      // console.log('return detail', e.detail);
 
-      console.log('return triggered on ', this);
-      console.log('this.ref', this.ref);
-      console.log('current outer instance', this.getInstance());
+      // console.log('return triggered on ', this);
+      // console.log('this.ref', this.ref);
+      // console.log('current outer instance', this.getInstance());
 
+/*
       console.log(
         '???? why ???? current nodeset should point to the node of the outer control',
         e.currentTarget.nodeset,
@@ -125,10 +134,11 @@ export default class FxControl extends XfAbstractControl {
         '???? why ???? current nodeset should point to the node of the outer control',
         this.nodeset,
       );
+*/
       const newNodes = e.detail.nodeset;
-      console.log('new nodeset', newNodes);
-      console.log('currentTarget', e.currentTarget);
-      console.log('target', e.target);
+      // console.log('new nodeset', newNodes);
+      // console.log('currentTarget', e.currentTarget);
+      // console.log('target', e.target);
 
       e.stopPropagation();
 
@@ -142,10 +152,9 @@ export default class FxControl extends XfAbstractControl {
     });
 
     this.template = this.querySelector('template');
-    // console.log('template',this.template);
-
     this.boundInitialized = false;
-    this.static = this.widget.hasAttribute('static')? true:false;
+    this.static = !!this.widget.hasAttribute('static');
+    // console.log('template',this.template);
   }
 
   _debounce(func, timeout = 300) {
@@ -295,7 +304,7 @@ export default class FxControl extends XfAbstractControl {
         const oldVal = this.nodeset;
         if (widget.value) {
           if (oldVal !== this.widget.value) {
-            console.log('changed');
+            // console.log('changed');
             widget.value = this.nodeset.cloneNode(true);
             return;
           }
@@ -316,7 +325,7 @@ export default class FxControl extends XfAbstractControl {
 
       if (this.initial) {
         this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
-        console.log('initialNodes', this.initialNode);
+        // console.log('initialNodes', this.initialNode);
       }
 
       // ### load the markup from Url
@@ -352,23 +361,24 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   async _loadForeFromUrl() {
-    console.log('########## loading Fore from ', this.url, '##########');
     console.info(
         `%cFore is processing URL ${this.url}`,
-        "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+        "background:#64b5f6; color:white; padding:0.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
     );
     try {
       const response = await fetch(this.url, {
         method: 'GET',
+/*
         mode: 'cors',
         credentials: 'include',
+*/
         headers: {
           'Content-Type': 'text/html',
         },
       });
 
       const responseContentType = response.headers.get('content-type').toLowerCase();
-      console.log('********** responseContentType *********', responseContentType);
+      // console.log('********** responseContentType *********', responseContentType);
       let data;
       if (responseContentType.startsWith('text/html')) {
         data = await response.text().then(result =>
@@ -382,24 +392,17 @@ export default class FxControl extends XfAbstractControl {
       const theFore = data.querySelector('fx-fore');
       const imported = document.importNode(theFore,true);
 
-      // console.log('thefore', theFore)
       imported.classList.add('widget'); // is the new widget
-      console.log(`########## loaded fore as component ##### ${this.url}`);
       imported.addEventListener(
           'model-construct-done',
           e => {
-            console.log('subcomponent ready', e.target);
             const defaultInst = imported.querySelector('fx-instance');
-            // console.log('defaultInst', defaultInst);
             if(this.initialNode){
               const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
               // Note: Clone the input to prevent the inner fore from editing the outer node
               doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-              // defaultinst.setInstanceData(this.initialNode);
               defaultInst.setInstanceData(doc);
             }
-            // console.log('new data', defaultInst.getInstanceData());
-            // theFore.getModel().modelConstruct();
             imported.getModel().updateModel();
             imported.refresh();
           },
@@ -411,9 +414,7 @@ export default class FxControl extends XfAbstractControl {
         dummy.parentNode.removeChild(dummy);
         this.shadowRoot.appendChild(imported);
       } else {
-        console.log(this, 'replacing widget with',theFore);
         dummy.replaceWith(imported);
-        // this.appendChild(imported);
       }
 
 
@@ -426,10 +427,9 @@ export default class FxControl extends XfAbstractControl {
           }),
         );
       }
-      console.log('loaded');
       this.dispatchEvent(new CustomEvent('loaded', { detail: { fore: theFore } }));
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       this.getOwnerForm().dispatchEvent(
         new CustomEvent('error', { detail: { message: `${this.url} not found` } }),
       );
