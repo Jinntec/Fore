@@ -672,7 +672,7 @@ class ADI {
 
 		if (selected && typeof selected.getModelItem === 'function' && selected.getModelItem()?.node) {
 			let selectedElement = selected.modelItem.node;
-			if (selectedElement.nodeType === Node.ATTRIBUTE_NODE) {
+			if (selectedElement?.nodeType === Node.ATTRIBUTE_NODE) {
 				selectedElement = selectedElement.ownerElement;
 			}
 			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
@@ -714,6 +714,10 @@ class ADI {
 
 		if (!this.document.contains(target)) {
 			// Targetted at somewhere else!!!
+			return;
+		}
+		if (target.nodeType === Node.DOCUMENT_NODE) {
+			// Targetted at the document node. Nothing to highlight
 			return;
 		}
 
