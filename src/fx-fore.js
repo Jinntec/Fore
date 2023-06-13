@@ -267,6 +267,11 @@ export class FxFore extends HTMLElement {
     }
 
     _injectDevtools(){
+		if (this.ownerDocument.querySelector('fx-devtools')) {
+			// There's already a devtools, so we can ignore this one.
+			// One devtools can focus multiple fore elements
+			return;
+		}
         const search = window.location.search;
         const urlParams = new URLSearchParams(search);
         if(urlParams.has('inspect')){
