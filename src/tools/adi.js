@@ -16,7 +16,7 @@ function isAttributeShown(name) {
 }
 
 class ADI {
-    constructor(rootElement, instanceId) {
+    constructor(rootElement, instance) {
 		this.sourceNodeByInspectorNodeLookup = new Map();
 
         this.uiView = null;
@@ -49,12 +49,12 @@ class ADI {
             nodeTypes: [Node.ELEMENT_NODE, Node.TEXT_NODE, Node.COMMENT_NODE, Node.DOCUMENT_NODE],
         };
 
-        this.instanceId = instanceId;
-        if (this.instanceId === '#document') {
+        if (instance === '#document') {
+			this.instanceId = '#document';
             this.document = window.document;
             this.isInstanceViewer = false;
         } else {
-            const instance = window.document.querySelector(`#${this.instanceId}`);
+			this.instanceId = instance.id;
             if (!instance || instance.localName !== 'fx-instance') {
                 console.error('No instance found!');
             }
@@ -67,7 +67,7 @@ class ADI {
 
 		// We're updating here, but we're doing that again later, when the UI is read (the 'ready' event fires)
         this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
-        document.addEventListener('execute-action', e => this.processExecuteAction)
+        document.addEventListener('execute-action', e => this.processExecuteAction);
     }
 
     // Returns selected element or null
@@ -675,8 +675,9 @@ class ADI {
 			if (selectedElement?.nodeType === Node.ATTRIBUTE_NODE) {
 				selectedElement = selectedElement.ownerElement;
 			}
-			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
+			// window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
 		}
+			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selected}}));
     }
 
 
@@ -932,8 +933,6 @@ class ADI {
             },
             false,
         );
-
-        document.addEventListener('focus',event => this.handleActive(event),{capture:true});
 
         document.addEventListener('mousemove', event => this.verticalResize(event), false);
         document.addEventListener('mousemove', event => this.horizontalResize(event), false)

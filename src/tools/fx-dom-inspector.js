@@ -5,17 +5,21 @@ export class FxDomInspector extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.instanceName = null;
+        this.instance = null;
     }
 
     connectedCallback() {
-        this.instanceName = this.getAttribute('instance');
         this.render();
-		if (this.instanceName) {
+		if (this.instance) {
 			this.shadowRoot.querySelector('#focus-button').style = 'display: none';
 		} else {
 			this.setupFocusButton();
 		}
     }
+
+	setInstance(instance) {
+		this.instance = instance;
+	}
 
     disconnectedCallback(){
         this.adiInstance = null;
@@ -577,7 +581,7 @@ export class FxDomInspector extends HTMLElement {
         const inst = this.hasAttribute('instance') ?
 		  this.getAttribute('instance') :
 		  '#document';
-        this.adiInstance = new ADI(this.shadowRoot, inst);
+        this.adiInstance = new ADI(this.shadowRoot, this.hasAttribute('instance') ? this.instance : '#document');
     }
 
     verticalResize(e) {

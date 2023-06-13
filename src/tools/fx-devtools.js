@@ -53,6 +53,9 @@ export class FxDevtools extends HTMLElement {
                 this.buttonByInstanceId.set(instance.id, btn);
                 btn.addEventListener('click', () => this.selectInstance(instance.id));
             });
+			if (!this.instances.length) {
+				return;
+			}
             this.selectInstance(this.instances[0].id);
         };
 
@@ -73,7 +76,7 @@ export class FxDevtools extends HTMLElement {
 
 			// Note that the event target or srcElement may be the document node.
             const closestFore = target.nodeType === Node.DOCUMENT_NODE ? null : target.closest('fx-fore');
-            if (closestFore && closestFore !== this.fore) {
+            if (closestFore) {
                 attachToFore(closestFore);
             }
 
@@ -409,9 +412,10 @@ export class FxDevtools extends HTMLElement {
 
     _renderInstancePanel(instance){
         if(instance.type === 'xml'){
-            const domInpector = document.createElement('fx-dom-inspector');
-            domInpector.setAttribute('instance', instance.id);
-            return domInpector;
+            const domInspector = document.createElement('fx-dom-inspector');
+			domInspector.setInstance(instance);
+            domInspector.setAttribute('instance', instance.id);
+            return domInspector;
 
             /*
                         return
