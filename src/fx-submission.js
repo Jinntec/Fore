@@ -93,11 +93,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         await this._serializeAndSend();
     }
 
-    _resolveUrl() {
-        if (this.parameters.has('url')) {
-            return  this.parameters.get('url');
+    _getProperty(attrName){
+        if(this.parameters.has(attrName)){
+            return this.parameters.get(attrName);
         } else {
-            return  this.evaluateAttributeTemplateExpression(this.url, this);
+            return this.getAttribute(attrName);
         }
     }
 
@@ -107,8 +107,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @private
      */
     async _serializeAndSend() {
-
-        const resolvedUrl = this._resolveUrl();
+        const resolvedUrl = this._getProperty('url');
         console.log('resolvedUrl',resolvedUrl);
         const instance = this.getInstance();
         if (!instance) {
@@ -212,17 +211,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 contentType.startsWith('text/markdown')
             ) {
                 const text = await response.text();
-                this._handleResponse(text, resolvedUrl);
+                this._handleResponse(text, resolvedUrl,contentType);
             } else if (contentType.startsWith('application/json')) {
                 const json = await response.json();
-                this._handleResponse(json, resolvedUrl);
+                this._handleResponse(json, resolvedUrl,contentType);
             } else if (contentType.startsWith('application/xml')) {
                 const text = await response.text();
                 const xml = new DOMParser().parseFromString(text, 'application/xml');
-                this._handleResponse(xml, resolvedUrl);
+                this._handleResponse(xml, resolvedUrl,contentType);
             } else {
                 const blob = await response.blob();
-                this._handleResponse(blob, resolvedUrl);
+                this._handleResponse(blob, resolvedUrl,contentType);
             }
 
             // this.dispatch('submit-done', {});
@@ -313,7 +312,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @param data
      * @private
      */
-    _handleResponse(data, resolvedUrl) {
+    _handleResponse(data, resolvedUrl, contentType) {
         // console.log('_handleResponse ', data);
 
         /*
@@ -373,10 +372,15 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             window.location.href = resolvedUrl;
             // document.getElementsByTagName('html')[0].innerHTML = data;
         }
-        if (this.replace === 'target') {
-            const target = this.getAttribute('target');
+        if (this.replace === 'target' && contentType.startsWith('text/html')) {
+            // const target = this.getAttribute('target');
+            const target = this._getProperty('target');
             const targetNode = document.querySelector(target);
-            targetNode.innerHTML = data;
+            if(targetNode){
+                targetNode.innerHTML = data;
+            }else{
+                Fore.dispatch(this, 'submit-error', {message:`targetNode for selector ${target} not found`});
+            }
         }
         if (this.replace === 'redirect') {
             window.location.href = data;

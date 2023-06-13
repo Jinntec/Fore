@@ -14,6 +14,7 @@ class FxSend extends AbstractAction {
     super();
     this.value = '';
     this.url = null;
+    this.target=null;
   }
 
   connectedCallback() {
@@ -22,6 +23,7 @@ class FxSend extends AbstractAction {
     // console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');
     this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
+    this.target = this.hasAttribute('target') ? this.getAttribute('target'):null;
   }
 
   async perform() {
@@ -64,6 +66,21 @@ class FxSend extends AbstractAction {
       const resolved = this.evaluateAttributeTemplateExpression(this.url,this);
       submission.parameters.set('url',resolved);
     }
+    if(this.target){
+      const resolved = this.evaluateAttributeTemplateExpression(this.target,this);
+      submission.parameters.set('target',resolved);
+    }
+
+
+/*
+    Array.from(this.attributes).forEach( attr => {
+      if(attr.nodeName !== 'submission'){
+        const resolved = this.evaluateAttributeTemplateExpression(attr,this);
+        submission.parameters.set(attr.nodeName,resolved);
+      }
+    });
+*/
+
     console.log('submission', submission);
     await submission.submit();
 /*

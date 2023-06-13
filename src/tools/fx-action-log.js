@@ -522,12 +522,15 @@ export class FxActionLog extends HTMLElement {
     }
 
     _renderAction(actionElement, xpath, short, e) {
-        const stripped = actionElement.nodeName.split('-')[1];
+        const stripped = actionElement.nodeName.split('-')[1]
+        let eventName;
         switch (actionElement.nodeName) {
             case 'FX-ACTION':
                 this.parentPath = xpath;
+                eventName = e.target.currentEvent ? e.target.currentEvent.type : e.detail.event ? e.detail.event:'' ;
+
                 return `
-                <fx-log-item event-name="${e.target.currentEvent.type}"
+                <fx-log-item event-name="${eventName}"
                              xpath="${xpath}"
                              short-name="ACTION"
                               data-path="${e.detail.path}" 
@@ -562,7 +565,7 @@ export class FxActionLog extends HTMLElement {
                 const event = e.detail.event ? e.detail.event: '';
                 return `
                 <fx-log-item short-name="SEND"
-                             short-info="${submission.id}"
+                             short-info="${submission.getAttribute('id')}"
                              event-name="${event}"
                              xpath="${xpath}" class="action"
                              data-path="${e.detail.path}" >
@@ -595,9 +598,9 @@ export class FxActionLog extends HTMLElement {
                 `;
             // break;
             default:
-                const ev = e.target.currentEvent ? e.target.currentEvent.type : e.detail.event ? e.detail.event:'' ;
+                eventName = e.target.currentEvent ? e.target.currentEvent.type : e.detail.event ? e.detail.event:'' ;
                 return `
-                    <fx-log-item event-name="${ev}" 
+                    <fx-log-item event-name="${eventName}" 
                                 short-name="${e.target.nodeName}"
                                 xpath="${xpath}"
                                 data-path="${e.detail.path}" 
