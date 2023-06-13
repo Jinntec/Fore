@@ -56,16 +56,23 @@ export class FxDevtools extends HTMLElement {
             this.selectInstance(this.instances[0].id);
         };
 
-        window.addEventListener("DOMContentLoaded", (event) => {
-            // console.log("DOM fully loaded and parsed");
-            this.fore = document.querySelector('fx-fore');
-            this.fore.addEventListener('model-construct-done', () => attachToFore(this.fore));
-        });
+        const fore = document.querySelector('fx-fore');
+		if (fore) {
+			// If there's no `fore` element, there cannot be an inspector
+			if (fore.inited) {
+				// The fore element is already initialized. We can attach immediately.
+				// This can happen if the fore element does not use anything asynchronous and loads right away.
+				attachToFore(fore);
+			} else {
+				fore.addEventListener('model-construct-done', () => attachToFore(fore));
+			}
+		}
 
 		window.document.addEventListener('log-active-element', (e) => {
 			const target = e ? e.detail?.target || e.target : window.event.srcElement;
 
-            const closestFore = target.closest('fx-fore');
+			// Note that the event target or srcElement may be the document node.
+            const closestFore = target.nodeType === Node.DOCUMENT_NODE ? null : target.closest('fx-fore');
             if (closestFore && closestFore !== this.fore) {
                 attachToFore(closestFore);
             }
@@ -76,7 +83,7 @@ export class FxDevtools extends HTMLElement {
 						// TODO: handle JSON instances!
 						return false;
 					}
-					return instance.instanceData.contains(target)
+					return instance.instanceData.contains(target);
 				});
             // const instance = this._getInstanceForTarget(target);
 
