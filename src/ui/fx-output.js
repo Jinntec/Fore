@@ -130,7 +130,7 @@ export class FxOutput extends XfAbstractControl {
         // ### try to parse as string
         const tmpDoc = new DOMParser().parseFromString(node,'text/html');
         const theNode = tmpDoc.body.childNodes;
-        console.log('actual node', theNode)
+        // console.log('actual node', theNode)
         Array.from(theNode).forEach(n =>{
           valueWrapper.append(n);
         });
@@ -147,10 +147,12 @@ export class FxOutput extends XfAbstractControl {
           this.appendChild(obj[1]);
         });
 */
+/*
         Object.entries(node).map(obj => {
           // valueWrapper.appendChild(obj[1]);
           this.appendChild(obj[1]);
         });
+*/
 
         return;
       }
