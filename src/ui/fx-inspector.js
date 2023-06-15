@@ -92,10 +92,10 @@ export class FxInspector extends HTMLElement {
 
     Array.from(pre).forEach(element => {
       const inst = fore.getModel().getInstance(element.getAttribute('id'));
-      if (inst.type === 'xml') {
+      if (inst.getAttribute('type') === 'xml') {
         element.innerText = this.serializeDOM(inst.instanceData);
       }
-      if (inst.type === 'json') {
+      if (inst.getAttribute('type') === 'json') {
         element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
       }
     });

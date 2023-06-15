@@ -107,14 +107,15 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
      * @private
      */
     async _serializeAndSend() {
-        const resolvedUrl = this._getProperty('url');
+        const url = this._getProperty('url');
+        const resolvedUrl = this.evaluateAttributeTemplateExpression(url,this);
         console.log('resolvedUrl',resolvedUrl);
         const instance = this.getInstance();
         if (!instance) {
             Fore.dispatch(this, 'warn', {message: `instance not found ${instance.getAttribute('id')}`})
         }
         const instType = instance.getAttribute('type');
-        console.log('instance type', instance.type);
+        // console.log('instance type', instance.type);
 
         let serialized;
         if (this.serialization === 'none') {

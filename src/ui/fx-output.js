@@ -38,22 +38,13 @@ export class FxOutput extends XfAbstractControl {
           .label{
             display: inline-block;
           }
-          table,tbody{
-            width:100%;
-          }
-          th{
-            text-align:left;
-          }
-          td{
-            padding-right:1rem;
-          }
         `;
 
     const outputHtml = `
             <slot name="label"></slot>
             
             <span id="value">
-                <slot></slot>
+                <slot name="default"></slot>
             </span>
         `;
 
@@ -117,7 +108,7 @@ export class FxOutput extends XfAbstractControl {
   async updateWidgetValue() {
     // console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
-
+    valueWrapper.innerHTML = '';
 
     // if (this.mediatype === 'markdown') {
     //   const md = markdown(this.nodeset);
@@ -126,13 +117,27 @@ export class FxOutput extends XfAbstractControl {
 
     if (this.mediatype === 'html') {
       if (this.modelItem.node) {
-        /*
-        valueWrapper.innerHTML = this.modelItem.node.outerHTML;
-        return;
-*/
 
+        const defaultSlot = this.shadowRoot.querySelector('#default');
         const { node } = this.modelItem;
+        if (node.nodeType) {
 
+          valueWrapper.append(node);
+          // this.appendChild(node);
+          return;
+        }
+
+        // ### try to parse as string
+        const tmpDoc = new DOMParser().parseFromString(node,'text/html');
+        const theNode = tmpDoc.body.childNodes;
+        console.log('actual node', theNode)
+        Array.from(theNode).forEach(n =>{
+          valueWrapper.append(n);
+        });
+        // valueWrapper.append(theNode);
+
+        // valueWrapper.innerHTML=node;
+/*
         if (node.nodeType) {
           this.appendChild(node);
           return;
@@ -141,11 +146,17 @@ export class FxOutput extends XfAbstractControl {
           // valueWrapper.appendChild(obj[1]);
           this.appendChild(obj[1]);
         });
+*/
+        Object.entries(node).map(obj => {
+          // valueWrapper.appendChild(obj[1]);
+          this.appendChild(obj[1]);
+        });
+
         return;
       }
 
       // this.innerHTML = this.value.outerHTML;
-      valueWrapper.innerHTML = this.value.outerHTML;
+      // valueWrapper.innerHTML = this.value.outerHTML;
 
       // this.shadowRoot.appendChild(this.value);
       return;
@@ -156,7 +167,7 @@ export class FxOutput extends XfAbstractControl {
 		img.setAttribute('src',this.value);
 		// Reset the output before adding the image
 		this.innerHTML = '';
-      this.appendChild(img);
+      valueWrapper.appendChild(img);
       return;
     }
 

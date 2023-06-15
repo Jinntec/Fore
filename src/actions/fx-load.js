@@ -122,7 +122,7 @@ class FxLoad extends AbstractAction {
             );
             return;
         }
-        this.url = this._evaluateUrlExpression();
+        this.url = this.evaluateAttributeTemplateExpression(this.url,this);
         if (this.attachTo === '_blank') {
             window.open(this.url);
         }

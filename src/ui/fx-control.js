@@ -220,8 +220,10 @@ export default class FxControl extends XfAbstractControl {
       this.modelItem.node.nodeValue = node.nodeValue;
     } else if(node.nodeType === Node.ELEMENT_NODE){
       this.modelItem.node.replaceWith(node.cloneNode(true));
+    } else if(node.nodeType === Node.TEXT_NODE){
+      this.modelItem.node.nodeValue = node.textContent;
     } else(
-        Fore.dispatch(this,"warn",{'message':'trying to replace a node that is neither an Attribute or Elmment'})
+        Fore.dispatch(this,"warn",{'message':'trying to replace a node that is neither an Attribute, Elemment or Text node'})
     )
     this.getOwnerForm().refresh();
   }
@@ -413,7 +415,7 @@ export default class FxControl extends XfAbstractControl {
       if (this.hasAttribute('shadow')) {
         dummy.parentNode.removeChild(dummy);
         this.shadowRoot.appendChild(imported);
-      } else {
+      } else if (!this.loaded) {
         dummy.replaceWith(imported);
       }
 
