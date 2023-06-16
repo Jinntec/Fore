@@ -12,66 +12,13 @@
         <fx-model>
             <fx-instance>
                 <data>
-                    <bound>a</bound>
-                    <item>
-                        <field name="a">a</field>
-                        <field name="b">b</field>
-                        <field name="c">c</field>
-                        <field name="d">d</field>
-                        <field name="e">e</field>
-                        <field name="f">f</field>
-                    </item>
-                    <item>
-                        <field name="a">g</field>
-                        <field name="b">h</field>
-                        <field name="c">i</field>
-                        <field name="d">j</field>
-                        <field name="e">k</field>
-                        <field name="f">l</field>
-                    </item>
-                    <item>
-                        <field name="a">m</field>
-                        <field name="b">n</field>
-                        <field name="c">o</field>
-                        <field name="d">p</field>
-                        <field name="e">q</field>
-                        <field name="f">r</field>
-                    </item>
+                    <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
                 </data>
             </fx-instance>
         </fx-model>
-
-        <h1>Repeats via attributes</h1>
-
-
-        <h2>Building a dynamic datalist</h2>
-        <p>To actually see the dynamic list delete the bound value from the control and hit space or click arrow.</p>
-        <demo-snippet>
-            <template>
-                <fx-control ref="bound">
-                    <input list="datalist">
-                    <datalist id="datalist" data-ref="//field">
-                        <template>
-                            <option value="{.}"></option>
-                        </template>
-                    </datalist>
-                </fx-control>
-            </template>
-        </demo-snippet>
-
-
-
-
-        <!--
-            <ul data-ref="field">
-                <template>
-                    <li>
-                        {field[@name="a"]} | {field[@name="b"]}
-                    </li>
-                </template>
-            </ul>
-        -->
-        <fx-inspector open></fx-inspector>
+        <fx-output ref="div" mediatype="html">
+            <label slot="label">Output bound node as HTML: </label>
+        </fx-output>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

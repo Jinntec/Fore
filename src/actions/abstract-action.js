@@ -180,7 +180,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }
         */
         if (this.propagate === 'stop') {
-            console.log('event propagation stopped', e)
+            // console.log('event propagation stopped', e)
             e.stopPropagation();
         }
         if (this.defaultAction === 'cancel') {
@@ -200,12 +200,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // console.log('executing e', e);
         // console.log('executing e phase', e.eventPhase);
         if (FxFore.outermostHandler === null) {
-            console.time('outermostHandler');
+            // console.time('outermostHandler');
+/*
             console.info(
                 `%coutermost Action `,
                 'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
                 this,
             );
+*/
             // console.log('starting outermost handler',this);
             FxFore.outermostHandler = this;
             this.dispatchEvent(new CustomEvent('outermost-action-start', {
@@ -215,6 +217,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }));
         }
 
+/*
         if (FxFore.outermostHandler !== this) {
             console.info(
                 `%cAction `,
@@ -222,6 +225,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 this,
             );
         }
+*/
         // console.log('>>> outermostHandler', FxFore.outermostHandler);
 
         if (e) {
@@ -303,12 +307,14 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this.actionPerformed();
         if (FxFore.outermostHandler === this) {
             FxFore.outermostHandler = null;
+/*
             console.info(
                 `%coutermost Action done`,
                 'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
                 this,
             );
             console.timeEnd('outermostHandler');
+*/
             this.dispatchEvent(new CustomEvent('outermost-action-end', {
                 composed: true,
                 bubbles: true,
@@ -361,7 +367,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         ) {
             // The old outermostHandler fell out of the document. An error has happened.
             // Just remove the old one and act like we are starting anew.
-            console.warn('Unsetting outermost handler');
+            // console.warn('Unsetting outermost handler');
             FxFore.outermostHandler = null;
         }
         // console.log('actionPerformed action parentNode ', this.parentNode);
@@ -369,18 +375,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             this.needsUpdate &&
             (FxFore.outermostHandler === this || !FxFore.outermostHandler)
         ) {
-            console.log('running update cycle for outermostHandler', this);
+            // console.log('running update cycle for outermostHandler', this);
             model.recalculate();
             model.revalidate();
             model.parentNode.refresh(true);
             this.dispatchActionPerformed();
         } else if (this.needsUpdate) {
-            console.log('Update delayed!');
+            // console.log('Update delayed!');
             // We need an update, but the outermost action handler is not done yet. Make this clear!
             // console.log('running actionperformed on', this, ' to be updated by ', FxFore.outermostHandler);
             FxFore.outermostHandler.needsUpdate = true;
         }
-        console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);
+        // console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);
     }
 
     /**

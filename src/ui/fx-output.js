@@ -31,12 +31,16 @@ export class FxOutput extends XfAbstractControl {
     const style = `
           :host {
             display: inline-block;
+            max-width:100%;
           }
           #widget {
             display: inline-block;
           }
           .label{
             display: inline-block;
+          }
+          #value{
+            max-width:100%;
           }
         `;
 

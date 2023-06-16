@@ -53,6 +53,7 @@ import './src/actions/fx-confirm.js';
 import './src/actions/fx-show.js';
 import './src/actions/fx-hide.js';
 import './src/actions/fx-reload.js';
+import './src/actions/fx-reset.js';
 import './src/actions/fx-load.js';
 
 import './src/functions/fx-function.js';

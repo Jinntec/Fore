@@ -110,6 +110,10 @@ export class FxInstance extends HTMLElement {
     return this;
   }
 
+  reset(){
+    this._useInlineData();
+  }
+
   evalXPath(xpath) {
     const formElement = this.parentElement.parentElement;
     const result = evaluateXPathToFirstNode(xpath, this.getDefaultContext(), formElement);

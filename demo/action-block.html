@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="../resources/demo.css"/>
 </head>
 <body>
-<div class="wrapper">  
+<div class="wrapper">
+
+    <h1>Looping with an action block</h1>
+
+    <p>This demo shows how to create a loop of submissions by using a action block and the <code>fx-dispatch</code>
+    action.</p>
+
     <demo-snippet>
         <template>
             <fx-fore>
@@ -29,44 +35,46 @@
                     
                     <!-- SUBMISSIONS -->
                     <fx-submission id="s-submission1" method="get" url="#echo" replace="none">
-                        <fx-message event="submit">submit</fx-message>
+                        <fx-message event="submit">submit {instance('vars')/completed + 1}</fx-message>
                         <fx-message event="submit-error">error</fx-message>
                         <fx-dispatch event="submit-done" name="check-done" targetid="deployment"></fx-dispatch>
                     </fx-submission>
                     
                 </fx-model>
-        
+
+                <fx-action id="deployment" event="check-done">
+                    <fx-setvalue ref="instance('vars')/completed" value=". + 1"></fx-setvalue>
+                    <fx-update></fx-update>
+                    <fx-message if="instance('vars')/completed = '6'">all checks done</fx-message>
+                    <fx-action if="instance('vars')/completed = 6">
+                        <fx-setvalue ref="instance('vars')/success">true</fx-setvalue>
+                    </fx-action>
+                    <fx-send submission="s-submission1" if="instance('vars')/completed < 6"></fx-send>
+                </fx-action>
+
                 <fx-group class="ui">
                     <fx-trigger>
-                        <button>one</button>
+                        <button>start checking</button>
                         <fx-send submission="s-submission1"></fx-send>
                     </fx-trigger>
-                    <fx-group id="deployment">
-                        <fx-action event="check-done">
-                            <fx-setvalue ref="instance('vars')/completed" value=". + 1"></fx-setvalue>
-                            <fx-update></fx-update>
-                            <fx-refresh></fx-refresh>
-                            <fx-message if="instance('vars')/completed = '6'">all checks done</fx-message>
-                            <fx-action if="instance('vars')/completed = 6">
-                                <fx-setvalue ref="instance('vars')/success">true</fx-setvalue>
-                            </fx-action>
-                        </fx-action>
-                    </fx-group>
-                        
-                    <!-- DEBUG Section -->
-                    
+
                     <fx-group>
                         <ul>
-                            <li>Complete: { instance('vars')/completed }</li>                            
-                            <li>Complete = 6: {instance('vars')/completed = 6}</li>
+                            <li>Completed: { instance('vars')/completed } checks</li>
+                            <li>Complete = {instance('vars')/completed = 6}</li>
                             <li>success: {instance('vars')/success}</li>
                         </ul>    
                     </fx-group>
                 </fx-group>
-                <fx-inspector open></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>
+
+    <p>The action block 'deployment' is called 6 times in this example and is triggered by the 'start checking' button
+    initially. This will call the submission which upon its completion will dispatch a custom event "check-done" to
+    the action block.</p>
+    <p>Within the action we increment a counter, which is then used to check whether we're done or have to call
+    the submission again.</p>
 </div>
 <!--    <script type="module" src="./js/fore-debug.js"/>-->
 <script type="module" src="demo.js"/>

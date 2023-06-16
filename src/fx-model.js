@@ -157,7 +157,7 @@ export class FxModel extends HTMLElement {
 */
         this.recalculate();
         this.revalidate();
-        console.log('updateModel finished with modelItems ', this.modelItems);
+        // console.log('updateModel finished with modelItems ', this.modelItems);
 
         // console.timeEnd('updateModel');
     }
