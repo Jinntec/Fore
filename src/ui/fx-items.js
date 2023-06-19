@@ -1,4 +1,4 @@
-import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
+import { evaluateXPath,evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 import { XPathUtil} from "../xpath-util.js";
@@ -85,28 +85,38 @@ export class FxItems extends FxControl {
    */
   updateEntry(newEntry, node) {
     // console.log('fx-items updateEntry', this.value);
-    // super.updateEntry(newEntry,node);
 
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-
-    const label = newEntry.querySelector('label');
-    label.textContent = node.textContent;
-
+    // ### create unique id to connect label and input
     const id = Fore.createUUID();
+
+    // ### handle 'label'
+    const label = newEntry.querySelector('label');
+    // ### xml / JSON
+    if(node.nodeType){
+      label.textContent = node.textContent;
+    } else{
+      const labelTxt = this.template.content.querySelector('Label').textContent;
+      const labelExpr = Fore.getExpression(labelTxt);
+      label.textContent = node[labelExpr];
+    }
     label.setAttribute('for', id);
 
+    // ### handle the 'value'
     // getting element which has 'value' attr
     const input = newEntry.querySelector('[value]');
     // getting expr
     const expr = input.value;
-    const cutted = expr.substring(1, expr.length - 1);
-    const evaluated = evaluateXPathToString(cutted, node, newEntry);
+    // const cutted = expr.substring(1, expr.length - 1);
+    const cutted = Fore.getExpression(expr);
+    let evaluated;
+    if(node.nodeType){
+      evaluated =  evaluateXPathToString(cutted, node, newEntry);
+    }else{
+      evaluated = node[cutted];
+    }
 
     // adding space around value to allow matching of 'words'
     const spaced = ` ${evaluated} `;
-
     const valAttr = ` ${this.getAttribute('value')} `;
     input.value = evaluated;
     input.setAttribute('id', id);

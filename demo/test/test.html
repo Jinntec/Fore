@@ -9,16 +9,28 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model>
+        <fx-model id="model1">
             <fx-instance>
                 <data>
-                    <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
+                    <item>foobar</item>
+                    <result>foobar</result>
                 </data>
+                <fx-bind ref="item"></fx-bind>
             </fx-instance>
         </fx-model>
-        <fx-output ref="div" mediatype="html">
-            <label slot="label">Output bound node as HTML: </label>
-        </fx-output>
+        <fx-group>
+            <span id="result">{result}</span>
+            <fx-control id="input1" ref="result">
+                <fx-items ref="instance('default')/item">
+                    <template>
+                        <span id="checkbox">
+                          <label slot="label">{.}</label>
+                          <input type="checkbox" value="{.}" />
+                        </span>
+                    </template>
+                </fx-items>
+            </fx-control>
+        </fx-group>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

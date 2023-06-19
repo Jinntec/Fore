@@ -34,7 +34,12 @@ export class Fore {
     return indexes.join('.');
   }
 
-
+  static getExpression(input){
+    if(input.startsWith('{') && input.endsWith('}')){
+       return input.substring(1, input.length - 1);
+    }
+    return input;
+  }
 
   /**
    * returns the next `fx-fore` element upwards in tree
