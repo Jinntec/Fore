@@ -56,7 +56,7 @@
     "lint-staged": "^12.4.3",
     "lit-html": "^2.2.5",
     "mocha": "^10.0.0",
-    "np": "^7.6.1",
+    "np": "^8.0.4",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.4",
     "rollup-plugin-babel": "^4.4.0",
