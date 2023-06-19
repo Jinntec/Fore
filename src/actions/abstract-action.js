@@ -333,6 +333,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
      * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
      */
     async perform() {
+        // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
+
+        //todo: review - this evaluation seems redundant as we already evaluated in execute
+        if (this.isBound() || this.nodeName === 'FX-ACTION') {
+            this.evalInContext();
+        }
+
         this.dispatchEvent(
             new CustomEvent('execute-action', {
                 composed: true,
@@ -342,12 +349,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }),
         );
 
-        // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-        //todo: review - this evaluation seems redundant as we already evaluated in execute
-        if (this.isBound() || this.nodeName === 'FX-ACTION') {
-            this.evalInContext();
-        }
     }
 
     /**
@@ -386,6 +387,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // console.log('running actionperformed on', this, ' to be updated by ', FxFore.outermostHandler);
             FxFore.outermostHandler.needsUpdate = true;
         }
+
         // console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);
     }
 

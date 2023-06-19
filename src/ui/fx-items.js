@@ -30,8 +30,9 @@ export class FxItems extends FxControl {
     super.connectedCallback();
 
     this.addEventListener('click', e => {
+      e.preventDefault;
+      e.stopPropagation();
       const items = this.querySelectorAll('[value]');
-
       let target;
       if (e.target.nodeName === 'LABEL') {
         target = resolveId(e.target.getAttribute('for'), this);
