@@ -239,4 +239,158 @@ describe('fx-items tests', () => {
     expect(control.value).to.equal('VAdj Part AgtNoun ActNoun PropN');
     expect(control.modelItem.value).to.equal('VAdj Part AgtNoun ActNoun PropN');
   });
+
+  it('works with JSON data', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model-1">
+          <fx-instance>
+            <data>
+              <selected></selected>
+            </data>
+          </fx-instance>
+          <fx-instance id="list" type="json">
+            [
+            {
+            "name": "Akklamation",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
+            },
+            {
+            "name": "Adnuntiatio",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
+            },
+            {
+            "name": "Assignationsinschrift",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
+            }
+            ]
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="selected" update-event="input">
+          <fx-items ref="instance('list')?*" class="widget">
+            <template>
+                  <span class="fx-checkbox">
+                    <input id="check" name="option" type="checkbox" value="{value}"/>
+                    <label>{name}</label>
+                  </span>
+            </template>
+          </fx-items>
+        </fx-control>
+        <fx-output ref="selected"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const checkboxes = el.querySelectorAll('input');
+    expect(checkboxes.length).to.equal(3);
+    expect(checkboxes[0].value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/73');
+    expect(checkboxes[1].value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/113');
+    expect(checkboxes[2].value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/116');
+
+    const labels = el.querySelectorAll('label');
+    expect(labels.length).to.equal(3);
+    expect(labels[0].textContent).to.equal('Akklamation');
+    expect(labels[1].textContent).to.equal('Adnuntiatio');
+    expect(labels[2].textContent).to.equal('Assignationsinschrift');
+  });
+
+  it('works with JSON data when label clicked', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model-1">
+          <fx-instance>
+            <data>
+              <selected></selected>
+            </data>
+          </fx-instance>
+          <fx-instance id="list" type="json">
+            [
+            {
+            "name": "Akklamation",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
+            },
+            {
+            "name": "Adnuntiatio",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
+            },
+            {
+            "name": "Assignationsinschrift",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
+            }
+            ]
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="selected" update-event="input">
+          <fx-items ref="instance('list')?*" class="widget">
+            <template>
+                  <span class="fx-checkbox">
+                    <input id="check" name="option" type="checkbox" value="{value}"/>
+                    <label>{name}</label>
+                  </span>
+            </template>
+          </fx-items>
+        </fx-control>
+        <fx-output ref="selected"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const labels = el.querySelectorAll('label');
+    labels[1].click();
+
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/113');
+  });
+  it('has correct initial checkbox state', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model-1">
+          <fx-instance>
+            <data>
+              <selected>https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113</selected>
+            </data>
+          </fx-instance>
+          <fx-instance id="list" type="json">
+            [
+            {
+            "name": "Akklamation",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
+            },
+            {
+            "name": "Adnuntiatio",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
+            },
+            {
+            "name": "Assignationsinschrift",
+            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
+            }
+            ]
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="selected" update-event="input">
+          <fx-items ref="instance('list')?*" class="widget">
+            <template>
+                  <span class="fx-checkbox">
+                    <input id="check" name="option" type="checkbox" value="{value}"/>
+                    <label>{name}</label>
+                  </span>
+            </template>
+          </fx-items>
+        </fx-control>
+        <fx-output ref="selected"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113');
+
+    const checkboxes = el.querySelectorAll('input');
+    expect(checkboxes[0].checked).to.be.true;
+    expect(checkboxes[1].checked).to.be.true;
+
+  });
 });
