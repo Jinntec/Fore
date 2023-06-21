@@ -675,9 +675,9 @@ class ADI {
 			if (selectedElement?.nodeType === Node.ATTRIBUTE_NODE) {
 				selectedElement = selectedElement.ownerElement;
 			}
-			// window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
+			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selectedElement}}));
 		}
-			window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selected}}));
+		//	window.document.dispatchEvent(new CustomEvent('log-active-element', {detail: {target: selected}}));
     }
 
 
