@@ -49,6 +49,14 @@ export default class FxControl extends XfAbstractControl {
 		};
 	}
 
+	_getValueFromHtmlDom () {
+		if (this.valueProp === 'selectedOptions') {
+			// We have multiple! Just return that as space-separated for now
+			return [...this.widget.selectedOptions].map(option => option.value).join(' ');
+		}
+		return this.widget[this.valueProp];
+	}
+
   connectedCallback() {
     this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
     this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
@@ -58,8 +66,7 @@ export default class FxControl extends XfAbstractControl {
 
     this.updateEvent = this.hasAttribute('update-event')
       ? this.getAttribute('update-event')
-      : 'blur';
-    this.valueProp = this.hasAttribute('value-prop') ? this.getAttribute('value-prop') : 'value';
+		  : 'blur';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
     const style = `
             :host{
@@ -75,7 +82,13 @@ export default class FxControl extends XfAbstractControl {
         `;
 
     this.widget = this.getWidget();
-    // console.log('widget ', this.widget);
+
+      const defaultValueProp = this.widget.hasAttribute('multiple') ? 'selectedOptions' : 'value';
+      this.valueProp = this.hasAttribute('value-prop') ?
+		  this.getAttribute('value-prop') :
+		  defaultValueProp;
+
+	  // console.log('widget ', this.widget);
     let listenOn = this.widget // default: usually listening on widget
 
     if(this.hasAttribute('listen-on')){
@@ -97,7 +110,7 @@ export default class FxControl extends XfAbstractControl {
           // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
           event.preventDefault();
-          this.setValue(this.widget[this.valueProp]);
+			this.setValue(this._getValueFromHtmlDom());
         }
       });
       this.updateEvent = 'blur'; // needs to be registered too
@@ -108,12 +121,12 @@ export default class FxControl extends XfAbstractControl {
         debounce(this,() => {
           // console.log('eventlistener ', this.updateEvent);
           // console.info('handling Event:', event.type, listenOn);
-          this.setValue(this.widget[this.valueProp]);
+			this.setValue(this._getValueFromHtmlDom());
         }, this.debounceDelay),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, (event) => {
-        this.setValue(this.widget[this.valueProp]);
+          this.setValue(this._getValueFromHtmlDom());
       });
     }
 
@@ -276,7 +289,7 @@ export default class FxControl extends XfAbstractControl {
    * @returns {Promise<void>}
    */
   async updateWidgetValue() {
-    // this.widget[this.valueProp] = this.value;
+    // this._getValueFromHtmlDom() = this.value;
 
     let { widget } = this;
     if (!widget) {
@@ -291,6 +304,18 @@ export default class FxControl extends XfAbstractControl {
       }
       return;
     }
+
+	  if (this.valueProp === 'selectedOptions') {
+		  const valueSet = new Set(this.value.split(' '));
+		  for (const option of [...this.widget.querySelectorAll('option')]){
+			  if (valueSet.has(option.value)) {
+				  option.selected = true;
+			  } else {
+				  option.selected = false;
+			  }
+		  }
+		  return;
+	  }
 
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');
@@ -500,7 +525,7 @@ export default class FxControl extends XfAbstractControl {
       });
 
       // ### build the items
-      const template = this.template;
+      const {template} = this;
       if (template) {
         // ### handle 'selection'  open and insert an empty option in that case
         if(this.widget.nodeName === "SELECT" &&
