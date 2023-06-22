@@ -18,6 +18,23 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+
+  /**
+   * returns true if target element is the widget itself or some element within the widget.
+   * @param target an event target
+   * @returns {boolean}
+   */
+  static isWidget(target) {
+    if(target?.classList.contains("widget")) return true;
+    let parent = target.parentNode;
+    while(parent && parent.nodeName !== 'FX-CONTROL'){
+      if(parent.classList.contains('widget')) return true;
+      parent = parent.parentNode;
+    }
+    return false;
+  }
+
+
   static getDomNodeIndexString(node) {
     const indexes = [];
     let currentNode = node;

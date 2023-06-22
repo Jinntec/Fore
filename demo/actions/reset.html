@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>resetting data</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+        <link href="../../resources/vars.css" rel="stylesheet">
+        <link href="../../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-trigger, fx-output{
+            display: block;
+        }
+        section{
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Resetting data to initial state</h1>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <!-- inline xml instance -->
+                    <fx-instance>
+                        <data>
+                            <value></value>
+                        </data>
+                    </fx-instance>
+
+                    <fx-instance id="json" type="json">{"value":""}</fx-instance>
+                </fx-model>
+
+
+                <section>
+                    <fx-trigger>
+                        <button>Change default instance</button>
+                        <fx-setvalue ref="value">Changed value</fx-setvalue>
+                    </fx-trigger>
+
+                    <fx-output ref="value">
+                        <label slot="label">Default instance value</label>
+                    </fx-output>
+
+                    <fx-trigger>
+                        <button>Reset</button>
+                        <fx-reset instance="default"></fx-reset>
+                    </fx-trigger>
+                </section>
+
+                <section>
+                    <fx-trigger>
+                        <button>Change JSON instance</button>
+                        <fx-setvalue ref="instance('json')?value">Changed json value</fx-setvalue>
+                    </fx-trigger>
+
+                    <fx-output ref="instance('json')?value">
+                        <label slot="label">Default instance value</label>
+                    </fx-output>
+
+                    <fx-trigger>
+                        <button>Reset</button>
+                        <fx-reset instance="json"></fx-reset>
+                    </fx-trigger>
+                </section>
+
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

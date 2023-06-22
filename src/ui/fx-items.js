@@ -28,6 +28,22 @@ export class FxItems extends FxControl {
 
   connectedCallback() {
     super.connectedCallback();
+    // Some other library is stealing focus when clicking on the label of a checkbox list.
+    // The browser should handle this, but we need to manually focus the checkbox if the label is pressed
+    // TODO: find a better solution
+    this.addEventListener('mousedown', e => {
+      // const items = this.querySelectorAll('[value]');
+
+      if (!Fore.isWidget(e.target)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+
+      if (e.target.nodeName === 'LABEL') {
+        const target = resolveId(e.target.getAttribute('for'), this);
+        target.focus();
+      }
+    });
 
     // Some other library is stealing focus when clicking on the label of a checkbox list.
     // The browser should handle this, but we need to manually focus the checkbox if the label is pressed

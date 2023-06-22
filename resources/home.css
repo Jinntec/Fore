@@ -149,20 +149,22 @@ h3{
     font-weight: 700;
     font-size:1.4rem;
 }
+/*
 .header {
-    /*background: rgba(255, 255, 255, 0.95);*/
-    /*background: rgba(255, 255, 255, 0.4);*/
+    !*background: rgba(255, 255, 255, 0.95);*!
+    !*background: rgba(255, 255, 255, 0.4);*!
     text-align: center;
     padding: 2rem;
     border-radius: 1rem;
     margin-top: 0.5rem;
-    /*opacity: 0.5;*/
+    !*opacity: 0.5;*!
 
-    /*border: 2px rgba(255,255,255,0.4) solid;*/
-    /*border-bottom: 2px rgba(40,40,40,0.35) solid;*/
-    /*border-right: 2px rgba(40,40,40,0.35) solid;*/
+    !*border: 2px rgba(255,255,255,0.4) solid;*!
+    !*border-bottom: 2px rgba(40,40,40,0.35) solid;*!
+    !*border-right: 2px rgba(40,40,40,0.35) solid;*!
 
 }
+*/
 header, footer{
     /*background: rgba(248, 248, 255,0.86) ;*/
     padding:2rem 0;
@@ -174,7 +176,7 @@ header{
     position: relative;
     z-index: 10;
     background: rgba(248, 248, 255,0.26) ;
-
+    padding: 0;
     /*background: url(../resources/images/cool-background.png) no-repeat ;*/
 
 }
@@ -199,20 +201,28 @@ header{
     margin-bottom: 1rem;
 }
 nav{
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    top: 0;
     text-align: center;
     width: 100%;
     padding: 1.5rem 0;
     background: rgba(255,255,255,0.3);
     border-top: 1px solid rgba(255,255,255,0.5);
     border-bottom:1px solid rgba(0,0,0,0.2);
+    z-index: 10;
 }
 
 nav a, nav a:link, nav a:visited{
     color: black;
     padding: 0.75rem 1rem;
     font-size: 1.2rem;
+}
+
+nav ul{
+    list-style: none;
+}
+nav ul li{
+    display: inline-block;
 }
 
 .three-col {

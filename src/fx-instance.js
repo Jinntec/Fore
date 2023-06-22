@@ -51,6 +51,7 @@ export class FxInstance extends HTMLElement {
     super();
     this.model = this.parentNode;
     this.attachShadow({ mode: 'open' });
+    this.originalInstance = null;
   }
 
   connectedCallback() {
@@ -111,7 +112,8 @@ export class FxInstance extends HTMLElement {
   }
 
   reset(){
-    this._useInlineData();
+    // this._useInlineData();
+    this.instanceData = this.originalInstance;
   }
 
   evalXPath(xpath) {
@@ -137,7 +139,8 @@ export class FxInstance extends HTMLElement {
       this.createInstanceData();
       return;
     }
-    this.instanceData = data;
+    this._setInitialData(data);
+    // this.instanceData = data;
   }
 
   /**
@@ -175,7 +178,11 @@ export class FxInstance extends HTMLElement {
         newNode.appendChild(doc.createTextNode(p[1]));
         root.appendChild(newNode);
       }
+      this._setInitialData(doc);
+/*
       this.instanceData = doc;
+      this.originalInstance = this.instanceData.cloneNode(true);
+*/
       // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // resolve('done');
     } else if (this.src) {
@@ -190,9 +197,11 @@ export class FxInstance extends HTMLElement {
       // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
+      this.originalInstance = this.instanceData.cloneNode(true);
     }
     if (this.type === 'json') {
       this.instanceData = {};
+      this.originalInstance = [...this.instanceData];
     }
   }
 
@@ -204,6 +213,7 @@ export class FxInstance extends HTMLElement {
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
+      // ### does it make sense to store originalData here?
 
       if (!key) {
         console.warn('no key specified for localStore');
@@ -235,14 +245,29 @@ export class FxInstance extends HTMLElement {
         },
       });
       const data = await handleResponse(response);
+      this._setInitialData(data);
+/*
       if (data.nodeType) {
+        this._setInitialData(data);
         this.instanceData = data;
+        this.originalInstance = this.instanceData.cloneNode(true);
         console.log('instanceData loaded: ', this.id, this.instanceData);
         return;
       }
       this.instanceData = data;
+      this.originalInstance = [...data];
+*/
     } catch (error) {
       throw new Error(`failed loading data ${error}`);
+    }
+  }
+
+  _setInitialData(data){
+    this.instanceData = data;
+    if(data.nodeType){
+      this.originalInstance = this.instanceData.cloneNode(true);
+    } else {
+      this.originalInstance = {...this.instanceData};
     }
   }
 
@@ -263,7 +288,8 @@ export class FxInstance extends HTMLElement {
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
 
       // console.log('fx-instance init id:', this.id);
-      this.instanceData = instanceData;
+      // this.instanceData = instanceData;
+      this._setInitialData(instanceData);
       // console.log('instanceData ', this.instanceData);
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
@@ -271,11 +297,15 @@ export class FxInstance extends HTMLElement {
       // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
-      this.instanceData = JSON.parse(this.textContent);
+      // this.instanceData = JSON.parse(this.textContent);
+      this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
-      this.instanceData = this.firstElementChild.children;
+      // this.instanceData = this.firstElementChild.children;
+      this._setInitialData(this.firstElementChild.children)
+
     } else if (this.type === 'text') {
-      this.instanceData = this.textContent;
+      // this.instanceData = this.textContent;
+      this._setInitialData(this.textContent)
     } else {
       console.warn('unknow type for data ', this.type);
     }

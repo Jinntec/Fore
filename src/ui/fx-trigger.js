@@ -1,5 +1,6 @@
 import XfAbstractControl from './abstract-control.js';
 import { leadingDebounce } from '../events.js';
+import {resolveId} from "../xpath-evaluation";
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
@@ -27,6 +28,11 @@ export class FxTrigger extends XfAbstractControl {
       elements[0].setAttribute('role', 'button');
 
       const element = elements[0];
+
+      this.addEventListener('mousedown', e => {
+        console.log('target', e.target.nodeName);
+          e.target.focus();
+      });
 
       if (this.debounceDelay) {
         this.addEventListener(

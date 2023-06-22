@@ -43,11 +43,11 @@ class FxSwitch extends FxContainer {
     super.refresh();
     // console.log('refresh on switch ');
     const cases = this.querySelectorAll(':scope > fx-case');
-    let selectedCase;
+    let selectedCase = cases[0]; // first is always default
     if (this.isBound()) {
       Array.from(cases).forEach(caseElem => {
         const name = caseElem.getAttribute('name');
-        if (name === this.modelItem.value) {
+        if (name === this.modelItem?.value) {
           Fore.dispatch(caseElem,'select',{});
           caseElem.classList.add('selected-case');
           selectedCase = caseElem;
