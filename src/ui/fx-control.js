@@ -85,9 +85,9 @@ export default class FxControl extends XfAbstractControl {
 
         this.addEventListener('mousedown', e => {
             // ### prevent mousedown events on all control content that is not the widget or within the widget
-            if (!Fore.isWidget(e.target)) {
+            if (!Fore.isWidget(e.target) && !e.target?.classList.contains('fx-hint')) {
                 e.preventDefault();
-                e.stopImmediatePropagation();
+                // e.stopImmediatePropagation();
             }
             this.widget.focus();
         });

@@ -32,13 +32,15 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
 
     this.getOwnerForm().registerLazyElement(this);
 
+/*
     this.addEventListener('mousedown', e => {
 
       if(e.target === this){
         e.preventDefault();
-        e.stopImmediatePropagation();
+        // e.stopImmediatePropagation();
       }
-    },{capture:true});
+    } );
+*/
 
     this.setAttribute('tabindex','0');
   }
