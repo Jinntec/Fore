@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>i18n</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+        <style>
+            .current-lang{
+                font-size: 2rem;
+            }
+        </style>
+
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance id="default" src="en.json" type="json">
+                        <div>Hello</div>
+                    </fx-instance>
+                    <fx-submission id="switch-lang"
+                                   method="get"
+                                   replace="instance"
+                                   instance="default">
+                        <fx-refresh event="submit-done"></fx-refresh>
+                    </fx-submission>
+                </fx-model>
+
+                <h1>i18n</h1>
+                <p>This example uses a single instance with loads the current language. It simply loads
+                one language as the default and switches between different languages by exchanging the language
+                instance with a submission.</p>
+                <fx-group ref="instance()?form">
+                    <fx-output ref="?object-description">
+                        <label slot="label">object-description</label>
+                    </fx-output>
+                </fx-group>
+
+                <fx-trigger>
+                    <button>DE</button>
+                    <fx-send submission="switch-lang" url="de.json">de</fx-send>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>EN</button>
+                    <fx-send submission="switch-lang" url="en.json">en</fx-send>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+
+</body>
+</html>
