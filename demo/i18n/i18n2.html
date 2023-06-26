@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>i18n</title>
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <style>
+        .current-lang{
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance id="default" src="typeins-de.json" type="json">
+                        <div>Hello</div>
+                    </fx-instance>
+                    <fx-instance id="vars">
+                        <data>
+                            <selected></selected>
+                        </data>
+                    </fx-instance>
+                    <fx-submission id="switch-lang"
+                                   method="get"
+                                   replace="instance"
+                                   instance="default">
+                    </fx-submission>
+                </fx-model>
+
+                <h1>i18n</h1>
+                <p>This example uses a single instance which holds the current language. It simply loads
+                one language as the default with <code>src</code> and switches between different languages by exchanging the
+                instance with a submission.</p>
+                <fx-group>
+                    <fx-control ref="instance('vars')/selected">
+                        <label>Selected</label>
+                        <fx-items ref="instance('default')?*" class="widget">
+                            <template>
+                                <div class="fx-checkbox">
+                                    <input type="checkbox" value="{value}"/>
+                                    <label>{name}</label>
+                                </div>
+                            </template>
+                        </fx-items>
+                    </fx-control>
+                </fx-group>
+
+                <fx-trigger>
+                    <button>DE</button>
+                    <fx-send submission="switch-lang" url="typeins-de.json">de</fx-send>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>EN</button>
+                    <fx-send submission="switch-lang" url="typeins-en.json">en</fx-send>
+                </fx-trigger>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+
+</body>
+</html>
