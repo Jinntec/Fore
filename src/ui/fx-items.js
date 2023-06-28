@@ -119,12 +119,14 @@ export class FxItems extends FxControl {
 
     // ### handle 'label'
     const label = newEntry.querySelector('label');
+    const lblExpr = Fore.getExpression(label.textContent);
+
     // ### xml / JSON
     if(node.nodeType){
-      label.textContent = node.textContent;
+      const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+      label.textContent = lblEvaluated;
     } else{
-      const labelTxt = this.template.content.querySelector('Label').textContent;
-      const labelExpr = Fore.getExpression(labelTxt);
+      const labelExpr = Fore.getExpression(lblExpr);
       label.textContent = node[labelExpr];
     }
     label.setAttribute('for', id);
