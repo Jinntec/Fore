@@ -183,10 +183,7 @@ export class FxModel extends HTMLElement {
 
         // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
         Fore.dispatch(this,'rebuild-done',{maingraph:this.mainGraph});
-        console.log(
-            `rebuild finished with modelItems ${this.modelItems.length} item(s)`,
-            this.modelItems,
-        );
+        console.log('mainGraph', this.mainGraph);
     }
 
     /**
@@ -258,7 +255,7 @@ export class FxModel extends HTMLElement {
             });
             Fore.dispatch(this,'recalculate-done',{graph:this.mainGraph})
         }
-        // console.log('recalculate finished with modelItems ', this.modelItems);
+        console.log('recalculate finished with modelItems ', this.modelItems);
     }
 
     /*
