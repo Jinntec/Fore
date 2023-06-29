@@ -51,7 +51,7 @@ export default class FxSetvalue extends AbstractAction {
         } else {
             value = '';
         }
-        if (value.nodeType === Node.ATTRIBUTE_NODE) {
+        if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
@@ -86,7 +86,7 @@ export default class FxSetvalue extends AbstractAction {
                 }),
             );
 
-            if(newVal.nodeType){
+            if(newVal?.nodeType){
                 if(newVal.nodeType === Node.ELEMENT_NODE){
                     item.value = newVal.textContent;
                 }
