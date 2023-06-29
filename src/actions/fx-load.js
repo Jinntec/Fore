@@ -166,11 +166,21 @@ class FxLoad extends AbstractAction {
     }
 
     _attachToElement(content){
+        let effectiveContent;
+        if(content.nodeType){
+            effectiveContent = content
+        }else{
+
+            effectiveContent = new DOMParser().parseFromString(content, 'text/html').firstElementChild;
+        }
+
         if (this.attachTo.startsWith('#')) {
             const targetId = this.attachTo.substring(1);
             const resolved = resolveId(targetId, this);
             resolved.innerHTML = '';
-            resolved.innerHTML = content;
+            // resolved.innerHTML = effectiveContent;
+            const body = effectiveContent.querySelector('body').cloneNode(true);
+            resolved.appendChild( body.firstElementChild);
         }
     }
 

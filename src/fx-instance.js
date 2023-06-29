@@ -150,7 +150,7 @@ export class FxInstance extends HTMLElement {
    */
   getDefaultContext() {
     // console.log('getDefaultContext ', this.instanceData.firstElementChild);
-    if (this.type === 'xml') {
+    if (this.type === 'xml' || this.type === 'html') {
       return this.instanceData.firstElementChild;
     }
     return this.instanceData;
@@ -300,8 +300,8 @@ export class FxInstance extends HTMLElement {
       // this.instanceData = JSON.parse(this.textContent);
       this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
-      // this.instanceData = this.firstElementChild.children;
-      this._setInitialData(this.firstElementChild.children)
+      this.instanceData = this.firstElementChild.children;
+      // this._setInitialData(this.firstElementChild ? this.firstElementChild.children:null);
 
     } else if (this.type === 'text') {
       // this.instanceData = this.textContent;
