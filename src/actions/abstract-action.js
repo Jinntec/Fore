@@ -156,6 +156,21 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         }
     }
 
+	async performSafe() {
+		try {
+			await this.perform();
+			// Return true to indicate success
+			return true;
+		} catch (error) {
+			const stringifiedComponent = `<${this.localName} ${Array.from(this.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${this.localName}>`;
+			await Fore.dispatch(this, 'error', {
+                message: `The action could not be performed. ${error} The error came from ${stringifiedComponent}`,
+            });
+			// Return false to indicate failure. Any loops must be canceled
+			return false;
+		}
+	}
+
     /**
      * executes the action.
      *
@@ -265,8 +280,10 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                     return;
                 }
 
-                // Perform the action once
-                this.perform();
+                // Perform the action once. But quit if it errored
+                if (!this.performSafe()) {
+					return;
+				}
 
                 // Go for one more iteration
                 if (this.delay) {
@@ -297,7 +314,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }
         }
 
-        await this.perform();
+        await this.performSafe();
         this._finalizePerform(resolveThisEvent);
     }
 
