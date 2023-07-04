@@ -68,6 +68,18 @@ em{
 .feature > *{
     color:var(--paper-grey-900);
 }
+
+
+figure{
+    margin-top:-4rem;
+}
+figcaption{
+    color:white;
+    font-size: 1.4rem;
+    padding-top:1rem;
+    max-width: 40rem;
+    font-family: 'Verdana', 'Arial', 'sans';
+}
 footer{
     margin-top:2rem;
     border-top:thin solid rgba(255,255,255,0.5);
@@ -145,7 +157,7 @@ h2.outer{
 }
 h3{
     font-weight: 700;
-    font-size:1.4rem;
+    font-size:1.5rem;
 }
 /*
 .header {
@@ -176,6 +188,7 @@ header .hero{
     align-items: center;
     height: 18rem;
 }
+
 header{
     width: 100%;
     text-align: center;
@@ -390,3 +403,21 @@ fx-fore#version {
         opacity: 1;
     }
 }
+
+/* ### demo page styles */
+#demos header .hero{
+    height: 38rem;
+}
+#demos .hero figure img{
+    width: 100%;
+    max-width: 40rem;
+    height: auto;
+    object-fit: fill;
+}
+#demos fx-fore#version{
+    top:10%;
+}
+#demos h3{
+    font-size: 1.5rem;
+}
+
