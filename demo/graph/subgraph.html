@@ -261,10 +261,7 @@
 
         });
         model.addEventListener('recalculate-done', (e) => {
-
-            // console.log('mainGraph', e.detail.graph);
-            renderGraph(e.detail.subgraph, 'subgraph');
-
+            renderGraph(e.detail.graph, 'subgraph');
         });
 
     })();
