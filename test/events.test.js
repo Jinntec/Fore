@@ -183,7 +183,7 @@ describe('Event Tests', () => {
   it('handles bubbling event', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-        <fx-dispatch targetid="t" name="click" event="ready"></fx-dispatch>
+        <fx-dispatch targetid="t" name="click" event="model-construct-done"></fx-dispatch>
         <fx-model>
           <fx-instance>
             <data>
