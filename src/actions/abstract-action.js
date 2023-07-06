@@ -187,11 +187,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // console.log('execute', this.event);
 
 
-            if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
-              // Event originates from a sub-component. Ignore it!
-              // No need to stop propagation. All other listeners will also ignore it from here
-              return;
+        if (e && e.target.nodeType !== Node.DOCUMENT_NODE ){
+            /*
+             ### ignore event if there's a parent fore and the current element is NOT part of it. This avoids
+             ### an event to fire twice on an inner one and the surrounding one(s).
+             ### e.target might be outside an fx-fore element and shouldn't get cancelled in that case.
+            */
+            if(e.target.closest('fx-fore') && e.target.closest('fx-fore') !== this.closest('fx-fore')) {
+                // Event originates from a sub-component. Ignore it!
+                // No need to stop propagation. All other listeners will also ignore it from here
+                return;
             }
+        }
 
         if (this.propagate === 'stop') {
             // console.log('event propagation stopped', e)

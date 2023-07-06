@@ -30,8 +30,8 @@
     "!.DS_Store"
   ],
   "dependencies": {
-    "@jinntec/jinn-toast": "^1.0.4",
-    "fontoxpath": "^3.27.1"
+    "@jinntec/jinn-toast": "^1.0.5",
+    "fontoxpath": "^3.29.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.17.12",
