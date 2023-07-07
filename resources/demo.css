@@ -7,7 +7,7 @@
 }
 
 a, a:link, a:visited {
-    color:ghostwhite;
+    color:black;
     font-weight: 300;
     letter-spacing: 0.05rem;
 }
@@ -25,8 +25,8 @@ code{
     white-space: nowrap;
     padding:0 0.3rem;
 }
-.demos .three-col div{
-    background: rgba(40,40,40,0.3);
+.demos .three-col div {
+    background: rgba(50,50,50,0.1);
     border-radius: 0.3rem;
 }
 demo-snippet .code-container{
@@ -56,6 +56,37 @@ h2, h3, h4{
 /*
 h2{
     color:white;
+}
+*/
+/*
+.logo-corner {
+    transform: rotate(-74deg);
+    position: fixed;
+    right: -2.5rem;
+    top: -2.9rem;
+    width: 6rem;
+    height: 5rem;
+    !* background: ghostwhite; *!
+    border: thin solid lightsteelblue;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.3px);
+    -webkit-backdrop-filter: blur(4.3px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-top-left-radius: 0.2rem;
+}
+.logo-corner:hover{
+    background: ghostwhite;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+
+}
+
+.logo-corner .logo {
+    width: 3rem;
+    position: absolute;
+    top: 1.25rem;
+    left: -0.4rem;
+    transform: rotate(75deg);
 }
 */
 #modalMessage{
@@ -109,17 +140,17 @@ p{
     align-self: flex-start;
     border-right: none;
 }
-.wrapper:before{
-    content:'Fore';
-    position: fixed;
-    left:60%;
-    transform: rotate(325deg) translateY(-50%) translateX(-50%);
-    top:0;
-    font-size:1024px;
-    z-index: -1;
-    opacity: 0.03;
-    color:var(--paper-blue-grey-900);
-}
+/*.wrapper:before{*/
+/*    content:'Fore';*/
+/*    position: fixed;*/
+/*    left:60%;*/
+/*    transform: rotate(325deg) translateY(-50%) translateX(-50%);*/
+/*    top:0;*/
+/*    font-size:512px;*/
+/*    z-index: -1;*/
+/*    opacity: 0.03;*/
+/*    color:var(--paper-blue-grey-900);*/
+/*}*/
 
 .wrapper{
     height:auto;

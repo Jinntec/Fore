@@ -6,3 +6,4 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-button/paper-button.js';
 // import '../src/lab/instance-inspector.js';
 import '../index.js';
+import '../doc/fore-corner.js';
