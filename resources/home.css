@@ -1,3 +1,7 @@
+html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 12rem;
+}
 @font-face {
     font-family: "Kimberley";
     src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
@@ -31,7 +35,8 @@ body {
     font-family: "Kimberley";
     margin:0;
     /*background: linear-gradient(to right, rgba(19, 40, 115, 0.8), rgba(19, 120, 255, 0.8)););*/
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.8), rgba(240, 240, 245, 0.8)););
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.8));
+    position: relative;
 }
 
 blockquote{
@@ -211,6 +216,8 @@ header .hero{
     background: white;
     border-radius: 0;
     padding:1rem 0;
+    border-bottom: thin solid rgba(0,0,0,0.2);
+
 }
 
 header{
@@ -251,10 +258,11 @@ nav{
     text-align: center;
     width: 100%;
     padding: 0.25rem 0;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(240, 240, 245, 0.99));
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1));
     border-top: 1px solid rgba(255,255,255,0.5);
-    border-bottom:1px solid rgba(0,0,0,0.2);
     z-index: 10;
+    border-bottom: thin solid rgba(0,0,0,0.2);
+
 }
 
 nav ul a, nav ul a:link, nav ul a:visited{
@@ -267,6 +275,34 @@ nav ul{
 }
 nav ul li{
     display: inline-block;
+}
+
+nav.local-nav{
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(240, 240, 240, 0.99));
+
+    border: none;
+    top:4rem;
+    border-bottom:1px solid rgba(0,0,0,0.2);
+    white-space: nowrap;
+    overflow: auto;
+}
+nav.local-nav a,
+nav.local-nav a:link,
+nav.local-nav a:visited
+{
+    padding: 0.25rem;
+    border: thin solid;
+    border-radius: 0.3rem;
+    padding: 0.25rem;
+    border: thin solid;
+    display: inline-block;
+    text-decoration: none;
+    background: rgba(255,255,255,0.75);
+    font-size: 0.6rem;
+    margin:0 0.1rem;
+}
+nav.local-nav a:hover{
+    text-decoration: underline;
 }
 
 .three-col {
@@ -296,8 +332,20 @@ section {
     margin-bottom:2rem;
 }
 
-section > div {
+.demos section > div {
     padding: 1rem;
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    /*
+    box-shadow: 0.25rem 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    */
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.9);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .overlay {
@@ -375,7 +423,7 @@ ul li{
 fx-fore#version {
     position: absolute;
     left: calc(48% + 12.5rem);
-    top: 23%;
+    top: 10%;
     background: transparent;
     font-size: 1.2rem;
     font-style: italic;
@@ -435,13 +483,17 @@ fx-fore#version {
     object-fit: fill;
 }
 #demos fx-fore#version{
-    top:10%;
+    top:15%;
 }
 #demos h3{
     font-size: 1.5rem;
 }
+#demos header{
+    /*padding-top:7rem;*/
+}
 #demos header .hero{
     max-height: 16rem;
+    margin-top: 6rem;
 }
 #demos figure{
     text-align: center;

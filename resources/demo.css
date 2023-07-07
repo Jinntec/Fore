@@ -26,7 +26,7 @@ code{
     padding:0 0.3rem;
 }
 .demos .three-col div {
-    background: rgba(50,50,50,0.1);
+    background: rgba(255,255,255,0.7);
     border-radius: 0.3rem;
 }
 demo-snippet .code-container{

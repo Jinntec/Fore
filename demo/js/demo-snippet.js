@@ -87,7 +87,12 @@ Polymer({
         font-size: 0.9rem;
         overflow: auto;
         @apply --demo-snippet-code;
-        padding: 0 1rem
+        padding: 0 1rem;
+        border-top: 2px solid rgba(255,255,255,0.9);
+        border-left:2px solid rgba(255,255,255,0.9);
+        border-bottom: thin solid rgba(0,0,0,0.2);
+        border-right: thin solid rgba(0,0,0,0.2);
+        border-radius: 0.75rem;
       }
       .code > pre {
         margin: 0;

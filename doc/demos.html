@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="../resources/demo.css">
     <link rel="stylesheet" href="../resources/home.css">
+    <meta name="keywords" content="Fore Demos, Documentation">
+
     <style>
         .demos .broken {
             background: red !important;
@@ -31,20 +33,34 @@
         </svg>
     </a>
     <header>
-        <nav>
+        <nav arial-label="Main Navigation">
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="#" disabled="disabled">Demos</a></li>
                 <li><a href="https://jinntec.github.io/fore-docs/" target="_blank">Documentation</a></li>
             </ul>
         </nav>
+        <nav class="local-nav" aria-label="Demo Categories">
+            <a href="#basic" title="Basic Examples">Basic</a>
+            <a href="#model" title="Model-related Examples">Model</a>
+            <a href="#request" title="Submission Examples">Submission</a>
+            <a href="#control">Control</a>
+            <a href="#container">Container</a>
+            <a href="#actions">Actions</a>
+            <a href="#functions">Functions</a>
+            <a href="#json">JSON</a>
+            <a href="#byelement">by element</a>
+            <a href="#bricks">Bricks</a>
+            <a href="#other">Other</a>
+        </nav>
+
         <section class="hero">
             <img class="logo fore" src="../resources/images/light-blue1.png">
             <h1>Declarative user interfaces in plain HTML</h1>
             <fx-fore id="version" src="version.html"></fx-fore>
         </section>
     </header>
-    <div class="wrapper demos topic">
+    <main class="wrapper demos topic">
         <!--    <p class="style-hint">If you don't like the colors just <a href="demos.html">reload</a> the page.</p>-->
 
         <h2>Demos</h2>
@@ -60,386 +76,401 @@
 
 
         <p>The demos with a green dot <span class="updated inline"></span> are new or have been enhanced since last release.</p>
+
+
         <h2>Basic</h2>
-        <section class="three-col">
+        <section id="basic" class="three-col">
             <div>
-                <h3><a href="../demo/getstarted.html" target="_blank">Get started</a></h3>
+                <h3><a href="../demo/getstarted.html">Get started</a></h3>
                 <p>setting up Fore and Hello Universe</p>
             </div>
             <div>
-                <h3><a href="../demo/01-hi.html" target="_blank">A simple output</a></h3>
+                <h3><a href="../demo/01-hi.html">A simple output</a></h3>
                 <p>Using a ref to lazily create a data node.</p>
             </div>
             <div>
-                <h3><a href="../demo/02-refs.html" target="_blank">ref what?</a></h3>
+                <h3><a href="../demo/02-refs.html">ref what?</a></h3>
                 <p>Introducing binding expressions</p>
             </div>
             <div>
-                <h3><a href="../demo/03-instances.html" target="_blank">What an instance can do</a></h3>
+                <h3><a href="../demo/03-instances.html">What an instance can do</a></h3>
                 <p>Using one or more <code>fx-instance</code> elements</p>
             </div>
             <div>
-                <h3><a href="../demo/04-instances.html?param1=foo&param2=bar" target="_blank">Instance super
+                <h3><a href="../demo/04-instances.html?param1=foo&param2=bar">Instance super
                     powers</a></h3>
                 <p>loading an <code>fx-instance</code>, JSON instances and creating a instance from queryString</p>
             </div>
             <div>
-                <h3><a href="../demo/binding.html" target="_blank">Bindings are forever</a></h3>
+                <h3><a href="../demo/binding.html">Bindings are forever</a></h3>
                 <p><code>fx-bind</code> elements and ModelItems explained</p>
             </div>
             <div>
-                <h3><a href="../demo/binding-nested.html" target="_blank">Bindings - they nest!</a></h3>
+                <h3><a href="../demo/binding-nested.html">Bindings - they nest!</a></h3>
                 <p>Nesting bindings and Scoped Resolution</p>
             </div>
             <div>
-                <h3><a href="../demo/unbound.html" target="_blank">Unbound, unbound, unbound...</a></h3>
+                <h3><a href="../demo/unbound.html">Unbound, unbound, unbound...</a></h3>
                 <p>Controls don't show if their binding node does not exist.</p>
             </div>
         </section>
+
         <h2>Model</h2>
-        <section class="three-col">
+        <section id="model" class="three-col">
             <div>
-                <h3><a href="../demo/recalculate.html" target="_blank">One depends the other</a></h3>
+                <h3><a href="../demo/recalculate.html">One depends the other</a></h3>
                 <p>Shows how data node constraints can depend on each other.</p>
             </div>
             <div>
-                <h3><a href="../demo/simple-calc.html" target="_blank">Calculate</a></h3>
+                <h3><a href="../demo/simple-calc.html">Calculate</a></h3>
                 <p>A simple calculation</p>
             </div>
             <div>
-                <h3><a href="../demo/revalidate.html" target="_blank">Validation and Alerts</a></h3>
+                <h3><a href="../demo/revalidate.html">Validation and Alerts</a></h3>
                 <p>Defining a validation with the <code>constraint</code> attribute and various way to specify
                     an valid alert.</p>
             </div>
             <div>
-                <h3><a href="../demo/calc-order.html" target="_blank">Calculation Order</a></h3>
+                <h3><a href="../demo/calc-order.html">Calculation Order</a></h3>
                 <p>No matter the order of binds it will calculate values in the correct order.</p>
             </div>
         </section>
+
         <h2>Submission</h2>
-        <section class="three-col">
+        <section id="request" class="three-col">
             <div>
-                <h3><a href="../demo/submission2.html" target="_blank">On a submission...</a></h3>
+                <h3><a href="../demo/submission2.html">On a submission...</a></h3>
                 <p>Many ways to deal with a response from a submission.</p>
             </div>
             <div>
-                <h3><a href="../demo/submission1.html" target="_blank">more submissions</a></h3>
+                <h3><a href="../demo/submission1.html">more submissions</a></h3>
                 <p>Submission events to react to response status.</p>
             </div>
             <div>
-                <h3><a href="../demo/submission3.html" target="_blank">submission chaining</a></h3>
+                <h3><a href="../demo/submission3.html">submission chaining</a></h3>
                 <p>Create a chain of submissions</p>
             </div>
             <div>
-                <h3><a href="../demo/submission4.html" target="_blank">Submission with Template Expressions</a></h3>
+                <h3><a href="../demo/submission4.html">Submission with Template Expressions</a></h3>
                 <p>Resolving expressions on submission URL to send dynamic query parameters</p>
             </div>
             <div>
-                <h3><a href="../demo/submission-relevance.html" target="_blank">Submission & Relevance</a></h3>
+                <h3><a href="../demo/submission-relevance.html">Submission & Relevance</a></h3>
                 <p>filtering data by their relevance.</p>
             </div>
             <div>
-                <h3><a href="../demo/submission-json.html" target="_blank">Submission of JSON</a></h3>
+                <h3><a href="../demo/submission-json.html">Submission of JSON</a></h3>
                 <p>Submitting and replacing JSON data</p>
             </div>
             <div>
-                <h3><a href="../demo/targetref.html" target="_blank">partial submission and replacement</a></h3>
+                <h3><a href="../demo/targetref.html">partial submission and replacement</a></h3>
                 <p>Submit and replace of only parts of an instance.</p>
             </div>
             <div>
-                <h3><a href="../demo/submission-localStore.html" target="_blank">using browsers localstorage</a></h3>
+                <h3><a href="../demo/submission-localStore.html">using browsers localstorage</a></h3>
                 <p>read and store data instances in localstorage</p>
             </div>
             <div>
-                <h3><a href="../demo/submission/submission-required.html" target="_blank">Submission with required
+                <h3><a href="../demo/submission/submission-required.html">Submission with required
                     values</a></h3>
                 <p>How to react to empty but required fields during a submission</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/submission-url-overwrite.html" target="_blank">Send with Url</a></h3>
+                <h3><a href="../demo/submission-url-overwrite.html">Send with Url</a></h3>
                 <p>Send Action can overwrite submission Url</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/submission-target-overwrite.html" target="_blank">Send with a target</a></h3>
+                <h3><a href="../demo/submission-target-overwrite.html">Send with a target</a></h3>
                 <p>Send Action can overwrite submission target</p>
             </div>
         </section>
 
         <h2>UI Controls</h2>
-        <section class="three-col">
-            <div><h3><a href="../demo/fx-control.html" target="_blank">one Control to bind 'em all</a></h3>
+        <section id="control" class="three-col">
+            <div><h3><a href="../demo/fx-control.html">one Control to bind 'em all</a></h3>
                 <p>The generic <code>fx-control</code> elements can use native and third-party widgets.</p>
             </div>
-            <div><h3><a href="../demo/controls/fx-output.html" target="_blank">fx-output</a></h3>
+            <div><h3><a href="../demo/controls/fx-output.html">fx-output</a></h3>
                 <p>bound output, evaluated output and HTML output</p>
             </div>
-            <div><h3><a href="../demo/selects2.html" target="_blank">Selects (1)</a></h3>
+            <div><h3><a href="../demo/selects2.html">Selects (1)</a></h3>
                 <p>Static and bound select controls</p>
             </div>
-            <div><h3><a href="../demo/selects.html" target="_blank">Selects (2)</a></h3>
+            <div><h3><a href="../demo/selects.html">Selects (2)</a></h3>
                 <p>A select depending on another select</p>
             </div>
-            <div><h3><a href="../demo/selects3.html" target="_blank">Select Multiple</a></h3>
+            <div><h3><a href="../demo/selects3.html">Select Multiple</a></h3>
                 <p>Using <code>fx-items</code> to build a list of checkboxes from data</p>
             </div>
-            <div><h3><a href="../demo/selects4.html" target="_blank">Dynamic and static list widgets</a></h3>
+            <div><h3><a href="../demo/selects4.html">Dynamic and static list widgets</a></h3>
                 <p>Using <code>static</code> on bound widgets improves rendering speed.</p>
             </div>
-            <div><h3><a href="../demo/trigger.html" target="_blank">Trigger</a></h3>
+            <div><h3><a href="../demo/trigger.html">Trigger</a></h3>
                 <p>Permutations of <code>fx-trigger</code>. Walks like a button, talks like a button...</p>
             </div>
-            <div><h3><a href="../demo/avt.html" target="_blank">Template Expressions (1)</a></h3>
+            <div><h3><a href="../demo/avt.html">Template Expressions (1)</a></h3>
                 <p>Using Template Expressions</p>
             </div>
-            <div><h3><a href="../demo/css.html" target="_blank">Template Expressions (2)</a></h3>
+            <div><h3><a href="../demo/css.html">Template Expressions (2)</a></h3>
                 <p>More fun with Template Expressions</p>
             </div>
-            <div><h3><a href="../demo/dyn-datalist.html" target="_blank">Ajax datalist</a></h3>
+            <div><h3><a href="../demo/dyn-datalist.html">Ajax datalist</a></h3>
                 <p>An Ajax datalist with a third-party lib</p>
             </div>
-            <div class="updated"><h3><a href="../demo/fx-json-items.html" target="_blank"><code>fx-items</code> using JSON
+            <div class="updated"><h3><a href="../demo/fx-json-items.html"><code>fx-items</code> using JSON
                 data</a></h3>
                 <p>Building a set of chechboxes from JSON data with <code>fx-items.</code></p>
             </div>
         </section>
+
         <h2>UI Container</h2>
-        <section class="three-col">
+        <section id="container" class="three-col">
             <div>
-                <h3><a href="../demo/todo.html" target="_blank">Simple Repeat</a></h3>
+                <h3><a href="../demo/todo.html">Simple Repeat</a></h3>
                 <p>A simple todo with <code>fx-repeat</code></p>
             </div>
             <div>
-                <h3><a href="../demo/nested-todo.html" target="_blank">Nested Repeat</a></h3>
+                <h3><a href="../demo/nested-todo.html">Nested Repeat</a></h3>
                 <p>Nesting <code>fx-repeat</code> elements</p>
             </div>
             <div>
-                <h3><a href="../demo/switch.html" target="_blank">Switch</a></h3>
+                <h3><a href="../demo/switch.html">Switch</a></h3>
                 <p>Static or bound <code>fx-switch</code> rendered as a tabcontainer</p>
             </div>
             <div>
-                <h3><a href="../demo/switch-lazy.html" target="_blank">Switch is lazy</a></h3>
+                <h3><a href="../demo/switch-lazy.html">Switch is lazy</a></h3>
                 <p><code>fx-switch</code> not only updates selected case.</p>
             </div>
             <div>
-                <h3><a href="../demo/repeat-in-switch.html" target="_blank">Repeats in Switch</a></h3>
+                <h3><a href="../demo/repeat-in-switch.html">Repeats in Switch</a></h3>
                 <p><code>fx-repeat</code> nested in a tabcontainer(<code>fx-switch</code>)</p>
             </div>
             <div>
-                <h3><a href="../demo/accordion.html" target="_blank">Accordion</a></h3>
+                <h3><a href="../demo/accordion.html">Accordion</a></h3>
                 <p>An accordion with <code>fx-switch</code> with CSS transition when switching panels</p>
             </div>
             <div>
-                <h3><a href="../demo/repeat-atomic.html" target="_blank">repeat atomic values</a></h3>
+                <h3><a href="../demo/repeat-atomic.html">repeat atomic values</a></h3>
                 <p>Repeating plain values from a sequence</p>
             </div>
             <div>
-                <h3><a href="../demo/group-relevance.html" target="_blank">Group relevance</a></h3>
+                <h3><a href="../demo/group-relevance.html">Group relevance</a></h3>
                 <p>show/hide groups depending on their binding</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/repeat-attributes.html" target="_blank">Repeats via attributes</a></h3>
+                <h3><a href="../demo/repeat-attributes.html">Repeats via attributes</a></h3>
                 <p>Building repeats by using <code>data-ref</code> attribute</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/lab/fore-component.html" target="_blank">Fore as Web Component</a></h3>
+                <h3><a href="../demo/lab/fore-component.html">Fore as Web Component</a></h3>
                 <p><code>fore-component</code> a generic Web Component to encapsulate a complete Fore page
                     in shadowDOM.</p>
             </div>
         </section>
 
         <h2>Actions and Events</h2>
-        <section class="three-col">
+        <section id="actions" class="three-col">
             <div>
-                <h3><a href="../demo/if.html" target="_blank">The <code>if</code> attribute</a></h3>
+                <h3><a href="../demo/if.html">The <code>if</code> attribute</a></h3>
                 <p>Conditional actions with the <code>if</code> attribute</p>
             </div>
             <div>
-                <h3><a href="../demo/while.html" target="_blank">The <code>while</code> attribute</a></h3>
+                <h3><a href="../demo/while.html">The <code>while</code> attribute</a></h3>
                 <p>Looping with the <code>while</code> attribute</p>
             </div>
             <div>
-                <h3><a href="../demo/delay.html" target="_blank">The <code>delay</code> attribute</a></h3>
+                <h3><a href="../demo/delay.html">The <code>delay</code> attribute</a></h3>
                 <p>Deplaying an action</p>
             </div>
             <div>
-                <h3><a href="../demo/events.html" target="_blank">handling events</a></h3>
+                <h3><a href="../demo/events.html">handling events</a></h3>
                 <p>Handling a custom event</p>
             </div>
             <div>
-                <h3><a href="../demo/events2.html" target="_blank">passing params with events</a></h3>
+                <h3><a href="../demo/events2.html">passing params with events</a></h3>
                 <p>Reading custom event parameters</p>
             </div>
             <div>
-                <h3><a href="../demo/hello-fonto.html" target="_blank">and... Action</a></h3>
+                <h3><a href="../demo/hello-fonto.html">and... Action</a></h3>
                 <p>Playing with state events</p>
             </div>
             <div>
-                <h3><a href="../demo/actions.html" target="_blank">Action Extras</a></h3>
+                <h3><a href="../demo/actions.html">Action Extras</a></h3>
                 <p>Conditional action and action blocks</p>
             </div>
             <div>
-                <h3><a href="../demo/script-actions.html" target="_blank">Action calling JavaScript</a></h3>
+                <h3><a href="../demo/script-actions.html">Action calling JavaScript</a></h3>
                 <p>An action calling JavaScript</p>
             </div>
             <div>
-                <h3><a href="../demo/fx-dispatch.html" target="_blank">fx-dispatch action</a></h3>
+                <h3><a href="../demo/fx-dispatch.html">fx-dispatch action</a></h3>
                 <p>Dispatching events with parameters</p>
             </div>
             <div>
-                <h3><a href="../demo/insert.html" target="_blank">The insert action</a></h3>
+                <h3><a href="../demo/insert.html">The insert action</a></h3>
                 <p><code>fx-insert</code> - the swiss army knife of data mutation</p>
             </div>
             <div>
-                <h3><a href="../demo/insert2.html" target="_blank">more inserts - using context</a></h3>
+                <h3><a href="../demo/insert2.html">more inserts - using context</a></h3>
                 <p><code>fx-insert</code> using <code>context</code> attribute</p>
             </div>
             <div>
-                <h3><a href="../demo/insert-inhomogenious.html" target="_blank">inserting in inhomogenious
+                <h3><a href="../demo/insert-inhomogenious.html">inserting in inhomogenious
                     nodeset</a></h3>
                 <p>Inserting into the right place with mixed siblings</p>
             </div>
             <div>
-                <h3><a href="../demo/fx-replace.html" target="_blank">replace action</a></h3>
+                <h3><a href="../demo/fx-replace.html">replace action</a></h3>
                 <p>Replacing data nodes</p>
             </div>
             <div>
-                <h3><a href="../demo/keycode.html" target="_blank">handling keyboard events</a></h3>
+                <h3><a href="../demo/keycode.html">handling keyboard events</a></h3>
                 <p>Using event() function to conditionally execute actions for certain keys</p>
             </div>
             <div>
-                <h3><a href="../demo/debounce.html" target="_blank">debouncing trigger executions</a></h3>
+                <h3><a href="../demo/debounce.html">debouncing trigger executions</a></h3>
                 <p>Using <code>debounce</code> to prevent triggers to fire too often.
                 </p>
             </div>
             <div>
-                <h3><a href="../demo/reload.html" target="_blank">the reload action</a></h3>
+                <h3><a href="../demo/reload.html">the reload action</a></h3>
                 <p>A simple action to reload the window</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/load.html" target="_blank">the load action</a></h3>
+                <h3><a href="../demo/load.html">the load action</a></h3>
                 <p>loading content into document, replacing window or opening a tab.</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/action-block.html" target="_blank">Looping submissions with actions</a></h3>
+                <h3><a href="../demo/action-block.html">Looping submissions with actions</a></h3>
                 <p>Looping submissions with an action block.</p>
             </div>
             <div class="updated">
-                <h3><a href="../demo/actions/reset.html" target="_blank">Resetting data</a></h3>
+                <h3><a href="../demo/actions/reset.html">Resetting data</a></h3>
                 <p>Resetting data to their initial state.</p>
             </div>
         </section>
 
         <h2>Functions</h2>
-        <section class="three-col">
+        <section id="functions" class="three-col">
             <div>
-                <h3><a href="../demo/functions/fn-context.html" target="_blank">context()</a></h3>
+                <h3><a href="../demo/functions/fn-context.html">context()</a></h3>
                 <p>The <code>context</code> attribute and the <code>context()</code> function</p>
             </div>
             <div>
-                <h3><a href="../demo/functions.html" target="_blank">Custom Functions</a></h3>
+                <h3><a href="../demo/functions.html">Custom Functions</a></h3>
                 <p>Creating custom functions in JavaScript and XPath/XQuery and XUpdate.</p>
             </div>
         </section>
 
         <h2>JSON</h2>
-        <section class="three-col">
+        <section id="json" class="three-col">
             <div>
-                <h3><a href="../demo/hello-json.html" target="_blank">binding JSON</a></h3>
+                <h3><a href="../demo/hello-json.html">binding JSON</a></h3>
                 <p>Binding JSON data nodes in a <code>fx-repeat</code></p>
             </div>
         </section>
 
 
         <h2>By element</h2>
-        <section class="three-col">
+        <section id="byelement" class="three-col">
             <div>
-                <h3><a href="../demo/controls/fx-dialog.html" target="_blank">the `fx-dialog` element</a></h3>
+                <h3><a href="../demo/controls/fx-dialog.html">the `fx-dialog` element</a></h3>
                 <p>Modal dialog with <code>fx-dialog</code> and associated actions</p>
             </div>
             <div>
-                <h3><a href="../demo/fx-message.html" target="_blank">the `fx-message` element</a></h3>
+                <h3><a href="../demo/fx-message.html">the `fx-message` element</a></h3>
                 <p>Dissappearing, sticky and modal messages</p>
             </div>
             <div>
-                <h3><a href="../demo/controls/fx-output.html" target="_blank">the `fx-output` element</a></h3>
+                <h3><a href="../demo/controls/fx-output.html">the `fx-output` element</a></h3>
                 <p>Various options of the <code>fx-output</code> element</p>
             </div>
         </section>
 
-        <h2>Other examples</h2>
-        <section class="three-col">
+        <h2>Bricks</h2>
+        <section id="bricks" class="three-col">
             <div>
-                <h3><a href="reference.html" target="_blank">Fore Element Reference</a></h3>
+                <h3><a href="../demo/i18n/i18n.html">i18n</a></h3>
+                <p>Switching the interface language</p>
+            </div>
+            <div>
+                <h3><a href="../demo/beforeunload.html">Page exit confirmation</a></h3>
+                <p>Show/do not show a exit confirmation depending on a condition</p>
+            </div>
+            <div>
+                <h3><a href="../demo/auth.html">a simple login</a></h3>
+                <p>A simple login with <code>fx-switch</code></p>
+            </div>
+        </section>
+
+        <h2>Other examples</h2>
+        <section id="other" class="three-col">
+            <div>
+                <h3><a href="reference.html">Fore Element Reference</a></h3>
                 <p>Dynamically loads and renders markdown files with document the Fore Element syntax</p>
             </div>
             <div>
-                <h3><a href="../demo/api.html" target="_blank">API Demo</a></h3>
+                <h3><a href="../demo/api.html">API Demo</a></h3>
                 <p>Uses a large, generated API JSON file to display Fore API</p>
             </div>
             <div>
-                <h3><a href="../demo/todo2.html" target="_blank">Todo</a></h3>
+                <h3><a href="../demo/todo2.html">Todo</a></h3>
                 <p>A little todo application</p>
             </div>
             <div>
-                <h3><a href="../demo/project.html" target="_blank">a Kanban board with checklists</a></h3>
+                <h3><a href="../demo/project.html">a Kanban board with checklists</a></h3>
                 <p>a Kanban board with nested <code>fx-repeat</code> elements and a bit of dynamic CSS</p>
             </div>
             <div>
-                <h3><a href="../demo/simple-tei-header.html" target="_blank">editing a basic TEI header</a></h3>
+                <h3><a href="../demo/simple-tei-header.html">editing a basic TEI header</a></h3>
                 <p>A basic TEI header editor with <code>fx-repeat</code> and <code>fx-switch</code> elements.</p>
             </div>
             <div>
-                <h3><a href="../demo/docbook-bibliography.html" target="_blank">DocBook Bibliography - editing
+                <h3><a href="../demo/docbook-bibliography.html">DocBook Bibliography - editing
                     namespaced XML</a></h3>
                 <p>Editing namespaced XML</p>
             </div>
             <div>
-                <h3><a href="../demo/randomizer.html" target="_blank">Randomizing CSS properties</a></h3>
+                <h3><a href="../demo/randomizer.html">Randomizing CSS properties</a></h3>
                 <p>Some fun with randomly generated CSS properties.</p>
             </div>
-            <div>
-                <h3><a href="../demo/auth.html" target="_blank">a simple login</a></h3>
-                <p>A simple login with <code>fx-switch</code></p>
-            </div>
             <div class="broken">
-                <h3><a href="../demo/graph/subgraph.html" target="_blank">Subgraph recalculation</a></h3>
+                <h3><a href="../demo/graph/subgraph.html">Subgraph recalculation</a></h3>
                 <p>Showing the dependency graph at work</p>
             </div>
             <div>
-                <h3><a href="../demo/variables.html" target="_blank">Variables</a></h3>
+                <h3><a href="../demo/variables.html">Variables</a></h3>
                 <p>Using the <code>fx-var</code> element</p>
             </div>
             <div>
-                <h3><a href="../demo/instance-generator/instance-generator.html" target="_blank">Instance Data
+                <h3><a href="../demo/instance-generator/instance-generator.html">Instance Data
                     generator</a></h3>
                 <p>A primitive instance data generator</p>
             </div>
             <div>
-                <h3><a href="../demo/external-fore.html" target="_blank">loading external Fore page</a></h3>
+                <h3><a href="../demo/external-fore.html">loading external Fore page</a></h3>
                 <p>Loading a <code>fx-fore</code> element from another page</p>
             </div>
             <div>
-                <h3><a href="../demo/controls/fx-fore.html" target="_blank">Fore as widget</a></h3>
+                <h3><a href="../demo/controls/fx-fore.html">Fore as widget</a></h3>
                 <p>Using a <code>fx-fore</code> element as control in another Fore</p>
             </div>
             <div>
-                <h3><a href="../demo/clock2.html" target="_blank">Clock</a></h3>
+                <h3><a href="../demo/clock2.html">Clock</a></h3>
                 <p>A clock with one line of JavaScript</p>
             </div>
             <div>
-                <h3><a href="../demo/codemirror/codemirror.html" target="_blank">Codemirror as Control</a></h3>
+                <h3><a href="../demo/codemirror/codemirror.html">Codemirror as Control</a></h3>
                 <p>Editing a document fragment with CodeMirror and binding it with <code>fx-control</code>.</p>
-            </div>
-            <div>
-                <h3><a href="../demo/beforeunload.html" target="_blank">Page exit confirmation</a></h3>
-                <p>Show/do not show a exit confirmation depending on a condition</p>
             </div>
         </section>
 
-        <!--        <h3><a href="../demo/auth.html" target="_blank">URLEncoded Submission</a></h3>-->
+        <!--        <h3><a href="../demo/auth.html">URLEncoded Submission</a></h3>-->
 
-    </div>
+    </main>
+
     <footer>
+
         <div class="wrapper three-col">
             <div>
                 <h4>Fore is brought to you by</h4>
