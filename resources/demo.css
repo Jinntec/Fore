@@ -29,6 +29,9 @@ code{
     background: rgba(255,255,255,0.7);
     border-radius: 0.3rem;
 }
+demo-snippet{
+    border: thin solid #cccccc;
+}
 demo-snippet .code-container{
     background: white;
     font-size: 1.2rem;

@@ -54,32 +54,7 @@ demo-snippet h2{
 }
 em{
     font-weight: 900;
-    /*text-decoration: underline;*/
 }
-
-.feature{
-    background: white;
-    /*background-color: #ffffff;*/
-    padding: 2rem;
-    margin: 1rem;
-    color:var(--paper-grey-900);
-    border-radius: 0.3rem;
-    /*border-top: thin solid rgba(255,255,255,0.5);*/
-    /*border-left:thin solid rgba(255,255,255,0.5);*/
-    border-bottom: thin solid rgba(0,0,0,0.7);
-    border-right: thin solid rgba(0,0,0,0.7);
-
-    /*
-    border-left:thin solid white;
-    border-top: thin solid white;
-    border-right: thin solid var(--paper-grey-700);
-    border-bottom: thin solid var(--paper-grey-700);
-    */
-}
-.feature > *{
-    color:var(--paper-grey-900);
-}
-
 
 figcaption{
     /*color:white;*/
@@ -184,6 +159,7 @@ h2.outer{
 h3{
     font-weight: 700;
     font-size:1.5rem;
+    margin-top:0.5rem;
 }
 /*
 .header {
@@ -251,6 +227,8 @@ header{
     /*color:white;*/
     font-size: 2rem;
     margin-bottom: 1rem;
+    width: 100%;
+    align-self: flex-start;
 }
 nav{
     position: fixed;
@@ -308,7 +286,7 @@ nav.local-nav a:hover{
 .three-col {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    grid-gap: 1rem;
+    grid-gap: 1.5rem;
 }
 
 .teaser{
@@ -327,27 +305,24 @@ p {
 }
 
 section {
-    /*background: rgba(255, 255, 255, 0.5);*/
     width: 100%;
     margin-bottom:2rem;
 }
 
-.demos section > div {
+.demos section > a {
     padding: 1rem;
     /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    /*
-    box-shadow: 0.25rem 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    */
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 0.5rem;
+    text-decoration: none;
     border-top: 1px solid rgba(255, 255, 255, 0.9);
     border-left: 1px solid rgba(255, 255, 255, 0.9);
     border-right: 1px solid rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
-
+.demos section > a:hover{
+    box-shadow: 0rem 0.2rem 0.75rem rgba(0, 0, 0, 0.3);
+}
 .overlay {
     position: absolute;
     top: 0;

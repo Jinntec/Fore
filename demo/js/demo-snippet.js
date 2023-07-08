@@ -58,7 +58,7 @@ Polymer({
     <style include="prism-theme-default">
       :host {
         display: block;
-        margin-bottom: 40px;
+        /*margin-bottom: 40px;*/
         @apply --demo-snippet;
       }
 
@@ -67,8 +67,10 @@ Polymer({
         /*border-bottom: 1px solid #e0e0e0;*/
         background: rgba(240,245,255,0.5)
         margin: 0;
-        padding: 20px;
+        padding: 1rem;
         @apply --demo-snippet-demo;
+        display: flex;
+        align-items:center;
       }
 
       .code-container {
@@ -79,6 +81,7 @@ Polymer({
         padding: 0 20px;
         z-index: -1;
         @apply --demo-snippet-code;
+        margin-bottom: 1rem;
       }
 
       .code {
@@ -88,12 +91,15 @@ Polymer({
         overflow: auto;
         @apply --demo-snippet-code;
         padding: 0 1rem;
+        /*
         border-top: 2px solid rgba(255,255,255,0.9);
         border-left:2px solid rgba(255,255,255,0.9);
         border-bottom: thin solid rgba(0,0,0,0.2);
         border-right: thin solid rgba(0,0,0,0.2);
         border-radius: 0.75rem;
+        */
       }
+      
       .code > pre {
         margin: 0;
         padding: 0 0 10px 0;

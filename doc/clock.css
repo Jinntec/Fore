@@ -31,7 +31,7 @@
     background: transparent;
     border-radius: 50%;
     position: relative;
-    margin:5rem 0 0 1rem;
+    margin:1rem;
     border:thin solid darkgoldenrod;
 
     border:0.0625em solid #444;
@@ -49,6 +49,7 @@
     left: 50%;
     transform: translateX(-50%);
     /*color: white;*/
+    z-index: 1;
 }
 .clock::after{
     position: absolute;
