@@ -280,6 +280,9 @@ export default class FxControl extends XfAbstractControl {
         let widget = this.querySelector(`.${WIDGETCLASS}`);
         if (!widget) {
             widget = this.querySelector('input');
+            if(widget && !widget.classList.contains('widget')){
+                widget.classList.add('widget');
+            }
         }
         if (!widget) {
             const input = document.createElement('input');
