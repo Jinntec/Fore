@@ -24,7 +24,7 @@
     <h1>What are these <code>ref</code>s about?</h1>
     <p>Seen that <code>ref</code> thingy before but what does it actually do?</p>
 
-    <p>A <code>ref</code> (short for 'reference') points to some location in your instance data and binds to it. Whenever
+    <p>A <code>ref</code> (short for 'reference') points to some location in your data and binds to it. Whenever
         that bound node changes the UI will follow.</p>
 
     <p>Likewise when a control or action changes the bound node, the instance data will be updated.</p>
@@ -50,8 +50,10 @@
 
 
     <p>A <code>ref</code> is a path expression - it may have steps like a filesystem path.</p>
+    <div class="note">The binding language in Fore is XPath 3. It's simple for simple cases but can also handle
+    complex filtering and searching. See the <a href="https://jinntec.github.io/fore-docs/links/" target="_blank">Links</a> section of the documentation. </div>
 
-    <p>The <code>data</code> step does not need to be mentioned - it's always implicit to save typing.</p>
+    <p>The <code>data</code> step does not need to be mentioned - The root element is always implicit to save typing.</p>
 
     <div class="nav-buttons">
         <a class="redline prev" href="./01-hi.html">previous</a>
