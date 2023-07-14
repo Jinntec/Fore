@@ -44,6 +44,12 @@ export class FxFore extends HTMLElement {
             ready: {
                 type: Boolean,
             },
+            /**
+             *
+             */
+            validateOn: {
+                type: String
+            }
         };
     }
 
@@ -182,6 +188,7 @@ export class FxFore extends HTMLElement {
         this.initialRun = true;
         this.someInstanceDataStructureChanged = false;
         this.repeatsFromAttributesCreated = false;
+        this.validateOn = this.hasAttribute('validate-on') ? this.getAttribute('validate-on'):'update';
     }
 
     connectedCallback() {

@@ -197,11 +197,10 @@ export class FxModel extends HTMLElement {
         }
 
         // console.log('changed nodes ', this.changed);
-
-
         this.computes = 0;
 
         this.subgraph = new DepGraph(false);
+        // ### create the subgraph for all changed modelItems
         if (this.changed.length !== 0) {
             // ### build the subgraph
             this.changed.forEach(modelItem => {
@@ -246,14 +245,14 @@ export class FxModel extends HTMLElement {
             const toRefresh = [...this.changed];
             this.formElement.toRefresh = toRefresh;
             this.changed = [];
-            Fore.dispatch(this,'recalculate-done',{graph:this.subgraph})
+            Fore.dispatch(this,'recalculate-done',{graph:this.subgraph,computes:this.computes})
         } else {
             const v = this.mainGraph.overallOrder(false);
             v.forEach(path => {
                 const node = this.mainGraph.getNodeData(path);
                 this.compute(node, path);
             });
-            Fore.dispatch(this,'recalculate-done',{graph:this.mainGraph})
+            Fore.dispatch(this,'recalculate-done',{graph:this.mainGraph,computes:this.computes})
         }
         console.log('recalculate finished with modelItems ', this.modelItems);
     }
@@ -317,13 +316,13 @@ export class FxModel extends HTMLElement {
                             }
                         }
         */
+                const expr = modelItem.bind[property];
                 if (property === 'calculate') {
-                    const expr = modelItem.bind[property];
                     const compute = evaluateXPath(expr, modelItem.node, this);
                     modelItem.value = compute;
                     modelItem.readonly = true; // calculated nodes are always readonly
                 } else if (property !== 'constraint' && property !== 'type') {
-                    const expr = modelItem.bind[property];
+                    // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
                     if (expr) {
                         const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
                         modelItem[property] = compute;
@@ -376,7 +375,7 @@ export class FxModel extends HTMLElement {
                         */
                 if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
                     const constraint = bind.getAttribute('constraint');
-                    if (constraint) {
+                    if (constraint && modelItem.node) {
                         const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
                         // console.log('modelItem validity computed: ', compute);
                         modelItem.constraint = compute;
@@ -392,7 +391,6 @@ export class FxModel extends HTMLElement {
                         modelItem.required = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!modelItem.node.textContent) {
-                            // console.log('modelItem required check failed: ');
                             valid = false;
                         }
                         // if (!compute) valid = false;
@@ -409,7 +407,7 @@ export class FxModel extends HTMLElement {
                 }
             }
         });
-        // console.log('modelItems after revalidate: ', this.modelItems);
+        console.log('modelItems after revalidate: ', this.modelItems);
         return valid;
     }
 

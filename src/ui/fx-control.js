@@ -113,6 +113,11 @@ export default class FxControl extends XfAbstractControl {
 
         this.addEventListener('keyup', () => {
             FxModel.dataChanged = true;
+/*
+            if (!this.classList.contains('visited')) {
+                this.classList.add('visited');
+            }
+*/
         });
         // ### convenience marker event
         if (this.updateEvent === 'enter') {
@@ -139,6 +144,9 @@ export default class FxControl extends XfAbstractControl {
             listenOn.addEventListener(this.updateEvent, (event) => {
                 this.setValue(this._getValueFromHtmlDom());
             });
+            listenOn.addEventListener('blur', (event) => {
+                this.setValue(this._getValueFromHtmlDom());
+            },{once:true});
         }
 
         this.addEventListener('return', e => {
@@ -170,9 +178,11 @@ export default class FxControl extends XfAbstractControl {
         });
 
         this.widget.addEventListener('focus', () => {
+/*
             if (!this.classList.contains('visited')) {
                 this.classList.add('visited');
             }
+*/
         });
 
         this.template = this.querySelector('template');
@@ -203,13 +213,11 @@ export default class FxControl extends XfAbstractControl {
     setValue(val) {
         const modelitem = this.getModelItem();
 
-        /*
             if(this.getAttribute('class')){
               this.classList.add('visited');
             }else{
               this.setAttribute('class','visited');
             }
-        */
 
         if (modelitem?.readonly) {
             console.warn('attempt to change readonly node', modelitem);
@@ -235,7 +243,7 @@ export default class FxControl extends XfAbstractControl {
         }
 
         setval.actionPerformed();
-        this.visited = true;
+        // this.visited = true;
     }
 
     _replaceNode(node) {
