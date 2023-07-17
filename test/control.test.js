@@ -2,6 +2,7 @@
 import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
+import * as fx from "fontoxpath";
 
 describe('control tests', () => {
   it('shows control alert defined on control', async () => {
@@ -406,6 +407,36 @@ describe('control tests', () => {
     input.blur();
     console.log('claslist',input.classList)
     expect(input.classList.contains('visited')).to.be.true;
+
+  });
+
+  it('creates non existing attributes', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item attr1="foo"></item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="item/@attr2" create></fx-control>
+        <fx-group ref="item" create>
+          <fx-control ref="@attr3"></fx-control>
+        </fx-group>
+        <fx-inspector></fx-inspector>
+      </fx-fore>
+    `);
+
+    // await elementUpdated(el);
+    let { detail } = await oneEvent(el, 'refresh-done');
+
+    const instance = el.querySelector('fx-instance');
+    const item = fx.evaluateXPathToFirstNode('//item', instance.instanceData, null, {});
+
+    expect(item).to.exist;
+    expect(item.hasAttribute('attr2')).to.be.true;
+    expect(item.hasAttribute('attr3')).to.be.true;
 
   });
 
