@@ -177,11 +177,19 @@ class FxLoad extends AbstractAction {
             }
         }
 
+        if(!(this.attachTo.startsWith('_')||this.attachTo.startsWith('#'))){
+            Fore.dispatch(this,'error',{message:'valid values for "attach-to" start with "_" or "#"'});
+        }
+
         if (this.attachTo.startsWith('#')) {
             const targetId = this.attachTo.substring(1);
             const resolved = resolveId(targetId, this);
             resolved.innerHTML = '';
             // resolved.innerHTML = effectiveContent;
+            if(effectiveContent.querySelector('fx-fore')){
+                resolved.append(effectiveContent.querySelector('fx-fore').cloneNode(true));
+                return;
+            }
             const body = effectiveContent.querySelector('body').cloneNode(true);
             resolved.appendChild( body.firstElementChild);
         }

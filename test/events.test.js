@@ -40,8 +40,11 @@ describe('Event Tests', () => {
       .getDefaultInstance()
       .getDefaultContext();
     const p1 = fx.evaluateXPathToString('param1', inst, null, {});
+    const p2 = fx.evaluateXPathToString('param2', inst, null, {});
 
     expect(p1).to.equal('foo');
+    // ### todo: fails - why?
+    // expect(p2).to.equal('bar');
   });
 
   it('handles bubbling events', async () => {
