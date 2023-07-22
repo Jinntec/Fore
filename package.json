@@ -129,6 +129,9 @@
       ]
     }
   },
+  "engines": {
+    "node": ">= 16.19.1"
+  },
   "prettier": "@open-wc/prettier-config",
   "main": "index.js"
 }
