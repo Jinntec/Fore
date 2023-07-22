@@ -3,20 +3,13 @@ import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import strip from '@rollup/plugin-strip';
-import { generate} from 'build-number-generator';
 
 // eslint-disable-next-line no-unused-vars
 const { dependencies } = require('./package.json');
-const buildNumber = generate();
 export default [
   {
     input: './index.js',
     output: [
-      {
-        file: `dist/fore.${buildNumber}.js`,
-        format: 'es',
-        sourcemap: true,
-      },
       {
         file: `dist/fore.js`,
         format: 'es',
@@ -42,11 +35,6 @@ export default [
   {
     input: './index.js',
     output: [
-      {
-        file: `dist/fore-dev.${buildNumber}.js`,
-        format: 'es',
-        sourcemap: true,
-      },
       {
         file: `dist/fore-dev.js`,
         format: 'es',
