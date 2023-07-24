@@ -18,6 +18,8 @@
 
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
 <demo-snippet>
     <template>
@@ -37,7 +39,11 @@
             <fx-group>
                 <h1>Static and dynamic list widgets</h1>
 
-                <p>A dynamic list needs to rebuild its items on every refresh</p>
+                <h2>Dynamic List</h2>
+                <p>
+                    If the list items change at runtime by user interaction or otherwise changing the underlying
+                    bound nodes Fore will rebuild the whole list during next execution of <code>refresh()</code>.
+                </p>
                 <fx-control ref="listitem" update-event="input">
                     <label>dynamic list</label>
                     <select ref="instance('list')?*" class="widget">
@@ -47,8 +53,10 @@
                     </select>
                 </fx-control>
 
-
-                <p>A static list is mucher faster in updating as the list will only be built once</p>
+                <h2>Static List</h2>
+                <p>Oftentimes lists are just static picklists that don't need to be rebuild at any time except load time.</p>
+                <p>Using the <code>static</code> marker attribute gives Fore a hint that it doesn't need to reconsider
+                this list once it has been build.</p>
                 <fx-control ref="listitem2" update-event="input">
                     <label>static list</label>
                     <select ref="instance('list2')?*" class="widget" static>

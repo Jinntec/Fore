@@ -99,13 +99,13 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     return refd.children;
   }
   async connectedCallback() {
-    console.log('connectedCallback',this);
+    // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
-      console.log('handle index event ', e);
+      // console.log('handle index event ', e);
       const { item } = e.detail;
       const repeatedItems = this._getRepeatedItems();
       const idx = Array.from(repeatedItems).indexOf(item);
@@ -116,9 +116,6 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     document.addEventListener('index-changed', e => {
       e.stopPropagation();
       if (!e.target === this) return;
-      console.log('handle index event ', e);
-      // const { item } = e.detail;
-      // const idx = Array.from(this.children).indexOf(item);
       const { index } = e.detail;
       this.index = Number(index);
       this.applyIndex(this.children[index - 1]);
@@ -133,13 +130,11 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
 
     // if (this.getOwnerForm().lazyRefresh) {
     this.mutationObserver = new MutationObserver(mutations => {
-      console.log('mutations', mutations);
 
       if (mutations[0].type === 'childList') {
         const added = mutations[0].addedNodes[0];
         if (added) {
           const path = XPathUtil.getPath(added);
-          console.log('path mutated', path);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;
           // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -182,7 +177,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     // ### there must be a single 'template' child
 
     const inited = new Promise(resolve => {
-      console.log('##### repeat-attributes init ', this.id);
+      // console.log('##### repeat-attributes init ', this.id);
       // if(!this.inited) this.init();
       // does not use this.evalInContext as it is expecting a nodeset instead of single node
       this._evalNodeset();
@@ -231,12 +226,9 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   async refresh(force) {
-    // console.group('fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
-    console.time('repeat-refresh', this);
     this._evalNodeset();
-    // console.log('repeat refresh nodeset ', this.nodeset);
 
     let repeatItems = this.querySelectorAll('.fx-repeatitem');
     let repeatItemCount = repeatItems.length;
@@ -268,6 +260,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         // add new repeatitem
 
         const clonedTemplate = this._clone();
+        if(!clonedTemplate) return;
 
         // ### cloned templates are always appended to the binding element - the one having the data-ref
         const bindingElement = this.querySelector('[data-ref]');
@@ -309,13 +302,9 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     // this.style.display = 'block';
     // this.style.display = this.display;
     this.setIndex(this.index);
-    console.timeEnd('repeat-refresh');
-
-    console.groupEnd();
   }
 
   _dispatchIndexChange() {
-    // console.log('_dispatchIndexChange on index ', this.index);
       this.dispatchEvent(
           new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
       );
@@ -355,15 +344,13 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   async _initTemplate() {
-    // const shadowTemplate = this.shadowRoot.querySelector('template');
-    // console.log('shadowtempl ', shadowTemplate);
 
     // const defaultSlot = this.shadowRoot.querySelector('slot');
     // todo: this is still weak - should handle that better maybe by an explicit slot?
     // this.template = this.firstElementChild;
     this.template = this.querySelector('template');
-    console.log('### init template for repeat ', this.id, this.template);
 
+/*
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);
       // todo: catch this on form element
@@ -375,31 +362,14 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
         }),
       );
     }
+*/
+    if(!this.template) {
+      return;
+    }
 
     this.shadowRoot.appendChild(this.template);
   }
 
-/*
-  _initRepeatItems() {
-    console.log('_initRepeatItems', this.nodeset);
-    // const model = this.getModel();
-    // this.textContent = '';
-    Array.from(this.nodeset).forEach((item, index) => {
-
-      const clone = this._clone();
-      this.appendChild(clone);
-/!*
-      this.appendChild(repeatItem);
-
-      if (item.index === 1) {
-        this.applyIndex(item);
-      }
-
-      this._initVariables(item);
-*!/
-    });
-  }
-*/
 
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
@@ -415,11 +385,8 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   _clone() {
-    // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
-    // this.template = this.querySelector('template');
-    // const content = this.template.content.cloneNode(true);
-    // return document.importNode(content, true);
+    if(!this.template) return;
     return this.template.content.firstElementChild.cloneNode(true);
   }
 

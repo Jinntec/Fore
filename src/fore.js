@@ -1,3 +1,12 @@
+import getInScopeContext from "./getInScopeContext.js";
+import {evaluateXPathToString} from "./xpath-evaluation.js";
+import { XPathUtil } from "./xpath-util.js";
+
+/**
+ * Class hosting common utility functions used throughout all fore elements
+ *
+ * @example ../doc/demo.html
+ */
 export class Fore {
   static READONLY_DEFAULT = false;
 
@@ -8,6 +17,46 @@ export class Fore {
   static CONSTRAINT_DEFAULT = true;
 
   static TYPE_DEFAULT = 'xs:string';
+
+
+  /**
+   * returns true if target element is the widget itself or some element within the widget.
+   * @param target an event target
+   * @returns {boolean}
+   */
+  static isWidget(target) {
+    if(target?.classList.contains("widget")) return true;
+    let parent = target.parentNode;
+    while(parent && parent.nodeName !== 'FX-CONTROL'){
+      if(parent.classList.contains('widget')) return true;
+      parent = parent.parentNode;
+    }
+    return false;
+  }
+
+
+  static getDomNodeIndexString(node) {
+    const indexes = [];
+    let currentNode = node;
+
+    while (currentNode && currentNode.parentNode) {
+      const parent = currentNode.parentNode;
+      if (parent.childNodes && parent.childNodes.length > 0) {
+        const index = [...parent.childNodes].indexOf(currentNode);
+        indexes.unshift(index);
+      }
+      currentNode = parent;
+    }
+
+    return indexes.join('.');
+  }
+
+  static getExpression(input){
+    if(input.startsWith('{') && input.endsWith('}')){
+       return input.substring(1, input.length - 1);
+    }
+    return input;
+  }
 
   /**
    * returns the next `fx-fore` element upwards in tree
@@ -119,8 +168,6 @@ export class Fore {
   /**
    * recursively refreshes all UI Elements.
    *
-   * todo: this could probably made more efficient with significant impact on rendering perf
-   *
    * @param startElement
    * @param force
    * @returns {Promise<unknown>}
@@ -174,8 +221,8 @@ export class Fore {
     this.convertFromSimple(inputElement,newFore);
     newFore.removeAttribute('convert');
     console.log('converted', newFore);
-    return newFore;
     console.timeEnd('convert');
+    return newFore;
   }
   static convertFromSimple(startElement,targetElement){
     const children = startElement.childNodes;
@@ -218,28 +265,11 @@ export class Fore {
     });
   }
 
-
-  /**
-   * Alternative to `closest` that respects subcontrol boundaries
-   */
-  static getClosest(querySelector, start) {
-    while (!start.matches(querySelector)) {
-      if (start.matches('fx-fore')) {
-        // Subform reached. Bail out
-        return null;
-      }
-      start = start.parentNode;
-      if (!start) {
-        return null;
-      }
-    }
-    return start;
-  }
-
   /**
    * returns the proper content-type for instance.
    *
    * @param instance an fx-instance element
+   * @param contentType - the contentType
    * @returns {string|null}
    */
   static getContentType(instance, contentType) {
@@ -254,6 +284,59 @@ export class Fore {
     }
     console.warn('content-type unknown ', instance.type);
     return null;
+  }
+
+  static async handleResponse(response) {
+    const { status } = response;
+    if (status >= 400) {
+      // console.log('response status', status);
+      alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
+      throw new Error(`failed to load data - status: ${status}`);
+    }
+    const responseContentType = response.headers.get('content-type').toLowerCase();
+    // console.log('********** responseContentType *********', responseContentType);
+    if (responseContentType.startsWith('text/html')) {
+      // const htmlResponse = response.text();
+      // return new DOMParser().parseFromString(htmlResponse, 'text/html');
+      // return response.text();
+      return response.text().then(result =>
+          // console.log('xml ********', result);
+          new DOMParser().parseFromString(result, 'text/html'),
+      );
+    }
+    if (
+        responseContentType.startsWith('text/plain') ||
+        responseContentType.startsWith('text/markdown')
+    ) {
+      // console.log("********** inside  res plain *********");
+      return response.text();
+    }
+    if (responseContentType.startsWith('application/json')) {
+      // console.log("********** inside res json *********");
+      return response.json();
+    }
+    if (responseContentType.startsWith('application/xml')) {
+      const text = await response.text();
+      // console.log('xml ********', result);
+      return new DOMParser().parseFromString(text, 'application/xml');
+    }
+    return 'done';
+  }
+
+  static evaluateAttributeTemplateExpression(expr, node) {
+    const matches = expr.match(/{[^}]*}/g);
+    if (matches) {
+      matches.forEach(match => {
+        console.log('match ', match);
+        const naked = match.substring(1, match.length - 1);
+        const inscope = getInScopeContext(node, naked);
+        const result = evaluateXPathToString(naked, inscope, node.getOwnerForm());
+        const replaced = expr.replaceAll(match, result);
+        console.log('replacing ', expr, ' with ', replaced);
+        expr = replaced;
+      });
+    }
+    return expr;
   }
 
   static fadeInElement(element) {
@@ -297,51 +380,24 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
+      if (!XPathUtil.contains(target?.ownerDocument, target)) {
+      // The target is gone from the document. This happens when we are done with a refresh that removed the component
+      return;
+    }
     const event = new CustomEvent(eventName, {
       composed: false,
       bubbles: true,
       detail,
     });
-	  event.listenerPromises = [];
-      // console.info('dispatching', event.type, target);
-	  // console.log('!!! DISPATCH_START', eventName);
+    event.listenerPromises = [];
 
-      target.dispatchEvent(event);
+    target.dispatchEvent(event);
 
-	  // By now, all listeners for the event should have registered their completion promises to us.
-	  if (event.listenerPromises.length) {
-		  await Promise.all(event.listenerPromises);
-	  }
-	  // console.log('!!! DISPATCH_DONE', eventName);
-  }
-
-  static prettifyXml(source) {
-    const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
-    const xsltDoc = new DOMParser().parseFromString(
-      [
-        // describes how we want to modify the XML - indent everything
-        '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-        '  <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>',
-        '  <xsl:strip-space elements="*"/>',
-        '  <xsl:template match="text()">', // change to just text() to strip space in text nodes
-        '    <xsl:value-of select="normalize-space(.)"/>',
-        '  </xsl:template>',
-        '  <xsl:template match="node()|@*">',
-        '    <xsl:copy>',
-        '        <xsl:apply-templates select="node()|@*"/>',
-        '    </xsl:copy>',
-        '  </xsl:template>',
-        '</xsl:stylesheet>',
-      ].join('\n'),
-      'application/xml',
-    );
-
-
-    const xsltProcessor = new XSLTProcessor();
-    xsltProcessor.importStylesheet(xsltDoc);
-    const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
-    const resultXml = new XMLSerializer().serializeToString(resultDoc);
-    return resultXml;
+    // By now, all listeners for the event should have registered their completion promises to us.
+    if (event.listenerPromises.length) {
+      await Promise.all(event.listenerPromises);
+    }
+    // console.log('!!! DISPATCH_DONE', eventName);
   }
 
   static formatXml (xml) {
@@ -349,7 +405,6 @@ export class Fore {
     var wsexp = / *(.*) +\n/g;
     var contexp = /(<.+>)(.+\n)/g;
     xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
-    var pad = 0;
     var formatted = '';
     var lines = xml.split('\n');
     var indent = 0;
@@ -394,7 +449,7 @@ export class Fore {
   }
 
   static async loadForeFromUrl(hostElement, url) {
-    console.log('########## loading Fore from ', this.src, '##########');
+    // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -434,7 +489,7 @@ export class Fore {
         imported.addEventListener(
             'model-construct-done',
             e => {
-              console.log('subcomponent ready', e.target);
+              // console.log('subcomponent ready', e.target);
               const defaultInst = imported.querySelector('fx-instance');
               // console.log('defaultInst', defaultInst);
               if(hostElement.initialNode){
@@ -459,7 +514,7 @@ export class Fore {
           dummy.parentNode.removeChild(dummy);
           hostElement.shadowRoot.appendChild(imported);
         } else {
-          console.log(this, 'replacing widget with',theFore);
+          // console.log(this, 'replacing widget with',theFore);
           dummy.replaceWith(imported);
           // this.appendChild(imported);
         }

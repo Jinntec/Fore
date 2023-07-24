@@ -2,6 +2,7 @@
 import '../fx-model.js';
 import {AbstractAction} from './abstract-action.js';
 import {evaluateXPath} from '../xpath-evaluation.js';
+import {Fore} from '../fore.js';
 
 /**
  * `fx-setvalue`
@@ -50,9 +51,7 @@ export default class FxSetvalue extends AbstractAction {
         } else {
             value = '';
         }
-        console.log('value', value);
-        if (value.nodeType === Node.ATTRIBUTE_NODE) {
-            // console.log('value', value.nodeValue);
+        if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
@@ -62,12 +61,41 @@ export default class FxSetvalue extends AbstractAction {
 
     }
 
+    /**
+     * need to overwrite default dispatchExecute to do it ourselves. This is necessary for tracking control value changes
+     * which call setvalue directly without perform().
+     */
+    dispatchExecute() {}
+
     setValue(modelItem, newVal) {
         const item = modelItem;
         if (!item) return;
 
         if (item.value !== newVal) {
-            item.value = newVal;
+            // const path = XPathUtil.getPath(modelItem.node);
+            const path = Fore.getDomNodeIndexString(modelItem.node)
+
+            const ev = this.event;
+            const targetElem = this;
+            this.dispatchEvent(
+                new CustomEvent('execute-action', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable:true,
+                    detail: { action: targetElem, event:ev, value:newVal, path:path},
+                }),
+            );
+
+            if(newVal?.nodeType){
+                if(newVal.nodeType === Node.ELEMENT_NODE){
+                    item.value = newVal.textContent;
+                }
+                if(newVal.nodeType === Node.ATTRIBUTE_NODE){
+                    item.value = newVal.getValue()
+                }
+            }else{
+                item.value = newVal;
+            }
             this.getModel().changed.push(modelItem);
             this.needsUpdate = true;
         }

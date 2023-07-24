@@ -1,0 +1,141 @@
+
+body{
+    font-family: Montserrat, Verdana, sans-serif;
+    padding: 0;
+}
+.card{
+    border:thin solid;
+    padding:0.3rem;
+    margin:0.3rem 0;
+    border-radius: 5px;
+    background: white;
+
+}
+label{
+    display: block;
+}
+[repeat-index]{
+    background: rgba(255,255,255,0.5);
+}
+
+.wrapper{
+    width:auto;
+    max-width: 100%;
+}
+fx-control{
+    width: 100%;
+    position:relative;
+}
+fx-repeat{
+    position:relative;
+}
+fx-repeatitem{
+    display: block;
+    min-width: 200px;
+    position:relative;
+}
+input{
+    width: calc(100% - 0.5rem);
+    border: none;
+    padding: 4px;
+    background: white;
+    font-size: 0.8rem;
+}
+/* project repeat */
+.iconbtn{
+    position: absolute;
+}
+.iconbtn button:hover{
+    background: grey;
+    color:white;
+}
+.deleteProject{
+    right: 2rem;
+    position: absolute;
+}
+.iconbtn button{
+    border-radius: 50%;
+    border:none;
+    color:black;
+    background: white;
+}
+.addProject{
+    right: 0.5rem;
+}
+
+#project{
+    display: grid !important;
+    /*grid-template-columns: repeat(3,1fr);*/
+    grid-gap: 1rem;
+    overflow: auto;
+    width: 100%;
+}
+.header{
+    /*border-bottom: thin solid white;*/
+    padding: 1rem;
+}
+.header input{
+    background: transparent;
+}
+
+#project > fx-repeatitem{
+    /*background: rgba(255,255,255,0.5);*/
+    border:thin solid white;
+    position: relative;
+    min-width: 300px;
+    padding:0.5rem 0.25rem;
+}
+#project .header > fx-control{
+    width: calc(100% - 5rem);
+}
+.subheader{
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-top:1rem;
+}
+.activity{
+    width: 100%;
+    display: block;
+}
+.priority:before{
+    /*color:white;*/
+    width:16px;
+    height: 16px;
+    padding: 2px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 14px;
+    content:'';
+}
+.priority.p1:before{
+    /*content:'highest';*/
+    background: red;
+}
+.priority.p2:before{
+    /*content:'high';*/
+    background: orange;
+}
+.priority.p3:before{
+    /*content:'medium';*/
+    background: dodgerblue;
+}
+.priority.p4:before{
+    /*content:'forget it';*/
+    background: green;
+}
+
+#activity fx-repeatitem{
+    display: grid;
+    grid-template-columns: 20px auto 20px;
+    align-items: center;
+}
+#activity .iconbtn{
+    position:relative;
+    right:0;
+}
+#activity .iconbtn.delActivity{
+    right: 0;
+}
+#task .iconbtn{
+    right: 0.5rem;
+}

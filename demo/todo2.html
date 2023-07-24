@@ -9,6 +9,8 @@
     <script type="module" src="./demo.js"></script>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
     <div class="wrapper">
         <fx-fore id="todo">
             <fx-send submission="load" event="model-construct-done"></fx-send>
@@ -105,6 +107,14 @@
                 <button>clear your data</button>
                 <fx-send submission="clear"></fx-send>
             </fx-trigger>
+
+
+<!--
+            <fx-action-log></fx-action-log>
+            <fx-message event="log-action">{event('type')}</fx-message>
+            <fx-message event="log-action">{event('target.nodeName')}</fx-message>
+            <fx-message event="log-action">{event('eventPhase')}</fx-message>
+-->
         </fx-fore>
 
     </div>

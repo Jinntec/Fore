@@ -1,0 +1,5208 @@
+{
+  "version": "1.0.0",
+  "tags": [
+    {
+      "name": "fx-action",
+      "path": "./src/actions/fx-action.js",
+      "description": "`fx-action` an action to wrap other actions and defers the update cycle until the end of the block.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-append",
+      "path": "./src/actions/fx-append.js",
+      "description": "`fx-append` appends an entry to a repeat.",
+      "attributes": [
+        {
+          "name": "clear",
+          "type": "string"
+        },
+        {
+          "name": "repeat",
+          "description": "the repeat this action is appending to.",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "index-changed",
+          "description": "fired after new item is appended"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ],
+      "deprecated": true,
+      "deprecatedMessage": "will be replaced with `fx-insert`"
+    },
+    {
+      "name": "fx-confirm",
+      "path": "./src/actions/fx-confirm.js",
+      "description": "`fx-confirm`\nDisplays a simple confirmation before actually executing the nested actions.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-copy",
+      "path": "./src/actions/fx-copy.js",
+      "description": "`fx-copy`\ntodo: demo + tests",
+      "attributes": [
+        {
+          "name": "to",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-delete",
+      "path": "./src/actions/fx-delete.js",
+      "description": "`fx-delete`\ndeletes nodes from instance data.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "deleted",
+          "description": "event"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-dispatch",
+      "path": "./src/actions/fx-dispatch.js",
+      "description": "`fx-dispatch`\n\ndispatches an event with optional details.\n\nProperties given by `fx-property` child elements are stored to the events' details object and\ncan be accessed in usual JavaScript way.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-hide",
+      "path": "./src/actions/fx-hide.js",
+      "description": "`fx-hide`\nhides a dialog",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-insert",
+      "path": "./src/actions/fx-insert.js",
+      "description": "`fx-insert`\ninserts nodes into data instances",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "index-changed"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-load",
+      "path": "./src/actions/fx-load.js",
+      "description": "`fx-message`\n\nAction to display messages to the user.",
+      "attributes": [
+        {
+          "name": "attachTo",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-message",
+      "path": "./src/actions/fx-message.js",
+      "description": "`fx-message`\n\nAction to display messages to the user.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "message"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-refresh",
+      "path": "./src/actions/fx-refresh.js",
+      "description": "`fx-refresh`\n\nCalls refresh() on fx-form",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-reload",
+      "path": "./src/actions/fx-reload.js",
+      "description": "`fx-reload`\nreloads browser window when receiving 'reload' event",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-replace",
+      "path": "./src/actions/fx-replace.js",
+      "description": "`fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.",
+      "attributes": [
+        {
+          "name": "replaceNode"
+        },
+        {
+          "name": "with",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "replaceNode",
+          "attribute": "replaceNode"
+        },
+        {
+          "name": "with",
+          "attribute": "with",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-return",
+      "path": "./src/actions/fx-return.js",
+      "description": "`fx-return`\nreturns data from a nested Fore to it's host Fore.\n\nbehaves like a `<fx-submission @replace='instance' with `targetref` and respects relevance processing.\n\n`targetref` will be the `ref` of the host control.\n\ntodo: deos not relevant selection yet",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "return"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-send",
+      "path": "./src/actions/fx-send.js",
+      "description": "`fx-send` - finds and activates a `fx-submission` element.\n\nextension idea: allow params to be passed as with dispatch action which can be used to set properties on submission attributes",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-setfocus",
+      "path": "./src/actions/fx-setfocus.js",
+      "description": "`fx-setfocus`\nSet the focus to a target control optionally selecting eventual value in case a `select` attribute is given.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-setvalue",
+      "path": "./src/actions/fx-setvalue.js",
+      "description": "`fx-setvalue`",
+      "attributes": [
+        {
+          "name": "valueAttr",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "properties": [
+        {
+          "name": "valueAttr",
+          "attribute": "valueAttr",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-show",
+      "path": "./src/actions/fx-show.js",
+      "description": "`fx-confirm`\nDisplays a simple confirmation before actually executing the nested actions.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-toggle",
+      "path": "./src/actions/fx-toggle.js",
+      "description": "`fx-toggle`",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-update",
+      "path": "./src/actions/fx-update.js",
+      "description": "`fx-update`\n\nCalls updateModel() on fx-model which in turn will rebuild, recalculate and revalidate.",
+      "attributes": [
+        {
+          "name": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "outermostHandler"
+        },
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "defaultAction",
+          "attribute": "defaultAction",
+          "description": "can be either 'cancel' or 'perform' (default)",
+          "type": "string"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "delay before executing action in milliseconds",
+          "type": "number"
+        },
+        {
+          "name": "event",
+          "attribute": "event",
+          "description": "event to listen for",
+          "type": "object"
+        },
+        {
+          "name": "handler",
+          "attribute": "handler",
+          "type": "object"
+        },
+        {
+          "name": "ifExpr",
+          "attribute": "ifExpr",
+          "description": "boolean XPath expression. If true the action will be executed.",
+          "type": "string"
+        },
+        {
+          "name": "observer",
+          "attribute": "observer",
+          "description": "The observer if given is the element on which an event is triggered. It must be an ancestor of the target\nelement of an event.",
+          "type": "object"
+        },
+        {
+          "name": "phase",
+          "attribute": "phase",
+          "description": "can be either 'capture' or 'default' (default)",
+          "type": "string"
+        },
+        {
+          "name": "propagate",
+          "attribute": "propagate",
+          "description": "can be either 'stop' or 'continue' (default)",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "id of target element to attach listener to",
+          "type": "string"
+        },
+        {
+          "name": "whileExpr",
+          "attribute": "whileExpr",
+          "description": "boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true\nto actually run the action.",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "action-performed",
+          "description": "is dispatched after each execution of an action."
+        }
+      ]
+    },
+    {
+      "name": "fx-function",
+      "path": "./src/functions/fx-function.js",
+      "description": "Allows to extend a form with local custom functions.\n\n`",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-bind",
+      "path": "./src/fx-bind.js",
+      "description": "FxBind declaratively attaches constraints to nodes in the data (instances).\n\nIt's major task is to create ModelItem Objects for each Node in the data their ref is pointing to.\n\nReferences and constraint attributes use XPath statements to point to the nodes they are attributing.\n\nNote: why is fx-bind not extending BoundElement? Though fx-bind has a 'ref' attr it is not bound in the sense of\ngetting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by\nBoundElements to track their state.",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "READONLY_DEFAULT",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "REQUIRED_DEFAULT",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "RELEVANT_DEFAULT",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "CONSTRAINT_DEFAULT",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "TYPE_DEFAULT",
+          "type": "string",
+          "default": "\"xs:string\""
+        },
+        {
+          "name": "contextNode",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-fore",
+      "path": "./src/fx-fore.js",
+      "description": "Main class for Fore.Outermost container element for each Fore application.\n\nRoot element for Fore. Kicks off initialization and displays messages.\n\nfx-fore is the outermost container for each form. A form can have exactly one model\nwith arbitrary number of instances.\n\nMain responsibilities are initialization and updating of model and instances, update of UI (refresh) and global messaging.",
+      "attributes": [
+        {
+          "name": "lazyRefresh",
+          "description": "Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being\nin viewport.\n\nthis feature is still experimental and should be used with caution and extra testing",
+          "type": "boolean"
+        },
+        {
+          "name": "model",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ready",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "properties": [
+        {
+          "name": "lazyRefresh",
+          "attribute": "lazyRefresh",
+          "description": "Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being\nin viewport.\n\nthis feature is still experimental and should be used with caution and extra testing",
+          "type": "boolean"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ready",
+          "attribute": "ready",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "storedTemplateExpressionByNode",
+          "type": "Map<any, any>"
+        },
+        {
+          "name": "toRefresh",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "initialRun",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "someInstanceDataStructureChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "repeatsFromAttributesCreated",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "events": [
+        {
+          "name": "compute-exception",
+          "description": "dispatched in case the dependency graph is circular"
+        },
+        {
+          "name": "refresh-done",
+          "description": "dispatched after a refresh() run"
+        },
+        {
+          "name": "ready",
+          "description": "dispatched after Fore has fully been initialized"
+        },
+        {
+          "name": "error",
+          "description": "dispatches error when template expression fails to evaluate"
+        }
+      ]
+    },
+    {
+      "name": "fx-header",
+      "path": "./src/fx-header.js",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-instance",
+      "path": "./src/fx-instance.js",
+      "description": "Container for data instances.\n\nOffers several ways of loading data from either inline content or via 'src' attribute which will use the fetch\nAPI to resolve data.",
+      "properties": [
+        {
+          "name": "model",
+          "type": "any & any | any",
+          "default": "\"parentNode\""
+        }
+      ],
+      "events": [
+        {
+          "name": "instance-loaded"
+        }
+      ]
+    },
+    {
+      "name": "fx-model",
+      "path": "./src/fx-model.js",
+      "properties": [
+        {
+          "name": "dataChanged",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "formElement",
+          "type": "HTMLElement | null"
+        },
+        {
+          "name": "instances",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "modelItems",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "defaultContext",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "changed",
+          "type": "never[]",
+          "default": "[]"
+        },
+        {
+          "name": "inited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "modelConstructed",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "computes",
+          "type": "number",
+          "default": "0"
+        }
+      ],
+      "events": [
+        {
+          "name": "model-construct-done"
+        },
+        {
+          "name": "recalculate-done"
+        }
+      ]
+    },
+    {
+      "name": "fx-submission",
+      "path": "./src/fx-submission.js",
+      "description": "todo: validate='false'",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-var",
+      "path": "./src/fx-var.js",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "valueQuery",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "value"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-abstract-control",
+      "path": "./src/ui/abstract-control.js",
+      "description": "`AbstractControl` -\nis a general base class for control elements.",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "display",
+          "default": "\"display\""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "widget"
+        },
+        {
+          "name": "visited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "force",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-alert",
+      "path": "./src/ui/fx-alert.js",
+      "attributes": [
+        {
+          "name": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "detail",
+          "attribute": "detail",
+          "description": "detail - event detail object",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "needsUpdate",
+          "attribute": "needsUpdate",
+          "description": "whether nor not an action needs to run the update cycle",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "display",
+          "default": "\"display\""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "widget"
+        },
+        {
+          "name": "visited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "force",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-case",
+      "path": "./src/ui/fx-case.js",
+      "description": "`fx-case`\na container allowing to switch between fx-case elements\n\n  * todo: implement"
+    },
+    {
+      "name": "fx-container",
+      "path": "./src/ui/fx-container.js",
+      "description": "`fx-container` -\nis a general class for container elements.",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "enabled"
+        }
+      ]
+    },
+    {
+      "name": "fx-control",
+      "path": "./src/ui/fx-control.js",
+      "description": "`fx-control`\na generic wrapper for controls",
+      "attributes": [
+        {
+          "name": "as",
+          "attribute": "as",
+          "description": "with value 'node' passes bound content as node",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "update-event",
+          "attribute": "update-event",
+          "description": "The widget event triggering update of model",
+          "type": "string"
+        },
+        {
+          "name": "value-prop",
+          "attribute": "value-prop",
+          "description": "The name of the widget property to bind to",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "widget"
+        },
+        {
+          "name": "visited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "fx-dialog",
+      "path": "./src/ui/fx-dialog.js",
+      "attributes": [
+        {
+          "name": "id"
+        }
+      ],
+      "properties": []
+    },
+    {
+      "name": "fx-group",
+      "path": "./src/ui/fx-group.js",
+      "description": "`fx-group`\na container allowing to switch between fx-case elements\n\n\n  * todo: implement",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "collapse",
+          "attribute": "collapse",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "enabled"
+        }
+      ]
+    },
+    {
+      "name": "fx-hint",
+      "path": "./src/ui/fx-hint.js",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-inspector",
+      "path": "./src/ui/fx-inspector.js",
+      "description": "lists out all live instances in html 'details' and 'summary' elements."
+    },
+    {
+      "name": "fx-items",
+      "path": "./src/ui/fx-items.js",
+      "description": "FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used\nwithin an fx-control element.",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "valueAttr",
+          "type": "string"
+        }
+     ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "loaded"
+        }
+      ]
+    },
+    {
+      "name": "fx-output",
+      "path": "./src/ui/fx-output.js",
+      "description": "todo: review placing of value. should probably work with value attribute and not allow slotted content.",
+      "attributes": [
+        {
+          "name": "mediatype",
+          "attribute": "mediatype",
+          "description": "mediatype",
+          "type": "string"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "valueAttr"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "widget"
+        },
+        {
+          "name": "visited",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    },
+    {
+      "name": "fx-repeat-attributes",
+      "path": "./src/ui/fx-repeat-attributes.js",
+      "description": "`fx-repeat`\n\nRepeats its template for each node in its' bound nodeset.\n\nTemplate is a standard HTML `<template>` element. Once instanciated the template\nis moved to the shadowDOM of the repeat for safe re-use.",
+      "attributes": [
+        {
+          "name": "focusOnCreate",
+          "type": "string",
+          "default": "false"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "repeatSize",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "properties": [
+        {
+          "name": "focusOnCreate",
+          "attribute": "focusOnCreate",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "repeatIndex",
+          "attribute": "repeatIndex",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "index",
+          "attribute": "index",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "repeatSize",
+          "attribute": "repeatSize",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "array",
+          "default": "[]"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "item-changed"
+        },
+        {
+          "name": "no-template-error"
+        }
+      ]
+    },
+    {
+      "name": "fx-repeat",
+      "path": "./src/ui/fx-repeat.js",
+      "description": "`fx-repeat`\n\nRepeats its template for each node in its' bound nodeset.\n\nTemplate is a standard HTML `<template>` element. Once instanciated the template\nis moved to the shadowDOM of the repeat for safe re-use.",
+      "attributes": [
+        {
+          "name": "focusOnCreate",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "properties": [
+        {
+          "name": "repeatIndex",
+          "attribute": "repeatIndex",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "index",
+          "attribute": "index",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "repeatSize",
+          "default": "0"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "array",
+          "default": "[]"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "no-template-error"
+        }
+      ]
+    },
+    {
+      "name": "fx-repeatitem",
+      "path": "./src/ui/fx-repeatitem.js",
+      "description": "`fx-repeat`\nan xformish form for eXist-db",
+      "attributes": [
+      ],
+      "properties": [
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "item-changed"
+        }
+      ]
+    },
+    {
+      "name": "fx-switch",
+      "path": "./src/ui/fx-switch.js",
+      "description": "`fx-switch`\na container allowing to switch between fx-case elements",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "formerCase",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ],
+      "events": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "enabled"
+        }
+      ]
+    },
+    {
+      "name": "fx-trigger",
+      "path": "./src/ui/fx-trigger.js",
+      "attributes": [
+        {
+          "name": "ref",
+          "attribute": "ref",
+          "description": "XPath binding expression pointing to bound node",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "widget"
+        },
+        {
+          "name": "nodeset",
+          "attribute": "nodeset",
+          "description": "the node(s) bound by this element",
+          "type": "object"
+        },
+        {
+          "name": "context",
+          "attribute": "context",
+          "description": "context object for evaluation",
+          "type": "object"
+        },
+        {
+          "name": "model",
+          "attribute": "model",
+          "description": "the model of this element",
+          "type": "object"
+        },
+        {
+          "name": "modelItem",
+          "attribute": "modelItem",
+          "description": "The modelitem object associated to the bound node holding the evaluated state.",
+          "type": "object",
+          "default": "{}"
+        },
+        {
+          "name": "inScopeVariables",
+          "attribute": "inScopeVariables"
+        }
+      ]
+    }
+  ]
+}

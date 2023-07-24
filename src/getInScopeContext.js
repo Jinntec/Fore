@@ -1,6 +1,4 @@
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
-import {Fore} from './fore.js';
-
 import {XPathUtil} from './xpath-util.js';
 
 function _getElement(node) {
@@ -29,8 +27,8 @@ function _getModelInContext(node) {
 }
 
 function _getInitialContext(node, ref) {
-    const parentBind = Fore.getClosest('[ref]', node);
-    const localFore = Fore.getClosest('fx-fore', node);
+    const parentBind = XPathUtil.getClosest('[ref]', node);
+    const localFore = XPathUtil.getClosest('fx-fore', node);
 
     const model = _getModelInContext(node);
 
@@ -62,12 +60,12 @@ export default function getInScopeContext(node, ref) {
     if(parentElement.nodeName === 'FX-FORE'){
         return parentElement.getModel().getDefaultInstance().getDefaultContext();
     }
-    const parentBind = Fore.getClosest('[ref]', parentElement.parentNode);
-    if (parentBind && parentBind.nodeName === 'FX-GROUP') {
+    const parentBind = XPathUtil.getClosest('[ref]', parentElement.parentNode);
+    if (parentBind && (parentBind.nodeName === 'FX-GROUP' || parentBind.nodeName === 'FX-CONTROL')) {
         return parentBind.nodeset;
     }
 
-    const repeatItem = Fore.getClosest('fx-repeatitem', parentElement);
+    const repeatItem = XPathUtil.getClosest('fx-repeatitem', parentElement);
     if (repeatItem) {
         if (node.nodeName === 'context') {
             return evaluateXPathToFirstNode(
@@ -80,8 +78,8 @@ export default function getInScopeContext(node, ref) {
     }
 
   // ### check for repeatitems created by fx-repeat-attributes - this could possibly be unified with standard repeats
-  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
-  // const repeatItemFromAttrs = Fore.getClosest('.fx-repeatitem', parentElement);
+  // const repeatItemFromAttrs = XPathUtil.getClosest('.fx-repeatitem', parentElement);
+  // const repeatItemFromAttrs = XPathUtil.getClosest('.fx-repeatitem', parentElement);
   const repeatItemFromAttrs = parentElement.closest('.fx-repeatitem');
 
   if (repeatItemFromAttrs) {
@@ -91,7 +89,7 @@ export default function getInScopeContext(node, ref) {
     const index = Array.from(parent.children).indexOf(repeatItemFromAttrs);
 
     // ### fetching nodeset from fx-repeat-attributes element
-    const repeatFromAttributes = Fore.getClosest('fx-repeat-attributes', parentElement);
+    const repeatFromAttributes = XPathUtil.getClosest('fx-repeat-attributes', parentElement);
     return repeatFromAttributes.nodeset[index];
   }
 

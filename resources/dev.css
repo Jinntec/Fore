@@ -1,0 +1,119 @@
+[required]::after{
+    content:''
+}
+fx-action,
+fx-model,
+fx-bind,
+fx-delete,
+fx-instance,
+fx-message,
+fx-send,
+fx-setvalue,
+fx-toggle{
+    display: block !important;
+    background: var(--paper-blue-grey-300);
+    padding:0.25rem;
+    /*transform: skew(-5deg);*/
+    font-size:0.8rem;
+    /*border:thin solid;*/
+    /*font-style:italic;*/
+    color:white;
+}
+
+fx-action,
+fx-append,
+fx-confirm,
+fx-copy,
+fx-delete,
+fx-dispatch,
+fx-hide,
+fx-insert,
+fx-load,
+fx-message,
+fx-refresh,
+fx-reload,
+fx-replace,
+fx-return,
+fx-send,
+fx-setfocus,
+fx-setvalue,
+fx-show,
+fx-toggle,
+fx-update{
+    background: var(--paper-blue-900);
+    color:white;
+    width: fit-content;
+}
+fx-action::before{
+    content:'action event=' attr(event);
+}
+fx-append::before{
+    content:'append ref=' attr(ref);
+}
+fx-bind::before{
+    content:'bind ref=' attr(ref);
+}
+fx-confirm::before{
+    content:'confirm';
+}
+fx-copy{
+    content:'copy ref=' attr(ref) ' to ' attr(to);
+}
+fx-delete::before{
+    content:'delete ref=' attr(ref);
+}
+fx-insert::before{
+    content:'insert ref=' attr(ref);
+}
+fx-instance::before{
+    content:'instance:' attr(id);
+}
+fx-message::before{
+    content:'message event="' attr(event) '"';
+}
+fx-model::before{
+    content:'model';
+}
+fx-replace::before{
+    content:'replace ref:' attr(ref) ' with ' attr(with);
+}
+fx-setvalue::before{
+    content:'setvalue ' attr(ref);
+    border-radius: 0.5rem;
+    /*width:30px;*/
+    /*height:30px;*/
+    /*content:'\9674';*/
+    /*content:'◊';*/
+    /*clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);*/
+    /*display: inline-block;*/
+}
+fx-send::before{
+    content:'send submission=' attr(submission);
+    width: fit-content;
+}
+
+fx-toggle::before{
+    content:'toggle case=' attr(case);
+}
+
+
+fx-bind{
+    background: var(--paper-blue-grey-500);
+}
+fx-group{
+    background-filter: darken;
+}
+fx-instance{
+    margin-bottom: 0.5rem;
+    background: var(--paper-indigo-a400);
+}
+fx-instance *{
+    display: none;
+}
+
+
+
+/*
+[event='ready']::before{
+    content:'ready';
+}*/

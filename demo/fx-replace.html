@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>invoice</title>
+    <title>replace action</title>
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
@@ -25,6 +25,7 @@
     </style>
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
     <h1><code>fx-replace</code> Action</h1>
     <p>
@@ -40,7 +41,7 @@
         <template>
             <fx-fore>
                 <fx-model id="model1">
-                    <fx-instance>
+                    <fx-instance id="default">
                         <data>
                             <value>A</value>
                         </data>
@@ -66,6 +67,16 @@
                     </template>
                 </fx-repeat>
                 <fx-inspector open></fx-inspector>
+<!--                <instance-inspector id="default"></instance-inspector>-->
+<!--
+                <section>
+                    <fx-control ref="instance('default')" as="node">
+                        <label>plain</label>
+                        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+                    </fx-control>
+                </section>
+-->
+
             </fx-fore>
 
 <!--
@@ -93,6 +104,8 @@
 
 
 </div>
+<!--<script type="module" src="./codemirror/jinn-codemirror-bundle.js"></script>-->
+
 <script type="module" src="./demo.js"></script>
 </body>
 </html>

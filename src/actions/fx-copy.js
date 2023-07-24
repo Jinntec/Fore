@@ -39,7 +39,6 @@ export default class FxCopy extends AbstractAction {
     }
 
     perform() {
-        console.log('copying to clipboard')
         super.perform();
 
         if(this.nodeset.nodeType === Node.ATTRIBUTE_NODE){

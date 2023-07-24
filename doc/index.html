@@ -3,21 +3,18 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-    <!--    <link href="styles.css"  type="text/css" rel="stylesheet"/>-->
-
     <title>Fore</title>
-
-    <!--    <link rel="stylesheet" href="../demo/todo.css">-->
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="../resources/demo.css">
-    <link rel="stylesheet" href="../demo/clock.css">
+    <link rel="stylesheet" href=".//clock.css">
     <link rel="stylesheet" href="../resources/home.css">
-
+    <meta name="keywords" content="Fore, HTML5, Web Components, Declarative framework">
 </head>
 <body>
+<noscript>Sorry - This page requires JavaScript to work.</noscript>
 <a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
    aria-label="Visit Tuttle on GitHub" target="_blank">
-    <svg width="80" height="80" viewBox="0 0 250 250"
+    <svg width="64" height="64" viewBox="0 0 250 250"
          style="color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
         <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
         <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
@@ -26,104 +23,30 @@
               fill="currentColor" class="octo-body"></path>
     </svg>
 </a>
-
 <header>
-<!--    <div class="background" style="background: rgb(255, 255, 255);"><canvas class="canvas canvas-particles" width="1192" height="580" style="width: 100%; height: 100%;"></canvas></div>-->
-    <img class="logo fore" src="../resources/images/light7.png">
-    <!--            <div class="version">{instance('package')?version}</div>-->
-    <h1>Declarative user interfaces in plain HTML</h1>
-
-    <a href="https://jinntec.github.io/fore-docs/getstarted/" role="button" class="action btn">Get Started</a>
-    <a class="learn" href="https://jinntec.github.io/fore-docs/" target="_blank">learn more</a>
     <nav>
-        <a href="#" disabled="disabled">Home</a>
-        <a href="demos.html">Demos</a>
-<!--        <a href="https://jinntec.github.io/fore-docs/" target="_blank">Documentation</a>-->
-        <!--        <a href="https://github.com/Jinntec/Fore/discussions" target="_blank">Community</a>-->
+        <ul>
+            <li><a href="#" disabled="disabled">Home</a></li>
+            <li><a href="demos.html">Demos</a></li>
+            <li><a href="https://jinntec.github.io/fore-docs/" target="_blank">Documentation</a></li>
+        </ul>
     </nav>
+    <section class="hero">
+        <img class="logo fore" src="../resources/images/light-blue1.png" alt="Fore Logo">
+        <h1>Declarative user interfaces in plain HTML</h1>
+        <fx-fore id="version" src="version.html"></fx-fore>
+        <a href="https://jinntec.github.io/fore-docs/getstarted/" role="button" class="getstarted">Get Started</a>
+
+    </section>
 </header>
 <div class="wrapper topic">
-<!--    <p class="style-hint">If you don't like the colors just <a href="index.html">reload</a> the page.</p>-->
-
-    <fx-fore>
-        <fx-model>
-            <fx-instance>
-                <data>
-                    <color1>#424242</color1>
-                    <color2>#9e9e9e</color2>
-                </data>
-            </fx-instance>
-            <fx-instance id="package" src="../package.json" type="json"></fx-instance>
-
-<!--
-            <fx-bind ref="color1" calculate="local:randomColor()"></fx-bind>
-            <fx-bind ref="color2" calculate="local:randomColor()"></fx-bind>
--->
-
-            <fx-function
-                    signature="local:randomColor() as xs:string"
-                    type="text/javascript">
-
-                hex2rgba = (hex, alpha = 1) => {
-                const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-                return `rgba(${r},${g},${b},${alpha})`;
-                };
-
-
-                var characters = ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9];
-                var randomColorArray = [];
-                for (var i = 0; i < 6; i++) {
-                var randomIndex = Math.floor(Math.random()*characters.length);
-                randomColorArray.push(characters[randomIndex])
-                }
-                const hexCol = `#${randomColorArray.join("")}`;
-                return hex2rgba(hexCol,0.9);
-
-            </fx-function>
-
-
-        </fx-model>
-<!--        <div id="rule" data-style="linear-gradient(to right, {color1} ,{color2})"></div>-->
-<!--        <div id="rule" data-style="linear-gradient(to right, rgba(93, 5, 244, 0.8), rgba(67, 222, 106, 0.8))"></div>-->
-<!--        <fx-action event="ready" src="setBg.js"></fx-action>-->
-    </fx-fore>
-    <!--
-        <div class="header">
-            <img class="logo" src="../resources/images/light7.png">
-            &lt;!&ndash;            <div class="version">{instance('package')?version}</div>&ndash;&gt;
-            <h1>Declarative user interfaces in plain HTML</h1>
-        </div>
-    -->
-
     <main>
-        <section class="three-col teaser">
-            <section>
-                <div>
-                    <h2>No Code or Low Code</h2>
-                    <p>Write
-                        complete interfaces without (or minimal) scripting.
-                    </p>
-                </div>
-            </section>
-            <section>
-                <div>
-                    <h2>built with Web Components</h2>
-                    <p>Fore extends HTML with Web Components for processing and displaying your data.</p>
-                </div>
-            </section>
-            <section>
-                <div>
-                    <h2>Data-driven</h2>
-                    <p>Load, process and submit multiple data sources in XML, JSON and other formats.</p>
-                </div>
-            </section>
-        </section>
 
         <section class="samples">
             <div class="col-left">
-                <h3>Just pure tags</h3>
+                <h2>Just pure tags</h2>
                 <p>
-                    Build fully interactive user interfaces from pure markup with data-binding.
+                    Build fully interactive user interfaces with pure HTML.
                 </p>
                 <p>From simple to very complex.</p>
             </div>
@@ -135,7 +58,7 @@
                                 {"greeting":"Hello Universe"}
                             </fx-instance>
                         </fx-model>
-                        <h2>{?greeting}</h2>
+                        <h3>{?greeting}</h3>
                     </fx-fore>
                 </template>
             </demo-snippet>
@@ -144,17 +67,11 @@
         <section class="samples two">
             <div class="col-left">
                 <h3>A clock</h3>
-                <p>The <em>model</em> holds structured data in one or more <em>instances</em>. </p>
-                <p><em>Bindings</em> apply calculations (or constraints) to the data.</p>
-                <p>Predefined <em>Actions</em> mutate, load or send data, interact with the user or trigger events.</p>
-                <p>NoCode is fine most of the time but still you can define your own custom
-                    functions to reach out to some script.</p>
-                <p>The <em>state engine</em> tracks dependencies and updates the user interface
-                    as needed while dispatching lifecycle and state events to hook in.</p>
-                <p>When initialized the 'ready' event will start an endless loop that updates the time
-                    with a delay 1000ms. It does by calling a custom JavaScript function.</p>
-                <p>The bindings will recalculate their values
-                and the UI will update the template expressions - the ones in curly brackets.</p>
+                <p>The <strong>model</strong> holds structured data in one or more <em>instances</em>. </p>
+                <p><strong>Bindings</strong> apply calculations (or constraints) to the data.</p>
+                <p><strong>Actions</strong> mutate, load or send data, interact with the user or trigger events.</p>
+                <p>The <strong>state engine</strong> tracks dependencies and updates the user interface
+                    automatically when values change.</p>
             </div>
             <demo-snippet>
                 <template>
@@ -179,16 +96,11 @@
                             </fx-instance>
 
                             <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
-                            <!--          <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>-->
-
                             <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
                             <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
-
                             <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
-
                             <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
                             <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
-
 
                             <fx-function signature="now() as xs:string" type="text/javascript">
                                 const now = new Date();
@@ -208,50 +120,7 @@
                 </template>
             </demo-snippet>
         </section>
-        <h2 class="outer">More features</h2>
-        <section class="three-col">
-            <div class="feature">
-                <h3>group, repeat or switch</h3>
-                <p>Repeating (even nested) sections of the Ui or switching between views is no problem
-                with the respective Fore elements.</p>
-            </div>
-            <div class="feature">
-                <h3>Generic Control</h3>
-                <p>Use either native or third-party components acting as controls within Fore.
-                </p>
-            </div>
-            <div class="feature">
-                <h3>MVC Architecture</h3>
-                <p>Fore elements fall into 3 categories: model, user-interface and action elements that act
-                together in a defined lifecycle.</p>
-            </div>
-            <div class="feature">
-                <h3>Constraints</h3>
-                <p>With bindings data nodes can be constrained or be calculated from other data. Flexible alert
-                messages can be logged to the user.</p>
-            </div>
-            <div class="feature">
-                <h3>Dependency Tracking</h3>
-                <p>Fore keeps tracks of the dependencies that might exist between data nodes.</p>
-            </div>
-            <div class="feature">
-                <h3>XPath/XQuery 3.1 support</h3>
-                <p>With fontoXPath Fore uses a powerful expression language to address either XML and/or JSON.</p>
-            </div>
-            <div class="feature">
-                <h3>Submissions</h3>
-                <p>A submission can load data from or send them to a URL. </p>
-                <p>Responses can be handled depending on
-                    returned data and trigger further actions.</p>
-            </div>
-            <div class="feature">
-                <h3>Framework agnostic</h3>
-                <p>Fore is pure vanilla ES6 and not dependent on a specific framework.</p>
-            </div>
-        </section>
     </main>
-
-
 </div>
 <footer>
     <div class="wrapper three-col">

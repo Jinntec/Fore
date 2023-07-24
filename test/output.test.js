@@ -90,7 +90,7 @@ describe('fx-output Tests', () => {
         expect(label).to.exist;
         expect(label.textContent).to.equal('Output bound node as HTML: ');
 
-        const div = control.querySelector('div');
+        const div = control.shadowRoot.querySelector('div');
         // div exists in lightDOM
         expect(div).to.exist;
         expect(div.getAttribute('style')).to.equal('color:white;background:#333;padding:1rem;');
@@ -122,7 +122,7 @@ describe('fx-output Tests', () => {
         expect(label).to.exist;
         expect(label.textContent).to.equal('Output bound node as HTML: ');
 
-        const div = control.querySelector('div');
+        const div = control.shadowRoot.querySelector('div');
         expect(div).to.exist;
         expect(div.getAttribute('style')).to.equal('color:white;background:#333;padding:1rem;');
         expect(div.textContent).to.equal('hey there');
@@ -171,7 +171,7 @@ describe('fx-output Tests', () => {
 
         await oneEvent(el, 'refresh-done');
         const control = el.querySelector('fx-output');
-        const img = el.querySelector('img');
+        const img = control.shadowRoot.querySelector('img');
 
         expect(img).to.exist;
         expect(img.getAttribute('src')).to.equal('base/resources/images/light7.png');

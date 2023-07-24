@@ -1,4 +1,3 @@
-import { html } from 'lit-element';
 import { Fore } from '../fore.js';
 // import XfAbstractControl from "./fx-abstract-control";
 import { FxContainer } from './fx-container.js';
@@ -36,7 +35,7 @@ class FxGroup extends FxContainer {
   }
 
   render() {
-    return html`
+    return `
       <slot></slot>
     `;
   }
@@ -52,10 +51,10 @@ class FxGroup extends FxContainer {
 
   initializeChildren(node) {
     const children = Array.from(node.children);
-    console.log('_initializeChildren ', children);
+    // console.log('_initializeChildren ', children);
 
     children.forEach(child => {
-      console.log('child ', child);
+      // console.log('child ', child);
 
       if (Fore.isUiElement(child.nodeName)) {
         child.init(this.model);

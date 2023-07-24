@@ -1,6 +1,5 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 import { foreElementMixin } from './ForeElementMixin.js';
-import { Fore } from './fore.js';
 import { ModelItem } from './modelitem.js';
 import {
   evaluateXPathToBoolean,
@@ -20,8 +19,9 @@ import getInScopeContext from './getInScopeContext.js';
  * Note: why is fx-bind not extending BoundElement? Though fx-bind has a 'ref' attr it is not bound in the sense of
  * getting updates about changes of the bound nodes. Instead it  acts as a factory for modelItems that are used by
  * BoundElements to track their state.
+ *
+ * @customElements
  */
-// export class FxBind extends HTMLElement {
 export class FxBind extends foreElementMixin(HTMLElement) {
   static READONLY_DEFAULT = false;
 
@@ -235,7 +235,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     // console.log('#### ', thi+s.nodeset);
 
     if (Array.isArray(this.nodeset)) {
-      // todo - iterate and create
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
       Array.from(this.nodeset).forEach(n => {
@@ -272,7 +271,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         if bind is the dot expression we use the modelitem of the parent
          */
     if (XPathUtil.isSelfReference(this.ref)) {
-      const parentBoundElement = Fore.getClosest('fx-bind[ref]', this.parentElement);
+      const parentBoundElement = XPathUtil.getClosest('fx-bind[ref]', this.parentElement);
       // console.log('parent bound element ', parentBoundElement);
 
       if (parentBoundElement) {
@@ -304,9 +303,9 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     const path = XPathUtil.getPath(node);
     // const shortPath = this.shortenPath(path);
 
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
-    // ### constructiong default modelitem - will get evaluated during reaalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
+    // ### constructing default modelitem - will get evaluated during recalculate()
     // const newItem = new ModelItem(shortPath,
     const newItem = new ModelItem(
       path,
@@ -324,6 +323,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (alert) {
       newItem.addAlert(alert);
     }
+
 
     this.getModel().registerModelItem(newItem);
   }

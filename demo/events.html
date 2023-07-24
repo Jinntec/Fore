@@ -47,6 +47,8 @@
 
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
 
     <h1>Event handler</h1>
@@ -168,12 +170,12 @@
                     <fx-setvalue ref="param1" value="event('param1')"></fx-setvalue>
                     <fx-setvalue ref="param2" value="event('param2')"></fx-setvalue>
                 </fx-action>
+                <button onclick="firecustomDoc(event)">fire custom event to document</button>
 
                 <h3>{param1}</h3>
                 <h3>{param2}</h3>
             </fx-fore>
             <!-- ### button outside of fx-fore -->
-            <button onclick="firecustomDoc(event)">fire custom event to document</button>
 
             <script>
                 function firecustomDoc(event) {

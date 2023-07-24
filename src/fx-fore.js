@@ -2,10 +2,9 @@ import {Fore} from './fore.js';
 import './fx-instance.js';
 import {FxModel} from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToString} from './xpath-evaluation.js';
+import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToFirstNode, evaluateXPathToString} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
-// import {FxRepeat} from "./ui/fx-repeat";
 import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
 
 /**
@@ -26,6 +25,8 @@ import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
  * @ts-check
  */
 export class FxFore extends HTMLElement {
+    static outermostHandler = null;
+
     static get properties() {
         return {
             /**
@@ -43,6 +44,12 @@ export class FxFore extends HTMLElement {
             ready: {
                 type: Boolean,
             },
+            /**
+             *
+             */
+            validateOn: {
+                type: String
+            }
         };
     }
 
@@ -57,15 +64,23 @@ export class FxFore extends HTMLElement {
     constructor() {
         super();
         this.model = {};
+        this.inited=false;
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // todo: refactoring - these should rather go into connectedcallback
         this.addEventListener('message', this._displayMessage);
         this.addEventListener('error', this._displayError);
+        this.addEventListener('warn', this._displayWarning);
+        this.addEventListener('log', this._logError);
         window.addEventListener('compute-exception', e => {
             console.error('circular dependency: ', e);
         });
 
         this.ready = false;
         this.storedTemplateExpressionByNode = new Map();
+
+		// Stores the outer most action handler. If an action handler is already running, all
+		// updates are included in that one
+		this.outermostHandler = null;
 
         const style = `
             :host {
@@ -137,13 +152,20 @@ export class FxFore extends HTMLElement {
             #messageContent{
                 margin-top:40px;
             }
+            .warning{
+                background:orange;
+            }
         `;
 
         const html = `
+           <noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
+
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
-           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom"></jinn-toast>
-           <slot></slot>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
+           <jinn-toast id="warn" text="warning" duration="-1" data-class="warning" close="true" position="right" gravity="bottom"></jinn-toast>
+           <slot id="default"></slot>
+           <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
                 <div class="popup">
                    <h2></h2>
@@ -151,6 +173,7 @@ export class FxFore extends HTMLElement {
                     <div id="messageContent"></div>
                 </div>
            </div>
+           <slot name="event"></slot>
         `;
 
         this.attachShadow({mode: 'open'});
@@ -165,6 +188,7 @@ export class FxFore extends HTMLElement {
         this.initialRun = true;
         this.someInstanceDataStructureChanged = false;
         this.repeatsFromAttributesCreated = false;
+        this.validateOn = this.hasAttribute('validate-on') ? this.getAttribute('validate-on'):'update';
     }
 
     connectedCallback() {
@@ -205,10 +229,12 @@ export class FxFore extends HTMLElement {
             return;
         }
 
-        const slot = this.shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', async event => {
+        this._injectDevtools();
 
+        const slot = this.shadowRoot.querySelector('slot#default');
+        slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            if(this.inited) return;
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
                 // Fore.copyDom(this);
@@ -223,6 +249,9 @@ export class FxFore extends HTMLElement {
                 const generatedModel = document.createElement('fx-model');
                 this.appendChild(generatedModel);
                 modelElement = generatedModel;
+				// We are going to get a new slotchange event immediately, because we changed a slot.
+				// so cancel this one.
+				return;
             }
             if (!modelElement.inited) {
                 console.info(
@@ -230,23 +259,33 @@ export class FxFore extends HTMLElement {
                     "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
 
-                if (this.src) {
-                    console.log('########## FORE: loaded from ... ', this.src, '##########');
-                }
                 await modelElement.modelConstruct();
 				this._handleModelConstructDone();
             }
             this.model = modelElement;
 
             this._createRepeatsFromAttributes();
+            this.inited = true;
 
         });
         this.addEventListener('path-mutated', () => {
-            // console.log('path-mutated event received', e.detail.path, e.detail.index);
             this.someInstanceDataStructureChanged = true;
         });
     }
 
+    _injectDevtools(){
+		if (this.ownerDocument.querySelector('fx-devtools')) {
+			// There's already a devtools, so we can ignore this one.
+			// One devtools can focus multiple fore elements
+			return;
+		}
+        const search = window.location.search;
+        const urlParams = new URLSearchParams(search);
+        if(urlParams.has('inspect')){
+            const devtools = document.createElement('fx-devtools');
+            document.body.appendChild(devtools);
+        }
+    }
     addToRefresh(modelItem) {
         const found = this.toRefresh.find(mi => mi.path === modelItem.path);
         if (!found) {
@@ -261,7 +300,7 @@ export class FxFore extends HTMLElement {
      * @private
      */
     _loadFromSrc() {
-        console.log('########## loading Fore from ', this.src, '##########');
+        // console.log('########## loading Fore from ', this.src, '##########');
         fetch(this.src, {
             method: 'GET',
             mode: 'cors',
@@ -297,6 +336,12 @@ export class FxFore extends HTMLElement {
                     });
                 }
                 theFore.setAttribute('from-src', this.src);
+                const thisAttrs = this.attributes;
+                Array.from(thisAttrs).forEach(attr =>{
+                    if(attr.name !== 'src'){
+                        theFore.setAttribute(attr.name,attr.value);
+                    }
+                });
                 this.replaceWith(theFore);
             })
             .catch(() => {
@@ -313,7 +358,7 @@ export class FxFore extends HTMLElement {
      * @param observer
      */
     handleIntersect(entries, observer) {
-        console.time('refreshLazy');
+        // console.time('refreshLazy');
 
         entries.forEach(entry => {
             const {target} = entry;
@@ -322,7 +367,7 @@ export class FxFore extends HTMLElement {
             if(fore.initialRun) return;
 
             if (entry.isIntersecting) {
-                console.log('in view', entry);
+                // console.log('in view', entry);
                 // console.log('repeat in view entry', entry.target);
                 // const target = entry.target;
                 // if(target.hasAttribute('refresh-on-view')){
@@ -331,17 +376,17 @@ export class FxFore extends HTMLElement {
 
                 // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
                 if (typeof target.refresh === 'function') {
-                    console.log('refreshing target', target);
+                    // console.log('refreshing target', target);
                     target.refresh(target, true);
                 } else {
-                    console.log('refreshing children', target);
+                    // console.log('refreshing children', target);
                     Fore.refreshChildren(target, true);
                 }
             }
         });
         entries[0].target.getOwnerForm().dispatchEvent(new CustomEvent('refresh-done'));
 
-        console.timeEnd('refreshLazy');
+        // console.timeEnd('refreshLazy');
     }
 
     evaluateToNodes(xpath, context) {
@@ -367,8 +412,8 @@ export class FxFore extends HTMLElement {
      *
      */
     async forceRefresh() {
-        console.time('refresh');
-        console.group('### forced refresh', this);
+        // console.time('refresh');
+        // console.group('### forced refresh', this);
 
         Fore.refreshChildren(this, true);
         this._updateTemplateExpressions();
@@ -376,23 +421,16 @@ export class FxFore extends HTMLElement {
         this._processTemplateExpressions();
         Fore.dispatch(this, 'refresh-done', {});
 
-        console.groupEnd();
-        console.timeEnd('refresh');
+        // console.groupEnd();
+        // console.timeEnd('refresh');
     }
 
     async refresh(force) {
         // refresh () {
-        console.info('%crefresh','font-style: italic; background: #8bc34a; color:white; padding:0.3rem 5rem 0.3rem 0.3rem; display:block; width:100%;');
-        console.group('refresh', force);
-
-        console.time('refresh');
-
         // ### refresh Fore UI elements
-        // console.time('refreshChildren');
-        console.log('toRefresh', this.toRefresh);
-
         // if (!this.initialRun && this.toRefresh.length !== 0) {
         if (!force && !this.initialRun && this.toRefresh.length !== 0) {
+            // console.log('toRefresh', this.toRefresh);
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
@@ -425,10 +463,20 @@ export class FxFore extends HTMLElement {
                 }
             });
             this.toRefresh = [];
+/*
             if (!needsRefresh) {
                 console.log('no dependants to refresh');
             }
+*/
         } else {
+            // ### resetting visited state for controls to refresh
+/*
+            const visited = this.parentNode.querySelectorAll('.visited');
+            Array.from(visited).forEach(v =>{
+                v.classList.remove('visited');
+            });
+*/
+
             Fore.refreshChildren(this, true);
             // console.timeEnd('refreshChildren');
         }
@@ -440,9 +488,6 @@ export class FxFore extends HTMLElement {
         }
         this._processTemplateExpressions();
 
-        console.timeEnd('refresh');
-
-        console.groupEnd();
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
@@ -494,12 +539,12 @@ export class FxFore extends HTMLElement {
         for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
 			if (node.nodeType === Node.ATTRIBUTE_NODE) {
 				// Attribute nodes are not contained by the document, but their owner elements are!
-				if (!node.ownerDocument.contains(node.ownerElement)) {
+				if (!XPathUtil.contains(this, node.ownerElement)) {
 					this.storedTemplateExpressionByNode.delete(node);
 					continue;
 				}
-			} else if (!node.ownerDocument.contains(node)) {
-				// For all other nodes, if the document does not contain them, they are dead
+			} else if (!XPathUtil.contains(this, node)) {
+				// For all other nodes, if this `fore` element does not contain them, they are dead
 				this.storedTemplateExpressionByNode.delete(node);
 				continue;
 			}
@@ -521,10 +566,9 @@ export class FxFore extends HTMLElement {
     }
 
     /**
-     * evaluate a template expression (some expression in {} brackets) on a node (either text- or attribute node.
-     * @param input The string to parse for expressions
+     * evaluate a template expression on a node either text- or attribute node.
+     * @param expr The string to parse for expressions
      * @param node the node which will get updated with evaluation result
-     * @param form the form element
      */
     evaluateTemplateExpression(expr, node) {
         const replaced = expr.replace(/{[^}]*}/g, match => {
@@ -542,11 +586,15 @@ export class FxFore extends HTMLElement {
             // Templates are special: they use the namespace configuration from the place where they are
             // being defined
             const instanceId = XPathUtil.getInstanceId(naked);
-            const inst = this.getModel().getInstance(instanceId);
-            try {
+
+			// If there is an instance referred
+            const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
+
+			try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
             } catch (error) {
-                console.log('ignoring unparseable expr');
+                console.warn('ignoring unparseable expr', error);
+
                 return match;
             }
         });
@@ -590,21 +638,17 @@ export class FxFore extends HTMLElement {
                 window.addEventListener('beforeunload', event => {
                     const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this)
                     if(mustDisplay){
-                        console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                    console.log('do not display confirmation')
                 })
             }else{
                 window.addEventListener('beforeunload', event => {
                     // if(AbstractAction.dataChanged){
                     if(FxModel.dataChanged){
-                        console.log('have to display confirmation')
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                    console.log('do not display confirmation')
                 })
             }
         }
@@ -622,7 +666,7 @@ export class FxFore extends HTMLElement {
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
         if (model.instances.length === 0) {
-            console.log('### lazy creation of instance');
+            // console.log('### lazy creation of instance');
             const generatedInstance = document.createElement('fx-instance');
             model.appendChild(generatedInstance);
 
@@ -631,7 +675,7 @@ export class FxFore extends HTMLElement {
             this._generateInstance(this, generated.firstElementChild);
             generatedInstance.instanceData = generated;
             model.instances.push(generatedInstance);
-            console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
+            // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
         }
     }
 
@@ -644,11 +688,9 @@ export class FxFore extends HTMLElement {
             const ref = start.getAttribute('ref');
 
             if (ref.includes('/')) {
-                console.log('complex path to create ', ref);
+                // console.log('complex path to create ', ref);
                 const steps = ref.split('/');
                 steps.forEach(step => {
-                    console.log('step ', step);
-
                     // const generated = document.createElement(ref);
                     parent = this._generateNode(parent, step, start);
                 });
@@ -728,8 +770,9 @@ export class FxFore extends HTMLElement {
      * @private
      */
     async _initUI() {
-        console.log('### _initUI()');
+        // console.log('### _initUI()');
         if (!this.initialRun) return;
+        this.classList.add('initialRun');
         await this._lazyCreateInstance();
 
         // console.log('registering variables!');
@@ -763,12 +806,8 @@ export class FxFore extends HTMLElement {
         // console.log('### >>>>> dispatching ready >>>>>', this);
         // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
-        console.info(
-            `%cPage Initialization done`,
-            "background:#64b5f6; color:white; padding:1rem; display:block; white-space: nowrap; border-radius:0.3rem;width:100%;",
-        );
+        // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
-        console.log('dataChanged', FxModel.dataChanged);
     }
 
     registerLazyElement(element) {
@@ -808,6 +847,50 @@ export class FxFore extends HTMLElement {
         toast.showToast(msg);
     }
 
+    _displayWarning(e){
+        const msg = e.detail.message;
+        // this._showMessage('modal', msg);
+        const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        const toast = this.shadowRoot.querySelector('#warn');
+        toast.showToast(`WARN: ${path}:${msg}`);
+    }
+
+    _logError(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const div = document.createElement('div');
+        div.setAttribute('slot','messages');
+        div.setAttribute('data-level',e.detail.level);
+
+        const id = document.createElement('div');
+        id.textContent = `"${e.detail.id}"`;
+        div.appendChild(id);
+
+        const path = document.createElement('div');
+        const pathExpr = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+        // console.log('pathExpr',pathExpr)
+        path.textContent = pathExpr;
+        div.appendChild(path);
+
+        const message = document.createElement('div');
+        message.textContent = e.detail.message;
+        div.appendChild(message);
+
+        /*
+                const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
+                div.innerText = `${path} :: ${e.detail.message}`;
+        */
+        this.appendChild(div);
+        div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+
+
+        const errorElement = evaluateXPathToFirstNode(`/${pathExpr}`,document,null);
+        errorElement.classList.add('fore-error');
+
+
+    }
+
     _showMessage(level, msg) {
         if (level === 'modal') {
             // this.$.messageContent.innerText = msg;
@@ -834,6 +917,20 @@ export class FxFore extends HTMLElement {
         const repeats = this.querySelectorAll('[data-ref]');
         if(repeats){
             Array.from(repeats).forEach(item =>{
+                if(item.closest('fx-control')) return;
+/*
+                const parentRepeat = item.closest('fx-repeat');
+                if(parentRepeat){
+                    this.dispatchEvent(
+                        new CustomEvent('log', {
+                            composed: false,
+                            bubbles: true,
+                            cancelable:true,
+                            detail: { id:this.id, message: `nesting elements with data-ref attributes within fx-repeat is not supported by now`, level:'Error'},
+                        }),
+                    );
+                }
+*/
 
                 const table = item.parentNode.closest('table');
                 let host;

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>AcID DOM Inspector :: Demo page</title>
+		<meta name="author" content="Jan Myler">
+		<link rel="author" href="humans.txt">
+		<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/style.css">
+
+		<!-- AcID DOM Inspector include -->
+		<link rel="stylesheet" href="acid-dom/css/acid_dom.css">
+	</head>
+
+	<body>
+		<div id="wrap">
+			<header id="header">
+				<h1>AcID DOM Inspector</h1>
+				<p class="author-info">Created by <a href="https://github.com/janmyler" target="_blank">Jan Myler</a></p>
+			</header>
+			<section id="main">
+				<article>
+					<h2>Overview</h2>
+					<p><strong>AcID DOM Inspector</strong> (aka ADI) is a simple DOM inspector written in JavaScript. It has been created as a school project and doesn't aim to compete with tools such as Firebug or Chrome DevTools.</p>
+					<p>ADI provides a simple DOM tree overview with an interactive highlighting feature. Simple editing of attributes is available for selected DOM nodes.</p>
+
+					<h2>How to use</h2>
+					<div class="step first">
+						<p><a href="https://github.com/janmyler/DOM-inspector/archive/master.zip">Download</a> the latest version of ADI.</p>
+					</div>
+					<div class="step second">
+						<p>Move the <code>acid-dom</code> folder into your project's root folder.</p>
+					</div>
+					<div class="step third">
+						<p>Add the ADI stylesheet to the <code>&lt;head&gt;</code> tag.</p>
+						<pre><code>&lt;link rel="stylesheet" href="acid-dom/css/acid_dom.css"&gt;</code>
+						</pre>
+					</div>
+					<div class="step fourth">
+						<p>Add the ADI source code before the <code>&lt;/body&gt;</code> tag.</p>
+						<pre><code>&lt;script src="acid-dom/js/acid_dom.min.js"&gt;&lt;/script&gt;</code></pre>
+					</div>
+					<div class="step fifth">
+						<p>That's it, now you're ready to start using ADI. ;)</p>
+					</div>
+
+					<h2>Usage notes</h2>
+					<p><strong>Ctrl + Alt + D</strong> shortcut is available to open/close ADI.</p>
+					<p>Drag the horizontal/vertical splitter to resize the view.</p>
+
+					<h2>Inspecting the DOM</h2>
+					<img src="img/dom_view.png" height="185" width="300" alt="ADI Dom View" class="right">
+					<p>Simplified DOM tree is displayed in the upper part. Hover over DOM nodes for on-page highlighting.</p>
+					<p>Click on the selected node to activate it. This also allows you to edit the attributes.</p>
+					<h3>Using the lookup tool</h3>
+					<p>Select the lookup tool from the menu panel in the bottom part. Move a mouse cursor over the page and click on the selected element to activate it.</p>
+					<p>You can click on the lookup tool again for its deactivation whenever you want.</p>
+
+					<h2>Editing the attributes</h2>
+					<img src="img/attr_view.png" height="160" width="329" alt="ADI Attr View" class="right">
+					<p>You can edit <code>id</code>, <code>class</code> and <code>style</code> attributes for every active element simply by editing the text inputs' values.</p>
+					<p>If the active element has other attributes than those mentioned above, you can also edit them.</p>
+
+					<h2>Configuration</h2>
+					<p>Click on the cog icon to open the settings panel, there are several options you can change.<p>
+					<dl>
+						<dt>Saving of settings</dt>
+							<dd>If enabled, ADI will save the options and dimensions of its view in browser's local storage. These are restored with every page refresh.</dd>
+						<dt>Scroll to the active element in DOM View</dt>
+							<dd>DOM view will be scrolled so that the active element's DOM node is always visible.</dd>
+						<dt>Hide empty text nodes</dt>
+							<dd>Empty text nodes (or text nodes containing only whitespace characters) are not displayed by default.</dd>
+						<dt>Fold the text nodes</dt>
+							<dd>DOM nodes which contain only text nodes are folded by default.</dd>
+						<dt>Transparent background</dt>
+							<dd>Since the ADI view is rendered over the page, it might be useful for highlighting elements which lies underneath the ADI view.</dd>
+					</dl>
+
+					<h2>Public API</h2>
+					<p>ADI object is attached to the global namespace and provides two public methods.</p>
+					<p><code>ADI.toggle()</code> which opens or closes the ADI view.</p>
+					<p><code>ADI.getSelectedElement()</code> which returns either the active element's DOM node or <code>null</code> if no element is active.</p>
+				</article>
+			</section>
+
+			<!-- Github -->
+			<a href="https://github.com/janmyler/DOM-inspector" id="github-link"><img style="position: fixed; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub"></a>
+		</div>
+
+		<!-- AcID DOM Inspector include -->
+		<script src="acid-dom/js/acid_dom.min.js"></script>
+	</body>
+</html>

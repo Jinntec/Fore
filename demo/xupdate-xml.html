@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <script type="module" src="./codemirror/jinn-codemirror.js"></script>
+
+    <style>
+        fx-control{
+            display: block;
+        }
+        jinn-codemirror{
+            height: 400px;
+            display: block;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<script type="module" src="../index.js"></script>            <fx-fore>
+
+    <fx-model>
+        <fx-instance src="inspector/element-def.xml"></fx-instance>
+        <fx-instance id="result">
+            <data>
+                <xml>
+                    <references>
+                        <ref id="123">The first ref!</ref>
+                        <ref id="abc">The second ref!</ref>
+                    </references>
+                    <main>
+                        <not-a-ref>Not a ref here!</not-a-ref>
+                        <ref link="123">I should be replaced!</ref>
+                        <not-a-ref>Not a ref here!</not-a-ref>
+                        <ref link="abc">I should also be replaced!</ref>
+                        <not-a-ref>Not a ref here!</not-a-ref>
+                    </main>
+                </xml>
+            </data>
+        </fx-instance>
+
+        <fx-function
+                signature="update($element as element()) as element()*"
+                type="text/xquf">
+            copy $xml := $element modify (
+            for $ref in $xml/element
+            return insert node $ref/@name with $xml/element/name/text()
+            ) return $xml
+        </fx-function>
+    </fx-model>
+    <fx-group>
+
+        <h2>XQuery update facility function</h2>
+
+
+        <fx-control class="input-data" ref="//elements" as="node" update-event="update">
+            <h3>The input:</h3>
+            <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+
+        </fx-control>
+
+
+        <fx-control ref="update(//elements)" as="node">
+            <h3>The transformed XML:</h3>
+            <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
+        </fx-control>
+
+
+
+    </fx-group>
+    <fx-inspector open></fx-inspector>
+</fx-fore>
+
+
+
+</body>
+</html>

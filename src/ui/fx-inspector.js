@@ -1,4 +1,4 @@
-import { Fore } from '../fore.js';
+import { prettifyXml } from '../functions/common-function.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
@@ -92,10 +92,10 @@ export class FxInspector extends HTMLElement {
 
     Array.from(pre).forEach(element => {
       const inst = fore.getModel().getInstance(element.getAttribute('id'));
-      if (inst.type === 'xml') {
+      if (inst.getAttribute('type') === 'xml') {
         element.innerText = this.serializeDOM(inst.instanceData);
       }
-      if (inst.type === 'json') {
+      if (inst.getAttribute('type') === 'json') {
         element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
       }
     });
@@ -112,7 +112,7 @@ export class FxInspector extends HTMLElement {
             <slot></slot>
             <span class="handle"></span>
                 ${instances.map(
-                  (instance, index) => `
+                  (instance) => `
                   <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
@@ -125,7 +125,6 @@ export class FxInspector extends HTMLElement {
     const handle = this.shadowRoot.querySelector('.handle');
     handle.addEventListener('click', e => {
       // console.log('toggling');
-      const { target } = e;
       if (this.hasAttribute('open')) {
         this.removeAttribute('open');
       } else {
@@ -141,7 +140,7 @@ export class FxInspector extends HTMLElement {
     }
     // console.log('serializeDOM', data);
     const ser = new XMLSerializer().serializeToString(data);
-    return Fore.prettifyXml(ser);
+    return prettifyXml(ser);
   }
 }
 

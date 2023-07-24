@@ -1,10 +1,8 @@
-import { html, css } from 'lit-element';
-
 import XfAbstractControl from './abstract-control.js';
 
 export class FxHint extends XfAbstractControl {
   static get styles() {
-    return css`
+    return `
       :host {
         display: block;
         height: auto;
@@ -22,7 +20,7 @@ export class FxHint extends XfAbstractControl {
   }
 
   render() {
-    return html`
+    return `
       <slot></slot>
     `;
   }

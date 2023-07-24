@@ -1,12 +1,12 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
-import { Fore } from './fore.js';
 import {
   evaluateXPath,
   evaluateXPathToFirstNode,
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
+import {Fore} from './fore.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -134,11 +134,13 @@ export const foreElementMixin = superclass =>
           }
         });
 */
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
+        // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
+        this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+        if(!inscopeContext) return;
         const { nodeType } = inscopeContext;
-        if (nodeType) {
+        if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
           this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
         } else {
           [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
@@ -146,6 +148,30 @@ export const foreElementMixin = superclass =>
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
+
+    /**
+     * resolves template expressions for a single attribute
+     * @param expr an attribute value containing curly brackets containing XPath expressions to evaluate
+     * @param node the attribute node used for scoped resolution
+     * @returns {*}
+     * @private
+     */
+    evaluateAttributeTemplateExpression(expr, node) {
+      const matches = expr.match(/{[^}]*}/g);
+      if (matches) {
+        matches.forEach(match => {
+          // console.log('match ', match);
+          const naked = match.substring(1, match.length - 1);
+          const inscope = getInScopeContext(node, naked);
+          const result = evaluateXPathToString(naked, inscope, this);
+          const replaced = expr.replaceAll(match, result);
+          // console.log('replacing ', expr, ' with ', replaced);
+          expr = replaced;
+        });
+      }
+      return expr;
+    }
+
 
     isNotBound() {
       return !this.hasAttribute('ref');
@@ -160,7 +186,7 @@ export const foreElementMixin = superclass =>
         return this.getAttribute('ref');
       }
       // try to get closest parent bind
-      const parent = Fore.getClosest('[ref]', this.parentNode);
+      const parent = XPathUtil.getClosest('[ref]', this.parentNode);
       if (!parent) {
         return 'instance()'; // the default instance
       }
@@ -199,7 +225,7 @@ export const foreElementMixin = superclass =>
         this.modelItem = mi;
       }
 
-      const repeated = Fore.getClosest('fx-repeatitem', this);
+      const repeated = XPathUtil.getClosest('fx-repeatitem', this);
       let existed;
       if (repeated) {
         const { index } = repeated;

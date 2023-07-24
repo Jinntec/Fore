@@ -30,12 +30,14 @@ async function handleResponse(response) {
     // console.log("********** inside res json *********");
     return response.json();
   }
-  if (responseContentType.startsWith('application/xml')) {
+  if (responseContentType.startsWith('application/xml') ||
+      responseContentType.startsWith('text/xml')) {
+    // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
     // console.log('xml ********', result);
     return new DOMParser().parseFromString(text, 'application/xml');
   }
-  return 'done';
+  throw new Error(`unable to handle response content type: ${responseContentType}`);
 }
 
 /**
@@ -49,6 +51,7 @@ export class FxInstance extends HTMLElement {
     super();
     this.model = this.parentNode;
     this.attachShadow({ mode: 'open' });
+    this.originalInstance = null;
   }
 
   connectedCallback() {
@@ -67,6 +70,7 @@ export class FxInstance extends HTMLElement {
       this.type = this.getAttribute('type');
     } else {
       this.type = 'xml';
+      this.setAttribute('type',this.type);
     }
     const style = `
             :host {
@@ -107,6 +111,11 @@ export class FxInstance extends HTMLElement {
     return this;
   }
 
+  reset(){
+    // this._useInlineData();
+    this.instanceData = this.originalInstance;
+  }
+
   evalXPath(xpath) {
     const formElement = this.parentElement.parentElement;
     const result = evaluateXPathToFirstNode(xpath, this.getDefaultContext(), formElement);
@@ -130,7 +139,8 @@ export class FxInstance extends HTMLElement {
       this.createInstanceData();
       return;
     }
-    this.instanceData = data;
+    this._setInitialData(data);
+    // this.instanceData = data;
   }
 
   /**
@@ -168,7 +178,11 @@ export class FxInstance extends HTMLElement {
         newNode.appendChild(doc.createTextNode(p[1]));
         root.appendChild(newNode);
       }
+      this._setInitialData(doc);
+/*
       this.instanceData = doc;
+      this.originalInstance = this.instanceData.cloneNode(true);
+*/
       // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // resolve('done');
     } else if (this.src) {
@@ -183,9 +197,11 @@ export class FxInstance extends HTMLElement {
       // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this.instanceData = doc;
+      this.originalInstance = this.instanceData.cloneNode(true);
     }
     if (this.type === 'json') {
       this.instanceData = {};
+      this.originalInstance = [...this.instanceData];
     }
   }
 
@@ -196,8 +212,8 @@ export class FxInstance extends HTMLElement {
       const key = url.substring(url.indexOf(':') + 1);
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      const root = doc.firstElementChild;
       this.instanceData = doc;
+      // ### does it make sense to store originalData here?
 
       if (!key) {
         console.warn('no key specified for localStore');
@@ -212,7 +228,6 @@ export class FxInstance extends HTMLElement {
       }
       const data = new DOMParser().parseFromString(serialized, 'application/xml');
       // let data = this._parse(serialized, instance);
-      // root.appendChild(data);
       doc.firstElementChild.replaceWith(data.firstElementChild);
       return;
     }
@@ -221,22 +236,38 @@ export class FxInstance extends HTMLElement {
     try {
       const response = await fetch(url, {
         method: 'GET',
+/*
         mode: 'cors',
         credentials: 'include',
+*/
         headers: {
           'Content-Type': contentType,
         },
       });
-      const { status } = response;
       const data = await handleResponse(response);
+      this._setInitialData(data);
+/*
       if (data.nodeType) {
+        this._setInitialData(data);
         this.instanceData = data;
+        this.originalInstance = this.instanceData.cloneNode(true);
         console.log('instanceData loaded: ', this.id, this.instanceData);
         return;
       }
       this.instanceData = data;
+      this.originalInstance = [...data];
+*/
     } catch (error) {
       throw new Error(`failed loading data ${error}`);
+    }
+  }
+
+  _setInitialData(data){
+    this.instanceData = data;
+    if(data.nodeType){
+      this.originalInstance = this.instanceData.cloneNode(true);
+    } else {
+      this.originalInstance = {...this.instanceData};
     }
   }
 
@@ -257,7 +288,8 @@ export class FxInstance extends HTMLElement {
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
 
       // console.log('fx-instance init id:', this.id);
-      this.instanceData = instanceData;
+      // this.instanceData = instanceData;
+      this._setInitialData(instanceData);
       // console.log('instanceData ', this.instanceData);
       // console.log('instanceData ', this.instanceData.firstElementChild);
 
@@ -265,28 +297,34 @@ export class FxInstance extends HTMLElement {
       // this.instanceData.firstElementChild.setAttribute('id', this.id);
       // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
-      this.instanceData = JSON.parse(this.textContent);
+      // this.instanceData = JSON.parse(this.textContent);
+      this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
-      this.instanceData = this.firstElementChild.children;
+      // this.instanceData = this.firstElementChild.children;
+      this._setInitialData(this.firstElementChild.children)
+
     } else if (this.type === 'text') {
-      this.instanceData = this.textContent;
+      // this.instanceData = this.textContent;
+      this._setInitialData(this.textContent)
     } else {
       console.warn('unknow type for data ', this.type);
     }
   }
 
-  _handleResponse() {
-    console.log('_handleResponse ');
-    const ajax = this.shadowRoot.getElementById('loader');
-    const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
-    this.instanceData = instanceData;
-    console.log('data: ', this.instanceData);
-  }
+  // _handleResponse() {
+  //   console.log('_handleResponse ');
+  //   const ajax = this.shadowRoot.getElementById('loader');
+  //   const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
+  //   this.instanceData = instanceData;
+  //   console.log('data: ', this.instanceData);
+  // }
 
+/*
   _handleError() {
     const loader = this.shadowRoot.getElementById('loader');
     console.log('_handleResponse ', loader.lastError);
   }
+*/
 }
 if (!customElements.get('fx-instance')) {
   customElements.define('fx-instance', FxInstance);

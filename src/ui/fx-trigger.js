@@ -1,5 +1,6 @@
 import XfAbstractControl from './abstract-control.js';
 import { leadingDebounce } from '../events.js';
+import {resolveId} from "../xpath-evaluation";
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {
@@ -27,6 +28,11 @@ export class FxTrigger extends XfAbstractControl {
       elements[0].setAttribute('role', 'button');
 
       const element = elements[0];
+
+      this.addEventListener('mousedown', e => {
+        console.log('target', e.target.nodeName);
+          e.target.focus();
+      });
 
       if (this.debounceDelay) {
         this.addEventListener(
@@ -85,7 +91,7 @@ export class FxTrigger extends XfAbstractControl {
     // todo: support readonly for trigger not executing the action
     const repeatedItem = this.closest('fx-repeatitem');
     if (repeatedItem) {
-      console.log('repeated click');
+      // console.log('repeated click');
       repeatedItem.click();
     }
 
@@ -95,6 +101,12 @@ export class FxTrigger extends XfAbstractControl {
     for (let i = 0; i < this.children.length; i += 1) {
       const child = this.children[i];
       if (typeof child.execute === 'function') {
+        if (e) {
+          // We are handling the event. Stop it from going further
+          e.preventDefault();
+          e.stopPropagation();
+          if(e.type && child.event && e.type !== child.event) return;
+        }
         // eslint-disable-next-line no-await-in-loop
         await child.execute(e);
         // child.execute(e);

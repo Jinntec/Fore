@@ -72,6 +72,7 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
     <h1>Bindings are fore-ever</h1>
@@ -136,6 +137,7 @@
         <template>
 
             <fx-fore>
+                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -154,7 +156,7 @@
                     </fx-bind>
                 </fx-model>
                 <fx-group class="vertical">
-                    <fx-control ref="item">
+                    <fx-control id="input" ref="item">
                         <label>An input</label>
                         <!--                    <xf-hint>a hint for this item</xf-hint>-->
                         <input>

@@ -19,6 +19,8 @@
     </style>
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
 
     <h1>The <code>while</code> attribute</h1>
@@ -85,6 +87,8 @@
                     <button>reset</button>
                     <fx-setvalue ref="counter" value="0"></fx-setvalue>
                 </fx-trigger>
+                <fx-action-log></fx-action-log>
+
             </fx-fore>
         </template>
     </demo-snippet>
@@ -116,6 +120,8 @@
                     <button>stop</button>
                     <fx-setvalue ref="stop">true</fx-setvalue>
                 </fx-trigger>
+                <fx-action-log></fx-action-log>
+
             </fx-fore>
         </template>
     </demo-snippet>
@@ -163,7 +169,7 @@
                     <button>insert a new one</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
-<fx-inspector open></fx-inspector>
+<fx-inspector></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>

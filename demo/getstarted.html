@@ -8,6 +8,7 @@
 
     <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link href="../resources/demo.css" rel="stylesheet">
+<!--    <link href="../resources/dev.css" rel="stylesheet">-->
 
     <style>
         .dynamic {
@@ -26,24 +27,30 @@
     </style>
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
     <noscript>Scripting is disabled - Sorry, can't process this page.</noscript>
 
 
     <h1>Get started</h1>
 
-    <h2>Step 1 - Setting up the page</h2>
+    <h2>Setting up the page</h2>
+
     <p>Add these two lines to the head of a new HTML page.</p>
     <demo-snippet>
         <template>
-            <link href="../resources/fore.css" rel="stylesheet">
-            <script type="module" src="../index.js"></script>
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/resources/fore.css">
+
+            <script type="module"
+                    src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore.js"></script>
         </template>
     </demo-snippet>
 
+    <div class="note">There are more alternatives to import Fore - see the <a href="https://jinntec.github.io/fore-docs/getstarted/" target="_blank">documentation</a> for details.</div>
+
+    <h2>Hello Universe</h2>
     <p>Let's jump right into the simplest possible example...</p>
-    <p>In lazy mode you don't even need to write a model. This is for the 'small and quick' use cases where
-    you don't need much logic or constraints.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -52,25 +59,24 @@
         </template>
     </demo-snippet>
 
-
-
-
-
-
-
-
-
+    <p>The <code>fx-fore</code> element creates a scope for everything being embedded inside it, similar to
+    a HTML <code>form</code> element.</p>
     <p>
         Besides the <code>fx-fore</code> element we have a <code>fx-output</code> here
          which - well - outputs a referenced data node.
     </p>
 
     <p>Note the <code>ref</code> attribute. <code>ref</code> stands for 'reference' and is a pointer
-    to some data node. Currently Fore supports XML and JSON as its data formats. </p>
+    to some data node.</p>
 
-    <h2>What is happening here?</h2>
+    <h3>What happens behind the curtain when Fore loads?</h3>
+
+    <p>Fore separates data, UI and logic. Data-related elements live inside of a <code>fx-model</code> element.</p>
+
     <p>When the page is loaded the Fore element will start initialization. If it does not find a <code>fx-model</code>
-    one will get generated with a default instance.</p>
+    one will get generated with a default instance. The <code>fx-instance</code> is a constainer element for data.</p>
+
+
     <p>Fore will look for elements having a <code>ref</code> and create data nodes using the value of the
     reference as name for the property and its content as value.</p>
 
@@ -97,10 +103,6 @@
     </fx-output>
 -->
 
-    <p>The form holds a single <code>fx-model</code> which itself contains a <code>fx-instance</code> element. This
-    is where our actual data are living. A form can contain a single model but as many <code>fx-instance</code> elements
-    as you like.</p>
-
     <h2>Nesting refs</h2>
     <p>References can nested and Fore will create the respective hierarchy.</p>
     <demo-snippet>
@@ -113,7 +115,7 @@
         </template>
     </demo-snippet>
 
-    <p>Guess how the instance looks like now? Here it is </p>
+    <p>The resulting data structure</p>
     <demo-snippet>
         <template>
             <fx-instance>

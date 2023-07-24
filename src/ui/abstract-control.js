@@ -2,6 +2,9 @@ import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
+import {XPathUtil} from "../xpath-util";
+import getInScopeContext from "../getInScopeContext";
+import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 
 /**
  * `AbstractControl` -
@@ -69,7 +72,41 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       // this.control = this.querySelector('#control');
 
       if(!this.nodeset){
-        this.style.display = 'none';
+
+        const create = this.closest('[create]');
+        if(create){
+          // ### check if parent element exists
+          let attrName,parentPath, parentNode;
+
+          if(this.ref.includes('/')){
+            parentPath = this.ref.substring(0, this.ref.indexOf('/'));
+            const inscope = getInScopeContext(this.parentNode, this.ref);
+            parentNode = evaluateXPathToFirstNode(parentPath,inscope,this);
+
+            if(parentNode && parentNode.nodeType === Node.ELEMENT_NODE){
+              if(this.ref.includes('@')){
+                attrName = this.ref.substring(this.ref.indexOf('/')+2);
+                parentNode.setAttribute(attrName,'');
+              }else{
+                Fore.dispatch(this,'warn',{message:'"create" is not implemented for elements'})
+              }
+            }
+          }else{
+            let inscope = getInScopeContext(this, this.ref);
+
+            if(this.ref.includes('@')) {
+              attrName = this.ref.substring(this.ref.indexOf('@') + 1);
+              inscope.setAttribute(attrName, '');
+            }else{
+              Fore.dispatch(this,'warn',{message:'"create" is not implemented for elements'})
+              // inscope = getInScopeContext(this.parentNode, this.ref);
+            }
+          }
+        }else{
+          // ### this actually makes the control nonrelevant
+          // todo: we should call a template function here to allow detachment of event-listeners and resetting eventual state
+          this.style.display = 'none';
+        }
         return;
       }
 
@@ -119,6 +156,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.handleModelItemProperties();
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
+        if(this.getOwnerForm().initialRun){
+          Fore.dispatch(this,'init',{});
+        }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value ) {
           // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
@@ -254,9 +294,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   // todo - review alert handling altogether. There could be potentially multiple ones in model
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
-    const alert = this.querySelector('fx-alert');
 
-    const mi = this.getModelItem();
     // console.log('late modelItem', mi);
     if (this.isValid() !== this.modelItem.constraint) {
       if (this.modelItem.constraint) {

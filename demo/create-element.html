@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+
+<!--<main class="wrapper">-->
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <foo></foo>
+                            <bar></bar>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="templates">
+                        <data>
+                            <item attr1="foo"></item>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+<!--
+                <fx-output ref="item/@attr1">
+                    <label slot="label">Existing Attribute 1</label>
+                </fx-output>
+-->
+                <!--
+                Alternative approach is to set a 'create' attribute on control. As this always knows its context
+                within the tree it can simply create the node. Model constraints for 'relevant' would still apply
+                as usual.
+                -->
+                <fx-control ref="item" create>
+                    <label>Non-existing but lazy-created {}</label>
+                </fx-control>
+<!--
+                <fx-control ref="final" create>
+                    <label>Non-existing but lazy-created {}</label>
+                </fx-control>
+-->
+<!--
+                <fx-group ref="item" create>
+                    <fx-control ref="@attr3">
+                        <label>Non-existing but lazy-created {}</label>
+                    </fx-control>
+                </fx-group>
+-->
+                <fx-inspector></fx-inspector>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+<!--</main>-->
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

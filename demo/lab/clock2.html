@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Clock</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+<!--    <link href="clock.css" rel="stylesheet">-->
+</head>
+<body>
+<div class="wrapper">
+<!--
+    <demo-snippet>
+        <template>
+-->
+            <fx-fore>
+                <fx-action event="ready" while="true()" delay="1000">
+                    <fx-setvalue ref="time" value="now()"></fx-setvalue>
+                    <fx-update></fx-update>
+                    <fx-refresh></fx-refresh>
+                    <fx-dispatch name="clock">
+                        <fx-property name="time" expr="time/string()"></fx-property>
+                    </fx-dispatch>
+                </fx-action>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <time>12:30:00</time>
+                            <hour>0</hour>
+                            <minute>0</minute>
+                            <second>0</second>
+                            <h-deg></h-deg>
+                            <min-deg>0</min-deg>
+                            <s-deg></s-deg>
+                        </data>
+                    </fx-instance>
+
+                    <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
+                    <!--          <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>-->
+
+                    <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
+                    <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
+
+                    <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
+
+                    <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
+                    <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
+
+
+                    <fx-function signature="now() as xs:string" type="text/javascript">
+                        const now = new Date();
+                        return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                    </fx-function>
+
+                </fx-model>
+                <div class="clock">
+                  <div class="circle" style="transform:rotate({s-deg}deg);"></div>
+                    <div class="brand">Fore</div>
+                    <span class="three-nine"></span>
+                    <div class="display-time">{time}</div>
+                    <div style="transform:rotate({h-deg}deg);" class="hour"></div>
+                  <div style="transform:rotate({min-deg}deg);" class="minute"></div>
+                </div>
+<!--                <fx-action-log></fx-action-log>-->
+
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
