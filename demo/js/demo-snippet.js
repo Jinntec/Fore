@@ -71,6 +71,7 @@ Polymer({
         @apply --demo-snippet-demo;
         display: flex;
         align-items:center;
+        flex-wrap:wrap;
       }
 
       .code-container {

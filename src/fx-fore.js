@@ -676,6 +676,7 @@ export class FxFore extends HTMLElement {
             generatedInstance.instanceData = generated;
             model.instances.push(generatedInstance);
             // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
+            Fore.dispatch(this,'instance-loaded',{instance:this})
         }
     }
 
