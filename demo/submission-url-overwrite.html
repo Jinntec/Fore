@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Overwriting Url with Send</title>
+    <title>Overwriting URL with Send</title>
 
     <link href="../resources/demo.css" rel="stylesheet">
 
@@ -43,23 +43,23 @@
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
-    <h1>Overwriting Submission Url with <code>fx-send</code> action</h1>
+    <h1>Overwriting Submission URL with <code>fx-send</code> action</h1>
     <p>
         Sometimes you want to set a value to use in a submission URL somewhere in context of your UI. This requires you to create
         a data node somewhere, set it's value in context of the UI and then use that on your submission URL. This may lead to redundant and repetitive
         markup.
     </p>
 
-    <h2><code>fx-send</code> with <code>url</code></h2>
+    <h2><code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/"target="_blank">fx-send</a></code> with <code>URL</code></h2>
 
-    <p>To simplify such scenarios you can specify the url on the <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">fx-send</a></code> action allowing
+    <p>To simplify such scenarios you can specify the URL on the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/" target="_blank">fx-send</a></code> action allowing
     inscope values to modify the submission URL.</p>
 
-    <p>The control in the example below has a send action attached to it <code>value-changed</code> event. It
+    <p>The control in the example below has a send action attached to it <code><a href="https://jinntec.github.io/fore-docs/events/#control-state-events"target="_blank">value-changed</a></code> event. It
     passes the URL to the submission 'sub1' </p>
 
-    <p>Intially the submission has an empty Url. Once you change the value of the control and hit Enter the send
-    action will evaluate the <code>url</code> attributes value inscope.</p>
+    <p>Intially the submission has an empty URL. Once you change the value of the control and hit Enter the send
+    action will evaluate the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/#attributes"target="_blank">URL</a></code> attributes value inscope.</p>
 
     <p>If you had given 'hello' as a message this resolves to:</p>
     <code>
@@ -67,8 +67,8 @@
     </code>
 
     <div class="note">
-        The send action will overwrite the Url just once for its execution. The original <code>url</code> attribute
-        on <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">fx-submission</a></code> stays untouched meaning that later executions will use its original Url
+        The send action will overwrite the URL just once for its execution. The original <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/#attributes"target="_blank">URL</a></code> attribute
+        on <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">fx-submission</a></code> stays untouched meaning that later executions will use its original URL
         unless overwritten again.
     </div>
     <demo-snippet>
