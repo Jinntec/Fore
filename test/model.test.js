@@ -166,33 +166,18 @@ describe('model tests', () => {
             <data>
               <a>10</a>
               <b>10</b>
-              <c></c>
-              <d></d>
-              <e></e>
+              <c>0</c>
+              <d>0</d>
+              <e>0</e>
               <x>3.5</x>
-              <y></y>
-              <z></z>
+              <y>0</y>
+              <z>0</z>
             </data>
           </fx-instance>
-          <fx-bind
-            ref="c"
-            calculate="../a * ../b"
-            constraint="number(.) <= 100"
-            readonly="true()"
-          ></fx-bind>
-          <fx-bind
-            ref="d"
-            calculate="../a + ../b"
-            constraint="number(.) <= 20"
-            readonly="true()"
-          ></fx-bind>
-          <fx-bind
-            ref="e"
-            calculate="../a + 5"
-            constraint="number(.) <= 10"
-            readonly="true()"
-          ></fx-bind>
-          <fx-bind ref="y" calculate="../x + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
+          <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+          <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+          <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+          <fx-bind ref="y" calculate="number(../x) + 5" readonly="true()" constraint="number(.) <= 10"></fx-bind>
         </fx-model>
         <fx-control ref="a" update-event="input">
           <label>a</label>
@@ -234,7 +219,7 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
     // there are 15 nodes in mainGraph
     // const graphCount = model.mainGraph.overallOrder(false);
@@ -249,18 +234,18 @@ describe('model tests', () => {
                         <data>
                             <a>10</a>
                             <b>10</b>
-                            <c></c>
-                            <d></d>
-                            <e></e>
+                            <c>0</c>
+                            <d>0</d>
+                            <e>0</e>
                             <x>3.5</x>
-                            <y></y>
-                            <z></z>
+                            <y>0</y>
+                            <z>0</z>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                    <fx-bind ref="d" calculate="../a + ../b"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                    <fx-bind ref="e" calculate="../a + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
-                    <fx-bind ref="y" calculate="../x + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
+                    <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                    <fx-bind ref="d" calculate="number(../a) + number(../b)"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                    <fx-bind ref="e" calculate="number(../a) + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
+                    <fx-bind ref="y" calculate="number(../x) + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
                 </fx-model>
                 <fx-control id="a" ref="a" update-event="input">
                     <label>a</label>
@@ -304,10 +289,10 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
     const changed = model.computes;
-    expect(changed).to.equal(3);
+    expect(changed).to.equal(6);
 
     const cControl = el.querySelector('#c');
     expect(cControl.getModelItem().value).to.equal('110');
@@ -322,22 +307,22 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <a>10</a>
-                            <b>10</b>
-                            <c></c>
-                            <d></d>
-                            <e></e>
-                            <x>3.5</x>
-                            <y></y>
-                            <z></z>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                    <fx-bind ref="d" calculate="../a + ../b"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                    <fx-bind ref="e" calculate="../a + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
-                    <fx-bind ref="y" calculate="../x + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
+                  <fx-instance>
+                    <data>
+                      <a>10</a>
+                      <b>10</b>
+                      <c>0</c>
+                      <d>0</d>
+                      <e>0</e>
+                      <x>3.5</x>
+                      <y>0</y>
+                      <z>0</z>
+                    </data>
+                  </fx-instance>
+                  <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                  <fx-bind ref="d" calculate="number(../a) + number(../b)"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                  <fx-bind ref="e" calculate="number(../a) + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
+                  <fx-bind ref="y" calculate="number(../x) + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
                 </fx-model>
                 <fx-control id="a" ref="a" update-event="input">
                     <label>a</label>
@@ -378,10 +363,10 @@ describe('model tests', () => {
     await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     // console.log('modelitems ', model.modelItems);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
     const changed = model.computes;
-    expect(changed).to.equal(2);
+    expect(changed).to.equal(4);
 
     const cControl = el.querySelector('#c');
     expect(cControl.getModelItem().value).to.equal('110');
@@ -394,22 +379,22 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <a>10</a>
-                            <b>10</b>
-                            <c></c>
-                            <d></d>
-                            <e></e>
-                            <x>3.5</x>
-                            <y></y>
-                            <z></z>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="c" calculate="../a * ../b" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                    <fx-bind ref="d" calculate="../a + ../b"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                    <fx-bind ref="e" calculate="../a + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
-                    <fx-bind ref="y" calculate="../x + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
+                  <fx-instance>
+                    <data>
+                      <a>10</a>
+                      <b>10</b>
+                      <c>0</c>
+                      <d>0</d>
+                      <e>0</e>
+                      <x>3.5</x>
+                      <y>0</y>
+                      <z>0</z>
+                    </data>
+                  </fx-instance>
+                  <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+                  <fx-bind ref="d" calculate="number(../a) + number(../b)"  constraint="number(.) <= 20" readonly="true()"></fx-bind>
+                  <fx-bind ref="e" calculate="number(../a) + 5"  constraint="number(.) <= 10" readonly="true()"></fx-bind>
+                  <fx-bind ref="y" calculate="number(../x) + 5.0" readonly="true()" constraint=". <= 10"></fx-bind>
                 </fx-model>
                 <fx-control ref="a" update-event="input">
                     <label>a</label>
@@ -452,9 +437,9 @@ describe('model tests', () => {
     // console.log('modelitems ', model.modelItems);
 
     const changed = model.computes;
-    expect(changed).to.equal(1);
+    expect(changed).to.equal(2);
 
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(11);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
     const { subgraph } = model;
     expect(subgraph).to.exist;

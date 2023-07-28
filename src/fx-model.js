@@ -178,8 +178,8 @@ export class FxModel extends HTMLElement {
             bind.init(this);
         });
 
-        // console.log(`mainGraph`, this.mainGraph);
-        // console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+        console.log(`mainGraph`, this.mainGraph);
+        console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
 
         // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
         Fore.dispatch(this,'rebuild-done',{maingraph:this.mainGraph});

@@ -44,6 +44,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   connectedCallback() {
     // console.log('connectedCallback ', this);
     // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
+    this.constraint = this.getAttribute('constraint');
     this.ref = this.getAttribute('ref');
     this.readonly = this.getAttribute('readonly');
     this.required = this.getAttribute('required');
@@ -133,6 +134,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
           this._addDependencies(constraintRefs, node, path, 'constraint');
         } else if (this.constraint) {
           this.model.mainGraph.addNode(`${path}:constraint`, node);
+          this.model.mainGraph.addDependency(path, `${path}:constraint`);
         }
       });
     }
