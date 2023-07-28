@@ -5,6 +5,15 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     <title>template</title>
     <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        #thetarget{
+            transform: scale(0.3) translateX(-50%) translateY(-50%);
+            max-height:25rem;
+        }
+        .wrapper{
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
@@ -28,7 +37,6 @@
                 <fx-fore>
                     <fx-load event="ready" url="load-snippet.html" attach-to="#thetarget"></fx-load>
                     <fx-message event="loaded">url {event('url')}</fx-message>
-
                     <div id="thetarget"></div>
                 </fx-fore>
             </template>
@@ -179,6 +187,35 @@
                         </template>
                     </fx-load>
                 </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Deferring a nested Fore</h2>
+    <p>By loading a <code>fx-fore</code> element from a template you can lazy-load a complete subsection of external Fore markup.</p>
+    <demo-snippet>
+        <template>
+            <style>
+                #thetarget{
+                    transform: scale(0.3) translateX(-50%) translateY(-50%);
+                    max-height:25rem;
+                }
+            </style>
+            <fx-fore>
+                <button>load the body
+                    <fx-load event="click" attach-to="#thetarget">
+                        <template>
+                            <fx-fore src="randomizer.html"></fx-fore>
+                        </template>
+                    </fx-load>
+                </button>
+                <button>unload the body
+                    <fx-load event="click" attach-to="#thetarget">
+                        <template><div></div></template>
+                    </fx-load>
+                </button>
+                <fx-message event="loaded">url {event('url')}</fx-message>
+                <div id="thetarget"></div>
             </fx-fore>
         </template>
     </demo-snippet>

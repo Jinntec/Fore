@@ -73,6 +73,10 @@ Polymer({
         align-items:center;
         flex-wrap:wrap;
       }
+      
+      :host(.nodemo) .demo{
+        display: none;
+      }
 
       .code-container {
         margin: 0;
@@ -83,6 +87,10 @@ Polymer({
         z-index: -1;
         @apply --demo-snippet-code;
         margin-bottom: 1rem;
+      }
+      
+      :host(.nodemo) .code-container{
+        padding: 1rem 1rem 0 1rem;
       }
 
       .code {

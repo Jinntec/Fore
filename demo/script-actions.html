@@ -33,6 +33,17 @@
 
     <h1>Actions calling JavaScript</h1>
 
+    <p>
+        In general Fore is a Turing-conplete language to build applications for the browser platform and you can avoid
+        the use of JavaScript altogether.
+    </p>
+
+    <p>
+        But once you want to integrate with some third-party components you are often thrown back and have to use
+        some glue-code. Besides <a href="http://localhost:8090/demo/functions.html" target="_blank">custom functions</a> you
+        can use a script action to knock the backdoor of Fore.
+    </p>
+
     <p class="note">
         Use responsibly!<br><br>
         For security reasons the script needs to be external. Also you should make sure to wrap your script
@@ -63,12 +74,18 @@
 
     <p>Open the browser console to see the instance data logged.</p>
     <h2>The JavaScript used here (test.js):</h2>
-    <demo-snippet>
+    <p>
+        As Fore elements are usual DOM elements we can of course also use their API directly to get to our data
+        by searching for the <code>fx-instance</code> and using its <code>instanceData</code> property. This
+        will hold the actual data and can be queried simply with <code>querySelector</code>.
+    </p>
+
+    <demo-snippet class="nodemo">
         <template>
             {
                 const inst = document.querySelector('fx-instance');
-                console.log('instanceData', inst.instanceData.firstElementChild);
-                alert(`confirmation: ${inst.instanceData.firstElementChild.firstElementChild.textContent}`);
+                console.log('instanceData', inst.instanceData.querySelector('confirmation').textContent);
+                alert(`confirmation: ${inst.instanceData.querySelector('confirmation').textContent}`);
             }
         </template>
     </demo-snippet>
