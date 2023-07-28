@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>A Simple Email UI</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 5rem auto;
+            grid-template-areas: "label control";
+            grid-gap:1rem;
+        }
+        .widget{
+            display: inline-block;
+        }
+        fx-fore {
+            max-width: 40rem;
+            margin:3rem auto;
+            display: grid;
+            grid-template-columns: 30% auto;
+            grid-template-areas: "label control";
+            grid-gap:1rem;
+        }
+
+        fx-fore fx-fore{
+            margin:0;
+        }
+
+        fx-fore fx-fore fx-control{
+            display: inline-block;
+            border:thin solid;
+        }
+        fx-repeat{
+            display: inline-block;
+        }
+        fx-repeatitem{
+            display: inline-block;
+            padding-right:1rem;
+        }
+
+    </style>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html"></fore-corner>
+
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-message event="ready">outer fore ready</fx-message>
+
+        <fx-model>
+            <fx-message event="model-construct-done">Outer model ready</fx-message>
+            <fx-instance>
+                <data>
+                    <from>
+                        <email></email>
+                    </from>
+                    <cc>
+                        <email></email>
+                    </cc>
+                    <to>
+                        <email>Jane.Doe@nowhere.com</email>
+                    </to>
+                    <subject></subject>
+                    <message></message>
+                    <attachments></attachments>
+                    <email></email>
+                </data>
+            </fx-instance>
+<!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
+
+        </fx-model>
+
+            <label for="from">From</label>
+            <fx-action event="click" target="from" if="string-length((//from/email[last()])) != 0">
+                <fx-insert ref="from/email" origin="instance()/email" ></fx-insert>
+            </fx-action>
+            <fx-repeat id="from" ref="from/email" id="from">
+                <template>
+                    <fx-control ref="."
+                                url="email-address.html"
+                                initial="." id="from-lbl">
+                    </fx-control>
+                </template>
+            </fx-repeat>
+
+            <label for="to">To</label>
+            <fx-repeat ref="to" id="to">
+                <template>
+                    <fx-control id="to" ref="email"
+                                url="email-address.html"
+                                initial=".">
+                    </fx-control>
+                </template>
+            </fx-repeat>
+
+
+            <label for="subject">Subject</label>
+            <fx-control ref="subject" id="subject">
+            </fx-control>
+
+
+            <label for="message">Message</label>
+            <fx-control ref="message" id="message">
+                <textarea class="widget" rows="10"></textarea>
+            </fx-control>
+<!--
+
+            <fx-control ref="attachments"
+                        url="attachments.html" >
+                <label>Attachments</label>
+            </fx-control>
+-->
+        <fx-inspector></fx-inspector>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

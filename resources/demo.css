@@ -23,7 +23,8 @@ body{
 code{
     font-weight: 500;
     white-space: nowrap;
-    padding:0 0.3rem;
+    padding:0;
+    font-size: inherit;
 }
 .demos .three-col div {
     background: rgba(255,255,255,0.7);

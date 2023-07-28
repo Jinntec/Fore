@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../resources/home.css">
     <meta name="keywords" content="Fore, HTML5, Web Components, Declarative framework">
 </head>
-<body>
+<body id="home">
 <noscript>Sorry - This page requires JavaScript to work.</noscript>
 <a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
    aria-label="Visit Tuttle on GitHub" target="_blank">
@@ -53,12 +53,10 @@
             <demo-snippet>
                 <template>
                     <fx-fore>
-                        <fx-model>
-                            <fx-instance type="json">
-                                {"greeting":"Hello Universe"}
-                            </fx-instance>
-                        </fx-model>
-                        <h3>{?greeting}</h3>
+                        <button>
+                            Say Hello
+                            <fx-message event="click">Hello &hearts;</fx-message>
+                        </button>
                     </fx-fore>
                 </template>
             </demo-snippet>
@@ -71,18 +69,19 @@
                 <p><strong>Bindings</strong> apply calculations (or constraints) to the data.</p>
                 <p><strong>Actions</strong> mutate, load or send data, interact with the user or trigger events.</p>
                 <p>The <strong>state engine</strong> tracks dependencies and updates the user interface
-                    automatically when values change.</p>
+                    automatically.</p>
             </div>
             <demo-snippet>
                 <template>
                     <fx-fore>
+                        <!-- ### start the loop with a second delay between executions ### -->
                         <fx-action event="ready" while="true()" delay="1000">
+                            <!-- ### update the Time and trigger recalculation ### -->
                             <fx-setvalue ref="time" value="now()"></fx-setvalue>
-                            <fx-update></fx-update>
-                            <fx-refresh></fx-refresh>
                         </fx-action>
 
                         <fx-model>
+                            <!-- ### data-container ### -->
                             <fx-instance>
                                 <data>
                                     <time>12:30:00</time>
@@ -95,6 +94,7 @@
                                 </data>
                             </fx-instance>
 
+                            <!-- ### bindings calculating the hours, minutes and seconds and rotation degrees ### -->
                             <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
                             <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
                             <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
@@ -102,12 +102,14 @@
                             <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
                             <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
 
+                            <!-- ### a custom JavaScript utility function to return a formatted Date ### -->
                             <fx-function signature="now() as xs:string" type="text/javascript">
                                 const now = new Date();
                                 return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
                             </fx-function>
 
                         </fx-model>
+                        <!-- ### Template Expressions in {} to output the bound data ### -->
                         <div class="clock">
                             <div class="circle" style="transform:rotate({s-deg}deg);"></div>
                             <div class="brand">Fore</div>

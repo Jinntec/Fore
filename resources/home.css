@@ -450,6 +450,25 @@ fx-fore#version {
     }
 }
 
+#home .toastify.on{
+    left:50%;
+    top:50%;
+    transform:translateX(-50%) translateY(-50%);
+    background: #00bcd4;
+    padding: 2rem 4rem;
+    font-size: 2rem;
+    max-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color:white;
+}
+#home button {
+    padding: 1rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color:#333333;
+}
 /* ### demo page styles */
 #demos .hero figure img{
     width: 100%;

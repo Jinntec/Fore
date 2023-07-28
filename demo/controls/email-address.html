@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Email Address</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance id="email">
+            <data>
+                <email>default</email>
+            </data>
+        </fx-instance>
+        <fx-bind ref="email" required="true()"></fx-bind>
+    </fx-model>
+    <form id="form">
+        <!-- cancel the form submit - just used for validation  -->
+        <fx-action event="submit" defaultaction="cancel"></fx-action>
+        <fx-control ref="email" update-event="input">
+            <input name="email" class="widget" type="email">
+
+            <fx-action event="value-changed">
+                <fx-return ref="."></fx-return>
+                <fx-dispatch name="submit" targetid="form"></fx-dispatch>
+            </fx-action>
+        </fx-control>
+    </form>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

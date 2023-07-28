@@ -28,7 +28,7 @@ export class Fore {
     if(target?.classList.contains("widget")) return true;
     let parent = target.parentNode;
     while(parent && parent.nodeName !== 'FX-CONTROL'){
-      if(parent.classList.contains('widget')) return true;
+      if(parent?.classList?.contains('widget')) return true;
       parent = parent.parentNode;
     }
     return false;
