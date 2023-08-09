@@ -5,23 +5,12 @@
 * siehe Fore errors Ordner
 * markierte Begriffe kaum zu erkennen Bsp. siehe Selects(2) "select" + "by" könnte auch markiert sein
 ###Fragen/Anmerkungen/noch zu bearbeiten
-* Bindings are fore-ever -> "Modelitem" Tester font unvorteilhaft man denkt da steht "Modelltem"
-* Bindings are fore-ever -> man startet in der Mitte der Seite nicht oben
-* Model -> zwei heißen "Computations"
-* Get started und A simple output -> "ref" zwei mal nacheinander verlinken?
-* ref what? -> "data" was soll man da verlinken?
-* Submission with Template Expression -> keinen passenden link für URL gefunden
-* Submissions and Relevance -> keine Links für "keep" "empty" "remove" gefunden
-* "#echo" kein guter link zu finden
-* submitting with required data -> Überschriften angleichen
-* submitting with required data -> ´´beheben und durch <code> </code> austauschen ?!
-* One control to bind ´em all -> keinen Link für target gefunden
-* Selects(2) -> "select" keinen link gefunden
-* Dynamic and static list widgets -> keine links gefunden
-* Trigger -> "enter" "space" "click" möglicherweise anders markieren bzw. einheitlichkeit auf allen Seitn herstellen
-* Template Expressions (1) -> "greeting" <code> </code> keinen link gefunden
-* Template Expressions (1) -> "div" <code> </code> keinen link gefunden
-* Template Expressions (1) -> '{}' keinen link gefunden
+* On a submission -> submission markieren?
+* More Submissions -> Submission events markieren?
+* Demoseite -> replace action groß?
+* Get started + A simple output -> 'reference' so belassen?
+* Documentation -> Documentation?
+
 ###Bearbeitet
 * Instances - a home for your precious data -> "instance()" link hinzugefügt
 * Instances - a home for your precious data -> "instance()" link geändert
@@ -72,4 +61,15 @@
 * Trigger -> "fx-trigger"  <code> </code> + link hinzugefügt
 * Template Expressions (1) -> "greeting" <code> </code> hinzugefügt
 * Template Expressions (1) -> "div" <code> </code> hinzugefügt
-* 
+###BEarbeitet 09.08.2023
+* Überschriften vereinheitlicht
+* Get started -> "ref" link update
+* A simple output -> "ref" link update
+* Ref what -> "ref" link update
+* Submission with required values -> `` druch code ersetzt
+* Submission with required values ->
+### todo
+* Tickets bei Github anlegen -> fore docs -> issues -> screenshots mit beschreibung
+* Überschriften vereinheitlichen
+* Seitenreiter entfernen -> fx-inspector zeile löschen
+* weiter demos bearbeiten
