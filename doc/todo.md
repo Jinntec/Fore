@@ -4,7 +4,7 @@
 * ref what? -> Überschrift
 * siehe Fore errors Ordner
 * markierte Begriffe kaum zu erkennen Bsp. siehe Selects(2) "select" + "by" könnte auch markiert sein
-* 
+* Begriffe sollten einheitlich markiert sein
 ###Fragen/Anmerkungen/noch zu bearbeiten
 * On a submission -> submission markieren?
 * More Submissions -> Submission events markieren?
@@ -23,7 +23,13 @@ Group relevance -> funktion der Seite?
 * The insert action -> weiß nicht ob der index so funktioniert wie er soll
 * replace action -> fx-inspector entfernt (hat für fehlerhafte Formatierung gesorgt)
 * replace Action -> weiß nicht ob das richtig funktioniert
-* 
+* Custum function -> reference elements nicths gefunden
+* Binding JSON -> was soll mir die Liste sagen
+* The fx-message element -> "fx-dialog" link führt zu Demo
+* show-conforamtion -> existiert bei fx-fore nicht als element (kontext: Page exit conformation)
+* A simple login -> final?
+* Fore element reference -> man kann nicht markieren
+* Editing a basic TEI header -> 
 
 ###Bearbeitet
 * Instances - a home for your precious data -> "instance()" link hinzugefügt
@@ -73,7 +79,7 @@ Group relevance -> funktion der Seite?
 * Trigger -> "fx-trigger"  <code> </code> + link hinzugefügt
 * Template Expressions (1) -> "greeting" <code> </code> hinzugefügt
 * Template Expressions (1) -> "div" <code> </code> hinzugefügt
-###BEarbeitet 09.08.2023
+###Bearbeitet 09.08.2023
 * Überschriften vereinheitlicht
 * Get started -> "ref" link update
 * A simple output -> "ref" link update
@@ -110,7 +116,21 @@ Group relevance -> funktion der Seite?
 * replace action -> fx-inspector entfernt (hat für fehlerhafte Formatierung gesorgt)
 * Handling keyboard events -> "event()" link hinzugefügt
 * Debouncing trigger executions -> link hinzugefügt
-* 
+###Bearbeitet 17.09.2023
+* The load action -> id typo fix
+* The load action -> url txpo fixes
+* The load action -> "attach-to" link hinzugefügt
+* Looping submissions with actions -> "fx-dispatch" link hinzugefügt
+* Custom functions -> "fx-function" link hinzugefügt
+* Custom functions -> back ticks druch code ersetzt
+* Binding JSON -> "<fx-inspector></fx-inspector>" entfernt
+* The fx-message element -> back ticks  durch code ersetzt
+* The fx-message element -> "level=sticky" link hinzugefügt
+* The fx-message element -> "level=modal" link hinzugefügt"
+* i18n -> "src" link hinzugefügt
+* Fore Element Reference -> "This is just a demo - for real and latest documentation use the menu link" -> This is just a demo - for the real and latest documentation use the menu link
+* API Demo ->  <fx-inspector open></fx-inspector> entfernt
+* DocBook Bibliography - editing namespaced XML -> <fx-inspector open> entfernt 
 ### todo
 * Tickets bei Github anlegen -> fore docs -> issues -> screenshots mit beschreibung
 * Überschriften vereinheitlichen (demo seite und überschriften)
