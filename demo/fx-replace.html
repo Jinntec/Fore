@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>replace action</title>
+    <title>The replace action</title>
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
@@ -27,12 +27,9 @@
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
-    <h1><code>fx-replace</code> Action</h1>
+    <h1>The replace Action</h1>
     <p>
         Replaces a node with another one.
-    </p>
-    <p>
-        Watch Data Inspector on the right to see the data changing after hitting the button.
     </p>
     <p>
         After replacement the repeat will be bound to new nodes and be shown.
@@ -66,42 +63,31 @@
                         Item: {.}
                     </template>
                 </fx-repeat>
-                <fx-inspector open></fx-inspector>
-<!--                <instance-inspector id="default"></instance-inspector>-->
-<!--
-                <section>
-                    <fx-control ref="instance('default')" as="node">
-                        <label>plain</label>
-                        <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
-                    </fx-control>
-                </section>
--->
-
             </fx-fore>
 
-<!--
-            <fx-fore>
-                <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <value attr="">A</value>
-                            <with attr="foo"></with>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-
-                <fx-trigger id="trigger">
-                    <button>replace</button>
-                    <fx-replace ref="value/attr" with="../with/@attr"></fx-replace>
-                </fx-trigger>
-                <fx-inspector open></fx-inspector>
-            </fx-fore>
--->
 
         </template>
     </demo-snippet>
 
 
+    <!--
+                <fx-fore>
+                    <fx-model id="model1">
+                        <fx-instance>
+                            <data>
+                                <value attr="">A</value>
+                                <with attr="foo"></with>
+                            </data>
+                        </fx-instance>
+                    </fx-model>
+
+                    <fx-trigger id="trigger">
+                        <button>replace</button>
+                        <fx-replace ref="value/attr" with="../with/@attr"></fx-replace>
+                    </fx-trigger>
+                    <fx-inspector open></fx-inspector>
+                </fx-fore>
+    -->
 
 </div>
 <!--<script type="module" src="./codemirror/jinn-codemirror-bundle.js"></script>-->

@@ -5,15 +5,6 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     <title>template</title>
     <link href="../resources/demo.css" rel="stylesheet">
-    <style>
-        #thetarget{
-            transform: scale(0.3) translateX(-50%) translateY(-50%);
-            max-height:25rem;
-        }
-        .wrapper{
-            max-width: 100%;
-        }
-    </style>
 </head>
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
@@ -30,7 +21,7 @@
         <li>send the content to an element with given id. Id must be prefixed with '#'.</li>
     </ul>
     <h2>Using an idref</h2>
-    <p>Ids will be resolved automatically when used in a repeat.</p>
+    <p>IDs will be resolved automatically when used in a repeat.</p>
     <p>Here the load fires on 'ready' event and inlines the loaded content.</p>
         <demo-snippet>
             <template>
@@ -43,8 +34,8 @@
         </demo-snippet>
 
     <h2>Replacing current browser tab with content</h2>
-    <p>Leaving out the <code>attach-to</code> attribute will default to using '_blank' as
-        default target. This will replace the current window with the content loaded from <code>url</code>.</p>
+    <p>Leaving out the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/load/#attributes" target="_blank">attach-to</a></code> attribute will default to using '_blank' as
+        default target. This will replace the current window with the content loaded from <code>URL</code>.</p>
         <demo-snippet>
             <template>
                 <fx-fore>
@@ -57,7 +48,7 @@
         </demo-snippet>
 
     <h2>Opening new browser tab with content</h2>
-    <p>By using '_blank' for the <code>attach-to</code> attribute a new browser window will be opened with
+    <p>By using '_blank' for the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/load/#attributes" target="_blank">attach-to</a></code> attribute a new browser window will be opened with
         the content.</p>
         <demo-snippet>
             <template>
@@ -71,7 +62,7 @@
         </demo-snippet>
 
     <h2>Replacing current browser tab with confirmation</h2>
-    <p>The load action also respects the <code>show-confirmation</code> attribute
+    <p>The load action also respects the <code><a href="https://jinntec.github.io/fore-docs/elements/fore/#attributes" target="_blank">show-confirmation</a></code> attribute
         and will ask for confirmation if data have changed before replacing the current tab.</p>
         <demo-snippet>
             <template>
@@ -84,7 +75,7 @@
                         </fx-instance>
                     </fx-model>
                     <fx-trigger>
-                        <button>navigate to Url</button>
+                        <button>navigate to URL</button>
                         <fx-load url="load-snippet.html" attach-to="_self"></fx-load>
                     </fx-trigger>
                     <fx-control ref="value">
@@ -96,11 +87,10 @@
     <h2>Control loading of content with template element</h2>
     <p>Sometimes you want to control WHEN a certain snippet comes into life. In that situations you can
         wrap that content into an HTML <code>template</code> element which will make it inert (browser ignores it). When
-        <code>fx-load</code> is triggered it will clone the template and attach it to the DOM.</p>
+        <code><a href="https://jinntec.github.io/fore-docs/elements/actions/load/"target="_blank">fx-load</a></code> is triggered it will clone the template and attach it to the DOM.</p>
     <p>This either makes sure you don't pay the cost of loading content you probably don't need and you can be sure
         that Fore is initialized before children can act.</p>
     <p>It's also suitable to control the sequence of content loaded into the page.</p>
-    <h2>Showing error if no template nor url given</h2>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -197,7 +187,6 @@
         <template>
             <style>
                 #thetarget{
-                    transform: scale(0.3) translateX(-50%) translateY(-50%);
                     max-height:25rem;
                 }
             </style>

@@ -29,6 +29,9 @@
         [readonly] {
             background: transparent;
         }
+        fx-repeat-attributes{
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -69,13 +72,13 @@
         </fx-model>
 
         <h1>Repeats via attributes</h1>
-        <p>Sometimes the usual <code>fx-repeat</code> does not do the job as it would interfere with the content
+        <p>Sometimes the usual <code><a href="https://jinntec.github.io/fore-docs/elements/ui/repeat/"target="_blank">fx-repeat</a></code> does not do the job as it would interfere with the content
             model of the repeated content. Examples are <code>table</code> and all kind of lists.</p>
 
-        <p>In such situations the <code>data-ref</code> attribute can be used instead.</p>
+        <p>In such situations the <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">data-ref</a></code> attribute can be used instead.</p>
 
         <h2>A usual repeat</h2>
-        <p>A usual repeat uses the <code>fx-repeat</code> element with a <code>template</code> for repeating items.</p>
+        <p>A usual repeat uses the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/repeat/"target="_blank">fx-repeat</a></code> element with a <code><a href="https://jinntec.github.io/fore-docs/elements/ui/repeat/#description"target="_blank">template</a></code> for repeating items.</p>
         <demo-snippet>
             <template>
                 <fx-repeat ref="item">
@@ -89,9 +92,9 @@
 
         <h2>Simple Table via attributes</h2>
         <p class="note">All tables below bind to the same nodeset so adding/deleting items in one table will update the others.</p>
-        <p>To bind data nodes the <code>data-ref</code> attribute is used instead of the usual <code>ref</code> found
+        <p>To bind data nodes the <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">data-ref</a></code> attribute is used instead of the usual <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">ref</a></code> found
         on the Fore elements.</p>
-        <p>You still have to wrap the repeated content in a <code>template</code> as with usual repeats.</p>
+        <p>You still have to wrap the repeated content in a <code><a href="https://jinntec.github.io/fore-docs/elements/ui/repeat/#description"target="_blank">template</a></code> as with usual repeats.</p>
         <demo-snippet>
             <template>
                 <table data-ref="item">
@@ -136,7 +139,7 @@
         </demo-snippet>
 
         <h2>Table with header via attributes</h2>
-        <p>The <code>data-ref</code> can also be used deeper down in the markup like here on a <code>tbody</code>.</p>
+        <p>The <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">data-ref</a></code> can also be used deeper down in the markup like here on a <code>tbody</code>.</p>
         <demo-snippet>
             <template>
                 <table>
@@ -351,7 +354,6 @@
                 </template>
             </ul>
         -->
-        <fx-inspector open></fx-inspector>
     </fx-fore>
 </div>
 

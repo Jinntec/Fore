@@ -34,11 +34,6 @@ fx-control {
     white-space: nowrap;
 }
 
-fx-control[required]::after {
-    content:'*';
-    color:red;
-    margin-left:-4pt;
-}
 fx-control[readonly]::before {
     content:'!';
     color:blue;

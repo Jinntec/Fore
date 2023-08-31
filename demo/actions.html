@@ -68,16 +68,9 @@
 
         </fx-model>
 
-        <!--
-                <fx-control ref="confirmation" update-event="input" value-prop="checked">
-                    <input id="confirm" type="checkbox">
-                    <label for="confirm">i agree</label>
-                </fx-control>
-        -->
-
         <fx-group>
 
-            <h2>conditional action</h2>
+            <h2>Conditional action</h2>
             <p>Any action element may have an <code>if</code> attribute that contains an XPath expression that needs to
                 evaluate to a boolean. If the evaluation returns true, the action is performed otherwise not.</p>
 
@@ -94,9 +87,9 @@
                         <fx-setvalue if="../confirmation = 'true'" ref="entered">true</fx-setvalue>
                     </fx-trigger>
 
-            <fx-output ref="entered">
-                <fx-message event="value-changed" level="modal">Welcome!</fx-message>
-            </fx-output>
+                    <fx-output ref="entered">
+                        <fx-message event="value-changed" level="modal">Welcome!</fx-message>
+                    </fx-output>
                 </template>
             </demo-snippet>
 
@@ -116,12 +109,6 @@
                 </fx-trigger>
             </template>
         </demo-snippet>
-
-
-        <pre>
-                {log('default')}
-        </pre>
-
     </fx-fore>
 
 </div>

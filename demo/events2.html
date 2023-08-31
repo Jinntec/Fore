@@ -10,6 +10,9 @@
 
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
+        div{
+            margin:1rem 0;
+        }
         pre {
             /*position: fixed;*/
             right: 0;
@@ -53,9 +56,11 @@
 
 <div class="wrapper">
 
-    <h2>Passing data as event params</h2>
-    <p>Some inline JavaScript creates a XML document that is then passed via an event param to the
-    <code>fx-setvalue</code> action which will append it to its context node (root node of default instance here).</p>
+    <h1>Passing data as event params</h1>
+    <p>When the button is clicked a snippet of XML is created and passed along in the 'custom' event that is dispatched
+        to the document. A
+        <code><a href="https://jinntec.github.io/fore-docs/elements/actions/replace/"target="_blank">fx-replace</a></code> action will handle that event
+        and replace the instance data with the nodes carried by the event..</p>
     <demo-snippet>
         <template>
 
@@ -65,28 +70,32 @@
                         <data>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="foo" required="true()"></fx-bind>
                 </fx-model>
                 <!--
-                ### bubbling listener
+                ### document listener
                 -->
-                <fx-action event="custom">
-                    <fx-setvalue ref="instance('default')" value="event('data')"></fx-setvalue>
-<!--                    <fx-setvalue ref="foo" value="event('data')"></fx-setvalue>-->
-
+                <fx-action event="custom" target="#document">
+                    <fx-replace context="instance('default')" with="event('data')/*"></fx-replace>
+                    <fx-update></fx-update>
+                    <fx-refresh></fx-refresh>
                 </fx-action>
-                <button onclick="firecustom(event)">fire custom event from js</button>
-                <h3>{nodes/node1}</h3>
-                <h3>{nodes/node2}</h3>
-                <pre>
+                <button id="trigger" onclick="firecustom()">fire custom event from js</button>
+
+                <div>Node1: {node1}</div>
+                <div>Node2: {node2}</div>
+
+                <section>
+                    <header>Data</header>
+                    <pre>
                     {log('default')}
                 </pre>
+                </section>
             </fx-fore>
 
             <script>
                 function firecustom(event) {
                     const data = new DOMParser().parseFromString('<nodes><node1>nodeVal1</node1><node2>nodeVal2</node2></nodes>', 'application/xml');
-                    event.target.dispatchEvent(
+                    document.dispatchEvent(
                         new CustomEvent('custom', {
                             composed: true,
                             bubbles: true,
@@ -98,7 +107,8 @@
         </template>
     </demo-snippet>
 
-    <h2>If you just wanted a node in the tree...</h2>
+<!--    <h2>If you just wanted a node in the tree...</h2>-->
+<!--
     <demo-snippet>
         <template>
 
@@ -111,13 +121,13 @@
                     </fx-instance>
                     <fx-bind ref="foo" required="true()"></fx-bind>
                 </fx-model>
-                <!--
+                &lt;!&ndash;
                 ### bubbling listener
-                -->
+                &ndash;&gt;
                 <fx-action event="custom">
                     <fx-setvalue ref="foo" value="event('data')"></fx-setvalue>
                 </fx-action>
-                <button onclick="firecustom(event)">fire custom event from js</button>
+                <button onclick="firecustom()">fire custom event from js</button>
                 <h3>{foo/nodes/node1}</h3>
                 <h3>{foo/nodes/node2}</h3>
                 <pre>
@@ -128,6 +138,7 @@
             <script>
                 function firecustom(event) {
                     const data = new DOMParser().parseFromString('<nodes><node1>nodeVal1</node1><node2>nodeVal2</node2></nodes>', 'application/xml');
+                    console.log('custom')
                     event.target.dispatchEvent(
                         new CustomEvent('custom', {
                             composed: true,
@@ -139,6 +150,7 @@
             </script>
         </template>
     </demo-snippet>
+-->
 
 
 

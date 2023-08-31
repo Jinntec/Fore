@@ -26,7 +26,7 @@
     <h1>The <code>while</code> attribute</h1>
     <p>The <code>while</code> attribute is allowed on actions to execute a loop until the condition becomes
         <code>false</code>.</p>
-    <p>In this example the <code>fx-setvalue</code> action is executed as long as the counter is smaller than 10.
+    <p>In this example the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/"target="_blank">fx-setvalue</a></code> action is executed as long as the counter is smaller than 10.
         Afterwards
         the message action is displaying the result.</p>
     <demo-snippet>
@@ -87,7 +87,7 @@
                     <button>reset</button>
                     <fx-setvalue ref="counter" value="0"></fx-setvalue>
                 </fx-trigger>
-                <fx-action-log></fx-action-log>
+<!--                <fx-action-log></fx-action-log>-->
 
             </fx-fore>
         </template>
@@ -120,7 +120,7 @@
                     <button>stop</button>
                     <fx-setvalue ref="stop">true</fx-setvalue>
                 </fx-trigger>
-                <fx-action-log></fx-action-log>
+<!--                <fx-action-log></fx-action-log>-->
 
             </fx-fore>
         </template>
@@ -169,7 +169,6 @@
                     <button>insert a new one</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
-<fx-inspector></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>
