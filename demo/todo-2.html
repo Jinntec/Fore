@@ -80,9 +80,9 @@
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
                         </fx-control>
-                        <fx-control id="task" class="complete {@complete}" ref=".">
+                        <fx-control id="task" class="complete {@complete}" ref="." create>
                         </fx-control>
-                        <fx-control ref="@due">
+                        <fx-control ref="@due" create>
                             <input type="date">
                         </fx-control>
                         <fx-trigger class="btn delete">

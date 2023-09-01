@@ -12,6 +12,10 @@
 
     <h1>Group Relevance</h1>
     <p>A group being bound to a non-existing node becomes non-relevant and hides it's contents</p>
+
+    <p>By clicking the button a submission is fired that replaces the default instance (the first one).
+    Afterwards there will be a node 'foo' that the group can bind to and it becomes visible. Same applies to second
+    group.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -24,7 +28,7 @@
                             <foo>bar</foo>
                             <item type="color">blue</item>
                             <item type="color">red</item>
-                            <item type="color">greeb</item>
+                            <item type="color">green</item>
                         </data>
                     </fx-instance>
 
@@ -50,6 +54,7 @@
                         <button>switch non-relevant again</button>
                         <fx-delete ref="instance()/foo"></fx-delete>
                     </fx-trigger>
+                    <p>Clicking above button removes the 'foo' node again hiding the group again.</p>
                 </fx-group>
 
 
@@ -61,7 +66,7 @@
                     </fx-control>
                 </fx-group>
 
-                <fx-inspector></fx-inspector>
+
             </fx-fore>
         </template>
     </demo-snippet>

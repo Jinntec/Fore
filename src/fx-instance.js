@@ -113,7 +113,7 @@ export class FxInstance extends HTMLElement {
 
   reset(){
     // this._useInlineData();
-    this.instanceData = this.originalInstance;
+    this.instanceData = this.originalInstance.cloneNode(true);
   }
 
   evalXPath(xpath) {

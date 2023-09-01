@@ -130,6 +130,12 @@
         [readonly]{
             background: transparent;
         }
+        [invalid] .widget{
+            background: red;
+        }
+        fx-control[readonly]{
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -179,12 +185,12 @@
                         <data>
                             <a>101</a>
                             <b>10</b>
-                            <c></c>
-                            <d></d>
-                            <e></e>
+                            <c>0</c>
+                            <d>0</d>
+                            <e>0</e>
                             <x>3</x>
                             <y>0</y>
-                            <z></z>
+                            <z>0</z>
                             <q>foo</q>
                         </data>
                     </fx-instance>
@@ -210,13 +216,13 @@
                 <fx-group>
                     <div>some controls depending on the 'a' and 'b' controls</div>
                     <fx-control ref="c">
-                        <label>c = a * b <= 100</label>
+                        <label>c = a * b (should be <= 100)</label>
                     </fx-control>
                     <fx-control ref="d">
-                        <label>d = a + b <= 10</label>
+                        <label>d = a + b (should be <= 10)</label>
                     </fx-control>
                     <fx-control ref="e">
-                        <label>e = a + 5 < 10</label>
+                        <label>e = a + 5 (should be < 10)</label>
                     </fx-control>
                 </fx-group>
 

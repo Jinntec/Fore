@@ -82,23 +82,23 @@
     <p>In short model items attach constraints or calculations to the nodes of your data. </p>
     <img src="../resources/images/modelitem.svg" class="diagram">
 
-    <p>The <code>fx-bind</code> element allows you
+    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code> element allows you
     to use the following 'facets':</p>
 
     <table class="modelitems">
         <tr>
             <td>calculate</td>
-            <td>XPath expression whose result will be stored in node referenced by <code>ref</code></td>
+            <td>XPath expression whose result will be stored in node referenced by <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></td>
         </tr>
         <tr>
             <td>constraint</td>
             <td>XPath expression resolving to boolean. When resolving to true the referenced node is considered valid
-            in case <code>required</code> constraint also resolves to true</td>
+            in case <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">required</a></code> constraint also resolves to true</td>
         </tr>
         <tr>
             <td>readonly</td>
             <td>boolean XPath expression - when resolving to true it won't be possible any more to change its value
-            with a UI control or by using a <code>setvalue</code> action.</td>
+            with a UI control or by using a <code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/" target="_blank">setvalue</a></code> action.</td>
         </tr>
         <tr>
             <td>required</td>
@@ -117,7 +117,7 @@
     </table>
 
     <p>Each of these attributes will use XPath expressions that evaluate in the context of the node(s) given by the
-    <code>ref</code> attribute</p>
+    <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code> attribute</p>
 
     <demo-snippet>
         <template>
@@ -131,13 +131,13 @@
     <p>Use the buttons to toggle the state of the respective modelitem facet below.
     Hitting twice will have no additional effect.</p>
 
-    <p>The <code>fx-bind</code> defines a boolean condition for each of the facets. Here we depend on the value
+    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">fx-bind</a></code> defines a boolean condition for each of the facets. Here we depend on the value
     of a node which can be set with the corresponding button.</p>
     <demo-snippet>
         <template>
 
             <fx-fore>
-                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>
+<!--                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>-->
                 <fx-model>
                     <fx-instance>
                         <data>

@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>insert action 2</title>
+    <title>insert into empty list</title>
 
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
@@ -82,6 +82,7 @@
             display: inline-block;
             padding: 0 6px;
             white-space: nowrap;
+            width: auto;
 
             /*padding: 6px;*/
             /*margin: 4px;*/
@@ -140,8 +141,11 @@
                     </fx-instance>
                 </fx-model>
 
-                <h1>insert action with context</h1>
-
+                <h1>insert into empty list</h1>
+                <p>To insert into an empty list you need to use the <code>context</code> attribute which points
+                to the parent element you want to insert into. The <code>ref</code> will give the name of the inserted
+                element. As a template for insertion the <code>origin</code> attribute needs to point to some
+                existing nodes somewhere.</p>
                 <fx-repeat id="todos" ref="list/a">
                     <template>
                         <fx-control id="task" ref="."></fx-control>
