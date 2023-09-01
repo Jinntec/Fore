@@ -14,13 +14,17 @@
         body {
             font-size: 18px;
         }
+        h3{
+            width: 100%;
+        }
 
         fx-instance {
             display: none;
         }
 
         fx-control {
-            display: table-row;
+            display: block;
+            width: 100%;
         }
 
         fx-output {
@@ -50,6 +54,8 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
 
     <fx-fore>
@@ -63,6 +69,15 @@
                     <flavor></flavor>
                 </data>
             </fx-instance>
+            <fx-instance id="i-flavors">
+                <data>
+                    <flavor>Chocolate</flavor>
+                    <flavor>Coconut</flavor>
+                    <flavor>Mint</flavor>
+                    <flavor>Strawberry</flavor>
+                    <flavor>Vanilla</flavor>
+                </data>
+            </fx-instance>
             <fx-bind ref="item"></fx-bind>
             <fx-bind ref="checked" type="boolean"></fx-bind>
             <fx-bind ref="listitem"></fx-bind>
@@ -70,17 +85,17 @@
         </fx-model>
         <fx-group>
 
-            <h1>The fx-control element</h1>
+            <h1>The <code>fx-control</code> element</h1>
 
 
-            <p><code>fx-control</code> is a generic control.</p>
+            <p><code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/" target="_blank">fx-control</a></code> is a generic control.</p>
             <p>Its purpose is to bind a 'widget' to the model of the form. The widget is that part of the control
                 that the user actually interacts with.</p>
 
             <h2>Examples</h2>
 
             <p class="note">
-                These are just a few examples (more to come). The concept of <code>xf-control</code> is to wrap any kind of control as long as it emits
+                These are just a few examples (more to come). The concept of <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/" target="_blank">fx-control</a></code> is to wrap any kind of control as long as it emits
                 an event when it changes and has a defined 'value' property.
             </p>
             <section>
@@ -92,7 +107,7 @@
                         </fx-control>
                     </template>
                 </demo-snippet>
-                <p>By default a native <code>input</code> will be created as widget, listening for <code>blur</code>
+                <p>If nothing is given a native <code>input</code> will be created as widget by default, listening for the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes" target="_blank">blur</a></code>
                     event to
                     update
                     the bound node.</p>
@@ -110,19 +125,22 @@
                     </template>
                 </demo-snippet>
 
-                <p>Use <code>update-event</code> attribute to change the event to listen for.</p>
+                <p>Use <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/"target="_blank">update-event</a></code> attribute to change the event to listen for.</p>
                 <p>In this case each keystroke will update the model (fire an <code>input</code> event). Notice
                     the other inputs on the page updating themselves as they are all bound to the same node.</p>
 
-                <p>The <code>fx-message</code> action
-                    listens for a <code>value-changed</code> event it will receive during refresh after the model has
-                    changed.</p>
+                <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/actions/message/" target="_blank">fx-message</a></code> action
+                    listens for a <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/" target="_blank">value-changed</a></code> event and outputs
+                the current value of the control.</p>
             </section>
 
 
             <section>
-                <h3>Using a textarea</h3>
+                <h3>Customizing the widget</h3>
+                <p>By adding a CSS class "widget" you can use any other HTML element and mark it as the widget. Fore
+                will then look for a value of that element and add an eventlistener on that element.</p>
 
+                <p>This example uses a <code>textarea</code> as the widget. See below for more examples.</p>
                 <demo-snippet>
                     <template>
                         <fx-control ref="item" update-event="input">
@@ -133,13 +151,10 @@
                     </template>
                 </demo-snippet>
 
-                <p>Note the <code>class="widget"</code> attribute. As we're not just using an <code>input</code>
-                    the <code>fx-control</code> needs a little help to know which of its child elements is the actual
-                    widget.</p>
             </section>
 
             <section>
-                <h3>Using an `fx-control` with debounce</h3>
+                <h3>Using an <code>fx-control</code> with debounce</h3>
                 <p>if using input events, debounce allows to delay the call to the update handler to mimize event processing</p>
                 <demo-snippet>
                     <template>
@@ -150,10 +165,6 @@
                         <fx-output ref="item"></fx-output>
                     </template>
                 </demo-snippet>
-
-                <p>Note the <code>class="widget"</code> attribute. As we're not just using an <code>input</code>
-                    the <code>fx-control</code> needs a little help to know which of its child elements is the actual
-                    widget.</p>
             </section>
 
             <section>
@@ -216,6 +227,27 @@
                     </template>
                 </demo-snippet>
             </section>
+            <section>
+                <h3>Datalist (autocomplete) - dynamic</h3>
+                <demo-snippet>
+                    <template>
+
+                        <fx-control ref="flavor" update-event="input">
+                            <label slot="label">input with datalist</label>
+                            <input list="flavors">
+                            <datalist id="flavors" data-ref="instance('i-flavors')/flavor">
+                                    <template>
+                                        <option value="{.}">{.}</option>
+                                    </template>
+                            </datalist>
+                        </fx-control>
+
+                        Selected value is:
+                        <fx-output ref="flavor"></fx-output>
+
+                    </template>
+                </demo-snippet>
+            </section>
 
 
             <section>
@@ -239,6 +271,7 @@
                             <paper-input class="widget" label="{../label}"></paper-input>
                         </fx-control>
 
+                        <h3>Checkbox</h3>
                         <fx-control ref="checked" update-event="change" value-prop="checked">
                             <paper-checkbox class="widget">paper checkbox</paper-checkbox>
                         </fx-control>

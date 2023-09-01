@@ -56,18 +56,14 @@
                     <msPart xml:id="5cf1e956-0113-4366-b1e9-56011353668e">
                         <msIdentifier>
                             <!-- 12a) Aufbewahrung -->
-                            <!-- todo: ref + value setzen -->
                             <repository ref="">Bonn, Rhein. Landesmus.</repository>
                             <!-- 4) TM-Nummer - manuelle Eingabe -->
                             <idno type="TM">208730</idno>
                         </msIdentifier>
                         <msContents>
-                            <!-- TODO: 12d) Verifizierungsgrundlage: Auswahlmenü: Abklatsch / nicht-gesehen -->
-                            <!-- TODO: 12e) Datum der Verifizierung -->
                             <!-- 15) Inschriftengattung in @class -->
                             <msItem class="https://www.eagle-network.eu/voc/typeins/lod/80">
                                 <!-- 25) Sprache -->
-                                <!-- TODO: Metrik logisch hierhin -->
                                 <textLang mainLang="lat"/>
                                 <!-- 35b) Bibliographie-->
                                 <listBibl type="bibliography">

@@ -1,66 +1,124 @@
-@import 'toastify.css';
 @import 'vars.css';
+@import 'toastify.css';
+/*@import url('dev.css');*/
 
-html{
-    --inspector-bg:var(--paper-grey-300);
-    --inspector-pre-bg:var(--paper-grey-100);
-    --inspector-color:var(--paper-grey-800);
-    --inspector-instance-height:200px;
+html {
+    --inspector-bg: var(--paper-grey-300);
+    --inspector-pre-bg: var(--paper-grey-100);
+    --inspector-color: var(--paper-grey-800);
+    --inspector-instance-height: 200px;
     --inspector-handle-bg: var(--paper-blue-500);
     --inspector-handle-width: 30px;
-
 }
-[unresolved]{
+
+[unresolved] {
     display: none;
 }
+
 [disabled] {
     pointer-events: none;
     cursor: default;
 }
-[refresh-on-view]{
+
+[refresh-on-view] {
     /*opacity: 0;*/
 }
-/*
-    defaults for relevance
 
-    You can overwrite these matchers to use transistions
+/*
+    nonrelevant must always be hidden
 */
-[nonrelevant]{
-    display: none;
+[nonrelevant] {
+    display: none !important;
 }
-[relevant]{
+
+[relevant] {
     display: block;
 }
 
-[required]:after {
+fx-control[required]:after {
     content: "*";
     display: inline;
     color: red;
 }
 
-fx-alert{
-    color:darkred;
+[slot=messages] {
+    margin: 0 auto;
+    width: 100%;
+    padding: 2rem 0 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    position: relative;
+}
+
+[slot=messages]::before {
+    content: attr(data-level);
+    padding: 0.5rem;
+    background: darkred;
+    color: white;
+    display: block;
+}
+
+[slot=messages] div {
+    color: black;
+    padding: 0.25rem;
+    border: thin solid #efefef;
+}
+
+[slot=messages] div::before {
+    width: 6rem;
+    display: inline-block;
+}
+
+[slot=messages] div:nth-child(1)::before {
+    content: 'Id:';
+}
+
+[slot=messages] div:nth-child(2)::before {
+    content: 'Path:';
+}
+
+[slot=messages] div:nth-child(3)::before {
+    content: 'Message:';
+}
+
+.fore-error {
+    height: 2rem;
+    background: darkred;
+    width: 100%;
+    display: block !important;
+    color: white;
+}
+
+.fore-error::before {
+    content: 'right-click to inspect';
+    display: flex;
+    flex-align: center;
+}
+
+fx-alert {
+    color: darkred;
     font-size: 0.9rem;
     display: none;
 }
-.visited[invalid] fx-alert{
+
+.visited[invalid] fx-alert {
     display: block;
 }
 
 /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
-fx-case{
+fx-case {
     display: none;
 }
 
-fx-output[readonly] img{
+fx-output[readonly] img {
     background: inherit;
 }
 
-.error{
+.error {
     background: var(--paper-red-500);
 }
 
-fx-control, fx-trigger , .fx-checkbox{
+fx-control, fx-trigger, .fx-checkbox {
     white-space: nowrap;
     /* position: relative; */
 }
@@ -68,93 +126,81 @@ fx-control, fx-trigger , .fx-checkbox{
 /* ### FX-DIALOG STYLES ### */
 /* ### FX-DIALOG STYLES ### */
 /* ### FX-DIALOG STYLES ### */
-fx-dialog{
+fx-dialog {
     display: none;
     opacity: 0;
-    width:100vw;
+    width: 100vw;
     height: 100vh;
     transition: opacity 1s linear;
     z-index: -1;
     transition: none;
 }
-fx-dialog.show{
+
+fx-dialog.show {
     display: block;
     min-height: 200px;
     border-radius: 0.5rem;
     opacity: 1;
-    background:rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 10;
     transition: opacity 0.4s linear;
 }
 
-fx-dialog.show .dialog-content{
+fx-dialog.show .dialog-content {
     padding: 1rem;
-    width:fit-content;
-    height:fit-content;
-    border:thin solid;
+    width: fit-content;
+    height: fit-content;
+    border: thin solid;
     border-radius: 0.3rem;
     position: absolute;
-    left:50%;
-    top:50%;
-    transform:translateX(-50%) translateY(-50%);
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
     background: white;
 
 }
-fx-dialog a.close-dialog{
+
+fx-dialog a.close-dialog {
     position: absolute;
     right: 0.4rem;
-    top:0.2rem;
-    color:var(--paper-grey-900);
+    top: 0.2rem;
+    color: var(--paper-grey-900);
     text-decoration: none;
-    font-size:1.2rem;
+    font-size: 1.2rem;
 }
-fx-dialog .action{
+
+fx-dialog .action {
     width: 100%;
     text-align: center;
     display: block;
 }
 
-/* fx-fore{ */
-/*     opacity: 0; */
-/* } */
-/* fx-fore.fx-ready{ */
-/*     opacity: 1; */
-/* } */
-
-
-fx-group, fx-switch, fx-repeat, fx-dialog{
+fx-group, fx-switch, fx-repeat, fx-dialog {
     display: block;
 }
 
-fx-hint{
+fx-hint {
     display: none;
 }
 
 fx-model,
-fx-model *,
-fx-model ::slotted(fx-instance),
 fx-instance,
 fx-action,
-fx-setvalue{
-    display:none;
+fx-setvalue {
+    display: none;
 }
 
 fx-trigger a[disabled] {
-    color:lightgrey;
-}
-fx-trigger img[disabled]{
-    filter:blur(2px);
+    color: lightgrey;
 }
 
+fx-trigger img[disabled] {
+    filter: blur(2px);
+}
 
-fx-repeatitem{
-    position:relative;
-    opacity:1;
-    /*
-    -webkit-transition: opacity 3s;
-    -moz-transition: opacity 3s;
-    transition: opacity 3s;
-    */
+fx-repeatitem {
+    position: relative;
+    opacity: 1;
 }
 
 .hidden {
@@ -163,52 +209,92 @@ fx-repeatitem{
     transition: visibility 0s 2s, opacity 2s linear;
 }
 
-.isEmpty.visited .widget{
+.isEmpty.visited .widget {
     background: lightpink;
 }
 
-.loaded{
+.loaded {
     animation: fadein 0.3s forwards;
 }
+
 /* avoid flicker from nested lazily loaded elements */
-.loaded .loaded{
+.loaded .loaded {
     animation: none;
     opacity: 1;
 }
 
-.logtree details{
-    padding:0.1rem 1rem;
-    margin:0;
-}
-.logtree details summary{
-
-}
-
-/*
-.nonrelevant{
-    opacity: 0;
-    height: 0;
-    display: block;
-    padding: 0;
+.logtree details {
+    padding: 0.1rem 1rem;
     margin: 0;
-    border: none;
-    transition: opacity 0.4s;
 }
-*/
+noscript{
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: darkorange;
+    color:white;
+    position: absolute;
+    top:0;
+    left:0;
+}
 
-
-.submit-validation-failed .isEmpty .widget{
+.submit-validation-failed .isEmpty .widget {
     background: lightpink;
 }
-.vertical label{
+
+.vertical label {
     display: block;
 }
 
-/* @keyframes fadein { */
-/*     0% { */
-/*         opacity:0; */
-/*     } */
-/*     100% { */
-/*         opacity:1; */
-/*     } */
-/* } */
+/* fx-action-log styles */
+
+fx-fore.action-log{
+    /*background: var(--paper-orange-500);*/
+}
+.action-log .action-log-debug {
+    display: block !important;
+    min-height: 3rem;
+    background: var(--paper-orange-500);
+}
+.action-log fx-model{
+    display: block;
+    min-height: 1rem;
+}
+.action-log fx-model::before{
+    content:'model';
+}
+
+.action-log fx-instance,
+.action-log fx-bind,
+.action-log fx-submission,
+.action-log fx-function
+{
+    display: block;
+    min-height: 2rem;
+    background: var(--paper-orange-500);
+}
+
+.action-log fx-bind::before{
+    content:'bind :: ' attr(ref);
+}
+.action-log fx-instance::before{
+    content:'instance :: ' attr(id);
+}
+.action-log fx-submission::before{
+    content:'submission ::' attr(id);
+}
+
+.action-log .action-log-debug::before{
+    content: attr(data-name);
+}
+.action-log .action-log-debug .targetd{
+    cursor: pointer;
+}
+
+
+/* ### toastify customizations #### */
+
+.toastify.on.warning{
+    background: var(--paper-orange-500);
+}
+

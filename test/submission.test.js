@@ -213,7 +213,7 @@ describe('submission tests', () => {
   it('supports serialization none ', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-        <fx-send event="ready" submission="submission"></fx-send>
+        <fx-send event="model-construct-done" submission="submission"></fx-send>
 
         <fx-model>
           <fx-instance>
@@ -238,11 +238,13 @@ describe('submission tests', () => {
 
     await oneEvent(el, 'refresh-done');
 
+/*
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
 
     sm.submit();
     await oneEvent(sm, 'submit-done');
+*/
 
     const inst = el.querySelector('fx-instance');
     console.log('instancedata', inst.instanceData);

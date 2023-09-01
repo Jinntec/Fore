@@ -48,7 +48,9 @@
         }
     </style>
 </head>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <body unresolved="unresolved">
+
 <div class="wrapper">
     <demo-snippet>
         <template>
@@ -75,22 +77,37 @@
 
                     <h1>The fx-control element</h1>
 
-                    <h3>dynamic Datalist</h3>
+                    <h2>Dynamic Datalist</h2>
+
+                    <p>If a <code>datalist</code> has a <code>data-ref</code> attribute this is resolved
+                    and used to build the list of items.</p>
                     <fx-control ref="flavor" update-event="input">
                         <label slot="label">input with datalist</label>
-                        <input list="ice-cream-flavors">
-                        <datalist id="ice-cream-flavors" ref="instance('flavors')/flavor">
+                        <input list="ice-cream-flavors2">
+                        <datalist id="ice-cream-flavors2" data-ref="instance('flavors')/flavor">
                             <template>
-                                <option value="{.}">{.}</option>
+                                <option value="{.}"></option>
                             </template>
                         </datalist>
+                    </fx-control>
+
+                    <h2>Allowing the empty selection</h2>
+                    <p>With <code>selection="open"</code> an empty entry is added to the top of the list and will be
+                    accepted as value.</p>
+                    <fx-control ref="flavor" update-event="input">
+                        <label slot="label">input with datalist</label>
+                        <select data-ref="instance('flavors')/flavor" class="widget" selection="open">
+                            <template>
+                                <option value="{.}" >{.}</option>
+                            </template>
+                        </select>
                     </fx-control>
 
                     Selected value is:
                     <fx-output ref="flavor"></fx-output>
 
                 </fx-group>
-                <fx-inspector></fx-inspector>
+
             </fx-fore>
         </template>
     </demo-snippet>

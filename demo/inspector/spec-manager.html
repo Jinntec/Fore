@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fore Api Spec Manager</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        label{
+            display: block;
+        }
+        fx-repeat-item{
+            display: block;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance src="element-def.xml"></fx-instance>
+        <fx-instance id="vars">
+            <data>
+                <selected-element>fx-action</selected-element>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-control ref="instance('vars')/selected-element" update-event="input">
+        <label>Element</label>
+        <select ref="instance()/element/name" class="widget">
+            <template>
+                <option value="{.}">{.}</option>
+            </template>
+        </select>
+    </fx-control>
+
+    <fx-repeat ref="element[name=instance('vars')/selected-element]/attributes/attribute">
+        <template>
+            <div>
+                <fx-control ref="name">
+                    <label>Name</label>
+                </fx-control>
+                <fx-control ref="description">
+                    <label>Description</label>
+                </fx-control>
+                <fx-control ref="type">
+                    <label>Type</label>
+                </fx-control>
+                <fx-control ref="default">
+                    <label>Default</label>
+                </fx-control>
+            </div>
+        </template>
+    </fx-repeat>
+    <fx-inspector open></fx-inspector>
+</fx-fore>
+
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

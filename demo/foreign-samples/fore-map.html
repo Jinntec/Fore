@@ -17,7 +17,11 @@
         .mouse {position: absolute; top: 0; left: 0;}
         .space {height: 512px; width: 512px;}
         #root {position: relative;}
-        .fx-repeatitem {display: inline}
+        fx-repeatitem {display: inline;}
+
+        fx-repeatitem fx-repeatitem{
+            display: inline-block;
+        }
 
 
     </style>
@@ -33,16 +37,16 @@
                     <zoom>10</zoom>
                     <lasty>22058667</lasty>
                     <lastx>34477602</lastx>
-                    <posx></posx>
-                    <posy></posy>
-                    <x></x>
-                    <y></y>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <x>0</x>
+                    <y>0</y>
                     <tilesize>256</tilesize>
-                    <scale></scale>
-                    <maxpos></maxpos>
+                    <scale>0</scale>
+                    <maxpos>0</maxpos>
                     <maxzoom>19</maxzoom>
-                    <offx></offx>
-                    <offy></offy>
+                    <offx>0</offx>
+                    <offy>0</offy>
                     <offsets></offsets>
                     <site>http://tile.openstreetmap.org/</site>
                     <row y="-1">
@@ -66,51 +70,60 @@
                         <state>up</state>
                         <cursor></cursor>
                         <start>
-                            <x></x>
-                            <y></y>
+                            <x>0</x>
+                            <y>0</y>
                         </start>
                         <end>
-                            <x></x>
-                            <y></y>
+                            <x>0</x>
+                            <y>0</y>
                         </end>
                         <move>
-                            <x></x>
-                            <y></y>
+                            <x>0</x>
+                            <y>0</y>
                         </move>
                     </mouse>
                 </data>
             </fx-instance>
             <fx-bind ref="mouse/cursor" calculate="if(../state = 'up') then 'pointer' else 'move'"></fx-bind>
 
-            <!--
-                        <fx-bind ref="scale" calculate="power(2, 26 - ../zoom)"/>
-                        <fx-bind ref="maxpos" calculate="power(2, 26)"/>
-                        <fx-bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"/>
-                        <fx-bind ref="posy" calculate="(../lasty - (../mouse/move/y * (../scale div ../tilesize))) mod ../maxpos"/>
-                        <fx-bind ref="x" calculate="floor(../posx div ../scale)"/>
-                        <fx-bind ref="y" calculate="floor(../posy div ../scale)"/>
 
-                        <fx-bind ref="row/url" calculate="concat(/map/site, /map/zoom, '/',
-                                     /map/x + @x, '/', /map/y + ../@y, '.png')"/>
-                        <fx-bind ref="offx" calculate="floor(((../posx - ../x * ../scale) div ../scale)*../tilesize)" />
-                        <fx-bind ref="offy" calculate="floor(((../posy - ../y * ../scale) div ../scale)*../tilesize)" />
-                        <fx-bind ref="offsets" calculate="concat('margin-left: ', 0 - (../offx), 'px; margin-top: ', 0 - (../offy), 'px;')" />
+                        <fx-bind ref="scale" calculate="math:pow(2, 26 - ../zoom)"></fx-bind>
+                        <fx-bind ref="maxpos" calculate="math:pow(2, 26)"></fx-bind>
+                        <fx-bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"></fx-bind>
+                        <fx-bind ref="posy" calculate="(../lasty - (../mouse/move/y * (../scale div ../tilesize))) mod ../maxpos"></fx-bind>
+                        <fx-bind ref="x" calculate="floor(../posx div ../scale)"></fx-bind>
+                        <fx-bind ref="y" calculate="floor(../posy div ../scale)"></fx-bind>
+<!-- This madness is needed because we see to have a bug in `bind`: the bind should apply to all results of the query-->
+                        <fx-bind ref="row[1]/url[1]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[1]/url[2]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[1]/url[3]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[2]/url[1]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[2]/url[2]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[2]/url[3]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[3]/url[1]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[3]/url[2]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
+                        <fx-bind ref="row[3]/url[3]" calculate="concat(/data/site, /data/zoom, '/', /data/x + @x, '/', /data/y + ../@y, '.png')"></fx-bind>
 
-                        <fx-bind ref="mouse/cursor" calculate="if(../state = 'up', 'pointer', 'move')"/>
-                        <fx-bind ref="mouse/end/x" calculate="if(../../state = 'down', ../../x, .)"/>
-                        <fx-bind ref="mouse/end/y" calculate="if(../../state = 'down', ../../y, .)"/>
-                        <fx-bind ref="mouse/move/x" calculate="../../end/x - ../../start/x"/>
-                        <fx-bind ref="mouse/move/y" calculate="../../end/y - ../../start/y"/>
-            -->
+                        <fx-bind ref="offx" calculate="floor(((../posx - ../x * ../scale) div ../scale)*../tilesize)" ></fx-bind>
+                        <fx-bind ref="offy" calculate="floor(((../posy - ../y * ../scale) div ../scale)*../tilesize)" ></fx-bind>
+                        <fx-bind ref="offsets" calculate="concat('margin-left: ', 0 - (../offx), 'px; margin-top: ', 0 - (../offy), 'px;')" ></fx-bind>
+
+                        <fx-bind ref="mouse/cursor" calculate="if(../state = 'up') then 'pointer' else 'move'"></fx-bind>
+                        <!-- <fx-bind ref="mouse/end/x" calculate=""></fx-bind> -->
+                        <!-- <fx-bind ref="mouse/end/y" calculate="if(../../state = 'down') then ../../y else ."></fx-bind> -->
+                        <fx-bind ref="mouse/move/x" calculate="../../end/x - ../../start/x"></fx-bind>
+                        <fx-bind ref="mouse/move/y" calculate="../../end/y - ../../start/y"></fx-bind>
         </fx-model>
         <div id="root" class="map" style="cursor: {mouse/cursor};">
-            <div style="{offsets}">
-                <fx-group xmlns="http://www.w3.org/2002/xforms">
+<!--            <div style="{offsets}">-->
+            <div style="">
+                <fx-group>
+
                     <fx-repeat ref="row">
                         <template>
                             <fx-repeat ref="url">
                                 <template>
-                                    {.} <output ref="." mediatype="image"/>
+                                    <fx-output ref="." mediatype="image"></fx-output>
                                 </template>
                             </fx-repeat>
                         </template>
@@ -120,32 +133,34 @@
             <div class="mouse">
                 <div style="cursor: {mouse/cursor}">
                     <fx-group class="space">
-                        <fx-action ev:event="mousemove">
-                            <fx-setvalue ref="mouse/x" value="event('clientX')"/>
-                            <fx-setvalue ref="mouse/y" value="event('clientY')"/>
+                        <fx-action event="mousemove">
+                            <fx-setvalue ref="mouse/x" value="event('clientX')"></fx-setvalue>
+                            <fx-setvalue ref="mouse/y" value="event('clientY')"></fx-setvalue>
+                            <fx-setvalue ref="mouse/end/x" value="string(if(../../state = 'down') then ../../x else .)"></fx-setvalue>
+                            <fx-setvalue ref="mouse/end/y" value="string(if(../../state = 'down') then ../../y else .)"></fx-setvalue>
                         </fx-action>
-                        <fx-action ev:event="mousedown" ev:defaultAction="cancel">
+                        <fx-action event="mousedown" defaultAction="cancel">
                             <fx-setvalue ref="mouse/state">down</fx-setvalue>
-                            <fx-setvalue ref="mouse/start/x" value="event('clientX')"/>
-                            <fx-setvalue ref="mouse/start/y" value="event('clientY')"/>
+                            <fx-setvalue ref="mouse/start/x" value="event('clientX')"></fx-setvalue>
+                            <fx-setvalue ref="mouse/start/y" value="event('clientY')"></fx-setvalue>
                         </fx-action>
-                        <fx-action ev:event="mouseup" ev:defaultAction="cancel">
+                        <fx-action event="mouseup" defaultAction="cancel">
                             <fx-setvalue ref="mouse/state">up</fx-setvalue>
-                            <fx-setvalue ref="lastx" value="../posx"/>
-                            <fx-setvalue ref="lasty" value="../posy"/>
-                            <fx-setvalue ref="mouse/start/x" value="../../end/x"/>
-                            <fx-setvalue ref="mouse/start/y" value="../../end/y"/>
+                            <fx-setvalue ref="lastx" value="../posx/string()"></fx-setvalue>
+                            <fx-setvalue ref="lasty" value="../posy/string()"></fx-setvalue>
+                            <fx-setvalue ref="mouse/start/x" value="../../end/x/string()"></fx-setvalue>
+                            <fx-setvalue ref="mouse/start/y" value="../../end/y/string()"></fx-setvalue>
                             <!-- Not sure why this is necessary;
                                  either something to do with the recalc algorithm that I have forgotten, or a bug :-) -->
-                            <fx-setvalue ref="mouse/move/x" value="0"/>
-                            <fx-setvalue ref="mouse/move/y" value="0"/>
+                            <fx-setvalue ref="mouse/move/x" value="0"></fx-setvalue>
+                            <fx-setvalue ref="mouse/move/y" value="0"></fx-setvalue>
                         </fx-action>
-                        <fx-action ev:event="dblclick" ev:defaultAction="cancel">
-                            <fx-setvalue ref="zoom" value="if(. &gt;= ../maxzoom, ../maxzoom, . + 1)"/>
+                        <fx-action event="dblclick" defaultAction="cancel">
+                            <fx-setvalue ref="zoom" value="string(if(. &gt;= ../maxzoom) then ../maxzoom else . + 1)"></fx-setvalue>
                         </fx-action>
-                        <fx-action ev:event="mousewheel" ev:defaultAction="cancel">
+                        <fx-action event="mousewheel" defaultAction="cancel">
                             <fx-setvalue ref="zoom"
-                                      value="if(event('wheelDelta') &gt; 0, if(. &gt;= ../maxzoom, ../maxzoom, . + 1), if(. &lt;= 0, 0, . - 1))"/>
+                                      value="string(if(event('wheelDelta') &gt; 0) then if(number(.) &gt;= ../maxzoom) then ../maxzoom else . + 1 else if(. &lt;= 0) then 0 else . - 1)"></fx-setvalue>
                         </fx-action>
                     </fx-group>
                 </div>

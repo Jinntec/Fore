@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Overwriting target with Send</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+
+            fx-trigger {
+                display: block;
+            }
+
+            button{
+                font-size: 1.2rem;
+            }
+            h2{
+                color:inherit;
+            }
+
+            a,a:link,a:visited{
+                color: blue;
+            }
+            input{
+                width: 100%;
+            }
+            fx-output{
+                display: block;
+            }
+            section header{
+                font-size:1.4rem;
+                padding:1rem 0;
+            }
+        </style>
+    </custom-style>
+
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Overwriting Submission target with <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/"target="_blank">fx-send</a></code> action</h1>
+    <p>
+        The <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/#attributes"target="_blank">replace="target"</a></code> mode of submission allows to insert a piece of HTML into the local
+        HTML page. The send action allows to overwrite the <code>target</code> attribute of submission to allow
+        dynamic submission targets.
+    </p>
+
+    <h2><code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/"target="_blank">fx-send</a></code> with <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/#attributes"target="_blank">target</a></code></h2>
+
+    <p>This example shows 2 triggers that will send the submission response to different targets. Here they are static
+    values but could be also contain template expressions in curly brackets.</p>
+    <div class="note">
+        The send action will overwrite the target just once for its execution. The original <code><a href="https://jinntec.github.io/fore-docs/elements/actions/send/#attributes"target="_blank">target</a></code> attribute
+        on <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">fx-submission</a></code> stays untouched meaning that later executions will use its original target
+        unless overwritten again.
+    </div>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <div>Hello</div>
+                    </fx-instance>
+                    <fx-submission id="sub1"
+                                   url="response.html"
+                                   method="get"
+                                   replace="target">
+                    </fx-submission>
+                </fx-model>
+                <fx-trigger>
+                    <button>Send to target 1</button>
+                    <fx-send submission="sub1"
+                             target="#target1"></fx-send>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>Send to target 2</button>
+                    <fx-send submission="sub1"
+                             target="#target2"></fx-send>
+                </fx-trigger>
+                <section>
+                    <header>Target 1</header>
+                    <div id="target1"></div>
+                </section>
+                <section>
+                    <header>Target 2</header>
+                    <div id="target2"></div>
+                </section>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

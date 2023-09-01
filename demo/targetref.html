@@ -56,12 +56,13 @@
     </style>
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
     <h1>Submission and replacement of partial data</h1>
-    <p>With <code>ref</code> the initial data for submission are selected.</p>
-    <p><code>targetref</code> attribute points to the node that is replaced when <code>replace="instance"</code>.</p>
+    <p>With <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code> the initial data for submission are selected.</p>
+    <p><code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">targetref</a></code> attribute points to the node that is replaced when <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">replace="instance"</a></code>.</p>
     <p>Here the 'vehicle' node of the first instance is submitted, echoed by #echo submission and the returned node
-    is replacing the node referenced by <code>targetref</code>.</p>
+    is replacing the node referenced by <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">targetref</a></code>.</p>
     <p>This Fore automatically runs the submission with a delay of 3 seconds. Reload and watch second instance change.</p>
     <demo-snippet>
         <template>
@@ -93,7 +94,7 @@
                     </fx-submission>
                 </fx-model>
 
-                Vehicle: {vehicle}
+                Vehicle: {instance('result')/vehicle}
 
                 <h3>Original data:</h3>
                 <br>

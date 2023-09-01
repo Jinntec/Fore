@@ -7,19 +7,21 @@
     <link href="../resources/demo.css" rel="stylesheet">
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
     <h1>Debouncing trigger updates</h1>
         <p>Sometimes for save buttons and the like you don't want triggers to fire too often to prevent unwanted
         'double-clicks'. </p>
-        <p>The <code>debounce</code> attributes allows to specify a period in milliseconds before
+    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/"target="_blank">debounce</a></code> attributes allows to specify a period in milliseconds before
         the actions can be triggered again.</p>
 
-        <p>Try clicking fast on the button. You'll notice that only one message is displayed within a 800 milliseconds
+        <p>Try clicking fast on the button. You'll notice that only one message is displayed within a 2000 milliseconds
         timespan.</p>
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-trigger debounce="800">
+                <fx-trigger debounce="2000">
                     <button>click for message</button>
                     <fx-message>a debounced message</fx-message>
                 </fx-trigger>

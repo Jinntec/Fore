@@ -11,6 +11,8 @@
     <link href="../resources/demo.css" rel="stylesheet">
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
 
     <h1>Template Expressions</h1>
@@ -49,7 +51,6 @@
                     </fx-instance>
                 </fx-model>
 
-<!--                <div class="static {greeting}">Greeting {greeting} another {greeting}</div>-->
                 <div class="static {greeting}">Greeting: {greeting}</div>
                 <fx-control ref="greeting" update-event="input">
                     <label>Hey!</label>
@@ -60,8 +61,8 @@
         </template>
     </demo-snippet>
 
-    <p>Once the node bound to 'greeting' changes the template expressions (enclosed in '{}' brackets) are re-evaluated
-    resulting in the 'div' element getting its CSS classes updated and different styles will match.</p>
+    <p>Once the node bound to <code>greeting</code> changes the template expressions (enclosed in '{}' brackets) are re-evaluated
+    resulting in the <code>div</code> element getting its CSS classes updated and different styles will match.</p>
 
 </div>
 

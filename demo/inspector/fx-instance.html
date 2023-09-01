@@ -1,0 +1,36 @@
+<fx-fore id="fx-instance">
+    <fx-model>
+        <fx-instance>
+            <data>
+                <src></src>
+                <type></type>
+                <xpath-default-namespace></xpath-default-namespace>
+            </data>
+        </fx-instance>
+        <fx-function signature="get-targets()  as element()*">
+            return document.querySelectorAll('[id]');
+        </fx-function>
+    </fx-model>
+    <table>
+        <caption>Attributes</caption>
+        <tr>
+            <td><label for="src">src</label></td>
+            <td>
+                <fx-control id="src" ref="src"><label>src</label></fx-control>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="type">type</label></td>
+            <td>
+                <fx-control id="type" ref="type"><label>type</label></fx-control>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="xpath-default-namespace">xpath-default-namespace</label></td>
+            <td>
+                <fx-control id="xpath-default-namespace" ref="xpath-default-namespace">
+                    <label>xpath-default-namespace</label></fx-control>
+            </td>
+        </tr>
+    </table>
+</fx-fore>

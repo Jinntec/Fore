@@ -3,25 +3,20 @@
     <title>LGPN-Ling</title><!--
         ~ Copyright (c) 2015. existsolutions - http://www.exsitsolutions.com
         -->
-    <link href="resources/js/vendor/select2/select2.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="resources/css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link href="resources/js/vendor/select2/select2.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <link href="../../resources/demo.css" rel="stylesheet">
 
 </head>
 <body>
 <fx-fore>
-<!--
-    <fx-action event="ready">
-        <fx-message>heyho</fx-message>
-        <fx-send submission="s-load-data" if="bf:appContext('id') != ''"/>
-    </fx-action>
--->
 
     <fx-model id="model-1">
         <fx-instance id="default"
                      src="data/default.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
         <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>
 
         <fx-instance id="i-template"
@@ -29,42 +24,40 @@
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
         <fx-instance id="i-controller">
             <data xmlns="">
-                <morpheme/>
+                <morpheme></morpheme>
             </data>
         </fx-instance>
-        <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"/>
-        <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"/>
-        <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"/>
-        <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"/>
-        <fx-instance id="i-classification" src="data/xml/classification.xml"/>
-        <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"/>
-        <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"/>
-        <fx-instance id="i-relations" src="data/xml/relations.xml"/>
-        <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"/>
-        <fx-instance id="i-headedness" src="data/xml/headedness.xml"/>
-        <fx-instance id="i-functions" src="data/xml/functions.xml"/>
-        <fx-instance id="i-other" src="data/xml/other.xml"/>
-        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"/>
-        <fx-instance id="fictitious" src="data/xml/fictitious.xml"/>
-        <fx-instance id="i-gpr" src="data/xml/gpr.xml"/>
-        <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml"/>
-        <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"/>
+        <fx-instance id="i-suffix-1" src="data/xml/suffixes/suffix-1.xml"></fx-instance>
+        <fx-instance id="i-suffix-2" src="data/xml/suffixes/suffix-2.xml"></fx-instance>
+        <fx-instance id="i-suffix-3" src="data/xml/suffixes/suffix-3.xml"></fx-instance>
+        <fx-instance id="i-suffix-4" src="data/xml/suffixes/suffix-4.xml"></fx-instance>
+        <fx-instance id="i-classification" src="data/xml/classification.xml"></fx-instance>
+        <fx-instance id="i-polysemic" src="data/xml/polysemic.xml"></fx-instance>
+        <fx-instance id="i-sublemma" src="data/xml/sublemma.xml"></fx-instance>
+        <fx-instance id="i-relations" src="data/xml/relations.xml"></fx-instance>
+        <fx-instance id="i-prefix-headedness" src="data/xml/prefix-headedness.xml"></fx-instance>
+        <fx-instance id="i-headedness" src="data/xml/headedness.xml"></fx-instance>
+        <fx-instance id="i-functions" src="data/xml/functions.xml"></fx-instance>
+        <fx-instance id="i-other" src="data/xml/other.xml"></fx-instance>
+        <fx-instance id="i-name-characteristic" src="data/xml/name-characteristic.xml"></fx-instance>
+        <fx-instance id="fictitious" src="data/xml/fictitious.xml"></fx-instance>
+        <fx-instance id="i-gpr" src="data/xml/gpr.xml"></fx-instance>
+<!--
+        <fx-instance xmlns="" id="i-dialects" src="data/xml/dialects.xml"></fx-instance>
+        <fx-instance xmlns="" id="i-genders" src="../lgpn-ling-data/data/taxonomies/genders.xml"></fx-instance>
 
         <fx-instance id="i-meanings">
             <meanings xmlns="">
-                <being-reloaded grp="0" n=""/>
+                <being-reloaded grp="0" n=""></being-reloaded>
                 <target>
-                    <taxonomy/>
+                    <taxonomy></taxonomy>
                 </target>
                 <template>
-                    <meaning grp="0" n="0"/>
-                </template><!-- and actual entries created dynamically e.g.:
-                        <meaning grp="1" n="1">
-                            <taxonomy/>
-                        </meaning>
-                        -->
+                    <meaning grp="0" n="0"></meaning>
+                </template>
             </meanings>
         </fx-instance>
+-->
 
         <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
                        resource="modules/load.xql?id={bf:appContext('id')}">
@@ -74,15 +67,16 @@
                 <fx-action
                         while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
                     <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp + 1"/>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
-                    <fx-send submission="s-reload-meanings"/>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
-                    <fx-send submission="s-reload-meanings"/>
+                                 value="instance('i-meanings')/being-reloaded/@grp + 1"></fx-setvalue>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"></fx-setvalue>
+                    <fx-send submission="s-reload-meanings"></fx-send>
+                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"></fx-setvalue>
+                    <fx-send submission="s-reload-meanings"></fx-send>
                 </fx-action>
             </fx-action>
         </fx-submission>
         <fx-submission id="s-save-data" method="post" replace="none" validate="true" resource="modules/save.xql">
+<!--
             <fx-header>
                 <fx-name>userid</fx-name>
                 <fx-value>{bf:appContext('id')}</fx-value>
@@ -91,9 +85,10 @@
                 <fx-name>password</fx-name>
                 <fx-value/>
             </fx-header>
+-->
             <fx-action event="submit">
                 <fx-setvalue ref="instance('i-default')//entry/@xml:id"
-                             value="instance('i-default')//orth[@type='latin']"/>
+                             value="instance('i-default')//orth[@type='latin']"></fx-setvalue>
                 <fx-message event="submit-done" level="ephemeral">Saving...</fx-message>
             </fx-action>
             <fx-message event="submit-done" level="ephemeral">Data have been saved.</fx-message>
@@ -107,11 +102,11 @@
                 <fx-action
                         if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
                     <fx-insert context="instance('i-meanings')" ref="*[last()]"
-                               origin="instance('i-meanings')/template/meaning"/>
+                               origin="instance('i-meanings')/template/meaning"></fx-insert>
                     <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
-                                 value="instance('i-meanings')/being-reloaded/@n"/>
+                                 value="instance('i-meanings')/being-reloaded/@n"></fx-setvalue>
                     <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp"/>
+                                 value="instance('i-meanings')/being-reloaded/@grp"></fx-setvalue>
                 </fx-action>
                 <fx-delete
                         context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
@@ -305,7 +300,7 @@
                                         <fx-trigger class="-btn -btn-default ">
                                             <button>Add</button>
                                             <fx-insert ref="usg"
-                                                       origin="instance('i-template')//usg[@type='lang']"/>
+                                                       origin="instance('i-template')//usg[@type='lang']">
                                             <!--
                                                                                         <script>
                                                                                             clearAndInitAutocompletes();
@@ -346,8 +341,8 @@
                                                     <input type="checkbox">
                                                     <label>(Check if uncertain)</label>
                                                     <!--fx-action event="value-changed">
-                                                        <fx-setvalue ref="@cert" if=".=true()" value="'low'"/>
-                                                        <fx-setvalue ref="@cert" if=".=false()" value="''"/>
+                                                        <fx-setvalue ref="@cert" if=".=true()" value="'low'">
+                                                        <fx-setvalue ref="@cert" if=".=false()" value="''">
                                                     </fx-action-->
                                                 </fx-control>
                                             </div>
@@ -368,7 +363,7 @@
                             </fx-repeat>
                         </fx-group>
 
-                        <div class="tp-section-divider"/>
+                        <div class="tp-section-divider">
 
                     </fx-group>
                 </div>
@@ -544,7 +539,7 @@
                                             </section>
                                             <section class="tp-form-group-col"><label class="tp-label">Preroot</label>
                                                 <fx-output id="base-form" ref="m[@type = 'prefix' and @n = 1]/@baseForm">
-                                                    <input type="text" class="widget"/>
+                                                    <input type="text" class="widget">
                                                     <fx-action event="preroot-changed">
                                                         <fx-setvalue ref="m[@type = 'prefix' and @n = 1]/@baseForm" value="event('preroot')"></fx-setvalue>
                                                     </fx-action>
@@ -552,7 +547,7 @@
                                                 <fx-trigger>
                                                     <button class="widget">Change</button>
                                                     <fx-dispatch name="edit-morpheme" targetid="base-form">
-                                                        <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"/>
+                                                        <fx-property name="current" expr="m[@type = 'prefix' and @n = 1]/@baseForm"></fx-property>
                                                     </fx-dispatch>
                                                 </fx-trigger>
                                             <!-- Preroot functions -->
@@ -616,7 +611,6 @@
                                                 <input type="hidden" class="tp-input"
                                                        data-function="constituent_autocomplete"
                                                        placeholder="Type to search ..." autocomplete="off">
-                                                <!-- TODO: Edit correct ref + value in <fx-setvalue/> and name + targetID in <fx-dispatch/> if necessary -->
                                                 <fx-trigger class="hidden constituent_autocomplete-callback">
                                                     <fx-action event="DOMActivate">
                                                         <fx-setvalue ref="" value=""></fx-setvalue>
@@ -1208,7 +1202,7 @@
 </fx-fore>
 <paper-dialog id="morpheme-dialog">
     <paper-dialog-scrollable>
-        <input type="text" name="query"/>
+        <input type="text" name="query">
         <div class="results">
 
         </div>
@@ -1221,6 +1215,6 @@
 </paper-dialog>
 <!-- Modal Dialog -->
 <script type="module" src="../../index.js"></script>
-<script type="module" src="ling.js"></script>
+<!--<script type="module" src="ling.js"></script>-->
 </body>
 </html>

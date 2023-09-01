@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>todo</title>
+    <title>A simple repeat</title>
 
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
@@ -145,6 +145,8 @@
     </style>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
     <demo-snippet>
         <template>
@@ -165,14 +167,13 @@
                     </fx-bind>
                 </fx-model>
 
-                <h1>todos</h1>
-
+                <h1>A simple repeat</h1>
+                <h2>Todo List</h2>
 
                 <div class="repeat-header">
                     <div>Task</div>
                     <div>Due</div>
                     <div>Complete</div>
-<!--                    <div></div>-->
                 </div>
                 <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
                     <template>

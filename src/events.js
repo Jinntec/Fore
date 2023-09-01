@@ -1,5 +1,4 @@
 export function leadingDebounce(caller, func, timeout = 300){
-    console.log('debouncing', func);
     let timer;
     return (...args) => {
         if (!timer) {

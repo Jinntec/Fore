@@ -10,25 +10,21 @@
 
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
-        #bar::before{
-            content:'event.detail.instance=';
-            display: block;
-        }
-        #displayValue::before{
-            content: 'event.detail.string=';
-        }
         div{
             margin:1rem 0;
+            width: 100%;
         }
     </style>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
     <h1>Dispatching an event</h1>
 
-    <p><code>fx-dispatch</code> allows to dispatch custom events to a target or document.</p>
+    <p><code><a href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/"target="_blank">fx-dispatch</a></code> allows to dispatch custom events to a target or document.</p>
 
-    <p>With <code>fx-property</code> arbitrary properties can be passed as event details. The <code>name</code>
+    <p>With <code><a href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/#description"target="_blank">fx-property</a></code> arbitrary properties can be passed as event details. The <code>name</code>
     attribute defines the name in the event details object.</p>
 
     <h2>Passing a static value</h2>

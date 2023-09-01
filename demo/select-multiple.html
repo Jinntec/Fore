@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>multiple select</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <style>
+        fx-control{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <selected></selected>
+                <lang>de</lang>
+            </data>
+        </fx-instance>
+        <fx-instance id="material" src="data/material.xml"></fx-instance>
+
+
+    </fx-model>
+
+    lang {instance()/lang}
+
+    <fx-control ref="selected">
+        <label>Material</label>
+        <select multiple size="10" class="widget" ref="instance('material')/term">
+            <template>
+                <option value="{@ref}">{name[@xml:lang = instance()/lang]}</option>
+            </template>
+        </select>
+    </fx-control>
+</fx-fore>
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

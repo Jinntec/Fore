@@ -1,0 +1,2608 @@
+<data>
+    <fx-fore id="fx-action">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-append">
+        <fx-model>
+            <fx-instance>
+                <clear> </clear>
+                <repeat> </repeat>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="clear">
+                <label>clear</label>
+            </fx-control>
+            <fx-control ref="repeat">
+                <label>repeat</label>
+            </fx-control>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-confirm">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-copy">
+        <fx-model>
+            <fx-instance>
+                <to> </to>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="to">
+                <label>to</label>
+            </fx-control>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-delete">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-dispatch">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-hide">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-insert">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-load">
+        <fx-model>
+            <fx-instance>
+                <attachTo> </attachTo>
+                <url> </url>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="attachTo">
+                <label>attachTo</label>
+            </fx-control>
+            <fx-control ref="url">
+                <label>url</label>
+            </fx-control>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-message">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-refresh">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-reload">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-replace">
+        <fx-model>
+            <fx-instance>
+                <replaceNode> </replaceNode>
+                <with> </with>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="replaceNode">
+                <label>replaceNode</label>
+            </fx-control>
+            <fx-control ref="with">
+                <label>with</label>
+            </fx-control>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-return">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-send">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-setfocus">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-setvalue">
+        <fx-model>
+            <fx-instance>
+                <valueAttr> </valueAttr>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="valueAttr">
+                <label>valueAttr</label>
+            </fx-control>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-show">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-toggle">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-update">
+        <fx-model>
+            <fx-instance>
+                <defaultAction> </defaultAction>
+                <delay> </delay>
+                <event> </event>
+                <handler> </handler>
+                <ifExpr> </ifExpr>
+                <observer> </observer>
+                <phase> </phase>
+                <propagate> </propagate>
+                <target> </target>
+                <whileExpr> </whileExpr>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="defaultAction">
+                <label>defaultAction</label>
+            </fx-control>
+            <fx-control ref="delay">
+                <label>delay</label>
+            </fx-control>
+            <fx-control ref="event">
+                <label>event</label>
+            </fx-control>
+            <fx-control ref="handler">
+                <label>handler</label>
+            </fx-control>
+            <fx-control ref="ifExpr">
+                <label>ifExpr</label>
+            </fx-control>
+            <fx-control ref="observer">
+                <label>observer</label>
+            </fx-control>
+            <fx-control ref="phase">
+                <label>phase</label>
+            </fx-control>
+            <fx-control ref="propagate">
+                <label>propagate</label>
+            </fx-control>
+            <fx-control ref="target">
+                <label>target</label>
+            </fx-control>
+            <fx-control ref="whileExpr">
+                <label>whileExpr</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-function">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-bind">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-fore">
+        <fx-model>
+            <fx-instance>
+                <lazyRefresh> </lazyRefresh>
+                <model> </model>
+                <ready> </ready>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="lazyRefresh">
+                <label>lazyRefresh</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="ready">
+                <label>ready</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-header">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-instance">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-model">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-submission">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-var">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-abstract-control">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-alert">
+        <fx-model>
+            <fx-instance>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+                <detail> </detail>
+                <needsUpdate> </needsUpdate>
+                <nodeset> </nodeset>
+                <context> </context>
+                <model> </model>
+                <modelItem> </modelItem>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+            <fx-control ref="detail">
+                <label>detail</label>
+            </fx-control>
+            <fx-control ref="needsUpdate">
+                <label>needsUpdate</label>
+            </fx-control>
+            <fx-control ref="nodeset">
+                <label>nodeset</label>
+            </fx-control>
+            <fx-control ref="context">
+                <label>context</label>
+            </fx-control>
+            <fx-control ref="model">
+                <label>model</label>
+            </fx-control>
+            <fx-control ref="modelItem">
+                <label>modelItem</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-case">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-container">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-control">
+        <fx-model>
+            <fx-instance>
+                <as> </as>
+                <ref> </ref>
+                <update-event> </update-event>
+                <value-prop> </value-prop>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="as">
+                <label>as</label>
+            </fx-control>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+            <fx-control ref="update-event">
+                <label>update-event</label>
+            </fx-control>
+            <fx-control ref="value-prop">
+                <label>value-prop</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-dialog">
+        <fx-model>
+            <fx-instance>
+                <id> </id>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="id">
+                <label>id</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-group">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-hint">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-inspector">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-items">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+                <valueAttr> </valueAttr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+            <fx-control ref="valueAttr">
+                <label>valueAttr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-output">
+        <fx-model>
+            <fx-instance>
+                <mediatype> </mediatype>
+                <ref> </ref>
+                <valueAttr> </valueAttr>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="mediatype">
+                <label>mediatype</label>
+            </fx-control>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+            <fx-control ref="valueAttr">
+                <label>valueAttr</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-repeat-attributes">
+        <fx-model>
+            <fx-instance>
+                <focusOnCreate> </focusOnCreate>
+                <index> </index>
+                <repeatSize> </repeatSize>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="focusOnCreate">
+                <label>focusOnCreate</label>
+            </fx-control>
+            <fx-control ref="index">
+                <label>index</label>
+            </fx-control>
+            <fx-control ref="repeatSize">
+                <label>repeatSize</label>
+            </fx-control>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-repeat">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-repeatitem">
+        <fx-model>
+            <fx-instance/>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-switch">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+    <fx-fore id="fx-trigger">
+        <fx-model>
+            <fx-instance>
+                <ref> </ref>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <label>Attributes</label>
+            <fx-control ref="ref">
+                <label>ref</label>
+            </fx-control>
+        </fx-group><!--
+                <fx-group>
+                <label>Properties</label>
+                {
+                    for $prop in $props
+                        let $prop-name := $prop/name/string()
+                        return
+                            <fx-control ref="{$prop-name}">
+                                <label>{$prop-name}</label>
+                            </fx-control>
+                }
+                </fx-group>
+-->
+    </fx-fore>
+</data>

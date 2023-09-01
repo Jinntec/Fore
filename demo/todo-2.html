@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
+
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
     <div class="wrapper">
         <fx-fore>
             <fx-model>
@@ -77,9 +80,9 @@
                         <fx-control ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
                         </fx-control>
-                        <fx-control id="task" class="complete {@complete}" ref=".">
+                        <fx-control id="task" class="complete {@complete}" ref="." create>
                         </fx-control>
-                        <fx-control ref="@due">
+                        <fx-control ref="@due" create>
                             <input type="date">
                         </fx-control>
                         <fx-trigger class="btn delete">
@@ -108,8 +111,9 @@
                 <fx-send submission="clear"></fx-send>
             </fx-trigger>
 <!--<fx-inspector></fx-inspector>-->
+
         </fx-fore>
     </div>
-
+<fx-devtools></fx-devtools>
 </body>
 </html>

@@ -43,18 +43,24 @@
         .grid {
             display: grid;
             grid-template-columns: 50% 50%;
+            width: 100%;
         }
 
         fx-fore {
             max-width: 600px;
+            width: 100%;
         }
 
         fx-output {
             font-weight: bold;
         }
+        .widget{
+            /*min-width:12rem;*/
+        }
     </style>
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
     <h1>Selects - one depends on the other</h1>
@@ -109,7 +115,8 @@
                             <fx-control ref="selected" update-event="change">
                                 <label>Country</label>
                                 <select class="widget"
-                                        ref="instance('countries')//country[@continent = instance('default')/continent]">
+                                        ref="instance('countries')//country[@continent = instance('default')/continent]"
+                                        selection="open">
                                     <template>
                                         <option value="{@code}">{.}</option>
                                     </template>
@@ -130,7 +137,7 @@
     </demo-snippet>
     <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
 
-    <p>It is structered by this:</p>
+    <p>It is structered like this:</p>
 
     <demo-snippet>
         <template>

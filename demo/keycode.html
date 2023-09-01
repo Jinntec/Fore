@@ -8,12 +8,13 @@
     <link href="../resources/demo.css" rel="stylesheet">
 </head>
 <body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
     <demo-snippet>
         <template>
             <h1>Handling key codes</h1>
             <p>Press left or right, ESC or ENTER key.</p>
-            <p>The <code>event()</code> function provides the key code for keyboard events</p>
+            <p>The <code><a href="https://jinntec.github.io/fore-docs/functions/#eventproperty"target="_blank">event()</a></code> function provides the key code for keyboard events</p>
             <fx-fore>
                 <fx-action event="keydown" target="#document" if="event('code') = 'Enter'">
                     <fx-message>Enter!</fx-message>

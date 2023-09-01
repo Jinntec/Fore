@@ -1,6 +1,7 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 import {resolveId} from "../xpath-evaluation.js";
+import {XPathUtil} from "../xpath-util.js";
 
 /**
  * `fx-refresh`
@@ -10,8 +11,17 @@ import {resolveId} from "../xpath-evaluation.js";
  */
 class FxRefresh extends AbstractAction {
   async perform() {
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event},
+        }),
+    );
+
     if (this.hasAttribute('self')) {
-      const control = Fore.getClosest('fx-control', this);
+      const control = XPathUtil.getClosest('fx-control', this);
       if (control) {
         control.refresh();
         return;

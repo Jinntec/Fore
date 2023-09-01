@@ -1,6 +1,7 @@
-import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
+import { evaluateXPath,evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
+import { XPathUtil} from "../xpath-util.js";
 
 /**
  * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
@@ -27,10 +28,38 @@ export class FxItems extends FxControl {
 
   connectedCallback() {
     super.connectedCallback();
+    // Some other library is stealing focus when clicking on the label of a checkbox list.
+    // The browser should handle this, but we need to manually focus the checkbox if the label is pressed
+    // TODO: find a better solution
+    this.addEventListener('mousedown', e => {
+      // const items = this.querySelectorAll('[value]');
 
-    this.addEventListener('click', e => {
+      if (!Fore.isWidget(e.target)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+
+      if (e.target.nodeName === 'LABEL') {
+        const target = resolveId(e.target.getAttribute('for'), this);
+        target.focus();
+      }
+    });
+
+    // Some other library is stealing focus when clicking on the label of a checkbox list.
+    // The browser should handle this, but we need to manually focus the checkbox if the label is pressed
+    // TODO: find a better solution
+    this.addEventListener('mousedown', e => {
       const items = this.querySelectorAll('[value]');
 
+      if (e.target.nodeName === 'LABEL') {
+	      const target = resolveId(e.target.getAttribute('for'), this);
+	      target.focus();
+      }
+	});
+    this.addEventListener('click', e => {
+      e.preventDefault;
+      e.stopPropagation();
+      const items = this.querySelectorAll('[value]');
       let target;
       if (e.target.nodeName === 'LABEL') {
         target = resolveId(e.target.getAttribute('for'), this);
@@ -46,7 +75,7 @@ export class FxItems extends FxControl {
       this.setAttribute('value', val.trim());
 
       // ### check for parent control
-      const parentBind = Fore.getClosest('[ref]', this.parentNode);
+      const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
       if (!parentBind) return;
       const modelitem = parentBind.getModelItem();
       const setval = this.shadowRoot.getElementById('setvalue');
@@ -62,7 +91,7 @@ export class FxItems extends FxControl {
   async updateWidgetValue() {
     // console.log('setting items value');
 
-    const parentBind = Fore.getClosest('[ref]', this.parentNode);
+    const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
     if (parentBind) {
       this.value = parentBind.value;
     }
@@ -84,28 +113,40 @@ export class FxItems extends FxControl {
    */
   updateEntry(newEntry, node) {
     // console.log('fx-items updateEntry', this.value);
-    // super.updateEntry(newEntry,node);
 
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-    // ### danger zone - highly specific - assumes knowledge of the template structure ###
-
-    const label = newEntry.querySelector('label');
-    label.textContent = node.textContent;
-
+    // ### create unique id to connect label and input
     const id = Fore.createUUID();
+
+    // ### handle 'label'
+    const label = newEntry.querySelector('label');
+    const lblExpr = Fore.getExpression(label.textContent);
+
+    // ### xml / JSON
+    if(node.nodeType){
+      const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+      label.textContent = lblEvaluated;
+    } else{
+      const labelExpr = Fore.getExpression(lblExpr);
+      label.textContent = node[labelExpr];
+    }
     label.setAttribute('for', id);
 
+    // ### handle the 'value'
     // getting element which has 'value' attr
     const input = newEntry.querySelector('[value]');
     // getting expr
     const expr = input.value;
-    const cutted = expr.substring(1, expr.length - 1);
-    const evaluated = evaluateXPathToString(cutted, node, newEntry);
+    // const cutted = expr.substring(1, expr.length - 1);
+    const cutted = Fore.getExpression(expr);
+    let evaluated;
+    if(node.nodeType){
+      evaluated =  evaluateXPathToString(cutted, node, newEntry);
+    }else{
+      evaluated = node[cutted];
+    }
 
     // adding space around value to allow matching of 'words'
     const spaced = ` ${evaluated} `;
-
     const valAttr = ` ${this.getAttribute('value')} `;
     input.value = evaluated;
     input.setAttribute('id', id);

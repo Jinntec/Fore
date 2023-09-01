@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>the 'if' attribute</title>
+
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+
+
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+<div class="wrapper">
+
+    <h1>Toggle a Boolean value</h1>
+
+    <p>
+        Sometimes it's handy to have simple way of toggling a Boolean value for instance when you want to
+        switch some view mode. <code>fx-toggleboolean</code> makes as easy as it gets. Just specify the reference
+        to the node.
+    </p>
+
+    <h2>Toggling a CSS class with <code>fx-toggleboolean</code></h2>
+    <p>In this example the toggle is used to switch some content by changing the CSS class.</p>
+    <demo-snippet>
+        <template>
+            <style>
+                div {
+                    width: 100%;
+                    margin: 1rem 0;
+                }
+                .show-,
+                .show-false{
+                    display:none;
+                }
+                .show-true{
+                    display: block;
+                }
+            </style>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <toggle>false</toggle>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-group>
+                    <fx-trigger>
+                        <button>toggle</button>
+                        <fx-toggleboolean ref="toggle"></fx-toggleboolean>
+                    </fx-trigger>
+                    <div>Toggle:{toggle}</div>
+                </fx-group>
+                <div class="show-{toggle}">
+                    <p>I'm toggled</p>
+                </div>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Toggle with lazy-instance</h2>
+    <p>When lazy-initializing (without explicit model) the 'toggle' will have an indetermined value initially and
+    become 'true' with first toggle.</p>
+    <demo-snippet>
+        <template>
+            <style>
+                div {
+                    width: 100%;
+                    margin: 1rem 0;
+                }
+                .show-,
+                .show-false{
+                    display:none;
+                }
+                .show-true{
+                    display: block;
+                }
+            </style>
+
+            <fx-fore>
+                <fx-group>
+                    <fx-trigger>
+                        <button>toggle</button>
+                        <fx-toggleboolean ref="toggle"></fx-toggleboolean>
+                    </fx-trigger>
+                    <div>Toggle:{toggle}</div>
+                </fx-group>
+                <div class="show-{toggle}">
+                    <p>I'm toggled</p>
+                </div>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-toggleboolean ref="toggle" event="instance-loaded"></fx-toggleboolean>
+                <div id="toggle">{toggle}</div>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

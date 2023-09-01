@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>zotero</title>
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+<!--    <link href="clock.css" rel="stylesheet">-->
+
+    <style>
+        .zotero-picker{
+            position: relative;
+        }
+        .zotero-picker fx-repeat{
+            display: none;
+        }
+        .zotero-picker.open fx-repeat{
+            display: block;
+            position: absolute;
+            max-height: 80vh;
+            overflow: auto;
+        }
+        .bib{
+            display: block;
+        }
+        .bib:hover{
+            background: #efefef;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+            <fx-fore>
+                <fx-model>
+                    <fx-send event="model-construct-done" submission="s-load"></fx-send>
+                    <fx-instance type="json">{}</fx-instance>
+
+                    <fx-instance id="vars">
+                        <data>
+                            <search></search>
+                            <open></open>
+                        </data>
+                    </fx-instance>
+
+                    <fx-submission id="s-load"
+                                   url="https://api.zotero.org/groups/2519759/items?q=lat&include=data,bib"
+                                   method="get"
+                                   replace="instance"
+                                   validate="false"></fx-submission>
+
+                </fx-model>
+
+                <section class="zotero-picker {instance('vars')/open}">
+                    <header>
+                        <fx-control ref="instance('vars')/search" update-event="input">
+                            <fx-action event="value-changed">
+                                <fx-update></fx-update>
+                                <fx-refresh></fx-refresh>
+                                <fx-setvalue ref="instance('vars')/open">open</fx-setvalue>
+                            </fx-action>
+                        </fx-control>
+                    </header>
+                    <fx-repeat ref="?*">
+                        <template>
+                            <fx-output class="bib" tabindex="0" ref="?bib[contains(.,instance('vars')/search)]" html>
+                                <fx-message event="click">item clicked</fx-message>
+                                <fx-action event="keydown">
+                                    <fx-message>selected {context()}</fx-message>
+                                    <fx-setvalue ref="instance('vars')/open"></fx-setvalue>
+                                </fx-action>
+                            </fx-output>
+                        </template>
+                    </fx-repeat>
+                </section>
+            </fx-fore>
+
+</div>
+<script type="module" src="../demo.js"></script>
+<fx-devtools></fx-devtools>
+</body>
+
+</html>

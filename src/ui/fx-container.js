@@ -1,5 +1,4 @@
 import '../fx-model.js';
-import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 
 /**
@@ -32,6 +31,18 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     `;
 
     this.getOwnerForm().registerLazyElement(this);
+
+/*
+    this.addEventListener('mousedown', e => {
+
+      if(e.target === this){
+        e.preventDefault();
+        // e.stopImmediatePropagation();
+      }
+    } );
+*/
+
+    this.setAttribute('tabindex','0');
   }
 
   /**
@@ -58,7 +69,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   }
 
   /**
-   * anly relevance is processed for container controls
+   * relevance is processed for container controls only
    */
   handleModelItemProperties() {
     this.handleRelevant();
@@ -71,7 +82,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
     if (!this.modelItem) {
-      console.log('container is not relevant');
+      // console.log('container is not relevant');
       this.removeAttribute('relevant','');
       this.setAttribute('nonrelevant','');
       this.dispatchEvent(new CustomEvent('disabled', {}));

@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Submission Demo</title>
+    <title>On a Submission</title>
 
     <!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
@@ -34,9 +34,6 @@
             font-size:1rem;
             margin:0.5rem 0;
         }
-        p{
-            font-size: 1rem;
-        }
         fx-control, input{
             font-size: 1.2rem;
         }
@@ -44,6 +41,8 @@
 
 </head>
 <body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
 <div class="wrapper">
     <demo-snippet>
         <template>
@@ -124,11 +123,16 @@
                 </fx-model>
                 <fx-group collapse="true">
 
-                    <h1>Submission replace modes</h1>
+                    <h1>On a submission</h1>
+                    <p>
+                        Submissions send requests and Fore gives you a lot of options to deal with the response to
+                        that requests by setting the <code>replace</code> attribute.
+                    </p>
+                    <h2>Submission replace modes</h2>
 
                     <p>What to do with the response data a server might send us back?</p>
 
-                    <p>The <code>replace</code> attribute allows several ways of dealing with response data.</p>
+                    <p>The <code><a href="https://jinntec.github.io/fore-docs/getstarted/submission/#adding-a-submission" target="_blank">replace</a></code> attribute allows several ways of dealing with response data.</p>
 
                     <h2>replace='none'</h2>
                     <p>Just sends the data but ignores the response</p>

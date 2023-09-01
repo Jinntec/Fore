@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem{
+            display: grid;
+            grid-template-columns: 8rem auto;
+        }
+    </style>
+</head>
+<body>
+<fx-fore id="inspector">
+    <fx-model>
+        <fx-instance src="element-def.xml"></fx-instance>
+        <fx-instance id="vars">
+            <data>
+                <currentelement>fx-action</currentelement>
+                <value></value>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+<!--    <fx-replace ref="instance('vars')/currentelement" with="element('foo')" event="ready">-->
+<!--    <fx-message event="ready">hi from inspector</fx-message>-->
+    <fx-var name="current" value="string(instance('vars')/currentelement)"></fx-var>
+    <fx-repeat id="r-attrs" ref="element[name='fx-action']/attributes/attribute">
+<!--    <fx-repeat id="r-attrs" ref="?tags?*[?name=$current]?attributes?*">-->
+
+        <fx-action event="item-created">
+            <fx-message>{event('nodeset')/name} pos: {event('pos')}</fx-message>
+<!--            <fx-insert context="instance()/element[name='fx-action']/attributes/attribute[]" ref="value" origin="instance('vars')/value"></fx-insert>-->
+<!--            <fx-insert context="context('r-attrs')/.[event('pos')]" ref="value" origin="instance('vars')/value"></fx-insert>-->
+<!--            <fx-insert context="instance('payload')/attributes" ref="attribute" origin="instance('payload')/attribute"></fx-insert>-->
+<!--            <fx-update></fx-update>-->
+
+        </fx-action>
+        <template>
+<!--            <fx-output ref="name[.='defaultAction']"></fx-output>-->
+            <fx-control ref="value">
+                <label>{../name}</label>
+            </fx-control>
+        </template>
+    </fx-repeat>
+<!--
+    <fx-load attach-to="#detailsView" event="ready">
+        <template>
+            <fx-trigger>
+                <a href="#" class="explorer"><img src="../resources/scripts/dom-inspector/img/lookup.png"></a>
+                <action src="toggle.js"></action>
+            </fx-trigger>
+        </template>
+    </fx-load>
+-->
+    <fx-inspector open></fx-inspector>
+</fx-fore>
+<div id="panel"></div>
+
+
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

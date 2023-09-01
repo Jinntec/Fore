@@ -1,6 +1,5 @@
 import { Fore } from '../fore.js';
 import { AbstractAction } from './abstract-action.js';
-import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-reload`
@@ -13,13 +12,24 @@ import { resolveId } from '../xpath-evaluation.js';
 export class FxReload extends AbstractAction {
 
   connectedCallback() {
+    if(super.connectedCallback){
     super.connectedCallback();
-    this.addEventListener('reload', event => {
+    }
+    this.addEventListener('reload', () => {
       window.location.reload();
     },{once:true});
   }
 
   async perform() {
+    this.dispatchEvent(
+        new CustomEvent('execute-action', {
+          composed: true,
+          bubbles: true,
+          cancelable:true,
+          detail: { action: this, event:this.event},
+        }),
+    );
+
     Fore.dispatch(this, 'reload', {});
   }
 }

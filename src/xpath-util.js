@@ -2,6 +2,55 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
 
+	/**
+	 * Alternative to `contains` that respects shadowroots
+	 */
+	static contains(ancestor, descendant) {
+		while (descendant) {
+			if (descendant === ancestor) {
+				return true;
+			}
+
+			if (descendant.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+				// We are passing a shadow root boundary
+				descendant = descendant.host;
+			} else {
+				descendant = descendant.parentNode;
+			}
+		}
+		return false;
+	}
+
+  /**
+   * Alternative to `closest` that respects subcontrol boundaries
+   */
+  static getClosest(querySelector, start) {
+    while (start && !start.matches || !start.matches(querySelector)) {
+      if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        // We are passing a shadow root boundary
+        start = start.host;
+        continue;
+      }
+      if (start.nodeType === Node.ATTRIBUTE_NODE) {
+        // We are passing an attribute
+        start = start.ownerElement;
+        continue;
+      }
+      if (start.nodeType === Node.TEXT_NODE) {
+        start = start.parentNode;
+      }
+      if (start.matches('fx-fore')) {
+        // Subform reached. Bail out
+        return null;
+      }
+      start = start.parentNode;
+      if (!start) {
+        return null;
+      }
+    }
+    return start;
+  }
+
   /**
    * returns next bound element upwards in tree
    * @param start where to start the search
@@ -14,11 +63,16 @@ export class XPathUtil {
         return host;
       }
     } else */
-    if (start.parentNode && start.parentNode.nodeType !== Node.DOCUMENT_NODE) {
+    if (start.parentNode &&
+        (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) ) {
+/*
       if (start.parentNode.hasAttribute('ref')) {
         return start.parentNode;
       }
       return XPathUtil.getParentBindingElement(start.parentNode);
+*/
+
+      return start.parentNode.closest('[ref]');
     }
     return null;
   }
