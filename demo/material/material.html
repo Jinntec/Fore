@@ -18,14 +18,20 @@
         <fx-instance id="material" src="material.xml"></fx-instance>
 
     </fx-model>
-
+	<fx-function signature="sortNames($terms as element()*) as element()*" type="text/xquery">
+      for $term in $terms
+      order by $term/name[@xml:lang = instance()/language] => lower-case()
+      return $term
+    </fx-function>
+	<fx-control ref="instance()/language"></fx-control>
     {language}
     <fx-control ref="value">
-        <fx-items ref="instance('material')/term" class="widget">
+        <fx-items ref="sortNames(instance('material')/term)" class="widget">
             <template>
                 <span class="fx-checkbox">
                     <input type="checkbox" value="{@ref}"/>
                     <label>{name[@xml:lang = instance()/language]}</label>
+					<br/>
                 </span>
             </template>
         </fx-items>
