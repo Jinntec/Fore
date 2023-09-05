@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vocabulary>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/137">
+        <name xml:lang="de">unbestimmt</name>
+        <name xml:lang="en">indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/2">
+        <name xml:lang="de">Stein – unbestimmt</name>
+        <name xml:lang="en">Stone – indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/88">
+        <name xml:lang="de">Stein / Achat</name>
+        <name xml:lang="en">Stone – agate</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/77">
+        <name xml:lang="de">Stein / Alabaster</name>
+        <name xml:lang="en">Stone – alabaster</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/15">
+        <name xml:lang="de">Stein / Andesit</name>
+        <name xml:lang="en">Stone – andesit</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/7">
+        <name xml:lang="de">Stein / Aplit</name>
+        <name xml:lang="en">Stone – aplit</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/16">
+        <name xml:lang="de">Stein / Basalt</name>
+        <name xml:lang="en">Stone – basalt</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/73">
+        <name xml:lang="de">Stein / Brekzie</name>
+        <name xml:lang="en">Stone – breccia</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/59">
+        <name xml:lang="de">Stein / Dolomit</name>
+        <name xml:lang="en">Stone – dolomite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/24">
+        <name xml:lang="de">Stein / Feldspat</name>
+        <name xml:lang="en">Stone – feldspar</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/300">
+        <name xml:lang="de">Stein / Gagat</name>
+        <name xml:lang="en">Stone – jet</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/37">
+        <name xml:lang="de">Stein / Gneis</name>
+        <name xml:lang="en">Stone – gneiss</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/11">
+        <name xml:lang="de">Stein / Granit</name>
+        <name xml:lang="en">Stone – granite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/90">
+        <name xml:lang="de">Stein / Hämatit</name>
+        <name xml:lang="en">Stone – haematite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/91">
+        <name xml:lang="de">Stein / Heliotrop</name>
+        <name xml:lang="en">Stone – heliotrope</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/89">
+        <name xml:lang="de">Stein / Jaspis</name>
+        <name xml:lang="en">Stone – jasper</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/76">
+        <name xml:lang="de">Stein / Kalkmergel</name>
+        <name xml:lang="en">Stone – limestone marl</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/92">
+        <name xml:lang="de">Stein / Karneol</name>
+        <name xml:lang="en">Stone – carnelian</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/67">
+        <name xml:lang="de">Stein / Kalkstein</name>
+        <name xml:lang="en">Stone – limestone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/67">
+        <name xml:lang="de">Stein / Kohlenkalk</name>
+        <name xml:lang="en">Stone – carbonaceous limestone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/76">
+        <name xml:lang="de">Stein / Konglomerat</name>
+        <name xml:lang="en">Stone – conglomerate</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/93">
+        <name xml:lang="de">Stein / Lapislazuli</name>
+        <name xml:lang="en">Stone – lapis lazuli</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/53">
+        <name xml:lang="de">Stein / Lava</name>
+        <name xml:lang="en">Stone – lava</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/6">
+        <name xml:lang="de">Stein / magmatisches Gestein – unbestimmt</name>
+        <name xml:lang="en">Stone – magmatic rock – indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/48">
+        <name xml:lang="de">Stein / Marmor (Farbe unbestimmt)</name>
+        <name xml:lang="en">Stone – marble (colour indefinite)</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/49">
+        <name xml:lang="de">Stein / Marmor, weiß</name>
+        <name xml:lang="en">Stone – marble, white</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/50">
+        <name xml:lang="de">Stein / Marmor, geädert/farbig</name>
+        <name xml:lang="en">Stone – marble, veined/coloured</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/87">
+        <name xml:lang="de">Stein / Mineral – unbestimmt</name>
+        <name xml:lang="en">Stone – mineral – indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/79">
+        <name xml:lang="de">Stein / Molasse</name>
+        <name xml:lang="en">Stone – molasse</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/63">
+        <name xml:lang="de">Stein / Muschelkalk</name>
+        <name xml:lang="en">Stone – shell limestone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/81">
+        <name xml:lang="de">Stein / Nenfro</name>
+        <name xml:lang="en">Stone – nenfro</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/15">
+        <name xml:lang="de">Stein / Onyx</name>
+        <name xml:lang="en">Stone – onyx</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/70">
+        <name xml:lang="de">Stein / Oolith</name>
+        <name xml:lang="en">Stone – oolite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/95">
+        <name xml:lang="de">Stein / Opal</name>
+        <name xml:lang="en">Stone – Opal</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/82">
+        <name xml:lang="de">Stein / Peperin</name>
+        <name xml:lang="en">Stone – peperino</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/15">
+        <name xml:lang="de">Stein / Porphyr</name>
+        <name xml:lang="en">Stone – porphyr</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/51">
+        <name xml:lang="de">Stein / Quarzit</name>
+        <name xml:lang="en">Stone – quartzite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/75">
+        <name xml:lang="de">Stein / Sandstein</name>
+        <name xml:lang="en">Stone – sandstone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/97">
+        <name xml:lang="de">Stein / Sardonyx</name>
+        <name xml:lang="en">Stone – sardonyx</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/52">
+        <name xml:lang="de">Stein / Schiefer</name>
+        <name xml:lang="en">Stone – slate</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/41">
+        <name xml:lang="de">Stein / Speckstein</name>
+        <name xml:lang="en">Stone – soapstone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/13">
+        <name xml:lang="de">Stein / Syenit</name>
+        <name xml:lang="en">Stone – syenite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/83">
+        <name xml:lang="de">Stein / Trachyte</name>
+        <name xml:lang="en">Stone – trachyte</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/71">
+        <name xml:lang="de">Stein / Travertin</name>
+        <name xml:lang="en">Stone – travertine</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/30">
+        <name xml:lang="de">Stein / Tuff</name>
+        <name xml:lang="en">Stone – tuff (calcareous)</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/98">
+        <name xml:lang="de">Stein / Vulkantuff</name>
+        <name xml:lang="en">Stone – tuff (volcanic)</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/107">
+        <name xml:lang="de">Metall – unbestimmt</name>
+        <name xml:lang="en">Metals – indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/108">
+        <name xml:lang="de">Metall / Blei</name>
+        <name xml:lang="en">Metals - lead</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/109">
+        <name xml:lang="de">Metall / Bronze</name>
+        <name xml:lang="en">Metals - bronze</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/111">
+        <name xml:lang="de">Metall / Eisen</name>
+        <name xml:lang="en">Metals - iron</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/112">
+        <name xml:lang="de">Metall / Gold</name>
+        <name xml:lang="en">Metals - gold</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/113">
+        <name xml:lang="de">Metall / Kupfer</name>
+        <name xml:lang="en">Metals - copper</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/114">
+        <name xml:lang="de">Metall / Messing</name>
+        <name xml:lang="en">Metals - brass</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/115">
+        <name xml:lang="de">Metall / Silber</name>
+        <name xml:lang="en">Metals - silver</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/116">
+        <name xml:lang="de">Metall / Zinn</name>
+        <name xml:lang="en">Metals - tin</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/118">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe - unbestimmt</name>
+        <name xml:lang="en">other materials – indefinite</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/119">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Bernstein</name>
+        <name xml:lang="en">other materials – amber</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/120">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Elfenbein</name>
+        <name xml:lang="en">other materials – ivory</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/121">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Emaille</name>
+        <name xml:lang="en">other materials – enamel</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/122">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Glas</name>
+        <name xml:lang="en">other materials – glass</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/123">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Holz</name>
+        <name xml:lang="en">other materials – wood</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/124">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Knochen</name>
+        <name xml:lang="en">other materials – bone</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/125">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Leder</name>
+        <name xml:lang="en">other materials – leather</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/126">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Putz</name>
+        <name xml:lang="en">other materials – plaster</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/126">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Stuck</name>
+        <name xml:lang="en">other materials – stucco</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/131">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Ton</name>
+        <name xml:lang="en">other materials – clay</name>
+    </term>
+    <term ref="https://www.eagle-network.eu/voc/material/lod/133">
+        <name xml:lang="de">sonstige Materialien/Werkstoffe / Wachs</name>
+        <name xml:lang="en">other materials – wax</name>
+    </term>
+</vocabulary>
