@@ -1,0 +1,131 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0"><teiHeader>
+        <fileDesc>
+            <titleStmt>
+                
+                <title>Titulus sacer Herculei (EEE5)</title>
+                
+                <editor>Kantola</editor>
+                
+                
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license. </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        
+                        <idno type="EDEp">E0000001</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    
+                                    <objectType ref="https://www.eagle-network.eu/voc/objtyp/lod/85"/>
+                                    
+                                    <material ref="https://www.eagle-network.eu/voc/material/lod/67"/>
+                                    
+                                    <note>Fragmenta duo inter se coniuncta cippi parallelepipedi ex lapide calcario, supra et infra mutili.</note>
+                                </support>
+                            </supportDesc>
+                        </objectDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            
+                            <origDate notBefore-custom="-0100" notAfter-custom="-0075" datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">Saec I. a. Chr. n. ineuntis</origDate>
+                        </origin>
+                    </history>
+                    
+                    
+                    <msPart type="main" xml:id="6367e0b8-79fd-4363-a7e0-b879fd636349"><msIdentifier>
+                            
+                            <repository/>
+                            
+                            
+                        </msIdentifier><msContents>
+                            
+                            
+                            
+                            <msItem>
+                                
+                                
+                                <textLang mainLang="lat"/>
+                                
+                                <listBibl type="bibliography">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl><bibl xml:id=""><citedRange/><ptr target="EDCS"/></bibl><bibl xml:id=""><citedRange/><ptr target="CifarelliColaiacomoGuida"/></bibl><bibl xml:id=""><citedRange/><ptr target="BoosHeiligtümer"/></bibl></listBibl>
+
+                                
+                                
+                                
+                                <listBibl type="previousEditions">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl></listBibl>
+                                
+                                <listBibl type="images">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl><bibl xml:id=""><citedRange/><ptr target="CifarelliGiunoneMoneta"/></bibl></listBibl>
+                                
+                            </msItem>
+                        </msContents><physDesc>
+                            <objectDesc>
+                                <supportDesc>
+                                    <support>
+                                        
+                                        
+                                        <rs type="decoration" ref="https://www.eagle-network.eu/voc/decor/lod/1000"/>
+                                    </support>
+                                    
+                                    <condition>fragmentary</condition>
+                                </supportDesc>
+                                
+                            </objectDesc>
+                            <handDesc>
+                                <handNote>
+                                    
+                                    
+                                    <rs type="ligature">no</rs>
+                                </handNote>
+                            </handDesc>
+                        </physDesc><history>
+                            
+                            
+                            <provenance type="found" notBefore="1998" notAfter="2000">
+                                
+                                
+                            </provenance>
+                            
+                        </history></msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    
+                    <term ref="#pagan"/>
+                </keywords>
+                
+            </textClass>
+        </profileDesc>
+        
+        <revisionDesc status="draft"><change type="created" when="2023-04-14T07:24:53.976Z" who="edep"/><change type="changed" when="2023-09-04T13:21:23.542Z" who="edep"/></revisionDesc>
+    </teiHeader><text>
+        <body><div type="translation" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349" resp="Eibeck"><ab>Il medico <persName type="attested" key="P000002">Timocle</persName>, dopo aver offerto la decima, dona (questo altare) ad <persName type="divine" key="P000003">Ercole</persName>.</ab></div><div type="edition"><div type="textpart" subtype="fragment" n="a" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349"><ab>
+<lb n="1"/><persName type="divine" key="P000003">Hercole</persName>
+<lb n="2"/><persName type="attested" key="P000002">Timocles</persName>
+<lb n="3"/>medicus
+<lb n="4"/><expan>d<ex>ecuma</ex></expan> <expan>f<ex>acta</ex></expan> <expan>d<ex>onum</ex></expan> <expan>d<ex>at</ex></expan>
+</ab></div></div></body>
+    </text></TEI>

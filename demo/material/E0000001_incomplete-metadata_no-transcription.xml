@@ -1,0 +1,131 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0"><teiHeader>
+        <fileDesc>
+            <titleStmt>
+                
+                <title>Titulus sacer Herculei (EEE5)</title>
+                
+                <editor/>
+                
+                
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license. </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        
+                        <idno type="EDEp">E0000001</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    
+                                    
+                                    
+                                    <material ref="https://www.eagle-network.eu/voc/material/lod/67"/>
+                                    
+                                    
+                                </support>
+                            </supportDesc>
+                        </objectDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            
+                            <origDate when-custom="" notBefore-custom="" notAfter-custom="" datingMethod="http://en.wikipedia.org/wiki/Julian_calendar"/>
+                        </origin>
+                    </history>
+                    
+                    
+                    <msPart type="main" xml:id="6367e0b8-79fd-4363-a7e0-b879fd636349"><msIdentifier>
+                            
+                            <repository/>
+                            
+                            
+                        </msIdentifier><msContents>
+                            
+                            
+                            
+                            <msItem class="https://www.eagle-network.eu/voc/typeins/lod/3">
+                                
+                                
+                                <textLang mainLang="lat"/>
+                                
+                                <listBibl type="bibliography">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl><bibl xml:id=""><citedRange/><ptr target="EDCS"/></bibl><bibl xml:id=""><citedRange/><ptr target="CifarelliColaiacomoGuida"/></bibl><bibl xml:id=""><citedRange/><ptr target="BoosHeiligtümer"/></bibl></listBibl>
+
+                                
+                                
+                                
+                                <listBibl type="previousEditions">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl></listBibl>
+                                
+                                <listBibl type="images">
+                                    
+                                <bibl xml:id=""><citedRange/><ptr target="CifarelliCulto"/></bibl><bibl xml:id=""><citedRange/><ptr target="CifarelliGiunoneMoneta"/></bibl></listBibl>
+                                
+                            </msItem>
+                        </msContents><physDesc>
+                            <objectDesc>
+                                <supportDesc>
+                                    <support>
+                                        
+                                        
+                                        <rs type="decoration" ref="https://www.eagle-network.eu/voc/decor/lod/1000"/>
+                                    </support>
+                                    
+                                    <condition>fragmentary</condition>
+                                </supportDesc>
+                                <layoutDesc>
+                                    <layout><rs type="paleography" ref="#scratched"/><rs type="metric">no</rs></layout>
+                                </layoutDesc>
+                            </objectDesc>
+                            <handDesc>
+                                <handNote>
+                                    
+                                    
+                                    <rs type="ligature">yes</rs>
+                                </handNote>
+                            </handDesc>
+                        </physDesc><history>
+                            <origin>
+                                
+                                <origPlace corresp="G000006"/>
+                            </origin>
+                            
+                            <provenance type="found" when="1998">
+                                
+                                
+                            </provenance>
+                            
+                        </history></msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    
+                    <term ref="#jewish"/>
+                </keywords>
+                
+            </textClass>
+        </profileDesc>
+        
+        <revisionDesc status="draft"><change type="created" when="2023-04-14T07:24:53.976Z" who="edep"/><change type="changed" when="2023-09-04T13:25:42.012Z" who="edep"/></revisionDesc>
+    </teiHeader><text>
+        <body><div type="edition"><div type="textpart" subtype="fragment" n="a" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349"/></div></body>
+    </text></TEI>
