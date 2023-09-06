@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <!-- zusätzlich 0) freie Eingabe Textfeld -->
+                <title>Titulus sacer Herculei (EEE5)</title>
+                <!-- 44) Bearbeiter der Inschriftenedition -->
+                <editor>Kantola</editor>
+                <!-- 45) Bearbeiter des Datensatzes -->
+                <author/>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license.
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <!-- 3) EDEp ID -->
+                        <idno type="EDEp">E0000001</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <!-- 16a) Inschriftträger -->
+                                    <objectType ref="https://www.eagle-network.eu/voc/objtyp/lod/85"/>
+                                    <!-- 18) Material -->
+                                    <material ref="https://www.eagle-network.eu/voc/material/lod/67"/>
+                                    <!-- 16b) Beschreibung Inschriftträger -->
+                                    <note>Fragmenta duo inter se coniuncta cippi parallelepipedi ex lapide calcario,
+                                        supra et infra mutili.
+                                    </note>
+                                </support>
+                            </supportDesc>
+                        </objectDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <!--
+                                26) und 27) Datierung (zusammenfassen?)
+
+                                @when-custom - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                                @notBefore-custom - wie @when aber gemeint als "nach"
+                                @notAfter-custom - wie @when aber gemeint als "vor"
+                                Im Content - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                                @datingMethod - fixes Attribut, hier immer Julianisch
+                            -->
+                            <origDate when-custom="" notBefore-custom="-0100" notAfter-custom="-0075"
+                                      datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">Saec I. a. Chr. n.
+                                ineuntis
+                            </origDate>
+                        </origin>
+                    </history>
+                    <!-- msPart ist als Ganzes wiederholbar -->
+                    <!-- @xml:id erforderlich für Referenzierung unten -->
+                    <msPart xml:id="6367e0b8-79fd-4363-a7e0-b879fd636349" type="main">
+                        <msIdentifier>
+                            <!-- 12a) Aufbewahrung -->
+                            <repository>Museo Archeologico Comunale di Segni</repository>
+                            <!-- 4) TM-Nummer - manuelle Eingabe -->
+                            <idno type="TM">521282</idno>
+                        </msIdentifier>
+                        <msContents>
+                            <!-- TODO: 12d) Verifizierungsgrundlage: Auswahlmenü: Abklatsch / nicht-gesehen -->
+                            <!-- TODO: 12e) Datum der Verifizierung -->
+                            <!-- 15) Inschriftengattung in @class -->
+                            <msItem class="https://www.eagle-network.eu/voc/typeins/lod/80" type="">
+                                <!-- 25) Sprache -->
+                                <!-- TODO: Metrik logisch hierhin -->
+                                <textLang mainLang="lat"/>
+                                <!-- 35b) Bibliographie-->
+                                <listBibl type="bibliography">
+                                    <!-- Einträge wiederholbar -->
+                                    <bibl>
+                                        <ptr target="CifarelliCulto"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="EDR"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="EDCS"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="CifarelliGiunoneMoneta"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="CifarelliColaiacomoGuida"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="BoosHeiligtümer"/>
+                                        <note/>
+                                    </bibl>
+                                </listBibl>
+
+                                <!-- 12c) Überlieferung -->
+<!--
+                                <listBibl type="transmission">
+                                    &lt;!&ndash; Einträge wiederholbar &ndash;&gt;
+                                </listBibl>
+-->
+                                <!-- 35a) Ältere Editionen -->
+                                <listBibl type="previousEditions">
+                                    <!-- Einträge wiederholbar - optional -->
+                                    <bibl>
+                                        <ptr target="CifarelliCulto"/>
+                                        <note/>
+                                    </bibl>
+                                </listBibl>
+                                <!-- 35c) Bilder: Verweis auf Literatur, in der Abbildung vorhanden -->
+                                <listBibl type="images">
+                                    <!-- Einträge wiederholbar - optional -->
+                                    <bibl>
+                                        <ptr target="CifarelliCulto"/>
+                                        <note/>
+                                    </bibl>
+                                    <bibl>
+                                        <ptr target="CifarelliGiunoneMoneta"/>
+                                        <note/>
+                                    </bibl>
+                                </listBibl>
+                                <note type="verification" subtype="autopsy (Kajava)">
+                                    <date when="1998"/>
+                                </note>
+                            </msItem>
+                        </msContents>
+                        <physDesc>
+                            <objectDesc>
+                                <supportDesc>
+                                    <support>
+                                        <dimensions>
+                                            <!-- 19) Inschriftträger: Breite -->
+                                            <width>20-22 cm</width>
+                                            <!-- 38) Inschriftträger: Höhe -->
+                                            <height>64 cm</height>
+                                            <!-- 20) Inschriftträger: Tiefe -->
+                                            <depth>20-22 cm</depth>
+                                        </dimensions>
+                                        <!-- 14) Dekor -->
+                                        <rs type="decoration" ref="https://www.eagle-network.eu/voc/decor/lod/1000"/>
+                                    </support>
+                                    <!-- 13) Erhaltung -->
+                                    <condition>fragmentary</condition>
+                                </supportDesc>
+                                <layoutDesc>
+                                    <layout>
+                                        <dimensions>
+                                            <!-- 21) Inschriftfeld: Höhe -->
+                                            <height/>
+                                            <!-- 22) Inschriftfeld: Breite -->
+                                            <width/>
+                                        </dimensions>
+                                        <!-- 34) Paläographie: kontrolliertes Vokabular -->
+                                        <rs type="palaeography" ref=""/>
+                                        <!-- 24) Metrik -->
+                                        <rs type="metric">no</rs>
+                                    </layout>
+                                </layoutDesc>
+                            </objectDesc>
+                            <handDesc>
+                                <handNote>
+                                    <dimensions type="letterHeight">
+                                        <!-- 23) Buchstabenhöhe -->
+                                        <height>2,1-2,7 cm.</height>
+                                    </dimensions>
+                                    <!-- 39) Ligatur -->
+                                    <rs type="ligature">no</rs>
+                                </handNote>
+                            </handDesc>
+                        </physDesc>
+                        <history>
+                            <origin>
+                                <!-- in @corresp wird die GeoID angegeben, andere Ortsangaben sind redundant und werden
+                                    am Ende nur hinein kopiert - siehe Kommentare -->
+                                <origPlace corresp="G003587"/>
+                            </origin>
+                            <!--
+                                11) Fundjahr (Attribute auf <provenance>)
+
+                                @when - Korrekte Datumsangabe, entweder nur Jahr oder xs:date YYYY-MM-DD
+                                @notBefore - wie @when aber gemeint als "nach"
+                                @notAfter - wie @when aber gemeint als "vor"
+                                @when-custom - falls exakte Datierung unmöglich; schließt die anderen Attribute aus
+                            -->
+                            <provenance type="found" when="1998" when-custom="" notBefore="" notAfter="">
+                                <!-- 10b) Fundkontext: nicht kopiert, freie Eingabe -->
+                                <note type="context">Murum immissa erant a. 1998 Signiae in domo quadam privata.</note>
+                            </provenance>
+                            <provenance type="history"/>
+                        </history>
+                    </msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                <!-- Welche URI für lokale Klassifikation? -->
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    <!-- 28) Religion - kontrolliertes Vokabular? -->
+                    <term ref="#pagan"/>
+                </keywords>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/terms">
+                </keywords>
+            </textClass>
+        </profileDesc>
+        <!-- 33) Stand der Bearbeitung in @status -->
+        <revisionDesc status="draft">
+            <change type="created" when="2023-04-14T07:24:53.976Z" who="edep"/>
+            <change type="changed" when="2023-04-20T09:36:35.399Z" who="edep"/>
+        </revisionDesc>
+    </teiHeader>
+    <facsimile corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349">
+    </facsimile>
+    <text>
+        <body>
+            <div type="apparatus" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349"/>
+            <div type="translation" resp="Eibeck" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349">Il medico <persName
+                    type="attested" key="P000002">Timocle</persName>, dopo aver offerto la decima, dona (questo altare)
+                ad <persName type="divine" key="P000003">Ercole</persName>.
+            </div>
+            <div type="edition">
+                <div type="textpart" subtype="fragment" n="a" corresp="#6367e0b8-79fd-4363-a7e0-b879fd636349">
+                    <ab>
+                        <lb n="1"/>
+                        <persName type="divine" key="P000003">Hercole</persName>
+                        <lb n="2"/>
+                        <persName type="attested" key="P000002">Timocles</persName>
+                        <lb n="3"/>
+                        <occupation>medicus</occupation>
+                        <lb n="4"/>
+                        <expan>d
+                            <ex>ecuma</ex>
+                        </expan>
+                        <expan>f
+                            <ex>acta</ex>
+                        </expan>
+                        <expan>d
+                            <ex>onum</ex>
+                        </expan>
+                        <expan>d
+                            <ex>at</ex>
+                        </expan>
+                    </ab>
+                </div>
+            </div>
+            <div type="commentary">
+                <listBibl>
+                    <ref type="biblio" target="#CifarelliCulto">CIFARELLI, Culto <citedRange unit="page">176-180
+                    </citedRange> cum im. phot. figg. <citedRange unit="figure">2-4</citedRange> (AE 2000, 289).
+                    </ref>
+                    <ref type="biblio" target="#EDR">EDR
+                        <citedRange unit="number">155415</citedRange>
+                    </ref>
+                    ;
+                    <ref type="biblio" target="#EDCS">EDCS
+                        <citedRange unit="number">20100062</citedRange>
+                    </ref>
+                    .
+                    Cf.
+                    <bibl>
+                        <ref type="biblio" target="#CifarelliGiunoneMoneta">CIFARELLI, Giunone Moneta</ref>
+                        <citedRange>117-118</citedRange>
+                        cum im. phot.
+                        <citedRange>fig. 106</citedRange>
+                    </bibl>
+                    ;
+                    <bibl>
+                        <ref type="biblio" target="#CifarelliColaiacomoGuida">CIFARELLI - COLAIACOMO, Guida</ref>
+                        <citedRange>14</citedRange>
+                    </bibl>
+                    ;
+                    <bibl>
+                        <ref type="biblio" target="#BoosHeiligtümer">BOOS, Heiligtümer</ref>
+                        <citedRange>192</citedRange>
+                    </bibl>
+                    .
+                </listBibl>
+                De nomine <persName type="divine" key="P000003">Herculis</persName> in casu dativo in -e desinente cf.
+                <bibl>
+                    <ref type="biblio" target="#CifarelliCulto">CIFARELLI, Culto</ref>
+                    <citedRange>178</citedRange>
+                </bibl>
+                .
+            </div>
+        </body>
+    </text>
+</TEI>

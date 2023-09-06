@@ -52,6 +52,7 @@ export class FxInstance extends HTMLElement {
     this.model = this.parentNode;
     this.attachShadow({ mode: 'open' });
     this.originalInstance = null;
+    this.partialInstance = null;
   }
 
   connectedCallback() {
@@ -92,6 +93,7 @@ export class FxInstance extends HTMLElement {
             </style>
             ${html}
         `;
+    this.partialInstance = {};
   }
 
   /**
@@ -151,10 +153,23 @@ export class FxInstance extends HTMLElement {
   getDefaultContext() {
     // console.log('getDefaultContext ', this.instanceData.firstElementChild);
     if (this.type === 'xml') {
+      // if the are in 'mergePartial' mode we use the partial instance as default context if present
+      const foreElement = this.closest('fx-fore');
+/*
+      if(foreElement.mergePartial){
+
+        const merged = this.mergeXML(this.instanceData,this.partialInstance);
+        console.log('merged', merged);
+        this.instanceData = merged;
+        // return this.partialInstance?.firstElementChild;
+
+      }
+*/
       return this.instanceData.firstElementChild;
     }
     return this.instanceData;
   }
+
 
   /**
    * does the actual loading of data. Handles inline data, data loaded via fetch() or data constructed from

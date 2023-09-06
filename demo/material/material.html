@@ -3,42 +3,73 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-    <title>template</title>
+    <title>Sorting with XQuery</title>
     <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-control{
+            width: 100%;
+            margin:1rem 0;
+        }
+        fx-items{
+            column-count: 2;
+        }
+    </style>
 </head>
 <body>
-<fx-fore>
-    <fx-model>
-        <fx-instance>
-            <data>
-                <value></value>
-                <language>de</language>
-            </data>
-        </fx-instance>
-        <fx-instance id="material" src="material.xml"></fx-instance>
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
 
-    </fx-model>
-	<fx-function signature="sortNames($terms as element()*) as element()*" type="text/xquery">
-      for $term in $terms
-      order by $term/name[@xml:lang = instance()/language] => lower-case()
-      return $term
-    </fx-function>
-	<fx-control ref="instance()/language"></fx-control>
-    {language}
-    <fx-control ref="value">
-        <fx-items ref="sortNames(instance('material')/term)" class="widget">
-            <template>
-                <span class="fx-checkbox">
-                    <input type="checkbox" value="{@ref}"/>
-                    <label>{name[@xml:lang = instance()/language]}</label>
-					<br/>
-                </span>
-            </template>
-        </fx-items>
-        <!--                                    <fx-replace event="init" ref="instance('material')/*" with="sortNames(instance('material')/term[name[@xml:lang = instance('vars')/language]])"></fx-replace>-->
-    </fx-control>
+<div class="wrapper">
+    <h1>Sorting with XQuery</h1>
+    <p>This demo shows how to sort an XML nodeset with the help of a custom XQuery function.</p>
+    <p>It builds a list of checkboxes from a nodeset of materials for 2 languages and sorts them
+    accordingly whenever the language changes.</p>
+    <p>To see the data behind this form <a href="material.html?inspect">click here</a>. In the righthand panel
+    choose 'material'</p>
 
-</fx-fore>
+    <p><code>fx-items</code> is using a custom XQuery function 'sortNames' to sort the elements passed to it.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <value></value>
+                            <language>de</language>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="material" src="material.xml"></fx-instance>
+
+                    <fx-function signature="sortNames($terms as element()*) as element()*" type="text/xquery">
+                        for $term in $terms
+                        order by $term/name[@xml:lang = instance()/language] => lower-case()
+                        return $term
+                    </fx-function>
+                </fx-model>
+                <fx-control ref="instance()/language" update-event="input">
+                    <label>select language</label>
+                    <select class="widget">
+                        <option value="de">de</option>
+                        <option value="en">en</option>
+                    </select>
+                </fx-control>
+                {value}
+                <fx-control class="cols" ref="value">
+                    <fx-items ref="sortNames(instance('material')/term)" class="widget">
+                        <template>
+                            <div class="fx-checkbox">
+                                <input type="checkbox" value="{@ref}"/>
+                                <label>{name[@xml:lang = instance()/language]}</label>
+                            </div>
+                        </template>
+                    </fx-items>
+                </fx-control>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
 <script type="module" src="../demo.js"></script>
 </body>
 </html>
