@@ -325,6 +325,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         const targetInstance = this._getTargetInstance();
 
+/*
         if(this.replace === 'merge'){
             if (targetInstance && targetInstance.type === 'xml') {
                 targetInstance.partialInstance = data;
@@ -334,9 +335,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
                 targetInstance.instanceData = merged;
                 console.log('merging partial instance',targetInstance.partialInstance)
-                /*
+                /!*
                 targetInstance.instanceData not touched here as we want to keep the default instance unmodified as the full template for the UI.
-                */
+                *!/
 
                 // Skip any refreshes if the model is not yet inited#
                 // duplicate from replace='instance'
@@ -348,6 +349,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 // }
             }
         }
+*/
 
         if (this.replace === 'instance') {
             if (targetInstance) {
@@ -414,6 +416,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 
 
+/*
     _mergeXML(xml1, xml2) {
         const parser = new DOMParser();
         const serializer = new XMLSerializer();
@@ -426,6 +429,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         // return serializer.serializeToString(xml1);
         return xml1;
     }
+*/
 
 /*
     _mergeNodes(node1, node2) {
@@ -455,6 +459,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     }
 */
 
+/*
     mergeNodes(node1, node2) {
         // Overwrite attributes in node1 with values from node2
         for (const { name, value } of node2.attributes) {
@@ -484,6 +489,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             }
         });
     }
+*/
     /**
      * select relevant nodes
      *
