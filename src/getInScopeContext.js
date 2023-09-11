@@ -55,11 +55,11 @@ function _getInitialContext(node, ref) {
 }
 
 export default function getInScopeContext(node, ref) {
-    console.log('getInScopeContext', ref, node);
+    // console.log('getInScopeContext', ref, node);
 
 
     const parentElement = _getElement(node);
-    console.log('getInScopeContext parent', parentElement);
+    // console.log('getInScopeContext parent', parentElement);
 
     if(parentElement.closest('fx-fore').mergePartial){
         console.log('mergePartial mode')
