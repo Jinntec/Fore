@@ -259,37 +259,31 @@
             </div>
             <div type="commentary">
                 <listBibl>
-                    <ref type="biblio" target="#CifarelliCulto">CIFARELLI, Culto <citedRange unit="page">176-180
-                    </citedRange> cum im. phot. figg. <citedRange unit="figure">2-4</citedRange> (AE 2000, 289).
+                    <ref type="biblio" target="#CifarelliCulto">CIFARELLI, Culto <citedRange unit="page">
+                        </citedRange> cum im. phot. figg. <citedRange unit="figure">2-4</citedRange>
                     </ref>
                     <ref type="biblio" target="#EDR">EDR
                         <citedRange unit="number">155415</citedRange>
                     </ref>
-                    ;
                     <ref type="biblio" target="#EDCS">EDCS
                         <citedRange unit="number">20100062</citedRange>
                     </ref>
-                    .
-                    Cf.
                     <bibl>
                         <ref type="biblio" target="#CifarelliGiunoneMoneta">CIFARELLI, Giunone Moneta</ref>
                         <citedRange>117-118</citedRange>
                         cum im. phot.
                         <citedRange>fig. 106</citedRange>
                     </bibl>
-                    ;
                     <bibl>
                         <ref type="biblio" target="#CifarelliColaiacomoGuida">CIFARELLI - COLAIACOMO, Guida</ref>
                         <citedRange>14</citedRange>
                     </bibl>
-                    ;
                     <bibl>
                         <ref type="biblio" target="#BoosHeiligtümer">BOOS, Heiligtümer</ref>
                         <citedRange>192</citedRange>
                     </bibl>
-                    .
                 </listBibl>
-                De nomine <persName type="divine" key="P000003">Herculis</persName> in casu dativo in -e desinente cf.
+                De nomine <persName type="divine" key="P000003">Herculis</persName>
                 <bibl>
                     <ref type="biblio" target="#CifarelliCulto">CIFARELLI, Culto</ref>
                     <citedRange>178</citedRange>

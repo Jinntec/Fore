@@ -36,12 +36,15 @@
                     <fx-instance src="template.xml"
                                 xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
 
+                    <fx-instance id="partial" src="e1.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
                     <fx-submission id="load-partial"
                                    url="e1.xml"
                                    method="get"
                                    replace="merge"></fx-submission>
 
-
+                    <fx-function signature="merge($template as element()*, $partial as element()*) as element()*" type="text/xquery">
+                        return $template | $partial//*|@*|text()
+                    </fx-function>
                 </fx-model>
 
                 <fx-control ref="//authority">
@@ -56,7 +59,14 @@
                     {log('default')}
                 </textarea>
 
+                <fx-trigger>
+                    <button>merge</button>
+                    <fx-replace ref="instance('default')" with="merge(instance('default'), instance('partial')/*)"></fx-replace>
+                </fx-trigger>
 
+                <code>
+                    {merge(instance('default'), instance('partial'))"}
+                </code>
             </fx-fore>
 <!--
         </template>
