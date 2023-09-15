@@ -273,8 +273,8 @@ describe('functions', () => {
     );
   });
 
-	it.only('context() in repeats just works', async () => {
-		const el = await fixtureSync(html`
+  it('context() in repeats returns the correct item', async () => {
+    const el = await fixtureSync(html`
           <fx-fore>
               <fx-model>
                    <fx-instance id="mapping">
@@ -330,7 +330,9 @@ describe('functions', () => {
                               <h3 style="display: inline;">{.}</h3>
 
                               <!-- context() does not work here, but $current does -->
-<span id="context-span">{@code}</span>
+<span id="context-item-span">{@code}</span>
+<span id="context-function-span">{context()/@code}</span>
+<span id="current-span">{$current/@code}</span>
                               <p id="result-p-with-context" style="display: inline;">{instance('desc')/df/sfs/sf[code = context()/@code]/value}</p>
                               <p id="result-p-with-current" style="display: inline;">{instance('desc')/df/sfs/sf[code = $current/@code]/value}</p>
                           </template>
@@ -339,20 +341,27 @@ describe('functions', () => {
               </fx-repeat>
           </fx-fore>`);
 
-		await oneEvent(el, 'refresh-done');
-		const spans = el.querySelectorAll('#context-span');
-		const firstSpan = spans[0];
-		expect(firstSpan.innerText).to.equal('a');
-		const secondSpan = spans[1];
-		expect(secondSpan.innerText).to.equal('b');
+    await oneEvent(el, 'refresh-done');
+    const contextItemSpans = el.querySelectorAll('#context-item-span');
+    const contextFunctionSpans = el.querySelectorAll('#context-function-span');
 
-		const contextPs = el.querySelectorAll('#result-p-with-context');
-		const currentPs = el.querySelectorAll('#result-p-with-current');
+    const firstContextItemSpan = contextItemSpans[0];
+    expect(firstContextItemSpan.innerText).to.equal('a', 'firstContextItemSpan.innerText should be OK');
+    const firstContextFunctionSpan = contextFunctionSpans[0];
+    expect(firstContextFunctionSpan.innerText).to.equal('a', 'firstContextFunctionSpan.innerText should be OK');
 
-		expect(contextPs[0].innerText).to.equal(currentPs[0].innerText);
-		expect(contextPs[1].innerText).to.equal(currentPs[1].innerText);
+    const secondContextItemSpan = contextItemSpans[1];
+    expect(secondContextItemSpan.innerText).to.equal('b', 'secondContextItemSpan.innerText should be OK');
+    const secondContextFunctionSpan = contextFunctionSpans[1];
+    expect(secondContextFunctionSpan.innerText).to.equal('b', 'secondContextFunctionSpan.innerText should be OK');
 
-	});
+    const contextPs = el.querySelectorAll('#result-p-with-context');
+    const currentPs = el.querySelectorAll('#result-p-with-current');
+
+    expect(contextPs[0].innerText).to.equal(currentPs[0].innerText, 'The second result in the P should be correct');
+    expect(contextPs[1].innerText).to.equal(currentPs[1].innerText, 'The second result in the P should be correct');
+
+  });
 /*
   it.only('context() function returns correct nodesets', async () => {
     const el = await fixtureSync(html`
