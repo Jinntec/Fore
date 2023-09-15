@@ -614,7 +614,13 @@ const contextFunction = (dynamicContext, string) => {
     // const p = caller.nodeName;
     // const p = dynamicContext.domFacade.getParentElement();
 
-    if (parent) return parent.nodeset;
+    if (parent) {
+		const {nodeset} = parent;
+		if (Array.isArray(nodeset)) {
+			return nodeset[0];
+		}
+		return nodeset;
+	};
     return caller.getInScopeContext();
 };
 

@@ -273,6 +273,86 @@ describe('functions', () => {
     );
   });
 
+	it.only('context() in repeats just works', async () => {
+		const el = await fixtureSync(html`
+          <fx-fore>
+              <fx-model>
+                   <fx-instance id="mapping">
+                      <data>
+                          <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
+                              <sf code="a">bf:mainTitle</sf>
+                              <sf code="b">bf:subtitle</sf>
+                              <sf code="c">bf:responsibilityStatement</sf>
+                          </df>
+                      </data>
+                  </fx-instance>
+                  <fx-instance id="desc">
+                      <data>
+                          <df>
+                              <tag>245</tag>
+                              <ind1></ind1>
+                              <ind2></ind2>
+                              <sfs>
+                                  <sf>
+                                      <code>a</code>
+                                      <value>value-of-a</value>
+                                  </sf>
+                                  <sf>
+                                      <code>b</code>
+                                      <value>value-of-b</value>
+                                  </sf>
+                              </sfs>
+                          </df>
+                      </data>
+                  </fx-instance>
+              </fx-model>
+
+              <fx-repeat ref="instance('desc')/df">
+                  <template>
+                      <fx-control ref="tag" update-event="input">
+                          <label>Datafield</label>
+                      </fx-control>
+                      <fx-control ref="sfs/sf/code" update-event="input">
+                          <label>Subfield</label>
+                      </fx-control>
+                      <fx-control ref="sfs/sf/value" update-event="input">
+                          <label>Content</label>
+                      </fx-control>
+                  </template>
+              </fx-repeat>
+
+              <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
+                  <template>
+                      <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
+                      <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
+                          <template>
+                              <fx-var name="current" value="."></fx-var>
+                              <h3 style="display: inline;">{.}</h3>
+
+                              <!-- context() does not work here, but $current does -->
+<span id="context-span">{@code}</span>
+                              <p id="result-p-with-context" style="display: inline;">{instance('desc')/df/sfs/sf[code = context()/@code]/value}</p>
+                              <p id="result-p-with-current" style="display: inline;">{instance('desc')/df/sfs/sf[code = $current/@code]/value}</p>
+                          </template>
+                      </fx-repeat>
+                  </template>
+              </fx-repeat>
+          </fx-fore>`);
+
+		await oneEvent(el, 'refresh-done');
+		const spans = el.querySelectorAll('#context-span');
+		const firstSpan = spans[0];
+		expect(firstSpan.innerText).to.equal('a');
+		const secondSpan = spans[1];
+		expect(secondSpan.innerText).to.equal('b');
+
+		const contextPs = el.querySelectorAll('#result-p-with-context');
+		const currentPs = el.querySelectorAll('#result-p-with-current');
+
+		expect(contextPs[0].innerText).to.equal(currentPs[0].innerText);
+		expect(contextPs[1].innerText).to.equal(currentPs[1].innerText);
+
+	});
 /*
   it.only('context() function returns correct nodesets', async () => {
     const el = await fixtureSync(html`
