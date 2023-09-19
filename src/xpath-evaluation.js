@@ -595,26 +595,25 @@ export function evaluateXPathToNumber(
 
 const contextFunction = (dynamicContext, string) => {
     const caller = dynamicContext.currentContext.formElement;
+	let instance = null;
     if (string) {
-        const instance = resolveId(string, caller);
-        if (instance) {
-            if (instance.nodeName === 'FX-REPEAT') {
-                const {nodeset} = instance;
-                for (let parent = caller; parent; parent = parent.parentNode) {
-                    if (parent.parentNode === instance) {
-                        const offset = Array.from(parent.parentNode.children).indexOf(parent);
-                        return nodeset[offset];
-                    }
+        instance = resolveId(string, caller);
+	} else {
+		instance = XPathUtil.getParentBindingElement(caller);
+	}
+    if (instance) {
+        if (instance.nodeName === 'FX-REPEAT') {
+            const {nodeset} = instance;
+            for (let parent = caller; parent; parent = parent.parentNode) {
+                if (parent.parentNode === instance) {
+                    const offset = Array.from(parent.parentNode.children).indexOf(parent);
+                    return nodeset[offset];
                 }
             }
-            return instance.nodeset;
         }
+        return instance.nodeset;
     }
-    const parent = XPathUtil.getParentBindingElement(caller);
-    // const p = caller.nodeName;
-    // const p = dynamicContext.domFacade.getParentElement();
 
-    if (parent) return parent.nodeset;
     return caller.getInScopeContext();
 };
 

@@ -273,6 +273,95 @@ describe('functions', () => {
     );
   });
 
+  it('context() in repeats returns the correct item', async () => {
+    const el = await fixtureSync(html`
+          <fx-fore>
+              <fx-model>
+                   <fx-instance id="mapping">
+                      <data>
+                          <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
+                              <sf code="a">bf:mainTitle</sf>
+                              <sf code="b">bf:subtitle</sf>
+                              <sf code="c">bf:responsibilityStatement</sf>
+                          </df>
+                      </data>
+                  </fx-instance>
+                  <fx-instance id="desc">
+                      <data>
+                          <df>
+                              <tag>245</tag>
+                              <ind1></ind1>
+                              <ind2></ind2>
+                              <sfs>
+                                  <sf>
+                                      <code>a</code>
+                                      <value>value-of-a</value>
+                                  </sf>
+                                  <sf>
+                                      <code>b</code>
+                                      <value>value-of-b</value>
+                                  </sf>
+                              </sfs>
+                          </df>
+                      </data>
+                  </fx-instance>
+              </fx-model>
+
+              <fx-repeat ref="instance('desc')/df">
+                  <template>
+                      <fx-control ref="tag" update-event="input">
+                          <label>Datafield</label>
+                      </fx-control>
+                      <fx-control ref="sfs/sf/code" update-event="input">
+                          <label>Subfield</label>
+                      </fx-control>
+                      <fx-control ref="sfs/sf/value" update-event="input">
+                          <label>Content</label>
+                      </fx-control>
+                  </template>
+              </fx-repeat>
+
+              <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
+                  <template>
+                      <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
+                      <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
+                          <template>
+                              <fx-var name="current" value="."></fx-var>
+                              <h3 style="display: inline;">{.}</h3>
+
+                              <!-- context() does not work here, but $current does -->
+<span id="context-item-span">{@code}</span>
+<span id="context-function-span">{context()/@code}</span>
+<span id="current-span">{$current/@code}</span>
+                              <p id="result-p-with-context" style="display: inline;">{instance('desc')/df/sfs/sf[code = context()/@code]/value}</p>
+                              <p id="result-p-with-current" style="display: inline;">{instance('desc')/df/sfs/sf[code = $current/@code]/value}</p>
+                          </template>
+                      </fx-repeat>
+                  </template>
+              </fx-repeat>
+          </fx-fore>`);
+
+    await oneEvent(el, 'refresh-done');
+    const contextItemSpans = el.querySelectorAll('#context-item-span');
+    const contextFunctionSpans = el.querySelectorAll('#context-function-span');
+
+    const firstContextItemSpan = contextItemSpans[0];
+    expect(firstContextItemSpan.innerText).to.equal('a', 'firstContextItemSpan.innerText should be OK');
+    const firstContextFunctionSpan = contextFunctionSpans[0];
+    expect(firstContextFunctionSpan.innerText).to.equal('a', 'firstContextFunctionSpan.innerText should be OK');
+
+    const secondContextItemSpan = contextItemSpans[1];
+    expect(secondContextItemSpan.innerText).to.equal('b', 'secondContextItemSpan.innerText should be OK');
+    const secondContextFunctionSpan = contextFunctionSpans[1];
+    expect(secondContextFunctionSpan.innerText).to.equal('b', 'secondContextFunctionSpan.innerText should be OK');
+
+    const contextPs = el.querySelectorAll('#result-p-with-context');
+    const currentPs = el.querySelectorAll('#result-p-with-current');
+
+    expect(contextPs[0].innerText).to.equal(currentPs[0].innerText, 'The second result in the P should be correct');
+    expect(contextPs[1].innerText).to.equal(currentPs[1].innerText, 'The second result in the P should be correct');
+
+  });
 /*
   it.only('context() function returns correct nodesets', async () => {
     const el = await fixtureSync(html`
