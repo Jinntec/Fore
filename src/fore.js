@@ -195,6 +195,7 @@ export class Fore {
         Array.from(children).forEach(element => {
           if (element.nodeName.toUpperCase() === 'FX-FORE') {
             resolve('done');
+            return;
           }
           if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
             // console.log('refreshing', element, element?.ref);

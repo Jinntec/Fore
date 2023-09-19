@@ -528,6 +528,13 @@ export class FxFore extends HTMLElement {
             storing expressions and their nodes for re-evaluation
              */
         Array.from(tmplExpressions).forEach(node => {
+			const ele = node.nodeType === Node.ATTRIBUTE_NODE ?
+				  node.ownerElement :
+				  node.parentNode;
+			if (ele.closest('fx-fore') !== this) {
+				// We found something in a sub-fore. Act like it's not there
+				return;
+			}
             if (this.storedTemplateExpressionByNode.has(node)) {
                 // If the node is already known, do not process it twice
                 return;

@@ -151,25 +151,14 @@ export class FxInstance extends HTMLElement {
    * @returns {Document|T|any|Element}
    */
   getDefaultContext() {
-    // console.log('getDefaultContext ', this.instanceData.firstElementChild);
+    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
+    // such as an @src attribute
+    const instanceData = this.getInstanceData();
     if (this.type === 'xml') {
-      // if the are in 'mergePartial' mode we use the partial instance as default context if present
-      const foreElement = this.closest('fx-fore');
-/*
-      if(foreElement.mergePartial){
-
-        const merged = this.mergeXML(this.instanceData,this.partialInstance);
-        console.log('merged', merged);
-        this.instanceData = merged;
-        // return this.partialInstance?.firstElementChild;
-
-      }
-*/
-      return this.instanceData.firstElementChild;
+      return instanceData.firstElementChild;
     }
-    return this.instanceData;
+    return instanceData;
   }
-
 
   /**
    * does the actual loading of data. Handles inline data, data loaded via fetch() or data constructed from
