@@ -418,6 +418,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         {...variablesInScope, ...variables},
         fxEvaluateXPath.ALL_RESULTS_TYPE,
         {
+			debug: true,
             currentContext: {formElement, variables},
             moduleImports: {
                 xf: XFORMS_NAMESPACE_URI,
@@ -843,7 +844,12 @@ const instance = (dynamicContext, string) => {
 */
 
     if (inst) {
-        return inst.getDefaultContext();
+        const context = inst.getDefaultContext();
+		if (!context) {
+			debugger;
+			return null;
+		}
+		return context;
     }
     return null;
 };
