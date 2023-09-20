@@ -84,7 +84,7 @@
 
     <p class="note">
         The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
-        attached the nested Fore to the shadowDOM and is not reachable from the outside.
+        attached the nested Fore to the shadowDOM and is not reachable from the outside with global CSS.
     </p>
     <fx-fore>
         <fx-message event="ready">outer fore ready</fx-message>
@@ -121,7 +121,7 @@
             </fx-control>
             <fx-control id="to" ref="to/email"
                         url="email.html"
-                        initial=".">
+                        initial="." shadow>
                 <label>To</label>
             </fx-control>
             <fx-control ref="subject">

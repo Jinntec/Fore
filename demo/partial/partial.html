@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Reading partial instances</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-control{
+            width: 100%;
+            margin:1rem 0;
+        }
+        fx-items{
+            column-count: 2;
+        }
+        textarea{
+            width: 100%;
+            height: 60vh;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Merging partial instances</h1>
+    <p>merging <a href="template.xml" target="_blank">template.xml</a> with <a href="e1.xml" target="_blank">partial</a> </p>
+<!--
+    <demo-snippet>
+        <template>
+-->
+            <fx-fore merge-partial="true">
+
+                <fx-model>
+                    <fx-send submission="load-partial" event="model-construct-done"></fx-send>
+
+                    <fx-instance src="template.xml"
+                                xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+                    <fx-instance id="partial" src="e1.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                    <fx-submission id="load-partial"
+                                   url="e1.xml"
+                                   method="get"
+                                   replace="merge"></fx-submission>
+
+                    <fx-function signature="merge($template as element()*, $partial as element()*) as element()*" type="text/xquery">
+                        return $template | $partial//*|@*|text()
+                    </fx-function>
+                </fx-model>
+
+                <fx-control ref="//authority">
+                    <label>Idno</label>
+                </fx-control>
+                <fx-control ref="//idno">
+                    <label>Idno</label>
+                </fx-control>
+
+                <h2>Merged data</h2>
+                <textarea>
+                    {log('default')}
+                </textarea>
+
+                <fx-trigger>
+                    <button>merge</button>
+                    <fx-replace ref="instance('default')" with="merge(instance('default'), instance('partial')/*)"></fx-replace>
+                </fx-trigger>
+
+                <code>
+                    {merge(instance('default'), instance('partial'))"}
+                </code>
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+</div>
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

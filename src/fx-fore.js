@@ -30,6 +30,12 @@ export class FxFore extends HTMLElement {
     static get properties() {
         return {
             /**
+             * merge-partial
+             */
+            mergePartial:{
+                type: Boolean
+            },
+            /**
              * Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being
              * in viewport.
              *
@@ -189,6 +195,8 @@ export class FxFore extends HTMLElement {
         this.someInstanceDataStructureChanged = false;
         this.repeatsFromAttributesCreated = false;
         this.validateOn = this.hasAttribute('validate-on') ? this.getAttribute('validate-on'):'update';
+        // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
+        this.mergePartial = false;
     }
 
     connectedCallback() {
@@ -520,6 +528,13 @@ export class FxFore extends HTMLElement {
             storing expressions and their nodes for re-evaluation
              */
         Array.from(tmplExpressions).forEach(node => {
+			const ele = node.nodeType === Node.ATTRIBUTE_NODE ?
+				  node.ownerElement :
+				  node.parentNode;
+			if (ele.closest('fx-fore') !== this) {
+				// We found something in a sub-fore. Act like it's not there
+				return;
+			}
             if (this.storedTemplateExpressionByNode.has(node)) {
                 // If the node is already known, do not process it twice
                 return;

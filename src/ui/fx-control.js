@@ -400,7 +400,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     /**
-     * loads an external Fore from an HTML file given by `url` attribute.
+     * loads an external Fore from an HTML file given by `url` attribute and embed it as child of this control.
      *
      * Will look for the `<fx-fore>` element within the returned HTML file and return that element.
      *
@@ -459,6 +459,10 @@ export default class FxControl extends XfAbstractControl {
             );
 
             const dummy = this.querySelector('input');
+            /*
+            todo: the mechanism to import constructed stylesheets as in fore-component is still missing here.
+            There no way yet to specify CSS for a embedded fx-fore in shadowDOM.
+             */
             if (this.hasAttribute('shadow')) {
                 dummy.parentNode.removeChild(dummy);
                 this.shadowRoot.appendChild(imported);

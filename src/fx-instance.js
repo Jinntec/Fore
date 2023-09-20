@@ -52,6 +52,7 @@ export class FxInstance extends HTMLElement {
     this.model = this.parentNode;
     this.attachShadow({ mode: 'open' });
     this.originalInstance = null;
+    this.partialInstance = null;
   }
 
   connectedCallback() {
@@ -92,6 +93,7 @@ export class FxInstance extends HTMLElement {
             </style>
             ${html}
         `;
+    this.partialInstance = {};
   }
 
   /**
@@ -149,11 +151,13 @@ export class FxInstance extends HTMLElement {
    * @returns {Document|T|any|Element}
    */
   getDefaultContext() {
-    // console.log('getDefaultContext ', this.instanceData.firstElementChild);
+    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
+    // such as an @src attribute
+    const instanceData = this.getInstanceData();
     if (this.type === 'xml') {
-      return this.instanceData.firstElementChild;
+      return instanceData.firstElementChild;
     }
-    return this.instanceData;
+    return instanceData;
   }
 
   /**

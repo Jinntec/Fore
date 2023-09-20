@@ -41,12 +41,14 @@ conjunction with it.
 * state engine with dependency tracking for optimized updating
 * lifecycle with detailed state events
 * descriptive actions for data mutations (setvalue, insert, delete)
-* multiple XML (or JSON) data instances
+* binding for structured data like XML, HTML and JSON
 * group, repeat, dialog + switch container components
-* generic UI control to bind any kind of control 
-* bound template expressions
+* generic UI control binding any native control or third-party component 
+* auto-updating Template Expressions
 * powerful XPath/XQuery 3.1 support in the browser
 * Submission module declaratively wrapping the fetch API
+* efficient partial DOM updates
+* no build (tool) required
 
 
 ## An xformish framework in Web Components
