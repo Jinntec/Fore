@@ -1,0 +1,122 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0"><teiHeader>
+        <fileDesc>
+            <titleStmt>
+                
+                <title>Weihinschrift für Serapis aus Panóias (Conventus Bracaraugustanus, HiC)</title>
+                
+                <editor/>
+                
+                
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license. </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        
+                        <idno type="EDEp">E0000002</idno>
+                    </msIdentifier>
+                    
+                    <history>
+                        <origin>
+                            
+                            <origDate when-custom="" notBefore-custom="" notAfter-custom="" datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">2./3. Jh.</origDate>
+                        </origin>
+                    </history>
+                    
+                    
+                    <msPart type="main" xml:id="29786d55-6da0-4ee9-b86d-556da0aee94f"><msIdentifier>
+                            
+                            <repository/>
+                            
+                            <idno type="TM">227747</idno>
+                        </msIdentifier><msContents>
+                            
+                            
+                            
+                            <msItem>
+                                
+                                
+                                <textLang mainLang="xpu"/>
+                                
+                                
+
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                            </msItem>
+                        </msContents><physDesc>
+                            <objectDesc>
+                                <supportDesc>
+                                    <support>
+                                        <dimensions>
+                                            
+                                            <width/>
+                                            
+                                            <height>33</height>
+                                            
+                                            <depth/>
+                                        </dimensions>
+                                        
+                                        
+                                    </support>
+                                    
+                                    <condition/>
+                                </supportDesc>
+                                <layoutDesc>
+                                    <layout><dimensions>
+                                            
+                                            <height>5</height>
+                                            
+                                            <width>5</width>
+                                        </dimensions><rs type="metric">no</rs></layout>
+                                </layoutDesc>
+                            </objectDesc>
+                            <handDesc>
+                                <handNote>
+                                    
+                                    
+                                    <rs type="ligature"/>
+                                </handNote>
+                            </handDesc>
+                        </physDesc><history>
+                            
+                            
+                            <provenance type="found" when="1721">
+                                
+                                
+                            </provenance>
+                            
+                        </history></msPart>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    
+                    <term ref="#pagan"/>
+                </keywords>
+                
+            </textClass>
+        </profileDesc>
+        
+        <revisionDesc status="draft"><change type="created" when="2023-04-14T10:31:23.629Z" who="edep"/><change type="changed" when="2023-09-04T13:31:18.166Z" who="edep"/></revisionDesc>
+    </teiHeader><text>
+        <body><div type="apparatus" corresp="#29786d55-6da0-4ee9-b86d-556da0aee94f"><ab>Z. 2/3, CIL II 2395c: σὺν μοίρᾳ καὶ μυστηρίοις.</ab></div><div type="translation" corresp="#29786d55-6da0-4ee9-b86d-556da0aee94f" resp=""><ab>
+            </ab></div><div type="edition"><div type="textpart" subtype="fragment" n="a" corresp="#29786d55-6da0-4ee9-b86d-556da0aee94f"/></div></body>
+    </text></TEI>

@@ -435,12 +435,11 @@ export class FxModel extends HTMLElement {
     }
 
     getDefaultInstance() {
-        return this?.instances[0];
+        return this.instances[0];
     }
 
     getDefaultInstanceData() {
-        console.log('default instance data ', this.instances[0].instanceData);
-        return this.instances[0].instanceData;
+       return this.instances[0].getInstanceData();
     }
 
     getInstance(id) {

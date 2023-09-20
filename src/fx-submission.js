@@ -323,8 +323,35 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
     */
 
+        const targetInstance = this._getTargetInstance();
+
+/*
+        if(this.replace === 'merge'){
+            if (targetInstance && targetInstance.type === 'xml') {
+                targetInstance.partialInstance = data;
+
+                const merged = this._mergeXML(targetInstance.instanceData,targetInstance.partialInstance);
+                console.log('merged', merged);
+
+                targetInstance.instanceData = merged;
+                console.log('merging partial instance',targetInstance.partialInstance)
+                /!*
+                targetInstance.instanceData not touched here as we want to keep the default instance unmodified as the full template for the UI.
+                *!/
+
+                // Skip any refreshes if the model is not yet inited#
+                // duplicate from replace='instance'
+                // if (this.model.inited) {
+                    this.model.updateModel(); // force update
+                const owner = this.getOwnerForm();
+                // owner.mergePartial = true;
+                owner.refresh(true);
+                // }
+            }
+        }
+*/
+
         if (this.replace === 'instance') {
-            const targetInstance = this._getTargetInstance();
             if (targetInstance) {
                 if (this.targetref) {
                     const [theTarget] = evaluateXPath(
@@ -388,6 +415,81 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
     }
 
+
+/*
+    _mergeXML(xml1, xml2) {
+        const parser = new DOMParser();
+        const serializer = new XMLSerializer();
+
+        // const doc1 = parser.parseFromString(xml1, 'text/xml');
+        // const doc2 = parser.parseFromString(xml2, 'text/xml');
+
+        this.mergeNodes(xml1.documentElement, xml2.documentElement);
+
+        // return serializer.serializeToString(xml1);
+        return xml1;
+    }
+*/
+
+/*
+    _mergeNodes(node1, node2) {
+        const childNodes1 = node1.childNodes;
+        const childNodes2 = node2.childNodes;
+
+        for (let i = 0; i < childNodes2.length; i++) {
+            const child2 = childNodes2[i];
+            let nodeMerged = false;
+
+            if (child2.nodeType === 1) { // Element Node
+                for (let j = 0; j < childNodes1.length; j++) {
+                    const child1 = childNodes1[j];
+                    if (child1.nodeType === 1 && child1.tagName === child2.tagName) {
+                        this._mergeNodes(child1, child2);
+                        nodeMerged = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!nodeMerged) {
+                const clonedNode = child2.cloneNode(true);
+                node1.appendChild(clonedNode);
+            }
+        }
+    }
+*/
+
+/*
+    mergeNodes(node1, node2) {
+        // Overwrite attributes in node1 with values from node2
+        for (const { name, value } of node2.attributes) {
+            node1.setAttribute(name, value);
+        }
+
+        const childNodes1 = Array.from(node1.childNodes);
+        const childNodes2 = Array.from(node2.childNodes);
+
+        // Append all child nodes from node2 to node1
+        childNodes2.forEach(child2 => {
+            if (child2.nodeType === 1) {
+                // If it's an element node, check if a matching element exists in node1
+                const matchingElement = childNodes1.find(
+                    child1 => child1.nodeType === 1 && child1.tagName === child2.tagName
+                );
+                if (matchingElement) {
+                    this.mergeNodes(matchingElement, child2); // Recursively merge matching elements
+                } else {
+                    const clonedNode = child2.cloneNode(true);
+                    node1.appendChild(clonedNode);
+                }
+            } else {
+                // For text nodes, simply append them to node1
+                const clonedNode = child2.cloneNode(true);
+                node1.appendChild(clonedNode);
+            }
+        });
+    }
+*/
     /**
      * select relevant nodes
      *
