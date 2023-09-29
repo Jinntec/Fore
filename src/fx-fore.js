@@ -55,6 +55,9 @@ export class FxFore extends HTMLElement {
              */
             validateOn: {
                 type: String
+            },
+            version: {
+                type: String
             }
         };
     }
@@ -69,6 +72,8 @@ export class FxFore extends HTMLElement {
      */
     constructor() {
         super();
+        this.version = '[VI]Version: {version} - built on {date}[/VI]';
+
         this.model = {};
         this.inited=false;
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
