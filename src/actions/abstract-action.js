@@ -187,7 +187,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // console.log('execute', this.event);
 
 
-        if (e && e.target.nodeType !== Node.DOCUMENT_NODE ){
+        if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target !== window ){
             /*
              ### ignore event if there's a parent fore and the current element is NOT part of it. This avoids
              ### an event to fire twice on an inner one and the surrounding one(s).
