@@ -122,7 +122,7 @@ class FxLoad extends AbstractAction {
             );
             return;
         }
-        this.url = this.evaluateAttributeTemplateExpression(this.url,this);
+        const resolvedUrl = this.evaluateAttributeTemplateExpression(this.url,this);
         if (this.attachTo === '_blank') {
             window.open(this.url);
         }
@@ -132,7 +132,7 @@ class FxLoad extends AbstractAction {
         }
 
         try {
-            const response = await fetch(this.url, {
+            const response = await fetch(resolvedUrl,  {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'same-origin',
