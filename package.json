@@ -86,8 +86,8 @@
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
     "preversion": "npm run test",
     "version": "npm run build && git add -A dist",
-      "postversion": "git nppush && git push --tags && rm -rf build/",
-      "install-demos": "cd demo && npm i",
+    "postversion": "git nppush && git push --tags && rm -rf build/",
+    "install-demos": "cd demo && npm i",
     "start-cypress": "es-dev-server --app-index doc/index.html --node-resolve"
   },
   "keywords": [
