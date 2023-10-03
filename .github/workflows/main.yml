@@ -32,4 +32,4 @@ jobs:
             - name: Cypress run
               uses: cypress-io/github-action@v6
               with:
-                start: npm run start-cypress
+                start: npm run start-cypress > /dev/null
