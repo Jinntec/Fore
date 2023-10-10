@@ -11,7 +11,7 @@ import {XPathUtil} from "../xpath-util.js";
  */
 class FxRefresh extends AbstractAction {
   async perform() {
-    this.dispatchEvent(
+    await this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,
           bubbles: true,
@@ -23,23 +23,23 @@ class FxRefresh extends AbstractAction {
     if (this.hasAttribute('self')) {
       const control = XPathUtil.getClosest('fx-control', this);
       if (control) {
-        control.refresh();
+        await control.refresh();
         return;
       }
     }
     if(this.hasAttribute('force')){
-      this.getOwnerForm().forceRefresh();
+      await this.getOwnerForm().forceRefresh();
       return;
     }
     if(this.hasAttribute('control')){
       const targetId = this.getAttribute('control');
       const ctrl = resolveId(targetId, this);
       if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
-        ctrl.refresh();
+        await ctrl.refresh();
       }
       return;
     }
-    this.getOwnerForm().refresh();
+    await this.getOwnerForm().refresh();
   }
 }
 

@@ -38,6 +38,7 @@ export default class FxControl extends XfAbstractControl {
         super();
         this.inited = false;
         this.attachShadow({mode: 'open'});
+
     }
 
     static get properties() {
@@ -61,6 +62,7 @@ export default class FxControl extends XfAbstractControl {
         this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
         this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
         this.loaded = false;
+		this.isLoading = false;
         this.initialNode = null;
         this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
 
@@ -246,7 +248,7 @@ export default class FxControl extends XfAbstractControl {
         // this.visited = true;
     }
 
-    _replaceNode(node) {
+    async _replaceNode(node) {
         // Note: clone the node while replacing to prevent the instances to leak through
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             this.modelItem.node.nodeValue = node.nodeValue;
@@ -257,7 +259,7 @@ export default class FxControl extends XfAbstractControl {
         } else (
             Fore.dispatch(this, "warn", {'message': 'trying to replace a node that is neither an Attribute, Elemment or Text node'})
         )
-        this.getOwnerForm().refresh();
+        await this.getOwnerForm().refresh();
     }
 
     renderHTML(ref) {
@@ -377,9 +379,21 @@ export default class FxControl extends XfAbstractControl {
                 // console.log('initialNodes', this.initialNode);
             }
 
+			if (this.isLoading) {
+				console.log('??? Already loading!');
+				console.trace('!!!');
+				return;
+			}
+				console.log('??? first load!!');
+
             // ### load the markup from Url
+			this.isLoading = true;
             await this._loadForeFromUrl();
             this.loaded = true;
+			this.isLoading = false;
+							console.log('??? first load done!!');
+
+
 
             // ### replace default instance of embedded Fore with initial nodes
             // const innerInstance = this.querySelector('fx-instance');
@@ -442,18 +456,27 @@ export default class FxControl extends XfAbstractControl {
             const imported = document.importNode(theFore, true);
 
             imported.classList.add('widget'); // is the new widget
+			console.log(`??? INSTANCE start ${imported.querySelector('fx-instance').id}`);
+			let doneWithModelConstruct;
+			const donePromise = new Promise(done => doneWithModelConstruct = done)
             imported.addEventListener(
                 'model-construct-done',
-                e => {
+               async  e => {
                     const defaultInst = imported.querySelector('fx-instance');
-                    if (this.initialNode) {
+
+if (this.initialNode) {
                         const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
                         // Note: Clone the input to prevent the inner fore from editing the outer node
                         doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
+	console.log(`??? INSTANCE done ${defaultInst.id}`);
                         defaultInst.setInstanceData(doc);
                     }
-                    imported.getModel().updateModel();
-                    imported.refresh();
+                    await imported.getModel().updateModel();
+                    await imported.refresh();
+
+					e.stopPropagation();
+
+					doneWithModelConstruct();
                 },
                 {once: true},
             );
@@ -470,6 +493,7 @@ export default class FxControl extends XfAbstractControl {
                 dummy.replaceWith(imported);
             }
 
+			await donePromise;
 
             if (!theFore) {
                 this.dispatchEvent(
@@ -495,7 +519,7 @@ export default class FxControl extends XfAbstractControl {
 
     async refresh(force) {
         // console.log('fx-control refresh', this);
-        super.refresh(force);
+        await super.refresh(force);
         // console.log('refresh template', this.template);
         // const {widget} = this;
 
@@ -503,7 +527,7 @@ export default class FxControl extends XfAbstractControl {
         const widget = this.getWidget();
         this._handleBoundWidget(widget);
         this._handleDataAttributeBinding();
-        Fore.refreshChildren(this, force);
+        await Fore.refreshChildren(this, force);
     }
 
 

@@ -276,7 +276,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
-      Fore.refreshChildren(this, force);
+      await Fore.refreshChildren(this, force);
     }
     // this.style.display = 'block';
     // this.style.display = this.display;

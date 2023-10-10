@@ -7,6 +7,20 @@ import getInScopeContext from './getInScopeContext.js';
 import {XPathUtil} from './xpath-util.js';
 import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
 
+// const log = window.console.log;
+// const body = document.querySelector('body');
+// const pre = document.createElement('pre');
+// pre.setAttribute('style', 'position: fixed; top: 0;  background-color: white; overflow:scroll; height:100%; width: 25%; word-wrap: break-word; word-break: break-word;');
+// body.appendChild(pre);
+// window.console.log = (...args) => {
+// 	log.call(console, ...args);
+
+// 	const text = args[0];
+// 	if (text.includes('???')) {
+// 	pre.innerText += JSON.stringify(text) + '\n';
+// 	}
+// }
+
 /**
  * Main class for Fore.Outermost container element for each Fore application.
  *
@@ -245,12 +259,22 @@ export class FxFore extends HTMLElement {
         this._injectDevtools();
 
         const slot = this.shadowRoot.querySelector('slot#default');
+		let isRunning = false;
         slot.addEventListener('slotchange', async event => {
+			console.log('??? slotchange start'+event.target.nodeName +  event.eventPhase + " -> " + isRunning);
+			isRunning = true;
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
-            if(this.inited) return;
+            if(this.inited){
+						console.log('??? slotchange end 4'+event.target.nodeName +  event.eventPhase + " -> " + isRunning);
+
+				return;
+			}
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
                 // Fore.copyDom(this);
+										isRunning = false;
+			console.log('??? slotchange end 3'+event.target.nodeName +  event.eventPhase + " -> " + isRunning);
+
                 return;
             }
 
@@ -264,6 +288,9 @@ export class FxFore extends HTMLElement {
                 modelElement = generatedModel;
 				// We are going to get a new slotchange event immediately, because we changed a slot.
 				// so cancel this one.
+										isRunning = false;
+			console.log('??? slotchange end 2'+event.eventPhase + " -> " + isRunning);
+
 				return;
             }
             if (!modelElement.inited) {
@@ -273,12 +300,16 @@ export class FxFore extends HTMLElement {
                 );
 
                 await modelElement.modelConstruct();
-				this._handleModelConstructDone();
+
+				await this._handleModelConstructDone();
             }
             this.model = modelElement;
 
             this._createRepeatsFromAttributes();
             this.inited = true;
+						isRunning = false;
+
+			console.log('??? slotchange end'+event.eventPhase + " -> " + isRunning);
 
         });
         this.addEventListener('path-mutated', () => {
@@ -370,10 +401,10 @@ export class FxFore extends HTMLElement {
      * @param entries
      * @param observer
      */
-    handleIntersect(entries, observer) {
+   async handleIntersect(entries, observer) {
         // console.time('refreshLazy');
 
-        entries.forEach(entry => {
+        await entries.map(async entry => {
             const {target} = entry;
 
             const fore = Fore.getFore(target);
@@ -390,10 +421,10 @@ export class FxFore extends HTMLElement {
                 // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
                 if (typeof target.refresh === 'function') {
                     // console.log('refreshing target', target);
-                    target.refresh(target, true);
+                    await target.refresh(target, true);
                 } else {
                     // console.log('refreshing children', target);
-                    Fore.refreshChildren(target, true);
+                    await Fore.refreshChildren(target, true);
                 }
             }
         });
@@ -428,11 +459,11 @@ export class FxFore extends HTMLElement {
         // console.time('refresh');
         // console.group('### forced refresh', this);
 
-        Fore.refreshChildren(this, true);
+        await Fore.refreshChildren(this, true);
         this._updateTemplateExpressions();
         this.someInstanceDataStructureChanged = false; // reset
         this._processTemplateExpressions();
-        Fore.dispatch(this, 'refresh-done', {});
+        await Fore.dispatch(this, 'refresh-done', {});
 
         // console.groupEnd();
         // console.timeEnd('refresh');
@@ -447,12 +478,12 @@ export class FxFore extends HTMLElement {
             let needsRefresh = false;
 
             // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-            this.toRefresh.forEach(modelItem => {
+            await this.toRefresh.map(async modelItem => {
                 // check if modelItem has boundControls - if so, call refresh() for each of them
                 const controlsToRefresh = modelItem.boundControls;
                 if (controlsToRefresh) {
-                    controlsToRefresh.forEach(ctrl => {
-                        ctrl.refresh(force);
+                    await controlsToRefresh.map(async ctrl => {
+                        await ctrl.refresh(force);
                     });
                 }
 
@@ -462,13 +493,13 @@ export class FxFore extends HTMLElement {
                     const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
                     // ### iterate dependant modelItems and refresh all their boundControls
                     if (deps.length !== 0) {
-                        deps.forEach(dep => {
+                        await deps.map(async dep => {
                             // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
                             const basePath = XPathUtil.getBasePath(dep);
                             const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
                             // ### refresh all boundControls
-                            modelItemOfDep.boundControls.forEach(control => {
-                                control.refresh(force);
+                            await modelItemOfDep.boundControls.forEach(async control => {
+                                await control.refresh(force);
                             });
                         });
                         needsRefresh = true;
@@ -490,7 +521,7 @@ export class FxFore extends HTMLElement {
             });
 */
 
-            Fore.refreshChildren(this, true);
+            await Fore.refreshChildren(this, true);
             // console.timeEnd('refreshChildren');
         }
 
@@ -505,7 +536,7 @@ export class FxFore extends HTMLElement {
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
         this.style.visibility='visible';
-        Fore.dispatch(this, 'refresh-done', {});
+        await Fore.dispatch(this, 'refresh-done', {});
     }
 
     /**
@@ -644,36 +675,36 @@ export class FxFore extends HTMLElement {
      *
      * @private
      */
-    _handleModelConstructDone() {
+    async _handleModelConstructDone() {
         /*
         listening on beforeunload after model is constructed - this is to be able to evaluate a condition on the data
         that specifies whether or not to show confirmation.
          */
         if(this.hasAttribute('show-confirmation')){
             const condition = this.getAttribute('show-confirmation');
-            if(condition
+            if (condition
                 && condition !== 'show-confirmation'
                 && condition !== 'true'
                 && condition !== ''){
                 window.addEventListener('beforeunload', event => {
-                    const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this)
+                    const mustDisplay = evaluateXPathToBoolean(condition, this.getModel().getDefaultContext(), this);
                     if(mustDisplay){
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                })
-            }else{
+                });
+            } else {
                 window.addEventListener('beforeunload', event => {
                     // if(AbstractAction.dataChanged){
                     if(FxModel.dataChanged){
                         return event.returnValue = 'are you sure';
                     }
                     event.preventDefault();
-                })
+                });
             }
         }
 
-        this._initUI();
+        await this._initUI();
     }
 
     /**
@@ -818,6 +849,7 @@ export class FxFore extends HTMLElement {
 
 		// First refresh should be forced
         await this.refresh(true);
+
         // this.style.display='block'
         this.classList.add('fx-ready');
         document.body.classList.add('fx-ready');

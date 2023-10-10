@@ -76,7 +76,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         const create = this.closest('[create]');
         if(create){
           // ### check if parent element exists
-          let attrName,parentPath, parentNode;
+          let attrName; let parentPath; let parentNode;
 
           if(this.ref.includes('/')){
             parentPath = this.ref.substring(0, this.ref.indexOf('/'));
@@ -92,7 +92,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
               }
             }
           }else{
-            let inscope = getInScopeContext(this, this.ref);
+            const inscope = getInScopeContext(this, this.ref);
 
             if(this.ref.includes('@')) {
               attrName = this.ref.substring(this.ref.indexOf('@') + 1);
@@ -157,7 +157,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
         if(this.getOwnerForm().initialRun){
-          Fore.dispatch(this,'init',{});
+          await Fore.dispatch(this,'init',{});
         }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         if (currentVal !== this.value ) {
@@ -197,9 +197,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     return this.getModel().parentNode;
   }
 
-  _dispatchEvent(event) {
+  async _dispatchEvent(event) {
     if (this.getOwnerForm().ready) {
-      Fore.dispatch(this, event, {});
+      await Fore.dispatch(this, event, {});
     }
   }
 

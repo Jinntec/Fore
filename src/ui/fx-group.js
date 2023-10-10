@@ -85,8 +85,8 @@ class FxGroup extends FxContainer {
   }
 
   async refresh(force) {
-    super.refresh(force);
-    Fore.refreshChildren(this,force);
+    await super.refresh(force);
+    await Fore.refreshChildren(this,force);
   }
 }
 

@@ -104,11 +104,12 @@ export class FxModel extends HTMLElement {
     async modelConstruct() {
         // console.log('### <<<<< dispatching model-construct >>>>>');
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-        Fore.dispatch(this, 'model-construct', {model: this});
+       Fore.dispatch(this, 'model-construct', {model: this});
 
         // console.time('instance-loading');
         const instances = this.querySelectorAll('fx-instance');
         if (instances.length > 0) {
+
             const promises = [];
             instances.forEach(instance => {
                 promises.push(instance.init());
@@ -117,15 +118,18 @@ export class FxModel extends HTMLElement {
 			// Wait until all the instances are built
 			await Promise.all(promises);
 
+
             this.instances = Array.from(instances);
             // console.log('_modelConstruct this.instances ', this.instances);
 			// Await until the model-construct-done event is handled off
 
             await Fore.dispatch(this, 'model-construct-done', {model: this});
+
             this.inited = true;
             this.updateModel();
         } else {
             // ### if there's no instance one will created
+
             await this.dispatchEvent(
                 new CustomEvent('model-construct-done', {
                     composed: false,

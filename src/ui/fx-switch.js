@@ -19,6 +19,7 @@ class FxSwitch extends FxContainer {
     super();
     this.formerCase = {};
   }
+
   connectedCallback() {
     if (super.connectedCallback) {
       super.connectedCallback();

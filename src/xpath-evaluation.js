@@ -846,7 +846,7 @@ const instance = (dynamicContext, string) => {
     if (inst) {
         const context = inst.getDefaultContext();
 		if (!context) {
-			debugger;
+//			debugger;
 			return null;
 		}
 		return context;

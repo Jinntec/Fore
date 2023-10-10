@@ -81,7 +81,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
   }
 */
 
-  refresh(force) {
+	async refresh(force) {
     this.modelItem = this.getModelItem();
     // ### register ourselves as boundControl
     if (!this.modelItem.boundControls.includes(this)) {
@@ -107,7 +107,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     }
 */
 
-    Fore.refreshChildren(this, force);
+    await Fore.refreshChildren(this, force);
   }
 }
 

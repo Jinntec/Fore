@@ -173,7 +173,6 @@ export class Fore {
    * @returns {Promise<unknown>}
    */
   static async refreshChildren(startElement, force) {
-    const refreshed = new Promise(resolve => {
       /*
       if there's an 'refresh-on-view' attribute the element wants to be handled by
       handleIntersect function that calls the refresh of the respective element and
@@ -192,24 +191,21 @@ export class Fore {
 */
       const { children } = startElement;
       if (children) {
-        Array.from(children).forEach(element => {
+        await Array.from(children).map(async element => {
           if (element.nodeName.toUpperCase() === 'FX-FORE') {
-            resolve('done');
-            return;
+            return 'done';
           }
-          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-            // console.log('refreshing', element, element?.ref);
-            // console.log('refreshing ',element);
-            element.refresh(force);
-          } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
-            Fore.refreshChildren(element, force);
-          }
-        });
-      }
-      resolve('done');
-    });
+			if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+				// console.log('refreshing', element, element?.ref);
+				// console.log('refreshing ',element);
+				await element.refresh(force);
+			} else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
+				await Fore.refreshChildren(element, force);
+			}
 
-    return refreshed;
+			return 'done';
+		});
+	  }
   }
 
   static copyDom(inputElement){
@@ -384,20 +380,27 @@ export class Fore {
       if (!XPathUtil.contains(target?.ownerDocument, target)) {
       // The target is gone from the document. This happens when we are done with a refresh that removed the component
       return;
-    }
+      }
+
+
     const event = new CustomEvent(eventName, {
       composed: false,
       bubbles: true,
       detail,
     });
-    event.listenerPromises = [];
+
+event.listenerPromises = [];
 
     target.dispatchEvent(event);
 
-    // By now, all listeners for the event should have registered their completion promises to us.
-    if (event.listenerPromises.length) {
-      await Promise.all(event.listenerPromises);
-    }
+      // By now, all listeners for the event should have registered their completion promises to us.
+
+      if (event.listenerPromises.length) {
+
+		  await Promise.all(event.listenerPromises);
+
+      }
+
     // console.log('!!! DISPATCH_DONE', eventName);
   }
 
@@ -490,6 +493,7 @@ export class Fore {
         imported.addEventListener(
             'model-construct-done',
             e => {
+
               // console.log('subcomponent ready', e.target);
               const defaultInst = imported.querySelector('fx-instance');
               // console.log('defaultInst', defaultInst);
@@ -503,7 +507,7 @@ export class Fore {
               // console.log('new data', defaultInst.getInstanceData());
               // theFore.getModel().modelConstruct();
               imported.getModel().updateModel();
-              imported.refresh();
+				imported.refresh();
               return 'done';
 
             },
