@@ -242,6 +242,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (serialized && instance.getAttribute('type') === 'json') {
             data = JSON.parse(serialized);
         }
+        if (serialized && instance.getAttribute('type') === 'text') {
+            data = serialized;
+        }
         return data;
     }
 
@@ -262,6 +265,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (instanceType === 'json') {
             // console.warn('JSON serialization is not yet supported')
             return JSON.stringify(relevantNodes);
+        }
+        if (instanceType === 'text') {
+            return relevantNodes;
         }
         throw new Error('unknown instance type ', instanceType);
     }
@@ -394,10 +400,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
 
         if (this.replace === 'all') {
-            document.open();
-            document.write(data);
-            document.close();
-            window.location.href = resolvedUrl;
+            const target = this._getProperty('target');
+            if(target && target === '_blank'){
+                const win = window.open("", "_blank");
+                win.document.write(data);
+                win.document.close();
+            }else{
+                document.open();
+                document.write(data);
+                document.close();
+                window.location.href = resolvedUrl;
+            }
             // document.getElementsByTagName('html')[0].innerHTML = data;
         }
         if (this.replace === 'target' && contentType.startsWith('text/html')) {

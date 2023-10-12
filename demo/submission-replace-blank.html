@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Submission - new tab</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link rel="stylesheet" href="../resources/demo.css">
+
+
+
+
+    <custom-style>
+        <style is="custom-style">
+            .dynamic {
+                background: #76ff03;
+            }
+
+            [unresolved] {
+                display: none;
+            }
+
+            fx-trigger {
+                display: block;
+            }
+
+            .demo{
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+                background-color: rgba(135,135,135, 0.2);
+                box-shadow: rgba(0, 0, 0, 0.2) 2px 8px 8px;
+                border: 2px rgba(255,255,255,0.4) solid;
+                border-bottom: 2px rgba(40,40,40,0.35) solid;
+                border-right: 2px rgba(40,40,40,0.35) solid;
+
+            }
+
+
+        </style>
+    </custom-style>
+
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Send response to new tab</h1>
+    <p>In this demo a little CSV file it loaded into an instance of type 'text'. When the submission is triggered
+    it will use the '#echo' handler to just return that instance back but sending it to a new browser tab.</p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-message event="ready">Hey it's ready</fx-message>
+
+                <fx-model>
+                    <fx-instance src="data/sample.csv" type="text">
+                    </fx-instance>
+
+                    <fx-submission id="send"
+                                   url="#echo"
+                                   method="post"
+                                   replace="all"
+                                   target="_blank">
+                    </fx-submission>
+                </fx-model>
+                <fx-group collapse="true">
+                    <fx-trigger>
+                        <button>open response in new tab</button>
+                        <fx-send submission="send"></fx-send>
+                    </fx-trigger>
+
+                </fx-group>
+                {instance()}
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
