@@ -134,13 +134,14 @@ Include the following snippet at end of body:
 ```
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore-all.js"></script>
 ```
-## Installation
+## Installation width npm
 
 Run
 
 ```npm install @jinntec/fore```
 
 in your project to install it.
+
 
 Import it in your HTML page like so:
 
@@ -155,18 +156,17 @@ Import it in your HTML page like so:
 If you intend to hack it yourself ...
 
 > you need to have node installed on your machine (using 15.1.0)
-
+    
 * clone this repo to your machine
 * run `npm i` to install dependencies
 
 ## Running demos and docs
 
 1. checkout this repo or download the sources
-1. change to the rootfolder
-1. run `npm i` to install dependencies
-1. run `npm run start`
-
-starts the testserver with 'doc/index.html' as entry page. This will send you to 'doc/demos.html' as an
+1. change to the rootfolder and execute following command in your shell
+1. `npm install` to install Fore dependencies
+1. `npm run install-demos` to install Demo dependencies
+1. `npm run start` starts the testserver with 'doc/index.html' as entry page. This will send you to 'doc/demos.html' as an
 entry point. This lists out running examples to learn and copy from.
 
 ## Running test suite

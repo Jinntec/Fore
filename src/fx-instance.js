@@ -20,8 +20,7 @@ async function handleResponse(response) {
     );
   }
   if (
-    responseContentType.startsWith('text/plain') ||
-    responseContentType.startsWith('text/markdown')
+    responseContentType.startsWith('text/')
   ) {
     // console.log("********** inside  res plain *********");
     return response.text();
@@ -206,6 +205,10 @@ export class FxInstance extends HTMLElement {
     if (this.type === 'json') {
       this.instanceData = {};
       this.originalInstance = [...this.instanceData];
+    }
+    if(this.type === 'text'){
+      this.instanceData = '';
+      this.originalInstance = '';
     }
   }
 
