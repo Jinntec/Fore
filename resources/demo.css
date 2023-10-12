@@ -18,6 +18,11 @@ fx-control{
 fx-control[readonly]{
     background: white;
 }
+fore-corner a,
+fore-corner a:link,
+fore-corner a:visited{
+    color:var(--paper-blue-800);
+}
 body{
     padding:0;
     /*font-family:'Roboto','Noto', 'sans-serif';*/
