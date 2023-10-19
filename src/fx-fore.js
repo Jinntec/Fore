@@ -173,8 +173,8 @@ export class FxFore extends HTMLElement {
 
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
-           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="left" gravity="bottom" escape-markup="false"></jinn-toast>
-           <jinn-toast id="warn" text="warning" duration="-1" data-class="warning" close="true" position="right" gravity="bottom"></jinn-toast>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="right" gravity="top" escape-markup="false"></jinn-toast>
+           <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" position="left" gravity="top"></jinn-toast>
            <slot id="default"></slot>
            <slot name="messages"></slot>
            <div id="modalMessage" class="overlay">
@@ -920,9 +920,9 @@ export class FxFore extends HTMLElement {
             this.shadowRoot.getElementById('messageContent').innerText = msg;
             // this.shadowRoot.getElementById('modalMessage').open();
             this.shadowRoot.getElementById('modalMessage').classList.add('show');
-        } else if (level === 'sticky') {
+        } else if (level === 'sticky' || level === 'error' || level === 'warn') {
             // const notification = this.$.modeless;
-            this.shadowRoot.querySelector('#sticky').showToast(msg);
+            this.shadowRoot.querySelector(`#${level}`).showToast(msg);
         } else {
             const toast = this.shadowRoot.querySelector('#message');
             toast.showToast(msg);

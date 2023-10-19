@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>the 'if' attribute</title>
+
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+
+
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+<div class="wrapper">
+
+    <h1>Call an action or a function</h1>
+
+    <p>
+        <code>fx-call</code> allows to call action or a function.
+    </p>
+
+    <h2>Calling an action</h2>
+    <p>Calling an action is useful to avoid duplication of actions needed in several places of a page.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-action id="myAction">
+                    <fx-message>one</fx-message>
+                    <fx-message delay="500">two</fx-message>
+                    <fx-message delay="1000">three</fx-message>
+                </fx-action>
+                <fx-trigger>
+                    <button>call action</button>
+                    <fx-call action="myAction"></fx-call>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Calling a function</h2>
+    <p>Sometimes you probably just want to call a function for its side-effects without using a bound node.</p>
+    <demo-snippet>
+        <template>
+            <style>
+                div {
+                    width: 100%;
+                    margin: 1rem 0;
+                }
+            </style>
+
+            <fx-fore>
+                <fx-model>
+                    <fx-function signature="hello() as item()?" type="text/javascript">
+                        alert('hello');
+                        return null;
+                    </fx-function>
+                </fx-model>
+                <fx-trigger>
+                    <button>call hello()</button>
+                    <fx-call function="hello()"></fx-call>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>
