@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>ignore expressions</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+
+    <h1>Ignoring elements for Template Expression evaluation.</h1>
+<demo-snippet>
+    <template>
+        <fx-fore ignore-expressions=".myElement">
+            <fx-model>
+                <fx-instance>
+                    <data>
+                        <greeting>Hello</greeting>
+                        <ignored>if you read this it does not work</ignored>
+                    </data>
+                </fx-instance>
+            </fx-model>
+
+            <span>{greeting}</span>
+            <div class="myElement">
+                <span>{ignored}</span>
+                <span>{{whatever}}</span>
+            </div>
+
+
+            <div class="myElement">
+                {}{}{{{}}}
+            </div>
+
+        </fx-fore>    </template>
+</demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
