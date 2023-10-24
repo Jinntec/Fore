@@ -181,6 +181,23 @@ Alternatively you can run the test suite from the commandline once:
 npm run test
 ```
 
+## Running the integration tests
+
+Start the demo server and open cypress. Choose your browser and run all tests from there.
+
+```
+npm run start
+npx cypress open
+```
+
+Alternatively, start the demo server and run the tests headlessly:
+
+```
+npm run start
+npx cypress run
+```
+
+
 ## Building a package
 
 ```npm run build``` creates two bundles in 'dist' directory.
