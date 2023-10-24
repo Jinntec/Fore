@@ -43,9 +43,11 @@
                     <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
                     <fx-message>counted to {counter} done</fx-message>
                 </fx-trigger>
-                {counter}
+				<span data-cy="output">
+                  {counter}
+				</span>
                 <fx-trigger>
-                    <button>reset</button>
+                    <button data-cy="reset">reset</button>
                     <fx-setvalue ref="counter" value="0"></fx-setvalue>
                 </fx-trigger>
 
