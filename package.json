@@ -91,7 +91,7 @@
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
     "install-demos": "cd demo && npm i",
     "build-test": "npm run build && karma start",
-    "prepare": "npm run build"
+    "prepublish": "npm run build"
   },
   "keywords": [
     "Fore",
