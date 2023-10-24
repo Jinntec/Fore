@@ -90,7 +90,8 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
     "install-demos": "cd demo && npm i",
-    "build-test": "npm run build && karma start"
+    "build-test": "npm run build && karma start",
+    "version": "npm run build"
   },
   "keywords": [
     "Fore",
