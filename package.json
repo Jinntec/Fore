@@ -84,7 +84,7 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
     "install-demos": "cd demo && npm i",
-    "prepublish": "npm run build && git commit -m 'updated build'"
+    "prepublish": "npm run build && git add dist && git commit -m 'updated build'"
   },
   "keywords": [
     "Fore",
