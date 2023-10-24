@@ -29,7 +29,14 @@
     "dist/fore-dev.js.map",
     "!.DS_Store"
   ],
+  "np": {
+    "branch": "dev",
+    "testScript": "build-test",
+    "releaseDraft": false,
+    "contents": "dist"
+  },
   "dependencies": {
+    "@jinntec/fore": "^1.8.0",
     "@jinntec/jinn-toast": "^1.0.5",
     "fontoxpath": "^3.30.0"
   },
@@ -82,7 +89,8 @@
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
-    "install-demos": "cd demo && npm i"
+    "install-demos": "cd demo && npm i",
+    "build-test": "npm run build && karma start"
   },
   "keywords": [
     "Fore",

@@ -249,7 +249,9 @@ lines
               <span>{}{}{{{}}}</span>
             </div>
 
-          </fx-fore>    `);
+
+          </fx-fore>    
+        `);
 
 		await oneEvent(el, 'refresh-done');
 
@@ -263,6 +265,36 @@ lines
         expect(myElements[0].textContent.trim()).to.equal('{ignored}{{whatever}}')
         expect(myElements[1].textContent.trim()).to.equal('{}{}{{{}}}')
         expect(myElements[2].textContent.trim()).to.equal('{}{}{{{}}}')
+
+	});
+
+	it('does ignore attributes on elements matched by ignore-expression attribute', async () => {
+		const el = await fixtureSync(html`
+          <fx-fore ignore-expressions="pb-authority">
+            <fx-model>
+              <fx-instance>
+                <data>
+                </data>
+              </fx-instance>
+            </fx-model>
+
+            <pb-authority connector="Airtable" name="person" api-key="keyFpBEqgkRWCNrfK" base="appcVM9MIZSxyvkCU" table="People" fields="Name, Direct Order Name, Variants" label="{Name}" tokenize="Name, Variants" tokenize-regex="\\s*;\\s*" filter="or(search('{key}', lower({Name})), search('{key}', lower({Direct Order Name})), search('{key}', lower({Variants})))">
+                <template class="info">
+                    <h3>{Name}</h3>
+                    <p>{Variants}</p>
+                </template>
+                <template class="detail">
+                    {Variants}
+                </template>
+            </pb-authority>
+          </fx-fore>    
+        `);
+
+		await oneEvent(el, 'refresh-done');
+
+
+        const pb = document.querySelector('pb-authority');
+        expect(pb.getAttribute('label')).to.equal('{Name}');
 
 	});
 });

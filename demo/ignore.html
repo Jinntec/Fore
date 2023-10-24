@@ -6,14 +6,22 @@
     <title>ignore expressions</title>
     <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .Hello{
+            background: red;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper">
 
     <h1>Ignoring elements for Template Expression evaluation.</h1>
+    <p>If one or more elements need to be excluded from Template Expression evaluation
+    you can specifiy the <code>ignore-expressions</code> attribute and use CSS Selector
+    syntax to pick ignored nodes.</p>
 <demo-snippet>
     <template>
-        <fx-fore ignore-expressions=".myElement">
+        <fx-fore ignore-expressions=".myElement, my-sub-element,pb-authority">
             <fx-model>
                 <fx-instance>
                     <data>
@@ -24,7 +32,7 @@
             </fx-model>
 
             <span>{greeting}</span>
-            <div class="myElement">
+            <div class="myElement" filter="{ignored}">{ignored}
                 <span>{ignored}</span>
                 <span>{{whatever}}</span>
             </div>
@@ -33,6 +41,25 @@
             <div class="myElement">
                 {}{}{{{}}}
             </div>
+
+            <my-element class="{greeting}">
+                <my-sub-element foo="{ignored}"></my-sub-element>
+                <div>Some content</div>
+            </my-element>
+
+            <pb-authority connector="Airtable" name="person" api-key="keyFpBEqgkRWCNrfK" base="appcVM9MIZSxyvkCU"
+                          table="People" fields="Name, Direct Order Name, Variants" label="${Name}"
+                          tokenize="Name, Variants" tokenize-regex="\s*;\s*"
+                          filter="or(search('${key}', lower({Name})), search('${key}', lower({Direct Order Name})), search('${key}', lower({Variants})))">
+                <template class="info">
+                    <h3>${Name}</h3>
+                    <p>${Variants}</p>
+                </template>
+                <template class="detail">
+                    ${Variants}
+                </template>
+            </pb-authority>
+
 
         </fx-fore>    </template>
 </demo-snippet>

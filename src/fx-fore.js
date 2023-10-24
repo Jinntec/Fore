@@ -643,6 +643,9 @@ export class FxFore extends HTMLElement {
     // eslint-disable-next-line class-methods-use-this
     _getTemplateExpression(node) {
         if(this.ignoredNodes){
+            if(node.nodeType === Node.ATTRIBUTE_NODE){
+                node = node.ownerElement;
+            }
             const found = this.ignoredNodes.find( (n) => n.contains(node));
             if(found) return null;
         }
