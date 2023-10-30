@@ -369,7 +369,7 @@ export default class FxControl extends XfAbstractControl {
         }
 
         // ### when there's a url Fore is used as widget and will be loaded from external file
-        if (this.url && !this.loaded) {
+        if (this.url && !this.loaded && this.modelItem.relevant) {
             // ### evaluate initial data if necessary
 
             if (this.initial) {
