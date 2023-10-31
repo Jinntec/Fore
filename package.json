@@ -86,8 +86,7 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start": "es-dev-server --app-index doc/index.html --node-resolve --watch --open",
     "preversion": "npm run test",
-    "version": "npm run build && git add -A dist",
-    "postversion": "git nppush && git push --tags && rm -rf build/",
+    "prepare": "npm run build",
     "install-demos": "npm i && cd demo && npm i",
     "start-cypress": "es-dev-server --app-index doc/index.html --node-resolve"
   },
