@@ -52,6 +52,7 @@ export class FxInstance extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.originalInstance = null;
     this.partialInstance = null;
+    this.credentials = '';
   }
 
   connectedCallback() {
@@ -64,6 +65,13 @@ export class FxInstance extends HTMLElement {
       this.id = this.getAttribute('id');
     } else {
       this.id = 'default';
+    }
+
+    this.credentials = this.hasAttribute('credentials')
+        ? this.getAttribute('credentials')
+        : 'same-origin';
+    if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
+      console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
     }
 
     if (this.hasAttribute('type')) {
@@ -243,10 +251,8 @@ export class FxInstance extends HTMLElement {
     try {
       const response = await fetch(url, {
         method: 'GET',
-/*
+        credentials: this.credentials,
         mode: 'cors',
-        credentials: 'include',
-*/
         headers: {
           'Content-Type': contentType,
         },

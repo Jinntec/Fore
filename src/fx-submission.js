@@ -12,6 +12,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.credentials = '';
         this.parameters = new Map();
     }
 
@@ -197,6 +198,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             const response = await fetch(resolvedUrl, {
                 method: this.method,
                 credentials: this.credentials,
+                mode:'cors',
                 headers,
                 body: serialized,
             });

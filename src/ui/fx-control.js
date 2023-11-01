@@ -43,6 +43,9 @@ export default class FxControl extends XfAbstractControl {
     static get properties() {
         return {
             ...XfAbstractControl.properties,
+            credentials:{
+                type: String
+            },
             initial: {
                 type: Boolean
             }
@@ -73,6 +76,13 @@ export default class FxControl extends XfAbstractControl {
                 display:inline-block;
             }
         `;
+
+        this.credentials = this.hasAttribute('credentials')
+            ? this.getAttribute('credentials')
+            : 'same-origin';
+        if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
+            console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
+        }
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -417,10 +427,8 @@ export default class FxControl extends XfAbstractControl {
         try {
             const response = await fetch(this.url, {
                 method: 'GET',
-                /*
-                        mode: 'cors',
-                        credentials: 'include',
-                */
+                credentials: this.credentials,
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'text/html',
                 },
