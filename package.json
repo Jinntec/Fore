@@ -30,7 +30,6 @@
     "!.DS_Store"
   ],
   "dependencies": {
-    "@jinntec/fore": "^1.8.0",
     "@jinntec/jinn-toast": "^1.0.5",
     "fontoxpath": "^3.30.0"
   },
