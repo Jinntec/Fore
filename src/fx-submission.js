@@ -12,6 +12,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.credentials = '';
         this.parameters = new Map();
     }
 
@@ -56,6 +57,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             : 'application/xml';
 
         this.validate = this.getAttribute('validate') ? this.getAttribute('validate') : 'true';
+        this.credentials = this.hasAttribute('credentials')
+            ? this.getAttribute('credentials')
+            : 'same-origin';
+		if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
+			console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
+		}
         this.shadowRoot.innerHTML = this.renderHTML();
     }
 
@@ -96,9 +103,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     _getProperty(attrName){
         if(this.parameters.has(attrName)){
             return this.parameters.get(attrName);
-        } else {
-            return this.getAttribute(attrName);
         }
+        return this.getAttribute(attrName);
     }
 
     /**
@@ -191,10 +197,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         try {
             const response = await fetch(resolvedUrl, {
                 method: this.method,
-                /*
-                                mode: 'cors',
-                                credentials: 'include',
-                */
+                credentials: this.credentials,
+                mode:'cors',
                 headers,
                 body: serialized,
             });

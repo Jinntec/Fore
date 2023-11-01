@@ -30,6 +30,12 @@ export class FxFore extends HTMLElement {
     static get properties() {
         return {
             /**
+             * ignore certain nodes for template expression search
+             */
+            ignoreExpressions:{
+                type: String
+            },
+            /**
              * merge-partial
              */
             mergePartial:{
@@ -225,6 +231,7 @@ export class FxFore extends HTMLElement {
           // e.stopImmediatePropagation();
         },true);
     */
+        this.ignoreExpressions = this.hasAttribute('ignore-expressions') ? this.getAttribute('ignore-expressions'): null;
 
         this.lazyRefresh = this.hasAttribute('refresh-on-view');
         if (this.lazyRefresh) {
@@ -252,6 +259,10 @@ export class FxFore extends HTMLElement {
                 this.replaceWith(Fore.copyDom(this));
                 // Fore.copyDom(this);
                 return;
+            }
+
+            if(this.ignoreExpressions){
+                this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
             }
 
             const children = event.target.assignedElements();
@@ -547,7 +558,9 @@ export class FxFore extends HTMLElement {
             const expr = this._getTemplateExpression(node);
 
             // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
-            this.storedTemplateExpressionByNode.set(node, expr);
+            if(expr){
+                this.storedTemplateExpressionByNode.set(node, expr);
+            }
         });
         // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
@@ -629,6 +642,13 @@ export class FxFore extends HTMLElement {
 
     // eslint-disable-next-line class-methods-use-this
     _getTemplateExpression(node) {
+        if(this.ignoredNodes){
+            if(node.nodeType === Node.ATTRIBUTE_NODE){
+                node = node.ownerElement;
+            }
+            const found = this.ignoredNodes.find( (n) => n.contains(node));
+            if(found) return null;
+        }
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             return node.value;
         }

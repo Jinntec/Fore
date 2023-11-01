@@ -43,6 +43,9 @@ export default class FxControl extends XfAbstractControl {
     static get properties() {
         return {
             ...XfAbstractControl.properties,
+            credentials:{
+                type: String
+            },
             initial: {
                 type: Boolean
             }
@@ -73,6 +76,13 @@ export default class FxControl extends XfAbstractControl {
                 display:inline-block;
             }
         `;
+
+        this.credentials = this.hasAttribute('credentials')
+            ? this.getAttribute('credentials')
+            : 'same-origin';
+        if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
+            console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
+        }
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -369,7 +379,7 @@ export default class FxControl extends XfAbstractControl {
         }
 
         // ### when there's a url Fore is used as widget and will be loaded from external file
-        if (this.url && !this.loaded) {
+        if (this.url && !this.loaded && this.modelItem.relevant) {
             // ### evaluate initial data if necessary
 
             if (this.initial) {
@@ -417,10 +427,8 @@ export default class FxControl extends XfAbstractControl {
         try {
             const response = await fetch(this.url, {
                 method: 'GET',
-                /*
-                        mode: 'cors',
-                        credentials: 'include',
-                */
+                credentials: this.credentials,
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'text/html',
                 },
@@ -446,9 +454,12 @@ export default class FxControl extends XfAbstractControl {
                 'model-construct-done',
                 e => {
                     const defaultInst = imported.querySelector('fx-instance');
-                    if (this.initialNode) {
+                    if (this.initial) {
                         const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
                         // Note: Clone the input to prevent the inner fore from editing the outer node
+						// Also update the `initialNode` to make sure we have an up-to-date version
+						this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
+
                         doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
                         defaultInst.setInstanceData(doc);
                     }

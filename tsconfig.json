@@ -12,7 +12,6 @@
     ],
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true,
     "strict": false,
     "noImplicitThis": true,
     "alwaysStrict": true,

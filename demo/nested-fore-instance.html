@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>A simple output</title>
+
+<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+/*
+        fx-model{
+            display: none;
+        }
+*/
+        noscript{
+            padding: 1rem;
+            background: orange;
+            font-size: 2rem;
+        }
+        div{
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <noscript>Scripting is disabled - Sorry, can't process this page.</noscript>
+    <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
+    <h1>Resolving nested instances</h1>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <value>outer value</value>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="another">
+                        <data>
+                            <value>another outer value</value>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <section>
+                    <div>value={value}</div>
+                    <div>instance()/value={instance()/value}</div>
+                    <div>instance('default')/value={instance('default')/value}</div>
+                </section>
+
+                <section>
+                    <div>value from another instance={instance('another')/value}</div>
+                </section>
+
+                <fx-fore>
+                    <fx-model>
+                        <fx-instance>
+                            <data>
+                                <value>inner value</value>
+                            </data>
+                        </fx-instance>
+                        <fx-instance id="another">
+                            <data>
+                                <value>another inner value</value>
+                            </data>
+                        </fx-instance>
+                    </fx-model>
+
+                    <section>
+                        <div>value={value}</div>
+                        <div>instance()/value={instance()/value}</div>
+                        <div>instance('default')/value={instance('default')/value}</div>
+                    </section>
+
+                    <section>
+                        <div>value from another instance={instance('another')/value}</div>
+                    </section>
+
+                </fx-fore>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
