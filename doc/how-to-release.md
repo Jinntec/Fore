@@ -1,15 +1,11 @@
 # how to release step-by-step
 
 ## Release
-1. `npm run build` to update the dist and push
-1. `git status` must report 'working tree clean' to continue
-1. `npm pack` to create archive
-1. move resulting tgz to tmp folder and unpack
-1. check if content is as expected
-1. `np --branch dev --no-release-draft` start interactive np tool
-1. step through np and select appropriate release numbering
-1. push tags
-1. goto github and write release notes
+1. `npm version patch | minor | major` depending on the nature of the changes in this release
+1. `git push` to push the generated commit
+1. `git push --tags` to push the generated tag
+1. `npm publish` this also does the build
+1. go to github and write release notes
 1. merge dev to master
 
 ## updating demo site

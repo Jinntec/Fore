@@ -7,3 +7,4 @@ assets/
 /.idea/workspace.xml
 **/.DS_Store
 out/
+/dist/

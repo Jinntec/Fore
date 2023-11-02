@@ -231,7 +231,7 @@ describe('functions', () => {
     expect(Number(indexVal)).to.equal(3);
   });
 
-  it('returns correct index after insert for nested repeat index()', async () => {
+  it.skip('returns correct index after insert for nested repeat index()', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>

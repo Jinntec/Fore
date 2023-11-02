@@ -12,6 +12,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.credentials = '';
         this.parameters = new Map();
     }
 
@@ -56,6 +57,12 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             : 'application/xml';
 
         this.validate = this.getAttribute('validate') ? this.getAttribute('validate') : 'true';
+        this.credentials = this.hasAttribute('credentials')
+            ? this.getAttribute('credentials')
+            : 'same-origin';
+		if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
+			console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
+		}
         this.shadowRoot.innerHTML = this.renderHTML();
     }
 
@@ -96,9 +103,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
     _getProperty(attrName){
         if(this.parameters.has(attrName)){
             return this.parameters.get(attrName);
-        } else {
-            return this.getAttribute(attrName);
         }
+        return this.getAttribute(attrName);
     }
 
     /**
@@ -191,10 +197,8 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         try {
             const response = await fetch(resolvedUrl, {
                 method: this.method,
-                /*
-                                mode: 'cors',
-                                credentials: 'include',
-                */
+                credentials: this.credentials,
+                mode:'cors',
                 headers,
                 body: serialized,
             });
@@ -207,9 +211,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
             const contentType = response.headers.get('content-type').toLowerCase();
             if (
-                contentType.startsWith('text/plain') ||
-                contentType.startsWith('text/html') ||
-                contentType.startsWith('text/markdown')
+                contentType.startsWith('text/')
             ) {
                 const text = await response.text();
                 this._handleResponse(text, resolvedUrl,contentType);
@@ -231,6 +233,10 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             Fore.dispatch(this, 'submit-error', {error: error.message});
         } finally {
             this.parameters.clear();
+            const download = document.querySelector('[download]');
+            if(download){
+                document.body.removeChild(download);
+            }
         }
     }
 
@@ -399,11 +405,19 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             }
         }
 
+        if (this.replace === 'download') {
+            const target = this._getProperty('target');
+            const downloadLink = document.createElement('a');
+            downloadLink.setAttribute('download',target);
+            downloadLink.setAttribute('href',`data:${contentType},${data}`);
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
         if (this.replace === 'all') {
             const target = this._getProperty('target');
             if(target && target === '_blank'){
                 const win = window.open("", "_blank");
-                win.document.write(data);
+                win.document.write(`<pre>${data}</pre>`);
                 win.document.close();
             }else{
                 document.open();
@@ -428,51 +442,22 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
     }
 
-
-/*
-    _mergeXML(xml1, xml2) {
-        const parser = new DOMParser();
-        const serializer = new XMLSerializer();
-
-        // const doc1 = parser.parseFromString(xml1, 'text/xml');
-        // const doc2 = parser.parseFromString(xml2, 'text/xml');
-
-        this.mergeNodes(xml1.documentElement, xml2.documentElement);
-
-        // return serializer.serializeToString(xml1);
-        return xml1;
+    _handleError() {
+        // this.dispatch('submit-error', {});
+        Fore.dispatch(this, 'submit-error', {});
+        /*
+                    console.log('ERRRORRRRR');
+                    this.dispatchEvent(
+                        new CustomEvent('submit-error', {
+                            composed: true,
+                            bubbles: true,
+                            detail: {},
+                        }),
+                    );
+            */
     }
-*/
 
-/*
-    _mergeNodes(node1, node2) {
-        const childNodes1 = node1.childNodes;
-        const childNodes2 = node2.childNodes;
-
-        for (let i = 0; i < childNodes2.length; i++) {
-            const child2 = childNodes2[i];
-            let nodeMerged = false;
-
-            if (child2.nodeType === 1) { // Element Node
-                for (let j = 0; j < childNodes1.length; j++) {
-                    const child1 = childNodes1[j];
-                    if (child1.nodeType === 1 && child1.tagName === child2.tagName) {
-                        this._mergeNodes(child1, child2);
-                        nodeMerged = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!nodeMerged) {
-                const clonedNode = child2.cloneNode(true);
-                node1.appendChild(clonedNode);
-            }
-        }
-    }
-*/
-
-/*
+    /*
     mergeNodes(node1, node2) {
         // Overwrite attributes in node1 with values from node2
         for (const { name, value } of node2.attributes) {
@@ -503,97 +488,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         });
     }
 */
-    /**
-     * select relevant nodes
-     *
-     * @returns {*}
-     */
-    /*
-    selectRelevant(type) {
-      console.log('selectRelevant' ,type)
-      switch (type){
-        case 'xml':
-          return this._relevantXmlNodes();
-        default:
-          console.warn(`relevance selection not supported for type:${this.type}`);
-          return this.nodeset;
-      }
-    }
-  */
 
-    // todo: support for 'empty'
-    /*
-    _relevantXmlNodes() {
-      // ### no relevance selection - current nodeset is used 'as-is'
-      if (this.nonrelevant === 'keep') {
-        return this.nodeset;
-      }
-
-      // first check if nodeset of submission is relevant - otherwise bail out
-      const mi = this.getModel().getModelItem(this.nodeset);
-      if (mi && !mi.relevant) return null;
-
-      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      const root = doc.firstElementChild;
-
-      if (this.nodeset.children.length === 0 && this._isRelevant(this.nodeset)) {
-        return this.nodeset;
-      }
-      return this._filterRelevant(this.nodeset, root);
-    }
-  */
-
-    /*
-    _filterRelevant(node, result) {
-      const { childNodes } = node;
-      Array.from(childNodes).forEach(n => {
-        if (this._isRelevant(n)) {
-          const clone = n.cloneNode(false);
-          result.appendChild(clone);
-          const { attributes } = n;
-          if (attributes) {
-            Array.from(attributes).forEach(attr => {
-              if (this._isRelevant(attr)) {
-                clone.setAttribute(attr.nodeName, attr.value);
-              } else if (this.nonrelevant === 'empty') {
-                clone.setAttribute(attr.nodeName, '');
-              } else {
-                clone.removeAttribute(attr.nodeName);
-              }
-            });
-          }
-          return this._filterRelevant(n, clone);
-        }
-        return null;
-      });
-      return result;
-    }
-  */
-
-    /*
-    _isRelevant(node) {
-      const mi = this.getModel().getModelItem(node);
-      if (!mi || mi.relevant) {
-        return true;
-      }
-      return false;
-    }
-  */
-
-    _handleError() {
-        // this.dispatch('submit-error', {});
-        Fore.dispatch(this, 'submit-error', {});
-        /*
-                    console.log('ERRRORRRRR');
-                    this.dispatchEvent(
-                        new CustomEvent('submit-error', {
-                            composed: true,
-                            bubbles: true,
-                            detail: {},
-                        }),
-                    );
-            */
-    }
 }
 
 if (!customElements.get('fx-submission')) {

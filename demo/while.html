@@ -19,14 +19,12 @@
     </style>
 </head>
 <body>
-<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
-
 <div class="wrapper">
 
     <h1>The <code>while</code> attribute</h1>
     <p>The <code>while</code> attribute is allowed on actions to execute a loop until the condition becomes
         <code>false</code>.</p>
-    <p>In this example the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/"target="_blank">fx-setvalue</a></code> action is executed as long as the counter is smaller than 10.
+    <p>In this example the <code>fx-setvalue</code> action is executed as long as the counter is smaller than 10.
         Afterwards
         the message action is displaying the result.</p>
     <demo-snippet>
@@ -41,13 +39,15 @@
                 </fx-model>
 
                 <fx-trigger>
-                    <button>Count to 10</button>
+                    <button data-cy="counter">Count to 10</button>
                     <fx-setvalue ref="counter" value=".+1" while=". < 10"></fx-setvalue>
                     <fx-message>counted to {counter} done</fx-message>
                 </fx-trigger>
-                {counter}
+				<span data-cy="output">
+                  {counter}
+				</span>
                 <fx-trigger>
-                    <button>reset</button>
+                    <button data-cy="reset">reset</button>
                     <fx-setvalue ref="counter" value="0"></fx-setvalue>
                 </fx-trigger>
 
@@ -71,7 +71,7 @@
                 </fx-model>
 
                 <fx-trigger>
-                  <button>Start</button>
+                  <button data-cy="start">Start</button>
 				  <fx-var name="steps" value="1"></fx-var>
 				  <fx-var name="max" value="10"></fx-var>
 
@@ -87,7 +87,7 @@
                     <button>reset</button>
                     <fx-setvalue ref="counter" value="0"></fx-setvalue>
                 </fx-trigger>
-<!--                <fx-action-log></fx-action-log>-->
+                <fx-action-log></fx-action-log>
 
             </fx-fore>
         </template>
@@ -108,7 +108,7 @@
                 </fx-model>
 
                 <fx-trigger>
-                    <button>Start</button>
+                    <button data-cy="hey-go">Start</button>
                     <fx-message delay="1000" while="stop eq 'false'">hey</fx-message>
                 </fx-trigger>
                 {counter}
@@ -117,10 +117,10 @@
                     <fx-setvalue ref="stop">false</fx-setvalue>
                 </fx-trigger>
                 <fx-trigger>
-                    <button>stop</button>
+                    <button data-cy="hey-stop">stop</button>
                     <fx-setvalue ref="stop">true</fx-setvalue>
                 </fx-trigger>
-<!--                <fx-action-log></fx-action-log>-->
+                <fx-action-log></fx-action-log>
 
             </fx-fore>
         </template>
@@ -159,16 +159,17 @@
                             <fx-message delay="1000" while="true()">{.}</fx-message>
                         </fx-trigger>
                         <fx-trigger>
-                            <button class="deletebtn">X</button>
+                            <button class="deletebtn" data-cy="remove">X</button>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
 
                 <fx-trigger>
-                    <button>insert a new one</button>
+                    <button data-cy="insert">insert a new one</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
+<fx-inspector open></fx-inspector>
             </fx-fore>
         </template>
     </demo-snippet>

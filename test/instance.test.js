@@ -341,6 +341,59 @@ describe('instance Tests', () => {
     expect(instances[0].getDefaultContext()).to.exist;
   });
 
+  it('resolves instance correctly for nested fore elements', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <value>outer value</value>
+            </data>
+          </fx-instance>
+          <fx-instance id="another">
+            <data>
+              <value>another outer value</value>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div id="outer">{value}</div>
+        <div id="anotherouter">{instance('another')/value}</div>
+
+        <fx-fore>
+          <fx-model>
+            <fx-instance>
+              <data>
+                <value>inner value</value>
+              </data>
+            </fx-instance>
+            <fx-instance id="another">
+              <data>
+                <value>another inner value</value>
+              </data>
+            </fx-instance>
+          </fx-model>
+
+          <div id="inner">{value}</div>
+          <div id="anotherinner">{instance('another')/value}</div>
+
+        </fx-fore>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const outer=el.querySelector('#outer');
+    expect(outer.innerText).to.equal('outer value');
+    const anotherouter=el.querySelector('#anotherouter');
+    expect(anotherouter.innerText).to.equal('another outer value');
+
+    const inner=el.querySelector('#inner');
+    expect(inner.innerText).to.equal('inner value');
+    const anotherinner=el.querySelector('#anotherinner');
+    expect(anotherinner.innerText).to.equal('another inner value');
+  });
+
   /*
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (
