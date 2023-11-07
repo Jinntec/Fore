@@ -115,8 +115,11 @@ export class XPathUtil {
     return null;
   }
 
-  static resolveInstance(boundElement){
-    const instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+	static resolveInstance(boundElement, path){
+		let instanceId = XPathUtil.getInstanceId(path);
+		if (!instanceId) {
+			instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+		}
     if(instanceId !== null){
       return instanceId;
     }
@@ -128,16 +131,13 @@ export class XPathUtil {
     return 'default';
   }
 
-  // todo: certainly not ideal to rely on duplicating instance id on instance document - better way later ;)
-  static getPath(node) {
+  static getPath(node, instanceId) {
+      if (!instanceId) {
+		  throw new Error('InstanceId missing!!!')
+	  }
     const path = fx.evaluateXPathToString('path()', node);
-    /*
-    const instanceId = node.ownerDocument.firstElementChild.getAttribute('id');
-    if (instanceId !== null && instanceId !== 'default') {
-      return `#${instanceId}${XPathUtil.shortenPath(path)}`;
-    }
-*/
-    return XPathUtil.shortenPath(path);
+	// Path is like `$default/x/y`
+	return `$${instanceId}${XPathUtil.shortenPath(path)}`;
   }
 
   static shortenPath(path) {

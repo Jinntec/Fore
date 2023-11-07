@@ -79,8 +79,10 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   _buildBindGraph() {
     if (this.bindType === 'xml') {
-      this.nodeset.forEach(node => {
-        const path = XPathUtil.getPath(node);
+		this.nodeset.forEach(node => {
+			          const instance = XPathUtil.resolveInstance(this);
+
+          const path = XPathUtil.getPath(node, instance);
         this.model.mainGraph.addNode(path, node);
 
         /* ### catching references in the 'ref' itself...
@@ -156,8 +158,10 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
         this.model.mainGraph.addNode(nodeHash, node);
       }
-      refs.forEach(ref => {
-        const otherPath = XPathUtil.getPath(ref);
+		refs.forEach(ref => {
+			const instance = XPathUtil.resolveInstance(this, path);
+
+			const otherPath = XPathUtil.getPath(ref, instance);
         // console.log('otherPath', otherPath)
 
         // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
@@ -301,8 +305,10 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     const targetNode = node;
 
     // const path = fx.evaluateXPath('path()',node);
-    // const path = this.getPath(node);
-    const path = XPathUtil.getPath(node);
+      // const path = this.getPath(node);
+	  const instance = XPathUtil.resolveInstance(this, this.ref);
+
+      const path = XPathUtil.getPath(node, instance);
     // const shortPath = this.shortenPath(path);
 
     // ### constructing default modelitem - will get evaluated during recalculate()
