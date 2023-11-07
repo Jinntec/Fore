@@ -295,6 +295,7 @@ export class FxFore extends HTMLElement {
         this.addEventListener('path-mutated', () => {
             this.someInstanceDataStructureChanged = true;
         });
+
     }
 
     _injectDevtools(){
@@ -449,7 +450,24 @@ export class FxFore extends HTMLElement {
         // console.timeEnd('refresh');
     }
 
-    async refresh(force) {
+    async refresh(force, changedPaths) {
+		if (!changedPaths) {
+			changedPaths = this.toRefresh.map(item => item.path);
+		} else {
+			this.toRefresh.push(
+				...changedPaths
+					.map(
+						path =>
+						this.getModel()
+							.modelItems
+							.find(item => item.path === path)
+					)
+					.filter(Boolean)
+			);
+		}
+		if (this.isRefreshing) {
+			return;
+		}
         // refresh () {
         // ### refresh Fore UI elements
         // if (!this.initialRun && this.toRefresh.length !== 0) {
@@ -468,7 +486,7 @@ export class FxFore extends HTMLElement {
                 }
 
                 // ### check if other controls depend on current modelItem
-                const {mainGraph} = this.getModel();
+                const { mainGraph } = this.getModel();
                 if (mainGraph && mainGraph.hasNode(modelItem.path)) {
                     const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
                     // ### iterate dependant modelItems and refresh all their boundControls
@@ -517,6 +535,13 @@ export class FxFore extends HTMLElement {
         // this.initialRun = false;
         this.style.visibility='visible';
         Fore.dispatch(this, 'refresh-done', {});
+
+		this.isRefreshing = true;
+		this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+		for (const subFore of this.querySelectorAll('fx-fore')) {
+			subFore.refresh(false, changedPaths);
+		}
+		this.isRefreshing = false;
     }
 
     /**
@@ -705,6 +730,23 @@ export class FxFore extends HTMLElement {
      */
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
+				// Inherit shared models from the parent component
+
+			const parentFore = this.parentNode.closest('fx-fore');
+		if (parentFore) {
+			const sharedInstances = Array.from(parentFore.getModel().querySelectorAll('fx-instance')).filter(instance => instance.hasAttribute('shared'));
+
+				for(const instance of sharedInstances) {
+					if (this.getModel().getInstance(instance.id)) {
+						// don't overwrite. error maybe even?
+						continue;
+					}
+					this.getModel().instances.push(instance);
+				}
+			this.getModel().updateModel();
+			}
+
+
         if (model.instances.length === 0) {
             // console.log('### lazy creation of instance');
             const generatedInstance = document.createElement('fx-instance');
@@ -716,7 +758,7 @@ export class FxFore extends HTMLElement {
             generatedInstance.instanceData = generated;
             model.instances.push(generatedInstance);
             // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
-            Fore.dispatch(this,'instance-loaded',{instance:this})
+            Fore.dispatch(this,'instance-loaded',{instance:this});
         }
     }
 

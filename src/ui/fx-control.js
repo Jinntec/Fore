@@ -2,7 +2,7 @@ import XfAbstractControl from './abstract-control.js';
 import {
     evaluateXPath,
     evaluateXPathToString,
-    evaluateXPathToFirstNode, resolveId,
+    evaluateXPathToFirstNode,
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {Fore} from '../fore.js';

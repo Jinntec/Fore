@@ -834,8 +834,8 @@ const instance = (dynamicContext, string) => {
     );
 
     const inst = string
-        ? formElement.querySelector(`#${string}`)
-        : formElement.querySelector(`fx-instance`);
+          ? formElement.getModel().getInstance(string)
+          : formElement.getModel().getDefaultInstance();
 
 /*
     const inst = string
