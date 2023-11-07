@@ -132,9 +132,6 @@ export class XPathUtil {
   }
 
   static getPath(node, instanceId) {
-      if (!instanceId) {
-		  throw new Error('InstanceId missing!!!')
-	  }
     const path = fx.evaluateXPathToString('path()', node);
 	// Path is like `$default/x/y`
 	return `$${instanceId}${XPathUtil.shortenPath(path)}`;
