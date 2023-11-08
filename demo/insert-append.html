@@ -131,35 +131,6 @@
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
 
-    <demo-snippet>
-        <template>
-            <fx-fore>
-                <fx-model id="record">
-                    <fx-instance>
-                        <data>
-                            <task complete="false" due="2019-02-04">Pick up Milk</task>
-                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
-                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-trigger>
-                    <button>insert at end</button>
-                    <fx-insert ref="task"></fx-insert>
-                </fx-trigger>
-                <fx-repeat focus-on-create="task" id="todos" ref="task">
-                    <template>
-                        <fx-control id="task" ref="."></fx-control>
-                        <fx-trigger>
-                            <button class="deletebtn">X</button>
-                            <fx-delete ref="."></fx-delete>
-                        </fx-trigger>
-                    </template>
-                </fx-repeat>
-
-            </fx-fore>
-        </template>
-    </demo-snippet>
 
     <demo-snippet>
         <template>
@@ -176,16 +147,11 @@
                     <fx-instance id="templ">
                         <data>
                             <task complete="" due="">new task</task>
-                            <foo>bar</foo>
                         </data>
                     </fx-instance>
-
-                    <fx-bind ref="task">
-                        <fx-bind ref="./text()" required="true()"></fx-bind>
-                    </fx-bind>
                 </fx-model>
 
-                <h1>insert action</h1>
+                <h1>Appending data items</h1>
 
                 <div class="note">
                     You'll have to reload this page in order to test the actions in isolation.
@@ -209,7 +175,7 @@
                     that's what is wanted. To preserve the values add <code>keep-values</code> marker attribute.
                 </p>
                 <fx-trigger>
-                    <button>insert at end</button>
+                    <button>Append</button>
                     <fx-insert ref="task"></fx-insert>
                 </fx-trigger>
 
@@ -217,64 +183,17 @@
                 <p>When no <code>origin</code> attribute is given the last entry of the list is cloned and
                 inserted. This behavior is conformant with XForms 2.0.</p>
                 <fx-trigger>
-                    <button>insert at end with keepValues</button>
+                    <button>Append and keep values</button>
                     <fx-insert ref="task" keep-values></fx-insert>
                 </fx-trigger>
 
-                <h2>Inserting at given position</h2>
-                <p>Inserts an entry to the top of the list here.</p>
-                <fx-trigger>
-                    <button>insert as first</button>
-                    <fx-insert ref="task" position="before" at="1"></fx-insert>
-                </fx-trigger>
-
-                <h2>Insert a different item from template.</h2>
-                <p>With <code>origin</code> you can select nodes to be used as templates for insertion.</p>
-                <fx-trigger>
-                    <button>insert 'foo'</button>
-                    <fx-insert ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
-                </fx-trigger>
-                <span>Value of 'foo': {foo}</span>
-
-                <h2>Insert before a entry at position</h2>
-                <p>Inserts an item after the first in the list</p>
-                <fx-trigger>
-                    <button>insert after first</button>
-                    <fx-insert ref="task" position="after" at="1"></fx-insert>
-                </fx-trigger>
-
-                <h2>Insert a template node before the first</h2>
-                <fx-trigger>
-                    <button>insert as first from origin</button>
-                    <fx-insert ref="task" origin="instance('templ')/task" at="1" position="before"></fx-insert>
-                </fx-trigger>
-
-                <h2>Insert at end of list from template</h2>
+                <h2>Appending an item from another origin</h2>
                 <p>No <code>at</code> given means we append the template to the list</p>
                 <fx-trigger>
-                    <button>insert at end from origin</button>
+                    <button>Append a copy of origin node</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
 
-                <h2>Inserting using the current repeat index</h2>
-                <p>inserts an item before the currently selected item.</p>
-                <fx-trigger>
-                    <button>insert before current</button>
-                    <fx-insert ref="task" at="index('todos')" position="before"></fx-insert>
-                </fx-trigger>
-
-                <h2>Insert after currently selected item</h2>
-                <fx-trigger>
-                    <button>insert after current</button>
-                    <fx-insert ref="task" at="index('todos')"></fx-insert>
-                </fx-trigger>
-
-                <h2>Duplicating (Copying) an item</h2>
-                <p>Will copy the referenced node and insert it after it.</p>
-                <fx-trigger>
-                    <button>duplicate second</button>
-                    <fx-insert ref="task[2]" keep-values></fx-insert>
-                </fx-trigger>
                 <div class="index">Index is: {index('todos')}</div>
 
             </fx-fore>

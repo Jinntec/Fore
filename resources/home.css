@@ -193,6 +193,7 @@ header .hero{
     border-radius: 0;
     padding:1rem 0;
     border-bottom: thin solid rgba(0,0,0,0.2);
+    position: relative;
 
 }
 
@@ -231,7 +232,7 @@ header{
     align-self: flex-start;
 }
 nav{
-    position: fixed;
+    /*position: fixed;*/
     top: 0;
     text-align: center;
     width: 100%;
@@ -242,7 +243,9 @@ nav{
     border-top: 1px solid rgba(255,255,255,0.5);
     z-index: 10;
     border-bottom: thin solid rgba(0,0,0,0.2);
-
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 nav ul a, nav ul a:link, nav ul a:visited{
@@ -252,6 +255,7 @@ nav ul a, nav ul a:link, nav ul a:visited{
 
 nav ul{
     list-style: none;
+    margin:0 auto;
 }
 nav ul li{
     display: inline-block;
@@ -265,6 +269,7 @@ nav.local-nav{
     border-bottom:1px solid rgba(0,0,0,0.2);
     white-space: nowrap;
     overflow: auto;
+    justify-content: center;
 }
 nav.local-nav a,
 nav.local-nav a:link,
@@ -397,7 +402,7 @@ ul li{
 }
 fx-fore#version {
     position: absolute;
-    left: calc(48% + 12.5rem);
+    left: calc(48% + 12rem);
     top: 10%;
     background: transparent;
     font-size: 1.2rem;
