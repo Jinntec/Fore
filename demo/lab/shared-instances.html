@@ -1,68 +1,96 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     <title>todo</title>
     <link rel="stylesheet" href="../../resources/fore.css">
-    <link rel="stylesheet" href="todo.css">
+    <link rel="stylesheet" href="../../resources/demo.css">
     <script type="module" src="../demo.js"></script>
-  </head>
-  <body unresolved="unresolved">
-    <div class="wrapper">
-      <fx-fore id="todo">
-        <fx-model>
-          <fx-instance id="todos" shared>
-            <data>
-              <todos>
-				<todo>Fix this!</todo>
-				<todo>Fix this as well!</todo>
-				<todo>Why is this not fixed yet?!</todo>
-				<todo>Write tests</todo>
-			  </todos>
-            </data>
-          </fx-instance>
-        </fx-model>
-		<h1>There are {instance('todos')/todos/todo => count()} TODOS</h1>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+		input, p {
+			font-size: 1rem;
+			padding: 0.5rem;
+		}
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
 
-		<div style="display:flex; flex-direction:row; width:100%">
-		  <div style="flex-grow:0; flex-shrink:1; min-width:100px;">
-			<fx-repeat ref="instance('todos')/todos/todo">
-			  <template>
-				  <fx-control ref="."></fx-control>
-			  </template>
-			</fx-repeat>
-		  </div>
+<div class="wrapper">
+	<h1>Shared instances</h1>
 
-		  <div style="flex-grow:0; flex-shrink:1; min-width:100px;">
-			<fx-fore id="child-a">
-			  <fx-model>
-				<!-- TODO: Make this work!!! -->
-				<!-- <fx-instance id="default"><data><message>You can do it!</message></data></fx-instance> -->
-			  </fx-model>
-			  <h3>Summary view ({instance('todos')/todos/todo => count()} TODOS)</h3>
-			  <fx-repeat ref="instance('todos')/todos/todo" id="repeat-a">
-				<template>
-				  <h2>{.} - {instance('default')/message}</h2>
-				</template>
-			  </fx-repeat>
-    		</fx-fore>
-		  </div>
-		  <div style="flex-grow:0; flex-shrink:1; align-self:right">
-			<fx-fore id="child-b">
-			  <h3>Edit view  ({instance('todos')/todos/todo => count()} TODOS)</h3>
-			  <fx-repeat ref="instance('todos')/todos/todo" id="repeat-b">
-				<template>
-				  <fx-control ref="."></fx-control>
-				</template>
-			  </fx-repeat>
-    		</fx-fore>
-		  </div>
-		</div>
-	  </fx-fore>
-	  <fx-action-log></fx-action-log>
+	<p>By marking an <code>fx-instance</code> element with a <code>shared</code> attribute you can
+		access this instance from with nested <code>fx-fore</code> elements.</p>
 
-	</div>
+	<demo-snippet>
+		<template>
+			<fx-fore id="todo">
+				<fx-model>
+					<fx-instance id="todos" shared>
+						<data>
+							<todos>
+								<todo>Fix this!</todo>
+								<todo>Fix this as well!</todo>
+								<todo>Why is this not fixed yet?!</todo>
+								<todo>Write tests</todo>
+							</todos>
+						</data>
+					</fx-instance>
+				</fx-model>
+				<div class="grid">
+					<div class="repeat">
+						<div>Parent Fore element ({instance('todos')/todos/todo => count()})</div>
+						<fx-repeat ref="instance('todos')/todos/todo">
+							<template>
+								<fx-control ref="."></fx-control>
+							</template>
+						</fx-repeat>
+						<fx-trigger>
+							<button>+</button>
+							<fx-insert ref="instance('todos')/todos/todo"></fx-insert>
+						</fx-trigger>
+					</div>
 
-  </body>
+					<div class="repeat">
+						<fx-fore id="child-a">
+							<fx-model>
+								<!-- TODO: Make this work!!! -->
+								<!-- <fx-instance id="default"><data><message>You can do it!</message></data></fx-instance> -->
+							</fx-model>
+							<div>First nested Fore element ({instance('todos')/todos/todo => count()})</div>
+							<fx-repeat ref="instance('todos')/todos/todo" id="repeat-a">
+								<template>
+									<p>{.} - {instance('default')/message}</p>
+								</template>
+							</fx-repeat>
+						</fx-fore>
+					</div>
+					<div class="repeat">
+						<fx-fore id="child-b">
+							<div>Second nested Fore element ({instance('todos')/todos/todo => count()})</div>
+							<fx-repeat ref="instance('todos')/todos/todo" id="repeat-b">
+								<template>
+									<fx-control ref="."></fx-control>
+								</template>
+							</fx-repeat>
+							<fx-trigger>
+								<button>+</button>
+								<fx-insert ref="instance('todos')/todos/todo"></fx-insert>
+							</fx-trigger>
+						</fx-fore>
+					</div>
+				</div>
+			</fx-fore>
+		</template>
+	</demo-snippet>
+<!--    <fx-action-log></fx-action-log>-->
+
+</div>
+
+</body>
 </html>
