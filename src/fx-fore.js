@@ -464,6 +464,24 @@ export class FxFore extends HTMLElement {
 					)
 					.filter(Boolean)
 			);
+
+			for(const changedPath of changedPaths) {
+				for (const repeat of this.querySelectorAll('fx-repeat')) {
+					if (repeat.closest('fx-fore') !== this) {
+						continue;
+					}
+
+					if (repeat.touchedPaths.has(changedPath)) {
+						// Make a temporary model-item-like structure for this
+						this.toRefresh.push({
+							path: changedPath,
+							boundControls: [repeat]
+						});
+
+						console.log('Found a repeat to update!!!', repeat)
+					}
+				}
+			}
 		}
 		if (this.isRefreshing) {
 			return;

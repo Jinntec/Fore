@@ -158,9 +158,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
 	async performSafe() {
 		try {
-			await this.perform();
-			// Return true to indicate success
-			return true;
+			const changedPaths = await this.perform();
+			// Return truthy to indicate success
+			return changedPaths;
 		} catch (error) {
 			const stringifiedComponent = `<${this.localName} ${Array.from(this.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${this.localName}>`;
 			await Fore.dispatch(this, 'error', {
@@ -288,7 +288,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 }
 
                 // Perform the action once. But quit if it errored
-                if (!this.performSafe()) {
+				const result = this.performSafe();
+                if (!result) {
 					return;
 				}
 
@@ -305,7 +306,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
             // After loop is done call actionPerformed to update the model and UI
             await loop();
-            this._finalizePerform(resolveThisEvent);
+			// TODO: pass the result(s)
+            this._finalizePerform(resolveThisEvent, []);
 
             return;
         }
@@ -321,13 +323,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }
         }
 
-        await this.performSafe();
-        this._finalizePerform(resolveThisEvent);
+        const result = await this.performSafe();
+        this._finalizePerform(resolveThisEvent, result);
     }
 
-    _finalizePerform(resolveThisEvent) {
+    _finalizePerform(resolveThisEvent, changedPaths) {
         this.currentEvent = null;
-        this.actionPerformed();
+        this.actionPerformed(changedPaths);
         if (FxFore.outermostHandler === this) {
             FxFore.outermostHandler = null;
 /*
@@ -377,7 +379,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
     /**
      * calls the update cycle if action signalled that update is needed.
      */
-    actionPerformed() {
+    actionPerformed(changedPaths = []) {
         const model = this.getModel();
         if (!model) {
             return;
@@ -402,7 +404,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // console.log('running update cycle for outermostHandler', this);
             model.recalculate();
             model.revalidate();
-            model.parentNode.refresh(true);
+            model.parentNode.refresh(false, changedPaths);
             this.dispatchActionPerformed();
         } else if (this.needsUpdate) {
             // console.log('Update delayed!');

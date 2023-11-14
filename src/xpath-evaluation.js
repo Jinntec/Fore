@@ -418,14 +418,14 @@ function getVariablesInScope(formElement) {
  * @param  {Node} contextNode The start of the XPath
  * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}) {
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
     return fxEvaluateXPath(
         xpath,
         contextNode,
-        null,
+        domFacade,
         {...variablesInScope, ...variables},
         fxEvaluateXPath.ALL_RESULTS_TYPE,
         {
