@@ -62,7 +62,7 @@
             display: none;
         }
 
-        fx-repeat {
+        fx-repeat:nth-child(1) {
             padding: 20px;
             display: block;
             height: 100vh;
@@ -122,6 +122,9 @@
             color:black;
             font-weight: 500;
         }
+        fx-trigger{
+            margin:1rem 0;
+        }
         fx-trigger button{
             font-size:1.2rem;
         }
@@ -130,11 +133,18 @@
 <body unresolved="unresolved">
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
+    <h1>Appending data items</h1>
 
+    <h2>Appending an item</h2>
+    <p>If just the <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">ref</a></code>is given the last element of the list is cloned and appended.</p>
+    <p>Important: if the list is empty this action has no effect! See below.</p>
+    <p class="note">
+        Fore differs from XForms in that it will clear the values of the cloned item as most of the time
+        that's what is wanted. To preserve the values add <code>keep-values</code> marker attribute.
+    </p>
 
     <demo-snippet>
         <template>
-
             <fx-fore>
                 <fx-model id="record">
                     <fx-instance>
@@ -151,11 +161,10 @@
                     </fx-instance>
                 </fx-model>
 
-                <h1>Appending data items</h1>
-
-                <div class="note">
-                    You'll have to reload this page in order to test the actions in isolation.
-                </div>
+                <fx-trigger>
+                    <button>Append</button>
+                    <fx-insert ref="task"></fx-insert>
+                </fx-trigger>
 
                 <fx-repeat focus-on-create="task" id="todos" ref="task">
                     <template>
@@ -167,25 +176,83 @@
                     </template>
                 </fx-repeat>
 
-                <h2>Appending an item</h2>
-                <p>If just the <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"target="_blank">ref</a></code>is given the last element of the list is cloned and appended.</p>
-                <p>Important: if the list is empty this action has no effect! See below.</p>
-                <p class="note">
-                    Fore differs from XForms in that it will clear the values of the cloned item as most of the time
-                    that's what is wanted. To preserve the values add <code>keep-values</code> marker attribute.
-                </p>
-                <fx-trigger>
-                    <button>Append</button>
-                    <fx-insert ref="task"></fx-insert>
-                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
-                <h2>Appendening an item keeping the values</h2>
-                <p>When no <code>origin</code> attribute is given the last entry of the list is cloned and
-                inserted. This behavior is conformant with XForms 2.0.</p>
+    <h2>Appendening an item keeping the values</h2>
+    <p>When no <code>origin</code> attribute is given the last entry of the list is cloned and
+        inserted. This behavior is conformant with XForms 2.0.</p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <task complete="false" due="2019-02-04">Pick up Milk</task>
+                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+
+                <fx-repeat focus-on-create="task" id="todos" ref="task">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
                 <fx-trigger>
-                    <button>Append and keep values</button>
+                    <button>Append a copy and keep values (copy last entry)</button>
                     <fx-insert ref="task" keep-values></fx-insert>
                 </fx-trigger>
+
+                <div class="index">Index is: {index('todos')}</div>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Appending an item from another origin</h2>
+    <p>No <code>at</code> given means we append the template to the list</p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <task complete="false" due="2019-02-04">Pick up Milk</task>
+                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
+                            <subtask></subtask>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="templ">
+                        <data>
+                            <task complete="" due="">new task</task>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+
+                <fx-repeat focus-on-create="task" id="todos" ref="task">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
 
                 <h2>Appending an item from another origin</h2>
                 <p>No <code>at</code> given means we append the template to the list</p>
@@ -193,6 +260,49 @@
                     <button>Append a copy of origin node</button>
                     <fx-insert ref="task" origin="instance('templ')/task"></fx-insert>
                 </fx-trigger>
+
+                <div class="index">Index is: {index('todos')}</div>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Append to an empty parent</h2>
+    <p><code>context</code> is the parent node where to append (insert) a new item.</p>
+
+    <demo-snippet>
+        <template>
+
+            <fx-fore>
+                <fx-model id="record">
+                    <fx-instance>
+                        <data>
+                            <task complete="false" due="2019-02-04">Pick up Milk</task>
+                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
+                            <subtask></subtask>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="templ">
+                        <data>
+                            <task complete="" due="">new task</task>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-trigger>
+                    <button>Append to an empty parent</button>
+                    <fx-insert context="subtask" ref="task" origin="instance('templ')/task"></fx-insert>
+                </fx-trigger>
+                <fx-repeat ref="subtask/task">
+                    <template>
+                        <fx-control id="task" ref="."></fx-control>
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
 
                 <div class="index">Index is: {index('todos')}</div>
 
