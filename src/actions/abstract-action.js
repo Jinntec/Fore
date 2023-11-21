@@ -101,6 +101,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         super();
         this.detail = {};
         this.needsUpdate = false;
+
+		this.changedPathsQueue = [];
     }
 
     connectedCallback() {
@@ -324,7 +326,12 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         }
 
         const result = await this.performSafe();
-        this._finalizePerform(resolveThisEvent, result);
+		if (!result) {
+			this._finalizePerform(resolveThisEvent, []);
+			return;
+		}
+		this._finalizePerform(resolveThisEvent, result);
+
     }
 
     _finalizePerform(resolveThisEvent, changedPaths) {
@@ -404,13 +411,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // console.log('running update cycle for outermostHandler', this);
             model.recalculate();
             model.revalidate();
-            model.parentNode.refresh(false, changedPaths);
+            model.parentNode.refresh(false, [...this.changedPathsQueue, ...changedPaths]);
+			this.changedPathsQueue = [];
             this.dispatchActionPerformed();
         } else if (this.needsUpdate) {
             // console.log('Update delayed!');
             // We need an update, but the outermost action handler is not done yet. Make this clear!
             // console.log('running actionperformed on', this, ' to be updated by ', FxFore.outermostHandler);
             FxFore.outermostHandler.needsUpdate = true;
+			FxFore.outermostHandler.changedPathsQueue.push(...changedPaths);
         }
 
         // console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);

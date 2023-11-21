@@ -748,21 +748,16 @@ export class FxFore extends HTMLElement {
      */
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
-				// Inherit shared models from the parent component
+        // Inherit shared models from the parent component
 
-			const parentFore = this.parentNode.closest('fx-fore');
+        const parentFore = this.parentNode.closest('fx-fore');
 		if (parentFore) {
 			const sharedInstances = Array.from(parentFore.getModel().querySelectorAll('fx-instance')).filter(instance => instance.hasAttribute('shared'));
-
 				for(const instance of sharedInstances) {
-					if (this.getModel().getInstance(instance.id)) {
-						// don't overwrite. error maybe even?
-						continue;
-					}
 					this.getModel().instances.push(instance);
 				}
 			this.getModel().updateModel();
-			}
+		}
 
 
         if (model.instances.length === 0) {

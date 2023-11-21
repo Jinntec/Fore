@@ -132,7 +132,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (mutations[0].type === 'childList') {
         const added = mutations[0].addedNodes[0];
         if (added) {
-          const instance = XPathUtil.resolveInstance(this);
+			const instance = XPathUtil.resolveInstance(this, this.ref);
 			const path = XPathUtil.getPath(added, instance);
           // console.log('path mutated', path);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
@@ -228,12 +228,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
     this._evalNodeset();
-
-	const modelItem = this.getModelItem();
-    // ### register ourselves as boundControl
-    if (!modelItem.boundControls.includes(this)) {
-	  modelItem.boundControls.push(this);
-    }
 
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);

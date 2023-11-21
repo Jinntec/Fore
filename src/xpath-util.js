@@ -126,7 +126,7 @@ export class XPathUtil {
 
     const parentBinding = XPathUtil.getParentBindingElement(boundElement);
     if(parentBinding){
-      return this.resolveInstance(parentBinding);
+		return this.resolveInstance(parentBinding, path);
     }
     return 'default';
   }
