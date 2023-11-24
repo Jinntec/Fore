@@ -11,8 +11,10 @@ import {
 
 import {Fore} from '../fore.js';
 
-function isAttributeShown(name) {
-    return name === 'id' || name === 'ref' || name === 'event';
+function isAttributeShown(name, sourceNode) {
+    if(name === 'style') return false;
+    return true;
+    // return name === 'id' || name === 'ref' || name === 'event';
 }
 
 class ADI {
@@ -187,10 +189,16 @@ class ADI {
                 if (sourceNode.nodeType !== Node.DOCUMENT_NODE) {
                     // tagStart.textContent = '<' + node.nodeName.toLowerCase() + '>';
 
+/*
+                    let attrString = `<${sourceNode.nodeName.toLowerCase()} `;
+                    if(sourceNode.attributes){
+                        Array.from(sourceNode.attributes).forEach(attr => {
+                            attrString += `${attr.nodeName}="${attr.nodeValue}" `;
+                        });
+                        console.log('ATTRSTRING',attrString);
+                    }
                     if (sourceNode.nodeName === 'FX-BIND') {
-                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute(
-                            'ref',
-                        )}">`;
+                        tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute('ref')}">`;
                     } else if (sourceNode.nodeName === 'FX-INSERT') {
                         tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} ref="${sourceNode.getAttribute('ref')}">`;
                     } else if (sourceNode.nodeName === 'FX-INSTANCE') {
@@ -204,16 +212,17 @@ class ADI {
                     } else if (sourceNode.nodeName === 'FX-SUBMISSION') {
                         tagStart.textContent = `<${sourceNode.nodeName.toLowerCase()} id="${sourceNode.getAttribute('id')}">`;
                     } else {
+*/
                         const attrString =  Array.from(sourceNode.attributes)
 							  .filter(
-								  attr => this.isInstanceViewer ? true : isAttributeShown(attr.name))
+								  attr => this.isInstanceViewer ? true : isAttributeShown(attr.name, sourceNode))
 							  .map(attr => `${attr.name}="${attr.value}"`).join(' ');
                         tagStart.textContent = `<${
                             sourceNode.nodeName.toLowerCase()
                         }${
                            attrString ? (` ${attrString}`) : ''
                         }>`;
-                    }
+                    // }
 
                     if (withChildren) {
                         tagEnd = newElement('span');
