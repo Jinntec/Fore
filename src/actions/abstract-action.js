@@ -372,6 +372,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             this.evalInContext();
         }
 
+/*
         this.dispatchEvent(
             new CustomEvent('execute-action', {
                 composed: true,
@@ -380,6 +381,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 detail: {action: this, event: this.event},
             }),
         );
+*/
 
     }
 
