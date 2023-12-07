@@ -25,7 +25,9 @@ export class FxTrigger extends XfAbstractControl {
     slot.addEventListener('slotchange', () => {
       const elements = slot.assignedElements({ flatten: true });
       elements[0].setAttribute('tabindex', '0');
-      elements[0].setAttribute('role', 'button');
+      if(elements[0].nodeName !== 'BUTTON'){
+        elements[0].setAttribute('role', 'button');
+      }
 
       const element = elements[0];
 
