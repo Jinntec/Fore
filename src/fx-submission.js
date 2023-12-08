@@ -339,26 +339,20 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
 /*
         if(this.replace === 'merge'){
+            if(targetInstance.type !== 'xml') {
+                Fore.dispatch(this, "warn", {'message': 'merging of instances only work for type xml'});
+            }
             if (targetInstance && targetInstance.type === 'xml') {
                 targetInstance.partialInstance = data;
-
-                const merged = this._mergeXML(targetInstance.instanceData,targetInstance.partialInstance);
+                // const resultDoc = new DOMParser(`${data.nodeName}`, 'application/xml');
+                // console.log('resultDoc', resultDoc)
+                const merged = Fore.combine(targetInstance.instanceData.firstElementChild, data.firstElementChild, this,null);
                 console.log('merged', merged);
 
                 targetInstance.instanceData = merged;
                 console.log('merging partial instance',targetInstance.partialInstance)
-                /!*
-                targetInstance.instanceData not touched here as we want to keep the default instance unmodified as the full template for the UI.
-                *!/
-
-                // Skip any refreshes if the model is not yet inited#
-                // duplicate from replace='instance'
-                // if (this.model.inited) {
-                    this.model.updateModel(); // force update
-                const owner = this.getOwnerForm();
-                // owner.mergePartial = true;
-                owner.refresh(true);
-                // }
+                this.model.updateModel();
+                this.getOwnerForm().refresh(true);
             }
         }
 */
