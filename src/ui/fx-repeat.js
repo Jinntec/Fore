@@ -5,6 +5,7 @@ import { foreElementMixin } from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
+import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
 /**
  * `fx-repeat`
@@ -131,7 +132,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       if (mutations[0].type === 'childList') {
         const added = mutations[0].addedNodes[0];
         if (added) {
-          const instance = XPathUtil.resolveInstance(this);
+			const instance = XPathUtil.resolveInstance(this, this.ref);
 			const path = XPathUtil.getPath(added, instance);
           // console.log('path mutated', path);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
@@ -206,7 +207,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       });
     }
 
-    const rawNodeset = evaluateXPath(this.ref, inscope, this);
+	  this.touchedPaths = new Set();
+	  const instance = XPathUtil.resolveInstance(this, this.ref);
+	  const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
+		  this.touchedPaths.add(XPathUtil.getPath(node, instance));
+	  });
+      const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
+	  console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
     if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
       // This XPath likely returned an XPath array. Just collapse to that array
       this.nodeset = rawNodeset[0];
@@ -221,6 +228,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
     this._evalNodeset();
+
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
 

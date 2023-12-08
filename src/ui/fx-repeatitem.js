@@ -58,7 +58,9 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.shadowRoot.innerHTML = `
             ${html}
         `;
-    this.getOwnerForm().registerLazyElement(this);
+      this.getOwnerForm().registerLazyElement(this);
+
+	  this.ref = `${this.parentNode.ref}`;
   }
 
   disconnectedCallback() {

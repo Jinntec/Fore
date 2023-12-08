@@ -2,8 +2,8 @@ import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
-import {XPathUtil} from "../xpath-util";
-import getInScopeContext from "../getInScopeContext";
+import { XPathUtil } from '../xpath-util.js';
+import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 
 /**
@@ -76,7 +76,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         const create = this.closest('[create]');
         if(create){
           // ### check if parent element exists
-          let attrName,parentPath, parentNode;
+          let attrName; let parentPath; let parentNode;
 
           if(this.ref.includes('/')){
             parentPath = this.ref.substring(0, this.ref.indexOf('/'));
@@ -92,7 +92,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
               }
             }
           }else{
-            let inscope = getInScopeContext(this, this.ref);
+            const inscope = getInScopeContext(this, this.ref);
 
             if(this.ref.includes('@')) {
               attrName = this.ref.substring(this.ref.indexOf('@') + 1);

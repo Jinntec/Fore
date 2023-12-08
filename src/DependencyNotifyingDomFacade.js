@@ -114,7 +114,7 @@ export class DependencyNotifyingDomFacade {
   // eslint-disable-next-line class-methods-use-this
   getNextSibling(node, bucket) {
     for (let sibling = node.nextSibling; sibling; sibling = sibling.nextSibling) {
-      if (!getBucketsForNode(sibling).includes(bucket)) {
+      if (bucket && !getBucketsForNode(sibling).includes(bucket)) {
         // eslint-disable-next-line no-continue
         continue;
       }
@@ -149,7 +149,7 @@ export class DependencyNotifyingDomFacade {
       previousSibling;
       previousSibling = previousSibling.previousSibling
     ) {
-      if (!getBucketsForNode(previousSibling).includes(bucket)) {
+      if (bucket && !getBucketsForNode(previousSibling).includes(bucket)) {
         // eslint-disable-next-line no-continue
         continue;
       }

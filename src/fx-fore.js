@@ -464,6 +464,24 @@ export class FxFore extends HTMLElement {
 					)
 					.filter(Boolean)
 			);
+
+			for(const changedPath of changedPaths) {
+				for (const repeat of this.querySelectorAll('fx-repeat')) {
+					if (repeat.closest('fx-fore') !== this) {
+						continue;
+					}
+
+					if (repeat.touchedPaths.has(changedPath)) {
+						// Make a temporary model-item-like structure for this
+						this.toRefresh.push({
+							path: changedPath,
+							boundControls: [repeat]
+						});
+
+						console.log('Found a repeat to update!!!', repeat)
+					}
+				}
+			}
 		}
 		if (this.isRefreshing) {
 			return;
@@ -730,21 +748,16 @@ export class FxFore extends HTMLElement {
      */
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
-				// Inherit shared models from the parent component
+        // Inherit shared models from the parent component
 
-			const parentFore = this.parentNode.closest('fx-fore');
+        const parentFore = this.parentNode.closest('fx-fore');
 		if (parentFore) {
 			const sharedInstances = Array.from(parentFore.getModel().querySelectorAll('fx-instance')).filter(instance => instance.hasAttribute('shared'));
-
 				for(const instance of sharedInstances) {
-					if (this.getModel().getInstance(instance.id)) {
-						// don't overwrite. error maybe even?
-						continue;
-					}
 					this.getModel().instances.push(instance);
 				}
 			this.getModel().updateModel();
-			}
+		}
 
 
         if (model.instances.length === 0) {
