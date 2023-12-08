@@ -537,7 +537,9 @@ export class FxFore extends HTMLElement {
             });
 */
 
-            Fore.refreshChildren(this, true);
+            if(this.inited){
+                Fore.refreshChildren(this, true);
+            }
             // console.timeEnd('refreshChildren');
         }
 
