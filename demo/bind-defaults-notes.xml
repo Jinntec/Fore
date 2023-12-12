@@ -1,0 +1,68 @@
+<fx-fore>
+  <fx-model>
+	<fx-instance>
+	  <person>
+		<persname>Jan</persname>
+		<death>1 jan 2023</death>
+	  </person>
+	</fx-instance>
+
+	<fx-instance>
+	  <persons>
+		<person>
+		  <persname>Jan</persname>
+		  <death>1 jan 2023</death>
+		  <notes>
+			<type>Got married</type>
+			<date>yesterday</date>
+			<description>good party</description>
+			<type>date is missing but should be added</type>
+			<description>what happened?</description>
+		  </notes>
+		</person>
+	  </persons>
+	</fx-instance>
+
+	<!-- fx-default is just an alias for `fx-insert`, but it's only allowed once in an fx-bind. It fires when an fx-bind their ref is not found-->
+
+	<fx-bind ref="persons">
+	  <fx-default><person id="person-1234"><persname/></person></fx-default>
+	  <fx-bind ref="person">
+
+		<fx-bind ref="birth" relevant="not-default"><!-- not(deep-equal($ref, ./fx-default/*)) -->
+		  <fx-default ref="persname[last()]" position="after">
+			<birth><date when=""/><location ref=""/></birth>
+		  </fx-default>
+		</fx-bind>
+
+		<fx-bind ref="notes/type">
+		  <fx-default
+			  if="following-sibling::*[self::description|self::type]/self::type"
+			  ref="."
+			  position="after">
+			<date />
+		  </fx-default>
+		</fx-bind>
+		<fx-bind ref="notes/date" relevant="."/>
+	  </fx-bind>
+
+
+	  <fx-bind ref="//bind" required="true"/>
+	</fx-bind>
+  </fx-model>
+
+  <fx-repeat ref="/persons/person">
+	<template>
+	  <fx-control ref="/person/birth/" />
+	</template>
+  </fx-repeat>
+
+  <fx-repeat ref="/person/notes/type">
+	<template>
+	  Type: <fx-control ref="."/>
+	  Date: <fx-control ref="following-sibling::date[1]"/>
+	  Description: <fx-control ref="following-sibling::description[1]"/>
+	</template>
+  </fx-repeat>
+
+</fx-fore>
