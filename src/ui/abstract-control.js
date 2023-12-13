@@ -206,12 +206,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   // eslint-disable-next-line class-methods-use-this
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
-    this.widget = this.getWidget();
+      this.widget = this.getWidget();
+	  const wasRequired = this.isRequired();
 
     if(!this.modelItem.required){
       this.widget.removeAttribute('required');
       this.removeAttribute('required');
-      if (this.isRequired() !== this.modelItem.required){
+      if (wasRequired !== this.modelItem.required){
         this._dispatchEvent('optional');
       }
       return;
@@ -229,7 +230,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     }
     this.widget.setAttribute('required', '');
     this.setAttribute('required', '');
-    if (this.isRequired() !== this.modelItem.required) {
+    if (wasRequired !== this.modelItem.required) {
       this._dispatchEvent('required');
     }
 
