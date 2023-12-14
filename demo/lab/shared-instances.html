@@ -10,11 +10,30 @@
     <style>
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+			grid-gap:1rem;
+			margin-top:2rem;
         }
 		input, p {
 			font-size: 1rem;
 			padding: 0.5rem;
+		}
+		fx-fore#todo{
+			padding: 3rem;
+			background: var(--paper-blue-100);
+		}
+		fx-fore fx-fore{
+			background: var(--paper-blue-300);
+			padding: 0.5rem;
+		}
+		fx-fore fx-fore input{
+			width: calc(100% - 1.25rem);
+		}
+		#outer{
+
+		}
+		input{
+			width: 100%;
 		}
     </style>
 </head>
@@ -25,8 +44,20 @@
 	<h1>Shared instances</h1>
 
 	<p>By marking an <code>fx-instance</code> element with a <code>shared</code> attribute you can
-		access this instance from with nested <code>fx-fore</code> elements.</p>
+		access this instance with its given id within a nested <code>fx-fore</code> element.</p>
 
+	<p>The data are truly shared - changing the data within a nested Fore will change the original
+	data. This simplifies to delegate the handling of a subtree of elements to a sub Fore without
+	the need to maintain a clone and applying it back.</p>
+
+	<p class="note">Sharing data this way is just one way of implementing data sharing. There
+		might be additional means to share data directly in the future.</p>
+
+	<p>
+		This example uses an outer Fore element and nests another 2 Fore elements within itself. All share (and modify)
+		the instance 'todos'. The first sub Fore just lists the entries but adds 'You can do it!', the second mirrors
+		the same repeat as its parent.
+	</p>
 	<demo-snippet>
 		<template>
 			<fx-fore id="todo">
@@ -42,25 +73,25 @@
 						</data>
 					</fx-instance>
 				</fx-model>
+				<div>
+					<div>Parent Fore element ({instance('todos')/todos/todo => count()})</div>
+					<fx-repeat id="outer" ref="instance('todos')/todos/todo">
+						<template>
+							<fx-control ref="."></fx-control>
+						</template>
+					</fx-repeat>
+					<fx-trigger>
+						<button>+</button>
+						<fx-insert ref="instance('todos')/todos/todo"></fx-insert>
+					</fx-trigger>
+				</div>
+
 				<div class="grid">
-					<div class="repeat">
-						<div>Parent Fore element ({instance('todos')/todos/todo => count()})</div>
-						<fx-repeat ref="instance('todos')/todos/todo">
-							<template>
-								<fx-control ref="."></fx-control>
-							</template>
-						</fx-repeat>
-						<fx-trigger>
-							<button>+</button>
-							<fx-insert ref="instance('todos')/todos/todo"></fx-insert>
-						</fx-trigger>
-					</div>
 
 					<div class="repeat">
 						<fx-fore id="child-a">
 							<fx-model>
-								<!-- TODO: Make this work!!! -->
-								<!-- <fx-instance id="default"><data><message>You can do it!</message></data></fx-instance> -->
+								 <fx-instance id="default"><data><message>You can do it!</message></data></fx-instance>
 							</fx-model>
 							<div>First nested Fore element ({instance('todos')/todos/todo => count()})</div>
 							<fx-repeat ref="instance('todos')/todos/todo" id="repeat-a">
