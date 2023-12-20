@@ -362,11 +362,45 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance src="/base/test/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
+          <fx-instance>
+<data><ol><li><p>66</p></li><li><p>78</p></li></ol></data>
+</fx-instance>
+        </fx-model>
+        <fx-group ref="ol">
+          <fx-repeat ref="//li">
+            <template>
+              <fx-group ref="p">
+                <fx-control ref=".">
+                  <label>Breite2</label>
+                </fx-control>
+              </fx-group>
+            </template>
+          </fx-repeat>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
+
+    const controls = el.querySelectorAll('fx-control');
+    expect(controls.length).to.equal(2);
+
+    expect(controls[0].value).to.equal('66');
+    expect(controls[1].value).to.equal('78');
+  });
+
+	it('resolves group within repeat (external instance)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
         </fx-model>
         <fx-group ref="teiHeader">
+{count(//*:msPart)}
           <fx-repeat ref=".//msPart">
             <template>
+---{name(.)}---
               <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
                 <fx-control ref="width">
                   <label>Breite2</label>
@@ -381,7 +415,8 @@ describe('scoped resolution tests', () => {
     // const model = el.querySelector('fx-fore fx-model');
     await oneEvent(el, 'ready');
 
-    const controls = el.querySelectorAll('fx-control');
+		const controls = el.querySelectorAll('fx-control');
+		console.log(el.outerHTML);
     expect(controls.length).to.equal(2);
 
     expect(controls[0].value).to.equal('66');

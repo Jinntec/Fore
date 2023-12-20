@@ -49,21 +49,25 @@
               <label>Email</label>
               <fx-return ref="." event="value-changed"></fx-return>
 			</fx-control>
+<!--
 			<fx-trigger>
 			  <button>Check it</button>
 			  <fx-show dialog="myDialog"></fx-show>
 			  <fx-dispatch name="myEvent" targetid="report">
 			  </fx-dispatch>
 			</fx-trigger>
+-->
 			<div id="report">
 			  <fx-message event="myEvent">Something happened {.}!</fx-message>
 			</div>
 			<fx-message event="myEvent" target="report">!!!{.}</fx-message>
+<!--
 			<fx-trigger>
               <button>message and refresh me</button>
               <fx-message>Hey my address is {.}</fx-message>
               <fx-refresh></fx-refresh>
 			</fx-trigger>
+-->
 
 			<fx-items ref=".">
 			  <template>

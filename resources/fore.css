@@ -101,6 +101,10 @@ fx-alert {
     display: none;
 }
 
+[valid] fx-alert{
+    display: none;
+}
+
 .visited[invalid] fx-alert {
     display: block;
 }

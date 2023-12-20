@@ -67,7 +67,9 @@ export class FxModel extends HTMLElement {
         // const path = fx.evaluateXPath('path()',node);
         let path;
         if (node.nodeType) {
-            path = XPathUtil.getPath(node);
+			const instance = XPathUtil.resolveInstance(model, ref);
+
+            path = XPathUtil.getPath(node, instance);
         } else {
             path = null;
             targetNode = node;

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Dependency Graph calculation</title>
+
+    <!--    <script src="../node_modules/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+
+    <script
+            type="text/javascript"
+            src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+    <script type="text/javascript" src="fore-graph.js"></script>
+    <style>
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html"></fore-corner>
+
+
+<fx-fore id="page-selector">
+    <fx-model>
+        <fx-instance>
+            <data>
+                <page>recalculate.htm</page>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <header>
+        <fx-action event="load-page" target="#document">
+            <fx-load attach-to="#graph" url="{page}"></fx-load>
+        </fx-action>
+
+        <fx-control id="page-url" ref="page" update-event="enter">
+            <input placeholder="URL of page to analyze">
+
+            <fx-action event="value-changed">
+                <fx-dispatch name="load-page"></fx-dispatch>
+            </fx-action>
+        </fx-control>
+    </header>
+    <main class="wrapper">
+        <div id="fore-graph"></div>
+    </main>
+</fx-fore>
+
+
+</main>
+
+<script>
+    (function () {
+
+        const fore = document.querySelectorAll('fx-fore > *');
+        renderGraph(fore,'fore-graph')
+
+    })();
+
+
+</script>
+</body>
+</html>

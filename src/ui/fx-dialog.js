@@ -39,6 +39,8 @@ export class FxDialog extends HTMLElement {
         this.classList.remove('show');
       });
     }
+    this.setAttribute('role','dialog');
+    this.setAttribute('aria-modal','false');
 
 /*
     this.addEventListener('transitionend', () => {

@@ -70,8 +70,8 @@
                 <fx-action id="deployment" event="check-done">
                     <fx-setvalue ref="instance('vars')/completed" value=". + 1"></fx-setvalue>
                     <fx-update></fx-update>
-                    <fx-message if="instance('vars')/completed = '6'">all checks done</fx-message>
-                    <fx-action if="instance('vars')/completed = 6">
+                    <fx-action if="instance('vars')/completed = '6'">
+                        <fx-message>all checks done</fx-message>
                         <fx-setvalue ref="instance('vars')/success">true</fx-setvalue>
                     </fx-action>
                     <fx-send submission="s-submission1" if="instance('vars')/completed < 6"></fx-send>
@@ -81,6 +81,11 @@
                     <fx-trigger>
                         <button>start checking</button>
                         <fx-send submission="s-submission1"></fx-send>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>reset</button>
+                        <fx-reset instance="default"></fx-reset>
+                        <fx-reset instance="vars"></fx-reset>
                     </fx-trigger>
 
                     <fx-group>

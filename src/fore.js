@@ -1,5 +1,5 @@
 import getInScopeContext from "./getInScopeContext.js";
-import {evaluateXPathToString} from "./xpath-evaluation.js";
+import {evaluateXPath, evaluateXPathToFirstNode, evaluateXPathToString, evaluateXPathToNodes} from "./xpath-evaluation.js";
 import { XPathUtil } from "./xpath-util.js";
 
 /**
@@ -17,6 +17,243 @@ export class Fore {
   static CONSTRAINT_DEFAULT = true;
 
   static TYPE_DEFAULT = 'xs:string';
+
+  /**
+   * recursively walks along a template instance that contains all nodes relevant for editing and
+   * applying all nodes being present in partial instance onto it.
+   *
+   * @param start
+   * @param partial
+   * @returns {*}
+   * @private
+   */
+  static combine(start, partial, foreElement,expr){
+    if(!start) return;
+
+    const appended = false;
+    // ### get the path of the current element
+    let path = evaluateXPath('path()',start,foreElement)[0];
+    if(expr){
+      path = expr;
+    }
+    // const attrMap = new Map();
+    console.log('########process path', XPathUtil.shortenPath(path));
+    const predicates = Fore.buildPredicates(start);
+    // console.log('########process search', path);
+    // ### search the path in the partial instance
+    const toMerge = evaluateXPathToFirstNode( path,partial,foreElement);
+    if(expr){
+      console.log('skipped one - new toMerge', toMerge);
+    }
+    // console.log('tomerge node', toMerge);
+    // if(toMerge.length === 1){}
+    if(toMerge){
+      // console.log('merging nodes', toMerge);
+      const mergeAttrs = Fore.buildPredicates(toMerge);
+      if(predicates === mergeAttrs) {
+
+
+        // console.log('####### attr maps', attrMap, toMergeAttrMap);
+        // console.log('########process merge attrs', mergeAttrs);
+        if(start.getAttribute('type') !== toMerge.getAttribute('type') ){
+          console.log('###### element type attr not matching', start, toMerge);
+          const nextSibling = start.nextElementSibling;
+          if(nextSibling && nextSibling.nodeName === start.nodeName){
+            console.log('nextSibling', nextSibling, XPathUtil.shortenPath(path));
+            console.log('start', start, XPathUtil.shortenPath(path));
+            Fore.combine(start,partial,foreElement,path);
+          }
+        }
+
+        // ### iterate the attributes of the template node
+        // if(attrMap === toMergeAttrMap){
+        // if(start.attributes){
+        Array.from(start.attributes).forEach(attr => {
+          // ### if the template attribute has a matching attribute in partial...
+          if (toMerge.hasAttribute(attr.nodeName)) {
+            if (attr.nodeName !== 'xmlns') {
+              // console.log('overwrite attr', attr);
+              const toMergeAttr = toMerge.getAttribute(attr.nodeName);
+              // if (attr.nodeValue !== toMergeAttr.nodeValue) {
+                // ### apply the attribute value from partial to template
+              if(toMergeAttr){
+                start.setAttribute(attr.nodeName, toMergeAttr)
+              }
+              // }
+            }
+          }
+        });
+        // }
+      }else{
+        console.log('###### element in template but not in partial',start);
+        const nextSibling = start.nextElementSibling;
+        if(nextSibling && nextSibling.nodeName === start.nodeName){
+          Fore.combine(nextSibling,partial,foreElement,path);
+        }
+      }
+      // ### if we don't have children we still might have text
+      if(toMerge.children.length === 0){
+        const toMergeText = toMerge.textContent;
+        if(toMergeText){
+          start.textContent = toMergeText;
+        }
+      }
+
+      // ### if the template node does not have children but the partial has then copy them over
+      if(start.children.length === 0 && toMerge.children.length !== 0){
+        const mergeChildren = Array.from(toMerge.children);
+        mergeChildren.forEach(child => {
+          start.append(child);
+        });
+      }
+    }
+
+    // ### recurse
+    if(start.children){
+      Array.from(start.children).forEach(element => {
+/*
+        console.log('stepping into element', element);
+        if(element.getAttribute('type') !== toMerge.getAttribute('type')){
+          // console.log('###### element in template but not in partial');
+          // const nextSibling = start.nextElementSibling;
+          const nextSibling = element.nextElementSibling;
+          if(nextSibling && nextSibling.nodeName === toMerge.nodeName){
+            console.log('nextSibling', nextSibling, XPathUtil.shortenPath(path));
+            Fore.combine(nextSibling,partial,foreElement,path);
+          }
+        }
+*/
+          return Fore.combine(element, partial,foreElement,null);
+
+
+      });
+    }
+    return start;
+  }
+/*
+  static combine(start, partial, foreElement,expr){
+    if(!start) return;
+    // ### get the path of the current element
+    let path = evaluateXPath('path()',start,foreElement)[0];
+    if(expr){
+      path = expr;
+    }
+    // const attrMap = new Map();
+    console.log('########process path', XPathUtil.shortenPath(path));
+    const predicates = Fore.buildPredicates(start);
+    /!*
+        if(predicates){
+          path = path.substring(1, path.lastIndexOf('['));
+        }
+        path += Fore.buildPredicates(start);
+    *!/
+    // console.log('########process search', path);
+    // ### search the path in the partial instance
+    const toMerge = evaluateXPathToFirstNode( path,partial,foreElement);
+
+    // console.log('tomerge node', toMerge);
+    // if(toMerge.length === 1){}
+    if(toMerge){
+      // console.log('merging nodes', toMerge);
+      const mergeAttrs = Fore.buildPredicates(toMerge);
+      if(predicates === mergeAttrs) {
+
+
+        // console.log('####### attr maps', attrMap, toMergeAttrMap);
+        // console.log('########process merge attrs', mergeAttrs);
+/!*
+        if(toMerge.getAttribute('type') !== start.getAttribute('type')){
+          // console.log('###### element in template but not in partial');
+          // const nextSibling = start.nextElementSibling;
+          const nextSibling = start.nextElementSibling;
+          if(nextSibling && nextSibling.nodeName === start.nodeName){
+            console.log('nextSibling', nextSibling, XPathUtil.shortenPath(path));
+            Fore.combine(nextSibling,partial,foreElement,path);
+          }
+        }
+*!/
+
+        // ### iterate the attributes of the template node
+        // if(attrMap === toMergeAttrMap){
+        // if(start.attributes){
+        Array.from(start.attributes).forEach(attr => {
+          // ### if the template attribute has a matching attribute in partial...
+          if (toMerge.hasAttribute(attr.nodeName)) {
+            if (attr.nodeName !== 'xmlns') {
+              // console.log('overwrite attr', attr);
+              const toMergeAttr = toMerge.getAttribute(attr.nodeName);
+              // if (attr.nodeValue !== toMergeAttr.nodeValue) {
+                // ### apply the attribute value from partial to template
+              if(toMergeAttr){
+                start.setAttribute(attr.nodeName, toMergeAttr)
+              }
+              // }
+            }
+          }
+        });
+        // }
+      }else{
+        console.log('###### element in template but not in partial',start);
+        const nextSibling = start.nextElementSibling;
+        if(nextSibling && nextSibling.nodeName === start.nodeName){
+          Fore.combine(nextSibling,partial,foreElement,path);
+        }
+      }
+      // ### if we don't have children we still might have text
+      if(toMerge.children.length === 0){
+        const toMergeText = toMerge.textContent;
+        if(toMergeText){
+          start.textContent = toMergeText;
+        }
+      }
+
+      // ### if the template node does not have children but the partial has then copy them over
+      if(start.children.length === 0 && toMerge.children.length !== 0){
+        const mergeChildren = Array.from(toMerge.children);
+        mergeChildren.forEach(child => {
+          start.append(child);
+        });
+      }
+    }
+
+    // ### recurse
+    if(start.children){
+      Array.from(start.children).forEach(element => {
+/!*
+        console.log('stepping into element', element);
+        if(element.getAttribute('type') !== toMerge.getAttribute('type')){
+          // console.log('###### element in template but not in partial');
+          // const nextSibling = start.nextElementSibling;
+          const nextSibling = element.nextElementSibling;
+          if(nextSibling && nextSibling.nodeName === toMerge.nodeName){
+            console.log('nextSibling', nextSibling, XPathUtil.shortenPath(path));
+            Fore.combine(nextSibling,partial,foreElement,path);
+          }
+        }
+*!/
+          return Fore.combine(element, partial,foreElement);
+
+
+      });
+    }
+    return start;
+  }
+*/
+
+  static buildPredicates(node){
+    let attrPredicate='';
+    Array.from(node.attributes).forEach(attr =>{
+      // attrMap.set(attr.nodeName,attr.nodeValue);
+      // if(attr.nodeName !== 'xmlns'){
+      //   if(attr.nodeValue !== ''){
+      //     attrPredicate += `[@${attr.nodeName}='${attr.nodeValue}']`;
+      //   }else{
+          attrPredicate += `[@${attr.nodeName}]`;
+        // }
+      // }
+    });
+    return attrPredicate
+  }
 
 
   /**

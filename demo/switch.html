@@ -79,17 +79,17 @@
     <demo-snippet>
         <template>
             <fx-fore>
-<!--
                 <fx-model>
                     <fx-instance>
                         <data>
                             <item1>a bound item</item1>
                             <item2>a bound item</item2>
                             <item3>a bound item</item3>
+                            <selected></selected>
                         </data>
                     </fx-instance>
                 </fx-model>
--->
+                <div>Tab '{selected}' is selected</div>
 
                 <fx-trigger label="page 1">
                     <paper-button>toggle page 1</paper-button>
@@ -106,7 +106,9 @@
                     <fx-toggle case="three"></fx-toggle>
                 </fx-trigger>
 
+
                 <fx-switch>
+
                     <fx-case id="one">
                         <fx-message event="select">Tab one selected</fx-message>
                         <fx-message event="deselect">Tab one deselected</fx-message>
@@ -118,6 +120,8 @@
 -->
                     </fx-case>
                     <fx-case id="two">
+                        <fx-message event="select">Tab two selected</fx-message>
+                        <fx-message event="deselect">Tab two deselected</fx-message>
                         some further content
 <!--
                         <fx-control ref="item2">
@@ -126,12 +130,17 @@
 -->
                     </fx-case>
                     <fx-case id="three">
+                        <fx-action event="select">
+                            <fx-message>Tab three selected</fx-message>
+                            <fx-setfocus control="c3"></fx-setfocus>
+                        </fx-action>
+
+                        <fx-message event="deselect">Tab three deselected</fx-message>
+
                         some completely unneeded content
-<!--
-                        <fx-control ref="item3">
+                        <fx-control id="c3" ref="item3">
                             <label>Item1</label>
                         </fx-control>
--->
                     </fx-case>
                 </fx-switch>
             </fx-fore>

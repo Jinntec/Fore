@@ -1,0 +1,88 @@
+<!doctype htm l>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+
+        <!-- inserting non-existing elements explicitly with insert actions at model init time -->
+        <fx-action event="model-construct-done">
+            <fx-message>done</fx-message>
+
+            <!-- insert gender template if not exists and insert after last persname-->
+            <fx-insert if="not(exists(gender))"
+                       ref="persname"
+                       position="after"
+                       origin="instance('template')/gender"></fx-insert>
+            <fx-update></fx-update>
+
+
+            <!-- insert birth template if not exists and insert after gender-->
+            <fx-insert if="not(exists(birth))"
+                       ref="gender"
+                       position="after"
+                       origin="instance('template')/birth"></fx-insert>
+            <fx-update></fx-update>
+
+            <fx-insert if="not(exists(note))"
+                       ref="instance()/*"
+                       origin="instance('template')/note" position="after"></fx-insert>
+            <fx-update></fx-update>
+
+
+        </fx-action>
+
+        <fx-instance>
+            <person xml:id="0001">
+                <persname type="main">John Doe</persname>
+                <persname type="sort">Jane Doe</persname>
+                <death>
+                    <date when="01.07.2026"/>
+                    <placeName ref="Paris"/>
+                </death>
+            </person>
+        </fx-instance>
+
+        <fx-instance id="template">
+            <person>
+                <person foo=""></person>
+                <gender value="U"></gender>
+                <birth>
+                    <date when=""></date>
+                    <placeName ref=""></placeName>
+                </birth>
+                <death>
+                    <date when=""></date>
+                    <placeName ref=""></placeName>
+                </death>
+                <note type="bio"></note>
+            </person>
+        </fx-instance>
+
+    </fx-model>
+
+    <fx-repeat ref="/persons/person">
+        <template>
+            <fx-control ref="/person/birth/" />
+        </template>
+    </fx-repeat>
+
+    <fx-repeat ref="/person/notes/type">
+        <template>
+            Type: <fx-control ref="."/>
+            Date: <fx-control ref="following-sibling::date[1]"/>
+            Description: <fx-control ref="following-sibling::description[1]"/>
+        </template>
+    </fx-repeat>
+
+</fx-fore>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>
