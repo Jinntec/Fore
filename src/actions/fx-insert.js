@@ -221,14 +221,19 @@ export class FxInsert extends AbstractAction {
         }
       }
     }
+	  // instance('default')/items/item[index()]
 
     // console.log('insert context item ', insertLocationNode);
     // console.log('parent ', insertLocationNode.parentNode);
     // console.log('instance ', this.getModel().getDefaultContext());
     // Fore.dispatch()
 
-    const inst = this.getModel().getInstance(XPathUtil.resolveInstance(this));
-    // console.log('<<<<<<< resolved instance', inst);
+	  const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
+    const inst = this.getModel().getInstance(instanceId);
+      // console.log('<<<<<<< resolved instance', inst);
+	  // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
+	  const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
+
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
@@ -259,7 +264,9 @@ export class FxInsert extends AbstractAction {
       }),
     );
 
-    this.needsUpdate = true;
+      this.needsUpdate = true;
+	  console.log('Changed!', xpath)
+	  return [xpath];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -273,9 +280,9 @@ export class FxInsert extends AbstractAction {
     return null;
   }
 
-  actionPerformed() {
-    this.getModel().rebuild();
-    super.actionPerformed();
+  actionPerformed(changedPaths) {
+//    this.getModel().rebuild();
+    super.actionPerformed(changedPaths);
   }
 
   /**

@@ -41,7 +41,7 @@ export class FxSetfocus extends AbstractAction {
       if(parentIItem){
           targetElement = parentIItem.querySelector(selector);
           this._focus(targetElement);
-          return;
+          // return;
       }
 
       // ### the target element is hosted within a repeat

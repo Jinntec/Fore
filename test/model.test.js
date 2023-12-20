@@ -61,7 +61,7 @@ describe('model tests', () => {
     expect(mi1.relevant).to.equal(true);
     expect(mi1.constraint).to.equal(true);
     expect(mi1.type).to.equal('xs:string');
-    expect(mi1.path).to.equal('/a[1]');
+    expect(mi1.path).to.equal('$default/a[1]');
 
     const mi2 = model.modelItems[1];
     expect(mi2.value).to.equal('B');
@@ -70,7 +70,7 @@ describe('model tests', () => {
     expect(mi2.relevant).to.equal(true);
     expect(mi2.constraint).to.equal(true);
     expect(mi2.type).to.equal('xs:string');
-    expect(mi2.path).to.equal('/b[1]');
+    expect(mi2.path).to.equal('$default/b[1]');
 
     const mi3 = model.modelItems[2];
     expect(mi3.value).to.equal('C');
@@ -79,7 +79,7 @@ describe('model tests', () => {
     expect(mi3.relevant).to.equal(true);
     expect(mi3.constraint).to.equal(true);
     expect(mi3.type).to.equal('xs:string');
-    expect(mi3.path).to.equal('/c[1]');
+    expect(mi3.path).to.equal('$default/c[1]');
   });
 
   it('rebuilds and recalcuates correctly after value change', async () => {
@@ -120,7 +120,7 @@ describe('model tests', () => {
     console.log('modelitems ', model.modelItems);
 
     const mi = model.modelItems[1]; // <b>B</b>
-    expect(mi.path).to.equal('/b[1]');
+    expect(mi.path).to.equal('$default/b[1]');
 
     mi.value = 'BB'; // making <c>C</c> non-relevant
     model.updateModel();
@@ -132,7 +132,7 @@ describe('model tests', () => {
     expect(mi1.relevant).to.equal(true);
     expect(mi1.constraint).to.equal(true);
     expect(mi1.type).to.equal('xs:string');
-    expect(mi1.path).to.equal('/a[1]');
+    expect(mi1.path).to.equal('$default/a[1]');
 
     const mi2 = model.modelItems[1];
     expect(mi2.value).to.equal('BB');
@@ -141,7 +141,7 @@ describe('model tests', () => {
     expect(mi2.relevant).to.equal(true);
     expect(mi2.constraint).to.equal(true);
     expect(mi2.type).to.equal('xs:string');
-    expect(mi2.path).to.equal('/b[1]');
+    expect(mi2.path).to.equal('$default/b[1]');
 
     const mi3 = model.modelItems[2];
     expect(mi3.value).to.equal('C');
@@ -150,7 +150,7 @@ describe('model tests', () => {
     expect(mi3.relevant).to.equal(false);
     expect(mi3.constraint).to.equal(true);
     expect(mi3.type).to.equal('xs:string');
-    expect(mi3.path).to.equal('/c[1]');
+    expect(mi3.path).to.equal('$default/c[1]');
   });
 
   it('recalcuates the whole graph (maingraph)', async () => {

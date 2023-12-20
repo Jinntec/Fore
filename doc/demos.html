@@ -43,10 +43,12 @@
         <nav class="local-nav" aria-labelledby="Demo Categories">
             <a href="#basic" title="Basic Examples">Basic</a>
             <a href="#model" title="Model-related Examples">Model</a>
+            <a href="#instance" title="Instance-related Examples">Instance</a>
             <a href="#request" title="Submission Examples">Submission</a>
             <a href="#control">Control</a>
             <a href="#container">Container</a>
             <a href="#actions">Actions</a>
+            <a href="#mutation">Data Mutation</a>
             <a href="#functions">Functions</a>
             <a href="#json">JSON</a>
             <a href="#byelement">by element</a>
@@ -93,15 +95,6 @@
                 <h3>Ref what?</h3>
                 <p>Introducing binding expressions</p>
             </div></a>
-            <a href="../demo/03-instances.html"><div>
-                <h3>What an instance can do</h3>
-                <p>Using one or more <code>fx-instance</code> elements</p>
-            </div></a>
-            <a href="../demo/04-instances.html?param1=foo&param2=bar"><div>
-                <h3>Instance super
-                    powers</h3>
-                <p>loading an <code>fx-instance</code>, JSON instances and creating a instance from queryString</p>
-            </div></a>
             <a href="../demo/binding.html"><div>
                 <h3>Bindings are forever</h3>
                 <p><code>fx-bind</code> elements and ModelItems explained</p>
@@ -135,6 +128,24 @@
                 <h3>Calculation Order</h3>
                 <p>No matter the order of binds it will calculate values in the correct order.</p>
             </div></a>
+        </section>
+
+        <h2>Instance</h2>
+        <section id="instance" class="three-col">
+            <a href="../demo/03-instances.html"><div>
+                <h3>What an instance can do</h3>
+                <p>Using one or more <code>fx-instance</code> elements</p>
+            </div></a>
+            <a href="../demo/04-instances.html?param1=foo&param2=bar"><div>
+                <h3>Instance super
+                    powers</h3>
+                <p>loading an <code>fx-instance</code>, JSON instances and creating a instance from queryString</p>
+            </div></a>
+            <a href="../demo/lab/shared-instances.html" class="updated"><div>
+                <h3>Shared instances</h3>
+                <p>Instances can be shared between nested Fore elements</p>
+            </div></a>
+
         </section>
 
         <h2>Submission</h2>
@@ -235,7 +246,7 @@
 
         <h2>UI Container</h2>
         <section id="container" class="three-col">
-            <a href="../demo/todo.html"><div>
+            <a href="../demo/todo2.html"><div>
                 <h3>Simple Repeat</h3>
                 <p>A simple todo with <code>fx-repeat</code></p>
             </div></a>
@@ -316,23 +327,6 @@
                 <h3>fx-dispatch action</h3>
                 <p>Dispatching events with parameters</p>
             </div></a>
-            <a href="../demo/insert.html"><div>
-                <h3>The insert action</h3>
-                <p><code>fx-insert</code> - the swiss army knife of data mutation</p>
-            </div></a>
-            <a href="../demo/insert2.html"><div>
-                <h3>Insert into empty list</h3>
-                <p>With the <code>context</code> attribute you can insert into an empty list</p>
-            </div></a>
-            <a href="../demo/insert-inhomogenious.html"><div>
-                <h3>Inserting in inhomogenious
-                    nodeset</h3>
-                <p>Inserting into the right place with mixed siblings</p>
-            </div></a>
-            <a href="../demo/fx-replace.html"><div>
-                <h3>The replace action</h3>
-                <p>Replacing data nodes</p>
-            </div></a>
             <a href="../demo/keycode.html"><div>
                 <h3>Handling keyboard events</h3>
                 <p>Using <code>event()</code> function to conditionally execute actions for certain keys</p>
@@ -354,18 +348,45 @@
                 <h3>Looping submissions with actions</h3>
                 <p>Looping submissions with an action block.</p>
             </div></a>
-            <a href="../demo/actions/reset.html"><div>
-                <h3>Resetting data</h3>
-                <p>Resetting data to their initial state.</p>
+            <a href="../demo/actions/call.html"><div class="updated">
+                <h3>The call action</h3>
+                <p>Call an action or a function</p>
+            </div></a>
+
+        </section>
+
+        <h2>Mutating data with actions</h2>
+        <section id="mutation" class="three-col">
+            <a href="../demo/insert-append.html"><div class="updated">
+                <h3>Appending data</h3>
+                <p>Appending data using <code>fx-insert</code></p>
+            </div></a>
+            <a href="../demo/insert.html"><div>
+                <h3>The insert action</h3>
+                <p><code>fx-insert</code> - the swiss army knife of data mutation</p>
+            </div></a>
+            <a href="../demo/insert2.html"><div>
+                <h3>Insert into empty list</h3>
+                <p>With the <code>context</code> attribute you can insert into an empty list</p>
+            </div></a>
+            <a href="../demo/insert-inhomogenious.html"><div>
+                <h3>Inserting in inhomogenious
+                    nodeset</h3>
+                <p>Inserting into the right place with mixed siblings</p>
+            </div></a>
+            <a href="../demo/fx-replace.html"><div>
+                <h3>The replace action</h3>
+                <p>Replacing data nodes</p>
             </div></a>
             <a href="../demo/actions/toggleboolean.html"><div>
                 <h3>Toggle a Boolean value</h3>
                 <p>Quickest way to toggle a Boolean value.</p>
             </div></a>
-            <a href="../demo/actions/call.html"><div class="updated">
-                <h3>The call action</h3>
-                <p>Call an action or a function</p>
+            <a href="../demo/actions/reset.html"><div>
+                <h3>Resetting data</h3>
+                <p>Resetting data to their initial state.</p>
             </div></a>
+
         </section>
 
         <h2>Functions</h2>
@@ -382,6 +403,12 @@
                 <h3>Sorting with XQuery</h3>
                 <p>Sorting elements with a custom XQuery function</p>
             </div></a>
+            <a href="../demo/uri.html"><div class="updated">
+                <h3>Builtin functions</h3>
+                <p>Some examples of builtin functions</p>
+            </div></a>
+
+
         </section>
 
         <h2>JSON</h2>
@@ -391,6 +418,7 @@
                 <p>Binding JSON data nodes in a <code>fx-repeat</code></p>
             </div></a>
         </section>
+
 
 
         <h2>By element</h2>

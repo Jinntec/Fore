@@ -1,0 +1,8 @@
+<person xmlns="http://www.tei-c.org/ns/1.0" xml:id="person0001">
+    <persName type="main">John Doe</persName>
+    <persName type="sort">Jane Doe</persName>
+    <death>
+        <date when="01.07.2026"/>
+        <placeName ref="Paris"/>
+    </death>
+</person>

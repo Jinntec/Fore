@@ -155,16 +155,16 @@
                 <h1>Todos with SubTasks</h1>
                 <fx-repeat focus-on-create="task" id="r-todos" ref="task">
                     <template>
-                        <fx-control label="Todo" ref="@text"></fx-control>
+                        <fx-control label="Todo" ref="@text" data-cy="todo-widget-{count(preceding-sibling::*)}"></fx-control>
                         <fx-trigger>
-                            <a href="#">X</a>
+                            <a href="#" data-cy="remove-todo-button-{count(preceding-sibling::*)}">X</a>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                         <fx-repeat id="r-subtask" ref="task">
                             <template>
-                                <fx-control id="task" label="Task" ref="@text" type="text"></fx-control>
+                                <fx-control id="task" label="Task" ref="@text" type="text" data-cy="task-widget-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}"></fx-control>
                                 <fx-trigger>
-                                    <a href="#">X</a>
+                                    <a href="#" data-cy="remove-task-button-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}">X</a>
                                     <fx-delete ref="."></fx-delete>
                                 </fx-trigger>
                             </template>

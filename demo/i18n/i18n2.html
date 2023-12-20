@@ -44,12 +44,13 @@
                         <fx-items ref="instance('default')?*" class="widget">
                             <template>
                                 <div class="fx-checkbox">
-                                    <input type="checkbox" value="{value}"/>
+                                    <input type="radio" name="group" value="{value}"/>
                                     <label>{name}</label>
                                 </div>
                             </template>
                         </fx-items>
                     </fx-control>
+                    {instance('vars')/selected}
                 </fx-group>
 
                 <fx-trigger>

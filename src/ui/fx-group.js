@@ -33,7 +33,10 @@ class FxGroup extends FxContainer {
     super();
     this.collapse = false;
   }
-
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role','group');
+  }
   render() {
     return `
       <slot></slot>

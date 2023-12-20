@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .wrapper{
+            position: relative;
+        }
+        fx-control{
+            width: 100%;
+            position: relative;
+        }
+        label{
+            display: block;
+        }
+        input{
+            width: 100%;
+        }
+        dt{
+            font-weight: bolder;
+        }
+        dd{
+            padding: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+
+    <h1>Builtin functions</h1>
+
+    <p>This page shows some examples of builtin Fore functions mainly for querying the browser URI.</p>
+    <a href="uri.html?param1=value1&param2=value2#hash">click here first to initialize some values</a>
+
+    <br/>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+
+                <dl>
+                    <dt>location-uri</dt>
+                    <dd>{uri()}</dd>
+                    <dt>uri-query:</dt>
+                    <dd>{uri-query()}</dd>
+                    <dt>param 'param1':</dt>
+                    <dd>{uri-param('param1')}</dd>
+                    <dt>param 'param2': </dt>
+                    <dd>{uri-param('param2')}</dd>
+                    <dt>path: </dt>
+                    <dd>{uri-path()}</dd>
+                    <dt>fragment:</dt>
+                    <dd> {uri-fragment()}</dd>
+                    <dt>scheme: </dt>
+                    <dd>{uri-scheme()}</dd>
+                    <dt>scheme specific part: </dt>
+                    <dd>{uri-scheme-specific-part()}</dd>
+                    <dt>host: </dt>
+                    <dd>{uri-host()}</dd>
+                    <dt>port: </dt>
+                    <dd>{uri-port()}</dd>
+                </dl>
+                
+                <p></p>
+                <dl>
+                    <dt>local-date:</dt>
+                    <dd>{local-date()}</dd>
+                    <dt>local-dateTime:</dt>
+                    <dd>{local-dateTime()}</label>
+                    </dd>
+                </dl>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="wrapper">
+        <h1>Working with partial data</h1>
+        <p>In some cases you want to skip elements from being saved as they would create invalid content.
+            When loading those partial instance back for editing they need to be merged into the full
+            template of possible nodes. This can be accomplished with <code>replace='merge'</code> for the
+            respective submission.</p>
+
+        <p>Use <a href="?inspect">Fore Glass</a> to see resulting data</p>
+
+        <h2>Loading the partial instance via submission</h2>
+        <p>Usually loading the partial instance involves loading it with some parameter and we
+        need to use a <code>fx-submission</code> to resolve it. <code>replace="merge"</code>
+        will merge the response data into the instance it is pointing to.</p>
+
+        <demo-snippet>
+            <template>
+                <fx-fore>
+                    <fx-model>
+                        <fx-instance id="full" src="epidoc-template.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <fx-instance id="partial" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+
+                        <!-- ### merge the response of this submission (partial) into target instance 'full'. That instance
+                        is the template. -->
+                        <fx-submission id="load-partial"
+                                       url="E0000001.xml"
+                                       replace="merge"
+                                       instance="full">
+                        </fx-submission>
+
+
+                        <!-- ### move 'full' instance to 'result' for applying relevance filtering that
+                                 shall only apply for the submission. -->
+                        <fx-submission id="save"
+                                       url="#echo"
+                                       method="post"
+                                       replace="instance"
+                                       instance="result">
+                            <!-- ### call the actual saving operation -->
+                            <fx-send submission="doSave" event="submit-done"></fx-send>
+                        </fx-submission>
+                        <fx-submission id="doSave"
+                                       url="#echo"
+                                       method="post"
+                                       ref="instance('result')"
+                                       replace="instance"
+                                       instance="result">
+                            <fx-message event="submit">doSave</fx-message>
+                            <fx-message event="submit-done">doSave done</fx-message>
+                        </fx-submission>
+
+                        <fx-instance id="result" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <fx-bind ref="instance('result')//listBibl" relevant="exists(bibl)"></fx-bind>
+
+                    </fx-model>
+
+                    {//listBibl[@type='transmission']/@type}
+
+                    <fx-trigger>
+                        <button>Load + merge</button>
+                        <fx-send submission="load-partial"></fx-send>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>Save</button>
+                        <fx-send submission="save"></fx-send>
+                    </fx-trigger>
+
+                    <fx-repeat ref="instance('full')//bibl">
+                        <template>
+                            {ptr/@target}
+                        </template>
+                    </fx-repeat>
+                    <!--
+                                <div>
+                                    {log('result')  }
+                                </div>
+                    -->
+                </fx-fore>
+            </template>
+        </demo-snippet>
+        <p class="note">Of course the template instance can also be loaded via submission.</p>
+        
+    </div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

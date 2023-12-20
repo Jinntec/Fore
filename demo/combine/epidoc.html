@@ -1,0 +1,83 @@
+<!doctype htm l>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-output{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+
+<!--        <fx-action event="model-construct-done">-->
+<!--            <fx-message>model-construct-done</fx-message>-->
+
+<!--
+            <fx-insert if="not(exists(//msDesc/msIdentifier/repository))"
+                       ref="//msDesc/msIdentifier/idno"
+                       origin="instance('template')//msDesc/msIdentifier/repository"
+                       position="before"></fx-insert>
+            <fx-update></fx-update>
+-->
+
+            <fx-action iterate="//msPart" event="model-construct-done">
+                <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
+                           context=".//msItem"
+                           origin="instance('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+            </fx-action>
+            <fx-action iterate="//msPart" event="model-construct-done">
+                <!-- ##### todo: adding a second action within the iterated block breaks the actions -->
+                <!-- ##### todo: adding a second action within the iterated block breaks the actions -->
+                <!-- ##### todo: adding a second action within the iterated block breaks the actions -->
+
+<!--                <fx-message>msPart {@xml:id}</fx-message>-->
+
+<!--
+                <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
+                           context=".//msItem"
+                           origin="instance('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+                <fx-update></fx-update>
+-->
+                <fx-insert if="not(exists(.//msItem/listBibl[@type='images']))"
+                           context=".//msItem"
+                           origin="instance('template')//msItem/listBibl[@type='images']"></fx-insert>
+                <fx-update></fx-update>
+
+            </fx-action>
+
+<!--        </fx-action>-->
+
+        <fx-instance src="E0000001.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+        </fx-instance>
+
+        <fx-instance id="template"
+                     src="epidoc-template.xml"
+                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+
+    </fx-model>
+
+    <fx-output ref="instance()//msDesc/msIdentifier/repository">
+        <label slot="label">Repo</label>
+    </fx-output>
+    <fx-output ref="instance()//msDesc/msIdentifier/idno">
+        <label slot="label">idno</label>
+    </fx-output>
+
+    <fx-output ref="instance()//msPart/@xml:id">
+        <label slot="label">msPart Id</label>
+    </fx-output>
+
+
+</fx-fore>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

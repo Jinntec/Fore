@@ -58,7 +58,9 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     this.shadowRoot.innerHTML = `
             ${html}
         `;
-    this.getOwnerForm().registerLazyElement(this);
+      this.getOwnerForm().registerLazyElement(this);
+
+	  this.ref = `${this.parentNode.ref}`;
   }
 
   disconnectedCallback() {
@@ -91,13 +93,13 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     if (this.modelItem && !this.modelItem.relevant) {
       // await Fore.fadeOutElement(this)
       // this.style.display = 'none';
-      this.classList.add('nonrelevant');
+		this.style.display = 'none';
     } else {
       // if(this.hasAttribute('repeat-index')){
       //   Fore.fadeInElement(this);
       // }
       // this.style.display = this.display;
-      this.classList.remove('nonrelevant');
+		this.style.display = 'block';
     }
 
     /*

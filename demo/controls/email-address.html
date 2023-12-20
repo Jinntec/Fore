@@ -25,7 +25,7 @@
         </fx-instance>
         <fx-bind ref="email" required="true()"></fx-bind>
     </fx-model>
-    <form id="form">
+<!--    <form id="form">-->
         <!-- cancel the form submit - just used for validation  -->
         <fx-action event="submit" defaultaction="cancel"></fx-action>
         <fx-control ref="email" update-event="input">
@@ -33,10 +33,10 @@
 
             <fx-action event="value-changed">
                 <fx-return ref="."></fx-return>
-                <fx-dispatch name="submit" targetid="form"></fx-dispatch>
+<!--                <fx-dispatch name="submit" targetid="form"></fx-dispatch>-->
             </fx-action>
         </fx-control>
-    </form>
+<!--    </form>-->
 </fx-fore>
 <script type="module" src="../../index.js"></script>
 </body>

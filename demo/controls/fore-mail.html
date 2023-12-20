@@ -14,10 +14,8 @@
         }
 
         fx-control {
-            display: grid;
-            grid-template-columns: 5rem auto;
-            grid-template-areas: "label control";
-            grid-gap:1rem;
+            display: block;
+            width: 100%;
         }
         .widget{
             display: inline-block;
@@ -33,11 +31,13 @@
 
         fx-fore fx-fore{
             margin:0;
+            width: calc(100% + 1rem);
         }
 
         fx-fore fx-fore fx-control{
             display: inline-block;
-            border:thin solid;
+            /*border:thin solid;*/
+
         }
         fx-repeat{
             display: inline-block;
@@ -45,6 +45,12 @@
         fx-repeatitem{
             display: inline-block;
             padding-right:1rem;
+        }
+        input.widget, select.widget, textarea.widget{
+            width:100%
+        }
+        fx-control[required]:after{
+            content: '';
         }
 
     </style>
@@ -113,6 +119,10 @@
             <fx-control ref="message" id="message">
                 <textarea class="widget" rows="10"></textarea>
             </fx-control>
+
+            <fx-trigger>
+                <button>Send</button>
+            </fx-trigger>
 <!--
 
             <fx-control ref="attachments"

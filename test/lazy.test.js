@@ -23,7 +23,7 @@ describe('lazy initialize', () => {
     expect(mi1.relevant).to.equal(true);
     expect(mi1.constraint).to.equal(true);
     expect(mi1.type).to.equal('xs:string');
-    expect(mi1.path).to.equal('/greeting[1]');
+    expect(mi1.path).to.equal('$default/greeting[1]');
   });
 
   it('constructs correct elements for nested location path', async () => {
@@ -86,7 +86,7 @@ describe('lazy initialize', () => {
     expect(mi1.relevant).to.equal(true);
     expect(mi1.constraint).to.equal(true);
     expect(mi1.type).to.equal('xs:string');
-    expect(mi1.path).to.equal('/greeting[1]/@type');
+    expect(mi1.path).to.equal('$default/greeting[1]/@type');
 
     const mi2 = model.modelItems[1];
     expect(mi2.value).to.equal('Hello World!');
@@ -95,7 +95,7 @@ describe('lazy initialize', () => {
     expect(mi2.relevant).to.equal(true);
     expect(mi2.constraint).to.equal(true);
     expect(mi2.type).to.equal('xs:string');
-    expect(mi2.path).to.equal('/greeting[1]');
+    expect(mi2.path).to.equal('$default/greeting[1]');
   });
 
   it('creates a model when there is none', async () => {
