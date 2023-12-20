@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <rect x="95.049" y="112.517" width="190.833" height="167.214" style="paint-order: stroke; stroke: rgb(99, 162, 237); fill: rgb(133, 176, 236);"/>
+  <rect x="109.956" y="162.356" width="163.889" height="48.009" style="paint-order: stroke; stroke: rgb(99, 162, 237); stroke-width: 1.702; vector-effect: non-scaling-stroke; fill: rgb(174, 207, 241); fill-opacity: 0.97; transform-box: fill-box; transform-origin: 50% 50%;"/>
+  <rect x="109.956" y="134.891" width="163.889" height="20.475" style="paint-order: stroke; stroke: rgb(99, 162, 237); stroke-width: 1.702; vector-effect: non-scaling-stroke; fill: rgb(174, 207, 241); transform-origin: 191.901px 145.128px; fill-opacity: 0.5;"/>
+  <rect x="109.956" y="217.355" width="163.889" height="20.475" style="paint-order: stroke; stroke: rgb(99, 162, 237); stroke-width: 1.702; vector-effect: non-scaling-stroke; fill: rgb(174, 207, 241); transform-origin: 191.901px 227.592px; fill-opacity: 0.5;"/>
+  <rect x="109.956" y="248.191" width="163.889" height="20.475" style="paint-order: stroke; stroke: rgb(99, 162, 237); stroke-width: 1.702; vector-effect: non-scaling-stroke; fill: rgb(174, 207, 241); transform-origin: 191.901px 258.428px; fill-opacity: 0.5;"/>
+  <text style="fill-opacity: 0.5; font-family: Arial, sans-serif; font-size: 12px; paint-order: stroke; white-space: pre;" x="117.926" y="149.627">label</text>
+  <text style="fill-opacity: 0.5; font-family: Arial, sans-serif; font-size: 12px; paint-order: stroke; white-space: pre;" x="117.926" y="179.556">widget</text>
+  <text style="fill-opacity: 0.5; font-family: Arial, sans-serif; font-size: 12px; paint-order: stroke; white-space: pre;" x="117.926" y="231.225">hint</text>
+  <text style="fill-opacity: 0.5; font-family: Arial, sans-serif; font-size: 12px; paint-order: stroke; white-space: pre;" x="117.926" y="262.061">error-message</text>
+  <text style="fill-opacity: 0.5; font-family: Arial, sans-serif; font-size: 12px; paint-order: stroke; white-space: pre;" x="97.049" y="125.387">fx-control</text>
+</svg>
