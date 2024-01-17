@@ -324,9 +324,9 @@ export class FxFore extends HTMLElement {
      * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
      * @private
      */
-    _loadFromSrc() {
+    async _loadFromSrc() {
         // console.log('########## loading Fore from ', this.src, '##########');
-        fetch(this.src, {
+        await fetch(this.src, {
             method: 'GET',
             mode: 'cors',
             credentials: 'include',
@@ -471,7 +471,7 @@ export class FxFore extends HTMLElement {
 						continue;
 					}
 
-					if (repeat.touchedPaths.has(changedPath)) {
+					if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
 						// Make a temporary model-item-like structure for this
 						this.toRefresh.push({
 							path: changedPath,
