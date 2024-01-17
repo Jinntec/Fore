@@ -337,20 +337,25 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
     const item = this.modelItem.node;
+    this.removeAttribute('relevant');
+    this.removeAttribute('nonrelevant');
     if (Array.isArray(item) && item.length === 0) {
       this._dispatchEvent('nonrelevant');
-      this.style.display = 'none';
+      this.setAttribute('nonrelevant','');
+      // this.style.display = 'none';
       return;
     }
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
         // this._fadeIn(this, this.display);
-        this.style.display = this.display;
+        this.setAttribute('relevant','');
+        // this.style.display = this.display;
       } else {
         this._dispatchEvent('nonrelevant');
         // this._fadeOut(this);
-        this.style.display = 'none';
+        this.setAttribute('nonrelevant','');
+        // this.style.display = 'none';
       }
     }
   }
