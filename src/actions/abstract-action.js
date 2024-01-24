@@ -101,8 +101,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         super();
         this.detail = {};
         this.needsUpdate = false;
-
-		this.changedPathsQueue = [];
     }
 
     connectedCallback() {
@@ -158,20 +156,20 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         }
     }
 
-	async performSafe() {
-		try {
-			const changedPaths = await this.perform();
-			// Return truthy to indicate success
-			return changedPaths;
-		} catch (error) {
-			const stringifiedComponent = `<${this.localName} ${Array.from(this.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${this.localName}>`;
-			await Fore.dispatch(this, 'error', {
+    async performSafe() {
+        try {
+            await this.perform();
+            // Return true to indicate success
+            return true;
+        } catch (error) {
+            const stringifiedComponent = `<${this.localName} ${Array.from(this.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${this.localName}>`;
+            await Fore.dispatch(this, 'error', {
                 message: `The action could not be performed. ${error} The error came from ${stringifiedComponent}`,
             });
-			// Return false to indicate failure. Any loops must be canceled
-			return false;
-		}
-	}
+            // Return false to indicate failure. Any loops must be canceled
+            return false;
+        }
+    }
 
     /**
      * executes the action.
@@ -210,7 +208,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             e.preventDefault();
         }
 
-    let resolveThisEvent = () => {};
+        let resolveThisEvent = () => {};
         if (e && e.listenerPromises) {
             e.listenerPromises.push(
                 new Promise(resolve => {
@@ -224,13 +222,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         // console.log('executing e phase', e.eventPhase);
         if (FxFore.outermostHandler === null) {
             // console.time('outermostHandler');
-/*
-            console.info(
-                `%coutermost Action `,
-                'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                this,
-            );
-*/
+            /*
+                        console.info(
+                            `%coutermost Action `,
+                            'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+                            this,
+                        );
+            */
             // console.log('starting outermost handler',this);
             FxFore.outermostHandler = this;
             this.dispatchEvent(new CustomEvent('outermost-action-start', {
@@ -240,15 +238,15 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }));
         }
 
-/*
-        if (FxFore.outermostHandler !== this) {
-            console.info(
-                `%cAction `,
-                'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                this,
-            );
-        }
-*/
+        /*
+                if (FxFore.outermostHandler !== this) {
+                    console.info(
+                        `%cAction `,
+                        'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+                        this,
+                    );
+                }
+        */
         // console.log('>>> outermostHandler', FxFore.outermostHandler);
 
         if (e) {
@@ -290,10 +288,9 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 }
 
                 // Perform the action once. But quit if it errored
-				const result = this.performSafe();
-                if (!result) {
-					return;
-				}
+                if (!this.performSafe()) {
+                    return;
+                }
 
                 // Go for one more iteration
                 if (this.delay) {
@@ -308,8 +305,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 
             // After loop is done call actionPerformed to update the model and UI
             await loop();
-			// TODO: pass the result(s)
-            this._finalizePerform(resolveThisEvent, []);
+            this._finalizePerform(resolveThisEvent);
 
             return;
         }
@@ -325,28 +321,23 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }
         }
 
-        const result = await this.performSafe();
-		if (!result) {
-			this._finalizePerform(resolveThisEvent, []);
-			return;
-		}
-		this._finalizePerform(resolveThisEvent, result);
-
+        await this.performSafe();
+        this._finalizePerform(resolveThisEvent);
     }
 
-    _finalizePerform(resolveThisEvent, changedPaths) {
+    _finalizePerform(resolveThisEvent) {
         this.currentEvent = null;
-        this.actionPerformed(changedPaths);
+        this.actionPerformed();
         if (FxFore.outermostHandler === this) {
             FxFore.outermostHandler = null;
-/*
-            console.info(
-                `%coutermost Action done`,
-                'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                this,
-            );
-            console.timeEnd('outermostHandler');
-*/
+            /*
+                        console.info(
+                            `%coutermost Action done`,
+                            'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+                            this,
+                        );
+                        console.timeEnd('outermostHandler');
+            */
             this.dispatchEvent(new CustomEvent('outermost-action-end', {
                 composed: true,
                 bubbles: true,
@@ -372,7 +363,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             this.evalInContext();
         }
 
-/*
         this.dispatchEvent(
             new CustomEvent('execute-action', {
                 composed: true,
@@ -381,14 +371,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 detail: {action: this, event: this.event},
             }),
         );
-*/
 
     }
 
     /**
      * calls the update cycle if action signalled that update is needed.
      */
-    actionPerformed(changedPaths = []) {
+    actionPerformed() {
         const model = this.getModel();
         if (!model) {
             return;
@@ -413,15 +402,13 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // console.log('running update cycle for outermostHandler', this);
             model.recalculate();
             model.revalidate();
-            model.parentNode.refresh(false, [...this.changedPathsQueue, ...changedPaths]);
-			this.changedPathsQueue = [];
+            model.parentNode.refresh(true);
             this.dispatchActionPerformed();
         } else if (this.needsUpdate) {
             // console.log('Update delayed!');
             // We need an update, but the outermost action handler is not done yet. Make this clear!
             // console.log('running actionperformed on', this, ' to be updated by ', FxFore.outermostHandler);
             FxFore.outermostHandler.needsUpdate = true;
-			FxFore.outermostHandler.changedPathsQueue.push(...changedPaths);
         }
 
         // console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);

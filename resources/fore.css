@@ -28,7 +28,7 @@ html {
     nonrelevant must always be hidden
 */
 [nonrelevant] {
-    display: none !important;
+    display: none;
 }
 
 [relevant] {

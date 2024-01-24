@@ -361,14 +361,11 @@ export class FxModel extends HTMLElement {
 
         if (this.modelItems.length === 0) return true;
 
-        console.time('revalidate');
-
         // reset submission validation
         // this.parentNode.classList.remove('submit-validation-failed')
         let valid = true;
         this.modelItems.forEach(modelItem => {
             // console.log('validating node ', modelItem.node);
-
             const {bind} = modelItem;
             if (bind) {
                 /*
@@ -382,7 +379,10 @@ export class FxModel extends HTMLElement {
                         // console.log('modelItem validity computed: ', compute);
                         modelItem.constraint = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
-                        if (!compute) valid = false;
+                        if (!compute) {
+                            console.log('validation failed on modelitem ', modelItem);
+                            valid = false;
+                        }
                     }
                 }
                 if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
@@ -393,6 +393,7 @@ export class FxModel extends HTMLElement {
                         modelItem.required = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!modelItem.node.textContent) {
+                            console.log('validation failed on modelitem ', modelItem);
                             valid = false;
                         }
                         // if (!compute) valid = false;

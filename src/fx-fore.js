@@ -450,39 +450,43 @@ export class FxFore extends HTMLElement {
         // console.timeEnd('refresh');
     }
 
-    async refresh(force, changedPaths) {
-		if (!changedPaths) {
-			changedPaths = this.toRefresh.map(item => item.path);
-		} else {
-			this.toRefresh.push(
-				...changedPaths
-					.map(
-						path =>
-						this.getModel()
-							.modelItems
-							.find(item => item.path === path)
-					)
-					.filter(Boolean)
-			);
+    // async refresh(force, changedPaths) {
+    async refresh(force) {
+        /*
 
-			for(const changedPath of changedPaths) {
-				for (const repeat of this.querySelectorAll('fx-repeat')) {
-					if (repeat.closest('fx-fore') !== this) {
-						continue;
-					}
+                if (!changedPaths) {
+                    changedPaths = this.toRefresh.map(item => item.path);
+                } else {
+                    this.toRefresh.push(
+                        ...changedPaths
+                            .map(
+                                path =>
+                                this.getModel()
+                                    .modelItems
+                                    .find(item => item.path === path)
+                            )
+                            .filter(Boolean)
+                    );
 
-					if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
-						// Make a temporary model-item-like structure for this
-						this.toRefresh.push({
-							path: changedPath,
-							boundControls: [repeat]
-						});
+                    for(const changedPath of changedPaths) {
+                        for (const repeat of this.querySelectorAll('fx-repeat')) {
+                            if (repeat.closest('fx-fore') !== this) {
+                                continue;
+                            }
 
-						console.log('Found a repeat to update!!!', repeat)
-					}
-				}
-			}
+                            if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
+                                // Make a temporary model-item-like structure for this
+                                this.toRefresh.push({
+                                    path: changedPath,
+                                    boundControls: [repeat]
+                                });
+
+                                console.log('Found a repeat to update!!!', repeat)
+                            }
+                        }
+                    }
 		}
+        */
 		if (this.isRefreshing) {
 			return;
 		}
@@ -557,9 +561,11 @@ export class FxFore extends HTMLElement {
         Fore.dispatch(this, 'refresh-done', {});
 
 		this.isRefreshing = true;
-		this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+		// this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+		this.parentNode.closest('fx-fore')?.refresh(false);
 		for (const subFore of this.querySelectorAll('fx-fore')) {
-			subFore.refresh(false, changedPaths);
+			// subFore.refresh(false, changedPaths);
+			subFore.refresh(false);
 		}
 		this.isRefreshing = false;
     }
@@ -649,6 +655,13 @@ export class FxFore extends HTMLElement {
      * @param node the node which will get updated with evaluation result
      */
     evaluateTemplateExpression(expr, node) {
+
+        // ### do not evaluate template expressions with nonrelevant sections
+        if(node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
+        if(node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
+        if(node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+
+        // if(node.closest('[nonrelevant]')) return;
         const replaced = expr.replace(/{[^}]*}/g, match => {
             if (match === '{}') return match;
             const naked = match.substring(1, match.length - 1);

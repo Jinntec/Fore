@@ -228,11 +228,14 @@ export class FxInsert extends AbstractAction {
     // console.log('instance ', this.getModel().getDefaultContext());
     // Fore.dispatch()
 
-	  const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
+	  // const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
     const inst = this.getModel().getInstance(instanceId);
       // console.log('<<<<<<< resolved instance', inst);
 	  // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
-	  const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
+	  // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
+    const xpath = XPathUtil.getPath(insertLocationNode.parentNode, instanceId);
+
 
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
@@ -281,7 +284,7 @@ export class FxInsert extends AbstractAction {
   }
 
   actionPerformed(changedPaths) {
-//    this.getModel().rebuild();
+   // this.getModel().rebuild();
     super.actionPerformed(changedPaths);
   }
 

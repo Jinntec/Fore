@@ -207,13 +207,17 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
       });
     }
 
+/*
 	  this.touchedPaths = new Set();
 	  const instance = XPathUtil.resolveInstance(this, this.ref);
 	  const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
 		  this.touchedPaths.add(XPathUtil.getPath(node, instance));
 	  });
       const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-	  console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
+*/
+    const rawNodeset = evaluateXPath(this.ref, inscope, this);
+
+    // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
     if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
       // This XPath likely returned an XPath array. Just collapse to that array
       this.nodeset = rawNodeset[0];
@@ -229,6 +233,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     // console.time('repeat-refresh', this);
     this._evalNodeset();
 
+    // ### register ourselves as boundControl
+/*
+    const modelItem = this.getModelItem();
+    if (!modelItem.boundControls.includes(this)) {
+      modelItem.boundControls.push(this);
+    }
+*/
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
 

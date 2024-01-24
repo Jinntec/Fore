@@ -23,7 +23,7 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-control');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('does not display output whose xml binding does not exist', async () => {
@@ -44,7 +44,8 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-output');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
+
   });
 
   it('does not display trigger whose xml binding does not exist', async () => {
@@ -65,7 +66,7 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-trigger');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('does not display control whose json binding does not exist', async () => {
@@ -84,7 +85,7 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-control');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('does not display output whose json binding does not exist', async () => {
@@ -103,7 +104,7 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-output');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('does not display trigger whose json binding does not exist', async () => {
@@ -122,7 +123,7 @@ describe('Relevance Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const control = el.querySelector('fx-trigger');
-    expect(control.style.display).to.equal('none');
+    expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('removes empty attributes by default', async () => {

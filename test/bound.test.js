@@ -191,7 +191,7 @@ describe('fx-control tests', () => {
 
     const bound = el.querySelector('fx-trigger');
     expect(bound).to.exist;
-    expect(bound.style.display).to.equal('none');
+    expect(bound.hasAttribute('nonrelevant')).to.be.true;
   });
 
   it('Correctly checks lone checkboxes', async () => {
