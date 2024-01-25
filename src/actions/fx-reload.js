@@ -1,4 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
+import {Fore} from "../fore.js";
 
 /**
  * `fx-reload`
