@@ -13,7 +13,6 @@ import {
 
 import {XPathUtil} from './xpath-util.js';
 import {prettifyXml} from './functions/common-function.js';
-import {Fore} from "./fore.js";
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -445,6 +444,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
 */
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}) {
     try{
+        console.log('evaluateXPath',xpath);
         const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
         const variablesInScope = getVariablesInScope(formElement);
 
@@ -466,6 +466,18 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
             },
         );
     }catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+
+/*
         formElement.dispatchEvent(
             new CustomEvent('error', {
                 composed: false,
@@ -478,7 +490,8 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
                     level:'Error'},
             }),
         );
-        return true;
+*/
+        return false;
     }
 }
 /**
@@ -503,12 +516,16 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
             namespaceResolver,
         });
     } catch (e){
-        Fore.dispatch(this, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -534,12 +551,16 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
             namespaceResolver,
         });
     }catch (e){
-        Fore.dispatch(formElement, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -565,12 +586,16 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
             namespaceResolver,
         });
     }catch (e){
-        Fore.dispatch(formElement, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -605,12 +630,16 @@ export function evaluateXPathToString(
             namespaceResolver,
         });
     }catch (e) {
-        Fore.dispatch(formElement, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -646,12 +675,16 @@ export function evaluateXPathToStrings(
             },
         );
     } catch (e){
-        Fore.dispatch(formElement, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -686,12 +719,16 @@ export function evaluateXPathToNumber(
             namespaceResolver,
         });
     }catch (e) {
-        Fore.dispatch(formElement, 'error', {
-            origin: formElement,
-            message: `Expression '${xpath}' failed`,
-            expr:xpath,
-            level:'Error'
-        });
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
     }
 }
 
@@ -940,11 +977,15 @@ const instance = (dynamicContext, string) => {
     }else{
         lookup = formElement.getModel().getInstance(string);
         if(!lookup){
-            Fore.dispatch(this, 'error', {
-                origin: formElement,
-                message: `Instance '${string}' does not exist`,
-                level:'Error'
-            });
+            document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
+                composed: true,
+                bubbles: true,
+                detail: {
+                    origin: 'functions',
+                    message: `Function not found '${localName}'`,
+                    level:'Error'
+                },
+            }));
         }
     }
 

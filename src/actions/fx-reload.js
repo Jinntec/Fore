@@ -1,4 +1,3 @@
-import { Fore } from '../fore.js';
 import { AbstractAction } from './abstract-action.js';
 
 /**
