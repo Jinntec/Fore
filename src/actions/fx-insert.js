@@ -284,8 +284,9 @@ export class FxInsert extends AbstractAction {
   }
 
   actionPerformed(changedPaths) {
-   this.getModel().updateModel();
-   //  super.actionPerformed(changedPaths);
+    // ### make sure the necessary modelItems will get created
+    this.getModel().rebuild();
+    super.actionPerformed();
   }
 
   /**
