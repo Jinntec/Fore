@@ -162,9 +162,11 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             // Return true to indicate success
             return true;
         } catch (error) {
-            const stringifiedComponent = `<${this.localName} ${Array.from(this.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${this.localName}>`;
             await Fore.dispatch(this, 'error', {
-                message: `The action could not be performed. ${error} The error came from ${stringifiedComponent}`,
+                origin: this,
+                message: `Action execution failed`,
+                expr:XPathUtil.getDocPath(this),
+                level:'Error'
             });
             // Return false to indicate failure. Any loops must be canceled
             return false;
@@ -183,7 +185,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
      * @param e
      */
     async execute(e) {
-        // console.log('execute', this, e);
+        console.log(this);
         // console.log('execute', this.event);
 
 

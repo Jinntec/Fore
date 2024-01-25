@@ -490,9 +490,13 @@ export default class FxControl extends XfAbstractControl {
             this.dispatchEvent(new CustomEvent('loaded', {detail: {fore: theFore}}));
         } catch (error) {
             // console.log('error', error);
-            this.getOwnerForm().dispatchEvent(
-                new CustomEvent('error', {detail: {message: `${this.url} not found`}}),
-            );
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `control couldn't be loaded from url '${this.url}'`,
+                expr:xpath,
+                level:'Error'
+            });
+
         }
     }
 
@@ -545,7 +549,6 @@ export default class FxControl extends XfAbstractControl {
             const inscope = getInScopeContext(this, ref);
             // const nodeset = evaluateXPathToNodes(ref, inscope, this);
             const nodeset = evaluateXPath(ref, inscope, this);
-
 
             // ### clear items
             const {children} = widget;

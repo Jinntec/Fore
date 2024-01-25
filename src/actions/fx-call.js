@@ -3,6 +3,7 @@ import {AbstractAction} from './abstract-action.js';
 import {evaluateXPath, evaluateXPathToString} from "../xpath-evaluation.js";
 import {Fore} from "../fore";
 import getInScopeContext from "../getInScopeContext";
+import {XPathUtil} from "../xpath-util.js";
 
 /**
  * `fx-call`
@@ -60,7 +61,15 @@ export default class FxCall extends AbstractAction {
         const action = document.querySelector(`#${this.action}`);
         if(action){
             await action.perform();
+        }else{
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `Action '${this.action}' not found`,
+                expr:XPathUtil.getDocPath(this),
+                level:'Error'
+            });
         }
+
     }
 
     _callFunction(){

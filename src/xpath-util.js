@@ -131,11 +131,18 @@ export class XPathUtil {
         return 'default';
     }
 
+    static getDocPath(node) {
+        const path = fx.evaluateXPathToString('path()', node);
+        // Path is like `$default/x[1]/y[1]`
+        const shortened = XPathUtil.shortenPath(path);
+        return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
+    }
+
     static getPath(node, instanceId) {
         const path = fx.evaluateXPathToString('path()', node);
         // Path is like `$default/x[1]/y[1]`
         const shortened = XPathUtil.shortenPath(path);
-        return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`
+        return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
     }
 
     static shortenPath(path) {

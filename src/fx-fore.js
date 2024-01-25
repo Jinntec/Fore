@@ -85,9 +85,10 @@ export class FxFore extends HTMLElement {
         // this.addEventListener('model-construct-done', this._handleModelConstructDone);
         // todo: refactoring - these should rather go into connectedcallback
         this.addEventListener('message', this._displayMessage);
-        this.addEventListener('error', this._displayError);
+        // this.addEventListener('error', this._displayError);
+        this.addEventListener('error', this._logError);
         this.addEventListener('warn', this._displayWarning);
-        this.addEventListener('log', this._logError);
+        // this.addEventListener('log', this._logError);
         window.addEventListener('compute-exception', e => {
             console.error('circular dependency: ', e);
         });
@@ -176,7 +177,7 @@ export class FxFore extends HTMLElement {
 
         const html = `
            <noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
-
+<!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
            <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="right" gravity="top" escape-markup="false"></jinn-toast>
@@ -452,6 +453,7 @@ export class FxFore extends HTMLElement {
 
     // async refresh(force, changedPaths) {
     async refresh(force) {
+
         /*
 
                 if (!changedPaths) {
@@ -490,6 +492,9 @@ export class FxFore extends HTMLElement {
 		if (this.isRefreshing) {
 			return;
 		}
+        this.isRefreshing = true;
+        console.log('### <<<<< refresh() >>>>>');
+
         // refresh () {
         // ### refresh Fore UI elements
         // if (!this.initialRun && this.toRefresh.length !== 0) {
@@ -560,7 +565,7 @@ export class FxFore extends HTMLElement {
         this.style.visibility='visible';
         Fore.dispatch(this, 'refresh-done', {});
 
-		this.isRefreshing = true;
+		// this.isRefreshing = true;
 		// this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
 		this.parentNode.closest('fx-fore')?.refresh(false);
 		for (const subFore of this.querySelectorAll('fx-fore')) {
@@ -882,6 +887,8 @@ export class FxFore extends HTMLElement {
      */
     async _initUI() {
         // console.log('### _initUI()');
+        console.log('### <<<<< _initUI >>>>>');
+
         if (!this.initialRun) return;
         this.classList.add('initialRun');
         await this._lazyCreateInstance();
@@ -915,6 +922,8 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
+        console.log(`### <<<<< ${this.id} ready >>>>>`);
+
         // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
         // console.log('dataChanged', FxModel.dataChanged);
@@ -966,39 +975,23 @@ export class FxFore extends HTMLElement {
         toast.showToast(`WARN: ${path}:${msg}`);
     }
 
+
     _logError(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        const div = document.createElement('div');
-        div.setAttribute('slot','messages');
-        div.setAttribute('data-level',e.detail.level);
+        console.error('ERROR',e.detail.message);
+        console.error(e.detail.origin);
+        if(e.detail.expr){
+            console.error('Failing expression',e.detail.expr);
+        }
+        console.error('---');
+        this._displayError(e);
+    }
 
-        const id = document.createElement('div');
-        id.textContent = `"${e.detail.id}"`;
-        div.appendChild(id);
-
-        const path = document.createElement('div');
-        const pathExpr = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
-        // console.log('pathExpr',pathExpr)
-        path.textContent = pathExpr;
-        div.appendChild(path);
-
-        const message = document.createElement('div');
-        message.textContent = e.detail.message;
-        div.appendChild(message);
-
-        /*
-                const path = XPathUtil.shortenPath(evaluateXPathToString('path()',e.target,this));
-                div.innerText = `${path} :: ${e.detail.message}`;
-        */
-        this.appendChild(div);
-        div.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-
-
-        const errorElement = evaluateXPathToFirstNode(`/${pathExpr}`,document,null);
-        errorElement.classList.add('fore-error');
-
+    _copyToClipboard(target){
+        console.log('copyToClipboard' , target.value)
+        navigator.clipboard.writeText(target.value);
 
     }
 

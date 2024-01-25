@@ -1,6 +1,7 @@
 import '../fx-model.js';
 import '../fx-submission.js';
 import { AbstractAction } from './abstract-action.js';
+import {XPathUtil} from "../xpath-util.js";
 
 /**
  * `fx-send` - finds and activates a `fx-submission` element.
@@ -45,16 +46,20 @@ class FxSend extends AbstractAction {
         new CustomEvent('error', {
           composed: true,
           bubbles: true,
-          detail: { message: `fx-submission element with id: '${this.submission}' not found` },
+          detail: { message: `fx-submission element with id: '${this.submission}' not found - ${XPathUtil.getDocPath(this)}` },
         }),
       );
 */
       this.dispatchEvent(
-          new CustomEvent('log', {
+          new CustomEvent('error', {
             composed: false,
             bubbles: true,
             cancelable:true,
-            detail: { id:this.id, message: `fx-submission element with id: '${this.submission}' not found`, level:'Error'},
+            detail: { id:this.id,
+                      origin: this,
+                      message: `<fx-submission id="${this.submission}"> not found`,
+                      expr:XPathUtil.getDocPath(this),
+                      level:'Error'},
           }),
       );
       return;

@@ -41,46 +41,6 @@ fx-control[required]:after {
     color: red;
 }
 
-[slot=messages] {
-    margin: 0 auto;
-    width: 100%;
-    padding: 2rem 0 1rem;
-    background: white;
-    border-radius: 0.5rem;
-    position: relative;
-}
-
-[slot=messages]::before {
-    content: attr(data-level);
-    padding: 0.5rem;
-    background: darkred;
-    color: white;
-    display: block;
-}
-
-[slot=messages] div {
-    color: black;
-    padding: 0.25rem;
-    border: thin solid #efefef;
-}
-
-[slot=messages] div::before {
-    width: 6rem;
-    display: inline-block;
-}
-
-[slot=messages] div:nth-child(1)::before {
-    content: 'Id:';
-}
-
-[slot=messages] div:nth-child(2)::before {
-    content: 'Path:';
-}
-
-[slot=messages] div:nth-child(3)::before {
-    content: 'Message:';
-}
-
 .fore-error {
     height: 2rem;
     background: darkred;
@@ -120,6 +80,7 @@ fx-output[readonly] img {
 
 .error {
     background: var(--paper-red-500);
+    display: flex;
 }
 
 fx-control, fx-trigger, .fx-checkbox {

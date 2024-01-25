@@ -104,7 +104,7 @@ export class FxModel extends HTMLElement {
      *
      */
     async modelConstruct() {
-        // console.log('### <<<<< dispatching model-construct >>>>>');
+        console.log('### <<<<< dispatching model-construct >>>>>');
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
 
@@ -122,12 +122,12 @@ export class FxModel extends HTMLElement {
             this.instances = Array.from(instances);
             // console.log('_modelConstruct this.instances ', this.instances);
 			// Await until the model-construct-done event is handled off
-
             await Fore.dispatch(this, 'model-construct-done', {model: this});
             this.inited = true;
             this.updateModel();
         } else {
             // ### if there's no instance one will created
+            console.log('### <<<<< dispatching model-construct-done >>>>>');
             await this.dispatchEvent(
                 new CustomEvent('model-construct-done', {
                     composed: false,
@@ -165,6 +165,8 @@ export class FxModel extends HTMLElement {
     }
 
     rebuild() {
+        console.log('### <<<<< rebuild() >>>>>');
+
         this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
         this.modelItems = [];
 
@@ -194,9 +196,12 @@ export class FxModel extends HTMLElement {
      * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
      */
     recalculate() {
+
         if (!this.mainGraph) {
             return;
         }
+
+        console.log('### <<<<< recalculate() >>>>>');
 
         // console.log('changed nodes ', this.changed);
         this.computes = 0;
@@ -361,6 +366,8 @@ export class FxModel extends HTMLElement {
 
         if (this.modelItems.length === 0) return true;
 
+        console.log('### <<<<< revalidate() >>>>>');
+
         // reset submission validation
         // this.parentNode.classList.remove('submit-validation-failed')
         let valid = true;
@@ -453,7 +460,12 @@ export class FxModel extends HTMLElement {
         const instArray = Array.from(this.instances);
         const found = instArray.find(inst => inst.id === id);
         if(!found){
-            return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `Instance '${id}' does not exist`,
+                level:'Error'
+            });
         }
         return found;
     }

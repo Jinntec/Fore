@@ -459,7 +459,7 @@ export class FxActionLog extends HTMLElement {
      */
     _logDetails(e) {
         const eventType = e.type;
-        const path = XPathUtil.getPath(e.target, 'unknown');
+        const path = XPathUtil.getDocPath(e.target);
         // console.log('>>>> _logDetails', path);
         const cut = path.substring(path.indexOf('/fx-fore'), path.length);
         const xpath = `/${cut}`;
