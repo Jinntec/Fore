@@ -1,4 +1,5 @@
 import {AbstractAction} from "./abstract-action.js";
+import {Fore} from "../fore";
 
 /**
  * `fx-setfocus`
@@ -32,7 +33,11 @@ export class FxSetfocus extends AbstractAction {
         let targetElement = document.querySelector(selector);
 
       if(!targetElement) {
-          console.warn('targetElement of setfocus action does not exist (yet)', selector);
+          Fore.dispatch(this, 'error', {
+              origin: this,
+              message: `Instance '${this.control}' not found`,
+              level:'Error'
+          });
           return;
       }
 

@@ -686,6 +686,9 @@ export class Fore {
     }
   }
 
+  static stringifiedComponent(element){
+    return `<${element.localName} ${Array.from(element.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${element.localName}>`;
+  }
   static async loadForeFromUrl(hostElement, url) {
     // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {

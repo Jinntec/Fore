@@ -35,7 +35,7 @@ class FxDelete extends AbstractAction {
 
         // console.log('delete nodeset ', this.nodeset);
 
-        const instanceId = XPathUtil.resolveInstance(this);
+        const instanceId = XPathUtil.resolveInstance(this, this.ref);
         const instance = this.getModel().getInstance(instanceId);
 
         // const path = instance && this.nodeset.length !== 0 ? evaluateXPathToString('path()', this.nodeset[0], instance) : '';
