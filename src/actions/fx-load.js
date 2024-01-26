@@ -113,11 +113,14 @@ class FxLoad extends AbstractAction {
             // for authoring errors we log errors directly to DOM
 
             this.dispatchEvent(
-                new CustomEvent('log', {
+                new CustomEvent('error', {
                     composed: false,
                     bubbles: true,
                     cancelable:true,
-                    detail: { id:this.id, message: `neiter template element nor Url was specified.`, level:'Error'},
+                    detail: {
+                        origin:this,
+                        message: `neither template element nor Url was specified.`,
+                        level:'Error'},
                 }),
             );
             return;

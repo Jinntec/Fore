@@ -80,7 +80,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _buildBindGraph() {
     if (this.bindType === 'xml') {
 		this.nodeset.forEach(node => {
-			          const instance = XPathUtil.resolveInstance(this);
+			          const instance = XPathUtil.resolveInstance(this,this.ref);
 
           const path = XPathUtil.getPath(node, instance);
         this.model.mainGraph.addNode(path, node);

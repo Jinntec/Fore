@@ -14,7 +14,7 @@ import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 export default class AbstractControl extends foreElementMixin(HTMLElement) {
   constructor() {
     super();
-    this.value = '';
+    this.value = null;
     this.display = this.style.display;
     this.required = false;
     this.readonly = false;
@@ -23,27 +23,6 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.force = false;
     // this.attachShadow({ mode: 'open' });
   }
-
-
-  // todo: discuss - this is a hack to circumvent that modelItems in toRefresh diverge from the modelItems in
-  // the model in some situations. This code first looks for refresh
-/*
-  getModelItem() {
-    console.log('toRefreshModelItems', this.getOwnerForm().toRefresh);
-    const s = this.modelItem.path;
-    console.log('toRefreshModelItems path', s);
-
-    const toRefresh = this.getOwnerForm().toRefresh;
-    let mi;
-    if(toRefresh){
-      mi = this.getOwnerForm().toRefresh.find(m => m.path === s);
-    }
-
-    return mi? mi: super.getModelItem();
-    // console.log('toRefreshModelItems realitem', mi);
-
-  }
-*/
 
   // eslint-disable-next-line class-methods-use-this
   getWidget() {
@@ -65,6 +44,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     // await this.updateComplete;
     // await this.getWidget();
     this.oldVal = this.nodeset ? this.nodeset : null;
+    // console.log('oldVal',this.oldVal);
+
     this.evalInContext();
 
     // todo this if should be removed - see above
@@ -105,7 +86,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         }else{
           // ### this actually makes the control nonrelevant
           // todo: we should call a template function here to allow detachment of event-listeners and resetting eventual state
-          this.style.display = 'none';
+          // this.style.display = 'none';
+          this.setAttribute('nonrelevant','');
         }
         return;
       }
@@ -124,6 +106,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         } else {
           this.value = this.modelItem.value;
         }
+        // console.log('newVal',this.value);
 
         // console.log('value of widget',this.value);
 
@@ -160,9 +143,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           Fore.dispatch(this,'init',{});
         }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        if (currentVal !== this.value ) {
-          // todo: discuss how to prevent unnecessary/unwanted value-changes e.g. when repeatitems are inserted
-        // if (currentVal !== this.value && this.visited) {
+        // if oldVal is null we haven't received a concrete value yet
+        if (this.oldVal !== null && currentVal !== this.value) {
           Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
         }
       }
@@ -337,20 +319,25 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   handleRelevant() {
     // console.log('mip valid', this.modelItem.enabled);
     const item = this.modelItem.node;
+    this.removeAttribute('relevant');
+    this.removeAttribute('nonrelevant');
     if (Array.isArray(item) && item.length === 0) {
       this._dispatchEvent('nonrelevant');
-      this.style.display = 'none';
+      this.setAttribute('nonrelevant','');
+      // this.style.display = 'none';
       return;
     }
     if (this.isEnabled() !== this.modelItem.relevant) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
         // this._fadeIn(this, this.display);
-        this.style.display = this.display;
+        this.setAttribute('relevant','');
+        // this.style.display = this.display;
       } else {
         this._dispatchEvent('nonrelevant');
         // this._fadeOut(this);
-        this.style.display = 'none';
+        this.setAttribute('nonrelevant','');
+        // this.style.display = 'none';
       }
     }
   }
@@ -360,11 +347,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isValid() {
-    // return this.valid;
-    if (this.hasAttribute('invalid')) {
-      return false;
-    }
-    return true;
+    return this.hasAttribute('invalid') ? false : true;
   }
 
   isReadonly() {
@@ -373,11 +356,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isEnabled() {
-    // if(this.style.display === 'none' || this.classList.contains('non-relevant')){
-    if (this.style.display === 'none') {
-      return false;
-    }
-    return true;
+    return !this.hasAttribute('nonrelevant');
   }
 
   // eslint-disable-next-line class-methods-use-this

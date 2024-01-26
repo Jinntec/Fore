@@ -116,19 +116,9 @@ export class FxTrigger extends XfAbstractControl {
     }
   }
 
-  /*
-        async refresh() {
-          super.refresh();
-          // console.log('fx-button refresh');
-
-          const elements = this.querySelectorAll(':scope > *');
-          elements.forEach(element => {
-            if (typeof element.refresh === 'function') {
-              element.refresh();
-            }
-          });
-        }
-      */
+  async refresh() {
+    super.refresh();
+  }
 }
 
 if (!customElements.get('fx-trigger')) {

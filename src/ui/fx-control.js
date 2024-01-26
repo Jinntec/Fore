@@ -123,12 +123,8 @@ export default class FxControl extends XfAbstractControl {
 
         this.addEventListener('keyup', () => {
             FxModel.dataChanged = true;
-/*
-            if (!this.classList.contains('visited')) {
-                this.classList.add('visited');
-            }
-*/
         });
+
         // ### convenience marker event
         if (this.updateEvent === 'enter') {
             this.widget.addEventListener('keyup', event => {
@@ -494,9 +490,13 @@ export default class FxControl extends XfAbstractControl {
             this.dispatchEvent(new CustomEvent('loaded', {detail: {fore: theFore}}));
         } catch (error) {
             // console.log('error', error);
-            this.getOwnerForm().dispatchEvent(
-                new CustomEvent('error', {detail: {message: `${this.url} not found`}}),
-            );
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `control couldn't be loaded from url '${this.url}'`,
+                expr:xpath,
+                level:'Error'
+            });
+
         }
     }
 
@@ -550,9 +550,6 @@ export default class FxControl extends XfAbstractControl {
             // const nodeset = evaluateXPathToNodes(ref, inscope, this);
             const nodeset = evaluateXPath(ref, inscope, this);
 
-            // ### bail out when nodeset is array and empty
-            if (Array.isArray(nodeset) && nodeset.length === 0) return;
-
             // ### clear items
             const {children} = widget;
             Array.from(children).forEach(child => {
@@ -560,6 +557,9 @@ export default class FxControl extends XfAbstractControl {
                     child.parentNode.removeChild(child);
                 }
             });
+
+            // ### bail out when nodeset is array and empty
+            if (Array.isArray(nodeset) && nodeset.length === 0) return;
 
             // ### build the items
             const {template} = this;
@@ -574,7 +574,7 @@ export default class FxControl extends XfAbstractControl {
                     this.widget.insertBefore(option, firstTemplateChild);
                 }
 
-                if (nodeset.length) {
+                if (nodeset.length !== 0) {
                     // console.log('nodeset', nodeset);
                     const fragment = document.createDocumentFragment();
                     // console.time('offscreen');

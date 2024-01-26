@@ -144,6 +144,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             const data = this._parse(serialized, instance);
             this._handleResponse(data);
             // this.dispatch('submit-done', {});
+            console.log('### <<<<< submit-done >>>>>');
             Fore.dispatch(this, 'submit-done', {});
             this.parameters.clear();
             return;
@@ -166,6 +167,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 if (this.method === 'consume') {
                     localStorage.removeItem(key);
                 }
+                console.log('### <<<<< submit-done >>>>>');
                 Fore.dispatch(this, 'submit-done', {});
             }
             if (this.method === 'post') {
@@ -173,6 +175,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
                 localStorage.setItem(key, serialized);
                 this._handleResponse(instance.instanceData);
+                console.log('### <<<<< submit-done >>>>>');
                 Fore.dispatch(this, 'submit-done', {});
             }
             if (this.method === 'delete') {
@@ -180,6 +183,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 localStorage.removeItem(key);
                 const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
                 this._handleResponse(newInst);
+                console.log('### <<<<< submit-done >>>>>');
                 Fore.dispatch(this, 'submit-done', {});
             }
 
@@ -228,6 +232,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             }
 
             // this.dispatch('submit-done', {});
+            console.log(`### <<<<< ${this.id} submit-done >>>>>`);
             Fore.dispatch(this, 'submit-done', {});
         } catch (error) {
             Fore.dispatch(this, 'submit-error', {error: error.message});

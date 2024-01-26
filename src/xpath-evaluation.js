@@ -418,6 +418,7 @@ function getVariablesInScope(formElement) {
  * @param  {Node} contextNode The start of the XPath
  * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
  */
+/*
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
@@ -440,7 +441,59 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         },
     );
 }
+*/
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}) {
+    try{
+        console.log('evaluateXPath',xpath);
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
 
+        return fxEvaluateXPath(
+            xpath,
+            contextNode,
+            null,
+            {...variablesInScope, ...variables},
+            fxEvaluateXPath.ALL_RESULTS_TYPE,
+            {
+                debug: true,
+                currentContext: {formElement, variables},
+                moduleImports: {
+                    xf: XFORMS_NAMESPACE_URI,
+                },
+                functionNameResolver,
+                namespaceResolver,
+                language: options.language || evaluateXPath.XPATH_3_1
+            },
+        );
+    }catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+
+/*
+        formElement.dispatchEvent(
+            new CustomEvent('error', {
+                composed: false,
+                bubbles: true,
+                cancelable:true,
+                detail: {
+                    origin: formElement,
+                    message: `Expression '${xpath}' failed`,
+                    expr:xpath,
+                    level:'Error'},
+            }),
+        );
+*/
+        return false;
+    }
+}
 /**
  * Evaluate an XPath to the first Node
  *
@@ -450,17 +503,30 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
  * @return {Node}  The first node found by the XPath
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
-    return fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
-        defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-        moduleImports: {
-            xf: XFORMS_NAMESPACE_URI,
-        },
-        currentContext: {formElement},
-        functionNameResolver,
-        namespaceResolver,
-    });
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
+        return fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
+            defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            currentContext: {formElement},
+            functionNameResolver,
+            namespaceResolver,
+        });
+    } catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 /**
@@ -472,17 +538,30 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  * @return {Node[]}  All nodes
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
-        currentContext: {formElement},
-        functionNameResolver,
-        moduleImports: {
-            xf: XFORMS_NAMESPACE_URI,
-        },
-        namespaceResolver,
-    });
+        return fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
+            currentContext: {formElement},
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver,
+        });
+    }catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 /**
@@ -494,17 +573,30 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  * @return {boolean}
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
-        currentContext: {formElement},
-        functionNameResolver,
-        moduleImports: {
-            xf: XFORMS_NAMESPACE_URI,
-        },
-        namespaceResolver,
-    });
+        return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
+            currentContext: {formElement},
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver,
+        });
+    }catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 /**
@@ -525,17 +617,30 @@ export function evaluateXPathToString(
     domFacade = null,
     namespaceReferenceNode = formElement,
 ) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
-        currentContext: {formElement},
-        functionNameResolver,
-        moduleImports: {
-            xf: XFORMS_NAMESPACE_URI,
-        },
-        namespaceResolver,
-    });
+        return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
+            currentContext: {formElement},
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver,
+        });
+    }catch (e) {
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 /**
@@ -556,22 +661,31 @@ export function evaluateXPathToStrings(
     domFacade = null,
     namespaceReferenceNode = formElement,
 ) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    return fxEvaluateXPathToStrings(
-        xpath,
-        contextNode,
-        domFacade,
-        {},
-
-        {
-            currentContext: {formElement},
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        return fxEvaluateXPathToStrings( xpath, contextNode, domFacade,
+            {},
+            {
+                currentContext: {formElement},
+                functionNameResolver,
+                moduleImports: {
+                    xf: XFORMS_NAMESPACE_URI,
+                },
+                namespaceResolver,
             },
-            namespaceResolver,
-        },
-    );
+        );
+    } catch (e){
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 /**
@@ -592,17 +706,30 @@ export function evaluateXPathToNumber(
     domFacade = null,
     namespaceReferenceNode = formElement,
 ) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+    try{
+        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+        const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
-        currentContext: {formElement},
-        functionNameResolver,
-        moduleImports: {
-            xf: XFORMS_NAMESPACE_URI,
-        },
-        namespaceResolver,
-    });
+        return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
+            currentContext: {formElement},
+            functionNameResolver,
+            moduleImports: {
+                xf: XFORMS_NAMESPACE_URI,
+            },
+            namespaceResolver,
+        });
+    }catch (e) {
+        formElement.dispatchEvent(new CustomEvent('error', {
+            composed: false,
+            bubbles: true,
+            detail: {
+                origin: formElement,
+                message: `Expression '${xpath}' failed`,
+                expr:xpath,
+                level:'Error'
+            },
+        }));
+    }
 }
 
 const contextFunction = (dynamicContext, string) => {
@@ -844,18 +971,44 @@ const instance = (dynamicContext, string) => {
         {namespaceResolver: xhtmlNamespaceResolver},
     );
 
+    let lookup = null;
+    if(string === null || string === 'default'){
+        lookup = formElement.getModel().getDefaultInstance();
+    }else{
+        lookup = formElement.getModel().getInstance(string);
+        if(!lookup){
+            document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
+                composed: true,
+                bubbles: true,
+                detail: {
+                    origin: 'functions',
+                    message: `Function not found '${localName}'`,
+                    level:'Error'
+                },
+            }));
+        }
+    }
+
+    const context = lookup.getDefaultContext();
+    if (!context) {
+        debugger;
+        return null;
+    }
+    return context;
+
+/*
     const inst = string
           ? formElement.getModel().getInstance(string)
           : formElement.getModel().getDefaultInstance();
+*/
 
 /*
     const inst = string
         ? resolveId(string, formElement, 'fx-instance')
         : formElement.querySelector(`fx-instance`);
-*/
 
-    if (inst) {
-        const context = inst.getDefaultContext();
+    if (lookup) {
+        const context = lookup.getDefaultContext();
 		if (!context) {
 			debugger;
 			return null;
@@ -863,6 +1016,7 @@ const instance = (dynamicContext, string) => {
 		return context;
     }
     return null;
+*/
 };
 
 registerCustomXPathFunction(

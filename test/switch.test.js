@@ -328,10 +328,10 @@ describe('fx-switch Tests', () => {
     expect(control1.value).to.equal('a bound item');
 
     const control2 = el.querySelector('[ref="item2"]');
-    expect(control2.value).to.equal('');
+    expect(control2.value).to.equal(null);
 
     const control3 = el.querySelector('[ref="item3"]');
-    expect(control3.value).to.equal('');
+    expect(control3.value).to.equal(null);
 
   });
 
