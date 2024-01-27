@@ -18,7 +18,10 @@ class FxSwitch extends FxContainer {
   constructor() {
     super();
     this.formerCase = {};
+    this.selectedCase = null;
+    this.cases = null;
   }
+
   connectedCallback() {
     if (super.connectedCallback) {
       super.connectedCallback();
@@ -37,63 +40,83 @@ class FxSwitch extends FxContainer {
         </style>
         ${html}
     `;
+    this.cases = [];
+    this.formerCase=null;
   }
 
   async refresh(force) {
     super.refresh();
     // console.log('refresh on switch ');
-    const cases = this.querySelectorAll(':scope > fx-case');
-    let selectedCase = cases[0]; // first is always default
-    if (this.isBound()) {
-      Array.from(cases).forEach(caseElem => {
-        const name = caseElem.getAttribute('name');
-        if (name === this.modelItem?.value) {
-          Fore.dispatch(caseElem,'select',{});
-          caseElem.classList.add('selected-case');
-          selectedCase = caseElem;
-        } else {
-          if(caseElem.classList.contains('selected-case')){
-            Fore.dispatch(caseElem,'deselect',{});
-          }
-          caseElem.classList.remove('selected-case');
-        }
-      });
-    } else {
-      selectedCase = this.querySelector(':scope > .selected-case');
-      // if none is selected select the first as default
-      if (!selectedCase) {
-        selectedCase = cases[0]; // if nothing is selected use the first case
-        Fore.dispatch(selectedCase,'select',{});
-        selectedCase.classList.add('selected-case');
-      }
-    }
-    if(this.formerCase !== selectedCase){
-      const visited = selectedCase.querySelectorAll('.visited');
-      Array.from(visited).forEach(v =>{
-        v.classList.remove('visited');
-      });
+    if(this.cases.length === 0){
+      this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
     }
 
-    Fore.refreshChildren(selectedCase,force);
-    this.formerCase = selectedCase;
+    if (this.isBound()) {
+      this._handleBoundSwitch();
+    }
+    if(!this.selectedCase){
+      this.selectedCase = this.cases[0]; // first is always default
+      this.toggle(this.selectedCase);
+    }
+
+    Fore.refreshChildren(this.selectedCase,force);
   }
 
-  toggle(caseElement) {
-    const cases = this.querySelectorAll('fx-case');
-    Array.from(cases).forEach(c => {
-      if (caseElement === c) {
-        // eslint-disable-next-line no-param-reassign
-        c.classList.add('selected-case');
-        Fore.dispatch(c,'select',{});
-        this.refresh();
-      } else {
-        // eslint-disable-next-line no-param-reassign
-        if(c.classList.contains('selected-case')){
-          Fore.dispatch(c,'deselect',{});
-        }
-        c.classList.remove('selected-case');
+  _dispatchEvents(){
+    if(this.formerCase && this.formerCase !== this.selectedCase){
+      Fore.dispatch(this.formerCase,'deselect',{});
+    }
+    if(this.selectedCase.classList.contains('selected-case')){
+      Fore.dispatch(this.selectedCase,'select',{});
+    }
+  }
+
+  _resetVisited(){
+    const visited = this.selectedCase.querySelectorAll('.visited');
+    Array.from(visited).forEach(v =>{
+      v.classList.remove('visited');
+    });
+  }
+
+  /**
+   * handles switches being bound. If modelItem value matches the 'name' attribute that case will be toggled.
+   * @private
+   */
+  _handleBoundSwitch() {
+    Array.from(this.cases).forEach(caseElem => {
+      const name = caseElem.getAttribute('name');
+      if (name === this.modelItem?.value) {
+        this.toggle(caseElem);
       }
     });
+  }
+
+  /**
+   * Activates a fx-case element by switching CSS classes.
+   * Dispatches 'select' and 'deselect' events as appropriate.
+   *
+   * @param caseElement the fx-case element to activate
+   */
+  toggle(caseElement) {
+    this.formerCase = this.selectedCase;
+    this.selectedCase = caseElement;
+    Array.from(this.cases).forEach(c => {
+      if (c === this.selectedCase) {
+        c.classList.remove('deselected-case');
+        c.classList.add('selected-case');
+        c.inert = false;
+      } else {
+        c.classList.remove('selected-case');
+        c.classList.add('deselected-case');
+        c.inert = true;
+        this._resetVisited();
+      }
+    });
+
+    if(this.selectedCase !== caseElement){
+      this.selectedCase = caseElement;
+    }
+    this._dispatchEvents();
   }
 }
 

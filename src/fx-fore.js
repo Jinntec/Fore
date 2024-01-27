@@ -768,30 +768,31 @@ export class FxFore extends HTMLElement {
      */
     async _lazyCreateInstance() {
         const model = this.querySelector('fx-model');
-        // Inherit shared models from the parent component
 
+        // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
         const parentFore = this.parentNode.closest('fx-fore');
-		if (parentFore) {
-			const sharedInstances = Array.from(parentFore.getModel().querySelectorAll('fx-instance')).filter(instance => instance.hasAttribute('shared'));
-				for(const instance of sharedInstances) {
-					this.getModel().instances.push(instance);
-				}
-			this.getModel().updateModel();
-		}
+        if(parentFore){
+            const shared = parentFore.getModel().instances.filter(shared => shared.hasAttribute('shared'));
+            if(shared.length !==0) return;
+        }
 
+        // still need to catch just in case...
+        try{
+            if (model.instances.length === 0) {
+                // console.log('### lazy creation of instance');
+                const generatedInstance = document.createElement('fx-instance');
+                model.appendChild(generatedInstance);
 
-        if (model.instances.length === 0) {
-            // console.log('### lazy creation of instance');
-            const generatedInstance = document.createElement('fx-instance');
-            model.appendChild(generatedInstance);
-
-            const generated = document.implementation.createDocument(null, 'data', null);
-            // const newData = this._generateInstance(this, generated.firstElementChild);
-            this._generateInstance(this, generated.firstElementChild);
-            generatedInstance.instanceData = generated;
-            model.instances.push(generatedInstance);
-            // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
-            Fore.dispatch(this,'instance-loaded',{instance:this});
+                const generated = document.implementation.createDocument(null, 'data', null);
+                // const newData = this._generateInstance(this, generated.firstElementChild);
+                this._generateInstance(this, generated.firstElementChild);
+                generatedInstance.instanceData = generated;
+                model.instances.push(generatedInstance);
+                // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
+                Fore.dispatch(this,'instance-loaded',{instance:this});
+            }
+        }catch (e) {
+            console.warn('lazyCreateInstance created an error attempting to create a document', e.message);
         }
     }
 

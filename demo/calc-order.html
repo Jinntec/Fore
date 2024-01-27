@@ -58,8 +58,8 @@
                             <result></result>
                         </data>
                     </fx-instance>
-                    <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
-                    <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
+                    <fx-bind ref="add" calculate="number(../m2) + 5"></fx-bind>
+                    <fx-bind ref="m2" calculate="number(../m1) * 2"></fx-bind>
                 </fx-model>
                 <fx-group>
                     <h2>Calculations</h2>
