@@ -72,8 +72,8 @@
     <h1>Switch</h1>
     <h2><code>fx-switch</code> with toggle</h2>
     <p>
-        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/"target="_blank">fx-case</a></code> child elements can be switched by an explicit <code><a href="https://jinntec.github.io/fore-docs/elements/actions/toggle/"target="_blank">fx-toggle</a></code> action which take the <code>ID</code> of an
-        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/"target="_blank">fx-case</a></code> element.
+        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/" target="_blank">fx-case</a></code> child elements can be switched by an explicit <code><a href="https://jinntec.github.io/fore-docs/elements/actions/toggle/"target="_blank">fx-toggle</a></code> action which take the <code>ID</code> of an
+        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/" target="_blank">fx-case</a></code> element.
     </p>
 
     <demo-snippet>
@@ -177,9 +177,13 @@
 
         <fx-switch class="second" ref="page">
             <fx-case name="page1">
+                <fx-message event="select">page 1 selected</fx-message>
+                <fx-message event="deselect">page 1 deselected</fx-message>
                 <h2>Page1</h2>
             </fx-case>
             <fx-case name="page2">
+                <fx-message event="select">page 2 selected</fx-message>
+                <fx-message event="deselect">page 2 deselected</fx-message>
                 <h2>Page 2</h2>
             </fx-case>
             <fx-case name="page3">
