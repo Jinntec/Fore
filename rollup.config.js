@@ -7,14 +7,15 @@ import versionInjector from 'rollup-plugin-version-injector';
 
 // eslint-disable-next-line no-unused-vars
 const { dependencies } = require('./package.json');
+
 export default [
   {
-    input: './index.js',
+    input: './demo/demo-build.js',
     output: [
       {
-        file: `dist/fore.js`,
+        file: 'dist/demo.js',
         format: 'es',
-        sourcemap: true,
+        sourcemap: false,
       },
     ],
     plugins: [
@@ -33,28 +34,5 @@ export default [
       minifyHTML(),
       terser(),
     ],
-  },
-  {
-    input: './index.js',
-    output: [
-      {
-        file: `dist/fore-dev.js`,
-        format: 'es',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      versionInjector(),
-      resolve(),
-      babel({
-        babelrc: false,
-        plugins: [
-          // Tell babel to accept the `static READONLY_DEFAULT = false;` properties found in some places.
-          // eslint-disable-next-line global-require
-          [require('@babel/plugin-proposal-class-properties'), { loose: true }],
-        ],
-      }),
-      terser(),
-    ],
-  },
+  }
 ];

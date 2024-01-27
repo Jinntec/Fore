@@ -6,3 +6,4 @@ import './js/demo-snippet.js';
 import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
 import './codemirror/jinn-codemirror-bundle.js';
 import '../index.js';
+import '../doc/fore-corner.js';

@@ -47,10 +47,12 @@ export class ForeCorner extends HTMLElement{
         `;
 
         this.href = this.getAttribute('href');
+        const end = this.href.lastIndexOf('/');
+        const base = this.href.substring(0,end);
         const outputHtml = `
             <a href="${this.href}">
                 <div class="logo-corner">
-                    <img class="logo fore" src="/doc/light-blue1.png">
+                    <img class="logo fore" src="/doc/light-blue1.png" alt="Fore">
                 </div>
             </a>
         `;

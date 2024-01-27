@@ -1,6 +1,6 @@
 {
   "name": "fore demos",
-  "version": "0.22.0",
+  "version": "1.0.0",
   "description": "Fore - Demos",
   "module": "./demo.js",
   "dependencies": {
