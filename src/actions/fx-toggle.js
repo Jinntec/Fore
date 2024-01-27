@@ -23,6 +23,7 @@ class FxToggle extends AbstractAction {
     super.perform();
     if (this.case) {
       const ownerForm = this.getOwnerForm();
+      // todo: id resolution!!!
       const caseElement = ownerForm.querySelector(`#${this.case}`);
       if(!caseElement){
         Fore.dispatch(this, 'error', { message: `fx-case id not found: ${this.case}` });
