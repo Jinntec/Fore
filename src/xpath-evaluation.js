@@ -982,7 +982,7 @@ const instance = (dynamicContext, string) => {
                 bubbles: true,
                 detail: {
                     origin: 'functions',
-                    message: `Function not found '${localName}'`,
+                    message: `Instance not found '${localName}'`,
                     level:'Error'
                 },
             }));
@@ -995,28 +995,6 @@ const instance = (dynamicContext, string) => {
         return null;
     }
     return context;
-
-/*
-    const inst = string
-          ? formElement.getModel().getInstance(string)
-          : formElement.getModel().getDefaultInstance();
-*/
-
-/*
-    const inst = string
-        ? resolveId(string, formElement, 'fx-instance')
-        : formElement.querySelector(`fx-instance`);
-
-    if (lookup) {
-        const context = lookup.getDefaultContext();
-		if (!context) {
-			debugger;
-			return null;
-		}
-		return context;
-    }
-    return null;
-*/
 };
 
 registerCustomXPathFunction(
