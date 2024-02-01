@@ -63,7 +63,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   init(model) {
     this.model = model;
     // console.log('init binding ', this);
-    this.instanceId = this._getInstanceId();
+    this._getInstanceId();
     this.bindType = this.getModel().getInstance(this.instanceId).type;
     // console.log('binding type ', this.bindType);
 
@@ -399,20 +399,40 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     return result;
   }
 
-  // todo: more elaborated implementation ;)
+  /**
+   * return the instance id this bind is associated with. Resolves upwards in binds to either find an expr containing
+   * and instance() function or if not found return 'default'.
+   * @private
+   */
   _getInstanceId() {
     const bindExpr = this.getBindingExpr();
     // console.log('_getInstanceId bindExpr ', bindExpr);
     if (bindExpr.startsWith('instance(')) {
       this.instanceId = XPathUtil.getInstanceId(bindExpr);
-      return this.instanceId;
+      return;
     }
-    if (this.instanceId) {
-      return this.instanceId;
+    if(!this.instanceId && this.parentNode.nodeName === 'FX-BIND'){
+      let parent = this.parentNode;
+      while(parent && !this.instanceId){
+        const ref = parent.getBindingExpr();
+        if (ref.startsWith('instance(')) {
+          this.instanceId = XPathUtil.getInstanceId(ref);
+          return;
+        }
+        if(parent.parentNode.nodeName !== 'FX-BIND'){
+          this.instanceId = 'default';
+          break;
+        }
+        parent = parent.parentNode;
+      }
     }
-    return 'default';
+    this.instanceId = 'default';
   }
+
+
+
 }
+
 if (!customElements.get('fx-bind')) {
   customElements.define('fx-bind', FxBind);
 }

@@ -30,6 +30,7 @@ export class FxModel extends HTMLElement {
         this.modelConstructed = false;
         this.attachShadow({mode: 'open'});
         this.computes = 0;
+        this.fore = {};
     }
 
     get formElement() {
@@ -49,6 +50,7 @@ export class FxModel extends HTMLElement {
         }, {once: true});
 
         this.skipUpdate = false;
+        this.fore = this.parentNode;
     }
 
     static lazyCreateModelItem(model, ref, node) {
@@ -400,7 +402,7 @@ export class FxModel extends HTMLElement {
                         modelItem.required = compute;
                         this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
                         if (!modelItem.node.textContent) {
-                            console.log('validation failed on modelitem ', modelItem);
+                            console.log('node is required but has no value ', XPathUtil.getDocPath(modelItem.node));
                             valid = false;
                         }
                         // if (!compute) valid = false;
@@ -458,7 +460,16 @@ export class FxModel extends HTMLElement {
         // console.log('instances array ',Array.from(this.instances));
 
         const instArray = Array.from(this.instances);
-        const found = instArray.find(inst => inst.id === id);
+        let found = instArray.find(inst => inst.id === id);
+        if(!found) {
+            const parentFore = this.fore.parentNode.closest('fx-fore');
+            if (parentFore) {
+                console.log('shared instances from parent', this.parentNode.id);
+                const parentInstances = parentFore.getModel().instances;
+                const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
+                found = shared.find(found => found.id === id);
+            }
+        }
         if(!found){
             // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
             Fore.dispatch(this, 'error', {

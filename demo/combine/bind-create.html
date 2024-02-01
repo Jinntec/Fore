@@ -41,6 +41,12 @@
 
             <!-- assuming the persName elements are required and always exist - otherwise add binding here -->
 
+            <!-- #####
+            when it is found that 'gender' does not exist in the partial (default) instance the <fx-create> action
+            fires automatically.
+
+            When serialising on submit the same 'relevant' can be used to filter out unwanted (optional) nodes.
+            ##### -->
             <fx-bind ref="gender" relevant="string-length(@value) != 0">
                 <fx-create ref="persName[last()]" position="after" origin="instance('template')/gender"></fx-create>
             </fx-bind>
