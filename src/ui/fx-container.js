@@ -42,7 +42,6 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     } );
 */
 
-    this.setAttribute('tabindex','0');
   }
 
   /**
