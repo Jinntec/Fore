@@ -477,4 +477,47 @@ describe('bind Tests', () => {
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
   });
+
+  it('uses the instance of parent bind', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <item>foobar</item>
+              <result>foobar</result>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <items>
+                <item>Part1</item>
+                <item>Part2</item>
+              </items>
+            </data>
+          </fx-instance>
+
+          <fx-bind ref="instance('second')">
+            <fx-bind id="wrap" ref=".//item">
+              <fx-bind id="nested" ref="part" constraint="false()"></fx-bind>
+            </fx-bind>
+          </fx-bind>
+
+        </fx-model>
+        <fx-repeat ref="instance('second')//item">
+          <template>
+            <fx-control ref=".">
+              <label>Part:</label>
+            </fx-control>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const nestedBind = el.querySelector('#nested');
+    expect(nestedBind.instanceId).to.equal('second');
+
+  });
+
 });
