@@ -61,10 +61,6 @@ export default function getInScopeContext(node, ref) {
     const parentElement = _getElement(node);
     // console.log('getInScopeContext parent', parentElement);
 
-    if(parentElement.closest('fx-fore').mergePartial){
-        console.log('mergePartial mode')
-    }
-
     if(parentElement.nodeName === 'FX-FORE'){
         return parentElement.getModel().getDefaultInstance().getDefaultContext();
     }
