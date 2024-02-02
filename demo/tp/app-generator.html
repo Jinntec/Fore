@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>App Generator</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../../index.js"></script>
+
+    <script type="module">
+        import 'https://unpkg.com/@teipublisher/pb-components@1.43.2/dist/pb-components-bundle.js';
+    </script>
+
+    <style>
+        details{
+            padding:1rem;
+            background: white;
+            margin-top:2rem;
+            border:thin solid #efefef;
+        }
+        fx-fore{
+            max-width:50rem;
+            margin:0 auto;
+            background: ghostwhite;
+            padding: 3rem;
+        }
+        fx-control,label{
+            display: block;
+            width: 100%;
+        }
+        fx-control{
+            margin:2rem 0;
+        }
+        fx-control .widget{
+            width: 12rem;
+
+        }
+        fx-hint{
+            display: block;
+            margin:0.25rem 0;
+        }
+        #generate{
+            padding: 1rem 1.5rem;
+            background: #00b0ff;
+            font-size: 1rem;
+            margin:1rem 0;
+            color: white;
+            border-color: white;
+        }
+        h1{
+            text-align: center;
+        }
+        .short{
+            width: 12rem;
+        }
+        .long .widget{
+            width: calc(100% - 2rem);
+        }
+        fx-control[required]:after{
+            content: '';
+        }
+        summary{
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-setfocus control="short" event="ready"></fx-setfocus>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <title></title>
+                <shortname></shortname>
+                <data-collection>data</data-collection>
+                <html-template></html-template>
+                <default-view></default-view>
+                <default-index></default-index>
+                <owner></owner>
+                <pass></pass>
+                <url base="https://e-editiones.org/apps/"></url>
+            </data>
+        </fx-instance>
+        <fx-bind ref="shortname"
+                 required="true()"
+                 constraint="not(contains(./text(),' '))" alert="The Short Name must not contain spaces"></fx-bind>
+        <!--        <fx-instance src="api/templates"></fx-instance>-->
+    </fx-model>
+
+    <header>
+        <h1>App Generator</h1>
+        <div>
+            App Generator creates a complete application for your edition....
+        </div>
+    </header>
+    <main>
+        <fx-control id="short" class="short" ref="shortname" update-event="input">
+            <label>App Name (required)</label>
+            <input>
+            <fx-hint>
+                The App name displayed in eXistdb Dashboard. (Must not contain spaces)
+            </fx-hint>
+            <fx-action event="value-changed">
+                <fx-setvalue ref="../url" value="./@base || ../shortname"></fx-setvalue>
+                <fx-setvalue ref="../owner" value="../shortname"></fx-setvalue>
+                <fx-setvalue ref="../pass" value="../shortname"></fx-setvalue>
+            </fx-action>
+        </fx-control>
+
+        <fx-control class="long" ref="title">
+            <label>App Title</label>
+            <input>
+            <fx-hint>An optional more descriptive title for the App</fx-hint>
+        </fx-control>
+
+
+        <!--        <details open="open">-->
+        <details>
+            <summary>Advanced Configuration</summary>
+
+            <fx-control ref="owner">
+                <label>Owner of the App (required)</label>
+            </fx-control>
+            <fx-control ref="pass">
+                <label>Password for Owner</label>
+                <input type="password">
+                <fx-hint>Password for Owner (defaults to App Name)</fx-hint>
+            </fx-control>
+
+            <fx-control class="long" ref="url">
+                <label>Namespace</label>
+                <input>
+                <fx-hint>Unique URL for App used as identifier internally</fx-hint>
+            </fx-control>
+            <fx-control ref="data-collection">
+                <label>Root collection for documents</label>
+            </fx-control>
+            <fx-control ref="default-index">
+                <label>Default Volltext Index</label>
+            </fx-control>
+
+
+            <fx-control ref="html-template">
+                <label>HTML template</label>
+            </fx-control>
+
+            <fx-control ref="default-view">
+                <label>Standardansicht</label>
+                <select class="widget">
+                    <option value="div">by Div</option>
+                    <option value="Page">by Page</option>
+                </select>
+            </fx-control>
+
+
+
+        </details>
+        <fx-trigger>
+            <button id="generate">Generate</button>
+
+        </fx-trigger>
+    </main>
+    <footer></footer>
+    <!--    <fx-inspector open></fx-inspector>-->
+</fx-fore>
+
+</body>
+</html>
