@@ -5,10 +5,9 @@ import {XPathUtil} from "../xpath-util.js";
 import {Fore} from "../fore.js";
 
 /**
- * `fx-message`
+ * `fx-load`
  *
- * Action to display messages to the user.
- *
+ * Action to load a window, tab or embed some Html into the current page at given location.
  *
  */
 class FxLoad extends AbstractAction {
@@ -135,34 +134,13 @@ class FxLoad extends AbstractAction {
         }
 
         try {
-            const response = await fetch(resolvedUrl,  {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'same-origin',
-                headers: {
-                  'Content-Type': "text/html",
-                },
-            });
-            const data = await response.text();
-            // console.log('data loaded: ', data);
-
+            const data = Fore.loadHtml(resolvedUrl);
             // todo: if data contain '<template' element as first child instanciate and insert it
             if (!this.attachTo) {
                 this.innerHtml = data;
             }
-/*
-            if (this.attachTo.startsWith('#')) {
-                const targetId = this.attachTo.substring(1);
-                const resolved = resolveId(targetId, this);
-                resolved.innerHTML = '';
-                resolved.innerHTML = data;
-            }
-*/
             this._attachToElement(data);
-
-
             Fore.dispatch(this, 'loaded', {url: this.url})
-
         } catch (error) {
             throw new Error(`failed loading data ${error}`);
         }
@@ -227,27 +205,6 @@ class FxLoad extends AbstractAction {
         });
         return replaced;
     }
-
-
-    /*
-        _getValue() {
-            if (this.hasAttribute('value')) {
-                const valAttr = this.getAttribute('value');
-                try {
-                    const inscopeContext = getInScopeContext(this, valAttr);
-                    return evaluateXPathToString(valAttr, inscopeContext, this);
-                } catch (error) {
-                    console.error(error);
-                    Fore.dispatch(this, 'error', {message: error});
-                }
-            }
-            if (this.textContent) {
-                return this.textContent;
-            }
-            return null;
-        }
-    */
-
 
 }
 

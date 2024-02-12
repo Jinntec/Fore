@@ -18,6 +18,37 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  /**
+   * Loads and return a piece of HTML
+   * @param url - the Url to load from
+   * @returns {Promise<string>}
+   */
+  static async loadHtml(url){
+    try{
+      const response = await fetch(url,  {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': "text/html",
+        },
+      });
+      const responseContentType = response.headers.get('content-type').toLowerCase();
+      if (responseContentType.startsWith('text/html')) {
+        return await response.text();
+      } else {
+        Fore.dispatch(this, 'error', {
+          message: `Response has wrong contentType '${responseContentType}'. Should be 'text/html'`,
+          level:'Error'
+        });
+      }
+    } catch (e){
+      Fore.dispatch(this, 'error', {
+        message: `Html couldn't be loaded from '${url}'`,
+        level:'Error'
+      });
+    }
+  }
   static buildPredicates(node){
     let attrPredicate='';
     Array.from(node.attributes).forEach(attr =>{
