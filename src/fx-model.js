@@ -106,7 +106,7 @@ export class FxModel extends HTMLElement {
      *
      */
     async modelConstruct() {
-        console.log('### <<<<< dispatching model-construct >>>>>');
+        console.log(`### <<<<< dispatching model-construct for '${this.fore.id}' >>>>>`);
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
 
@@ -129,7 +129,7 @@ export class FxModel extends HTMLElement {
             this.updateModel();
         } else {
             // ### if there's no instance one will created
-            console.log('### <<<<< dispatching model-construct-done >>>>>');
+            console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
             await this.dispatchEvent(
                 new CustomEvent('model-construct-done', {
                     composed: false,
@@ -167,7 +167,7 @@ export class FxModel extends HTMLElement {
     }
 
     rebuild() {
-        console.log('### <<<<< rebuild() >>>>>');
+        console.log(`### <<<<< rebuilding '${this.fore.id}' >>>>>`);
 
         this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
         this.modelItems = [];
@@ -203,7 +203,7 @@ export class FxModel extends HTMLElement {
             return;
         }
 
-        console.log('### <<<<< recalculate() >>>>>');
+        console.log(`### <<<<< recalculating '${this.fore.id}' >>>>>`);
 
         // console.log('changed nodes ', this.changed);
         this.computes = 0;
@@ -459,8 +459,15 @@ export class FxModel extends HTMLElement {
         // console.log('instances ', this.instances);
         // console.log('instances array ',Array.from(this.instances));
 
+        let found;
+        if(id === 'default'){
+            found = this.getDefaultInstance();
+        }
+        if(!found) {
         const instArray = Array.from(this.instances);
-        let found = instArray.find(inst => inst.id === id);
+            found = instArray.find(inst => inst.id === id);
+
+        }
         if(!found) {
             const parentFore = this.fore.parentNode.closest('fx-fore');
             if (parentFore) {
@@ -470,7 +477,7 @@ export class FxModel extends HTMLElement {
                 found = shared.find(found => found.id === id);
             }
         }
-        if(!found){
+        if(!found && this.fore.strict){
             // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
             Fore.dispatch(this, 'error', {
                 origin: this,

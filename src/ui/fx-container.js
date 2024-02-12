@@ -1,5 +1,6 @@
 import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
+import {Fore} from "../fore.js";
 
 /**
  * `fx-container` -
@@ -7,12 +8,21 @@ import { foreElementMixin } from '../ForeElementMixin.js';
  *
  */
 export class FxContainer extends foreElementMixin(HTMLElement) {
+  static get properties() {
+    return {
+      ...super.properties,
+      src: {
+        type: String,
+      },
+    };
+  }
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
+    this.src = this.hasAttribute('src') ? this.getAttribute('src'):null;
     const style = `
         :host {
             display: block;
@@ -51,6 +61,24 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (!force && this.hasAttribute('refresh-on-view')) return;
     // console.log('### FxContainer.refresh on : ', this);
 
+    // if loading from 'src' needs to be done do it now
+    if(this.src){
+      await Fore.loadForeFromSrc(this,this.src,'fx-group')
+          .then(foreElement =>{
+            this.getOwnerForm().registerLazyElement(foreElement);
+            foreElement.refresh();
+          })
+/*
+          .then(fore => {
+            const thisAttrs = this.attributes;
+            Array.from(thisAttrs).forEach(attr =>{
+              if(attr.name !== 'src'){
+                fore.setAttribute(attr.name,attr.value);
+              }
+            });
+          });
+*/
+    }
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
@@ -64,7 +92,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     // if (this._getForm().ready) {
     //   this.handleModelItemProperties();
     // }
-    // Fore.refreshChildren(this, force);
+    Fore.refreshChildren(this, force);
   }
 
   /**
