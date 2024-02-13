@@ -462,7 +462,10 @@ export class FxModel extends HTMLElement {
         const instArray = Array.from(this.instances);
         let found = instArray.find(inst => inst.id === id);
         if(!found) {
-            const parentFore = this.fore.parentNode.closest('fx-fore');
+            const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+                                    ? this.fore.parentNode.host.closest('fx-fore')
+                                    : this.fore.parentNode.closest('fx-fore')
+
             if (parentFore) {
                 console.log('shared instances from parent', this.parentNode.id);
                 const parentInstances = parentFore.getModel().instances;

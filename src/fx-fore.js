@@ -567,7 +567,9 @@ export class FxFore extends HTMLElement {
 
 		// this.isRefreshing = true;
 		// this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
-		this.parentNode.closest('fx-fore')?.refresh(false);
+        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
+            this.parentNode.closest('fx-fore')?.refresh(false);
+        }
 		for (const subFore of this.querySelectorAll('fx-fore')) {
 			// subFore.refresh(false, changedPaths);
 			subFore.refresh(false);
@@ -770,7 +772,11 @@ export class FxFore extends HTMLElement {
         const model = this.querySelector('fx-model');
 
         // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
-        const parentFore = this.parentNode.closest('fx-fore');
+        const parentFore = this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE ? this.parentNode.closest('fx-fore'): null;
+        if(this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+            console.log('fragment',this.parentNode)
+        }
+
         if(parentFore){
             const shared = parentFore.getModel().instances.filter(shared => shared.hasAttribute('shared'));
             if(shared.length !==0) return;
