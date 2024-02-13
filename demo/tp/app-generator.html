@@ -21,7 +21,7 @@
             border:thin solid #efefef;
         }
         fx-fore{
-            max-width:50rem;
+            max-width:80rem;
             margin:0 auto;
             background: ghostwhite;
             padding: 3rem;
@@ -64,6 +64,23 @@
         summary{
             padding: 1rem;
         }
+        #r-pages{
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-gap: 1rem;
+        }
+        #r-pages [repeat-index]{
+            background: var(--paper-pink-700);
+        }
+        #r-pages iframe{
+            transform: scale(0.9);
+        }
+        /*
+        #r-pages fx-repeatitem{
+            display: inline-block;
+            width: 30%;
+        }
+        */
     </style>
 </head>
 <body>
@@ -80,12 +97,75 @@
                 <default-index></default-index>
                 <owner></owner>
                 <pass></pass>
+                <odds>
+                    <!-- odd config with fantasy params -->
+                    <odd src="" group="tei" base="...">
+                        This odd is targetted at Docbook files ...
+                    </odd>
+                </odds>
+                <!-- all page types to be used by the app -->
+                <pages>
+                    <page type="home" name="index.html" layout="homepage" selected="false">
+                        <!--
+                            assuming index.html contains an element with class="area".
+
+                            page template files can contain matchable sections to define the broad layout and where
+                            certain elements are placed. It's a matter of the CSS then to provide the actual layout.
+
+                            This allows to generate pages that define the overall structure of the page and
+                         -->
+                        <feature ref="map" placement=".map"></feature>
+                        <feature ref="intro" placement="main"></feature>
+                        <!-- pulling up parameters from Web Components like e.g. pb-document or pb-view params and
+                        inject them from here -->
+                        <feature ref="document" placement=".area" src="api/anArticle?id=featured"></feature>
+                    </page>
+                    <page type="document" name="document.html" layout="layout1" selected="false"></page>
+                    <page type="search" name="search.html" layout="searchpage" selected="false"></page>
+                </pages>
+                <stylesheets>
+                    <stylesheet>...</stylesheet>
+                </stylesheets>
+                <fonts>
+                    <font src=""></font>
+                </fonts>
+                <images>
+                    <collection src="src/images/..."></collection>
+                    <collection src="https://iiifblafoo">
+                        <!-- params -->
+                    </collection>
+                </images>
+                <layouts>
+                    <layout id="homepage" src="grid-two-col.html"></layout>
+                    <layout id="searchpage" src="seach-page-layout.html"></layout>
+                </layouts>
+                <!-- all UI components to be used by the app -->
+                <features>
+                    <feature id="intro">
+                        <pb-view src="...."></pb-view>
+                    </feature>
+                    <feature id="map" name="pb-map" data="map-endpoint"></feature>
+                    <feature id="timeline" name="pb-timeline"></feature>
+                    <feature id="annotations" name="pb-annotation-view">
+                        <config>
+                            <authorities>
+                                <authority name="gnd" form="gnd-form.html"></authority>
+                                <authority name="gnd" form="gnd-form.html"></authority>
+                            </authorities>
+                        </config>
+                    </feature>
+                    <feature id="search" name="pb-search"></feature>
+                    <feature id="fore" name="fore"></feature>
+                </features>
                 <url base="https://e-editiones.org/apps/"></url>
+                <page-selected></page-selected>
             </data>
         </fx-instance>
+<!--
         <fx-bind ref="shortname"
                  required="true()"
                  constraint="not(contains(./text(),' '))" alert="The Short Name must not contain spaces"></fx-bind>
+-->
         <!--        <fx-instance src="api/templates"></fx-instance>-->
     </fx-model>
 
@@ -115,6 +195,64 @@
             <fx-hint>An optional more descriptive title for the App</fx-hint>
         </fx-control>
 
+        <div>
+            <fx-trigger>
+                <button>ODDs</button>
+                <fx-toggle case="odd-case"></fx-toggle>
+            </fx-trigger>
+            <fx-trigger>
+                <button>Layouts</button>
+                <fx-toggle case="layout-case"></fx-toggle>
+            </fx-trigger>
+            <fx-trigger>
+                <button>Features</button>
+                <fx-toggle case="feature-case"></fx-toggle>
+            </fx-trigger>
+        </div>
+<!--
+        <fx-repeat id="r-pages" ref="instance()/pages/page">
+            <template>
+                &lt;!&ndash;
+                                        <fx-control ref="@selected" value-prop="checked" update-value="input">
+                                            <input type="checkbox">
+                                        </fx-control>
+                &ndash;&gt;
+                <iframe src="{@name}" style="width:100%; height: 30rem;"></iframe>
+            </template>
+        </fx-repeat>
+-->
+
+        <fx-switch>
+            <fx-case id="odd-case">
+                the odds used
+            </fx-case>
+            <fx-case id="layout-case">
+                <fx-repeat id="r-pages" ref="instance()/pages/page">
+                    <template>
+                        <!--
+                                                <fx-control ref="@selected" value-prop="checked" update-value="input">
+                                                    <input type="checkbox">
+                                                </fx-control>
+                        -->
+                        <iframe src="{@name}" style="width:100%; height: 30rem;"></iframe>
+                    </template>
+                </fx-repeat>
+            </fx-case>
+            <fx-case id="feature-case">features</fx-case>
+        </fx-switch>
+
+<!--
+        <fx-control ref="page-selected" update-event="input">
+            <label>Add a layout</label>
+            <select class="widget" ref="instance()/pages/page/@name" selection="open">
+                <template>
+                    <option value="{.}">{.}</option>
+                </template>
+            </select>
+        </fx-control>
+-->
+
+<!--        <iframe src="{pages/page[@type='home']/@name}" style="width:100%; height: 30rem;"></iframe>-->
 
         <!--        <details open="open">-->
         <details>
@@ -159,7 +297,6 @@
         </details>
         <fx-trigger>
             <button id="generate">Generate</button>
-
         </fx-trigger>
     </main>
     <footer></footer>

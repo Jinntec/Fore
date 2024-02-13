@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper{
+            display: grid;
+            grid-template-rows: 4rem 10rem auto;
+            width: 100vw;
+            height: 100vh;
+            background: lightgrey;
+        }
+        .wrapper > * {
+            padding: 1rem;
+        }
+        nav{
+            background: var(--paper-blue-900);
+        }
+        header{
+            background:var(--paper-blue-700);
+            color:white;
+        }
+        main{
+            background: var(--paper-blue-100);
+            height:100%;
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-gap:1rem;
+        }
+        .left, .right{
+            background: var(--paper-blue-50);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav></nav>
+        <header>
+            <h1>My beautiful page</h1>
+            <section id="intro"></section>
+        </header>
+        <main>
+            <section class="left">Left Content</section>
+            <section class="right">Right Content</section>
+        </main>
+    </div>
+</body>
+</html>
