@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using Fore as control</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+
+        fx-control {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap:1rem;
+        }
+
+        input{
+            padding: 0.3rem;
+        }
+
+        fx-group {
+            width:max-content;
+        }
+
+        fx-fore fx-fore {
+            background: lightsteelblue;
+            border: thin solid steelblue;
+            /*height:200px;*/
+            position:relative;
+        }
+
+        label{
+            justify-self:end;
+        }
+        fx-fore fx-fore label{
+            display: none;
+        }
+        fx-inspector{
+            position: absolute;
+            height: 99%;
+        }
+        fx-fore fx-fore fx-inspector{
+            /*right:2rem;*/
+        }
+        .wrapper{
+            padding: 2rem;
+            background: white;
+        }
+/*
+        #inner-inspect{
+            position:fixed;
+            left:0;
+        }
+*/
+        #attachments{
+            height: 300px;
+            position: relative;
+        }
+        #attachments fx-repeatitem{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html"></fore-corner>
+
+<div class="wrapper">
+
+    <h1>Email message using Fore as control</h1>
+    <p>The areas in blue are loaded from another nested `fx-fore` element that is used as a widget
+    in the outer Fore.</p>
+    <p>Data can be passed into nested Fore elements, being updated in sub-Fore and being passed back to outer Fore.</p>
+
+    <p class="note">
+        The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
+        attached the nested Fore to the shadowDOM and is not reachable from the outside with global CSS.
+    </p>
+    <fx-fore id="mailer">
+        <fx-message event="ready">outer fore ready</fx-message>
+
+        <fx-model>
+            <fx-message event="model-construct-done">Outer model ready</fx-message>
+            <fx-instance shared>
+                <data>
+                    <from>
+                        <email>John.Doe@nowhere.com</email>
+                    </from>
+                    <to>
+                        <email>Jane.Doe@nowhere.com</email>
+                    </to>
+                    <subject>just a message</subject>
+                    <message>Hey there - i'm a shared message</message>
+                    <attachments></attachments>
+                </data>
+            </fx-instance>
+<!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
+
+        </fx-model>
+
+        <fx-fore src="ui.html"></fx-fore>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
