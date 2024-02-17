@@ -263,7 +263,7 @@ export default class FxControl extends XfAbstractControl {
         } else (
             Fore.dispatch(this, "warn", {'message': 'trying to replace a node that is neither an Attribute, Elemment or Text node'})
         )
-        this.getOwnerForm().refresh();
+        // this.getOwnerForm().refresh();
     }
 
     renderHTML(ref) {
@@ -417,7 +417,7 @@ export default class FxControl extends XfAbstractControl {
      */
     async _loadForeFromUrl() {
         console.info(
-            `%cFore is processing URL ${this.url}`,
+            `%cControl ref="${this.ref}" is loading ${this.url}`,
             "background:#64b5f6; color:white; padding:0.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
         try {
@@ -457,10 +457,14 @@ export default class FxControl extends XfAbstractControl {
 						this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
 
                         doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-                        defaultInst.setInstanceData(doc);
+                            defaultInst.instanceData = doc;
                     }
-                    imported.getModel().updateModel();
-                    imported.refresh();
+                        imported.model = imported.querySelector('fx-model');
+                        imported.model.updateModel();
+
+                        imported.refresh(true);
+                        // Fore.dispatch(e.target, 'loaded', {url: this.url})
+
                 },
                 {once: true},
             );
@@ -477,23 +481,19 @@ export default class FxControl extends XfAbstractControl {
                 dummy.replaceWith(imported);
             }
 
-
             if (!theFore) {
-                this.dispatchEvent(
-                    new CustomEvent('error', {
-                        detail: {
-                            message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
-                        },
-                    }),
-                );
+                Fore.dispatch('error', {
+                    detail: {
+                        message: `Fore element not found in '${this.url}'. Maybe wrapped within 'template' element?`,
+                    }
+                });
             }
-            this.dispatchEvent(new CustomEvent('loaded', {detail: {fore: theFore}}));
+            Fore.dispatch('loaded', {detail: {fore: theFore}});
         } catch (error) {
             // console.log('error', error);
             Fore.dispatch(this, 'error', {
                 origin: this,
                 message: `control couldn't be loaded from url '${this.url}'`,
-                expr:xpath,
                 level:'Error'
             });
 
