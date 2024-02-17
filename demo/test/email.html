@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Email Address</title>
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-setfocus control="email" event="ready"></fx-setfocus>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <from>default</from>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-control id="email" ref="from">
+<!--            <label>From</label>-->
+        </fx-control>
+    </fx-fore>
+
+
+</div>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
