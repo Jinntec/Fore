@@ -86,7 +86,7 @@
         The first nested Fore is attached to the lightDOM and therefore is styled by outer CSS. The second
         attached the nested Fore to the shadowDOM and is not reachable from the outside with global CSS.
     </p>
-    <fx-fore>
+    <fx-fore id="mailer">
         <fx-message event="ready">outer fore ready</fx-message>
 
         <fx-model>
@@ -136,7 +136,6 @@
                 <label>Attachments</label>
             </fx-control>
         </fx-group>
-        <fx-inspector open></fx-inspector>
     </fx-fore>
 
 
