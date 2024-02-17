@@ -106,7 +106,7 @@ export class FxModel extends HTMLElement {
      *
      */
     async modelConstruct() {
-        console.log('### <<<<< dispatching model-construct >>>>>');
+        console.log(`### <<<<< dispatching model-construct '${this.fore.id}' >>>>>`);
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
 
@@ -167,7 +167,7 @@ export class FxModel extends HTMLElement {
     }
 
     rebuild() {
-        console.log('### <<<<< rebuild() >>>>>');
+        console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
 
         this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
         this.modelItems = [];
@@ -203,7 +203,7 @@ export class FxModel extends HTMLElement {
             return;
         }
 
-        console.log('### <<<<< recalculate() >>>>>');
+        console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
         // console.log('changed nodes ', this.changed);
         this.computes = 0;
@@ -368,7 +368,7 @@ export class FxModel extends HTMLElement {
 
         if (this.modelItems.length === 0) return true;
 
-        console.log('### <<<<< revalidate() >>>>>');
+        console.log(`### <<<<< revalidate() '${this.fore.id}' >>>>>`);
 
         // reset submission validation
         // this.parentNode.classList.remove('submit-validation-failed')
@@ -443,7 +443,7 @@ export class FxModel extends HTMLElement {
      * @returns {Element} the
      */
     getDefaultContext() {
-        return this.instances[0].getDefaultContext();
+        return this.getDefaultInstance().getDefaultContext();
     }
 
     getDefaultInstance() {
@@ -451,7 +451,7 @@ export class FxModel extends HTMLElement {
     }
 
     getDefaultInstanceData() {
-       return this.instances[0].getInstanceData();
+		return this.getDefaultInstance().getInstanceData();
     }
 
     getInstance(id) {
@@ -459,29 +459,46 @@ export class FxModel extends HTMLElement {
         // console.log('instances ', this.instances);
         // console.log('instances array ',Array.from(this.instances));
 
-        const instArray = Array.from(this.instances);
-        let found = instArray.find(inst => inst.id === id);
+        let found;
+        if(id === 'default'){
+            found = this.getDefaultInstance();
+        }
+        // ### lookup in local instances first
         if(!found) {
+        const instArray = Array.from(this.instances);
+            found = instArray.find(inst => inst.id === id);
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-                                    ? this.fore.parentNode.host.closest('fx-fore')
-                                    : this.fore.parentNode.closest('fx-fore')
+                    ? this.fore.parentNode.host.closest('fx-fore')
+                    : this.fore.parentNode.closest('fx-fore');
 
+        }
+        // ### lookup in parent Fore if present
+        if(!found){
+            // const parentFore = this.fore.parentNode.closest('fx-fore');
+            const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+                ? this.fore.parentNode.host.closest('fx-fore')
+                : this.fore.parentNode.closest('fx-fore');
             if (parentFore) {
                 console.log('shared instances from parent', this.parentNode.id);
                 const parentInstances = parentFore.getModel().instances;
                 const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
                 found = shared.find(found => found.id === id);
             }
+
         }
-        if(!found){
-            // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-            Fore.dispatch(this, 'error', {
-                origin: this,
-                message: `Instance '${id}' does not exist`,
-                level:'Error'
-            });
+        if(found){
+			return found;
         }
-        return found;
+		if (id === 'default') {
+			return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+		}
+
+        Fore.dispatch(this, 'error', {
+            origin: this,
+            message: `Instance '${id}' does not exist`,
+            level:'Error'
+        });
+		return null;
     }
 
     evalBinding(bindingExpr) {
