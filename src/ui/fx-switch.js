@@ -98,7 +98,6 @@ class FxSwitch extends FxContainer {
    * @param caseElement the fx-case element to activate
    */
   toggle(caseElement) {
-    this.formerCase = this.selectedCase;
     this.selectedCase = caseElement;
     Array.from(this.cases).forEach(c => {
       if (c === this.selectedCase) {
@@ -117,6 +116,7 @@ class FxSwitch extends FxContainer {
       this.selectedCase = caseElement;
     }
     this._dispatchEvents();
+    this.formerCase = this.selectedCase;
   }
 }
 
