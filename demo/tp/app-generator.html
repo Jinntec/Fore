@@ -212,11 +212,6 @@
 <!--
         <fx-repeat id="r-pages" ref="instance()/pages/page">
             <template>
-                &lt;!&ndash;
-                                        <fx-control ref="@selected" value-prop="checked" update-value="input">
-                                            <input type="checkbox">
-                                        </fx-control>
-                &ndash;&gt;
                 <iframe src="{@name}" style="width:100%; height: 30rem;"></iframe>
             </template>
         </fx-repeat>
@@ -227,6 +222,7 @@
                 the odds used
             </fx-case>
             <fx-case id="layout-case">
+                <fx-refresh force="force" self event="select"></fx-refresh>
                 <fx-repeat id="r-pages" ref="instance()/pages/page">
                     <template>
                         <!--
