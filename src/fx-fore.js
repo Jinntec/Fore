@@ -255,6 +255,7 @@ export class FxFore extends HTMLElement {
         const slot = this.shadowRoot.querySelector('slot#default');
         slot.addEventListener('slotchange', async event => {
             // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
             if(this.inited) return;
             if(this.hasAttribute('convert')){
                 this.replaceWith(Fore.copyDom(this));
@@ -280,8 +281,8 @@ export class FxFore extends HTMLElement {
             }
             if (!modelElement.inited) {
                 console.info(
-                    `%cFore is processing URL ${window.location.href}`,
-                    "background:#64b5f6; color:white; padding:1rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
+                        `%cFore is processing fx-fore#${this.id}`,
+                    "background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
 
                 await modelElement.modelConstruct();
@@ -295,6 +296,9 @@ export class FxFore extends HTMLElement {
         });
         this.addEventListener('path-mutated', () => {
             this.someInstanceDataStructureChanged = true;
+        });
+        this.addEventListener('refresh', () => {
+            this.refresh(true);
         });
 
     }
@@ -445,6 +449,9 @@ export class FxFore extends HTMLElement {
         this._updateTemplateExpressions();
         this.someInstanceDataStructureChanged = false; // reset
         this._processTemplateExpressions();
+
+        console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
+
         Fore.dispatch(this, 'refresh-done', {});
 
         // console.groupEnd();
@@ -493,7 +500,7 @@ export class FxFore extends HTMLElement {
 			return;
 		}
         this.isRefreshing = true;
-        console.log('### <<<<< refresh() >>>>>');
+        console.log(`### <<<<< refresh() '${this.id}' >>>>>`);
 
         // refresh () {
         // ### refresh Fore UI elements
@@ -563,16 +570,33 @@ export class FxFore extends HTMLElement {
         // this.dispatchEvent(new CustomEvent('refresh-done'));
         // this.initialRun = false;
         this.style.visibility='visible';
+        console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
         Fore.dispatch(this, 'refresh-done', {});
 
 		// this.isRefreshing = true;
 		// this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+
+        const subFores = Array.from(this.querySelectorAll('fx-fore'));
+/*
+        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
+        if a child should actually interact with its parent in this way.
+
+        This only affects the refreshing NOT the data mutation itself which is happening as expected.
+
+        Current solution is that a child that wants the parent to refresh must do so by adding an additional
+        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
+
+        So refreshed propagate downwards but not upwards which is at least an option to consider.
+
         if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-            this.parentNode.closest('fx-fore')?.refresh(false);
+            // await this.parentNode.closest('fx-fore')?.refresh(false);
         }
-		for (const subFore of this.querySelectorAll('fx-fore')) {
+*/
+		for (const subFore of subFores) {
 			// subFore.refresh(false, changedPaths);
-			subFore.refresh(false);
+            if(subFore.ready){
+                await subFore.refresh(false);
+            }
 		}
 		this.isRefreshing = false;
     }
@@ -664,7 +688,7 @@ export class FxFore extends HTMLElement {
     evaluateTemplateExpression(expr, node) {
 
         // ### do not evaluate template expressions with nonrelevant sections
-        if(node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
+        if(node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]'))  return;
         if(node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
         if(node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
@@ -674,11 +698,11 @@ export class FxFore extends HTMLElement {
             const naked = match.substring(1, match.length - 1);
             const inscope = getInScopeContext(node, naked);
             if (!inscope) {
+                console.warn('no inscope context for expr', naked);
                 const errNode =
                     node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
                         ? node.parentNode
                         : node;
-                console.warn('no inscope context for ', errNode);
                 return match;
             }
             // Templates are special: they use the namespace configuration from the place where they are
@@ -894,7 +918,7 @@ export class FxFore extends HTMLElement {
      */
     async _initUI() {
         // console.log('### _initUI()');
-        console.log('### <<<<< _initUI >>>>>');
+        console.log(`### <<<<< _initUI '${this.id}' >>>>>`);
 
         if (!this.initialRun) return;
         this.classList.add('initialRun');
