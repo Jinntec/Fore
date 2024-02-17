@@ -21,6 +21,7 @@ class FxRefresh extends AbstractAction {
     );
 
     if (this.hasAttribute('self')) {
+      console.log(`### <<<<< refresh() self ${this} >>>>>`);
       const control = XPathUtil.getClosest('fx-control', this);
       if (control) {
         control.refresh();
@@ -28,11 +29,13 @@ class FxRefresh extends AbstractAction {
       }
     }
     if(this.hasAttribute('force')){
+      console.log(`### <<<<< refresh() force ${this} >>>>>`);
       this.getOwnerForm().forceRefresh();
       return;
     }
     if(this.hasAttribute('control')){
       const targetId = this.getAttribute('control');
+      console.log(`### <<<<< refresh() control '${targetId}' >>>>>`);
       const ctrl = resolveId(targetId, this);
       if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
         ctrl.refresh();
