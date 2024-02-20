@@ -204,7 +204,7 @@ export class FxFore extends HTMLElement {
 
         this.toRefresh = [];
         this.initialRun = true;
-        this.someInstanceDataStructureChanged = false;
+        this._scanForNewTemplateExpressionsNextRefresh = false;
         this.repeatsFromAttributesCreated = false;
         this.validateOn = this.hasAttribute('validate-on') ? this.getAttribute('validate-on'):'update';
         // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
@@ -295,7 +295,7 @@ export class FxFore extends HTMLElement {
 
         });
         this.addEventListener('path-mutated', () => {
-            this.someInstanceDataStructureChanged = true;
+            this._scanForNewTemplateExpressionsNextRefresh = true;
         });
         this.addEventListener('refresh', () => {
             this.refresh(true);
@@ -322,6 +322,15 @@ export class FxFore extends HTMLElement {
             this.toRefresh.push(modelItem);
         }
     }
+
+	/**
+	 * Raise a flag that there might be new template expressions under some node. This happens with
+	 * repeats updating (new repeat items can have new template expressions) or switches changing their case (new case = new raw HTML)
+	 */
+	scanForNewTemplateExpressionsNextRefresh() {
+		// TODO: also ask for the root of any new HTML: this can prevent some very deep queries.
+		this._scanForNewTemplateExpressionsNextRefresh = true;
+	}
 
     /**
      * loads a Fore from an URL given by `src`.
@@ -447,7 +456,7 @@ export class FxFore extends HTMLElement {
 
         Fore.refreshChildren(this, true);
         this._updateTemplateExpressions();
-        this.someInstanceDataStructureChanged = false; // reset
+        this._scanForNewTemplateExpressionsNextRefresh = false; // reset
         this._processTemplateExpressions();
 
         console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
@@ -560,9 +569,9 @@ export class FxFore extends HTMLElement {
         }
 
         // ### refresh template expressions
-        if (this.initialRun || this.someInstanceDataStructureChanged) {
+        if (this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
             this._updateTemplateExpressions();
-            this.someInstanceDataStructureChanged = false; // reset
+            this._scanForNewTemplateExpressionsNextRefresh = false; // reset
         }
         this._processTemplateExpressions();
 

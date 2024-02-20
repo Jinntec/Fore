@@ -116,7 +116,10 @@ class FxSwitch extends FxContainer {
       this.selectedCase = caseElement;
     }
     this._dispatchEvents();
-    this.formerCase = this.selectedCase;
+      this.formerCase = this.selectedCase;
+
+	  // Tell the owner form we might have new template expressions here
+	  this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
   }
 }
 
