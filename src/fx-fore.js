@@ -721,11 +721,17 @@ export class FxFore extends HTMLElement {
             }
         });
 
+		// Update to the new value. Don't do it though if nothing changed to prevent iframes or
+		// images from reloading for example
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             const parent = node.ownerElement;
-            parent.setAttribute(node.nodeName, replaced);
+			if (parent.getAttribute(node.nodeName) !== replaced) {
+				parent.setAttribute(node.nodeName, replaced);
+			}
         } else if (node.nodeType === Node.TEXT_NODE) {
-            node.textContent = replaced;
+			if (node.textContent !== replaced) {
+				node.textContent = replaced;
+			}
         }
     }
 
