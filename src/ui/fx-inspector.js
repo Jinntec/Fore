@@ -86,19 +86,23 @@ export class FxInspector extends HTMLElement {
 
   update() {
     // console.log('update');
-    const pre = this.shadowRoot.querySelectorAll('pre');
-    // console.log('pre', pre);
-    const fore = this.closest('fx-fore');
+    try{
+      const pre = this.shadowRoot.querySelectorAll('pre');
+      // console.log('pre', pre);
+      const fore = this.closest('fx-fore');
 
-    Array.from(pre).forEach(element => {
-      const inst = fore.getModel().getInstance(element.getAttribute('id'));
-      if (inst.getAttribute('type') === 'xml') {
-        element.innerText = this.serializeDOM(inst.instanceData);
-      }
-      if (inst.getAttribute('type') === 'json') {
-        element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
-      }
-    });
+      Array.from(pre).forEach(element => {
+        const inst = fore.getModel().getInstance(element.getAttribute('id'));
+        if (inst.getAttribute('type') === 'xml') {
+          element.innerText = this.serializeDOM(inst.instanceData);
+        }
+        if (inst.getAttribute('type') === 'json') {
+          element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
+        }
+      });
+    }catch (e){
+      console.warn('caught problem in inspector', e.message);
+    }
   }
 
   render(style) {

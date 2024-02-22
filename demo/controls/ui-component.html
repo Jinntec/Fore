@@ -91,7 +91,7 @@
 
         <fx-model>
             <fx-message event="model-construct-done">Outer model ready</fx-message>
-            <fx-instance>
+            <fx-instance shared>
                 <data>
                     <from>
                         <email>John.Doe@nowhere.com</email>
@@ -99,8 +99,8 @@
                     <to>
                         <email>Jane.Doe@nowhere.com</email>
                     </to>
-                    <subject></subject>
-                    <message></message>
+                    <subject>just a message</subject>
+                    <message>Hey there - i'm a shared message</message>
                     <attachments></attachments>
                 </data>
             </fx-instance>
@@ -108,38 +108,11 @@
 
         </fx-model>
 
-        <fx-group>
-<!--
-            <fx-control ref="from/email">
-                <label>from inline</label>
-            </fx-control>
--->
-            <fx-control ref="from/email"
-                        src="email.html"
-                        initial=".">
-                <label>From</label>
-            </fx-control>
-            <fx-control id="to" ref="to/email"
-                        src="email.html"
-                        initial=".">
-                <label>To</label>
-            </fx-control>
-            <fx-control ref="subject">
-                <label>Subject</label>
-            </fx-control>
-            <fx-control ref="message">
-                <label>Message</label>
-                <textarea class="widget" rows="10"></textarea>
-            </fx-control>
-            <fx-control ref="attachments"
-                        src="attachments.html" >
-                <label>Attachments</label>
-            </fx-control>
-        </fx-group>
+        <fx-fore src="ui.html"></fx-fore>
     </fx-fore>
 
 
 </div>
-<script type="module" src="../demo.js"></script>
+<script type="module" src="../../index.js"></script>
 </body>
 </html>

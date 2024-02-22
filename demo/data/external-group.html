@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Container Element with src</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+</head>
+<body>
+    <fx-group class="group">
+        <fx-control ref="item"></fx-control>
+    </fx-group>
+
+<!--    <fx-switch>-->
+
+        <fx-case id="page1">
+            <fx-control ref="."></fx-control>
+        </fx-case>
+
+        <fx-case id="page2">
+            with content
+        </fx-case>
+<!--    </fx-switch>-->
+
+    <fx-case id="theCase">
+        some content
+    </fx-case>
+
+    <fx-repeat id="repeat" ref="repeated">
+        <template>
+            {.}
+        </template>
+    </fx-repeat>
+
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

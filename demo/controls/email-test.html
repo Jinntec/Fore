@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-setvalue ref="cnt" event="ready" value=". + 1"></fx-setvalue>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <from>John</from>
+                    <to></to>
+                    <subject></subject>
+                    <message></message>
+                    <cnt>0</cnt>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <fx-control ref="from" url="email2.html" initial=".">
+                <label>From</label>
+            </fx-control>
+            <fx-output ref="cnt"></fx-output>
+        </fx-group>
+    </fx-fore>
+</div>
+<script type="module" src="../demo.js"/>
+</body>
+</html>

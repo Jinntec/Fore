@@ -22,15 +22,17 @@
                     display: none;
                 }
         */
-        fx-trigger:nth-child(1){
+        /*
+        .toggle:nth-child(1){
             background: lightblue;
         }
-        fx-trigger:nth-child(2){
+        .toggle:nth-child(2){
             background: #ffca28;
         }
-        fx-trigger:nth-child(3){
+        .toggle:nth-child(3){
             background: #aeea00;
         }
+        */
         fx-case {
             width: 600px;
             height: 400px;
@@ -91,17 +93,17 @@
                 </fx-model>
                 <div>Tab '{selected}' is selected</div>
 
-                <fx-trigger label="page 1">
+                <fx-trigger class="toggle" label="page 1">
                     <paper-button>toggle page 1</paper-button>
                     <fx-toggle case="one"></fx-toggle>
                 </fx-trigger>
 
-                <fx-trigger label="page 2" raised="raised">
+                <fx-trigger id="page2btn" class="toggle" label="page 2" raised="raised">
                     <paper-button>toggle page 2</paper-button>
                     <fx-toggle case="two"></fx-toggle>
                 </fx-trigger>
 
-                <fx-trigger label="page 3" raised="raised">
+                <fx-trigger id="page3btn" class="toggle" label="page 3" raised="raised">
                     <paper-button>toggle page 3</paper-button>
                     <fx-toggle case="three"></fx-toggle>
                 </fx-trigger>

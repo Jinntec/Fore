@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="../demo.js"></script>
+
 </head>
 <body unresolved="unresolved">
     <div class="wrapper">
@@ -58,13 +59,14 @@
                 </fx-instance>
             </fx-model>
 
+
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
                     <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
-
             </h1>
+            <div>Just a hello from my parent: {instance('shared')/greetings}</div>
             <div id="clock">started at {instance('helper')/time}</div>
             <div class="info">
                 You have {count(instance()/task[@complete='true'])} completed tasks

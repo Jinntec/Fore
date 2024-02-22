@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<set name="titleSet" idref="b-d2e1722">
+    <group name="title" repeated="true" idref="b-d2e1767">
+        <group name="textnode" idref="b-d2e1773">
+            <node name="@type" detail="false" idref="b-d2e1777"/>
+            <textnode detail="false" large="large" idref="b-d2e11"/>
+        </group>
+    </group>
+    <node name="notes" detail="false" idref="b-d2e1746"/>
+</set>
+-->
+<group idref="b-d2e11" name="vra">
+    <group name="collection" idref="b-d2e17">
+        <set name="agentSet" idref="b-d2e23">
+            <group name="agent" repeated="true" idref="b-d2e68">
+                <group name="name" idref="b-d2e180">
+                    <node name="@type" detail="true" idref="b-d2e187"/>
+                    <textnode detail="false" control="autocomplete" queryType="names" idref="b-d2e11"/>
+                </group>
+                <group name="role" idref="b-d2e202">
+                    <node name="@type" detail="false" hidden="true" idref="b-d2e209"/>
+                    <textnode detail="true" control="select1" code-table="role" idref="b-d2e11"/>
+                </group>
+                <node name="attribution" detail="true" idref="b-d2e74"/>
+                <node name="culture" detail="true" idref="b-d2e95"/>
+                <group name="dates" idref="b-d2e116">
+                    <node name="@type" detail="true" idref="b-d2e165"/>
+                    <group name="earliestDate" idref="b-d2e119">
+                        <textnode detail="true" idref="b-d2e11"/>
+                        <node name="@circa" detail="false" idref="b-d2e126"/>
+                        <node name="@type" detail="false" idref="b-d2e127"/>
+                    </group>
+                    <group name="latestDate" idref="b-d2e142">
+                        <textnode detail="true" idref="b-d2e11"/>
+                        <node name="@circa" detail="false" idref="b-d2e149"/>
+                        <node name="@type" detail="false" idref="b-d2e150"/>
+                    </group>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e47"/>
+        </set>
+        <set name="dateSet" idref="b-d2e304">
+            <group name="date" repeated="true" idref="b-d2e349">
+                <node name="@type" detail="false" idref="b-d2e451"/>
+                <group name="earliestDate" idref="b-d2e355">
+                    <group name="date" idref="b-d2e361">
+                        <textnode detail="false" idref="b-d2e11"/>
+                        <node name="@circa" detail="false" idref="b-d2e368"/>
+                        <node name="@type" detail="false" idref="b-d2e369"/>
+                    </group>
+                    <group name="alternativeNotation" idref="b-d2e384">
+                        <node name="@type" detail="false" idref="b-d2e388"/>
+                        <textnode detail="false" idref="b-d2e11"/>
+                    </group>
+                </group>
+                <group name="latestDate" idref="b-d2e403">
+                    <group name="date" idref="b-d2e409">
+                        <textnode detail="false" idref="b-d2e11"/>
+                        <node name="@circa" detail="false" idref="b-d2e416"/>
+                        <node name="@type" detail="false" idref="b-d2e417"/>
+                    </group>
+                    <group name="alternativeNotation" idref="b-d2e432">
+                        <node name="@type" detail="false" idref="b-d2e436"/>
+                        <textnode detail="false" idref="b-d2e11"/>
+                    </group>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e328"/>
+        </set>
+        <set name="descriptionSet" idref="b-d2e466">
+            <group name="description" repeated="true" idref="b-d2e511">
+                <node name="@type" detail="false" idref="b-d2e613"/>
+                <node name="textnode" detail="false" control="textnodearea" idref="b-d2e517"/>
+                <group name="author" repeated="true" idref="b-d2e538">
+                    <group name="name" idref="b-d2e541">
+                        <textnode detail="false" control="autocomplete" queryType="names" idref="b-d2e11"/>
+                        <node name="@type" detail="false" idref="b-d2e548"/>
+                    </group>
+                    <group name="role" idref="b-d2e563">
+                        <node name="@type" detail="false" hidden="true" idref="b-d2e570"/>
+                        <textnode detail="false" control="select1" code-table="role" idref="b-d2e11"/>
+                    </group>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e490"/>
+        </set>
+        <set name="locationSet" idref="b-d2e743">
+            <group name="location" repeated="true" idref="b-d2e788">
+                <group name="name" idref="b-d2e816">
+                    <textnode detail="false" control="autocomplete" queryType="geographic" idref="b-d2e11"/>
+                    <node name="@type" detail="false" idref="b-d2e823"/>
+                </group>
+                <node name="@type" detail="false" idref="b-d2e861"/>
+                <group name="refid" idref="b-d2e794">
+                    <textnode detail="false" idref="b-d2e11"/>
+                    <node name="@type" detail="false" idref="b-d2e801"/>
+                </group>
+                <group name="point" idref="b-d2e838">
+                    <node name="@epsg" detail="false" idref="b-d2e846"/>
+                    <node name="lat" detail="false" idref="b-d2e844"/>
+                    <node name="long" detail="false" idref="b-d2e845"/>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e767"/>
+        </set>
+        <set name="rightsSet" idref="b-d2e1066">
+            <group name="rights" repeated="true" idref="b-d2e1111">
+                <node name="@type" detail="false" idref="b-d2e1173"/>
+                <node name="rightsHolder" detail="false" idref="b-d2e1117"/>
+                <node name="textnode" detail="false" control="textnodearea" idref="b-d2e1138"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1090"/>
+        </set>
+        <set name="subjectSet" idref="b-d2e1460">
+            <group name="subject" repeated="true" idref="b-d2e1505">
+                <group name="term" idref="b-d2e1511">
+                    <node name="@type" detail="false" idref="b-d2e1518"/>
+                    <textnode detail="false" control="autocomplete" queryType="subjects" multiple="true" idref="b-d2e11"/>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1484"/>
+        </set>
+
+
+        <set name="titleSet" idref="b-d2e1722">
+            <group name="title" repeated="true" idref="b-d2e1767">
+                <node name="@type" detail="false" idref="b-d2e1774"/>
+                <textnode detail="false" large="large" idref="b-d2e11"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1746"/>
+        </set>
+
+        <separator idref="b-d2e11"/>
+
+        <set name="culturalContextnodeSet" visible="false" idref="b-d2e238">
+            <group name="culturalContextnode" repeated="true" idref="b-d2e283"/>
+            <node name="notes" detail="false" idref="b-d2e262"/>
+        </set>
+        <set name="inscriptionSet" visible="false" idref="b-d2e614">
+            <group name="inscription" repeated="true" idref="b-d2e659">
+                <group name="textnode" idref="b-d2e707">
+                    <node name="@type" detail="false" idref="b-d2e714"/>
+                    <textnode detail="false" control="textnodearea" idref="b-d2e11"/>
+                </group>
+                <node name="author" detail="false" control="autocomplete" queryType="names" idref="b-d2e665"/>
+                <node name="position" detail="false" idref="b-d2e686"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e638"/>
+        </set>
+        <set name="materialSet" visible="false" idref="b-d2e862">
+            <group name="material" repeated="true" idref="b-d2e907">
+                <node name="@type" detail="false" idref="b-d2e914"/>
+                <textnode detail="false" control="autocomplete" queryType="materials" idref="b-d2e11"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e886"/>
+        </set>
+        <set name="measurementsSet" visible="false" idref="b-d2e929">
+            <group name="measurements" repeated="true" idref="b-d2e974">
+                <node name="@type" detail="false" idref="b-d2e981"/>
+                <textnode detail="false" idref="b-d2e11"/>
+                <node name="@unit" detail="false" idref="b-d2e982"/>
+                <node name="@shape" detail="false" idref="b-d2e983"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e953"/>
+        </set>
+        <set name="relationSet" visible="false" idref="b-d2e998">
+            <group name="relation" repeated="true" idref="b-d2e1043">
+                <node name="@type" detail="false" idref="b-d2e1051"/>
+                <textnode detail="false" idref="b-d2e11"/>
+                <node name="@relids" detail="false" idref="b-d2e1050"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1022"/>
+        </set>
+        <set name="sourceSet" visible="false" idref="b-d2e1174">
+            <group name="source" repeated="true" idref="b-d2e1219">
+                <group name="refid" idref="b-d2e1225">
+                    <node name="@type" detail="false" idref="b-d2e1232"/>
+                    <textnode detail="false" idref="b-d2e11"/>
+                </group>
+                <group name="name" idref="b-d2e1247">
+                    <node name="@type" detail="false" idref="b-d2e1254"/>
+                    <textnode detail="false" idref="b-d2e11"/>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1198"/>
+        </set>
+        <set name="stateEditionSet" visible="false" idref="b-d2e1284">
+            <group name="stateEdition" repeated="true" idref="b-d2e1329">
+                <node name="@type" detail="false" idref="b-d2e1393"/>
+                <node name="@count" detail="false" idref="b-d2e1391"/>
+                <node name="@num" detail="false" idref="b-d2e1392"/>
+                <node name="description" detail="false" idref="b-d2e1335"/>
+                <node name="name" detail="false" idref="b-d2e1356"/>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1308"/>
+        </set>
+        <set name="stylePeriodSet" visible="false" idref="b-d2e1394">
+            <group name="stylePeriod" repeated="true" control="autocomplete" queryType="styleperiods" idref="b-d2e1439"/>
+            <node name="notes" detail="false" idref="b-d2e1418"/>
+        </set>
+        <set name="techniqueSet" visible="false" idref="b-d2e1547">
+            <group name="technique" repeated="true" control="autocomplete" queryType="techniques" idref="b-d2e1592"/>
+            <node name="notes" detail="false" idref="b-d2e1571"/>
+        </set>
+        <set name="textnoderefSet" visible="false" idref="b-d2e1613">
+            <group name="textnoderef" repeated="true" idref="b-d2e1658">
+                <group name="name" idref="b-d2e1664">
+                    <textnode detail="false" idref="b-d2e11"/>
+                    <node name="@type" detail="false" idref="b-d2e1671"/>
+                </group>
+                <group name="refid" idref="b-d2e1686">
+                    <textnode detail="false" idref="b-d2e11"/>
+                    <node name="@type" detail="false" idref="b-d2e1693"/>
+                </group>
+            </group>
+            <node name="notes" detail="false" idref="b-d2e1637"/>
+        </set>
+        <set name="worktypeSet" visible="false" idref="b-d2e1789">
+            <group name="worktype" repeated="true" control="autocomplete" queryType="worktypes" idref="b-d2e1834"/>
+            <node name="notes" detail="false" idref="b-d2e1813"/>
+        </set>
+    </group>
+</group>

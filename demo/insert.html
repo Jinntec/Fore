@@ -133,36 +133,6 @@
 
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model id="record">
-                    <fx-instance>
-                        <data>
-                            <task complete="false" due="2019-02-04">Pick up Milk</task>
-                            <task complete="true" due="2019-01-04">Make tutorial part 1</task>
-                            <task complete="true" due="2020-01-05">Make tutorial part 2</task>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-trigger>
-                    <button>insert at end</button>
-                    <fx-insert ref="task"></fx-insert>
-                </fx-trigger>
-                <fx-repeat focus-on-create="task" id="todos" ref="task">
-                    <template>
-                        <fx-control id="task" ref="."></fx-control>
-                        <fx-trigger>
-                            <button class="deletebtn">X</button>
-                            <fx-delete ref="."></fx-delete>
-                        </fx-trigger>
-                    </template>
-                </fx-repeat>
-
-            </fx-fore>
-        </template>
-    </demo-snippet>
-
-    <demo-snippet>
-        <template>
 
             <fx-fore>
                 <fx-model id="record">

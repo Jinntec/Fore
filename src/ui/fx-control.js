@@ -48,6 +48,9 @@ export default class FxControl extends XfAbstractControl {
             },
             initial: {
                 type: Boolean
+            },
+            src:{
+                type: String
             }
         };
     }
@@ -62,7 +65,7 @@ export default class FxControl extends XfAbstractControl {
 
     connectedCallback() {
         this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
-        this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
+        this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
         this.loaded = false;
         this.initialNode = null;
         this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
@@ -263,7 +266,7 @@ export default class FxControl extends XfAbstractControl {
         } else (
             Fore.dispatch(this, "warn", {'message': 'trying to replace a node that is neither an Attribute, Elemment or Text node'})
         )
-        this.getOwnerForm().refresh();
+        // this.getOwnerForm().refresh();
     }
 
     renderHTML(ref) {
@@ -374,8 +377,8 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
 
-        // ### when there's a url Fore is used as widget and will be loaded from external file
-        if (this.url && !this.loaded && this.modelItem.relevant) {
+        // ### when there's a src Fore is used as widget and will be loaded from external file
+        if (this.src && !this.loaded && this.modelItem.relevant) {
             // ### evaluate initial data if necessary
 
             if (this.initial) {
@@ -383,8 +386,8 @@ export default class FxControl extends XfAbstractControl {
                 // console.log('initialNodes', this.initialNode);
             }
 
-            // ### load the markup from Url
-            await this._loadForeFromUrl();
+            // ### load the markup from src
+            await this._loadForeFromSrc();
             this.loaded = true;
 
             // ### replace default instance of embedded Fore with initial nodes
@@ -393,20 +396,13 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
 
-        /*
-        if(this.url && !this.loaded){
-          this._loadForeFromUrl();
-          this.loaded=true;
-          return;
-        }
-    */
         if (widget.value !== this.value) {
             widget.value = this.value;
         }
     }
 
     /**
-     * loads an external Fore from an HTML file given by `url` attribute and embed it as child of this control.
+     * loads an external Fore from an HTML file given by `src` attribute and embed it as child of this control.
      *
      * Will look for the `<fx-fore>` element within the returned HTML file and return that element.
      *
@@ -415,13 +411,13 @@ export default class FxControl extends XfAbstractControl {
      * todo: dispatch link error
      * @private
      */
-    async _loadForeFromUrl() {
+    async _loadForeFromSrc() {
         console.info(
-            `%cFore is processing URL ${this.url}`,
+            `%cControl ref="${this.ref}" is loading ${this.src}`,
             "background:#64b5f6; color:white; padding:0.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
         try {
-            const response = await fetch(this.url, {
+            const response = await fetch(this.src, {
                 method: 'GET',
                 credentials: this.credentials,
                 mode: 'cors',
@@ -457,10 +453,12 @@ export default class FxControl extends XfAbstractControl {
 						this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
 
                         doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-                        defaultInst.setInstanceData(doc);
+                            defaultInst.instanceData = doc;
                     }
-                    imported.getModel().updateModel();
-                    imported.refresh();
+                        imported.model = imported.querySelector('fx-model');
+                        imported.model.updateModel();
+
+                        imported.refresh(true);
                 },
                 {once: true},
             );
@@ -477,23 +475,19 @@ export default class FxControl extends XfAbstractControl {
                 dummy.replaceWith(imported);
             }
 
-
             if (!theFore) {
-                this.dispatchEvent(
-                    new CustomEvent('error', {
-                        detail: {
-                            message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
-                        },
-                    }),
-                );
+                Fore.dispatch('error', {
+                    detail: {
+                        message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
+                    }
+                });
             }
-            this.dispatchEvent(new CustomEvent('loaded', {detail: {fore: theFore}}));
+            Fore.dispatch('loaded', {detail: {fore: theFore}});
         } catch (error) {
             // console.log('error', error);
             Fore.dispatch(this, 'error', {
                 origin: this,
-                message: `control couldn't be loaded from url '${this.url}'`,
-                expr:xpath,
+                message: `control couldn't be loaded from src '${this.src}'`,
                 level:'Error'
             });
 

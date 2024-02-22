@@ -185,7 +185,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
      * @param e
      */
     async execute(e) {
-        console.log(this);
+        console.log(this, this.event);
         // console.log('execute', this.event);
 
 
