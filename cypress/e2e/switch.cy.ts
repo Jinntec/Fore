@@ -7,20 +7,20 @@ describe('switch demo spec', () => {
 	  cy.get('fx-switch.second [name="page1"]').should('not.be.visible');
 	  cy.get('fx-switch.second [name="page2"]').should('be.visible');
 	  cy.get('fx-switch.second [name="page3"]').should('not.be.visible');
-	  cy.get('fx-switch.second [name="page2"]').should('contain.text', 'Page 2 (data is page2)');
+	  cy.get('fx-switch.second [name="page2"]').should('contain.text', 'This is page2');
 
       cy.get('select.widget').select('page3')
 
 	  cy.get('fx-switch.second [name="page1"]').should('not.be.visible');
 	  cy.get('fx-switch.second [name="page2"]').should('not.be.visible');
 	  cy.get('fx-switch.second [name="page3"]').should('be.visible');
-	  cy.get('fx-switch.second [name="page3"]').should('contain.text', 'Page 3 (data is page3)');
+	  cy.get('fx-switch.second [name="page3"]').should('contain.text', 'This is page3');
 
 	  cy.get('select.widget').select('page1')
 
 	  cy.get('fx-switch.second [name="page1"]').should('be.visible');
 	  cy.get('fx-switch.second [name="page2"]').should('not.be.visible');
 	  cy.get('fx-switch.second [name="page3"]').should('not.be.visible');
-	  cy.get('fx-switch.second [name="page1"]').should('contain.text', 'Page 1 (data is page1)');
+	  cy.get('fx-switch.second [name="page1"]').should('contain.text', 'This is page1');
   });
 });

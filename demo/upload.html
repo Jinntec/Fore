@@ -27,15 +27,20 @@
 
         <fx-control ref="file/@name">
             <label>Upload</label>
-            <input type="file">
         </fx-control>
 
+<!--
         <fx-upload filename="file/@name" content="file">
             <label>upload a file</label>
         </fx-upload>
+-->
 
         {file}
     </fx-fore>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file">
+        <input type="submit">
+    </form>
 
 </div>
 <script type="module" src="../index.js"></script>
