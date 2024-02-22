@@ -48,6 +48,9 @@ export default class FxControl extends XfAbstractControl {
             },
             initial: {
                 type: Boolean
+            },
+            src:{
+                type: String
             }
         };
     }
@@ -62,7 +65,7 @@ export default class FxControl extends XfAbstractControl {
 
     connectedCallback() {
         this.initial = this.hasAttribute('initial') ? this.getAttribute('initial') : null;
-        this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
+        this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
         this.loaded = false;
         this.initialNode = null;
         this.debounceDelay = this.hasAttribute('debounce') ? this.getAttribute('debounce') : null;
@@ -374,8 +377,8 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
 
-        // ### when there's a url Fore is used as widget and will be loaded from external file
-        if (this.url && !this.loaded && this.modelItem.relevant) {
+        // ### when there's a src Fore is used as widget and will be loaded from external file
+        if (this.src && !this.loaded && this.modelItem.relevant) {
             // ### evaluate initial data if necessary
 
             if (this.initial) {
@@ -383,8 +386,8 @@ export default class FxControl extends XfAbstractControl {
                 // console.log('initialNodes', this.initialNode);
             }
 
-            // ### load the markup from Url
-            await this._loadForeFromUrl();
+            // ### load the markup from src
+            await this._loadForeFromSrc();
             this.loaded = true;
 
             // ### replace default instance of embedded Fore with initial nodes
@@ -393,20 +396,13 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
 
-        /*
-        if(this.url && !this.loaded){
-          this._loadForeFromUrl();
-          this.loaded=true;
-          return;
-        }
-    */
         if (widget.value !== this.value) {
             widget.value = this.value;
         }
     }
 
     /**
-     * loads an external Fore from an HTML file given by `url` attribute and embed it as child of this control.
+     * loads an external Fore from an HTML file given by `src` attribute and embed it as child of this control.
      *
      * Will look for the `<fx-fore>` element within the returned HTML file and return that element.
      *
@@ -415,13 +411,13 @@ export default class FxControl extends XfAbstractControl {
      * todo: dispatch link error
      * @private
      */
-    async _loadForeFromUrl() {
+    async _loadForeFromSrc() {
         console.info(
-            `%cControl ref="${this.ref}" is loading ${this.url}`,
+            `%cControl ref="${this.ref}" is loading ${this.src}`,
             "background:#64b5f6; color:white; padding:0.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
         );
         try {
-            const response = await fetch(this.url, {
+            const response = await fetch(this.src, {
                 method: 'GET',
                 credentials: this.credentials,
                 mode: 'cors',
@@ -463,8 +459,6 @@ export default class FxControl extends XfAbstractControl {
                         imported.model.updateModel();
 
                         imported.refresh(true);
-                        // Fore.dispatch(e.target, 'loaded', {url: this.url})
-
                 },
                 {once: true},
             );
@@ -484,7 +478,7 @@ export default class FxControl extends XfAbstractControl {
             if (!theFore) {
                 Fore.dispatch('error', {
                     detail: {
-                        message: `Fore element not found in '${this.url}'. Maybe wrapped within 'template' element?`,
+                        message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
                     }
                 });
             }
@@ -493,7 +487,7 @@ export default class FxControl extends XfAbstractControl {
             // console.log('error', error);
             Fore.dispatch(this, 'error', {
                 origin: this,
-                message: `control couldn't be loaded from url '${this.url}'`,
+                message: `control couldn't be loaded from src '${this.src}'`,
                 level:'Error'
             });
 
