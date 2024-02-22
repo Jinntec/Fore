@@ -35,7 +35,7 @@ export class Fore {
       });
       const responseContentType = response.headers.get('content-type').toLowerCase();
       if (responseContentType.startsWith('text/html')) {
-        return await response.text();
+        return response.text();
       } else {
         Fore.dispatch(this, 'error', {
           message: `Response has wrong contentType '${responseContentType}'. Should be 'text/html'`,

@@ -134,7 +134,18 @@ class FxLoad extends AbstractAction {
         }
 
         try {
-            const data = Fore.loadHtml(resolvedUrl);
+            const response = await fetch(resolvedUrl,  {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'same-origin',
+                headers: {
+                  'Content-Type': "text/html",
+                },
+            });
+            const data = await response.text();
+            // console.log('data loaded: ', data);
+            // const data = Fore.loadHtml(resolvedUrl);
+
             // todo: if data contain '<template' element as first child instanciate and insert it
             if (!this.attachTo) {
                 this.innerHtml = data;

@@ -344,7 +344,7 @@ export class FxFore extends HTMLElement {
      */
     async _loadFromSrc() {
         // console.log('########## loading Fore from ', this.src, '##########');
-        await Fore.loadForeFromSrc(this,this.src);
+        await Fore.loadForeFromSrc(this,this.src,'fx-fore');
     }
 
     /**
