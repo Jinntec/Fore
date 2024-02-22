@@ -45,7 +45,7 @@ class FxSwitch extends FxContainer {
   }
 
   async refresh(force) {
-    super.refresh();
+    super.refresh(force);
     // console.log('refresh on switch ');
     if(this.cases.length === 0){
       this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
@@ -117,6 +117,9 @@ class FxSwitch extends FxContainer {
     }
     this._dispatchEvents();
     this.formerCase = this.selectedCase;
+
+	  // Tell the owner form we might have new template expressions here
+	  this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
   }
 }
 
