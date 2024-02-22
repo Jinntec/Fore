@@ -196,15 +196,15 @@
         </fx-control>
 
         <div>
-            <fx-trigger>
+            <fx-trigger id="oddCaseBtn">
                 <button>ODDs</button>
                 <fx-toggle case="odd-case"></fx-toggle>
             </fx-trigger>
-            <fx-trigger>
+            <fx-trigger id="layoutCaseBtn">
                 <button>Layouts</button>
                 <fx-toggle case="layout-case"></fx-toggle>
             </fx-trigger>
-            <fx-trigger>
+            <fx-trigger id="featureCaseBtn">
                 <button>Features</button>
                 <fx-toggle case="feature-case"></fx-toggle>
             </fx-trigger>
@@ -222,7 +222,6 @@
                 the odds used
             </fx-case>
             <fx-case id="layout-case">
-                <fx-refresh force="force" self event="select"></fx-refresh>
                 <fx-repeat id="r-pages" ref="instance()/pages/page">
                     <template>
                         <!--
