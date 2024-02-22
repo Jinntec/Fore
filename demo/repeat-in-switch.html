@@ -69,7 +69,7 @@
                     <fx-toggle case="one"/>
                 </fx-trigger>
 
-                <fx-trigger label="toggle page 2" raised="raised">
+                <fx-trigger id="t-page2" label="toggle page 2" raised="raised">
                     <paper-button raised>toggle page 2</paper-button>
                     <fx-toggle case="two"/>
                 </fx-trigger>
@@ -85,7 +85,7 @@
                         </fx-repeat>
                     </fx-case>
                     <fx-case id="two">
-                        <fx-repeat id="r-item" ref="//repeat[2]/item">
+                        <fx-repeat id="r-item-2" ref="//repeat[2]/item">
                             <template>
                                 <label>Item:</label>
                                 <fx-output ref="text()"></fx-output>

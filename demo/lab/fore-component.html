@@ -32,6 +32,17 @@
             display: block;
         }
 
+        fore-component{
+            border:thin solid var(--paper-blue-700);
+            position: relative;
+        }
+        fore-component::before{
+            content:'fore-component';
+            font-size: 0.8rem;
+            position: absolute;
+            top:0;
+            left:0;
+        }
         fore-component.first {
             margin-bottom: 1rem;
             display: block;
@@ -76,6 +87,13 @@
             <template>
 -->
     <fx-fore>
+        <fx-model>
+            <fx-instance id="shared" shared>
+                <data>
+                    <greetings>Greetings to all my babies!</greetings>
+                </data>
+            </fx-instance>
+        </fx-model>
         <fx-action event="clock" target="#document">
             <fx-message>{event('time')}</fx-message>
         </fx-action>
@@ -85,7 +103,7 @@
             <link rel="stylesheet" href="./clock.css"/>
         </fore-component>
 
-        <fore-component src="todo2.html">
+        <fore-component id="todo" src="todo2.html">
             <link rel="stylesheet" href="../../resources/fore.css"/>
             <link rel="stylesheet" href="todo.css"/>
         </fore-component>

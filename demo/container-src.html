@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Container Element with src</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <group>
+                        <item>an Item</item>
+                        <page>page1</page>
+                    </group>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <!-- optionally use 'select' for a querySelector being looked for in external src -->
+        <!-- otherwise just use the first element matching the element name that called the loading -->
+        <fx-group ref="group" src="data/external.html" select=".group"></fx-group>
+
+        <fx-switch ref="page">
+            <fx-case src="page1.html"></fx-case>
+            <!-- optionally use 'select' for a querySelector being looked for in external src -->
+            <fx-case src="page2.html" select="#page2"></fx-case>
+        </fx-switch>
+
+        <fx-repeat ref="repeated" src="data/external.html" select="#repeat"></fx-repeat>
+
+    </fx-fore>
+</div>
+
+<script type="module" src="../index.js"></script>
+</body>
+</html>

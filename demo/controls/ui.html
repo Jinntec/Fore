@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Email Address</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 21cm;
+            height: 29.7cm;
+            background: lightyellow;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<<fx-fore>
+    <fx-group>
+        <fx-control ref="instance('default')/from/email">
+            <label>From</label>
+        </fx-control>
+        <fx-control id="to" ref="to/email">
+            <label>To</label>
+        </fx-control>
+        <fx-control ref="subject">
+            <label>Subject</label>
+        </fx-control>
+        <fx-control ref="message">
+            <label>Message</label>
+            <textarea class="widget" rows="10"></textarea>
+        </fx-control>
+        <fx-control ref="attachments"
+                    url="attachments.html" >
+            <label>Attachments</label>
+        </fx-control>
+    </fx-group>
+
+</fx-fore>
+</body>
+</html>

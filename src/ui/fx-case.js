@@ -1,5 +1,7 @@
 // import { foreElementMixin } from '../ForeElementMixin';
 
+import {FxContainer} from "./fx-container.js";
+
 /**
  * `fx-case`
  * a container allowing to switch between fx-case elements
@@ -7,11 +9,12 @@
  *  * todo: implement
  * @customElement
  */
-class FxCase extends HTMLElement {
+class FxCase extends FxContainer {
+/*
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
   }
+*/
 
   connectedCallback() {
     if (this.hasAttribute('label')) {

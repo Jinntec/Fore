@@ -24,7 +24,7 @@
   <body>
 	<div class="wrapper">
 
-      <fx-fore>
+      <fx-fore id="emailpage">
           <!--
           # as only the `fx-fore` element is taken when loaded into outer page a CSS stylesheet link
           # can be put here to style the local content. However it must be noted that these styles
@@ -33,7 +33,9 @@
           -->
 <!--          <link href="../../resources/custom.css" rel="stylesheet">-->
 
-          <fx-message event="ready">email ready</fx-message>
+<!--          <fx-message event="ready">email ready</fx-message>-->
+          <fx-message event="ready">My label: {.}</fx-message>
+
         <fx-model>
 <!--          <fx-message event="model-construct-done">email model ready</fx-message>-->
 
@@ -72,11 +74,12 @@
 			<fx-items ref=".">
 			  <template>
                 <span class="fx-checkbox">
-                  <input id="check" name="fruit" type="checkbox" value="{.}">
-                  <label style="display:inline" for="check">My label: {.}</label>
+                  <input id="check" name="fruit" type="checkbox" value="{.}" class="widget">
+                  <label style="display:inline" for="check">{.}</label>
                 </span>
               </template>
 			</fx-items>
+              <!--                  <label style="display:inline" for="check">My label: {.}</label>-->
 
 
 			<fx-dialog id="myDialog">
@@ -94,7 +97,6 @@
 		  </template>
 		</fx-repeat>
 		<fx-trigger><button> append</button><fx-insert ref="email"></fx-trigger>
-		        <fx-inspector></fx-inspector>
       </fx-fore>
 
 

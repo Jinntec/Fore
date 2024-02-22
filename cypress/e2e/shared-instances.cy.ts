@@ -65,14 +65,11 @@ describe('shared instances', () => {
 			.should('have.value', 'chill ma');
 
 		// change child-b
-/*
 		cy.get('#todo #child-b fx-repeatitem:nth-child(5) fx-control .widget')
 			.type('chill more')
-			.should('have.value', 'chill more');
 
 		cy.get('#todo #child-a fx-repeatitem:nth-child(5) p')
 			.should('contain', 'chill more - You can do it!');
-*/
 
 	})
 
