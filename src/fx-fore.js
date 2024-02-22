@@ -56,6 +56,9 @@ export class FxFore extends HTMLElement {
             ready: {
                 type: Boolean,
             },
+            strict:{
+                type: Boolean
+            },
             /**
              *
              */
@@ -214,6 +217,7 @@ export class FxFore extends HTMLElement {
     connectedCallback() {
         this.style.visibility = 'hidden';
         console.time('init');
+        this.strict = this.hasAttribute('strict') ? true : false;
         /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -340,54 +344,7 @@ export class FxFore extends HTMLElement {
      */
     async _loadFromSrc() {
         // console.log('########## loading Fore from ', this.src, '##########');
-        await fetch(this.src, {
-            method: 'GET',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'text/html',
-            },
-        })
-            .then(response => {
-                const responseContentType = response.headers.get('content-type').toLowerCase();
-                console.log('********** responseContentType *********', responseContentType);
-                if (responseContentType.startsWith('text/html')) {
-                    // const htmlResponse = response.text();
-                    // return new DOMParser().parseFromString(htmlResponse, 'text/html');
-                    // return response.text();
-                    return response.text().then(result =>
-                        // console.log('xml ********', result);
-                        new DOMParser().parseFromString(result, 'text/html'),
-                    );
-                }
-                return 'done';
-            })
-            .then(data => {
-                // const theFore = fxEvaluateXPathToFirstNode('//fx-fore', data.firstElementChild);
-                const theFore = data.querySelector('fx-fore');
-
-                // console.log('thefore', theFore)
-                if (!theFore) {
-                    Fore.dispatch(this, 'error', {
-                        detail: {
-                            message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
-                        },
-                    });
-                }
-                theFore.setAttribute('from-src', this.src);
-                const thisAttrs = this.attributes;
-                Array.from(thisAttrs).forEach(attr =>{
-                    if(attr.name !== 'src'){
-                        theFore.setAttribute(attr.name,attr.value);
-                    }
-                });
-                this.replaceWith(theFore);
-            })
-            .catch(() => {
-                Fore.dispatch(this, 'error', {
-                    message: `'${this.src}' not found or does not contain Fore element.`,
-                });
-            });
+        await Fore.loadForeFromSrc(this,this.src);
     }
 
     /**
@@ -509,7 +466,7 @@ export class FxFore extends HTMLElement {
 			return;
 		}
         this.isRefreshing = true;
-        console.log(`### <<<<< refresh() '${this.id}' >>>>>`);
+        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
         // refresh () {
         // ### refresh Fore UI elements
@@ -697,7 +654,7 @@ export class FxFore extends HTMLElement {
     evaluateTemplateExpression(expr, node) {
 
         // ### do not evaluate template expressions with nonrelevant sections
-        if(node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]'))  return;
+        if(node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
         if(node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
         if(node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
@@ -1031,8 +988,9 @@ export class FxFore extends HTMLElement {
         if(e.detail.expr){
             console.error('Failing expression',e.detail.expr);
         }
-        console.error('---');
-        this._displayError(e);
+        if(this.strict){
+            this._displayError(e);
+        }
     }
 
     _copyToClipboard(target){

@@ -106,7 +106,7 @@ export class FxModel extends HTMLElement {
      *
      */
     async modelConstruct() {
-        console.log(`### <<<<< dispatching model-construct '${this.fore.id}' >>>>>`);
+        console.log(`### <<<<< dispatching model-construct for '${this.fore.id}' >>>>>`);
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
 
@@ -129,7 +129,7 @@ export class FxModel extends HTMLElement {
             this.updateModel();
         } else {
             // ### if there's no instance one will created
-            console.log('### <<<<< dispatching model-construct-done >>>>>');
+            console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
             await this.dispatchEvent(
                 new CustomEvent('model-construct-done', {
                     composed: false,
@@ -443,7 +443,7 @@ export class FxModel extends HTMLElement {
      * @returns {Element} the
      */
     getDefaultContext() {
-        return this.getDefaultInstance().getDefaultContext();
+        return this.instances[0].getDefaultContext();
     }
 
     getDefaultInstance() {
@@ -451,7 +451,7 @@ export class FxModel extends HTMLElement {
     }
 
     getDefaultInstanceData() {
-		return this.getDefaultInstance().getInstanceData();
+       return this.instances[0].getInstanceData();
     }
 
     getInstance(id) {
@@ -489,16 +489,18 @@ export class FxModel extends HTMLElement {
         if(found){
 			return found;
         }
-		if (id === 'default') {
-			return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-		}
-
-        Fore.dispatch(this, 'error', {
-            origin: this,
-            message: `Instance '${id}' does not exist`,
-            level:'Error'
-        });
-		return null;
+        if (id === 'default') {
+            return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+        }
+        if(!found && this.fore.strict){
+            // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `Instance '${id}' does not exist`,
+                level:'Error'
+            });
+        }
+        return null;
     }
 
     evalBinding(bindingExpr) {

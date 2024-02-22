@@ -1,0 +1,84 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fore Generator</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        [repeat-index] {
+            background: var(--paper-blue-500);
+        }
+        input{
+            border:none;
+        }
+        .level-1{
+            padding-left: 1rem;
+        }
+        .level-2{
+            padding-left: 2rem;
+        }
+        .level-3{
+            padding-left: 3rem;
+        }
+        .level-4{
+            padding-left: 4rem;
+        }
+        .level-5{
+            padding-left: 5rem;
+        }
+        .level-6{
+            padding-left: 6rem;
+        }
+        .level-7{
+            padding-left: 7rem;
+        }
+        .level-8{
+            padding-left: 8rem;
+        }
+        .level-9{
+            padding-left: 9rem;
+        }
+        .level-10{
+            padding-left: 10rem;
+        }
+    </style>
+</head>
+<body>
+
+<fx-fore>
+   <fx-model>
+       <fx-instance src="fore-struct.xml"></fx-instance>
+       <fx-instance id="vars">
+           <data>
+               <selected></selected>
+           </data>
+       </fx-instance>
+   </fx-model>
+   <main>
+       <fx-control ref="instance('vars')/selected">
+           <label></label>
+           <select class="widget">
+               <option value="group">group</option>
+               <option value="group">set</option>
+               <option value="group">node</option>
+               <option value="group">textnode</option>
+           </select>
+       </fx-control>
+
+       <fx-repeat ref="instance()//*">
+           <template>
+               <fx-control ref="@name" class="level-{count(ancestor::*)}">
+                   <label>{local-name(..)}</label>
+               </fx-control>
+               <fx-control ref="@control" class="level-{count(ancestor::*)}">
+                   <label>{local-name(..)}</label>
+               </fx-control>
+           </template>
+       </fx-repeat>
+   </main>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

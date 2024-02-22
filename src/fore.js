@@ -49,6 +49,48 @@ export class Fore {
       });
     }
   }
+
+  /**
+   * loads a Fore element from given `src`. Always returns the first occurrence of a `<fx-fore>`. The retured element
+   * will replace the `replace` element in the DOM.
+   *
+   * @param replace the element with a `src` attribute to resolvé.
+   * @param src the Url to resolve
+   * @param selector a querySelector expression to fetch certain element from loaded document
+   * @returns {Promise<void>}
+   */
+  static async loadForeFromSrc(replace, src, selector){
+    if(!src){
+      Fore.dispatch(this, 'error', {
+        detail: {
+          message: `No 'src' attribute present`,
+        },
+      });
+    }
+    await Fore.loadHtml(src)
+        .then(data => {
+          const parsed = new DOMParser().parseFromString(data, 'text/html');
+          // const theFore = parsed.querySelector('fx-fore');
+          const foreElement = parsed.querySelector(selector);
+          // console.log('foreElement', foreElement)
+          if (!foreElement) {
+            Fore.dispatch(this, 'error', {
+              detail: {
+                message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
+              },
+            });
+          }
+          foreElement.setAttribute('from-src', src);
+          const thisAttrs = replace.attributes;
+          Array.from(thisAttrs).forEach(attr =>{
+            if(attr.name !== 'src'){
+              foreElement.setAttribute(attr.name,attr.value);
+            }
+          });
+          replace.replaceWith(foreElement);
+          return foreElement;
+        });
+  }
   static buildPredicates(node){
     let attrPredicate='';
     Array.from(node.attributes).forEach(attr =>{
@@ -498,6 +540,7 @@ export class Fore {
   static stringifiedComponent(element){
     return `<${element.localName} ${Array.from(element.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${element.localName}>`;
   }
+/*
   static async loadForeFromUrl(hostElement, url) {
     // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {
@@ -569,7 +612,7 @@ export class Fore {
           // this.appendChild(imported);
         }
       })
-      /*.catch(error => {
+      /!*.catch(error => {
         hostElement.dispatchEvent(
           new CustomEvent('error', {
             composed: false,
@@ -580,8 +623,9 @@ export class Fore {
             },
           }),
         );
-      });*/
+      });*!/
   }
+*/
 
   /**
    * clear all text nodes and attribute values to get a 'clean' template.
