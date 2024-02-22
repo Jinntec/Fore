@@ -42,6 +42,8 @@ class FxSwitch extends FxContainer {
     `;
     this.cases = [];
     this.formerCase=null;
+    this.selectedCase = null;
+
   }
 
   async refresh(force) {
@@ -118,8 +120,8 @@ class FxSwitch extends FxContainer {
     this._dispatchEvents();
     this.formerCase = this.selectedCase;
 
-	  // Tell the owner form we might have new template expressions here
-	  this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    // Tell the owner form we might have new template expressions here
+    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
   }
 }
 
