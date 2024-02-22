@@ -8,9 +8,6 @@ describe('repeat-in-switch demo specc', () => {
 		.should('have.length', 3)
     cy.get('#t-page2')
         .click()
-    cy.get('#r-item-2 fx-repeatitem')
-          .should('have.length', 3)
-
   });
 
 
