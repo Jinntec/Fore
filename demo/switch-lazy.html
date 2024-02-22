@@ -72,8 +72,8 @@
     <demo-snippet>
         <template>
             <fx-fore>
+<!--                <fx-toggle event="ready" case="two"></fx-toggle>-->
                 <fx-model>
-                    <fx-toggle event="model-construct-done" case="two"></fx-toggle>
                     <fx-instance>
                         <data>
                             <item1>a bound item</item1>
@@ -83,30 +83,29 @@
                     </fx-instance>
                 </fx-model>
 
-                <fx-trigger label="page 1" class="orange">
+                <fx-trigger id="page1btn" label="page 1" class="orange">
                     <paper-button>toggle page 1</paper-button>
                     <fx-toggle case="one"></fx-toggle>
                 </fx-trigger>
 
-                <fx-trigger label="page 2" raised="raised" class="green">
+                <fx-trigger id="page2btn" label="page 2" raised="raised" class="green">
                     <paper-button>toggle page 2</paper-button>
                     <fx-toggle case="two"></fx-toggle>
                 </fx-trigger>
 
-                <fx-trigger label="page 3" raised="raised" class="blue">
+                <fx-trigger id="page3btn" label="page 3" raised="raised" class="blue">
                     <paper-button>toggle page 3</paper-button>
                     <fx-toggle case="three"></fx-toggle>
                 </fx-trigger>
 
                 <fx-switch>
-                    <fx-case id="one" class="orange">
+                    <fx-case id="one" class="orange selected-case">
                         some exclusive content
                         <fx-control ref="item1">
                             <label>Item1</label>
                         </fx-control>
                     </fx-case>
                     <fx-case id="two" class="green">
-                        <fx-message event="select">two got selected</fx-message>
                         some further content
                         <fx-control ref="item2">
                             <label>Item1</label>
