@@ -61,7 +61,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
    */
   async refresh(force) {
     if (!force && this.hasAttribute('refresh-on-view')) return;
-    console.log('### FxContainer.refresh on : ', this);
+    // console.log('### FxContainer.refresh on : ', this);
 
     // if loading from 'src' needs to be done do it now
 /*
