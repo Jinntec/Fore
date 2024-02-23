@@ -768,15 +768,26 @@ export class FxFore extends HTMLElement {
         const model = this.querySelector('fx-model');
 
         // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
-        const parentFore = this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE ? this.parentNode.closest('fx-fore'): null;
+/*
+        const parentFore = parent !== Node.DOCUMENT_FRAGMENT_NODE ? this.parentNode.closest('fx-fore'): null;
         if(this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
             console.log('fragment',this.parentNode)
         }
+*/
+        if(this.parentNode
+            && this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+            && this.parentNode.closest('fx-fore') ){
+            const parentFore = this.parentNode.closest('fx-fore');
+            const shared = parentFore.getModel().instances.filter(shared => shared.hasAttribute('shared'));
+            if(shared.length !==0) return;
+        }
 
+/*
         if(parentFore){
             const shared = parentFore.getModel().instances.filter(shared => shared.hasAttribute('shared'));
             if(shared.length !==0) return;
         }
+*/
 
         // still need to catch just in case...
         try{
