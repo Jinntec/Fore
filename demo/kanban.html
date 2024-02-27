@@ -22,7 +22,7 @@
             padding: 0;
         }
         .card{
-            padding:0.3rem;
+            padding:1rem;
             margin:0.3rem 0;
             border-radius: 5px;
             background: white;
@@ -250,7 +250,7 @@
                     </fx-trigger>
                 </div>
 <!--                <div>-->
-                    <fx-repeat id="r-task" ref="task">
+                    <fx-repeat id="r-task" ref="task" dnd="true">
                         <template draggable="true">
                             <div class="card">
                                 <fx-control id="task" ref="@name"></fx-control>
@@ -266,12 +266,18 @@
                                 </div>
 -->
                             </div>
-                            <div class="dropTarget"></div>
                         </template>
+
+						<fx-action event="fx-drop">
+						  <fx-delete ref="event('dragging-item')"></fx-delete>
+						  <fx-insert ref="event('dragging-item')" at="event('drop-index')"></fx-insert>
+						  <fx-setvalue ref="@status" value="open"></fx-setvalue>
+						</fx-action>
                     </fx-repeat>
 <!--                </div>-->
             </template>
         </fx-repeat>
+
 
         <div class="buttons">
             <fx-trigger>
@@ -281,7 +287,7 @@
             <fx-trigger>
                 <button>Append new column</button>
                 <fx-insert ref="column"></fx-insert>
-            </fx-trigger>
+gi t          </fx-trigger>
         </div>
 
         <fx-action-log></fx-action-log>
@@ -294,7 +300,8 @@
         // Get the element by id
 
         const fore = document.querySelector('fx-fore');
-        fore.addEventListener('ready', e => {
+  fore.addEventListener('ready', e => {
+	  return;
             const elements = document.querySelectorAll('[draggable]');
             Array.from(elements).forEach(elem => {
                 elem.addEventListener('dragstart', e => {

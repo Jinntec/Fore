@@ -1,3 +1,4 @@
+import * as fx from 'fontoxpath';
 import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
@@ -368,17 +369,67 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     this.shadowRoot.appendChild(this.template);
   }
 
+	_startDragging(event, draggingItem) {
+		event.dataTransfer.setData('text/html', draggingItem.outerHTML);
+		const path = fx.evaluateXPathToString('path()', draggingItem.nodeset);
+		const fullPath = `instance("${XPathUtil.resolveInstance(draggingItem, path)}")${path}`;
+		event.dataTransfer.setData('application/json', JSON.stringify({path: fullPath}));
+		event.dataTransfer.dropEffect = 'move';
+
+		console.log('drag start', draggingItem.nodeset)
+	}
+
+	_dragOver(event) {
+		event.target.classList.add('drag-over');
+		    event.preventDefault();
+	}
+
+	_dragLeave(event) {
+		event.target.classList.remove('drag-over');
+	}
+
+	_drop(event, index) {
+		const draggingItemPath = JSON.parse(event.dataTransfer.getData('application/json'));
+		const inscope = getInScopeContext(this, draggingItemPath.path);
+
+		const draggingItem = evaluateXPath(draggingItemPath.path, inscope, this);
+		console.log('drop', draggingItemPath.path, index);
+
+	}
+
   _initRepeatItems() {
     // const model = this.getModel();
-    // this.textContent = '';
+      // this.textContent = '';
+	  const dropTarget = document.createElement('fx-droptarget');
+	  dropTarget.setAttribute('droptarget', '');
+	  dropTarget.setAttribute('style', 'display:inline-block;height:25px; background-color:pink; width:100%');
+	  dropTarget.addEventListener('dragover', (e)=>this._dragOver(e));
+	  dropTarget.addEventListener('dragleave', (e)=>this._dragLeave(e));
+	  dropTarget.addEventListener('drop', (e)=>this._drop(e, 0));
+
+//	  dropTarget.appendChild(this._clone());
+	  if (this.getAttribute('dnd')) {
+	  this.appendChild(dropTarget);
+	  }
     this.nodeset.forEach((item, index) => {
-      const repeatItem = document.createElement('fx-repeatitem');
+		const repeatItem = document.createElement('fx-repeatitem');
+		repeatItem.setAttribute('draggable', 'true');
       repeatItem.nodeset = this.nodeset[index];
       repeatItem.index = index + 1; // 1-based index
 
       const clone = this._clone();
-      repeatItem.appendChild(clone);
-      this.appendChild(repeatItem);
+		repeatItem.appendChild(clone);
+		this.appendChild(repeatItem);
+
+
+
+	  if (this.getAttribute('dnd')) {
+		repeatItem.addEventListener('dragstart', e=>this._startDragging(e, repeatItem));
+		  const targetClone = this.appendChild(dropTarget.cloneNode(true));
+		  targetClone.addEventListener('dragover', (e)=>this._dragOver(e));
+		  targetClone.addEventListener('dragleave', (e)=>this._dragLeave(e));
+		  targetClone.addEventListener('drop', (e)=>this._drop(e, index + 1));
+	  }
 
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
@@ -403,7 +454,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
   }
 
   _clone() {
-    // const content = this.template.content.cloneNode(true);
+      // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
     const content = this.template.content.cloneNode(true);
     return document.importNode(content, true);
