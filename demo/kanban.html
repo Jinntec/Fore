@@ -26,7 +26,8 @@
             margin:0.3rem 0;
             border-radius: 5px;
             background: white;
-
+            display: grid;
+            grid-template-columns: auto 2rem;
         }
         #column{
             height: 75vh;
@@ -70,6 +71,11 @@
             display: block;
             min-width: 200px;
             position:relative;
+        }
+        .header{
+            display: grid;
+            grid-template-columns: auto 2rem;
+
         }
         input{
             width: calc(100% - 0.5rem);
@@ -252,7 +258,7 @@
 <!--                <div>-->
                     <fx-repeat id="r-task" ref="task">
                         <template draggable="true">
-                            <div class="card">
+                            <div class="card" >
                                 <fx-control id="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
                                     <button>x</button>
@@ -290,8 +296,6 @@
 
 </div>
 <script>
-    // window.addEventListener("DOMContentLoaded", () => {
-        // Get the element by id
 
         const fore = document.querySelector('fx-fore');
         fore.addEventListener('ready', e => {
@@ -309,14 +313,6 @@
                     const parent = parentBind.nodeset.parentNode;
                     console.log('dragging parent data node', parent)
 
-                    // parent.removeChild(parentBind.nodeset)
-
-
-
-
-
-
-                    // parentBind.nodeset.parentNode.removeChild(parentBind.nodeset)
                     e.dataTransfer.setData('text/html', e.target.outerHTML);
 
                 });
@@ -328,13 +324,13 @@
                 console.log('target', e.target)
                 target.addEventListener('dragenter', e =>{
                     e.preventDefault();
-                    // console.log('dragenter',e);
+                    console.log('dragenter',e);
 
                 })
 
                 target.addEventListener('dragover', e => {
                     e.preventDefault();
-                    // console.log('dragover',e);
+                    console.log('dragover',e);
                     e.target.classList.add('drag-over');
 
                 })
@@ -354,7 +350,6 @@
 
             })
         });
-    // });
 </script>
 <script type="module" src="./demo.js"></script>
 </body>
