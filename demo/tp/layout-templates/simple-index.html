@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Simple index page</title>
+    <link href="css/simple-index.css" rel="stylesheet" media="screen">
+    <link href="../../../resources/fore.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<fx-fore>
+
+    <fx-model>
+        <fx-instance>
+            <data>
+                <components>
+                    <component>pb-view</component>
+                    <component>pb-map</component>
+                    <component>pb-pagination</component>
+                </components>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <div class="wrapper">
+
+        <!--
+        Example menu section.
+
+        Menu elements that need grouping should be put into their own `<ul>` and will be distributed equally.
+
+        A `<nav>` should have a `aria-label` to name the main menu - if a footer nav is also used this should get something
+        like `Secondary' or 'Footernavigation'.
+        -->
+        <nav aria-label="Main">
+            <ul>
+                <li>[logo]</li>
+                <li>[menutitem]</li>
+                <li>[menutitem]</li>
+                <li>[long menuitem]</li>
+                <li>[menutitem]</li>
+            </ul>
+            <ul>
+                <li>[search]</li>
+                <li>[user]</li>
+            </ul>
+        </nav>
+
+        <header>
+            <h1>[Header]</h1>
+            <section id="intro"></section>
+        </header>
+
+        <main>
+            <fx-action event="click">
+                <fx-message>click</fx-message>
+                <fx-show dialog="components-dialog"></fx-show>
+            </fx-action>
+            [content]
+        </main>
+
+        <fx-dialog id="components-dialog">
+            <div class="dialog-content">
+                <fx-repeat ref="components/component">
+                    <template>{.}</template>
+                </fx-repeat>
+            </div>
+        </fx-dialog>
+    </div>
+</fx-fore>
+<script type="module" src="../../demo.js"></script>
+
+</body>
+</html>
