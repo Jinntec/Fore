@@ -338,19 +338,8 @@
 
         Array.from(elements).forEach(elem => {
             elem.addEventListener('dragstart', e => {
-                console.log('dragstart',e);
+                // console.log('dragstart',e);
                 e.dataTransfer.dropEffect = 'move';
-
-                const mi = fore.getModel().getModelItem(e.target);
-                console.log('dragging node', e.target)
-                const parentBind = e.target.parentNode;
-                // console.log('dragging parentBind', parentBind)
-                // console.log('dragging parentBind', parentBind.nodeset)
-                console.log('dragging data node', parentBind.nodeset[e.target.index + 1])
-
-                const parent = parentBind.nodeset.parentNode;
-                console.log('dragging parent data node', parent)
-
                 e.dataTransfer.setData('text/html', e.target.outerHTML);
                 draggedItem = e.target;
             });
@@ -358,66 +347,62 @@
             elem.addEventListener('dragover', e => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('dragover',e);
+                // console.log('dragover',e);
 
                 const repeatItem = e.target.closest('fx-repeatitem');
-                console.log('dragover repeatItem',repeatItem);
+                // console.log('dragover repeatItem',repeatItem);
 
                 if(repeatItem !== draggedItem){
-                    console.log('yeayhalsdf')
-
                     const itemHeight = repeatItem.offsetHeight;
-                    console.log('itemHeight',itemHeight);
-
-/*
-                    if(e.offsetY > itemHeight / 2 ){
-                        console.log('after')
-
-                        // repeatItem.style('margin-bottom:1rem;')
-                        repeatItem.classList.add("margin-top");
-                        repeatItem.classList.remove("margin-bottom");
-                    }else{
-                        console.log('before')
-                        // repeatItem.style('margin-top:1rem;')
-                        repeatItem.classList.add("margin-bottom");
-                        repeatItem.classList.remove("margin-top");
-                        draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
-                    }
-*/
-
-/*
-                    const ghost = document.createElement('fx-repeatitem');
-                    ghost.classList.add('droptarget');
-                    draggedItem.parentNode.insertBefore(ghost,repeatItem);
-                    droptarget = ghost;
-*/
+                    repeatItem.classList.add('drag-over');
                 }
-                // debugger;
-                repeatItem.classList.add('drag-over');
-
-
-/*
-                setTimeout({
-
-                },100);
-*/
-
             })
+
             elem.addEventListener('dragleave', e => {
-                console.log('dragleave',e);
+                // console.log('dragleave',e);
                 e.target.classList.remove('drag-over');
 
             })
+
             elem.addEventListener('drop', e => {
                 console.log('drop',e);
                 e.target.classList.remove('drag-over');
                 e.preventDefault();
+                e.stopPropagation();
                 const droppedElement = e.dataTransfer.getData('text/html');
-                console.log('dropped element', droppedElement);
+                // console.log('dropped element', droppedElement);
+
+                const dataNode = draggedItem.getModelItem().node;
+                const parent = dataNode.parentNode;
+                console.log('ModelItem',dataNode);
+
+
 
                 if(e.target.nodeName === 'FX-REPEAT'){
                     console.log('drop onto repeat',e.target);
-                    e.target.append(draggedItem);
+
+                    parent.removeChild(dataNode);
+                    const targetRepeat = e.target;
+                    const targetNodeset = targetRepeat.getModelItem().node;
+
+
+                    if(Array.isArray(targetNodeset)){
+                        if(targetNodeset.length === 0){
+                            parent.append(dataNode);
+                        }else{
+                            targetNodeset[0].parentNode.append(dataNode);// re-append
+                        }
+                    }else{
+                        targetNodeset.parentNode.append(dataNode);// re-append
+                    }
+
+                    document.querySelector('fx-fore').dispatchEvent(
+                        new CustomEvent('refresh', {
+                        composed: false,
+                        bubbles: true,
+                        detail:{force:true},
+                    }));
+
                     return;
 
                 }
@@ -446,15 +431,33 @@
                     console.log('itemHeight', itemHeight)
                     console.log('offsetY', e.offsetY)
                     if(e.offsetY > itemHeight / 2 ){
-                        console.log('after')
+                        console.log('drop after data',repeatItem.getModelItem().node);
+                        const repeatItemNode = repeatItem.getModelItem().node;
 
-                        repeatItem.after(draggedItem);
+                        // repeatItem.after(draggedItem);
+
+                        repeatItemNode.after(dataNode.cloneNode(true));
+                        dataNode.parentNode.removeChild(dataNode);
+
+
                     }else{
-                        console.log('before')
-                        draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
+                        console.log('drop before data',repeatItem.getModelItem().node);
+                        const repeatItemNode = repeatItem.getModelItem().node;
+                        // draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
+
+                        repeatItemNode.before(dataNode.cloneNode(true));
+                        parent.removeChild(dataNode);
+
+                        console.log('data',dataNode.ownerDocument)
 
                     }
-
+                    //
+                    document.querySelector('fx-fore').dispatchEvent(
+                        new CustomEvent('refresh', {
+                            composed: false,
+                            bubbles: true,
+                            detail:{force:true},
+                        }));
                 }
 
                 // e.target.innerHTML=droppedElement;
