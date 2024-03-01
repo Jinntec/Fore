@@ -26,8 +26,20 @@
             margin:0.3rem 0;
             border-radius: 5px;
             background: white;
-
+            display: grid;
+            grid-template-areas: "task icon"
+                                 "content content";
         }
+        .task{
+            grid-area: task;
+        }
+        .iconbtn{
+            grid-area: icon;
+        }
+        .card-content{
+            grid-area:content;
+        }
+
         #column{
             height: 75vh;
         }
@@ -37,14 +49,18 @@
         [repeat-index]{
             background: rgba(255,255,255,0.5);
         }
+        .droptarget{
+            background: #00c853;
+            height: 1rem;
+        }
 
         .drag-over{
             border:thin solid black;
-            padding: 1rem 0;
+            /*padding: 1rem 0;*/
         }
         .dropTarget{
-            height: 1rem;
-            /*height: 100%;*/
+            /*height: 1rem;*/
+            height: 0;
             width: 100%;
             background: var(--paper-grey-300);
             border-radius: 0.5rem;
@@ -111,9 +127,11 @@
             overflow: auto;
             width: 100%;
         }
-        .header{
-            /*border-bottom: thin solid white;*/
+        .header {
+            /* border-bottom: thin solid white; */
             padding: 1rem;
+            display: grid;
+            grid-template-columns: auto 1rem 1rem;
         }
         .header input{
             background: var(--paper-light-blue-500);
@@ -203,7 +221,15 @@
             max-width: 100%;
         }
 
-
+        #r-task{
+            height: 100%;
+        }
+        .margin-top{
+            margin-top:1rem;
+        }
+        .margin-bottom{
+            margin-bottom:1rem;
+        }
     </style>
 </head>
 <body>
@@ -250,14 +276,15 @@
                     </fx-trigger>
                 </div>
 <!--                <div>-->
-                    <fx-repeat id="r-task" ref="task" dnd="true">
+                    <fx-repeat id="r-task" ref="task" dnd="true" tabindex="0">
                         <template draggable="true">
-                            <div class="card">
-                                <fx-control id="task" ref="@name"></fx-control>
+                            <div class="card" tabindex="1">
+                                <fx-control id="task" class="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
                                     <button>x</button>
                                     <fx-delete ref="."></fx-delete>
                                 </fx-trigger>
+                                <div class="card-content"></div>
 <!--
                                 <div class="handle">
                                     <span class="line"></span>
@@ -268,11 +295,13 @@
                             </div>
                         </template>
 
+<!--
 						<fx-action event="fx-drop">
 						  <fx-delete ref="event('dragging-item')"></fx-delete>
 						  <fx-insert ref="event('dragging-item')" at="event('drop-index')"></fx-insert>
 						  <fx-setvalue ref="@status" value="open"></fx-setvalue>
 						</fx-action>
+-->
                     </fx-repeat>
 <!--                </div>-->
             </template>
@@ -287,7 +316,7 @@
             <fx-trigger>
                 <button>Append new column</button>
                 <fx-insert ref="column"></fx-insert>
-gi t          </fx-trigger>
+            </fx-trigger>
         </div>
 
         <fx-action-log></fx-action-log>
@@ -296,72 +325,179 @@ gi t          </fx-trigger>
 
 </div>
 <script>
-    // window.addEventListener("DOMContentLoaded", () => {
-        // Get the element by id
 
-        const fore = document.querySelector('fx-fore');
-  fore.addEventListener('ready', e => {
-	  return;
-            const elements = document.querySelectorAll('[draggable]');
-            Array.from(elements).forEach(elem => {
-                elem.addEventListener('dragstart', e => {
-                    console.log('dragstart',e);
-                    e.dataTransfer.dropEffect = 'copy';
-                    const mi = fore.getModel().getModelItem(e.target);
-                    console.log('dragging node', e.target)
-                    const parentBind = e.target.parentNode;
-                    console.log('dragging parentBind', parentBind)
-                    console.log('dragging parentBind', parentBind.nodeset)
-
-                    const parent = parentBind.nodeset.parentNode;
-                    console.log('dragging parent data node', parent)
-
-                    // parent.removeChild(parentBind.nodeset)
+    const fore = document.querySelector('fx-fore');
+    let draggedItem;
+    let droptarget;
+    fore.addEventListener('ready', e => {
 
 
+        const elements = document.querySelectorAll('[draggable]');
+        const repeat = elements[0].parentNode;
+        console.log('repeat to dnd', repeat);
 
+        Array.from(elements).forEach(elem => {
+            elem.addEventListener('dragstart', e => {
+                console.log('dragstart',e);
+                e.dataTransfer.dropEffect = 'move';
 
+                const mi = fore.getModel().getModelItem(e.target);
+                console.log('dragging node', e.target)
+                const parentBind = e.target.parentNode;
+                // console.log('dragging parentBind', parentBind)
+                // console.log('dragging parentBind', parentBind.nodeset)
+                console.log('dragging data node', parentBind.nodeset[e.target.index + 1])
 
+                const parent = parentBind.nodeset.parentNode;
+                console.log('dragging parent data node', parent)
 
-                    // parentBind.nodeset.parentNode.removeChild(parentBind.nodeset)
-                    e.dataTransfer.setData('text/html', e.target.outerHTML);
-
-                });
+                e.dataTransfer.setData('text/html', e.target.outerHTML);
+                draggedItem = e.target;
             });
 
+            elem.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('dragover',e);
 
-            const dropTargets = document.querySelectorAll('.dropTarget');
-            Array.from(dropTargets).forEach(target => {
-                console.log('target', e.target)
-                target.addEventListener('dragenter', e =>{
-                    e.preventDefault();
-                    // console.log('dragenter',e);
+                const repeatItem = e.target.closest('fx-repeatitem');
+                console.log('dragover repeatItem',repeatItem);
 
-                })
+                if(repeatItem !== draggedItem){
+                    console.log('yeayhalsdf')
 
-                target.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    // console.log('dragover',e);
-                    e.target.classList.add('drag-over');
+                    const itemHeight = repeatItem.offsetHeight;
+                    console.log('itemHeight',itemHeight);
 
-                })
-                target.addEventListener('dragleave', e => {
-                    e.target.classList.remove('drag-over');
+/*
+                    if(e.offsetY > itemHeight / 2 ){
+                        console.log('after')
 
-                })
-                target.addEventListener('drop', e => {
-                    e.target.classList.remove('drag-over');
-                    // e.preventDefault();
-                    const droppedElement = e.dataTransfer.getData('text/html');
-                    console.log('dropped element', droppedElement);
-                    console.log('drop target', e.target);
-                    e.target.innerHTML=droppedElement;
+                        // repeatItem.style('margin-bottom:1rem;')
+                        repeatItem.classList.add("margin-top");
+                        repeatItem.classList.remove("margin-bottom");
+                    }else{
+                        console.log('before')
+                        // repeatItem.style('margin-top:1rem;')
+                        repeatItem.classList.add("margin-bottom");
+                        repeatItem.classList.remove("margin-top");
+                        draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
+                    }
+*/
 
-                })
+/*
+                    const ghost = document.createElement('fx-repeatitem');
+                    ghost.classList.add('droptarget');
+                    draggedItem.parentNode.insertBefore(ghost,repeatItem);
+                    droptarget = ghost;
+*/
+                }
+                // debugger;
+                repeatItem.classList.add('drag-over');
+
+
+/*
+                setTimeout({
+
+                },100);
+*/
 
             })
+            elem.addEventListener('dragleave', e => {
+                console.log('dragleave',e);
+                e.target.classList.remove('drag-over');
+
+            })
+            elem.addEventListener('drop', e => {
+                console.log('drop',e);
+                e.target.classList.remove('drag-over');
+                e.preventDefault();
+                const droppedElement = e.dataTransfer.getData('text/html');
+                console.log('dropped element', droppedElement);
+
+                if(e.target.nodeName === 'FX-REPEAT'){
+                    console.log('drop onto repeat',e.target);
+                    e.target.append(draggedItem);
+                    return;
+
+                }
+                const repeatItem = e.target.closest('fx-repeatitem');
+                console.log('drop onto item',repeatItem);
+
+
+                if(e.target.nodeName !== 'FX-REPEATITEM'){
+                    const parentItem = e.target.closest('fx-repeatitem');
+
+                }
+
+/*
+                if(!repeatItem.parentNode.contains(draggedItem)){
+                    return;
+                }
+*/
+
+                if(!repeatItem){
+                    draggedItem.parentNode.append(draggedItem);
+                }
+
+                if(repeatItem !== draggedItem){
+                    const itemHeight = repeatItem.offsetHeight;
+
+                    console.log('itemHeight', itemHeight)
+                    console.log('offsetY', e.offsetY)
+                    if(e.offsetY > itemHeight / 2 ){
+                        console.log('after')
+
+                        repeatItem.after(draggedItem);
+                    }else{
+                        console.log('before')
+                        draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
+
+                    }
+
+                }
+
+                // e.target.innerHTML=droppedElement;
+
+
+            })
+
         });
-    // });
+
+
+/*
+        const dropTargets = document.querySelectorAll('.dropTarget');
+        Array.from(dropTargets).forEach(target => {
+            console.log('target', e.target)
+            target.addEventListener('dragenter', e =>{
+                e.preventDefault();
+                console.log('dragenter',e);
+
+            })
+
+            target.addEventListener('dragover', e => {
+                e.preventDefault();
+                console.log('dragover',e);
+                e.target.classList.add('drag-over');
+
+            })
+            target.addEventListener('dragleave', e => {
+                e.target.classList.remove('drag-over');
+
+            })
+            target.addEventListener('drop', e => {
+                e.target.classList.remove('drag-over');
+                // e.preventDefault();
+                const droppedElement = e.dataTransfer.getData('text/html');
+                console.log('dropped element', droppedElement);
+                console.log('drop target', e.target);
+                e.target.innerHTML=droppedElement;
+
+            })
+
+        })
+*/
+    });
 </script>
 <script type="module" src="./demo.js"></script>
 </body>
