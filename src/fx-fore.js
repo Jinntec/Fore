@@ -26,6 +26,7 @@ import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
  */
 export class FxFore extends HTMLElement {
     static outermostHandler = null;
+    static draggedItem = null;
 
     static get properties() {
         return {
@@ -102,6 +103,7 @@ export class FxFore extends HTMLElement {
 		// Stores the outer most action handler. If an action handler is already running, all
 		// updates are included in that one
 		this.outermostHandler = null;
+        this.draggedItem = null;
 
         const style = `
             :host {

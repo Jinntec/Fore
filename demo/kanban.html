@@ -51,11 +51,13 @@
         }
         .droptarget{
             background: #00c853;
-            height: 1rem;
         }
 
         .drag-over{
-            border:thin solid black;
+            border:thin solid #dddddd;
+            background: orange;
+            /*padding:1rem 0;*/
+            /*transform: scaleY(105%);*/
             /*padding: 1rem 0;*/
         }
         .dropTarget{
@@ -86,6 +88,10 @@
             display: block;
             min-width: 200px;
             position:relative;
+        }
+        .ghost{
+            height:3rem;
+            background: #dddddd;
         }
         input{
             width: calc(100% - 0.5rem);
@@ -225,10 +231,24 @@
             height: 100%;
         }
         .margin-top{
-            margin-top:1rem;
+            padding-top:2rem;
         }
         .margin-bottom{
-            margin-bottom:1rem;
+            padding-bottom:2rem;
+        }
+        .up::before{
+            content:'';
+            height: 3rem;
+            background: #dddddd;
+            border:thin solid #666666;
+            width: 100%;
+        }
+        .down::after{
+            content:'';
+            height: 3rem;
+            background: pink;
+            border:thin solid #666666;
+            width: 100%;
         }
     </style>
 </head>
@@ -324,14 +344,14 @@
 
 
 </div>
-<script>
+<!--<script>
 
     const fore = document.querySelector('fx-fore');
     let draggedItem;
     let droptarget;
     fore.addEventListener('ready', e => {
 
-
+        console.log('attach dnd script');
         const elements = document.querySelectorAll('[draggable]');
         const repeat = elements[0].parentNode;
         console.log('repeat to dnd', repeat);
@@ -353,8 +373,27 @@
                 // console.log('dragover repeatItem',repeatItem);
 
                 if(repeatItem !== draggedItem){
-                    const itemHeight = repeatItem.offsetHeight;
+                    // const itemHeight = repeatItem.offsetHeight;
+
+
                     repeatItem.classList.add('drag-over');
+                    // const dummy = document.createElement('fx-repeatitem');
+/*
+                    if(droptarget) return;
+                    setTimeout((e,repeatItem) => {
+                        if(e.offsetY > itemHeight / 2){
+                        // repeatItem.before(dummy);
+                        repeatItem.classList.toggle('up');
+                        }else {
+                            // repeatItem.after(dummy);
+                            repeatItem.classList.toggle('down');
+                        }
+                    },400);
+*/
+                    // droptarget = dummy;
+
+
+
                 }
             })
 
@@ -366,7 +405,7 @@
 
             elem.addEventListener('drop', e => {
                 console.log('drop',e);
-                e.target.classList.remove('drag-over');
+                e.target.closest('fx-repeatitem').classList.remove('drag-over');
                 e.preventDefault();
                 e.stopPropagation();
                 const droppedElement = e.dataTransfer.getData('text/html');
@@ -390,7 +429,9 @@
                         if(targetNodeset.length === 0){
                             parent.append(dataNode);
                         }else{
-                            targetNodeset[0].parentNode.append(dataNode);// re-append
+                            // todo: still a bug around here
+                            // targetNodeset[0].parentNode.append(dataNode);// re-append
+                            parent.append(dataNode);
                         }
                     }else{
                         targetNodeset.parentNode.append(dataNode);// re-append
@@ -435,7 +476,6 @@
                         const repeatItemNode = repeatItem.getModelItem().node;
 
                         // repeatItem.after(draggedItem);
-
                         repeatItemNode.after(dataNode.cloneNode(true));
                         dataNode.parentNode.removeChild(dataNode);
 
@@ -462,46 +502,11 @@
 
                 // e.target.innerHTML=droppedElement;
 
-
             })
 
         });
-
-
-/*
-        const dropTargets = document.querySelectorAll('.dropTarget');
-        Array.from(dropTargets).forEach(target => {
-            console.log('target', e.target)
-            target.addEventListener('dragenter', e =>{
-                e.preventDefault();
-                console.log('dragenter',e);
-
-            })
-
-            target.addEventListener('dragover', e => {
-                e.preventDefault();
-                console.log('dragover',e);
-                e.target.classList.add('drag-over');
-
-            })
-            target.addEventListener('dragleave', e => {
-                e.target.classList.remove('drag-over');
-
-            })
-            target.addEventListener('drop', e => {
-                e.target.classList.remove('drag-over');
-                // e.preventDefault();
-                const droppedElement = e.dataTransfer.getData('text/html');
-                console.log('dropped element', droppedElement);
-                console.log('drop target', e.target);
-                e.target.innerHTML=droppedElement;
-
-            })
-
-        })
-*/
     });
-</script>
+</script>-->
 <script type="module" src="./demo.js"></script>
 </body>
 </html>

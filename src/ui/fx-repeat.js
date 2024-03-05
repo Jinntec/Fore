@@ -1,4 +1,3 @@
-import * as fx from 'fontoxpath';
 import './fx-repeatitem.js';
 
 import {Fore} from '../fore.js';
@@ -6,7 +5,9 @@ import {foreElementMixin} from '../ForeElementMixin.js';
 import {evaluateXPath} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {XPathUtil} from '../xpath-util.js';
-import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
+import {FxFore} from '../fx-fore.js';
+
+// import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
 /**
  * `fx-repeat`
@@ -60,6 +61,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({mode: 'open', delegatesFocus: true});
+        // this.draggedItem = null;
     }
 
     get repeatSize() {
@@ -173,11 +175,80 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         `;
 
         // this.init();
+
+
+        this.getOwnerForm().addEventListener('ready', (e) => {
+            console.log('repeat attaching drop listener')
+            if (this.hasAttribute('dnd')) {
+                this.addEventListener('drop', event => this._drop(event));
+                this.addEventListener('dragover', event => this._dragOver(event));
+                this.addEventListener('dragleave', event => this._dragLeave(event));
+            }
+        });
+    }
+
+    _dragOver(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // console.log('dragover',event);
+        // console.log('dragover repeatItem',this);
+
+        const repeatItem = event.target.closest('fx-repeatitem');
+        if (repeatItem !== FxFore.draggedItem) {
+            this.classList.add('drag-over');
+        }
+    }
+
+    _dragLeave(event){
+        // console.log('_dragLeave',event);
+        this.classList.remove('drag-over');
+    }
+
+
+    _drop(event){
+        console.log('dropped on repeat',this, FxFore.draggedItem);
+        this.classList.remove('drag-over');
+        event.preventDefault();
+        event.stopPropagation();
+        // dropping on repeat itself always means to *append* the dropped item
+        // const dataNode = this.draggedItem.getModelItem().node;
+        const dataNode = FxFore.draggedItem.nodeset;
+        console.log('dropped on repeat - data:',dataNode);
+
+        // const parent = dataNode.parentNode;
+        // ### remove the bound data node
+        // parent.removeChild(dataNode);
+
+        // const targetRepeat = event.target;
+        // const targetNodeset = targetRepeat.getModelItem().node;
+        // const targetNodeset = event.target.nodeset;
+        const targetNodeset = this.getModelItem().node;
+        if(!targetNodeset) return;
+
+        const contextNode = getInScopeContext(this,this.ref);
+        if(Array.isArray(targetNodeset)){
+
+            if(targetNodeset.length === 0){
+                contextNode.append(dataNode);
+            }else{
+                // todo: still a bug around here
+                // targetNodeset[0].parentNode.append(dataNode);// re-append
+                // targetNodeset.append(dataNode);
+                // const instNode = this.getModelItem().node;
+                // targetNodeset.parentNode.append(dataNode);
+                contextNode.append(dataNode);
+            }
+        }else{
+            // targetNodeset.parentNode.append(dataNode);// re-append
+            contextNode.append(dataNode);// re-append
+        }
+
+        this.getOwnerForm().refresh(false);
     }
 
     init() {
         // ### there must be a single 'template' child
-        // console.log('##### repeat init ', this.id);
+        console.log('##### repeat init ', this.id);
         // if(!this.inited) this.init();
         // does not use this.evalInContext as it is expecting a nodeset instead of single node
         this._evalNodeset();
@@ -274,13 +345,9 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
                 const newItem = document.createElement('fx-repeatitem');
                 const clonedTemplate = this._clone();
 
-                if(this.hasAttribute('dnd')){
-                    newItem.setAttribute('draggable', 'true');
-                }
 
                 newItem.appendChild(clonedTemplate);
                 this.appendChild(newItem);
-
                 this._initVariables(newItem);
 
                 newItem.nodeset = this.nodeset[position - 1];
@@ -350,17 +417,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
 
     _initTemplate() {
-        // const shadowTemplate = this.shadowRoot.querySelector('template');
-        // console.log('shadowtempl ', shadowTemplate);
-
-        // const defaultSlot = this.shadowRoot.querySelector('slot');
-        // todo: this is still weak - should handle that better maybe by an explicit slot?
-        // this.template = this.firstElementChild;
         this.template = this.querySelector('template');
         // console.log('### init template for repeat ', this.id, this.template);
 
         if (this.template === null) {
-            // console.error('### no template found for this repeat:', this.id);
             // todo: catch this on form element
             this.dispatchEvent(
                 new CustomEvent('no-template-error', {
@@ -374,10 +434,13 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.shadowRoot.appendChild(this.template);
     }
 
+/*
     _startDragging(event, draggingItem) {
         console.log('_startDragging', event)
         event.dataTransfer.dropEffect = 'copy';
         event.dataTransfer.setData('text/html', draggingItem.outerHTML);
+        this.draggedItem = event.target;
+
         // const path = fx.evaluateXPathToString('path()', draggingItem.nodeset);
         // const fullPath = `instance("${XPathUtil.resolveInstance(draggingItem, path)}")${path}`;
         // event.dataTransfer.setData('application/json', JSON.stringify({path: fullPath}));
@@ -387,7 +450,9 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         console.log('drag start', draggingItem.nodeset)
         event.preventDefault();
     }
+*/
 
+/*
     _dragOver(event,item) {
         event.preventDefault();
         event.target.classList.add('drag-over');
@@ -418,6 +483,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         dropTarget.addEventListener('drop', (e) => this._drop(e, 0));
         return dropTarget;
     }
+*/
 
     _initRepeatItems() {
         // const model = this.getModel();
@@ -451,7 +517,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             if (this.getAttribute('dnd')) {
                 repeatItem.setAttribute('droptarget', '');
 
-                repeatItem.addEventListener('dragstart', e => this._startDragging(e, repeatItem));
+                this.dragstart = repeatItem.addEventListener('dragstart', e => this._startDragging(e, repeatItem));
                 repeatItem.addEventListener('dragover', e => this._dragOver(e, repeatItem));
                 repeatItem.addEventListener('dragleave', e => this._dragLeave(e, repeatItem));
                 repeatItem.addEventListener('drop', e => this._drop(e, repeatItem,repeatItem.index));
