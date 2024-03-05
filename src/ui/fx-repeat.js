@@ -61,7 +61,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({mode: 'open', delegatesFocus: true});
-        // this.draggedItem = null;
     }
 
     get repeatSize() {
@@ -187,6 +186,18 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         });
     }
 
+	_createNewRepeatItem() {
+		const newItem = document.createElement('fx-repeatitem');
+
+		if (this.hasAttribute('dnd')) {
+			newItem.setAttribute('draggable', 'true');
+		}
+		const clone = this._clone();
+        newItem.appendChild(clone);
+
+		return newItem;
+	}
+
     _dragOver(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -194,7 +205,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         // console.log('dragover repeatItem',this);
 
         const repeatItem = event.target.closest('fx-repeatitem');
-        if (repeatItem !== FxFore.draggedItem) {
+        if (repeatItem !== this.getOwnerForm().draggedItem) {
             this.classList.add('drag-over');
         }
     }
@@ -206,44 +217,22 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
 
     _drop(event){
-        console.log('dropped on repeat',this, FxFore.draggedItem);
+        console.log('dropped on repeat',this, this.getOwnerForm().draggedItem);
         this.classList.remove('drag-over');
         event.preventDefault();
         event.stopPropagation();
         // dropping on repeat itself always means to *append* the dropped item
         // const dataNode = this.draggedItem.getModelItem().node;
-        const dataNode = FxFore.draggedItem.nodeset;
-        console.log('dropped on repeat - data:',dataNode);
+        const dataNode = this.getOwnerForm().draggedItem;
+        console.log('dropped on repeat - data:', dataNode);
 
-        // const parent = dataNode.parentNode;
-        // ### remove the bound data node
-        // parent.removeChild(dataNode);
-
-        // const targetRepeat = event.target;
-        // const targetNodeset = targetRepeat.getModelItem().node;
-        // const targetNodeset = event.target.nodeset;
         const targetNodeset = this.getModelItem().node;
         if(!targetNodeset) return;
 
-        const contextNode = getInScopeContext(this,this.ref);
-        if(Array.isArray(targetNodeset)){
+        const contextNode = getInScopeContext(this, this.ref);
+        contextNode.append(dataNode);
 
-            if(targetNodeset.length === 0){
-                contextNode.append(dataNode);
-            }else{
-                // todo: still a bug around here
-                // targetNodeset[0].parentNode.append(dataNode);// re-append
-                // targetNodeset.append(dataNode);
-                // const instNode = this.getModelItem().node;
-                // targetNodeset.parentNode.append(dataNode);
-                contextNode.append(dataNode);
-            }
-        }else{
-            // targetNodeset.parentNode.append(dataNode);// re-append
-            contextNode.append(dataNode);// re-append
-        }
-
-        this.getOwnerForm().refresh(false);
+        this.getOwnerForm().refresh(true);
     }
 
     init() {
@@ -342,11 +331,8 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
             for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
                 // add new repeatitem
 
-                const newItem = document.createElement('fx-repeatitem');
-                const clonedTemplate = this._clone();
+				const newItem = this._createNewRepeatItem();
 
-
-                newItem.appendChild(clonedTemplate);
                 this.appendChild(newItem);
                 this._initVariables(newItem);
 
@@ -503,13 +489,10 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         }
 */
         this.nodeset.forEach((item, index) => {
-            const repeatItem = document.createElement('fx-repeatitem');
-            repeatItem.setAttribute('draggable', 'true');
+            const repeatItem = this._createNewRepeatItem();
             repeatItem.nodeset = this.nodeset[index];
             repeatItem.index = index + 1; // 1-based index
 
-            const clone = this._clone();
-            repeatItem.appendChild(clone);
             this.appendChild(repeatItem);
 
 

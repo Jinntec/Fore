@@ -296,9 +296,9 @@
                     </fx-trigger>
                 </div>
 <!--                <div>-->
-                    <fx-repeat id="r-task" ref="task" dnd="true" tabindex="0">
+                    <fx-repeat id="r-task" ref="task" dnd="true" tabindex="0" data-cy="{@name}">
                         <template draggable="true">
-                            <div class="card" tabindex="1">
+                            <div class="card" tabindex="1" data-cy="{../@name}-{count(preceding-sibling::task)}" data-cy-name="{@name}">
                                 <fx-control id="task" class="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
                                     <button>x</button>
