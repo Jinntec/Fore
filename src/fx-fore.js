@@ -103,7 +103,6 @@ export class FxFore extends HTMLElement {
 		// Stores the outer most action handler. If an action handler is already running, all
 		// updates are included in that one
 		this.outermostHandler = null;
-        this.draggedItem = null;
 
         const style = `
             :host {

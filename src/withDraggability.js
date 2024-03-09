@@ -27,9 +27,12 @@ class DraggableComponent extends superclass {
     }
 
 	connectedCallback() {
-        if (!this.hasAttribute('dnd')) {
-			return;
+        if (this.hasAttribute('draggable')) {
+			this.initDragAndDrop();
 		}
+	}
+
+	initDragAndDrop() {
         this.drop = this.addEventListener('drop', event => this._drop(event));
         this.dragOver = this.addEventListener('dragover', event => this._dragOver(event));
         this.dragleave = this.addEventListener('dragleave', event => this._dragLeave(event));
@@ -59,7 +62,6 @@ class DraggableComponent extends superclass {
 	}
 
 	_dragStart(event) {
-		console.log('drag start', this);
 		event.dataTransfer.dropEffect = 'move';
 		event.dataTransfer.setData('text/html', this.outerHTML);
 
@@ -70,85 +72,84 @@ class DraggableComponent extends superclass {
 
     _dragOver(event) {
         event.stopPropagation();
-        // console.log('dragover',event);
-        // console.log('dragover repeatItem',this);
 
         const repeatItem = event.target.closest('fx-repeatitem');
-        if (repeatItem !== this.getOwnerForm().draggedItem) {
-            this.classList.add('drag-over');
-        }
 		if (!this.getOwnerForm().draggedItem) {
 			// Not dragging
 			return;
 		}
 		// Only allow drag and drop in similar repeats
-		if (this.id === this.getOwnerForm().draggedItem.id) {
+		if (this === this.getOwnerForm().draggedItem) {
+			// Ignore: drop on itself
+			return;
+		}
+		const draggedItem = this.getOwnerForm().draggedItem;
+		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
+		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
+		if (thisClosestRepeat.id === draggingClosestRepeat.id) {
+			if (repeatItem !== this.getOwnerForm().draggedItem) {
+				this.classList.add('drag-over');
+			}
+
 			event.preventDefault();
 		}
     }
 
     _dragLeave(event){
-        // console.log('_dragLeave',event);
-        this.classList.remove('drag-over');
+       this.classList.remove('drag-over');
     }
 
 	_dragEnd (event) {
-		console.log('dragEnd',event);
-
 		this.getOwnerForm().draggedItem = null;
         this.classList.remove('drag-over');
+		event.stopPropagation();
 	}
 
     _drop(event){
-        console.log('dropped',this, this.getOwnerForm().draggedItem);
         this.classList.remove('drag-over');
-        event.preventDefault();
         event.stopPropagation();
 		const dataNode = this.getOwnerForm().draggedItem.getModelItem().node;
 		if (!dataNode){
 			return;
 		}
 
-		if (this.localName === 'fx-repeat') {
-			// dropping on repeat itself always means to *append* the dropped item
-			// const dataNode = this.draggedItem.getModelItem().node;
-
-			// TODO: Make this pluggable!
-			console.log('dropped on repeat - data:', dataNode);
-
-			const targetNodeset = this.getModelItem().node;
-			if(!targetNodeset) return;
-
-			let contextNode = getInScopeContext(this, this.ref);
-			if (Array.isArray(contextNode)) {
-				contextNode = contextNode[contextNode.length-1];
-			}
-			contextNode.append(dataNode);
+		const draggedItem = this.getOwnerForm().draggedItem;
+		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
+		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
+		if (thisClosestRepeat.id !== draggingClosestRepeat.id) {
+			// Moving between different repeats: this can make the items 'lost': placed into a
+			// different set
+			return;
 		}
 
-		else if (this.localName === 'fx-repeatitem') {
-			console.log('drop onto item',event);
+		// We are sure we'll handle this event!
+        event.preventDefault();
 
-			console.log('ModelItem',dataNode);
+		if (this.localName === 'fx-repeat') {
+			// Dropping on repeat itself always means to *append* the dropped item
 
-			const itemHeight = this.offsetHeight;
-
-			const repeatItemNode = this.getModelItem().node;
-			if(event.offsetY > itemHeight / 2 ){
-				console.log('drop after data',this.getModelItem().node);
-
-				repeatItemNode.after(dataNode);
+			let contextNode = this.nodeset;
+			if (Array.isArray(contextNode) && !contextNode.length) {
+				// Guess: just append it to the context node. Hope that the `ref` is actually a
+				// child axis, like `ref="./item"`. A ref like `./items/item` breaks.
+				const context = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+				context.append(dataNode);
 			} else {
-				console.log('drop before data',this.getModelItem().node);
-
-				repeatItemNode.before(dataNode);
-				console.log('data',dataNode.ownerDocument);
+				// Guess: just insert it after it to the context node. Hope that the `ref` is
+				// actually listing siblings, like `ref="./item"` or
+				// `ref="./items/item"`. `ref="descendant::item[@category='a']"` breaks
+				contextNode = contextNode[contextNode.length - 1];
+				contextNode.after(dataNode);
 			}
+		} else if (this.localName === 'fx-repeatitem') {
+			const repeatItemNode = this.getModelItem().node;
+
+			repeatItemNode.before(dataNode);
 		}
 
 		// Note: full refresh needed since multiple model items may be affected.
 		// TODO: Leverage the changedPaths trick
-
+		this.getOwnerForm().getModel().updateModel();
 		this.getOwnerForm().refresh(true);
     }
 };

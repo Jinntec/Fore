@@ -54,6 +54,8 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
         super();
         this.ref = '';
         this.dataTemplate = [];
+        this.isDraggable=null;
+        this.dropTarget=null;
         this.focusOnCreate = '';
         this.initDone = false;
         this.repeatIndex = 1;
@@ -182,9 +184,8 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
 	_createNewRepeatItem() {
 		const newItem = document.createElement('fx-repeatitem');
 
-		if (this.hasAttribute('dnd')) {
+		if (this.isDraggable) {
 			newItem.setAttribute('draggable', 'true');
-			newItem.setAttribute('dnd', 'true');
 			newItem.setAttribute('tabindex', 0);
 		}
 		const clone = this._clone();
@@ -363,6 +364,12 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     _initTemplate() {
         this.template = this.querySelector('template');
         // console.log('### init template for repeat ', this.id, this.template);
+        this.dropTarget = this.template.getAttribute('drop-target');
+        this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+
+		if (this.isDraggable) {
+			this.initDragAndDrop();
+		}
 
         if (this.template === null) {
             // todo: catch this on form element
@@ -385,7 +392,6 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
             repeatItem.index = index + 1; // 1-based index
 
             this.appendChild(repeatItem);
-
 
             if (repeatItem.index === 1) {
                 this.applyIndex(repeatItem);

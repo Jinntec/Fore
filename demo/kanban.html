@@ -54,12 +54,17 @@
         }
 
         .drag-over{
-            border:thin solid #dddddd;
             background: orange;
             /*padding:1rem 0;*/
             /*transform: scaleY(105%);*/
             /*padding: 1rem 0;*/
         }
+		#column > .drag-over {
+			background: blue;
+		}
+		#column.drag-over {
+			background: blue;
+		}
         .dropTarget{
             /*height: 1rem;*/
             height: 0;
@@ -127,12 +132,16 @@
         }
 
         #column{
-            display: grid !important;
+            /*display: grid !important;*/
+            display: flex;
             /*grid-template-columns: repeat(3,1fr);*/
-            grid-gap: 1rem;
+            /*grid-gap: 1rem;*/
             overflow: auto;
+            gap:.25rem;
             width: 100%;
         }
+
+
         .header {
             /* border-bottom: thin solid white; */
             padding: 1rem;
@@ -279,10 +288,10 @@
             </fx-instance>
         </fx-model>
         <h1>Kanban Board</h1>
-
-        <fx-repeat id="column" dnd="true" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">
-            <template>
-                <div class="header {@name}">
+<!--        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">-->
+        <fx-repeat id="column" ref="column">
+            <template draggable="true" drop-target="column">
+                <div class="header {@name}" tabindex="1">
                     <fx-control ref="@name"></fx-control>
                     <fx-trigger class="iconbtn addcolumn" title="add card">
                         <button>+</button>
@@ -296,8 +305,8 @@
                     </fx-trigger>
                 </div>
 <!--                <div>-->
-                    <fx-repeat id="r-task" ref="task" dnd="true" tabindex="0" data-cy="{@name}">
-                        <template draggable="true">
+                    <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
+                        <template draggable="true" drop-target="r-task">
                             <div class="card" tabindex="1" data-cy="{../@name}-{count(preceding-sibling::task)}" data-cy-name="{@name}">
                                 <fx-control id="task" class="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
