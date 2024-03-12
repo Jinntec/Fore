@@ -61,6 +61,8 @@ class DraggableComponent extends superclass {
 		event.dataTransfer.setData('text/html', this.outerHTML);
 
 		this.getOwnerForm().draggedItem = this.getModelItem().node;
+
+		event.stopPropagation();
 	}
 
     _dragOver(event) {
