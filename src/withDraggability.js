@@ -144,7 +144,12 @@ class DraggableComponent extends superclass {
 		} else if (this.localName === 'fx-repeatitem') {
 			const repeatItemNode = this.getModelItem().node;
 
-			repeatItemNode.before(dataNode);
+			if (repeatItemNode.previousSibling === dataNode) {
+				// moving before will make it do nothing, move after
+				repeatItemNode.after(dataNode);
+			} else {
+				repeatItemNode.before(dataNode);
+			}
 		}
 
 		// Note: full refresh needed since multiple model items may be affected.
