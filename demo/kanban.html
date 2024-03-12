@@ -280,7 +280,7 @@
         </fx-model>
         <h1>Kanban Board</h1>
 
-        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">
+        <fx-repeat id="column" dnd="true" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">
             <template>
                 <div class="header {@name}">
                     <fx-control ref="@name"></fx-control>

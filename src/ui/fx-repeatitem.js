@@ -10,7 +10,7 @@ import {withDraggability} from "../withDraggability.js";
  * @customElement
  * @demo demo/index.html
  */
-export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement)) {
+export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement), true) {
   static get properties() {
     return {
       inited: {

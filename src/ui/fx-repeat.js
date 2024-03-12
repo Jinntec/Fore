@@ -25,7 +25,7 @@ import {withDraggability} from '../withDraggability.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement)) {
+export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), false) {
     static get properties() {
         return {
             ...super.properties,
@@ -185,6 +185,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement)) {
 		if (this.hasAttribute('dnd')) {
 			newItem.setAttribute('draggable', 'true');
 			newItem.setAttribute('dnd', 'true');
+			newItem.setAttribute('tabindex', 0);
 		}
 		const clone = this._clone();
         newItem.appendChild(clone);
