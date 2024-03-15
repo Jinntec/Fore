@@ -55,6 +55,8 @@
 
         .drag-over{
             background: orange;
+            outline:thin solid blue;
+
             /*padding:1rem 0;*/
             /*transform: scaleY(105%);*/
             /*padding: 1rem 0;*/
@@ -100,10 +102,11 @@
         }
         input{
             width: calc(100% - 0.5rem);
-            border: none;
+            border: thin solid #dddddd;
             padding: 4px;
             background: white;
             font-size: 1rem;
+            border-radius: 0.2rem;
         }
         /* project repeat */
         .iconbtn{
@@ -140,8 +143,9 @@
             gap:.75rem;
             width: 100%;
         }
-
-
+        header{
+            padding: 1rem 0;
+        }
         .header {
             /* border-bottom: thin solid white; */
             padding: 1rem;
@@ -237,7 +241,8 @@
         }
 
         #r-task{
-            height: 100%;
+            height: calc(100% - 3rem);
+            overflow:auto;
         }
         .margin-top{
             padding-top:2rem;
@@ -288,6 +293,12 @@
             </fx-instance>
         </fx-model>
         <h1>Kanban Board</h1>
+        <header>
+            <fx-control ref="instance('vars')/search">
+                <label for="searchCtl">Search</label>
+                <input id="searchCtl">
+            </fx-control>
+        </header>
 <!--        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">-->
         <fx-repeat id="column" ref="column">
             <template draggable="true" drop-target="column">
