@@ -54,12 +54,17 @@
         }
 
         .drag-over{
-            border:thin solid #dddddd;
             background: orange;
             /*padding:1rem 0;*/
             /*transform: scaleY(105%);*/
             /*padding: 1rem 0;*/
         }
+		#column > .drag-over {
+			background: blue;
+		}
+		#column.drag-over {
+			background: blue;
+		}
         .dropTarget{
             /*height: 1rem;*/
             height: 0;
@@ -135,6 +140,8 @@
             gap:.75rem;
             width: 100%;
         }
+
+
         .header {
             /* border-bottom: thin solid white; */
             padding: 1rem;
@@ -281,7 +288,6 @@
             </fx-instance>
         </fx-model>
         <h1>Kanban Board</h1>
-
 <!--        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">-->
         <fx-repeat id="column" ref="column">
             <template draggable="true" drop-target="column">

@@ -6,6 +6,7 @@ import {evaluateXPath} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {XPathUtil} from '../xpath-util.js';
 import {FxFore} from '../fx-fore.js';
+import {withDraggability} from '../withDraggability.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -24,7 +25,7 @@ import {FxFore} from '../fx-fore.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeat extends foreElementMixin(HTMLElement) {
+export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), false) {
     static get properties() {
         return {
             ...super.properties,
@@ -53,7 +54,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         super();
         this.ref = '';
         this.dataTemplate = [];
-        this.draggable=null;
+        this.isDraggable=null;
         this.dropTarget=null;
         this.focusOnCreate = '';
         this.initDone = false;
@@ -100,6 +101,7 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
     }
 
     connectedCallback() {
+		super.connectedCallback();
         // console.log('connectedCallback',this);
         // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
         this.ref = this.getAttribute('ref');
@@ -177,78 +179,20 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
         // this.init();
 
-
-        this.getOwnerForm().addEventListener('ready', (e) => {
-            console.log(`repeat '${this.id}' attaching listeners`)
-            if (this.inited && this.template.hasAttribute('draggable')) {
-                this.addEventListener('drop', event => this._drop(event));
-                this.addEventListener('dragover', event => this._dragOver(event));
-                this.addEventListener('dragleave', event => this._dragLeave(event));
-            }
-        });
     }
 
 	_createNewRepeatItem() {
 		const newItem = document.createElement('fx-repeatitem');
 
-		if (this.draggable) {
+		if (this.isDraggable) {
 			newItem.setAttribute('draggable', 'true');
+			newItem.setAttribute('tabindex', 0);
 		}
 		const clone = this._clone();
         newItem.appendChild(clone);
 
 		return newItem;
 	}
-
-    _dragOver(event) {
-
-        /*
-        according to spec the in the dragOver event we can decide wether to prevent the default (NOT dropping an item).
-        This means if we do NOT prevent default the drop won't be possible as this is the default.
-         */
-        if(FxFore.draggedItem.parentNode.id === this.id ){
-            console.log('dragover',event.target);
-            console.log('repeat dragover ', FxFore.draggedItem.parentNode.id, this.id);
-            event.preventDefault();
-        }
-        event.stopPropagation();
-        // console.log('dragover',event);
-        // console.log('dragover repeatItem',this);
-
-        const repeatItem = event.target.closest('fx-repeatitem');
-        if (repeatItem !== FxFore.draggedItem) {
-            this.classList.add('drag-over');
-        }
-    }
-
-    _dragLeave(event){
-        // console.log('_dragLeave',event);
-        this.classList.remove('drag-over');
-    }
-
-
-    _drop(event){
-        console.log('dropped on repeat',this, FxFore.draggedItem);
-        this.classList.remove('drag-over');
-        if(FxFore.draggedItem.parentNode.id === event.target){
-            console.log('allowed target', this.id);
-            event.preventDefault();
-        }
-
-        event.stopPropagation();
-        // dropping on repeat itself always means to *append* the dropped item
-        // const dataNode = this.draggedItem.getModelItem().node;
-        const dataNode = FxFore.draggedItem.getModelItem().node;
-        console.log('dropped on repeat - data:', dataNode);
-
-        const targetNodeset = this.getModelItem().node;
-        if(!targetNodeset) return;
-
-        const contextNode = getInScopeContext(this, this.ref);
-        contextNode.append(dataNode);
-
-        this.getOwnerForm().refresh(true);
-    }
 
     init() {
         // ### there must be a single 'template' child
@@ -421,7 +365,11 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
         this.template = this.querySelector('template');
         // console.log('### init template for repeat ', this.id, this.template);
         this.dropTarget = this.template.getAttribute('drop-target');
-        this.draggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+        this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+
+		if (this.isDraggable) {
+			this.initDragAndDrop();
+		}
 
         if (this.template === null) {
             // todo: catch this on form element
@@ -436,7 +384,6 @@ export class FxRepeat extends foreElementMixin(HTMLElement) {
 
         this.shadowRoot.appendChild(this.template);
     }
-
 
     _initRepeatItems() {
         this.nodeset.forEach((item, index) => {
