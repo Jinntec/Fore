@@ -84,10 +84,10 @@ export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement)
 			} else {
 				this.setAttribute('relevant', '');
 			}
-
-
-			Fore.refreshChildren(this, force);
 		}
+
+		// Always recurse for these refreshes, especially when forced
+		Fore.refreshChildren(this, force);
 	}
 }
 if (!customElements.get('fx-repeatitem')) {
