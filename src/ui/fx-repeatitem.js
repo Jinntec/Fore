@@ -73,6 +73,13 @@ export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement)
 	  }
 	*/
 
+	_dispatchIndexChange() {
+		this.dispatchEvent(
+			new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
+		);
+	}
+
+
 	refresh(force) {
 		this.modelItem = this.getModelItem();
 		// ### register ourselves as boundControl

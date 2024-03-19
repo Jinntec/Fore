@@ -89,7 +89,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     }
 
     get index() {
-        return this.getAttribute('index');
+        return parseInt(this.getAttribute('index'), 10);
     }
 
     set index(idx) {
@@ -120,7 +120,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
             // const { item } = e.detail;
             // const idx = Array.from(this.children).indexOf(item);
             const {index} = e.detail;
-            this.index = Number(index);
+            this.index = parseInt(index, 10);
             this.applyIndex(this.children[index - 1]);
         });
         /*
