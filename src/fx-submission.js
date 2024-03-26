@@ -48,13 +48,15 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             ? this.getAttribute('serialization')
             : 'xml';
 
-        this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
-
-        this.targetref = this.hasAttribute('targetref') ? this.getAttribute('targetref') : null;
-
         this.mediatype = this.hasAttribute('mediatype')
             ? this.getAttribute('mediatype')
             : 'application/xml';
+
+        this.responseMediatype = this.hasAttribute('response-mediatype') ? this.getAttribute('response-mediatype') : this.mediatype;
+        this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
+
+        this.targetref = this.hasAttribute('targetref') ? this.getAttribute('targetref') : null;
+
 
         this.validate = this.getAttribute('validate') ? this.getAttribute('validate') : 'true';
         this.credentials = this.hasAttribute('credentials')
@@ -134,6 +136,23 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         // let serialized = serializer.serializeToString(relevant);
         if (this.method.toLowerCase() === 'get') {
+/*
+             todo: serialize the bound instance element names as get parameters and using their text values
+             as param values. leave out empty params and create querystring from the result.Elements may
+             have exactly level deep or are otherwise ignored.
+             <data>
+                <id>1234</id>
+                <name>john</name>
+                <zip></zip>
+                <!-- ignored as no direct text value -->
+                <phone>
+                    <mobile></mobile>
+                <phone>
+              </data>
+              results in: ?id=1234&name=john to be appended to this.url on fetch
+
+*/
+
             serialized = undefined;
         }
         // console.log('data being send', serialized);
