@@ -27,17 +27,17 @@ class DraggableComponent extends superclass {
     }
 
 	connectedCallback() {
+        this.drop = this.addEventListener('drop', event => this._drop(event));
+        this.dragOver = this.addEventListener('dragover', event => this._dragOver(event));
+        this.dragleave = this.addEventListener('dragleave', event => this._dragLeave(event));
+        this.dragend = this.addEventListener('dragend', event => this._dragEnd(event));
+
         if (this.hasAttribute('draggable')) {
 			this.initDragAndDrop();
 		}
 	}
 
 	initDragAndDrop() {
-        this.drop = this.addEventListener('drop', event => this._drop(event));
-        this.dragOver = this.addEventListener('dragover', event => this._dragOver(event));
-        this.dragleave = this.addEventListener('dragleave', event => this._dragLeave(event));
-        this.dragleave = this.addEventListener('dragleave', event => this._dragLeave(event));
-        this.dragend = this.addEventListener('dragend', event => this._dragEnd(event));
 		if (isAlsoDraggable) {
             this.dragstart = this.addEventListener('dragstart', event => this._dragStart(event));
 		}
@@ -61,9 +61,11 @@ class DraggableComponent extends superclass {
 		}
 	}
 
+	/*
+	 * TODO: unneeded?
+	 */
 	_dragStart(event) {
 		event.dataTransfer.dropEffect = 'move';
-		event.dataTransfer.setData('text/html', this.outerHTML);
 
 		this.getOwnerForm().draggedItem = this;
 
@@ -86,7 +88,7 @@ class DraggableComponent extends superclass {
 		const draggedItem = this.getOwnerForm().draggedItem;
 		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
 		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
-		if (thisClosestRepeat.id === draggingClosestRepeat.id) {
+		if (thisClosestRepeat?.id === draggingClosestRepeat?.id) {
 			if (repeatItem !== this.getOwnerForm().draggedItem) {
 				this.classList.add('drag-over');
 			}
@@ -96,7 +98,7 @@ class DraggableComponent extends superclass {
     }
 
     _dragLeave(event){
-       this.classList.remove('drag-over');
+		this.classList.remove('drag-over');
     }
 
 	_dragEnd (event) {
@@ -105,27 +107,44 @@ class DraggableComponent extends superclass {
 		event.stopPropagation();
 	}
 
-    _drop(event){
-        this.classList.remove('drag-over');
-        event.stopPropagation();
-		const dataNode = this.getOwnerForm().draggedItem.getModelItem().node;
-		if (!dataNode){
-			return;
+	_getDataNode () {
+		const dataNode = this.getOwnerForm().draggedItem?.getModelItem()?.node;
+		if (!dataNode) {
+			return null;
 		}
 
 		const draggedItem = this.getOwnerForm().draggedItem;
 		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
 		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
-		if (thisClosestRepeat.id !== draggingClosestRepeat.id) {
+		if (thisClosestRepeat?.id !== draggingClosestRepeat?.id) {
 			// Moving between different repeats: this can make the items 'lost': placed into a
 			// different set
+			return null;
+		}
+
+		return dataNode;
+	}
+
+    _drop(event){
+        this.classList.remove('drag-over');
+        event.stopPropagation();
+		if (this.localName === 'fx-droptarget') {
+			this.replaceChildren(this.getOwnerForm().draggedItem);
+			event.preventDefault();
+		this.getOwnerForm().getModel().updateModel();
+			this.getOwnerForm().refresh(true);
+			return;
+		}
+		const dataNode = this._getDataNode();
+		if (!dataNode) {
 			return;
 		}
 
-		// We are sure we'll handle this event!
-        event.preventDefault();
+
 
 		if (this.localName === 'fx-repeat') {
+			// We are sure we'll handle this event!
+			event.preventDefault();
 			// Dropping on repeat itself always means to *append* the dropped item
 
 			let contextNode = this.nodeset;

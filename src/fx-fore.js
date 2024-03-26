@@ -391,6 +391,7 @@ export class FxFore extends HTMLElement {
     }
 
     disconnectedCallback() {
+		this.removeEventListener('dragstart', this.dragstart);
         /*
         this.removeEventListener('model-construct-done', this._handleModelConstructDone);
         this.removeEventListener('message', this._displayMessage);
@@ -531,6 +532,7 @@ export class FxFore extends HTMLElement {
             this._updateTemplateExpressions();
             this._scanForNewTemplateExpressionsNextRefresh = false; // reset
         }
+
         this._processTemplateExpressions();
 
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
@@ -932,6 +934,12 @@ export class FxFore extends HTMLElement {
         Fore.dispatch(this, 'ready', {});
         // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
+
+		this.dragstart = this.addEventListener('dragstart', (event) => {
+			event.dataTransfer.dropEffect = 'move';
+
+			this.draggedItem = event.target.closest('[draggable="true"]');
+		});
     }
 
     registerLazyElement(element) {
