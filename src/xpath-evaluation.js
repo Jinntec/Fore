@@ -349,6 +349,7 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'uri-host':
         case 'uri-param':
         case 'uri-path':
+        case 'uri-relpath':
         case 'uri-port':
         case 'uri-query':
         case 'uri-scheme':
@@ -1166,6 +1167,15 @@ registerCustomXPathFunction(
     [],
     'xs:string?',
     (dynamicContext, arg) => window.location.search,
+);
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-relpath'},
+    [],
+    'xs:string?',
+    (dynamicContext, arg) => {
+        const path = new URL(window.location.href).pathname;
+        return path.substring(0,path.lastIndexOf('/') + 1);
+    },
 );
 registerCustomXPathFunction(
     {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-path'},
