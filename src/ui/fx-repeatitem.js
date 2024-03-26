@@ -73,6 +73,13 @@ export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement)
 	  }
 	*/
 
+	_dispatchIndexChange() {
+		this.dispatchEvent(
+			new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
+		);
+	}
+
+
 	refresh(force) {
 		this.modelItem = this.getModelItem();
 		// ### register ourselves as boundControl
@@ -84,10 +91,10 @@ export class FxRepeatitem extends withDraggability(foreElementMixin(HTMLElement)
 			} else {
 				this.setAttribute('relevant', '');
 			}
-
-
-			Fore.refreshChildren(this, force);
 		}
+
+		// Always recurse for these refreshes, especially when forced
+		Fore.refreshChildren(this, force);
 	}
 }
 if (!customElements.get('fx-repeatitem')) {
