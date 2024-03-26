@@ -91,8 +91,10 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
     }
 
     if (this.modelItem && !this.modelItem.relevant) {
+        this.removeAttribute('relevant');
         this.setAttribute('nonrelevant','');
     } else {
+        this.removeAttribute('nonrelevant');
 		this.setAttribute('relevant','');
     }
 
