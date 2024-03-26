@@ -1,5 +1,6 @@
 import { Fore } from '../fore.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
+import {Relevance} from "../relevance.js";
 
 /**
  * `fx-repeat`
@@ -90,6 +91,7 @@ export class FxRepeatitem extends foreElementMixin(HTMLElement) {
       this.modelItem.boundControls.push(this);
     }
 
+    // Relevance.handleRelevance(this);
     if (this.modelItem && !this.modelItem.relevant) {
         this.removeAttribute('relevant');
         this.setAttribute('nonrelevant','');

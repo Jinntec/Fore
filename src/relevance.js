@@ -1,4 +1,22 @@
+import {Fore} from "./fore.js";
+
 export class Relevance {
+
+  static handleRelevance(boundElement){
+    const modelItem = boundElement.getModelItem();
+
+    if (modelItem && modelItem.relevant) {
+      boundElement.removeAttribute('nonrelevant');
+      boundElement.setAttribute('relevant','');
+      Fore.dispatch(this,'relevant',{});
+
+    } else {
+      boundElement.removeAttribute('relevant');
+      boundElement.setAttribute('nonrelevant','');
+      Fore.dispatch(this,'nonrelevant',{});
+    }
+  }
+
   static selectRelevant(element, type) {
     // console.log('selectRelevant', type);
     switch (type) {
