@@ -17,6 +17,35 @@
             margin:0;
             padding:0;
             border:none;
+            font-family: sans-serif;
+        }
+        #attributes{
+
+        }
+        #file{
+            width: 100%;
+            padding: 0.25rem;
+        }
+        #file label{
+            font-size: smaller;
+        }
+        #file input{
+            width: calc(100% - 2rem);
+        }
+        header{
+            background: #efefef;
+            padding:0.25rem 0;
+        }
+        #components{
+            position: fixed;
+            left: 0;
+            width: 10rem;
+            height: 100vh;
+            overflow: auto;
+        }
+        #edited{
+            overflow: auto;
+            height: 100vh;
         }
         #elements{
             /*position:fixed;*/
@@ -67,19 +96,24 @@
             background: whitesmoke;
         }
         main {
-            width:100%;
+            position: fixed;
+            width:calc(100% - 20rem);
             background: orange;
             display: block;
+            left: 10rem;
         }
         main *::before{
             content:attr(data-name);
         }
         .wrapper{
-            width: 100vw;
+            width: 100%;
             height: 100vh;
             margin:0;
+            /*
             display: grid;
-            grid-template-columns: 200px auto 200px;
+            grid-template-columns:auto 10rem;
+            margin-left: 10rem;
+            */
         }
         main fx-fore{
             position: relative;
@@ -102,7 +136,7 @@
         }
 */
         main fx-model{
-            min-height : 200px;
+            min-height : 10rem;
             height: auto;
             width: 100%;
             display: block;
@@ -118,8 +152,15 @@
         main fx-instance:before{
             content: "Instance: '" attr(id) "'";
         }
+        aside{
+            position: fixed;
+            height: 100vh;
+            overflow: auto;
+            width:10rem;
+            right: 0;
+        }
         #ui {
-            min-height : 200px;
+            min-height : 10rem;
         }
 /*
         #ui::before{
@@ -169,6 +210,7 @@
             <fx-instance id="vars">
                 <data>
                     <current></current>
+                    <filename></filename>
                 </data>
             </fx-instance>
             <fx-function
@@ -181,7 +223,7 @@
         </fx-model>
 
 <!--        <fx-group class="elementPanel">-->
-            <h4>Model</h4>
+            <header>Model</header>
 
             <fx-repeat id="r-elements" ref="instance('elements')/model/*">
                 <template>
@@ -189,14 +231,14 @@
                 </template>
             </fx-repeat>
 
-            <h4>UI</h4>
+            <header>UI</header>
             <fx-repeat id="r-ui" ref="instance('elements')/UI/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
 
-            <h4>Actions</h4>
+            <header>Actions</header>
             <fx-repeat id="r-actions" ref="instance('elements')/actions/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
@@ -224,7 +266,9 @@
 
 
     <main current>
-        <h1>Fore Editor</h1>
+        <fx-control id="file" ref="instance('vars')/filename">
+<!--            <label>Filename</label>-->
+        </fx-control>
 
         <fx-fore id="edited">
             <fx-model id="targetModel" class="droppable">
@@ -235,7 +279,7 @@
     </main>
 
     <aside>
-        <h2>Properties</h2>
+        <header>Properties</header>
         <fx-fore id="attributes">
             <fx-action target="#document"
                        event="selectElement">

@@ -1,4 +1,4 @@
-describe('while demo spec', () => {
+describe('setattribute demo spec', () => {
    beforeEach(() => {
        cy.visit('actions/setattribute.html');
    });

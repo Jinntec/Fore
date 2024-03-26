@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>fx-construct-done</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<div class="wrapper">
+    <h1>fx-construct-done</h1>
+    <p>This action must occur as direct child of <code>fx-model</code> and is a shortcut / alternative notation for
+        an generic <code>fx-action</code>.</p>.
+
+    <p>Both example actions here give the same result and the author is free to choose.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <!-- alternative notation -->
+                    <fx-construct-done>
+                        <fx-message>Hello</fx-message>
+                    </fx-construct-done>
+
+                    <!-- using generic action element -->
+                    <fx-action event="model-construct-done">
+                        <fx-message>Hello again</fx-message>
+                    </fx-action>
+
+                </fx-model>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
