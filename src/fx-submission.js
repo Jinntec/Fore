@@ -201,6 +201,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
                 localStorage.removeItem(key);
                 const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
+                this.replace = 'instance';
                 this._handleResponse(newInst);
                 console.log('### <<<<< submit-done >>>>>');
                 Fore.dispatch(this, 'submit-done', {});
