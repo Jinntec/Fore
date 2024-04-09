@@ -348,7 +348,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 			this.currentContext = item;
 
 			// Perform the action once. But quit if it failed
-			if (!this.performSafe()) {
+			if (!await this.performSafe()) {
 				return;
 			}
 		}

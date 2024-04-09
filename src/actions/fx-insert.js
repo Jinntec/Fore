@@ -15,23 +15,23 @@ import {Fore} from '../fore.js';
  * @customElement
  */
 export class FxInsert extends AbstractAction {
-    static get properties() {
-        return {
-            ...super.properties,
-            at: {
-                type: Number,
-            },
-            position: {
-                type: Number,
-            },
-            origin: {
-                type: Object,
-            },
-            keepValues: {
-                type: Boolean,
-            },
-        };
-    }
+  static get properties() {
+    return {
+      ...super.properties,
+      at: {
+        type: Number,
+      },
+      position: {
+        type: Number,
+      },
+      origin: {
+        type: Object,
+      },
+      keepValues: {
+        type: Boolean,
+      },
+    };
+  }
 
   constructor() {
     super();
@@ -127,24 +127,20 @@ export class FxInsert extends AbstractAction {
   }
 
   async perform() {
-    // super.perform();
-    // as we're overwriting the superclass we need to dispatch the execute-action ourselves
-
-
-    /*
-         todo: !!! calling super here does not correctly give the nodeset - it's likely still a bug in ForeElementMixin !!!
-        // super.perform();
-        console.log('this.nodeset', this.nodeset);
-        */
-
+    // We have a few terms here: `inScope` is the 'current item' we have. It is the item we're
+    // copying and inserting elsewhere.  If we have a `ref`, one of the nodes returned will
+    // become the sibling of this copy.  The `context` is the new parent of the copied
+    // element. It's usually better to add a `context` because that deals with empty elements.
     let inscope;
+    let context;
+    let targetSequence = [];
+    const inscopeContext = getInScopeContext(this);
+
     // ### 'context' attribute takes precedence over 'ref'
-    let targetSequence;
     if (this.hasAttribute('context')) {
-      inscope = getInScopeContext(this.getAttributeNode('context'), this.getAttribute('context'));
-      targetSequence = evaluateXPathToNodes(
+      [context] = evaluateXPathToNodes(
         this.getAttribute('context'),
-        inscope,
+        inscopeContext,
         this.getOwnerForm(),
       );
     }
@@ -163,14 +159,19 @@ export class FxInsert extends AbstractAction {
     let insertLocationNode;
     let index;
 
-    // const idx = this._getInsertIndex(inscope, targetSequence);
-    // console.log('insert index', idx);
-
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
     if (targetSequence.length === 0) {
-      insertLocationNode = inscope;
-      inscope.appendChild(originSequenceClone);
-      index = 1;
+      if (context) {
+        insertLocationNode = context;
+        context.appendChild(originSequenceClone);
+        index = 1;
+      } else {
+        // No context. We can insert into the `inscope`.
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = 1;
+
+      }
     } else {
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
@@ -221,31 +222,31 @@ export class FxInsert extends AbstractAction {
         }
       }
     }
-	  // instance('default')/items/item[index()]
+    // instance('default')/items/item[index()]
 
     // console.log('insert context item ', insertLocationNode);
     // console.log('parent ', insertLocationNode.parentNode);
     // console.log('instance ', this.getModel().getDefaultContext());
     // Fore.dispatch()
 
-	  // const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
+    // const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
     const inst = this.getModel().getInstance(instanceId);
-      // console.log('<<<<<<< resolved instance', inst);
-	  // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
-	  // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
+    // console.log('<<<<<<< resolved instance', inst);
+    // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
+    // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
     const xpath = XPathUtil.getPath(insertLocationNode.parentNode, instanceId);
 
 
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event, path },
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable:true,
+        detail: { action: this, event:this.event, path },
+      }),
     );
 
     Fore.dispatch(inst,'insert',{
@@ -267,9 +268,9 @@ export class FxInsert extends AbstractAction {
       }),
     );
 
-      this.needsUpdate = true;
-	  console.log('Changed!', xpath)
-	  return [xpath];
+    this.needsUpdate = true;
+    console.log('Changed!', xpath)
+    return [xpath];
   }
 
   // eslint-disable-next-line class-methods-use-this
