@@ -143,6 +143,7 @@ export class FxInsert extends AbstractAction {
         inscopeContext,
         this.getOwnerForm(),
       );
+		inscope = inscopeContext;
     }
 
     if (this.hasAttribute('ref')) {
