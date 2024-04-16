@@ -38,7 +38,7 @@
             </fx-model>
 
             <fx-trigger>
-              <button data-cy="counter">Show messages</button>
+              <button data-cy="show-messages">Show messages</button>
               <fx-message iterate="./message">There is a message! {.}</fx-message>
             </fx-trigger>
           </fx-fore>
@@ -47,7 +47,7 @@
 
       <h2>Deleting using iterate</h2>
       <p>The iterate attribute can be useful to 'empty out' a set of nodes.</p>
-      <demo-snippet>
+      <demo-snippet id="crud-demo">
         <template>
           <fx-fore>
             <fx-model>
@@ -74,14 +74,14 @@
 
             <fx-repeat ref="./item">
               <template>
-                <fx-control ref="./@selected" update-event="input" value-prop="checked">
+                <fx-control id="checkbox-{.}" ref="./@selected" update-event="input" value-prop="checked">
                   <input type="checkbox">{.}</input>
                 </fx-control>
               </template>
             </fx-repeat>
 
             <fx-trigger>
-              <button>Remove selected</button>
+              <button id="remove-btn">Remove selected</button>
               <fx-delete
                 ref="."
                 iterate="instance()/item[@selected='true']"></fx-delete>
@@ -96,15 +96,15 @@
 			  </fx-confirm>
             </fx-trigger>
             <fx-trigger>
-              <button>Select all</button>
+              <button id="select-all-btn">Select all</button>
               <fx-setvalue ref="@selected" iterate="instance()/item[@selected='false']" value="'true'"></fx-setvalue>
             </fx-trigger>
             <fx-trigger>
-              <button>Select none</button>
+              <button id="unselect-all-btn">Select none</button>
               <fx-setvalue ref="@selected" iterate="instance()/item[@selected='true']" value="'false'"></fx-setvalue>
             </fx-trigger>
             <fx-trigger>
-              <button>Reset</button>
+              <button id="reset-btn">Reset</button>
               <fx-delete
                 ref="."
                 iterate="instance()/item"></fx-delete>
@@ -118,7 +118,7 @@
                 ></fx-insert>
             </fx-trigger>
             <fx-trigger>
-              <button>Duplicate Selected</button>
+              <button id="duplicate-selected-btn">Duplicate Selected</button>
               <fx-insert
                 iterate="instance()/item[@selected='true']"
                 context="instance()"
@@ -129,7 +129,7 @@
                 ></fx-insert>
             </fx-trigger>
             <fx-trigger>
-              <button>Sort selected to front</button>
+              <button id="sort-btn">Sort selected to front</button>
               <fx-action
                 iterate="instance()/item[@selected='true']">
                 <fx-insert
