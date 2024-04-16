@@ -1,8 +1,8 @@
 <html>
 
-  <!doctype html>
+<!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
 
@@ -11,71 +11,103 @@
 
     <link href="../resources/fore.css" rel="stylesheet">
     <link href="../resources/demo.css" rel="stylesheet">
-	<script src=""></script>
+    <script src=""></script>
 
-	<style>
-	  .column {
-		  height: 100%;
-	  }
-	  .columns {
-		  display:flex;
-	  }
-	  fx-droptarget {
-		  display: inline-block;
-		  height: 100%;
-		  min-height: 100px;
-		  width: 100%;
-	  }
-	  .drag-over {
-		  background-color: hotpink;
-	  }
-	</style>
-  </head>
-  <body>
-	<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
-	<div class="wrapper">
-      <fx-fore >
-		<fx-model>
-		  <fx-instance>
-			<root>
-			<my-data>My Data</my-data>
-			</root>
-		  </fx-instance>
-		  </fx-model>
-        <h1>Drag and drop Columns UI</h1>
+    <style>
+        .column {
+            height: 100%;
+        }
 
-		<div class="columns">
-		  <div class="column">
-			  <h2>First Column</h2>
-			  <fx-droptarget effect="move"> <!-- Move is the default. -->
+        .columns {
+            display: flex;
+        }
+
+        fx-droptarget {
+            display: inline-block;
+            height: 100%;
+            min-height: 100px;
+            width: 100%;
+        }
+
+        .drag-over {
+            background-color: hotpink;
+        }
+		aside{
+			position: fixed;
+			right: 0;
+			top:0;
+			width: 2rem;
+			background: #00b0ff;
+			height: 100vh;
+		}
+		aside:has(fx-droptarget){
+			width: 20rem;
+		}
+		footer{
+			position: fixed;
+			bottom:0;
+			left:0;
+			heigth: 12rem;
+			background: #ddd;
+			width: 100vw;
+		}
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <root>
+                    <my-data>My Data</my-data>
+                </root>
+            </fx-instance>
+        </fx-model>
+
+        <main>
+            <h1>Drag and drop</h1>
+        </main>
+		<aside>
+			<fx-droptarget>
+			</fx-droptarget>
+		</aside>
+        <footer>
+			<fx-droptarget effect="move"> <!-- Move is the default. -->
 				<div draggable="true">
-				  <h3>Facsimile panel</h3>
-				  <p>Form / summary</p>
+					<h3>Facsimile panel</h3>
+					<p>Form / summary</p>
 				</div>
 			</fx-droptarget>
+		</footer>
+<!--
+        <div class="columns">
+            <div class="column">
+                <h2>First Column</h2>
 
-		  </div>
-		  <div class="column">
-			  <h2>Second Column: The main editor</h2>
-			  <fx-droptarget>
-			  </fx-droptarget>
-		  </div>
-		  <div class="column">
-			<h2>Third Column</h2>
-			  <fx-droptarget>
-		  		<div draggable="true">
-				  <h3>Annotations panel</h3>
-				  <p><fx-control ref="my-data"></fx-control></p>
-				</div>
-			  </fx-droptarget>
-		  </div>
-		</div>
-      </fx-fore>
+            </div>
+            <div class="column">
+                <h2>Second Column: The main editor</h2>
+            </div>
+            <div class="bottom">
+                <h2>Third Column</h2>
+                <fx-droptarget>
+                    <div draggable="true">
+                        <h3>Annotations panel</h3>
+                        <p>
+                            <fx-control ref="my-data"></fx-control>
+                        </p>
+                    </div>
+                </fx-droptarget>
+            </div>
+        </div>
+-->
+    </fx-fore>
 
-	  <fx-droptarget ref="instance()/something"></fx-droptarget>
+    <fx-droptarget ref="instance()/something"></fx-droptarget>
 
-	</div>
-  </body>
-  <script type="module" src="./demo.js"></script>
+</div>
+</body>
+<script type="module" src="./demo.js"></script>
 
 </html>
