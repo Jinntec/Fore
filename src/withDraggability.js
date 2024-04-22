@@ -73,8 +73,12 @@ class DraggableComponent extends superclass {
 	}
 
     _dragOver(event) {
+		console.log('dragover ',this);
+		console.log('event target ',event.target);
+		if(event.target.classList.contains('no-drop')) {
+			return false;
+		}
         event.stopPropagation();
-
         const repeatItem = event.target.closest('fx-repeatitem');
 		if (!this.getOwnerForm().draggedItem) {
 			// Not dragging
@@ -86,6 +90,19 @@ class DraggableComponent extends superclass {
 			return;
 		}
 		const draggedItem = this.getOwnerForm().draggedItem;
+
+		// todo: here we need to debounce to keep it efficient
+		if(this.hasAttribute('accept')){
+			const accept = this.getAttribute('accept');
+			const accepted =  document.querySelectorAll(accept);
+			const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ? true: false ;
+			console.log('accepted',isAccepted);
+			this.accepted = isAccepted;
+			if(!isAccepted){
+				event.target.classList.add('no-drop');
+			}
+		}
+
 		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
 		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
 		if (thisClosestRepeat?.id === draggingClosestRepeat?.id) {
@@ -99,6 +116,7 @@ class DraggableComponent extends superclass {
 
     _dragLeave(event){
 		this.classList.remove('drag-over');
+		this.classList.remove('no-drop');
     }
 
 	_dragEnd (event) {
@@ -129,9 +147,57 @@ class DraggableComponent extends superclass {
         this.classList.remove('drag-over');
         event.stopPropagation();
 		if (this.localName === 'fx-droptarget') {
-			this.replaceChildren(this.getOwnerForm().draggedItem);
+
+
+			if(this.children.length !== 0){
+				console.log("we have to do something");
+			}
+
+			const draggedItem = this.getOwnerForm().draggedItem;
+
+			if(this.hasAttribute('accept')){
+				const accept = this.getAttribute('accept');
+				const accepted =  document.querySelectorAll(accept);
+				const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ? true: false ;
+				console.log('accepted',isAccepted);
+				if(!isAccepted){
+					this.classList.remove('no-drop');
+					return;
+				}
+			}
+			if(draggedItem === this){
+				return;
+			}
+			if(draggedItem.localName === 'fx-droptarget'){
+				if(this.hasAttribute('drop-position')){
+					this.replaceChildren(draggedItem);
+					event.preventDefault();
+					return;
+				}
+				if(this.parentNode.lastElementChild === this){
+					this.parentNode.append(draggedItem);
+					event.stopImmediatePropagation();
+					// return;
+				}else{
+					this.parentNode.insertBefore(draggedItem,this);
+				}
+			}else{
+				this.replaceChildren(draggedItem);
+			}
+
+/*
+			if(this.hasAttribute('drop-position')){
+				if(this.getAttribute('drop-position') === 'before'){
+					this.parentNode.insertBefore(draggedItem,this);
+				} else {
+					this.parentNode.append(draggedItem);
+				}
+			}else{
+				this.replaceChildren(draggedItem);
+			}
+*/
 			event.preventDefault();
-		this.getOwnerForm().getModel().updateModel();
+			this.getOwnerForm().getModel().updateModel();
 			this.getOwnerForm().refresh(true);
 			return;
 		}
@@ -139,8 +205,6 @@ class DraggableComponent extends superclass {
 		if (!dataNode) {
 			return;
 		}
-
-
 
 		if (this.localName === 'fx-repeat') {
 			// We are sure we'll handle this event!

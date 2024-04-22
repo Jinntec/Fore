@@ -1,5 +1,5 @@
 import { foreElementMixin } from '../ForeElementMixin.js';
-import { withDraggability } from '../withDraggability';
+import { withDraggability } from '../withDraggability.js';
 
 class FxDroptarget extends withDraggability(foreElementMixin(HTMLElement)) {
 }

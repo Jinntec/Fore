@@ -180,7 +180,6 @@ export class FxFore extends HTMLElement {
         `;
 
         const html = `
-           <noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
 <!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>

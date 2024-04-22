@@ -51,10 +51,28 @@
 			background: #ddd;
 			width: 100vw;
 		}
+        main{
+            display: flex;
+            flex-wrap: wrap;
+            gap:1rem;
+        }
+        main fx-droptarget{
+            width: 45%;
+            background: #1b9dec;
+            height:20rem;
+        }
+        .drag-over{
+            background: #00c853;
+        }
+        .no-drop{
+            background: red;
+        }
     </style>
 </head>
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
+
 <div class="wrapper">
     <fx-fore>
         <fx-model>
@@ -65,16 +83,36 @@
             </fx-instance>
         </fx-model>
 
+        <h1>Drag and drop</h1>
         <main>
-            <h1>Drag and drop</h1>
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Tasks</div>
+            </fx-droptarget>
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Updates</div>
+            </fx-droptarget>
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Favs</div>
+            </fx-droptarget>
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Misc</div>
+            </fx-droptarget>
+<!--
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Times</div>
+            </fx-droptarget>
+            <fx-droptarget draggable="true" accept="fx-droptarget">
+                <div>Locations</div>
+            </fx-droptarget>
+-->
         </main>
 		<aside>
-			<fx-droptarget>
+			<fx-droptarget drop-position="into" accept=".facs">
 			</fx-droptarget>
 		</aside>
         <footer>
-			<fx-droptarget effect="move"> <!-- Move is the default. -->
-				<div draggable="true">
+			<fx-droptarget effect="move" accept=".facs"> <!-- Move is the default. -->
+				<div class="facs" draggable="true">
 					<h3>Facsimile panel</h3>
 					<p>Form / summary</p>
 				</div>
