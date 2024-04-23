@@ -286,6 +286,12 @@
         #r-task fx-repeatitem{
             cursor:grabbing;
         }
+
+		.match {
+			background-color: lightyellow;
+			border-color: yellow;
+			border-width: medium;
+		}
     </style>
 </head>
 <body>
@@ -313,11 +319,17 @@
                     <confirm>false</confirm>
                 </data>
             </fx-instance>
+			<fx-instance id="vars">
+			  <data>
+				<search></search>
+			  </data>
+			</fx-instance>
+
         </fx-model>
         <h1>Kanban Board</h1>
         <main>
             <header>
-                <fx-control ref="instance('vars')/search">
+                <fx-control ref="instance('vars')/search" update-event="input" >
                     <label for="searchCtl">Search</label>
                     <input id="searchCtl" type="search">
                 </fx-control>
@@ -341,14 +353,18 @@
                         </fx-trigger>
                         <fx-trigger class="iconbtn deletecolumn">
                             <button>x</button>
-                            <fx-delete ref="." if="instance('default')/confirm"></fx-delete>
+                            <fx-delete ref="." if="instance('default')/confirm = true()"></fx-delete>
                         </fx-trigger>
 
                     </div>
                     <!--                <div>-->
                     <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
                         <template draggable="true" drop-target="r-task">
-                            <div class="card" tabindex="1" data-cy="{../@name}-{count(preceding-sibling::task)}" data-cy-name="{@name}">
+                          <div
+							class="card {let $search := instance('vars')/search return if (string-length($search) >= 1 and @name => contains($search)) then 'match' else ''}"
+							tabindex="1"
+							data-cy="{../@name}-{count(preceding-sibling::task)}"
+							data-cy-name="{@name}">
                                 <fx-control id="task" class="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
                                     <button>x</button>

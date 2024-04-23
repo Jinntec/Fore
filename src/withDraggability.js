@@ -19,18 +19,13 @@ class DraggableComponent extends superclass {
 	constructor() {
 		super();
 
-		this.dragstart = null;
-		this.dragover = null;
-		this.dragleave = null;
-		this.dragend = null;
-		this.drop = null;
     }
 
 	connectedCallback() {
-        this.drop = this.addEventListener('drop', event => this._drop(event));
-        this.dragOver = this.addEventListener('dragover', event => this._dragOver(event));
-        this.dragleave = this.addEventListener('dragleave', event => this._dragLeave(event));
-        this.dragend = this.addEventListener('dragend', event => this._dragEnd(event));
+        this.addEventListener('drop', this._drop);
+        this.addEventListener('dragover', this._dragOver);
+        this.addEventListener('dragleave', this._dragLeave);
+        this.addEventListener('dragend', this._dragEnd);
 
         if (this.hasAttribute('draggable')) {
 			this.initDragAndDrop();
@@ -39,26 +34,16 @@ class DraggableComponent extends superclass {
 
 	initDragAndDrop() {
 		if (isAlsoDraggable) {
-            this.dragstart = this.addEventListener('dragstart', event => this._dragStart(event));
+            this.addEventListener('dragstart', event => this._dragStart(event));
 		}
 	}
 
 	disconnectedCallback() {
-		if (this.drop) {
-            this.removeEventListener('drop', this.drop);
-		}
-		if (this.dragover) {
-            this.removeEventListener('dragover', this.dragover);
-		}
-		if (this.dragleave) {
-            this.removeEventListener('dragleave', this.dragleave);
-		}
-		if (this.dragend) {
-            this.removeEventListener('dragend', this.dragend);
-		}
-		if (this.dragstart) {
-            this.removeEventListener('dragstart', this.dragstart);
-		}
+        this.removeEventListener('drop', this._drop);
+        this.removeEventListener('dragover', this._dragOver);
+        this.removeEventListener('dragleave', this._dragLeave);
+		this.removeEventListener('dragend', this._dragEnd);
+        this.removeEventListener('dragstart', this.dragStart);
 	}
 
 	/*
@@ -89,13 +74,13 @@ class DraggableComponent extends superclass {
 			// Ignore: drop on itself
 			return;
 		}
-		const draggedItem = this.getOwnerForm().draggedItem;
+		const {draggedItem} = this.getOwnerForm();
 
 		// todo: here we need to debounce to keep it efficient
 		if(this.hasAttribute('accept')){
 			const accept = this.getAttribute('accept');
 			const accepted =  document.querySelectorAll(accept);
-			const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ? true: false ;
+			const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ;
 			console.log('accepted',isAccepted);
 			this.accepted = isAccepted;
 			if(!isAccepted){
@@ -131,7 +116,7 @@ class DraggableComponent extends superclass {
 			return null;
 		}
 
-		const draggedItem = this.getOwnerForm().draggedItem;
+		const {draggedItem} = this.getOwnerForm();
 		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
 		const draggingClosestRepeat = draggedItem.hasAttribute('id') ? draggedItem : draggedItem.closest('[id]');
 		if (thisClosestRepeat?.id !== draggingClosestRepeat?.id) {
@@ -153,12 +138,12 @@ class DraggableComponent extends superclass {
 				console.log("we have to do something");
 			}
 
-			const draggedItem = this.getOwnerForm().draggedItem;
+			const {draggedItem} = this.getOwnerForm();
 
 			if(this.hasAttribute('accept')){
 				const accept = this.getAttribute('accept');
 				const accepted =  document.querySelectorAll(accept);
-				const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ? true: false ;
+				const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ;
 				console.log('accepted',isAccepted);
 				if(!isAccepted){
 					this.classList.remove('no-drop');
@@ -178,14 +163,18 @@ class DraggableComponent extends superclass {
 					this.parentNode.append(draggedItem);
 					event.stopImmediatePropagation();
 					// return;
-				}else{
-					this.parentNode.insertBefore(draggedItem,this);
+				}else if (draggedItem === this.previousElementSibling) {
+					// insertBefore of draggedItem before us would be a no-op: it is already before us.
+					// Instead: insert _after_ us, so we can still do something!
+					this.parentNode.insertBefore(draggedItem,  this.nextElementSibling);
+				} else {
+					this.parentNode.insertBefore(draggedItem, this);
 				}
 			}else{
 				this.replaceChildren(draggedItem);
 			}
 
-/*
+			/*
 			if(this.hasAttribute('drop-position')){
 				if(this.getAttribute('drop-position') === 'before'){
 					this.parentNode.insertBefore(draggedItem,this);
