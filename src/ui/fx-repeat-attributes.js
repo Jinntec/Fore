@@ -3,6 +3,7 @@ import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import {foreElementMixin} from "../ForeElementMixin.js";
+import {withDraggability} from "../withDraggability.js";
 
 /**
  * `fx-repeat`
@@ -19,7 +20,7 @@ import {foreElementMixin} from "../ForeElementMixin.js";
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
+export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLElement), false) {
   static get properties() {
     return {
       ...super.properties,
@@ -51,6 +52,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
     super();
     this.ref = '';
     this.dataTemplate = [];
+    this.isDraggable=null;
     this.focusOnCreate = '';
     this.initDone = false;
     this.repeatIndex = 1;
@@ -87,7 +89,7 @@ export class FxRepeatAttributes extends foreElementMixin(HTMLElement) {
   }
 
   get index() {
-    return this.getAttribute('index');
+        return parseInt(this.getAttribute('index'), 10);
   }
 
   set index(idx) {

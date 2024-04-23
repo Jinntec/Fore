@@ -51,20 +51,20 @@
 			background: #ddd;
 			width: 100vw;
 		}
-        main{
+        .portal{
             display: flex;
             flex-wrap: wrap;
             gap:1rem;
         }
-        main fx-droptarget{
+        .portal fx-droptarget{
             width: 45%;
             background: #1b9dec;
             height:20rem;
         }
-        .drag-over{
+        fx-droptarget.drag-over{
             background: #00c853;
         }
-        .no-drop{
+        fx-droptarget.no-drop{
             background: red;
         }
     </style>
@@ -84,19 +84,27 @@
         </fx-model>
 
         <h1>Drag and drop</h1>
+        <p>This </p>
         <main>
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Tasks</div>
-            </fx-droptarget>
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Updates</div>
-            </fx-droptarget>
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Favs</div>
-            </fx-droptarget>
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Misc</div>
-            </fx-droptarget>
+            <section class="portal">
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Tasks</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Updates</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Favs</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Misc</div>
+                </fx-droptarget>
+            </section>
+            <section>
+                <div draggable="true" drop-action="copy">Copy me!</div>
+
+                <fx-droptarget></fx-droptarget>
+            </section>
 <!--
             <fx-droptarget draggable="true" accept="fx-droptarget">
                 <div>Times</div>
@@ -105,6 +113,7 @@
                 <div>Locations</div>
             </fx-droptarget>
 -->
+
         </main>
 		<aside>
 			<fx-droptarget drop-position="into" accept=".facs">

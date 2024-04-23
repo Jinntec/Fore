@@ -1,4 +1,4 @@
-describe('binding.html', () => {
+describe('kanban.html', () => {
 	beforeEach(() => {
 		cy.visit('kanban.html');
 	});

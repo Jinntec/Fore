@@ -364,6 +364,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     _initTemplate() {
         this.template = this.querySelector('template');
         // console.log('### init template for repeat ', this.id, this.template);
+        // todo: this.dropTarget not needed?
         this.dropTarget = this.template.getAttribute('drop-target');
         this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
 
