@@ -26,16 +26,6 @@ class DraggableComponent extends superclass {
         this.addEventListener('dragover', this._dragOver);
         this.addEventListener('dragleave', this._dragLeave);
         this.addEventListener('dragend', this._dragEnd);
-
-        if (this.hasAttribute('draggable')) {
-			this.initDragAndDrop();
-		}
-	}
-
-	initDragAndDrop() {
-		if (isAlsoDraggable) {
-            this.addEventListener('dragstart', event => this._dragStart(event));
-		}
 	}
 
 	disconnectedCallback() {
@@ -43,18 +33,6 @@ class DraggableComponent extends superclass {
         this.removeEventListener('dragover', this._dragOver);
         this.removeEventListener('dragleave', this._dragLeave);
 		this.removeEventListener('dragend', this._dragEnd);
-        this.removeEventListener('dragstart', this.dragStart);
-	}
-
-	/*
-	 * TODO: unneeded?
-	 */
-	_dragStart(event) {
-		event.dataTransfer.dropEffect = 'move';
-
-		this.getOwnerForm().draggedItem = this;
-
-		event.stopPropagation();
 	}
 
     _dragOver(event) {
@@ -171,7 +149,7 @@ class DraggableComponent extends superclass {
 					this.parentNode.insertBefore(draggedItem, this);
 				}
 			}else{
-				this.replaceChildren(draggedItem);
+				this.appendChild(draggedItem);
 			}
 
 			/*
