@@ -1,5 +1,5 @@
 import {foreElementMixin} from '../ForeElementMixin.js';
-import {evaluateXPathToBoolean, resolveId} from '../xpath-evaluation.js';
+import {evaluateXPathToBoolean, resolveId, evaluateXPath} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {Fore} from '../fore.js';
 import {FxFore} from '../fx-fore.js';
@@ -88,12 +88,24 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 type: String,
             },
             /**
-             * boolean XPath expression. If true loop will be executed. If an ifExpr is present this also needs to be true
-             * to actually run the action.
+             * boolean XPath expression. If true loop will be executed. If an ifExpr is present this
+             * also needs to be true to actually run the action.
              */
             whileExpr: {
                 type: String,
             },
+			/**
+			 * The iterate attribute can be added to any XForms action. It contains an expression
+			 * that is evaluated once using the in-scope evaluation context before the action is
+			 * executed, which will result in a sequence of items. The action will be executed with
+			 * each item in the sequence as its context. This context replaces the default in scope
+			 * evaluation context.
+			 *
+			 * The interaction with `@while` and `@if` is undefined.
+			 */
+			iterateExpr: {
+				type: String
+			}
         };
     }
 
@@ -132,6 +144,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         this.ifExpr = this.hasAttribute('if') ? this.getAttribute('if') : null;
         this.whileExpr = this.hasAttribute('while') ? this.getAttribute('while') : null;
         this.delay = this.hasAttribute('delay') ? Number(this.getAttribute('delay')) : 0;
+		this.iterateExpr = this.hasAttribute('iterate') ? this.getAttribute('iterate') : null;
 
         this._addUpdateListener();
 
@@ -186,8 +199,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
      */
     async execute(e) {
         console.log(this, this.event);
-        // console.log('execute', this.event);
-
 
         if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target !== window ){
             /*
@@ -219,19 +230,8 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             );
         }
 
-        // console.log('executing', this);
-        // console.log('executing e', e);
-        // console.log('executing e phase', e.eventPhase);
+		// Outermost handling
         if (FxFore.outermostHandler === null) {
-            // console.time('outermostHandler');
-            /*
-                        console.info(
-                            `%coutermost Action `,
-                            'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                            this,
-                        );
-            */
-            // console.log('starting outermost handler',this);
             FxFore.outermostHandler = this;
             this.dispatchEvent(new CustomEvent('outermost-action-start', {
                 composed: true,
@@ -240,16 +240,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             }));
         }
 
-        /*
-                if (FxFore.outermostHandler !== this) {
-                    console.info(
-                        `%cAction `,
-                        'background:orange; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                        this,
-                    );
-                }
-        */
-        // console.log('>>> outermostHandler', FxFore.outermostHandler);
 
         if (e) {
             this.currentEvent = e;
@@ -265,51 +255,26 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             this.nodeset = this.targetElement.nodeset;
         }
 
-        // First check if 'if' condition is true - otherwise exist right away
+		// Order of application between if / while and iterate is undefined. See
+		// https://www.w3.org/MarkUp/Forms/wiki/@iterate
+		if (this.iterateExpr) {
+			// Same as whileExpr, let it go update UI afterwards
+			await this.handleIterateExpr();
+			this._finalizePerform(resolveThisEvent);
+			return;
+		}
+
+        // Check if 'if' condition is true - otherwise exist right away
         if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
             this._finalizePerform(resolveThisEvent);
             return;
         }
 
-        // console.log('performing action', this);
-
         if (this.whileExpr) {
-            // While: while the condition is true, delay a bit and execute the action
-            const loop = async () => {
-                // Start by waiting
-                await wait(this.delay || 0);
-
-                if (!XPathUtil.contains(this.getOwnerForm(), this)) {
-                    // We are no longer in the document. Stop working
-                    return;
-                }
-
-                if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
-                    // Done with iterating
-                    return;
-                }
-
-                // Perform the action once. But quit if it errored
-                if (!this.performSafe()) {
-                    return;
-                }
-
-                // Go for one more iteration
-                if (this.delay) {
-                    // If we have a delay, fire and forget this.
-                    // Otherwise, if we have no delay, keep waiting for all iterations to be done.
-                    // The while is then uninterruptable and immediate
-                    loop();
-                    return;
-                }
-                await loop();
-            };
-
-            // After loop is done call actionPerformed to update the model and UI
-            await loop();
-            this._finalizePerform(resolveThisEvent);
-
-            return;
+			// After loop is done call actionPerformed to update the model and UI
+            await this.handleWhileExpr();
+			this._finalizePerform(resolveThisEvent);
+			return;
         }
 
         if (this.delay) {
@@ -326,6 +291,68 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
         await this.performSafe();
         this._finalizePerform(resolveThisEvent);
     }
+
+	async handleWhileExpr () {
+        // While: while the condition is true, delay a bit and execute the action
+        // Start by waiting
+        await wait(this.delay || 0);
+
+        if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+            // We are no longer in the document. Stop working
+            return;
+        }
+
+        if (!evaluateXPathToBoolean(this.whileExpr, getInScopeContext(this), this)) {
+            // Done with iterating
+            return;
+        }
+
+        // Perform the action once. But quit if it failed
+        if (!this.performSafe()) {
+            return;
+        }
+
+        // Go for one more iteration
+        if (this.delay) {
+            // If we have a delay, fire and forget this.
+            // Otherwise, if we have no delay, keep waiting for all iterations to be done.
+            // The while is then uninterruptable and immediate
+
+			this.handleWhileExpr();
+            return;
+        }
+
+
+        await this.handleWhileExpr();
+	}
+
+	async handleIterateExpr () {
+		// Iterate: get the context sequence and perform the action once per item.
+        const contextSequence = evaluateXPath(this.iterateExpr, getInScopeContext(this), this);
+
+		if (contextSequence.length === 0) {
+			return;
+		}
+
+        if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+            // We are no longer in the document. Stop working
+            return;
+        }
+
+		for (const item of contextSequence) {
+			if (this.delay) {
+				await wait(this.delay || 0);
+			}
+
+			// This will be picked up in `getInscopeContext`
+			this.currentContext = item;
+
+			// Perform the action once. But quit if it failed
+			if (!await this.performSafe()) {
+				return;
+			}
+		}
+	}
 
     _finalizePerform(resolveThisEvent) {
         this.currentEvent = null;

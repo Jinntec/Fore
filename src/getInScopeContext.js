@@ -69,6 +69,11 @@ export default function getInScopeContext(node, ref) {
         return parentBind.nodeset;
     }
 
+	const parentActionWithIterateExpr = parentElement.matches('[iterate]') ? parentElement : XPathUtil.getClosest('[iterate]', parentElement.parentNode);
+	if (parentActionWithIterateExpr && parentActionWithIterateExpr.currentContext) {
+		return parentActionWithIterateExpr.currentContext;
+	}
+
     const repeatItem = XPathUtil.getClosest('fx-repeatitem', parentElement);
     if (repeatItem) {
         if (node.nodeName === 'context') {

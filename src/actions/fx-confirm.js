@@ -18,15 +18,15 @@ export class FxConfirm extends FxAction {
 	}
 
   connectedCallback() {
-    if(super.connectedCallback){
-    super.connectedCallback();
+    if (super.connectedCallback){
+		super.connectedCallback();
     }
     this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
   }
 
   async perform() {
     if (window.confirm(this.message)) {
-      super.perform();
+      await super.perform();
     }
   }
 }
