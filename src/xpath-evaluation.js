@@ -339,6 +339,8 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'fore-attr':
         case 'index':
         case 'instance':
+        case 'json2xml':
+        case 'xml2Json':
         case 'log':
         case 'parse':
         case 'local-date':
@@ -1037,6 +1039,131 @@ registerCustomXPathFunction(
     'item()?',
     instance,
 );
+const getAttributes = (value) => {
+    if (Array.isArray(value)) {
+        return ` type="array"`;
+    } else if (typeof value === 'number') {
+        return ` type="number"`;
+    } else if (typeof value === 'boolean') {
+        return ` type="boolean"`;
+    }
+    return '';
+};
+
+const jsonToXml = (dynamicContext, json) => {
+    const escapeXml = (str) => {
+        return str.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g, (char) => {
+            return `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`;
+        });
+    };
+
+    const convert = (obj, parent) => {
+        const type = typeof obj;
+        if (type === 'number') {
+            parent.setAttribute('type', 'number');
+            parent.textContent = obj.toString();
+        } else if (type === 'boolean') {
+            parent.setAttribute('type', 'boolean');
+            parent.textContent = obj.toString();
+        } else if (obj === null) {
+            const node = document.createElement('_');
+            node.setAttribute('type', 'null');
+            parent.appendChild(node);
+        } else if (type === 'string') {
+            parent.textContent = escapeXml(obj);
+        } else if (Array.isArray(obj)) {
+            parent.setAttribute('type', 'array');
+            obj.forEach((item) => {
+                const node = document.createElement('_');
+                convert(item, node);
+                node.textContent = item;
+                parent.appendChild(node);
+            });
+        } else if (type === 'object') {
+            parent.setAttribute('type', 'object');
+            Object.entries(obj).forEach(([key, value]) => {
+                if(value){
+                    const childNode = document.createElement(key.replace(/[^a-zA-Z0-9_]/g, '_'));
+                    convert(value, childNode);
+                    parent.appendChild(childNode);
+                }
+            });
+        }
+    };
+
+    const root = document.createElement('json');
+    if(Array.isArray(json)){
+        root.setAttribute('type', 'array');
+    }else{
+        root.setAttribute('type', 'object');
+    }
+    convert(json, root);
+    // return root.outerHTML;
+    console.log('xml',root)
+    return root;
+};
+
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'json2xml'},
+    ['item()?'],
+    'item()?',
+    jsonToXml
+);
+const xmlToJson = (dynamicContext, xml) => {
+    const isElementNode = (node) => {
+        return node.nodeType === Node.ELEMENT_NODE;
+    };
+
+    const isTextNode = (node) => {
+        return node.nodeType === Node.TEXT_NODE;
+    };
+
+    const parseNode = (node) => {
+        if (isElementNode(node)) {
+            const obj = {};
+            if (node.hasAttributes()) {
+                obj['type'] = node.getAttribute('type');
+            }
+            if (node.childNodes.length === 1 && isTextNode(node.firstChild)) {
+                return node.textContent;
+            }
+            for (const child of node.childNodes) {
+                const childName = child.nodeName;
+                const childValue = parseNode(child);
+                if (obj[childName]) {
+                    if (!Array.isArray(obj[childName])) {
+                        obj[childName] = [obj[childName]];
+                    }
+                    obj[childName].push(childValue);
+                } else {
+                    obj[childName] = childValue;
+                }
+            }
+            return obj;
+        } else if (isTextNode(node)) {
+            return node.textContent;
+        }
+
+    };
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xml, 'application/xml');
+    const root = xmlDoc.documentElement;
+    return parseNode(root);
+};
+registerCustomXPathFunction(
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'xmltoJson'},
+    ['item()?'],
+    'item()?',
+    xmlToJson
+);
+
+/*
+// Example usage:
+const xml = '<json type="object"><given>Mark</given><family>Smith</family></json>';
+console.log(xmlToJson(xml));
+*/
+
 
 registerCustomXPathFunction(
     {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends'},

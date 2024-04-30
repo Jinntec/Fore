@@ -22,7 +22,8 @@
     <div class="wrapper">
 
       <h1>The <code>iterate</code> attribute</h1>
-      <p>The <code>iterate</code> attribute is allowed on actions foreach of the the <code>iterate</code> finds
+      <p>The <code>iterate</code> attribute is allowed on all action elements. It takes an XPath expression and
+         executes once for each node that matches the expression.</p>
       <p>In this example the <code>message</code> action is executed for all of the messages in the instance</p>
       <demo-snippet>
         <template>
@@ -40,13 +41,14 @@
             <fx-trigger>
               <button data-cy="show-messages">Show messages</button>
               <fx-message iterate="./message">There is a message! {.}</fx-message>
+              <fx-refresh></fx-refresh>
             </fx-trigger>
           </fx-fore>
         </template>
       </demo-snippet>
 
-      <h2>Deleting using iterate</h2>
-      <p>The iterate attribute can be useful to 'empty out' a set of nodes.</p>
+      <h2>Some examples using iterate</h2>
+      <p>The iterate attribute can be useful to 'empty out' a set of nodes, sort it, or apply all kinds of conditions to it.</p>
       <demo-snippet id="crud-demo">
         <template>
           <fx-fore>

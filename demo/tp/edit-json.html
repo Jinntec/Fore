@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper{
+        }
+        .wrapper > * {
+            padding: 1rem;
+        }
+        nav{
+            background: var(--paper-blue-900);
+        }
+        header{
+            background:var(--paper-blue-700);
+            color:white;
+        }
+        main{
+            background: var(--paper-blue-100);
+            height:100%;
+        }
+        fx-control, fx-repeat{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <fx-fore>
+        <fx-model>
+            <fx-instance id="default" type="xml">
+                <data></data>
+            </fx-instance>
+            <fx-instance id="json-input" src="profile.json" type="json"></fx-instance>
+            <fx-instance id="json-output"></fx-instance>
+
+            <fx-action event="model-construct-done">
+                <fx-replace ref="instance()" with="json2xml(instance('json-input'))"></fx-replace>
+            </fx-action>
+
+        </fx-model>
+    <div class="wrapper">
+
+        <nav></nav>
+        <header>
+            <h1>My beautiful page</h1>
+            <section id="intro"></section>
+        </header>
+        <main>
+<!--
+            {?version}
+            {?pkg?abbrev}
+            {?theme?fonts?content}
+            {?ignore?*[1]}
+-->
+
+
+            <fx-control ref="*:version">
+                <label>Base font</label>
+            </fx-control>
+            <fx-repeat ref="*:ignore/*">
+                <template>
+                    <fx-control ref=".">
+                        <label>Ignore</label>
+                    </fx-control>
+                </template>
+            </fx-repeat>
+            <fx-trigger>
+                <button>convertToJSON</button>
+                <fx-replace ref="instance('json-output')" with="xml2json(instance())"></fx-replace>
+            </fx-trigger>
+        </main>
+    </div>
+    </fx-fore>
+
+    <script type="module" src="../../index.js"></script>
+</body>
+
+</html>
