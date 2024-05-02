@@ -67,6 +67,18 @@
         fx-droptarget.no-drop{
             background: red;
         }
+
+		.copy > * {
+            width: 45%;
+            height:2rem;
+			margin-top: 10px;
+		}
+		.first {
+            background: teal;
+		}
+		.second {
+            background: orange;
+		}
     </style>
 </head>
 <body>
@@ -100,19 +112,13 @@
                     <div>Misc</div>
                 </fx-droptarget>
             </section>
-            <section>
-                <div draggable="true" drop-action="copy">Copy me!</div>
+            <section class="copy">
+                <div class="first" draggable="true" drop-action="copy">Copy me!</div>
+                <div class="second" draggable="true" drop-action="copy">Or me!</div>
 
-                <fx-droptarget></fx-droptarget>
+                <fx-droptarget drop-action="replace|append|ignore">Drop in here!</fx-droptarget>
+                <fx-droptarget drop-action="ignore">Drop in here to remove it!</fx-droptarget>
             </section>
-<!--
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Times</div>
-            </fx-droptarget>
-            <fx-droptarget draggable="true" accept="fx-droptarget">
-                <div>Locations</div>
-            </fx-droptarget>
--->
 
         </main>
 		<aside>
@@ -127,28 +133,7 @@
 				</div>
 			</fx-droptarget>
 		</footer>
-<!--
-        <div class="columns">
-            <div class="column">
-                <h2>First Column</h2>
 
-            </div>
-            <div class="column">
-                <h2>Second Column: The main editor</h2>
-            </div>
-            <div class="bottom">
-                <h2>Third Column</h2>
-                <fx-droptarget>
-                    <div draggable="true">
-                        <h3>Annotations panel</h3>
-                        <p>
-                            <fx-control ref="my-data"></fx-control>
-                        </p>
-                    </div>
-                </fx-droptarget>
-            </div>
-        </div>
--->
     </fx-fore>
 
     <fx-droptarget ref="instance()/something"></fx-droptarget>

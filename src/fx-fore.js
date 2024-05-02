@@ -935,9 +935,18 @@ export class FxFore extends HTMLElement {
         console.timeEnd('init');
 
 		this.dragstart = this.addEventListener('dragstart', (event) => {
-			event.dataTransfer.dropEffect = 'move';
+			const draggedItem = event.target.closest('[draggable="true"]');
+			if (draggedItem.getAttribute('drop-action') === 'copy') {
+				event.dataTransfer.dropEffect = 'copy';
+				event.dataTransfer.effectAllowed = 'copy';
 
-			this.draggedItem = event.target.closest('[draggable="true"]');
+				this.draggedItem = draggedItem.cloneNode(true);
+			} else {
+				event.dataTransfer.dropEffect = 'move';
+				event.dataTransfer.effectAllowed = 'move';
+				this.draggedItem = draggedItem;
+			}
+
 		});
     }
 
