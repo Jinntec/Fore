@@ -62,12 +62,22 @@ export default function getInScopeContext(node, ref) {
     // console.log('getInScopeContext parent', parentElement);
 
     if(parentElement.nodeName === 'FX-FORE'){
-        return parentElement.getModel().getDefaultInstance().getDefaultContext();
+        const context = parentElement.getModel().getDefaultInstance()?.getDefaultContext();
+		if (!context) {
+			// Edge-case, we are in an inner fore. Use the outer fore's default context
+			return getInScopeContext(parentElement.parentNode, ref);
+		}
+		return context;
     }
     const parentBind = XPathUtil.getClosest('[ref]', parentElement.parentNode);
     if (parentBind && (parentBind.nodeName === 'FX-GROUP' || parentBind.nodeName === 'FX-CONTROL')) {
         return parentBind.nodeset;
     }
+
+	const parentActionWithIterateExpr = parentElement.matches('[iterate]') ? parentElement : XPathUtil.getClosest('[iterate]', parentElement.parentNode);
+	if (parentActionWithIterateExpr && parentActionWithIterateExpr.currentContext) {
+		return parentActionWithIterateExpr.currentContext;
+	}
 
     const repeatItem = XPathUtil.getClosest('fx-repeatitem', parentElement);
     if (repeatItem) {

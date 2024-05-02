@@ -1,0 +1,42 @@
+{
+  "id": "https://e-editiones.org/app/tei-publisher/base",
+  "version": "1.0.0",
+  "pkg": {
+    "abbrev": "base-app",
+    "version": "1.0.0",
+    "title": "TEI Publisher: Custom App Base Profile",
+    "website": "http://tei-publisher.com",
+    "user": {
+      "name": "tei",
+      "group": "tei",
+      "password": "simple"
+    },
+    "permissions": "rw-r--r--"
+  },
+  "scripts": {
+    "webcomponents": "2.19.2",
+    "fore": "1.0.0",
+    "cdn": "https://cdn.jsdelivr.net/npm/@teipublisher/pb-components"
+  },
+  "data": "data",
+  "defaults": {
+    "view": "div",
+    "search": "div",
+    "odd": "teipublisher.odd",
+    "template": ""
+  },
+  "theme": {
+    "fonts": {
+      "base": "'Roboto', 'Noto', sans-serif",
+      "content": "Junicode, Georgia, 'Times New Roman', serif",
+      "heading": "Oswald, Verdana, Helvetica, sans-serif"
+    }
+  },
+  "odds": [
+    "teipublisher.odd",
+    "docx.odd"
+  ],
+  "ignore": [
+    "repo.xml"
+  ]
+}

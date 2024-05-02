@@ -83,6 +83,17 @@
             <fx-bind ref="listitem"></fx-bind>
             <fx-bind ref="label"></fx-bind>
         </fx-model>
+<fx-control ref="selected" update-event="input">
+                        <fx-items ref="instance('list')?*" class="widget">
+                            <template>
+                                  <span class="fx-checkbox">
+                                    <input id="check" name="option" type="checkbox" value="{value}"/>
+                                   <label>{name}</label>
+                                  </span>
+                            </template>
+                        </fx-items>
+                    </fx-control>
+
         <fx-group>
 
             <h1>The <code>fx-control</code> element</h1>

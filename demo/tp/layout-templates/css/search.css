@@ -1,0 +1,61 @@
+@import "../Lib/basic.css";
+@import "vars.css";
+@import "../lib/nav.css";
+
+aside {
+    grid-area: aside;
+    background: var(--paper-blue-200);
+    height: 100%;
+}
+footer{
+    grid-area:footer;
+}
+header {
+    grid-area: header;
+}
+
+main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: auto;
+}
+main > * {
+    padding: 1rem;
+    background: var(--paper-blue-500);
+    overflow: auto;
+}
+main > section{
+    padding: var(--tp-block-spacing-small);
+}
+
+nav {
+    grid-area: nav;
+}
+.result-header{
+    overflow: visible;
+}
+.result-list{
+    flex-grow: 10;
+    min-height: 80vh;
+}
+.wrapper {
+    display: grid;
+    grid-template-areas: "nav nav" "header header" "aside main" "footer footer";
+    grid-template-columns: minmax(10rem , 1fr) 5fr;
+    grid-template-rows: 4rem 8rem auto 8rem;
+    width: 100vw;
+    height: 100vh;
+    background: lightgrey;
+}
+.wrapper > * {
+    padding: 1rem;
+}
+
+
+/*
+header, main{
+    margin-left:10rem;
+}
+*/

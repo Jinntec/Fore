@@ -18,7 +18,7 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
-  /**
+ /**
    * Loads and return a piece of HTML
    * @param url - the Url to load from
    * @returns {Promise<string>}
@@ -412,6 +412,7 @@ export class Fore {
     return 'done';
   }
 
+/*
   static evaluateAttributeTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
     if (matches) {
@@ -427,6 +428,7 @@ export class Fore {
     }
     return expr;
   }
+*/
 
   static fadeInElement(element) {
     const duration = 600;

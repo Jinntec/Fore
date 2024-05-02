@@ -26,6 +26,7 @@ import {FxRepeatAttributes} from './ui/fx-repeat-attributes.js';
  */
 export class FxFore extends HTMLElement {
     static outermostHandler = null;
+    static draggedItem = null;
 
     static get properties() {
         return {
@@ -103,6 +104,8 @@ export class FxFore extends HTMLElement {
 		// updates are included in that one
 		this.outermostHandler = null;
 
+		this.copiedElements = new WeakSet();
+
         const style = `
             :host {
                 display: block;
@@ -179,7 +182,6 @@ export class FxFore extends HTMLElement {
         `;
 
         const html = `
-           <noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
 <!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
@@ -390,6 +392,7 @@ export class FxFore extends HTMLElement {
     }
 
     disconnectedCallback() {
+		this.removeEventListener('dragstart', this.dragstart);
         /*
         this.removeEventListener('model-construct-done', this._handleModelConstructDone);
         this.removeEventListener('message', this._displayMessage);
@@ -530,6 +533,7 @@ export class FxFore extends HTMLElement {
             this._updateTemplateExpressions();
             this._scanForNewTemplateExpressionsNextRefresh = false; // reset
         }
+
         this._processTemplateExpressions();
 
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
@@ -942,7 +946,50 @@ export class FxFore extends HTMLElement {
         Fore.dispatch(this, 'ready', {});
         // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
+
+		this.addEventListener('dragstart', this._handleDragStart);
+		//	this.addEventListener('dragend', this._handleDragEnd);
+		this.handleDrop = event => this._handleDrop(event);
+		this.ownerDocument.body.addEventListener('drop', this.handleDrop);
+		this.ownerDocument.body.addEventListener('dragover', e=>{
+			e.preventDefault();
+			e.stopPropagation();
+			e.dataTransfer.dropEffect = "move";
+		});
     }
+
+	_handleDragStart (event) {
+		const draggedItem = event.target.closest('[draggable="true"]');
+		this.originalDraggedItem = draggedItem;
+		console.log('DRAG START', this);
+		if (draggedItem.getAttribute('drop-action') === 'copy') {
+			event.dataTransfer.dropEffect = 'copy';
+			event.dataTransfer.effectAllowed = 'copy';
+			this.draggedItem = draggedItem.cloneNode(true);
+			this.draggedItem.setAttribute('drop-action', 'move');
+			this.copiedElements.add(this.draggedItem);
+		} else {
+			event.dataTransfer.dropEffect = 'move';
+			event.dataTransfer.effectAllowed = 'move';
+			this.draggedItem = draggedItem;
+		}
+	}
+
+	_handleDrop (event) {
+		console.log('DROP ON BODY', this)
+		if (!this.draggedItem) {
+			return;
+		}
+		// A drop on 'body' should be a removal.
+		if (event.dataTransfer.dropEffect === 'none') {
+			if (this.copiedElements.has(this.originalDraggedItem)) {
+				this.originalDraggedItem.remove();
+			}
+		}
+		this.originalDraggedItem = null
+		this.draggedItem = null;
+		event.stopPropagation();
+	}
 
     registerLazyElement(element) {
         if (this.intersectionObserver) {

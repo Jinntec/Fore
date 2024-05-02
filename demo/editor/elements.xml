@@ -3,8 +3,8 @@
 
     <model>
         <fx-bind readonly="" required="" relevant="" constraint="" calculate="" type=""/>
-        <fx-instance></fx-instance>
-        <fx-submission url="" replace=""></fx-submission>
+        <fx-instance src="" data-default-namespace="" shared="false"></fx-instance>
+        <fx-submission id="" url="" replace=""></fx-submission>
     </model>
     <UI>
         <fx-group ref=""/>
