@@ -21,10 +21,6 @@
             font-family: Montserrat, Verdana, sans-serif;
             padding: 0;
         }
-        main{
-            /*max-width: 64rem;*/
-            overflow:auto;
-        }
         .card{
             padding:1rem;
             margin:0.3rem 0;
@@ -70,7 +66,7 @@
 			background: blue;
 		}
 		#column.drag-over {
-			background: blue;
+			background: var(--paper-green-300);
 		}
         .dropTarget{
             /*height: 1rem;*/
@@ -101,6 +97,12 @@
             min-width: 200px;
             position:relative;
         }
+        /*
+        .ghost{
+            height:3rem;
+            background: #dddddd;
+        }
+        */
         input{
             width: calc(100% - 0.5rem);
             border: thin solid #dddddd;
@@ -175,20 +177,12 @@
             min-width: 300px;
             padding:0.5rem 0.25rem;
         }
-        #colum fx-repeatitem::before{
-            content:'';
-            width:1rem;
-            background:green;
-        }
-        /*
-        #r-task > [repeat-index]{
+        #column > [repeat-index]{
             border:thin solid var(--paper-grey-500);
         }
-        */
         #column .header > fx-control{
             width: calc(100% - 5rem);
         }
-
         .handle {
             width: 1rem;
             right: 0.5rem;
@@ -389,7 +383,7 @@
             </fx-trigger>
         </div>
 
-        <fx-action-log></fx-action-log>
+<!--        <fx-action-log></fx-action-log>-->
     </fx-fore>
 
 

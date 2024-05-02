@@ -620,7 +620,7 @@ describe('repeat Tests', () => {
 
     const repeat = el.querySelector('fx-repeat-attributes');
     expect(repeat).to.exist;
-    expect(repeat.index).to.equal('1');
+    expect(repeat.index).to.equal(1);
 
     const rItems = el.querySelectorAll('.fx-repeatitem');
     expect(rItems.length).to.equal(3);
@@ -630,7 +630,7 @@ describe('repeat Tests', () => {
     // await oneEvent(repeat, 'item-changed');
     expect(rItems[0].hasAttribute('repeat-index')).to.be.false;
     expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
-    expect(repeat.index).to.equal('2');
+    expect(repeat.index).to.equal(2);
 
   });
 });
