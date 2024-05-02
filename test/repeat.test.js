@@ -382,7 +382,7 @@ describe('repeat Tests', () => {
     const button = el.querySelector('fx-trigger');
    await button.performActions();
     const repeat = el.querySelector('fx-repeat');
-    expect(repeat.index).to.equal('3');
+    expect(repeat.index).to.equal(3);
     // appended item should have repeatindex set
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;

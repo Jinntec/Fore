@@ -21,10 +21,15 @@
             font-family: Montserrat, Verdana, sans-serif;
             padding: 0;
         }
+        main{
+            /*max-width: 64rem;*/
+            overflow:auto;
+        }
         .card{
             padding:1rem;
             margin:0.3rem 0;
             border-radius: 5px;
+            border:thin solid #dddddd;
             background: white;
             display: grid;
             grid-template-areas: "task icon"
@@ -54,22 +59,29 @@
         }
 
         .drag-over{
-            border:thin solid #dddddd;
             background: orange;
+            outline:thin solid blue;
+
             /*padding:1rem 0;*/
             /*transform: scaleY(105%);*/
             /*padding: 1rem 0;*/
         }
+		#column > .drag-over {
+			background: blue;
+		}
+		#column.drag-over {
+			background: blue;
+		}
         .dropTarget{
             /*height: 1rem;*/
             height: 0;
             width: 100%;
-            background: var(--paper-grey-300);
+            background: var(--paper-blue-300);
             border-radius: 0.5rem;
             transition: height 0.2s;
         }
-        .dropTarget.drag-over{
-            height: 1rem;
+        .drag-over > .droptarget{
+            height: 1rem !important;
         }
 
 
@@ -91,10 +103,11 @@
         }
         input{
             width: calc(100% - 0.5rem);
-            border: none;
+            border: thin solid #dddddd;
             padding: 4px;
             background: white;
             font-size: 1rem;
+            border-radius: 0.2rem;
         }
         /* project repeat */
         .iconbtn{
@@ -123,17 +136,22 @@
         }
 
         #column{
-            display: grid !important;
+            /*display: grid !important;*/
+            display: flex;
             /*grid-template-columns: repeat(3,1fr);*/
-            grid-gap: 1rem;
+            /*grid-gap: 1rem;*/
             overflow: auto;
+            gap:.75rem;
             width: 100%;
+        }
+        header{
+            padding: 1rem 0;
         }
         .header {
             /* border-bottom: thin solid white; */
             padding: 1rem;
-            display: grid;
-            grid-template-columns: auto 1rem 1rem;
+            display: flex;
+            align-items: center;
         }
         .header input{
             background: var(--paper-light-blue-500);
@@ -157,20 +175,26 @@
             min-width: 300px;
             padding:0.5rem 0.25rem;
         }
-        #column > [repeat-index]{
+        #colum fx-repeatitem::before{
+            content:'';
+            width:1rem;
+            background:green;
+        }
+        /*
+        #r-task > [repeat-index]{
             border:thin solid var(--paper-grey-500);
         }
+        */
         #column .header > fx-control{
             width: calc(100% - 5rem);
         }
-        .handle{
+
+        .handle {
             width: 1rem;
-            height: 1rem;
-            /* background: lightgrey; */
-            position: absolute;
             right: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);        }
+            padding-right: 1rem;
+            cursor: grabbing;
+        }
         .line{
             background: black;
             display: block;
@@ -224,7 +248,8 @@
         }
 
         #r-task{
-            height: 100%;
+            height: calc(100% - 3rem);
+            overflow:auto;
         }
         .margin-top{
             padding-top:2rem;
@@ -246,6 +271,23 @@
             border:thin solid #666666;
             width: 100%;
         }
+        #searchCtl{
+            padding:0.5rem;
+            max-width: 59.25rem;
+        }
+        #r-task{
+            padding: 0.25rem;
+        }
+
+        #r-task fx-repeatitem{
+            cursor:grabbing;
+        }
+
+		.match {
+			background-color: lightyellow;
+			border-color: yellow;
+			border-width: medium;
+		}
     </style>
 </head>
 <body>
@@ -273,28 +315,52 @@
                     <confirm>false</confirm>
                 </data>
             </fx-instance>
+			<fx-instance id="vars">
+			  <data>
+				<search></search>
+			  </data>
+			</fx-instance>
+
         </fx-model>
         <h1>Kanban Board</h1>
+        <main>
+            <header>
+                <fx-control ref="instance('vars')/search" update-event="input" >
+                    <label for="searchCtl">Search</label>
+                    <input id="searchCtl" type="search">
+                </fx-control>
+            </header>
+            <!--        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">-->
+            <fx-repeat id="column" ref="column">
+                <template draggable="true" drop-target="column">
+                    <div class="header {@name}" tabindex="1">
+                        <div class="handle">
+                            <span class="line"></span>
+                            <span class="line"></span>
+                            <span class="line"></span>
+                        </div>
 
-        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">
-            <template>
-                <div class="header {@name}">
-                    <fx-control ref="@name"></fx-control>
-                    <fx-trigger class="iconbtn addcolumn" title="add card">
-                        <button>+</button>
-                        <fx-insert ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
-                        <fx-refresh></fx-refresh>
-                        <fx-setfocus control="task"></fx-setfocus>
-                    </fx-trigger>
-                    <fx-trigger class="iconbtn deletecolumn">
-                        <button>x</button>
-                        <fx-delete ref="." if="instance('default')/confirm"></fx-delete>
-                    </fx-trigger>
-                </div>
-<!--                <div>-->
-                    <fx-repeat id="r-task" ref="task" dnd="true" tabindex="0" data-cy="{@name}">
-                        <template draggable="true">
-                            <div class="card" tabindex="1" data-cy="{../@name}-{count(preceding-sibling::task)}" data-cy-name="{@name}">
+                        <fx-control ref="@name"></fx-control>
+                        <fx-trigger class="iconbtn addcolumn" title="add card">
+                            <button>+</button>
+                            <fx-insert ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
+                            <fx-refresh></fx-refresh>
+                            <fx-setfocus control="task"></fx-setfocus>
+                        </fx-trigger>
+                        <fx-trigger class="iconbtn deletecolumn">
+                            <button>x</button>
+                            <fx-delete ref="." if="instance('default')/confirm = true()"></fx-delete>
+                        </fx-trigger>
+
+                    </div>
+                    <!--                <div>-->
+                    <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
+                        <template draggable="true" drop-target="r-task">
+                          <div
+							class="card {let $search := instance('vars')/search return if (string-length($search) >= 1 and @name => contains($search)) then 'match' else ''}"
+							tabindex="1"
+							data-cy="{../@name}-{count(preceding-sibling::task)}"
+							data-cy-name="{@name}">
                                 <fx-control id="task" class="task" ref="@name"></fx-control>
                                 <fx-trigger class="iconbtn" title="delete card">
                                     <button>x</button>
@@ -302,26 +368,14 @@
                                 </fx-trigger>
                                 <div class="card-content"></div>
 <!--
-                                <div class="handle">
-                                    <span class="line"></span>
-                                    <span class="line"></span>
-                                    <span class="line"></span>
-                                </div>
 -->
                             </div>
+                            <div class="droptarget"></div>
                         </template>
-
-<!--
-						<fx-action event="fx-drop">
-						  <fx-delete ref="event('dragging-item')"></fx-delete>
-						  <fx-insert ref="event('dragging-item')" at="event('drop-index')"></fx-insert>
-						  <fx-setvalue ref="@status" value="open"></fx-setvalue>
-						</fx-action>
--->
                     </fx-repeat>
-<!--                </div>-->
-            </template>
-        </fx-repeat>
+                </template>
+            </fx-repeat>
+        </main>
 
 
         <div class="buttons">
@@ -340,169 +394,6 @@
 
 
 </div>
-<!--<script>
-
-    const fore = document.querySelector('fx-fore');
-    let draggedItem;
-    let droptarget;
-    fore.addEventListener('ready', e => {
-
-        console.log('attach dnd script');
-        const elements = document.querySelectorAll('[draggable]');
-        const repeat = elements[0].parentNode;
-        console.log('repeat to dnd', repeat);
-
-        Array.from(elements).forEach(elem => {
-            elem.addEventListener('dragstart', e => {
-                // console.log('dragstart',e);
-                e.dataTransfer.dropEffect = 'move';
-                e.dataTransfer.setData('text/html', e.target.outerHTML);
-                draggedItem = e.target;
-            });
-
-            elem.addEventListener('dragover', e => {
-                e.preventDefault();
-                e.stopPropagation();
-                // console.log('dragover',e);
-
-                const repeatItem = e.target.closest('fx-repeatitem');
-                // console.log('dragover repeatItem',repeatItem);
-
-                if(repeatItem !== draggedItem){
-                    // const itemHeight = repeatItem.offsetHeight;
-
-
-                    repeatItem.classList.add('drag-over');
-                    // const dummy = document.createElement('fx-repeatitem');
-/*
-                    if(droptarget) return;
-                    setTimeout((e,repeatItem) => {
-                        if(e.offsetY > itemHeight / 2){
-                        // repeatItem.before(dummy);
-                        repeatItem.classList.toggle('up');
-                        }else {
-                            // repeatItem.after(dummy);
-                            repeatItem.classList.toggle('down');
-                        }
-                    },400);
-*/
-                    // droptarget = dummy;
-
-
-
-                }
-            })
-
-            elem.addEventListener('dragleave', e => {
-                // console.log('dragleave',e);
-                e.target.classList.remove('drag-over');
-
-            })
-
-            elem.addEventListener('drop', e => {
-                console.log('drop',e);
-                e.target.closest('fx-repeatitem').classList.remove('drag-over');
-                e.preventDefault();
-                e.stopPropagation();
-                const droppedElement = e.dataTransfer.getData('text/html');
-                // console.log('dropped element', droppedElement);
-
-                const dataNode = draggedItem.getModelItem().node;
-                const parent = dataNode.parentNode;
-                console.log('ModelItem',dataNode);
-
-
-
-                if(e.target.nodeName === 'FX-REPEAT'){
-                    console.log('drop onto repeat',e.target);
-
-                    parent.removeChild(dataNode);
-                    const targetRepeat = e.target;
-                    const targetNodeset = targetRepeat.getModelItem().node;
-
-
-                    if(Array.isArray(targetNodeset)){
-                        if(targetNodeset.length === 0){
-                            parent.append(dataNode);
-                        }else{
-                            // todo: still a bug around here
-                            // targetNodeset[0].parentNode.append(dataNode);// re-append
-                            parent.append(dataNode);
-                        }
-                    }else{
-                        targetNodeset.parentNode.append(dataNode);// re-append
-                    }
-
-                    document.querySelector('fx-fore').dispatchEvent(
-                        new CustomEvent('refresh', {
-                        composed: false,
-                        bubbles: true,
-                        detail:{force:true},
-                    }));
-
-                    return;
-
-                }
-                const repeatItem = e.target.closest('fx-repeatitem');
-                console.log('drop onto item',repeatItem);
-
-
-                if(e.target.nodeName !== 'FX-REPEATITEM'){
-                    const parentItem = e.target.closest('fx-repeatitem');
-
-                }
-
-/*
-                if(!repeatItem.parentNode.contains(draggedItem)){
-                    return;
-                }
-*/
-
-                if(!repeatItem){
-                    draggedItem.parentNode.append(draggedItem);
-                }
-
-                if(repeatItem !== draggedItem){
-                    const itemHeight = repeatItem.offsetHeight;
-
-                    console.log('itemHeight', itemHeight)
-                    console.log('offsetY', e.offsetY)
-                    if(e.offsetY > itemHeight / 2 ){
-                        console.log('drop after data',repeatItem.getModelItem().node);
-                        const repeatItemNode = repeatItem.getModelItem().node;
-
-                        // repeatItem.after(draggedItem);
-                        repeatItemNode.after(dataNode.cloneNode(true));
-                        dataNode.parentNode.removeChild(dataNode);
-
-
-                    }else{
-                        console.log('drop before data',repeatItem.getModelItem().node);
-                        const repeatItemNode = repeatItem.getModelItem().node;
-                        // draggedItem.parentNode.insertBefore(draggedItem,repeatItem);
-
-                        repeatItemNode.before(dataNode.cloneNode(true));
-                        parent.removeChild(dataNode);
-
-                        console.log('data',dataNode.ownerDocument)
-
-                    }
-                    //
-                    document.querySelector('fx-fore').dispatchEvent(
-                        new CustomEvent('refresh', {
-                            composed: false,
-                            bubbles: true,
-                            detail:{force:true},
-                        }));
-                }
-
-                // e.target.innerHTML=droppedElement;
-
-            })
-
-        });
-    });
-</script>-->
 <script type="module" src="./demo.js"></script>
 </body>
 </html>

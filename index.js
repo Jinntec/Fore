@@ -22,6 +22,7 @@ import './src/ui/fx-case.js';
 import './src/ui/fx-inspector.js';
 import './src/ui/fx-dialog.js';
 import './src/ui/fx-items.js';
+import './src/ui/fx-droptarget.js';
 
 import './src/tools/fx-action-log.js';
 import './src/tools/fx-log-settings.js';
