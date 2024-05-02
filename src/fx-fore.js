@@ -104,6 +104,8 @@ export class FxFore extends HTMLElement {
 		// updates are included in that one
 		this.outermostHandler = null;
 
+		this.copiedElements = new WeakSet();
+
         const style = `
             :host {
                 display: block;
@@ -934,21 +936,49 @@ export class FxFore extends HTMLElement {
         // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
 
-		this.dragstart = this.addEventListener('dragstart', (event) => {
-			const draggedItem = event.target.closest('[draggable="true"]');
-			if (draggedItem.getAttribute('drop-action') === 'copy') {
-				event.dataTransfer.dropEffect = 'copy';
-				event.dataTransfer.effectAllowed = 'copy';
-
-				this.draggedItem = draggedItem.cloneNode(true);
-			} else {
-				event.dataTransfer.dropEffect = 'move';
-				event.dataTransfer.effectAllowed = 'move';
-				this.draggedItem = draggedItem;
-			}
-
+		this.addEventListener('dragstart', this._handleDragStart);
+		//	this.addEventListener('dragend', this._handleDragEnd);
+		this.handleDrop = event => this._handleDrop(event);
+		this.ownerDocument.body.addEventListener('drop', this.handleDrop);
+		this.ownerDocument.body.addEventListener('dragover', e=>{
+			e.preventDefault();
+			e.stopPropagation();
+			e.dataTransfer.dropEffect = "move";
 		});
     }
+
+	_handleDragStart (event) {
+		const draggedItem = event.target.closest('[draggable="true"]');
+		this.originalDraggedItem = draggedItem;
+		console.log('DRAG START', this);
+		if (draggedItem.getAttribute('drop-action') === 'copy') {
+			event.dataTransfer.dropEffect = 'copy';
+			event.dataTransfer.effectAllowed = 'copy';
+			this.draggedItem = draggedItem.cloneNode(true);
+			this.draggedItem.setAttribute('drop-action', 'move');
+			this.copiedElements.add(this.draggedItem);
+		} else {
+			event.dataTransfer.dropEffect = 'move';
+			event.dataTransfer.effectAllowed = 'move';
+			this.draggedItem = draggedItem;
+		}
+	}
+
+	_handleDrop (event) {
+		console.log('DROP ON BODY', this)
+		if (!this.draggedItem) {
+			return;
+		}
+		// A drop on 'body' should be a removal.
+		if (event.dataTransfer.dropEffect === 'none') {
+			if (this.copiedElements.has(this.originalDraggedItem)) {
+				this.originalDraggedItem.remove();
+			}
+		}
+		this.originalDraggedItem = null
+		this.draggedItem = null;
+		event.stopPropagation();
+	}
 
     registerLazyElement(element) {
         if (this.intersectionObserver) {
