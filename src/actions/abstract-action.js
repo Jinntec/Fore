@@ -57,6 +57,18 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
                 type: String,
             },
             /**
+             * The iterate attribute can be added to any XForms action. It contains an expression
+             * that is evaluated once using the in-scope evaluation context before the action is
+             * executed, which will result in a sequence of items. The action will be executed with
+             * each item in the sequence as its context. This context replaces the default in scope
+             * evaluation context.
+             *
+             * The interaction with `@while` and `@if` is undefined.
+             */
+            iterateExpr: {
+                type: String
+            },
+            /**
              * whether nor not an action needs to run the update cycle
              */
             needsUpdate: {
@@ -94,18 +106,6 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
             whileExpr: {
                 type: String,
             },
-			/**
-			 * The iterate attribute can be added to any XForms action. It contains an expression
-			 * that is evaluated once using the in-scope evaluation context before the action is
-			 * executed, which will result in a sequence of items. The action will be executed with
-			 * each item in the sequence as its context. This context replaces the default in scope
-			 * evaluation context.
-			 *
-			 * The interaction with `@while` and `@if` is undefined.
-			 */
-			iterateExpr: {
-				type: String
-			}
         };
     }
 
