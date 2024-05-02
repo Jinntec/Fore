@@ -113,7 +113,7 @@ class DraggableComponent extends superclass {
 		}
 		const accept = this.getAttribute('accept');
 		const isAccepted = draggedItem.matches(accept);
-		console.log('accepted', isAccepted);
+		// console.log('accepted', isAccepted);
 		return isAccepted;
 	}
 
@@ -139,6 +139,7 @@ class DraggableComponent extends superclass {
 				return;
 			}
 			if(draggedItem.localName === 'fx-droptarget'){
+				// todo : this looks still a bit weak
 				if(this.hasAttribute('drop-position')){
 					this.replaceChildren(draggedItem);
 					event.preventDefault();
