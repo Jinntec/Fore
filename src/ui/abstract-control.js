@@ -5,6 +5,7 @@ import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
+import {Relevance} from "../relevance.js";
 
 /**
  * `AbstractControl` -
@@ -172,6 +173,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this.handleValid();
     }
     this.handleRelevant();
+    // Relevance.handleRelevance(this);
     // todo: handleType()
   }
 

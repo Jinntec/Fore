@@ -447,7 +447,10 @@ export class FxModel extends HTMLElement {
     }
 
     getDefaultInstance() {
-        return this.instances[0];
+        if (this.instances.length) {
+			return this.instances[0];
+		}
+		return this.getInstance('default');
     }
 
     getDefaultInstanceData() {
@@ -461,11 +464,11 @@ export class FxModel extends HTMLElement {
 
         let found;
         if(id === 'default'){
-            found = this.getDefaultInstance();
+            found = this.instances[0];
         }
         // ### lookup in local instances first
         if(!found) {
-        const instArray = Array.from(this.instances);
+			const instArray = Array.from(this.instances);
             found = instArray.find(inst => inst.id === id);
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
                     ? this.fore.parentNode.host.closest('fx-fore')

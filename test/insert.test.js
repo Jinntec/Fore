@@ -564,7 +564,7 @@ describe('insert Tests', () => {
 
     el.refresh();
     const outer = el.querySelector('#r-gramGrp');
-    expect(outer.index).to.equal('1');
+    expect(outer.index).to.equal(1);
   });
 
   it('inserts into outer repeat with "context" and "origin" attribute', async () => {
@@ -654,7 +654,7 @@ describe('insert Tests', () => {
     );
     expect(item).to.be.true;
     const outer = el.querySelector('#r-gramGrp');
-    expect(outer.index).to.equal('1');
+    expect(outer.index).to.equal(1);
   });
 
   it('inserts into inner repeat with "context" and "origin" attribute', async () => {
@@ -729,7 +729,7 @@ describe('insert Tests', () => {
     item = fx.evaluateXPathToBoolean('exists(//listBibl/cit)', inst, null, {});
     expect(item).to.be.true;
     const outer = el.querySelector('#r-gramGrp');
-    expect(outer.index).to.equal('1');
+      expect(outer.index).to.equal(1);
   });
 
   it('inserts into inner repeat with "context", "ref" and "origin" attribute', async () => {

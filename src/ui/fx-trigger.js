@@ -1,6 +1,5 @@
 import XfAbstractControl from './abstract-control.js';
 import { leadingDebounce } from '../events.js';
-import {resolveId} from "../xpath-evaluation";
 
 export class FxTrigger extends XfAbstractControl {
   connectedCallback() {

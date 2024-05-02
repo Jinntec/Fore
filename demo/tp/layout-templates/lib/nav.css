@@ -1,0 +1,15 @@
+nav[aria-label="Main"]{
+    background: var(--paper-blue-900);
+    display: flex;
+    justify-content: space-between;
+    color:var(--tp-menu-text-color);
+    padding: var(--tp-block-spacing-smaller);
+}
+nav ul{
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+}
+nav li{
+    display: inline-block;
+}

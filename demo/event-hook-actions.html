@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Event hook actions</title>
+
+    <!--    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        fx-trigger {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 2rem;
+        }
+        button{
+            padding: 0.5rem;
+            font-size:1rem;
+            margin:0.5rem 0;
+        }
+        fx-control, input{
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore strict>
+                <fx-model>
+
+                    <fx-construct-done>
+                        <fx-message>Model is ready to go</fx-message>
+                    </fx-construct-done>
+                    <!-- as alternative to.... -->
+                    <fx-action event="model-construct-done">
+                        <fx-message>conventional model-construct-done handler</fx-message>
+                    </fx-action>
+
+                    <fx-instance>
+                        <data>
+                            <greeting>Hello World!</greeting>
+                            <prop></prop>
+                        </data>
+                    </fx-instance>
+
+                    <fx-instance id="replaced">
+                        <data></data>
+                    </fx-instance>
+
+                    <fx-instance id="third">
+                        <data>
+                            <div>Thanks for being here</div>
+                        </data>
+                    </fx-instance>
+
+
+                    <fx-submission id="submission2"
+                                   url="#echo"
+                                   method="POST"
+                                   replace="instance">
+<!--                        <fx-action event="submit"></fx-action>-->
+                        <fx-submit>
+                            <fx-message>Going to submit</fx-message>
+                        </fx-submit>
+                        <fx-submit-done>
+                            <fx-message>All went well</fx-message>
+                        </fx-submit-done>
+                        <fx-submit-error>
+                            <fx-message>Well - we got a problem</fx-message>
+                        </fx-submit-error>
+                    </fx-submission>
+
+                </fx-model>
+
+
+                <fx-group collapse="true">
+
+                    <h1>Event hook actions</h1>
+
+                    <fx-control ref="greeting">
+                        <label>Data:</label>
+                        <fx-value-changed>
+                            <fx-message>value has changed</fx-message>
+                            <fx-message>value is {.}</fx-message>
+                        </fx-value-changed>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <button>replace instance</button>
+                        <fx-send submission="submission2"></fx-send>
+                    </fx-trigger>
+
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

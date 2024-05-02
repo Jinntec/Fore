@@ -67,6 +67,26 @@
     <p class="note">Caution: instance ids are not resolved in any way by now, so you have to make
         sure that ids that unique within a composed page.</p>
 
+    <fx-fore id="outer">
+        <fx-model>
+            <fx-instance shared>
+                <data>
+                    <name>John</name>
+                </data>
+            </fx-instance>
+            <fx-instance id="notshared">
+                <data>
+                    <foo></foo>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <fx-fore id="inner">
+            {instance('default')/name}
+        </fx-fore>
+    </fx-fore>
+
+
     <demo-snippet>
         <template>
             <fx-fore id="todo">

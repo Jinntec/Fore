@@ -17,6 +17,21 @@
             background: red !important;
         }
     </style>
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//stats.existsolutions.com/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '6']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
 </head>
 <body id="demos">
 
@@ -240,7 +255,7 @@
             </div></a>
             <a href="../demo/fx-json-items.html"><div><h3><code>fx-items</code> using JSON
                 data</h3>
-                <p>Building a set of chechboxes from JSON data with <code>fx-items.</code></p>
+                <p>Building a set of checkboxes from JSON data with <code>fx-items.</code></p>
             </div></a>
         </section>
 
@@ -299,6 +314,10 @@
                 <h3>The <code>while</code> attribute</h3>
                 <p>Looping with the <code>while</code> attribute</p>
             </div></a>
+            <a href="../demo/iterate.html" class="updated"><div>
+                <h3>The <code>iterate</code> attribute</h3>
+                <p>Looping over nodesets with the <code>iterate</code> attribute</p>
+            </div></a>
             <a href="../demo/delay.html"><div>
                 <h3>The <code>delay</code> attribute</h3>
                 <p>Deplaying an action</p>
@@ -351,6 +370,14 @@
             <a href="../demo/actions/call.html"><div class="updated">
                 <h3>The call action</h3>
                 <p>Call an action or a function</p>
+            </div></a>
+            <a href="../demo/actions/setattribute.html"><div class="updated">
+                <h3>The setattribute action</h3>
+                <p>Create and set an attribute</p>
+            </div></a>
+            <a href="../demo/hello-model-construct.html"><div class="updated">
+                <h3>fx-construct-done</h3>
+                <p>Initializing with fx-construct-done</p>
             </div></a>
 
         </section>

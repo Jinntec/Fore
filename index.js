@@ -22,6 +22,7 @@ import './src/ui/fx-case.js';
 import './src/ui/fx-inspector.js';
 import './src/ui/fx-dialog.js';
 import './src/ui/fx-items.js';
+import './src/ui/fx-droptarget.js';
 
 import './src/tools/fx-action-log.js';
 import './src/tools/fx-log-settings.js';
@@ -57,6 +58,8 @@ import './src/actions/fx-reset.js';
 import './src/actions/fx-load.js';
 import './src/actions/fx-toggleboolean.js';
 import './src/actions/fx-call.js';
+import './src/actions/fx-setattribute.js';
+import './src/actions/fx-construct-done.js';
 
 import './src/functions/fx-function.js';
 

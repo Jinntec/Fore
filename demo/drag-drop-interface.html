@@ -1,0 +1,214 @@
+<html>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
+
+    <title>Drag and Drop</title>
+
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <script src=""></script>
+
+    <style>
+        .column {
+            height: 100%;
+        }
+
+        .columns {
+            display: flex;
+        }
+        main{
+            margin-bottom: 10rem;
+        }
+        [draggable]{
+            cursor:grabbing;
+        }
+
+        fx-droptarget {
+            display: inline-block;
+            height: 100%;
+            min-height: 100px;
+            width: 100%;
+            background: var(--paper-blue-500);
+            color: white;
+        }
+
+        .drag-over {
+            background-color: hotpink;
+        }
+		aside{
+			position: fixed;
+			right: 0;
+			top:0;
+			width: 4rem;
+			background: #00b0ff;
+			height: 100vh;
+            transition: width .6s;
+		}
+        aside:has(.drag-over){
+            transition: width .6s;
+            width: 20rem;
+        }
+        .facs{
+            padding: 1rem;
+        }
+        aside:has(fx-droptarget .facs){
+            width: 20rem;
+        }
+        aside img{
+            max-width: 100%;
+        }
+        /*
+		aside:has(fx-droptarget){
+			width: 20rem;
+		}
+        */
+		footer{
+			position: fixed;
+			bottom:0;
+			left:0;
+			heigth: 12rem;
+			background: #ddd;
+			width: 100vw;
+		}
+        .portal{
+            display: flex;
+            flex-wrap: wrap;
+            gap:1rem;
+        }
+        .portal div{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .portal fx-droptarget{
+            width: 45%;
+            background: #1b9dec;
+            height:20rem;
+        }
+        fx-droptarget.drag-over{
+            background: #00c853;
+        }
+        fx-droptarget.no-drop{
+            background: red;
+        }
+        .copy{
+            display: grid;
+            grid-gap: 1rem;
+            grid-template-columns: 50% 50%;
+        }
+        .copy fx-droptarget{
+            border:thin solid #dddddd;
+            width: 100%;
+        }
+		.copy > * {
+            /*height:2rem;*/
+		}
+        .copy div div{
+            padding:0.5rem;
+        }
+        .copy span{
+            display: inline-block;
+            font-size: 1.2rem;
+            padding: 0.5rem 0;
+        }
+
+		.first {
+            background: teal;
+		}
+		.second {
+            background: orange;
+		}
+        .dropzone{
+            padding: 0.5rem;
+
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<noscript>This page uses Web Components and needs JavaScript to be enabled..</noscript>
+
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <root>
+                    <my-data>My Data</my-data>
+                </root>
+            </fx-instance>
+        </fx-model>
+
+        <h1>Drag and Drop</h1>
+        <p>This page presents several different Drag n Drop use cases combined in one page.</p>
+        <p>The new <code>fx-droptarget</code> element allows easy creation of dropzones in a page, constrain dropped
+        elements and allow move and copy operations.</p>
+
+        <p>The blue boxes on this page are <code>fx-droptarget</code> elements. Try moving them around on the page
+        and watch the background colors being applied. If a droptarget accepts an element for drop it will get
+        a green background. If it's not accepted it gets red - a drop on such an element has no effect.</p>
+        <main>
+            <h2>Moving an element between sections</h2>
+            <p>You may move the image on the right to the footer and back again.</p>
+            <h2>DnD Portal with moveable blocks</h2>
+            <p>The four squares below represent some UI blocks in a portal or dashboard layout where people are allowed
+            to move elements to their liking.</p>
+            <section class="portal">
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Tasks</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Updates</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Favs</div>
+                </fx-droptarget>
+                <fx-droptarget draggable="true" accept="fx-droptarget">
+                    <div>Misc</div>
+                </fx-droptarget>
+            </section>
+            <p class="note">The DOM is only re-arranged at runtime and not persisted yet in any way - a reload would
+                return the original order. This might get considered in future versions.</p>
+
+
+            <h2>Copy elements to target</h2>
+            <p>Copy elements by dragging them to the Dropzone. Remove items by dragging out again. Draggables in the Dropzone can also be re-arranged.</p>
+            <section class="copy">
+                <div>
+                    <div class="item first" drop-action="copy" draggable="true">Copy me!</div>
+                    <div class="item second" drop-action="copy" draggable="true">Or me!</div>
+                </div>
+                <fx-droptarget accept="div" class="dropzone" accept=".item"><span>Dropzone</span></fx-droptarget>
+			</section>
+
+        </main>
+		<aside>
+			<fx-droptarget  accept=".facs">
+                <div class="facs" draggable="true">
+                    <h3>Image panel</h3>
+                    <img src="../resources/images/fore1.png">
+                </div>
+			</fx-droptarget>
+
+		</aside>
+        <footer>
+			<fx-droptarget effect="move" accept=".facs">
+
+			</fx-droptarget>
+		</footer>
+
+    </fx-fore>
+
+<!--    <fx-droptarget ref="instance()/something"></fx-droptarget>-->
+
+</div>
+</body>
+<script type="module" src="./demo.js"></script>
+
+</html>

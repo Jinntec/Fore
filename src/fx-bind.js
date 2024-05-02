@@ -72,6 +72,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       this._buildBindGraph();
       this._createModelItems();
     }
+    // todo: support json
 
     // ### process child bindings
     this._processChildren(model);
