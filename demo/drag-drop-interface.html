@@ -112,17 +112,17 @@
                     <div>Misc</div>
                 </fx-droptarget>
             </section>
-            <section class="copy">
-                <div class="first" draggable="true" drop-action="copy">Copy me!</div>
-                <div class="second" draggable="true" drop-action="copy">Or me!</div>
-
-                <fx-droptarget drop-action="replace|append|ignore">Drop in here!</fx-droptarget>
-                <fx-droptarget drop-action="ignore">Drop in here to remove it!</fx-droptarget>
+            <section class="copy" >
+                <div class="first" drop-action="copy" draggable="true">Copy me!</div>
+                <div class="second" drop-action="copy" draggable="true">Or me!</div>
+			</section>
+			<section class="copy">
+                <fx-droptarget accept="div">Drop in here!</fx-droptarget>
             </section>
 
         </main>
 		<aside>
-			<fx-droptarget drop-position="into" accept=".facs">
+			<fx-droptarget drop-position="ffinto" accept=".facs">
 			</fx-droptarget>
 		</aside>
         <footer>

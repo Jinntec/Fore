@@ -368,10 +368,6 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
         this.dropTarget = this.template.getAttribute('drop-target');
         this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
 
-		if (this.isDraggable) {
-			this.initDragAndDrop();
-		}
-
         if (this.template === null) {
             // todo: catch this on form element
             this.dispatchEvent(

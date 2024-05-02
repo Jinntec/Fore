@@ -22,22 +22,26 @@ class DraggableComponent extends superclass {
     }
 
 	connectedCallback() {
-        this.addEventListener('drop', this._drop);
-        this.addEventListener('dragover', this._dragOver);
-        this.addEventListener('dragleave', this._dragLeave);
+		this.drop = (event) => this._drop(event);
+        this.addEventListener('drop', this.drop);
+		this.dragOver = (event) => this._dragOver(event);
+        this.addEventListener('dragover', this.dragOver);
+		this.dragLeave = (event) => this._dragLeave(event);
+        this.addEventListener('dragleave', this.dragLeave);
+		this.dragEnd = (event) => this._dragEnd(event);
         this.addEventListener('dragend', this._dragEnd);
 	}
 
 	disconnectedCallback() {
-        this.removeEventListener('drop', this._drop);
-        this.removeEventListener('dragover', this._dragOver);
-        this.removeEventListener('dragleave', this._dragLeave);
-		this.removeEventListener('dragend', this._dragEnd);
+        this.removeEventListener('drop', this.drop);
+        this.removeEventListener('dragover', this.dragOver);
+        this.removeEventListener('dragleave', this.dragLeave);
+		this.removeEventListener('dragend', this.dragEnd);
 	}
 
     _dragOver(event) {
-		console.log('dragover ',this);
-		console.log('event target ',event.target);
+//		console.log('dragover ',this);
+//		console.log('event target ',event.target);
 		if(event.target.classList.contains('no-drop')) {
 			return false;
 		}
@@ -54,16 +58,10 @@ class DraggableComponent extends superclass {
 		}
 		const {draggedItem} = this.getOwnerForm();
 
-		// todo: here we need to debounce to keep it efficient
-		if(this.hasAttribute('accept')){
-			const accept = this.getAttribute('accept');
-			const accepted =  document.querySelectorAll(accept);
-			const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ;
-			console.log('accepted',isAccepted);
-			this.accepted = isAccepted;
-			if(!isAccepted){
-				event.target.classList.add('no-drop');
-			}
+		if (this.accepts(draggedItem)) {
+			this.classList.remove('no-drop');
+		} else {
+			this.classList.add('no-drop');
 		}
 
 		const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
@@ -83,9 +81,12 @@ class DraggableComponent extends superclass {
     }
 
 	_dragEnd (event) {
-		this.getOwnerForm().draggedItem = null;
+		const item = this.getOwnerForm().draggedItem
+		if (item.getAttribute('drop-action') === 'copy') {
+			item.remove();
+		}
         this.classList.remove('drag-over');
-		event.stopPropagation();
+//		event.stopPropagation();
 	}
 
 	_getDataNode () {
@@ -106,27 +107,33 @@ class DraggableComponent extends superclass {
 		return dataNode;
 	}
 
+	accepts (draggedItem) {
+		if (!this.hasAttribute('accept')) {
+			return;
+		}
+		const accept = this.getAttribute('accept');
+		const isAccepted = draggedItem.matches(accept);
+		console.log('accepted', isAccepted);
+		return isAccepted;
+	}
+
     _drop(event){
         this.classList.remove('drag-over');
         event.stopPropagation();
 		if (this.localName === 'fx-droptarget') {
-
-
 			if(this.children.length !== 0){
 				console.log("we have to do something");
 			}
 
-			const {draggedItem} = this.getOwnerForm();
+			let {draggedItem} = this.getOwnerForm();
 
-			if(this.hasAttribute('accept')){
-				const accept = this.getAttribute('accept');
-				const accepted =  document.querySelectorAll(accept);
-				const isAccepted = Array.from(accepted).findIndex((accept) => accept === draggedItem) !== -1 ;
-				console.log('accepted',isAccepted);
-				if(!isAccepted){
-					this.classList.remove('no-drop');
-					return;
-				}
+			if (draggedItem.getAttribute('drop-action') === 'copy') {
+				draggedItem = draggedItem.cloneNode(true);
+			}
+
+			if (!this.accepts(draggedItem)) {
+				this.classList.remove('no-drop');
+				return;
 			}
 			if(draggedItem === this){
 				return;
