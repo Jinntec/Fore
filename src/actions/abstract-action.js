@@ -327,30 +327,34 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 	}
 
 	async handleIterateExpr () {
-		// Iterate: get the context sequence and perform the action once per item.
-        const contextSequence = evaluateXPath(this.iterateExpr, getInScopeContext(this), this);
+		try {
+			// Iterate: get the context sequence and perform the action once per item.
+			const contextSequence = evaluateXPath(this.iterateExpr, getInScopeContext(this), this);
 
-		if (contextSequence.length === 0) {
-			return;
-		}
-
-        if (!XPathUtil.contains(this.getOwnerForm(), this)) {
-            // We are no longer in the document. Stop working
-            return;
-        }
-
-		for (const item of contextSequence) {
-			if (this.delay) {
-				await wait(this.delay || 0);
-			}
-
-			// This will be picked up in `getInscopeContext`
-			this.currentContext = item;
-
-			// Perform the action once. But quit if it failed
-			if (!await this.performSafe()) {
+			if (contextSequence.length === 0) {
 				return;
 			}
+
+			if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+				// We are no longer in the document. Stop working
+				return;
+			}
+
+			for (const item of contextSequence) {
+				if (this.delay) {
+					await wait(this.delay || 0);
+				}
+
+				// This will be picked up in `getInscopeContext`
+				this.currentContext = item;
+
+				// Perform the action once. But quit if it failed
+				if (!await this.performSafe()) {
+					return;
+				}
+			}
+		} finally {
+			this.currentContext = null;
 		}
 	}
 
