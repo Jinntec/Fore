@@ -384,7 +384,9 @@ function functionNameResolver({prefix, localName}, _arity) {
 function getVariablesInScope(formElement) {
     let closestActualFormElement = formElement;
     while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
-        closestActualFormElement = closestActualFormElement.parentNode;
+        closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ?
+			closestActualFormElement.ownerElement :
+			closestActualFormElement.parentNode;
     }
 
     if (!closestActualFormElement) {
