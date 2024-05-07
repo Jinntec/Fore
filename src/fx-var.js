@@ -25,8 +25,13 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
   refresh() {
     const inscope = getInScopeContext(this, this.valueQuery);
 
-    const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
-    [this.value] = values;
+      const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
+	  if (values.length) {
+		  [this.value] = values;
+	  } else {
+		  // There is no value: set to null so it's interpreted as empty-sequence later on
+		  this.value = null;
+	  }
   }
 
   setInScopeVariables(inScopeVariables) {
