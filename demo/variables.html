@@ -58,7 +58,10 @@ x<!doctype html>
     <h1>Variables</h1>
 
     <fx-fore>
-        <fx-model>
+	  <!-- Variables can be declared before the model -->
+	  <fx-var name="requirements" value='(: This is a LONG XPath! :)
+										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
+	  <fx-model>
             <fx-instance>
               <data>
 				    <requirement kind="functional">It should work</requirement>
@@ -69,10 +72,10 @@ x<!doctype html>
                 </data>
             </fx-instance>
 
+			<fx-bind ref="$requirements" read-only="true()"></fx-bind>
+
         </fx-model>
 
-		<fx-var name="requirements" value='(: This is a LONG XPath! :)
-										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
         <fx-group>
           <h2>Reusing data</h2>
 		  <fx-var value="'a value'" name="my-variable"></fx-var>
