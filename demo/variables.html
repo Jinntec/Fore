@@ -108,7 +108,8 @@ x<!doctype html>
                             <p>Requirement: {@kind} {.}</p>
                         </template>
                     </fx-repeat>
-
+					<h3>And again: but now without using variables.</h3>
+					<!-- For documentation, this is the variant without using variables. Variables make it a lot shorter! -->
                     <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
                         <template>
                             <p>Requirement: {@kind} {.}</p>
