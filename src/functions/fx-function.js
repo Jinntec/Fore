@@ -53,7 +53,7 @@ export class FxFunction extends foreElementMixin(HTMLElement) {
 
     const paramParts = params
       ? params.split(',').map(param => {
-          const match = param.match(/(?<variableName>\$[^\s]+)(?:\sas\s(?<varType>.+))/);
+          const match = param.match(/(?<variableName>\$[^\s]+)(?:\sas\s(?<varType>[^\s]+))/);
           if (!match) {
             throw new Error(`Param ${param} could not be parsed`);
           }
