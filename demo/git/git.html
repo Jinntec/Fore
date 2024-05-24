@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+        }
+        main{
+            max-width: 62rem;
+            margin:0 auto;
+        }
+        section{
+            margin:1rem 0;
+        }
+        .config{
+            width:100%;
+        }
+        fx-repeat#r-config{
+            width: 100%;
+        }
+        fx-repeat#r-config fx-repeatitem{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        fx-output label{
+            display: block;
+            width: 100%;
+            font-weight: bolder;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid;
+            margin-bottom: 1rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="config.xml"></fx-instance>
+            <fx-instance id="issues"></fx-instance>
+
+            <fx-submission id="s-get-issues"
+                           url="{vcs[1]/url}/repos/{vcs[1]/owner}/{vcs[1]/repo}/issues"
+                           replace="instance"
+                           instance="issues">
+                <fx-header name="User-Agent" value="'Fore'"></fx-header>
+                <fx-header name="X-Github-Api-Version" value="'2022-11-28'"></fx-header>
+                <fx-header name="Authorization" value="'Bearer ' || vcs[1]/token"></fx-header>
+                <fx-header name="Accept" value="'application/vnd.github.html+json'"></fx-header>
+            </fx-submission>
+        </fx-model>
+
+        <main>
+            <section class="config">
+                <fx-repeat id="r-config" ref="vcs">
+                    <template>
+                        <fx-output ref="@type"><label slot="label">Type</label></fx-output>
+                        <fx-output ref="url"><label slot="label">Url</label></fx-output>
+                        <fx-output ref="owner"><label slot="label">Owner</label></fx-output>
+                        <fx-output ref="repo"><label slot="label">Repo</label></fx-output>
+                        <fx-output ref="branch"><label slot="label">Branch</label></fx-output>
+                    </template>
+                </fx-repeat>
+            </section>
+            <section class="commands">
+                <fx-control ref="vcs[1]/token">
+                    <label>Token {.}</label>
+                </fx-control>
+                <fx-trigger>
+                    <button>get Issues</button>
+                    <fx-send submission="s-get-issues"></fx-send>
+                </fx-trigger>
+            </section>
+            <section class="issues">
+
+            </section>
+        </main>
+    </fx-fore>
+
+    <script type="module" src="../../index.js"></script>
+</body>
+</html>
