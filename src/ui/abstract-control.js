@@ -144,7 +144,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           Fore.dispatch(this,'init',{});
         }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-        // if oldVal is null we haven't received a concrete value yet
+          // if oldVal is null we haven't received a concrete value yet
+
+		if (this.localName !== 'fx-control') return;
         if (this.oldVal !== null && currentVal !== this.value) {
           Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
         }
