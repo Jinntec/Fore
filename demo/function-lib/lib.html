@@ -1,0 +1,37 @@
+<html>
+  <head>
+	<title>Function library</title>
+	<style>
+	  fx-function::before {
+		  content: attr(signature) ', type=' attr(type);
+		  color: darkgrey;
+		  display: block;
+	  }
+	  fx-function {
+		  display: block;
+		  white-space-collapse: collapse;
+	  }
+	</style>
+</head>
+  <body>
+	<h3>Function library!</h3>
+	<p>Don't forget to document your functions. A function library is a great place to do that.</p>
+	<p>Returns a friendly greeting!</p>
+	  <pre>
+		<fx-function
+		  signature="local:hello($who as xs:string) as xs:string"
+		  type="text/xpath">
+		  "Hello " || $who
+		</fx-function>
+	  </pre>
+
+	  <p>Returns the answer to the life, the universe and anything</p>
+	  <pre>
+		<fx-function
+		  signature="local:theanswer() as xs:string"
+		  type="text/javascript">
+		  return 21*2;
+		</fx-function>
+	  </pre>
+	</body>
+</html>
