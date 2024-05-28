@@ -1,0 +1,15 @@
+<html>
+  <body>
+	<fx-function
+	  signature="local:hello($who as xs:string) as xs:string"
+	  type="text/xpath">
+	  "Hello " || $who
+	</fx-function>
+
+	<fx-function
+	  signature="local:theanswer() as xs:string"
+	  type="text/javascript">
+	  return 21*2;
+	</fx-function>
+  </body>
+</html>

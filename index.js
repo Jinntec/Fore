@@ -62,4 +62,5 @@ import './src/actions/fx-setattribute.js';
 import './src/actions/fx-construct-done.js';
 
 import './src/functions/fx-function.js';
+import './src/functions/fx-functionlib.js';
 

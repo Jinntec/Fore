@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using a function library!</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+	<script type="module" src="../demo.js"></script>
+    <style>
+        fx-control{
+            width: 100%;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Using a function library</h1>
+    <p>
+	  Functions are very powerful! But please Don't Repeat Yourself! So throw them in a function
+	  library and reuse them across your page! Both XPath as well as JavaScript functions are
+	  supported. Just use the <code>&lt;fx-functionlib src="my-functionlibrary-here.html"&gt;</code> element and away you go!
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+              <fx-model id="model1">
+                <fx-functionlib src="./lib.html"></fx-functionlib>
+              </fx-model>
+              <fx-group>
+                <h2>JavaScript function</h2>
+                <p>And the answer is {local:theanswer()}</p>
+                <h2>XPath function</h2>
+                <p>And the answer is {local:hello('from function')}</p>
+              </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+
+<div class="wrapper">
+    <h1>Reusing a function library around you multi-page app!</h1>
+    <p>
+	  Making an application with multiple pages, that each use Fore? No worry, you can have the same
+	  fx-functionlib without them overriding eachother. The XPath engine always takes the first in
+	  case of conflict
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+              <fx-model id="model1">
+				<!-- This is the second import. We already had one. -->
+                <fx-functionlib src="./lib.html"></fx-functionlib>
+              </fx-model>
+              <fx-group>
+                <h2>JavaScript function</h2>
+                <p>And the answer is {local:theanswer()}</p>
+                <h2>XPath function</h2>
+                <p>And the answer is {local:hello('from function')}</p>
+              </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>
