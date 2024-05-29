@@ -1,0 +1,9 @@
+<config>
+    <vcs type="github">
+        <url>https://github.com</url>
+        <owner>Jinntec</owner>
+        <repo>Fore</repo>
+        <branch>dev</branch>
+        <token></token>
+    </vcs>
+</config>

@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Function library</title>
+    <link href="../../resources/functionlib.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Example function library</h1>
+    <p>Don't forget to document your functions. A function library is a great place to do that.</p>
+	<p>Structure and style your functions as you like - this is just an example. </p>
+</header>
+<main>
+
+	<section>
+		<p>Returns the answer to the life, the universe and anything</p>
+
+		<pre>
+			<fx-function
+					signature="theanswer() as xs:string"
+					type="text/javascript">
+			  return 21*2;
+			</fx-function>
+		</pre>
+	</section>
+
+ 	<section>
+		<p>Returns a friendly greeting!</p>
+		<pre>
+			<fx-function
+					signature="hello($who as xs:string) as xs:string"
+					type="text/xpath">
+			  "Hello " || $who
+			</fx-function>
+		</pre>
+
+	</section>
+
+
+
+</main>
+</body>
+</html>

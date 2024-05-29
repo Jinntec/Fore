@@ -3,10 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
-
     <title>Kanban Board</title>
-
-
     <link href="../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
         <link href="../resources/demo.css" rel="stylesheet">
@@ -76,11 +73,9 @@
             border-radius: 0.5rem;
             transition: height 0.2s;
         }
-        .drag-over > .droptarget{
-            height: 1rem !important;
+        fx-repeatitem.drag-over{
+            outline: 0.25rem solid orange;
         }
-
-
 
         fx-control{
             width: 100%;
@@ -278,8 +273,8 @@
         }
 
 		.match {
-			background-color: lightyellow;
-			border-color: yellow;
+			background-color: orange;
+			border-color: darkorange;
 			border-width: medium;
 		}
     </style>
@@ -306,7 +301,6 @@
                         <column name=""></column>
                         <task name="newTask">new task</task>
                     </template>
-                    <confirm>false</confirm>
                 </data>
             </fx-instance>
 			<fx-instance id="vars">
@@ -317,14 +311,14 @@
 
         </fx-model>
         <h1>Kanban Board</h1>
+        <p>Cards and Colums can be moved with Drag and Drop.</p>
         <main>
             <header>
                 <fx-control ref="instance('vars')/search" update-event="input" >
                     <label for="searchCtl">Search</label>
-                    <input id="searchCtl" type="search">
+                    <input id="searchCtl" type="search" placeholder="input a search term - at least 2 characters">
                 </fx-control>
             </header>
-            <!--        <fx-repeat id="column" ref="column"  style="grid-template-columns: repeat({count(instance()/column)},1fr);">-->
             <fx-repeat id="column" ref="column">
                 <template draggable="true" drop-target="column">
                     <div class="header {@name}" tabindex="1">
@@ -343,15 +337,16 @@
                         </fx-trigger>
                         <fx-trigger class="iconbtn deletecolumn">
                             <button>x</button>
-                            <fx-delete ref="." if="instance('default')/confirm = true()"></fx-delete>
+                            <fx-confirm message="This can't be undone. Really delete? .">
+                                <fx-delete ref="."></fx-delete>
+                            </fx-confirm>
                         </fx-trigger>
 
                     </div>
-                    <!--                <div>-->
                     <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
                         <template draggable="true" drop-target="r-task">
                           <div
-							class="card {let $search := instance('vars')/search return if (string-length($search) >= 1 and @name => contains($search)) then 'match' else ''}"
+							class="card {let $search := instance('vars')/search return if (string-length($search) > 1 and @name => contains($search)) then 'match' else ''}"
 							tabindex="1"
 							data-cy="{../@name}-{count(preceding-sibling::task)}"
 							data-cy-name="{@name}">
@@ -361,8 +356,6 @@
                                     <fx-delete ref="."></fx-delete>
                                 </fx-trigger>
                                 <div class="card-content"></div>
-<!--
--->
                             </div>
                             <div class="droptarget"></div>
                         </template>
@@ -383,7 +376,6 @@
             </fx-trigger>
         </div>
 
-<!--        <fx-action-log></fx-action-log>-->
     </fx-fore>
 
 

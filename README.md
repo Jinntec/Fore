@@ -57,7 +57,7 @@ Fore is a model-driven language that follows the ideas of the XForms 2.0
 Standard but applies those to the world of HTML5 Web Components.
  
 Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
-ochestrate and interact with them by binding their properties to data instances.
+orchestrate and interact with them by binding their properties to data instances.
 
 Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. 
 

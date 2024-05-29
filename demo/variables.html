@@ -10,8 +10,6 @@ x<!doctype html>
     <link href="../resources/demo.css" rel="stylesheet">
 
 
-
-
     <style>
         pre {
             position: fixed;
@@ -48,6 +46,10 @@ x<!doctype html>
             margin-top: 2rem;
             font-size: 0.8rem;
         }
+        ins{
+            background: lightgreen;
+            text-decoration: none;
+        }
     </style>
 
 </head>
@@ -56,46 +58,67 @@ x<!doctype html>
 <div class="wrapper">
 
     <h1>Variables</h1>
+    <p>With the <code>fx-var</code> element you can declare a variable for re-use
+        in multiple places. Long complicated XPathes can be re-used this way improving readability and
+        changeability.</p>
 
-    <fx-fore>
-        <fx-model>
-            <fx-instance>
-              <data>
-				    <requirement kind="functional">It should work</requirement>
-				    <requirement kind="performance">It should be fast</requirement>
-				    <requirement kind="performance">It should be incredibly fast</requirement>
-				    <requirement kind="functional">It should not be broken</requirement>
-                    <filter>functional</filter>
-                </data>
-            </fx-instance>
+    <demo-snippet>
+        <template>
 
-        </fx-model>
-
-		<fx-var name="requirements" value='(: This is a LONG XPath! :)
+            <fx-fore>
+                <!-- Variables can be declared before the model -->
+                <fx-var name="requirements" value='(: This is a LONG XPath! :)
 										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
-        <fx-group>
-          <h2>Reusing data</h2>
-		  <fx-var value="'a value'" name="my-variable"></fx-var>
-		  <p>Variables can occur anywhere. They are invisible, they can contain simple values like "{$my-variable}"</p>
-		  <fx-var value="instance()/filter" name="filter"></fx-var>
-		  <p>They can also point to an instance, like this: {$filter}</p>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <requirement kind="functional">It should work</requirement>
+                            <requirement kind="performance">It should be fast</requirement>
+                            <requirement kind="performance">It should be incredibly fast</requirement>
+                            <requirement kind="functional">It should not be broken</requirement>
+                            <filter>functional</filter>
+                        </data>
+                    </fx-instance>
 
-		  <label>Current filter: {filter} - <fx-control ref="$filter"><input></fx-control></label>
-		  <p>There are {count(array:flatten($requirements))} requirements!</p>
-          <fx-repeat ref="$requirements">
-            <template>
-			  <p>Requirement: {@kind} {.}</p>
-			</template>
-		  </fx-repeat>
+                    <fx-bind ref="$requirements" read-only="true()"></fx-bind>
 
-		  <h3>All requirements:</h3>
-		  <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
-            <template>
-			  <p>Requirement: {@kind} {.}</p>
-			</template>
-		  </fx-repeat>
-        </fx-group>
-    </fx-fore>
+                </fx-model>
+
+                <fx-group>
+                    <h2>Variable for simple value</h2>
+                    <fx-var value="'a value'" name="my-variable"></fx-var>
+                    <p>Variables can occur anywhere. They are invisible, they can contain simple values like
+                        <ins>"{$my-variable}"</ins></p>
+                    <fx-var value="instance()/filter" name="filter"></fx-var>
+                    <h2>Using variable for binding</h2>
+                    <label>Control using variable as <code>ref</code>:
+                        <fx-control ref="$filter" update-event="input">
+                            <select class="widget">
+                                <option value="functional">functional</option>
+                                <option value="performance">performance</option>
+                            </select>
+                        </fx-control>
+                    </label>
+
+<!--                    <p>They can also point to an instance or a node, like this: <ins>{$filter}</ins></p>-->
+                    <h2>Variable as repeat binding</h2>
+                    <p>There are {count(array:flatten($requirements))} requirements!</p>
+                    <fx-repeat ref="$requirements">
+                        <template>
+                            <p>Requirement: {@kind} {.}</p>
+                        </template>
+                    </fx-repeat>
+					<h3>And again: but now without using variables.</h3>
+					<!-- For documentation, this is the variant without using variables. Variables make it a lot shorter! -->
+                    <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
+                        <template>
+                            <p>Requirement: {@kind} {.}</p>
+                        </template>
+                    </fx-repeat>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 </div>
 
 
