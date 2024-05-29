@@ -1,0 +1,60 @@
+<html>
+<head>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Function library</title>
+    <link href="../../resources/functionlib.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Example function library</h1>
+    <p>Don't forget to document your functions. A function library is a great place to do that.</p>
+	<p>Structure and style your functions as you like - this is just an example. </p>
+</header>
+<main>
+
+	<section>
+		<p>Returns a random number</p>
+		<pre>
+		<fx-function
+				signature="random($min as xs:integer, $max as xs:integer) as xs:string"
+				type="text/javascript">
+			return Math.floor(Math.random() * ($max - $min + 1)) + $min;
+		</fx-function>
+		</pre>
+	</section>
+
+	<section>
+		<p>Returns a random hex-color code</p>
+
+		<pre>
+		<fx-function
+				signature="randomColor() as xs:string"
+				type="text/javascript">
+			var characters = ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9];
+			var randomColorArray = [];
+			for (var i = 0; i < 6; i++) {
+			var randomIndex = Math.floor(Math.random()*characters.length);
+			randomColorArray.push(characters[randomIndex])
+			}
+			return `#${randomColorArray.join("")}`;
+		</fx-function>
+		</pre>
+	</section>
+
+ 	<section>
+		<p>Returns a random opacity value</p>
+		<pre>
+			<fx-function
+					signature="opacity() as xs:string"
+					type="text/javascript">
+				return Math.floor(Math.random() * 10);
+			</fx-function>
+		</pre>
+
+	</section>
+
+
+
+</main>
+</body>
+</html>

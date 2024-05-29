@@ -291,6 +291,16 @@ export class FxFore extends HTMLElement {
                     "background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;",
                 );
 
+				const variables = new Map();
+				(function registerVariables(node) {
+					for (const child of node.children) {
+						if ('setInScopeVariables' in child) {
+							child.setInScopeVariables(variables);
+						}
+						registerVariables(child);
+					}
+				})(this);
+
                 await modelElement.modelConstruct();
 				this._handleModelConstructDone();
             }
@@ -910,18 +920,6 @@ export class FxFore extends HTMLElement {
         if (!this.initialRun) return;
         this.classList.add('initialRun');
         await this._lazyCreateInstance();
-
-        // console.log('registering variables!');
-        const variables = new Map();
-        (function registerVariables(node) {
-            for (const child of node.children) {
-                if ('setInScopeVariables' in child) {
-                    child.setInScopeVariables(variables);
-                }
-                registerVariables(child);
-            }
-        })(this);
-        // console.log('Found variables:', variables);
 
         /*
         const options = {

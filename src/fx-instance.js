@@ -1,11 +1,11 @@
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
-async function handleResponse(response) {
+async function handleResponse(fxInstance, response) {
   const { status } = response;
   if (status >= 400) {
     // console.log('response status', status);
-    alert(`response status:  ${status} - failed to load data for '${this.src}' - stopping.`);
+    alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
   const responseContentType = response.headers.get('content-type').toLowerCase();
@@ -258,7 +258,7 @@ export class FxInstance extends HTMLElement {
           'Content-Type': contentType,
         },
       });
-      const data = await handleResponse(response);
+	  const data = await handleResponse(this, response);
       this._setInitialData(data);
 /*
       if (data.nodeType) {

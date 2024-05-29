@@ -1,0 +1,50 @@
+fx-fore,
+fx-bind,
+fx-function,
+fx-model,
+fx-instance,
+fx-submission{
+    display: block;
+    border:thin solid #dddddd;
+    border-radius: 0.5rem;
+    min-height: 1rem;
+    position: relative;
+    margin:0.5rem 0;
+}
+fx-fore *::before{
+    font-size: 0.8rem;
+    position: absolute;
+    left:0.25rem;
+    /*top:-0.5rem;*/
+}
+fx-fore::before{
+    content:'fx-fore';
+    font-size: 0.8rem;
+    position: absolute;
+    top:-0.5rem;
+}
+fx-model::before{
+    content:'fx-model';
+    top:-0.5rem;
+
+    /*
+    font-size: 0.8rem;
+    position: absolute;
+    top:-0.5rem;
+    */
+}
+fx-instance::before{
+    content:'fx-instance';
+}
+fx-submission::before{
+    content:'fx-submission';
+}
+fx-bind::before{
+    content:'fx-bind' ' ref="' attr(ref) '"';
+}
+fx-fore{
+    padding: 1rem;
+}
+fx-model{
+    background-color: #efefef;
+}

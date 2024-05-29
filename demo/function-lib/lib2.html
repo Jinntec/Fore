@@ -1,0 +1,42 @@
+<html>
+<head>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Function library</title>
+    <link href="../../resources/functionlib.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Example function library</h1>
+    <p>Don't forget to document your functions. A function library is a great place to do that.</p>
+	<p>Structure and style your functions as you like - this is just an example. </p>
+</header>
+<main>
+
+	<section>
+		<p>Returns a formatted timestamp</p>
+
+		<pre>
+			<fx-function signature="now() as xs:string" type="text/javascript">
+				const now = new Date();
+				return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+			</fx-function>
+		</pre>
+	</section>
+
+ 	<section>
+		<p>Returns the answer to the life, the universe and anything but lies and is ignored</p>
+		<pre>
+			<fx-function
+					signature="theanswer() as xs:string"
+					type="text/javascript">
+			  return 23;
+			</fx-function>
+		</pre>
+
+	</section>
+
+
+
+</main>
+</body>
+</html>

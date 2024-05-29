@@ -90,6 +90,14 @@
             background: rgba(255,255,255,0.5);
             padding: 1rem;
         }
+        fx-fore, fx-model, fx-group{
+            border-radius: 0.5rem;
+            border:thin solid #dddddd;
+            position: relative;
+        }
+        fx-fore::before{
+            content:'fx-fore';
+        }
         main{
             width: 100%;
             height: 100%;
@@ -98,9 +106,9 @@
         main {
             position: fixed;
             width:calc(100% - 20rem);
-            background: orange;
             display: block;
             left: 10rem;
+            padding: 1rem;
         }
         main *::before{
             content:attr(data-name);
@@ -118,6 +126,7 @@
         main fx-fore{
             position: relative;
         }
+
         main fx-model, main #ui{
             background:white;
             border:thin solid;
@@ -196,7 +205,7 @@
     </style>
 </head>
 <body>
-<div class="wrapper">
+<!--<div class="wrapper">-->
 
     <fx-fore id="components">
         <fx-action src="editor.js" event="ready"></fx-action>
@@ -266,9 +275,11 @@
 
 
     <main current>
+<!--
         <fx-control id="file" ref="instance('vars')/filename">
-<!--            <label>Filename</label>-->
+            <label>Filename</label>
         </fx-control>
+-->
 
         <fx-fore id="edited">
             <fx-model id="targetModel" class="droppable">
@@ -320,7 +331,7 @@
             </code>
         </fx-fore>
     </aside>
-</div>
+<!--</div>-->
 <script type="module" src="../../index.js"></script>
 <!--<script>
     (function () {

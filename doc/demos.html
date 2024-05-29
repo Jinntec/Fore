@@ -58,6 +58,7 @@
         <nav class="local-nav" aria-labelledby="Demo Categories">
             <a href="#basic" title="Basic Examples">Basic</a>
             <a href="#model" title="Model-related Examples">Model</a>
+            <a href="#bind" title="Bind Examples">Bind</a>
             <a href="#instance" title="Instance-related Examples">Instance</a>
             <a href="#request" title="Submission Examples">Submission</a>
             <a href="#control">Control</a>
@@ -106,21 +107,9 @@
                 <h3>A simple output</h3>
                 <p>Using a ref to lazily create a data node.</p>
             </div></a>
-            <a href="../demo/02-refs.html"><div class="updated">
+            <a href="../demo/02-refs.html"><div>
                 <h3>Ref what?</h3>
                 <p>Introducing binding expressions</p>
-            </div></a>
-            <a href="../demo/binding.html"><div>
-                <h3>Bindings are forever</h3>
-                <p><code>fx-bind</code> elements and ModelItems explained</p>
-            </div></a>
-            <a href="../demo/binding-nested.html"><div>
-                <h3>Bindings - they nest!</h3>
-                <p>Nesting bindings and Scoped Resolution</p>
-            </div></a>
-            <a href="../demo/unbound.html"><div>
-                <h3>Unbound control is not relevant</h3>
-                <p>Controls don't show if their binding node does not exist.</p>
             </div></a>
         </section>
 
@@ -145,6 +134,22 @@
             </div></a>
         </section>
 
+        <h2>Bind</h2>
+        <section id="bind" class="three-col">
+            <a href="../demo/binding.html"><div>
+                <h3>Bindings are forever</h3>
+                <p><code>fx-bind</code> elements and ModelItems explained</p>
+            </div></a>
+            <a href="../demo/binding-nested.html"><div>
+                <h3>Bindings - they nest!</h3>
+                <p>Nesting bindings and Scoped Resolution</p>
+            </div></a>
+            <a href="../demo/unbound.html"><div>
+                <h3>Unbound control is not relevant</h3>
+                <p>Controls don't show if their binding node does not exist.</p>
+            </div></a>
+        </section>
+
         <h2>Instance</h2>
         <section id="instance" class="three-col">
             <a href="../demo/03-instances.html"><div>
@@ -156,7 +161,7 @@
                     powers</h3>
                 <p>loading an <code>fx-instance</code>, JSON instances and creating a instance from queryString</p>
             </div></a>
-            <a href="../demo/shared-instances.html" class="updated"><div>
+            <a href="../demo/shared-instances.html"><div>
                 <h3>Shared instances</h3>
                 <p>Instances can be shared between nested Fore elements</p>
             </div></a>
@@ -210,12 +215,12 @@
                 <h3>Send with a target</h3>
                 <p>Send Action can overwrite submission target</p>
             </div></a>
-            <a href="../demo/submission-replace-blank.html" class="updated"><div>
+            <a href="../demo/submission-replace-blank.html"><div>
                 <h3>Send response to new tab</h3>
                 <p>Submission <code>replace="all"</code> along with <code>target="_blank"</code> sends response
                 to new tab.</p>
             </div></a>
-            <a href="../demo/submission-credentials.html" class="updated"><div>
+            <a href="../demo/submission-credentials.html"><div>
                 <h3>Handling Credentials</h3>
                 <p>Credentials can be controlled on certain elements</p>
             </div></a>
@@ -384,7 +389,7 @@
 
         <h2>Mutating data with actions</h2>
         <section id="mutation" class="three-col">
-            <a href="../demo/insert-append.html"><div class="updated">
+            <a href="../demo/insert-append.html"><div>
                 <h3>Appending data</h3>
                 <p>Appending data using <code>fx-insert</code></p>
             </div></a>
@@ -430,12 +435,15 @@
                 <h3>Sorting with XQuery</h3>
                 <p>Sorting elements with a custom XQuery function</p>
             </div></a>
-            <a href="../demo/uri.html"><div class="updated">
+            <a href="../demo/uri.html"><div>
                 <h3>Builtin functions</h3>
                 <p>Some examples of builtin functions</p>
             </div></a>
 
-
+			<a href="../demo/function-lib/function-lib.html"><div class="updated">
+                <h3>Function libraries</h3>
+                <p>Reuse your functions across multiple pages.</code></p>
+            </div></a>
         </section>
 
         <h2>JSON</h2>
@@ -478,6 +486,10 @@
                 <h3>A simple login</h3>
                 <p>A simple login with <code>fx-switch</code></p>
             </div></a>
+            <a href="../demo/drag-drop-interface.html"><div class="updated">
+                <h3>Drag and Drop</h3>
+                <p>Some use cases with drag and drop</p>
+            </div></a>
         </section>
 
         <h2>Other examples</h2>
@@ -496,7 +508,7 @@
             </div></a>
             <a href="../demo/kanban.html"><div class="updated">
                 <h3>A Kanban board with Drag and Drop</h3>
-                <p>a Kanban board with Drag and Drop and data re-ordering</p>
+                <p>a Kanban board with nested <code>fx-repeat</code> elements and drag and drop</p>
             </div></a>
             <a href="../demo/simple-tei-header.html"><div>
                 <h3>Editing a basic TEI header</h3>
@@ -507,7 +519,7 @@
                     namespaced XML</h3>
                 <p>Editing namespaced XML</p>
             </div></a>
-            <a href="../demo/randomizer.html"><div>
+            <a href="../demo/randomizer.html"><div class="updated">
                 <h3>Randomizing CSS properties</h3>
                 <p>Some fun with randomly generated CSS properties.</p>
             </div></a>
@@ -539,10 +551,6 @@
             <a href="../demo/codemirror/codemirror.html"><div>
                 <h3>Codemirror as Control</h3>
                 <p>Editing a document fragment with CodeMirror and binding it with <code>fx-control</code>.</p>
-            </div></a>
-            <a href="../demo/drag-drop-interface.html"><div class="updated">
-                <h3>Drag and Drop</h3>
-                <p>Different Drag and Drop examples.</code>.</p>
             </div></a>
         </section>
 

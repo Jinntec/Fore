@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using a function library!</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+	<script type="module" src="../demo.js"></script>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Using a function library</h1>
+    <p>
+	  Functions are very powerful! But please Don't Repeat Yourself! So throw them in a function
+	  library and reuse them across your pages! Both XPath (XQuery/XUpdate) as well as JavaScript functions are
+	  supported. Just use the <code>&lt;fx-functionlib src="my-functionlibrary-here.html"&gt;</code> element and away you go!
+    </p>
+	<p>The library can be found at <a href="./lib.html">./lib.html<a/>. Visit it!</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+              <fx-model id="model1">
+                <fx-functionlib src="lib.html"></fx-functionlib>
+              </fx-model>
+              <fx-group>
+                <h2>JavaScript function</h2>
+                <p>And the answer is {theanswer()}</p>
+                <h2>XPath function</h2>
+                <p>And the answer is {hello('from function')}</p>
+              </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+
+<div class="wrapper">
+    <h1>Reusing function libraries</h1>
+    <p>
+	  Making an application with multiple pages or nested Fore elements? No worry, you can reuse the same
+	  fx-functionlib without overwriting function definitions. If in confict the XPath engine always uses the first
+        matching <code>fx-function</code> element.
+    </p>
+    <p>
+        In the example below 2 function libaries are used and the second also has an answer to everything
+        but it's ignored.
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+              <fx-model id="model1">
+				<!-- This is the second import of lib.html.
+				 We already had one for the example above. -->
+                <fx-functionlib src="lib.html"></fx-functionlib>
+                <fx-functionlib src="lib2.html"></fx-functionlib>
+              </fx-model>
+              <fx-group>
+                <h2>The answer to everything</h2>
+                <p>And the answer is {theanswer()}</p>
+                <h2>XPath function</h2>
+                <p>{hello('from XPath function')}</p>
+                  <h2>Timestamp function from another lib</h2>
+                  <p>{now()}</p>
+              </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>
