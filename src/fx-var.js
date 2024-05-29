@@ -1,8 +1,13 @@
+import { createTypedValueFactory, domFacade } from 'fontoxpath';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import getInScopeContext from './getInScopeContext.js';
+
+// We are getting sequences here (evaluateXPath is returning all items, as an array)
+// So wrap them into something so FontoXPath also understands they are sequences, always.
+const typedValueFactory = createTypedValueFactory('item()*');
 
 /**
  * @ts-check
@@ -25,13 +30,8 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
   refresh() {
     const inscope = getInScopeContext(this, this.valueQuery);
 
-      const values = evaluateXPath(this.valueQuery, inscope, this, this.inScopeVariables);
-	  if (values.length) {
-		  [this.value] = values;
-	  } else {
-		  // There is no value: set to null so it's interpreted as empty-sequence later on
-		  this.value = null;
-	  }
+    const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
+    this.value = typedValueFactory(values, domFacade);
   }
 
   setInScopeVariables(inScopeVariables) {

@@ -497,7 +497,8 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
             }),
         );
 */
-        return false;
+		// Return 'nothing' in hope the rest of the page can forgive this
+        return [];
     }
 }
 /**

@@ -138,6 +138,9 @@ export class FxModel extends HTMLElement {
                 }),
             );
         }
+
+		const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
+		await Promise.all(functionlibImports.map(lib => lib.readyPromise));
         // console.timeEnd('instance-loading');
         this.inited = true;
     }
