@@ -22,7 +22,8 @@
             display: flex;
         }
         main{
-            margin-bottom: 10rem;
+            margin-bottom: 40rem;
+
         }
         [draggable]{
             cursor:grabbing;
@@ -74,6 +75,7 @@
 			heigth: 12rem;
 			background: #ddd;
 			width: 100vw;
+            border-top:white solid;
 		}
         .portal{
             display: flex;
@@ -97,6 +99,14 @@
         }
         fx-droptarget.no-drop{
             background: red;
+        }
+        fx-droptarget{
+            background: var(--paper-blue-700);
+        }
+
+        .facs img{
+            width: 100%;
+            max-width: 30rem;
         }
         .copy{
             display: grid;
@@ -199,7 +209,7 @@
 		</aside>
         <footer>
 			<fx-droptarget effect="move" accept=".facs">
-
+                Drag image over here...
 			</fx-droptarget>
 		</footer>
 

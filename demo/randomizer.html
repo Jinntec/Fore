@@ -66,28 +66,7 @@
             <fx-bind ref="skew-x" calculate="local:random(0,20)"></fx-bind>
             <fx-bind ref="skew-y" calculate="local:random(0,10)"></fx-bind>
             <fx-bind ref="scale" calculate="local:random(0,3)"></fx-bind>
-            <fx-function
-                    signature="local:randomColor() as xs:string"
-                    type="text/javascript">
-                var characters = ["a","b","c","d","e","f",0,1,2,3,4,5,6,7,8,9];
-                var randomColorArray = [];
-                for (var i = 0; i < 6; i++) {
-                var randomIndex = Math.floor(Math.random()*characters.length);
-                randomColorArray.push(characters[randomIndex])
-                }
-                return `#${randomColorArray.join("")}`;
-            </fx-function>
-            <fx-function
-                    signature="local:opacity() as xs:string"
-                    type="text/javascript">
-                return Math.floor(Math.random() * 10);
-            </fx-function>
-            <fx-function
-                    signature="local:random($min as xs:integer, $max as xs:integer) as xs:string"
-                    type="text/javascript">
-                return Math.floor(Math.random() * ($max - $min + 1)) + $min;
-            </fx-function>
-
+            <fx-functionlib src="lib/css-functions.html"></fx-functionlib>
         </fx-model>
 
         <div class="wrapper" style="
