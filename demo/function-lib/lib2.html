@@ -13,24 +13,23 @@
 <main>
 
 	<section>
-		<p>Returns the answer to the life, the universe and anything</p>
+		<p>Returns a formatted timestamp</p>
 
 		<pre>
-			<fx-function
-					signature="theanswer() as xs:string"
-					type="text/javascript">
-			  return 21*2;
+			<fx-function signature="now() as xs:string" type="text/javascript">
+				const now = new Date();
+				return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 			</fx-function>
 		</pre>
 	</section>
 
  	<section>
-		<p>Returns a friendly greeting!</p>
+		<p>Returns the answer to the life, the universe and anything but lies and is ignored</p>
 		<pre>
 			<fx-function
-					signature="hello($who as xs:string) as xs:string"
-					type="text/xpath">
-			  "Hello " || $who
+					signature="theanswer() as xs:string"
+					type="text/javascript">
+			  return 23;
 			</fx-function>
 		</pre>
 
