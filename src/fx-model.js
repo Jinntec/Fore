@@ -39,6 +39,7 @@ export class FxModel extends HTMLElement {
 
     connectedCallback() {
         // console.log('connectedCallback ', this);
+        this.setAttribute('inert',true);
         this.shadowRoot.innerHTML = `
             <slot></slot>
         `;

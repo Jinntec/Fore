@@ -119,6 +119,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 	}
 
     connectedCallback() {
+        this.setAttribute('inert',true);
         this.style.display = 'none';
         this.propagate = this.hasAttribute('propagate') ? this.getAttribute('propagate') : 'continue';
         this.repeatContext = undefined;
