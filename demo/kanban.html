@@ -27,6 +27,7 @@
             display: grid;
             grid-template-areas: "task icon"
                                  "content content";
+            position:relative;
         }
         .task{
             grid-area: task;
@@ -110,20 +111,31 @@
         .iconbtn{
             position: absolute;
             right:1rem;
+            z-index:10
         }
         .iconbtn button:hover{
             background: grey;
             color:white;
+            z-index:100;
         }
+        .card .iconbtn button:hover{
+            background: darkred;
+        }
+
+        .iconbtn.addcolumn:hover{
+            z-index:20;
+        }
+
+
         .deleteProject{
             right: 2rem;
             position: absolute;
         }
         .iconbtn button{
             border-radius: 50%;
-            border:none;
             color:black;
             background: white;
+            border: thin solid #efefef;
         }
         .addProject{
             right: 0.5rem;
@@ -179,10 +191,11 @@
             width: calc(100% - 5rem);
         }
         .handle {
-            width: 1rem;
+            width: 2rem;
             right: 0.5rem;
             padding-right: 1rem;
             cursor: grabbing;
+            height: 2rem;
         }
         .line{
             background: black;
@@ -229,8 +242,16 @@
 
         #r-task .iconbtn{
             right: 1.5rem;
+            width:1rem;
+            height:1rem;
+            position:absolute;
+            top:-1.5rem;
+            right:-0.5rem;
         }
-
+        #r-task .iconbtn button {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
         .wrapper{
             width:auto;
             max-width: 100%;

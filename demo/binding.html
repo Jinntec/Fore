@@ -8,11 +8,9 @@
     <link rel="stylesheet" href="../resources/fore.css">
     <link href="../resources/demo.css" rel="stylesheet">
 
-<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link rel="stylesheet" href="../resources/demo.css">
-
-
 
 
     <style>
@@ -30,18 +28,20 @@
             padding-top: 4px;
         }
 
-        .buttons {
-            display: block;
+
+        .buttons fx-trigger {
             width: 10rem;
+        }
+
+        button {
             width: 150px;
         }
-        button{
-            width:150px;
-        }
-        .buttonArray{
+
+        .buttonArray {
             display: flex;
             flex-direction: row;
-            flex-flow:wrap;
+            flex-flow: wrap;
+            gap:1rem;
         }
 
         fx-control {
@@ -49,7 +49,7 @@
             width: 5rem;
         }
 
-        fx-trigger{
+        fx-trigger {
             display: block;
         }
 
@@ -58,13 +58,14 @@
             margin: 0 auto 2rem;
 
         }
-        .modelitems{
+
+        .modelitems {
             width: 80%;
             vertical-align: top;
             font-size: 1.2rem;
         }
 
-        td{
+        td {
             padding: 0.5rem;
             vertical-align: top;
         }
@@ -82,33 +83,42 @@
     <p>In short model items attach constraints or calculations to the nodes of your data. </p>
     <img src="../resources/images/modelitem.svg" class="diagram">
 
-    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code> element allows you
-    to use the following 'facets':</p>
+    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code>
+        element allows you
+        to use the following 'facets':</p>
 
     <table class="modelitems">
         <tr>
             <td>calculate</td>
-            <td>XPath expression whose result will be stored in node referenced by <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></td>
+            <td>XPath expression whose result will be stored in node referenced by <code><a
+                    href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></td>
         </tr>
         <tr>
             <td>constraint</td>
             <td>XPath expression resolving to boolean. When resolving to true the referenced node is considered valid
-            in case <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">required</a></code> constraint also resolves to true</td>
+                in case <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">required</a></code>
+                constraint also resolves to true
+            </td>
         </tr>
         <tr>
             <td>readonly</td>
             <td>boolean XPath expression - when resolving to true it won't be possible any more to change its value
-            with a UI control or by using a <code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/" target="_blank">setvalue</a></code> action.</td>
+                with a UI control or by using a <code><a
+                        href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/"
+                        target="_blank">setvalue</a></code> action.
+            </td>
         </tr>
         <tr>
             <td>required</td>
             <td>boolean XPath expression - when resolving to true the node must have a value to be considered valid
-            before submission.</td>
+                before submission.
+            </td>
         </tr>
         <tr>
             <td>relevant</td>
             <td>boolean XPath expression - when resolving to false the node is considered non-relevant which results
-            in UI controls being not rendered for that node.</td>
+                in UI controls being not rendered for that node.
+            </td>
         </tr>
         <tr>
             <td>type</td>
@@ -117,7 +127,7 @@
     </table>
 
     <p>Each of these attributes will use XPath expressions that evaluate in the context of the node(s) given by the
-    <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code> attribute</p>
+        <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code> attribute</p>
 
     <demo-snippet>
         <template>
@@ -129,15 +139,16 @@
 
     <h2>ModelItem Tester</h2>
     <p>Use the buttons to toggle the state of the respective modelitem facet below.
-    Hitting twice will have no additional effect.</p>
+        Hitting twice will have no additional effect.</p>
 
-    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">fx-bind</a></code> defines a boolean condition for each of the facets. Here we depend on the value
-    of a node which can be set with the corresponding button.</p>
+    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">fx-bind</a></code>
+        defines a boolean condition for each of the facets. Here we depend on the value
+        of a node which can be set with the corresponding button.</p>
     <demo-snippet>
         <template>
 
             <fx-fore>
-<!--                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>-->
+                <!--                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>-->
                 <fx-model>
                     <fx-instance>
                         <data>
@@ -172,46 +183,38 @@
                     </fx-control>
 
                     <div class="buttonArray">
-                        <div class="buttons">
-                            <fx-trigger>
-                                <button data-cy="required">set required</button>
-                                <fx-setvalue ref="required">true</fx-setvalue>
-                            </fx-trigger>
-                            <fx-trigger>
-                                <button data-cy="optional">set optional</button>
-                                <fx-setvalue ref="required">false</fx-setvalue>
-                            </fx-trigger>
-                        </div>
-                        <div class="buttons">
-                            <fx-trigger>
-                                <button data-cy="readonly">set readonly</button>
-                                <fx-setvalue ref="readonly">true</fx-setvalue>
-                            </fx-trigger>
-                            <fx-trigger>
-                                <button data-cy="readwrite">set readwrite</button>
-                                <fx-setvalue ref="readonly">false</fx-setvalue>
-                            </fx-trigger>
-                        </div>
-                        <div class="buttons">
-                            <fx-trigger>
-                                <button data-cy="valid">set valid</button>
-                                <fx-setvalue ref="constraint">true</fx-setvalue>
-                            </fx-trigger>
-                            <fx-trigger>
-                                <button data-cy="invalid">set invalid</button>
-                                <fx-setvalue ref="constraint">false</fx-setvalue>
-                            </fx-trigger>
-                        </div>
-                        <div class="buttons">
-                            <fx-trigger>
-                                <button data-cy="relevant">set relevant</button>
-                                <fx-setvalue ref="relevant">true</fx-setvalue>
-                            </fx-trigger>
-                            <fx-trigger>
-                                <button data-cy="non">set non-relevant</button>
-                                <fx-setvalue ref="relevant">false</fx-setvalue>
-                            </fx-trigger>
-                        </div>
+                        <fx-trigger>
+                            <button data-cy="required">set required</button>
+                            <fx-setvalue ref="required">true</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="optional">set optional</button>
+                            <fx-setvalue ref="required">false</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="readonly">set readonly</button>
+                            <fx-setvalue ref="readonly">true</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="readwrite">set readwrite</button>
+                            <fx-setvalue ref="readonly">false</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="valid">set valid</button>
+                            <fx-setvalue ref="constraint">true</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="invalid">set invalid</button>
+                            <fx-setvalue ref="constraint">false</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="relevant">set relevant</button>
+                            <fx-setvalue ref="relevant">true</fx-setvalue>
+                        </fx-trigger>
+                        <fx-trigger>
+                            <button data-cy="non">set non-relevant</button>
+                            <fx-setvalue ref="relevant">false</fx-setvalue>
+                        </fx-trigger>
                     </div>
                 </fx-group>
             </fx-fore>

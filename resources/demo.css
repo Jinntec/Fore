@@ -1,5 +1,20 @@
+@import 'pico.min.css';
 @import 'vars.css';
 @import 'fore.css';
+
+/* overwrite pico default here */
+[role=group]{
+    display:block;
+    padding:0.5rem 1.5rem;
+}
+
+fx-fore{
+    display:block;
+}
+input.widget{
+    display:block;
+}
+
 @font-face {
     font-family: "Kimberley";
     src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
