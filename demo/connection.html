@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-connection</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem{
+            display: block;
+            padding: 1rem;
+            background: #efefef;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-model>
+
+            <fx-connection id="chat" ref="instance()/me/message" url="ws://localhost:8088" message-format="text">
+                <fx-message event="open">connection open</fx-message>
+                <fx-action event="channel-message">
+                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>
+                    <fx-update></fx-update>
+                    <fx-refresh force></fx-refresh>
+                    <fx-insert context="instance()//transcript" ref="message"  origin="instance()/message"></fx-insert>
+                </fx-action>
+<!--                <fx-setvalue event="channel-message" ref="message" value="event('message')"></fx-setvalue>-->
+<!--
+                <fx-action event="channel-message">
+                    <fx-message>connection message {event('message')}</fx-message>
+                    <fx-insert context="instance()//transcript" ref="message"  origin="instance()/message"></fx-insert>
+                </fx-action>
+-->
+                <fx-message event="close">connection close</fx-message>
+                <fx-message event="error">connection error {event('detail')}</fx-message>
+            </fx-connection>
+
+            <fx-instance>
+                <data>
+                    <item>Item1</item>
+                    <me>
+                        <message></message>
+                    </me>
+                    <transcript>
+                    </transcript>
+                    <message></message>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <div>{server-says}</div>
+
+        <fx-repeat ref="transcript/message">
+            <template>
+                <div>{.}</div>
+            </template>
+        </fx-repeat>
+
+        <fx-control ref="me/message" update-event="enter">
+            <label>Me</label>
+            <fx-action event="value-changed">
+                <fx-send connection="chat"></fx-send>
+<!--                <fx-insert context="instance()//transcript" ref="message"  origin="instance()/me/message"></fx-insert>-->
+
+<!--                <fx-insert context="instance()//transcript"  origin="instance()/me/message" at="2" position="after"></fx-insert>-->
+
+                <!--                <fx-refresh force></fx-refresh>-->
+            </fx-action>
+        </fx-control>
+
+
+        <fx-inspector open></fx-inspector>
+    </fx-fore>
+
+</div>
+<script type="module">
+    import './demo.js';
+</script>
+</body>
+</html>

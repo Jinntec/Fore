@@ -23,8 +23,9 @@ class FxSend extends AbstractAction {
     super.connectedCallback();
     // console.log('connectedCallback ', this);
     this.submission = this.getAttribute('submission');
-    this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
-    this.target = this.hasAttribute('target') ? this.getAttribute('target'):null;
+      this.url = this.hasAttribute('url') ? this.getAttribute('url'):null;
+      this.target = this.hasAttribute('target') ? this.getAttribute('target'):null;
+      this.connection = this.hasAttribute('connection') ? this.getAttribute('connection'):null;
   }
 
   async perform() {
@@ -33,23 +34,8 @@ class FxSend extends AbstractAction {
     console.log('submitting ', this.submission);
     // reset CSS class that signalled validation error during last submit
     this.getOwnerForm().classList.remove('submit-validation-failed');
-    // console.log('submitting model', this.getModel());
-
-    // if not exists signal error
-    // todo: instead of relying on model just use pure dom to find submission as the context could be broken due to a delete action
-    // const fore = this.closest('fx-fore');
-    // const submission = fore.querySelector(`#${this.submission}`);
     const submission = this.getModel().querySelector(`#${this.submission}`);
     if (submission === null) {
-/*
-      this.dispatchEvent(
-        new CustomEvent('error', {
-          composed: true,
-          bubbles: true,
-          detail: { message: `fx-submission element with id: '${this.submission}' not found - ${XPathUtil.getDocPath(this)}` },
-        }),
-      );
-*/
       this.dispatchEvent(
           new CustomEvent('error', {
             composed: false,
@@ -66,6 +52,11 @@ class FxSend extends AbstractAction {
 
       // throw new Error(`submission with id: ${this.submission} not found`);
     }
+    console.log('submission', submission);
+    if(this.connection){
+      this._emitToChannel();
+      return;
+    }
 
     if(this.url){
       const resolved = this.evaluateAttributeTemplateExpression(this.url,this);
@@ -76,17 +67,6 @@ class FxSend extends AbstractAction {
       submission.parameters.set('target',resolved);
     }
 
-
-/*
-    Array.from(this.attributes).forEach( attr => {
-      if(attr.nodeName !== 'submission'){
-        const resolved = this.evaluateAttributeTemplateExpression(attr,this);
-        submission.parameters.set(attr.nodeName,resolved);
-      }
-    });
-*/
-
-    console.log('submission', submission);
     await submission.submit();
 /*
     if(submission.replace === 'instance'){
@@ -96,6 +76,15 @@ class FxSend extends AbstractAction {
 */
     // if not of type fx-submission signal error
   }
+    _emitToChannel(){
+        console.log('modelItem?', this.modelItem.node);
+        const channel = this.getModel().querySelector(`#${this.connection}`);
+        if(!this._logError(channel)){
+            channel.send();
+        }
+
+    }
+
 }
 
 if (!customElements.get('fx-send')) {
