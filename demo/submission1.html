@@ -49,7 +49,7 @@
 <div class="wrapper">
     <demo-snippet>
         <template>
-            <fx-fore>
+            <fx-fore strict>
                 <fx-message event="ready">Hey it's ready</fx-message>
 
                 <fx-model>
@@ -92,7 +92,7 @@
                     <p><fx-output ref="prop"></fx-output></p>
 
                     <h2>non-existing submission raises error</h2>
-
+                    <p>This demo uses the 'strict' flag which brings up a stickly toast. Without the flag the error is only logged to console.</p>
                     <fx-trigger>
                         <button>does not exist</button>
                         <fx-send submission="notexistent"></fx-send>

@@ -147,6 +147,7 @@ class FxConnection extends foreElementMixin(HTMLElement) {
             default:
                 throw new Error(`Unsupported message format: ${this._messageFormat}`);
         }
+        console.log('dispatching channel-message', message);
         Fore.dispatch(this,'channel-message', {"message": message});
     }
 

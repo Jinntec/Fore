@@ -15,21 +15,31 @@
             padding: 1rem;
             background: #efefef;
         }
+        main{
+            display:grid;
+            grid-template-rows:auto 2rem;
+            height:calc(100vh - 2rem);
+            padding:1rem;
+        }
+        fx-repeat{
+            overflow:auto;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
-<div class="wrapper">
 
     <fx-fore>
         <fx-model>
 
-            <fx-connection id="chat" ref="instance()/me/message" url="ws://localhost:8088" message-format="text">
+            <fx-connection id="chat" ref="instance()/message" url="ws://localhost:8088" message-format="text">
                 <fx-message event="open">connection open</fx-message>
                 <fx-action event="channel-message">
-                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>
-                    <fx-update></fx-update>
-                    <fx-refresh force></fx-refresh>
-                    <fx-insert context="instance()//transcript" ref="message"  origin="instance()/message"></fx-insert>
+                    <fx-message level="sticky">channel-message {event('message')}</fx-message>
+<!--                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>-->
+<!--                    <fx-update></fx-update>-->
+<!--                    <fx-refresh force></fx-refresh>-->
+                    <fx-insert context="instance()/transcript" ref="message"  origin="context()"></fx-insert>
+                    <fx-setvalue ref="instance()/transcript[count(../transcript)]">{event('message')}</fx-setvalue>
                 </fx-action>
 <!--                <fx-setvalue event="channel-message" ref="message" value="event('message')"></fx-setvalue>-->
 <!--
@@ -45,9 +55,7 @@
             <fx-instance>
                 <data>
                     <item>Item1</item>
-                    <me>
-                        <message></message>
-                    </me>
+                    <message></message>
                     <transcript>
                     </transcript>
                     <message></message>
@@ -55,31 +63,34 @@
             </fx-instance>
         </fx-model>
 
-        <div>{server-says}</div>
+        <div></div>
 
-        <fx-repeat ref="transcript/message">
-            <template>
-                <div>{.}</div>
-            </template>
-        </fx-repeat>
+        <main>
+            <fx-repeat ref="transcript/message">
+                <template>
+                    <div>{.}</div>
+                </template>
+            </fx-repeat>
 
-        <fx-control ref="me/message" update-event="enter">
-            <label>Me</label>
-            <fx-action event="value-changed">
-                <fx-send connection="chat"></fx-send>
-<!--                <fx-insert context="instance()//transcript" ref="message"  origin="instance()/me/message"></fx-insert>-->
+            <fx-control ref="message" update-event="enter">
+                <textarea placeholder="your message..." class="widget"></textarea>
+                <fx-action event="value-changed" if=". != ''">
+                    <fx-insert context="instance()//transcript" ref="message"  origin="context()"></fx-insert>
+                    <fx-send connection="chat"></fx-send>
+                    <fx-setvalue ref="."></fx-setvalue>
+                    <!--                <fx-insert context="instance()//transcript" ref="message"  origin="instance()/me/message"></fx-insert>-->
 
-<!--                <fx-insert context="instance()//transcript"  origin="instance()/me/message" at="2" position="after"></fx-insert>-->
+                    <!--                <fx-insert context="instance()//transcript"  origin="instance()/me/message" at="2" position="after"></fx-insert>-->
 
-                <!--                <fx-refresh force></fx-refresh>-->
-            </fx-action>
-        </fx-control>
+                    <!--                <fx-refresh force></fx-refresh>-->
+                </fx-action>
+            </fx-control>
+        </main>
 
 
-        <fx-inspector open></fx-inspector>
+<!--        <fx-inspector open></fx-inspector>-->
     </fx-fore>
 
-</div>
 <script type="module">
     import './demo.js';
 </script>

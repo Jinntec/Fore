@@ -26,7 +26,7 @@ server.on('connection', (socket) => {
         // Push the message to all connected sockets except the sender
         sockets.forEach((clientSocket) => {
             if (clientSocket !== socket) {
-                clientSocket.send(`Broadcast: ${message}`);
+                clientSocket.send(`${message}`);
             }
         });
     });
