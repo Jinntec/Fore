@@ -7,6 +7,22 @@ import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 import {Relevance} from "../relevance.js";
 
+function isDifferent (oldValue, newValue) {
+    if (oldValue === null) {
+	return false;
+    }
+
+    if (newValue === oldValue) {
+	return false;
+    }
+
+    if (newValue.nodeType && oldValue.nodeType) {
+	return newValue.outerHTML !== oldValue.outerHTML;
+    }
+
+    return true;
+}
+
 /**
  * `AbstractControl` -
  * is a general base class for control elements.
@@ -146,10 +162,11 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
           // if oldVal is null we haven't received a concrete value yet
 
-		if (this.localName !== 'fx-control') return;
-        if (this.oldVal !== null && currentVal !== this.value) {
+	  if (this.localName !== 'fx-control') return;
+//	        if (this.oldVal !== null && currentVal !== this.value) {
+	  if (isDifferent(this.oldVal, this.value)) {
           Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
-        }
+	  }
       }
     }
   }

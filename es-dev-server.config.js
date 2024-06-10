@@ -1,3 +1,6 @@
+// Also run the websocket server now
+require('./websocket-server.js')
+
 module.exports = {
   port: 8090,
   watch: true,

@@ -1,11 +1,11 @@
 import {foreElementMixin} from './ForeElementMixin.js';
 import {Fore} from "./fore.js";
+import {FxModel} from "./fx-model.js";
 
 class FxConnection extends foreElementMixin(HTMLElement) {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this._render();
         this._url = '';
         this._socket = null;
         this._heartbeatInterval = FxConnection._defaultHeartbeatInterval;
@@ -22,6 +22,11 @@ class FxConnection extends foreElementMixin(HTMLElement) {
 
         const html = `
             <slot></slot>
+${
+this._messageFormat === 'xml' ?
+`<fx-replace id="replace" ref="."></fx-replace>` :
+`<fx-setvalue id="setvalue" ref="."></fx-setvalue>`
+}
         `
         this.shadowRoot.innerHTML = `
             <style>
@@ -47,10 +52,14 @@ class FxConnection extends foreElementMixin(HTMLElement) {
         if (this.hasAttribute('message-format')) {
             this._messageFormat = this.getAttribute('message-format');
         }
+
+	        this._render();
+
         this.getOwnerForm().addEventListener('model-construct-done', e => {
             console.log('Fore model ready');
             this._connect();
 
+	    this.evalInContext();
         });
     }
 
@@ -79,7 +88,6 @@ class FxConnection extends foreElementMixin(HTMLElement) {
 
 
     send(data) {
-
         this.evalInContext();
         data = this.nodeset;
         if (this._socket && this._socket.readyState === WebSocket.OPEN) {
@@ -139,7 +147,12 @@ class FxConnection extends foreElementMixin(HTMLElement) {
                 break;
             case 'xml':
                 const parser = new DOMParser();
-                message = parser.parseFromString(event.data, 'application/xml');
+            message = parser.parseFromString(event.data, 'application/xml');
+	    this.getModelItem().value = message;
+	    FxModel.dataChanged = true;
+	    this.getModel().changed.push(this.modelItem);
+	    this.getModel().updateModel();
+	    this.getOwnerForm().refresh(true);
                 break;
             case 'text':
                 message = event.data;
@@ -148,6 +161,7 @@ class FxConnection extends foreElementMixin(HTMLElement) {
                 throw new Error(`Unsupported message format: ${this._messageFormat}`);
         }
         console.log('dispatching channel-message', message);
+
         Fore.dispatch(this,'channel-message', {"message": message});
     }
 

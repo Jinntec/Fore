@@ -17,7 +17,7 @@ function _getElement(node) {
 }
 
 function _getForeContext(node) {
-    return node.closest('fx-fore');
+    return XPathUtil.getClosest( 'fx-fore', node);
 }
 
 function _getModelInContext(node) {
