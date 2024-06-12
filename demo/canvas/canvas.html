@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Lean Canvas</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .grid1{
+            width:100vw;
+            height:75vh;
+            display:grid;
+            grid-template-areas: "problem solution unique unfair segments"
+                                 "problem metrics unique channels segments";
+            grid-gap:0;
+        }
+        .grid2{
+            display:grid;
+            grid-gap:0;
+            grid-template-columns:1fr 1fr;
+            width:100vw;
+            height:25vh;
+        }
+        section{
+            margin-bottom:0;
+            border:thin solid #333333;
+            border-collapse:collapse;
+            padding:0.25rem;
+        }
+        header{
+            font-weight:bolder;
+        }
+        #problem{
+            grid-area:problem;
+        }
+        #solution{
+            grid-area:solution;
+        }
+        #metrics{
+            grid-area: metrics;
+        }
+        #unique{
+            grid-area: unique;
+        }
+        #unfair{
+            grid-area:unfair;
+        }
+        #segments{
+            grid-area:segments;
+        }
+        #cost{
+            border-collapse:collapse;
+        }
+        #revenue{
+        }
+        .add-trigger a{
+            font-size:1.4rem;
+            background:transparent;
+            padding:0;
+            float:right;
+            border:0;
+        }
+        section:has(:focus){
+            /*
+            transform:scale(1.2);
+            transform-origin:left top;
+            */
+            background:ghostwhite;
+        }
+        section fx-control{
+            height:calc(100% - 1.5rem);
+        }
+        section fx-control textarea{
+            height:100%;
+            resize:none;
+            background:transparent;
+            border:none;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <problem></problem>
+                <solution></solution>
+                <metrics></metrics>
+                <unique></unique>
+                <unfair></unfair>
+                <channels></channels>
+                <segments></segments>
+                <cost></cost>
+                <revenue></revenue>
+                <item></item>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <main>
+        <div class="grid1">
+            <section id="problem">
+                <header>Problem</header>
+                <fx-control ref="problem">
+                    <textarea class="widget" placeholder="List top 1-3 problems"></textarea>
+                </fx-control>
+            </section>
+            <section id="solution">
+                <header>Solution</header>
+                <fx-control ref="solution">
+                    <textarea class="widget" placeholder="Outline a possible solution for each problem"></textarea>
+                </fx-control>
+            </section>
+            <section id="metrics">
+                <header>Key Metrics</header>
+                <fx-control ref="metrics">
+                    <textarea class="widget" placeholder="List the key numbers that tell you how your business is doing"></textarea>
+                </fx-control>
+            </section>
+            <section id="unique">
+                <header>Unique Value Proposition</header>
+                <fx-control ref="unique">
+                    <textarea class="widget" placeholder="Single clear, compelling message that states why you are different and worth paying attention"></textarea>
+                </fx-control>
+            </section>
+            <section id="unfair">
+                <header>Unfair Advantage</header>
+                <fx-control ref="unfair">
+                    <textarea class="widget" placeholder="Something that cannot easily be bought or copied"></textarea>
+                </fx-control>
+            </section>
+            <section id="channels">
+                <header>Channels</header>
+                <fx-control ref="channels">
+                    <textarea class="widget" placeholder="List your path to customers (inbound or outbound)"></textarea>
+                </fx-control>
+            </section>
+            <section id="segments">
+                <header>Customer Segments</header>
+                <fx-control ref="segments">
+                    <textarea class="widget" placeholder="List your target customers and users"></textarea>
+                </fx-control>
+            </section>
+        </div>
+        <div class="grid2">
+            <section id="cost">
+                <header>Cost Structure</header>
+                <fx-control ref="cost">
+                    <textarea class="widget" placeholder="List your fixed and variable costs"></textarea>
+                </fx-control>
+            </section>
+            <section id="revenue">
+                <header>Revenue Streams</header>
+                <fx-control ref="revenue">
+                    <textarea class="widget" placeholder="List your sources of revenue"></textarea>
+                </fx-control>
+            </section>
+        </div>
+    </main>
+
+
+    <!--        <fx-inspector open></fx-inspector>-->
+</fx-fore>
+
+<script type="module">
+    import '../demo.js';
+</script>
+</body>
+</html>
