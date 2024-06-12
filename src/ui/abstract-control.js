@@ -7,17 +7,20 @@ import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 import {Relevance} from "../relevance.js";
 
-function isDifferent (oldValue, newValue) {
-    if (oldValue === null) {
+function isDifferent (oldNodeValue, newNodeValue, oldControlValue, newControlValue) {
+    if (oldNodeValue === null) {
 	return false;
     }
 
-    if (newValue === oldValue) {
+    if (oldNodeValue === newNodeValue) {
 	return false;
     }
 
-    if (newValue.nodeType && oldValue.nodeType) {
-	return newValue.outerHTML !== oldValue.outerHTML;
+	if (oldControlValue === newControlValue) {
+		return true;
+	}
+    if (newControlValue.nodeType && oldControlValue.nodeType) {
+		return newControlValue.outerHTML !== oldControlValue.outerHTML;
     }
 
     return true;
@@ -53,7 +56,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if(force) this.force=true;
     // console.log('### AbstractControl.refresh on : ', this);
 
-    const currentVal = this.value;
+      // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
+    const oldValue = this.value;
 
     // if(this.repeated) return
     if (this.isNotBound()) return;
@@ -163,8 +167,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           // if oldVal is null we haven't received a concrete value yet
 
 	  if (this.localName !== 'fx-control') return;
-//	        if (this.oldVal !== null && currentVal !== this.value) {
-	  if (isDifferent(this.oldVal, this.value)) {
+		  if (isDifferent(this.oldVal, this.nodeset, this.value, oldValue)) {
           Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
 	  }
       }
@@ -368,7 +371,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   }
 
   isValid() {
-    return this.hasAttribute('invalid') ? false : true;
+    return !this.hasAttribute('invalid');
   }
 
   isReadonly() {
