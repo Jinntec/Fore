@@ -7,11 +7,13 @@ describe('kanban.html', () => {
 		const target = Cypress.$(toSelector)[0];
 		const bcr = target.getBoundingClientRect();
 		const dataTransfer = new DataTransfer();
-		const offsetY = bcr.height / 2 + (beforeOrAfter === 'before' ? -10 : 10);
+		const offsetY = 10000;
 		cy.get(fromSelector)
 			.trigger('dragstart', { dataTransfer });
+		// Pass 'force': true to prevent Cypress from finding a closer drop target. We explicitly
+		// want to drop in the selected element
 		cy.get(toSelector)
-			.trigger('drop', {dataTransfer, offsetY});
+			.trigger('drop', 'center', {dataTransfer, offsetY, force: true});
 
 	}
 
@@ -28,7 +30,7 @@ describe('kanban.html', () => {
 });
 
 	it('can drag an item to the end', () => {
-		dragItem('[data-cy="todo-0"]', '[data-cy="doing"]', 'before');
+		dragItem('[data-cy="todo-0"]', '[data-cy="doing"]', 'after');
 		cy.get('[data-cy="doing-2"]').should('have.attr', 'data-cy-name', 'launch preps');
 	});
 });

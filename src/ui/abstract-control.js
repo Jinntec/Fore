@@ -2,26 +2,21 @@ import '../fx-model.js';
 import { foreElementMixin } from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
-import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
-import {Relevance} from "../relevance.js";
 
-function isDifferent (oldNodeValue, newNodeValue, oldControlValue, newControlValue) {
+function isDifferent (oldNodeValue, oldControlValue, newControlValue) {
     if (oldNodeValue === null) {
-	return false;
+		return false;
     }
 
-    if (oldNodeValue === newNodeValue) {
-	return false;
+    if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
+		return newControlValue.outerHTML !== oldControlValue.outerHTML;
     }
 
 	if (oldControlValue === newControlValue) {
-		return true;
+		return false;
 	}
-    if (newControlValue.nodeType && oldControlValue.nodeType) {
-		return newControlValue.outerHTML !== oldControlValue.outerHTML;
-    }
 
     return true;
 }
@@ -167,7 +162,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
           // if oldVal is null we haven't received a concrete value yet
 
 	  if (this.localName !== 'fx-control') return;
-		  if (isDifferent(this.oldVal, this.nodeset, this.value, oldValue)) {
+		  if (isDifferent(this.oldVal, this.value, oldValue)) {
           Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
 	  }
       }
