@@ -16,7 +16,7 @@
 [Documentation](https://jinntec.github.io/fore-docs/) |
 
 
-# Declarative user interfaces in plain HTML
+# Declarative applications in plain HTML
 
 Fore lets you write data-driven front-end applications in a declarative way
 just using HTML5 Web Components. 
