@@ -1,14 +1,12 @@
 import {Fore} from './fore.js';
 import {Relevance} from './relevance.js';
-import {foreElementMixin} from './ForeElementMixin.js';
-import {evaluateXPathToString, evaluateXPath} from './xpath-evaluation.js';
-import getInScopeContext from './getInScopeContext.js';
-import {XPathUtil} from "./xpath-util.js";
+import { evaluateXPath} from './xpath-evaluation.js';
+import ForeElementMixin from './ForeElementMixin.js';
 
 /**
  * todo: validate='false'
  */
-export class FxSubmission extends foreElementMixin(HTMLElement) {
+export class FxSubmission extends ForeElementMixin {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});

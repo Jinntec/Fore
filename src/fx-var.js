@@ -2,24 +2,22 @@ import { createTypedValueFactory, domFacade } from 'fontoxpath';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import getInScopeContext from './getInScopeContext.js';
 
 // We are getting sequences here (evaluateXPath is returning all items, as an array)
 // So wrap them into something so FontoXPath also understands they are sequences, always.
 const typedValueFactory = createTypedValueFactory('item()*');
 
-/**
- * @ts-check
- */
-export class FxVariable extends foreElementMixin(HTMLElement) {
+export class FxVariable extends ForeElementMixin {
   constructor() {
     super();
 
     this.attachShadow({ mode: 'open' });
     this.name = '';
     this.valueQuery = '';
-    this.value = null;
+      this.value = null;
+	  this.precedingVariables = [];
   }
 
   connectedCallback() {
@@ -34,6 +32,9 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
     this.value = typedValueFactory(values, domFacade);
   }
 
+	/**
+	 * @param {Map<string, FxVariable>} inScopeVariables
+	 */
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {
       console.error(`The variable ${this.name} is declared more than once`);

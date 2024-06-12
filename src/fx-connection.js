@@ -1,8 +1,8 @@
-import {foreElementMixin} from './ForeElementMixin.js';
+import ForeElementMixin from "./ForeElementMixin.js";
 import {Fore} from "./fore.js";
 import {FxModel} from "./fx-model.js";
 
-class FxConnection extends foreElementMixin(HTMLElement) {
+class FxConnection extends ForeElementMixin {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });

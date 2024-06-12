@@ -1,5 +1,5 @@
 import '../fx-model.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
@@ -26,7 +26,7 @@ function isDifferent (oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends foreElementMixin(HTMLElement) {
+export default class AbstractControl extends ForeElementMixin {
   constructor() {
     super();
     this.value = null;

@@ -1,6 +1,6 @@
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from "./ForeElementMixin.js";
 
-export class FxHeader extends foreElementMixin(HTMLElement) {
+export class FxHeader extends ForeElementMixin {
   constructor() {
     super();
     this.style.display = 'none';

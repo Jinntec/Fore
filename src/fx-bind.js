@@ -1,5 +1,5 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import { ModelItem } from './modelitem.js';
 import {
   evaluateXPathToBoolean,
@@ -22,7 +22,7 @@ import getInScopeContext from './getInScopeContext.js';
  *
  * @customElements
  */
-export class FxBind extends foreElementMixin(HTMLElement) {
+export class FxBind extends ForeElementMixin {
   static READONLY_DEFAULT = false;
 
   static REQUIRED_DEFAULT = false;

@@ -20,10 +20,11 @@ export class Fore {
 
  /**
    * Loads and return a piece of HTML
-   * @param url - the Url to load from
+   * @param url {String} - the Url to load from
    * @returns {Promise<string>}
    */
-  static async loadHtml(url){
+	static async loadHtml(url){
+
     try{
       const response = await fetch(url,  {
         method: 'GET',
@@ -54,9 +55,9 @@ export class Fore {
    * loads a Fore element from given `src`. Always returns the first occurrence of a `<fx-fore>`. The retured element
    * will replace the `replace` element in the DOM.
    *
-   * @param replace the element with a `src` attribute to resolvé.
-   * @param src the Url to resolve
-   * @param selector a querySelector expression to fetch certain element from loaded document
+   * @param {string} replace the element with a `src` attribute to resolvé.
+   * @param {string} src the Url to resolve
+   * @param {string} selector a querySelector expression to fetch certain element from loaded document
    * @returns {Promise<void>}
    */
   static async loadForeFromSrc(replace, src, selector){
@@ -91,6 +92,12 @@ export class Fore {
           return foreElement;
         });
   }
+
+	/**
+	 * Builds a predicate string that identifies this node.
+	 * @todo Likely unused
+	 * @param  {Node} node
+	 */
   static buildPredicates(node){
     let attrPredicate='';
     Array.from(node.attributes).forEach(attr =>{
@@ -103,13 +110,13 @@ export class Fore {
         // }
       // }
     });
-    return attrPredicate
+      return attrPredicate;
   }
 
 
   /**
    * returns true if target element is the widget itself or some element within the widget.
-   * @param target an event target
+   * @param {HTMLElement} target an event target
    * @returns {boolean}
    */
   static isWidget(target) {
@@ -122,7 +129,12 @@ export class Fore {
     return false;
   }
 
-
+	/**
+	 * Get a string that can be used as a path to a node
+	 *
+	 * @param {Node} node
+	 * @returns {string}
+	 */
   static getDomNodeIndexString(node) {
     const indexes = [];
     let currentNode = node;
@@ -139,6 +151,11 @@ export class Fore {
     return indexes.join('.');
   }
 
+	/**
+	 * Get the expression part of something
+	 * @param {string} input
+	 * @returns {string}
+	 */
   static getExpression(input){
     if(input.startsWith('{') && input.endsWith('}')){
        return input.substring(1, input.length - 1);
@@ -149,8 +166,8 @@ export class Fore {
   /**
    * returns the next `fx-fore` element upwards in tree
    *
-   * @param start
-   * @returns {*}
+   * @param {HTMLElement|Text} start
+   * @returns {import('./fx-fore.js').FxFore}
    */
   static getFore(start) {
     return start.nodeType === Node.TEXT_NODE ? start.parentNode.closest('fx-fore'):start.closest('fx-fore');
@@ -205,6 +222,10 @@ export class Fore {
     return 'http://www.w3.org/2002/xforms';
   }
 
+	/**
+	 * @param {string} elementName
+	 * @returns {boolean}
+	 */
   static isActionElement(elementName) {
     return Fore.ACTION_ELEMENTS.includes(elementName);
   }
@@ -245,6 +266,10 @@ export class Fore {
     ];
   }
 
+	/**
+	 * @param {string} elementName
+	 * @returns {boolean}
+	 */
   static isUiElement(elementName) {
     const found = Fore.UI_ELEMENTS.includes(elementName);
     if (found) {
@@ -256,9 +281,9 @@ export class Fore {
   /**
    * recursively refreshes all UI Elements.
    *
-   * @param startElement
-   * @param force
-   * @returns {Promise<unknown>}
+   * @param {HTMLElement} startElement
+   * @param {boolean} force
+   * @returns {Promise<void>}
    */
   static async refreshChildren(startElement, force) {
     const refreshed = new Promise(resolve => {

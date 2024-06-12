@@ -4,6 +4,9 @@ export class XPathUtil {
 
     /**
      * Alternative to `contains` that respects shadowroots
+	 * @param {Node} ancestor
+	 * @param {Node} descendant
+	 * @returns {boolean}
      */
     static contains(ancestor, descendant) {
         while (descendant) {
@@ -23,6 +26,9 @@ export class XPathUtil {
 
     /**
      * Alternative to `closest` that respects subcontrol boundaries
+	 *
+	 * @param {string} querySelector
+	 * @param {Node} start
      */
     static getClosest(querySelector, start) {
         while (start && !start.matches || !start.matches(querySelector)) {
@@ -53,7 +59,7 @@ export class XPathUtil {
 
     /**
      * returns next bound element upwards in tree
-     * @param start where to start the search
+     * @param {Node} start where to start the search
      * @returns {*|null}
      */
     static getParentBindingElement(start) {
@@ -78,14 +84,17 @@ export class XPathUtil {
     /**
      * Checks whether the specified path expression is an absolute path.
      *
-     * @param path the path expression.
-     * @return <code>true</code> if specified path expression is an absolute
+     * @param {string} path the path expression.
+     * @returns {boolean} <code>true</code> if specified path expression is an absolute
      * path, otherwise <code>false</code>.
      */
     static isAbsolutePath(path) {
         return path != null && (path.startsWith('/') || path.startsWith('instance('));
     }
 
+	/**
+	 * @param {string} ref
+	 */
     static isSelfReference(ref) {
         return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
     }
@@ -96,7 +105,7 @@ export class XPathUtil {
      * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
      *
      * Otherwise instance id is extracted from function and returned. If all fails null is returned.
-     * @param ref
+     * @param {string} ref
      * @returns {string}
      */
     static getInstanceId(ref) {
@@ -113,6 +122,11 @@ export class XPathUtil {
         return null;
     }
 
+	/**
+	 * @param {HTMLElement} boundElement
+	 * @param {string} path
+	 * @returns {string}
+	 */
     static resolveInstance(boundElement, path) {
         let instanceId = XPathUtil.getInstanceId(path);
         if (!instanceId) {
@@ -129,6 +143,10 @@ export class XPathUtil {
         return 'default';
     }
 
+	/**
+	 * @param {Node} node
+	 * @returns string
+	 */
     static getDocPath(node) {
         const path = fx.evaluateXPathToString('path()', node);
         // Path is like `$default/x[1]/y[1]`
@@ -136,6 +154,11 @@ export class XPathUtil {
         return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
     }
 
+	/**
+	 * @param {Node} node
+	 * @param {string} instanceId
+	 * @returns string
+	 */
     static getPath(node, instanceId) {
         const path = fx.evaluateXPathToString('path()', node);
         // Path is like `$default/x[1]/y[1]`
@@ -143,6 +166,10 @@ export class XPathUtil {
         return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
     }
 
+	/**
+	 * @param {string} path
+	 * @returns string
+	 */
     static shortenPath(path) {
         const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
         // cut off leading slash
@@ -151,6 +178,10 @@ export class XPathUtil {
         return tmp1.substring(tmp1.indexOf('/'), tmp.length);
     }
 
+	/**
+	 * @param {string} dep
+	 * @returns {string}
+	 */
     static getBasePath(dep) {
         const split = dep.split(':');
         return split[0];

@@ -1,13 +1,11 @@
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import registerFunction from './registerFunction.js';
 
 /**
  * Allows to extend a form with remote custom functions.
  *
- * @extends {HTMLElement}
  */
-
-export class FxFunctionlib extends foreElementMixin(HTMLElement) {
+export class FxFunctionlib extends ForeElementMixin {
     constructor() {
         super();
 

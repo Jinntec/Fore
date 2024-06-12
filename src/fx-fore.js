@@ -332,6 +332,13 @@ export class FxFore extends HTMLElement {
             document.body.appendChild(devtools);
         }
     }
+
+	/**
+	 * Add a model item to the refresh list
+	 *
+	 * @param {import('./modelitem.js').ModelItem} modelItem
+	 * @returns {void}
+	 */
     addToRefresh(modelItem) {
         const found = this.toRefresh.find(mi => mi.path === modelItem.path);
         if (!found) {
@@ -662,8 +669,8 @@ export class FxFore extends HTMLElement {
 
     /**
      * evaluate a template expression on a node either text- or attribute node.
-     * @param expr The string to parse for expressions
-     * @param node the node which will get updated with evaluation result
+     * @param {string} expr The string to parse for expressions
+     * @param {Node} node the node which will get updated with evaluation result
      */
     evaluateTemplateExpression(expr, node) {
 

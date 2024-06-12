@@ -1,10 +1,14 @@
-import {foreElementMixin} from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import {evaluateXPathToBoolean, resolveId, evaluateXPath} from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {Fore} from '../fore.js';
 import {FxFore} from '../fx-fore.js';
 import {XPathUtil} from '../xpath-util.js';
 
+/**
+ * @param {number} howLong How long to wait, in ms
+ * @returns {Promise<void>}
+ */
 async function wait(howLong) {
     return new Promise(resolve => setTimeout(() => resolve(), howLong));
 }
@@ -17,7 +21,7 @@ async function wait(howLong) {
  * @customElement
  * @demo demo/index.html
  */
-export class AbstractAction extends foreElementMixin(HTMLElement) {
+export class AbstractAction extends ForeElementMixin {
     static dataChanged = false;
 
     static get properties() {
@@ -119,7 +123,7 @@ export class AbstractAction extends foreElementMixin(HTMLElement) {
 	}
 
     connectedCallback() {
-        this.setAttribute('inert',true);
+        this.setAttribute('inert', 'true');
         this.style.display = 'none';
         this.propagate = this.hasAttribute('propagate') ? this.getAttribute('propagate') : 'continue';
         this.repeatContext = undefined;
