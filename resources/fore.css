@@ -35,7 +35,7 @@ html {
     display: block;
 }
 
-fx-control[required]:after {
+fx-control[required] label:after {
     content: "*";
     display: inline;
     color: red;
