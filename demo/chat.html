@@ -10,6 +10,9 @@
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
+        body{
+            position:relative;
+        }
         fx-repeatitem{
             display: block;
             padding: 1rem;
@@ -17,15 +20,27 @@
         }
         main{
             display:grid;
-            grid-template-rows:auto 2rem;
-            height:calc(100vh - 2rem);
+            grid-template-rows:auto 4rem;
+            height:calc(100vh - 4rem);
             padding:1rem;
         }
         fx-repeat{
             overflow:auto;
         }
+        /*
         fx-repeatitem div::before{
             content:attr(data-from) ' ';
+        }
+        */
+        textarea{
+            width:100%;
+            height:100%;
+        }
+        #hint{
+            position:absolute;
+            right:2rem;
+            top:2rem;
+            z-index:1;
         }
     </style>
 </head>
@@ -55,6 +70,7 @@
 
     </fx-model>
 
+    <a id="hint" href="chat.html" target="_blank">click to open another chat page</a>
     <main>
         <fx-repeat ref="transcript/message">
             <template>

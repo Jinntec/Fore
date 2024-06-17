@@ -330,7 +330,6 @@
 				<search></search>
 			  </data>
 			</fx-instance>
-
         </fx-model>
         <h1>Kanban Board</h1>
         <p>Cards and Colums can be moved with Drag and Drop.</p>
@@ -349,7 +348,6 @@
                             <span class="line"></span>
                             <span class="line"></span>
                         </div>
-
                         <fx-control ref="@name"></fx-control>
                         <fx-trigger class="iconbtn addcolumn" title="add card">
                             <button>+</button>
@@ -363,7 +361,6 @@
                                 <fx-delete ref="."></fx-delete>
                             </fx-confirm>
                         </fx-trigger>
-
                     </div>
                     <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
                         <template draggable="true" drop-target="r-task">
@@ -385,8 +382,6 @@
                 </template>
             </fx-repeat>
         </main>
-
-
         <div class="buttons">
             <fx-trigger>
                 <button>insert a column</button>
@@ -397,7 +392,6 @@
                 <fx-insert ref="column"></fx-insert>
             </fx-trigger>
         </div>
-
     </fx-fore>
 
 

@@ -1,4 +1,4 @@
-@import 'pico.min.css';
+/*@import 'pico.min.css';*/
 @import 'vars.css';
 @import 'fore.css';
 
@@ -6,6 +6,10 @@
 [role=group]{
     display:block;
     padding:0.5rem 1.5rem;
+}
+
+fx-fore [role=group]>:not(:last-child){
+    border:none;
 }
 
 fx-fore{

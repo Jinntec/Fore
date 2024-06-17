@@ -29,20 +29,18 @@
         }
 
 
-        .buttons fx-trigger {
-            width: 10rem;
-        }
+        fx-trigger {
+            width: 15rem;
 
-        button {
-            width: 150px;
         }
-
-        .buttonArray {
+        .vertical .buttonArray {
             display: flex;
             flex-direction: row;
             flex-flow: wrap;
             gap:1rem;
+            width:80%
         }
+
 
         fx-control {
             margin: 20px 0;
@@ -54,9 +52,7 @@
         }
 
         .diagram {
-            width: 70%;
-            margin: 0 auto 2rem;
-
+            width: 100%;
         }
 
         .modelitems {
@@ -81,23 +77,25 @@
 
     <h2>ModelItems</h2>
     <p>In short model items attach constraints or calculations to the nodes of your data. </p>
-    <img src="../resources/images/modelitem.svg" class="diagram">
+    <img src="../resources/images/modelitemv2.svg" class="diagram">
 
-    <p>The <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code>
-        element allows you
-        to use the following 'facets':</p>
+    <p>Imagine your data as a tree of nodes. With bindings you can add
+    additional constraints to those nodes (the colored dots) which will be recalculated
+    and revalidated automatically when a data change requires it.</p>
+
+    <p>Each <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code> <strong>requires</strong> a <code>ref</code> attribute pointing
+    to the node(s) it applies to.</p>
+    <p>With following attributes you can add calculations and validations as needed:</p>
 
     <table class="modelitems">
         <tr>
             <td>calculate</td>
-            <td>XPath expression whose result will be stored in node referenced by <code><a
-                    href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></td>
+            <td>XPath calculation expression whose result will be stored in node referenced by <code><a
+                    href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code>.</td>
         </tr>
         <tr>
             <td>constraint</td>
-            <td>XPath expression resolving to boolean. When resolving to true the referenced node is considered valid
-                in case <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">required</a></code>
-                constraint also resolves to true
+            <td>XPath expression resolving to boolean. When resolving to true the referenced node is considered valid.
             </td>
         </tr>
         <tr>
@@ -110,19 +108,15 @@
         </tr>
         <tr>
             <td>required</td>
-            <td>boolean XPath expression - when resolving to true the node must have a value to be considered valid
-                before submission.
+            <td>boolean XPath expression - when resolving to true the node must have a value to allow submission.
             </td>
         </tr>
         <tr>
             <td>relevant</td>
-            <td>boolean XPath expression - when resolving to false the node is considered non-relevant which results
-                in UI controls being not rendered for that node.
+            <td>boolean XPath expression - when resolving to false the node is considered non-relevant. UI controls
+                binding to the referenced node are not rendered in that case. Non-relevant nodes are also not
+                submitted but get filtered out by default.
             </td>
-        </tr>
-        <tr>
-            <td>type</td>
-            <td>datatype</td>
         </tr>
     </table>
 
@@ -134,7 +128,7 @@
             <fx-bind ref="item" calculate="3*11"></fx-bind>
         </template>
     </demo-snippet>
-    <p>The above results in the node named 'item' there will be a value of '33'</p>
+    <p>In this example the node 'item' will get a value of '33'</p>
     <p class="note">Calculated nodes are always readonly!</p>
 
     <h2>ModelItem Tester</h2>
@@ -171,7 +165,7 @@
                         <label>An input</label>
                         <!--                    <xf-hint>a hint for this item</xf-hint>-->
                         <input>
-                        <fx-alert>This went wrong</fx-alert>
+                        <fx-alert>validation alert</fx-alert>
                         <fx-message event="required">required event fired</fx-message>
                         <fx-message event="optional">optional event fired</fx-message>
                         <fx-message event="valid">valid event fired</fx-message>
