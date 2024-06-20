@@ -191,12 +191,6 @@ export class FxInstance extends HTMLElement {
         root.appendChild(newNode);
       }
       this._setInitialData(doc);
-/*
-      this.instanceData = doc;
-      this.originalInstance = this.instanceData.cloneNode(true);
-*/
-      // this.instanceData.firstElementChild.setAttribute('id', this.id);
-      // resolve('done');
     } else if (this.src) {
       await this._loadData();
     } else if (this.childNodes.length !== 0) {
