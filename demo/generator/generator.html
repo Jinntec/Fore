@@ -57,7 +57,7 @@
        </data>
    </fx-model>
    <main>
-       <fx-control ref="instance('vars')/selected">
+       <fx-control ref="data('vars')/selected">
            <label></label>
            <select class="widget">
                <option value="group">group</option>
@@ -67,7 +67,7 @@
            </select>
        </fx-control>
 
-       <fx-repeat ref="instance()//*">
+       <fx-repeat ref="data()//*">
            <template>
                <fx-control ref="@name" class="level-{count(ancestor::*)}">
                    <label>{local-name(..)}</label>

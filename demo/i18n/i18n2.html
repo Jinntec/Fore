@@ -29,7 +29,7 @@
                     </fx-instance>
                     <fx-submission id="switch-lang"
                                    method="get"
-                                   replace="instance"
+                                   replace="data"
                                    instance="default">
                     </fx-submission>
                 </fx-model>
@@ -39,9 +39,9 @@
                 one language as the default with <code>src</code> and switches between different languages by exchanging the
                 instance with a submission.</p>
                 <fx-group>
-                    <fx-control ref="instance('vars')/selected">
+                    <fx-control ref="data('vars')/selected">
                         <label>Selected</label>
-                        <fx-items ref="instance('default')?*" class="widget">
+                        <fx-items ref="data('default')?*" class="widget">
                             <template>
                                 <div class="fx-checkbox">
                                     <input type="radio" name="group" value="{value}"/>
@@ -50,7 +50,7 @@
                             </template>
                         </fx-items>
                     </fx-control>
-                    {instance('vars')/selected}
+                    {data('vars')/selected}
                 </fx-group>
 
                 <fx-trigger>

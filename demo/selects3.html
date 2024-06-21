@@ -74,7 +74,7 @@
 
                     <p>Use <code><a href="https://jinntec.github.io/fore-docs/elements/ui/items/"target="_blank">fx-items</a></code> to build a group of checkboxes</p>
                     <fx-control ref="listitem">
-                        <fx-items ref="instance('default')//fruit" class="widget">
+                        <fx-items ref="data('default')//fruit" class="widget">
                             <template>
                                 <span class="fx-checkbox">
                                     <input id="check" name="fruit" type="checkbox" value="{@value}">
@@ -87,7 +87,7 @@
                     <p>Selected value is: {listitem}</p>
 
                     <fx-control ref="listitem">
-                        <fx-items ref="instance('default')/single" class="widget">
+                        <fx-items ref="data('default')/single" class="widget">
                             <template>
                                 <span class="fx-checkbox">
                                     <input id="check" name="fruit" type="checkbox" value="{.}">

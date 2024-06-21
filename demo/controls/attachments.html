@@ -36,7 +36,7 @@
             </data>
         </fx-model>
 
-        <fx-repeat id="r-attachments" ref="instance()//attachment">
+        <fx-repeat id="r-attachments" ref="data()//attachment">
             <template>
                 {.}
             </template>
@@ -56,7 +56,7 @@
         </fx-repeat>
         <fx-trigger>
             <button>Save attachments</button>
-            <fx-return ref="instance()" event="value-changed"></fx-return>
+            <fx-return ref="data()" event="value-changed"></fx-return>
         </fx-trigger>
         <fx-inspector open></fx-inspector>
 -->

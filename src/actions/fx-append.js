@@ -65,11 +65,11 @@ class FxAppend extends AbstractAction {
     /*
         const instData = new XMLSerializer().serializeToString(
             this.getModel()
-                .getDefaultInstance()
+                .getDefaultData()
                 .getInstanceData(),
         );
 */
-    // console.log('modified instance ', this.getModel().getDefaultInstance().getInstanceData());
+    // console.log('modified instance ', this.getModel().getDefaultData().getInstanceData());
 
     this.needsUpdate = true;
   }

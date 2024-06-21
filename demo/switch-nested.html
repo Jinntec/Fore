@@ -21,7 +21,7 @@
             <fx-submission id="login"
                            method="urlencoded-post"
                            url="#echo"
-                           ref="instance('auth')"
+                           ref="data('auth')"
                            replace="none">
                 <fx-setvalue ref="inprogress" event="submit">true</fx-setvalue>
                 <fx-header name="Authorization" value="'auth'"></fx-header>
@@ -40,11 +40,11 @@
         <fx-switch>
             <fx-case id="loginpage">
                 <section class="login">
-                    <fx-control ref="instance('auth')/user" update-event="enter">
+                    <fx-control ref="data('auth')/user" update-event="enter">
                         <label>User</label>
                         <input type="text" autofocus="autofocus" autocomplete="false"/>
                     </fx-control>
-                    <fx-control ref="instance('auth')/password" update-event="enter">
+                    <fx-control ref="data('auth')/password" update-event="enter">
                         <label>Password</label>
                         <input type="password"/>
                     </fx-control>

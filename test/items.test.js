@@ -17,7 +17,7 @@ describe('fx-items tests', () => {
                 </fx-model>
                 <fx-group>
                     <fx-control ref="listitem">
-                        <fx-items ref="instance('default')//fruit" class="widget">
+                        <fx-items ref="data('default')//fruit" class="widget">
                             <template>
                 <span class="fx-checkbox">
                   <input id="check" name="fruit" type="checkbox" value="{@value}"/>
@@ -61,7 +61,7 @@ describe('fx-items tests', () => {
                 </fx-model>
                 <fx-group>
                     <fx-control ref="listitem">
-                        <fx-items ref="instance('default')//fruit" class="widget">
+                        <fx-items ref="data('default')//fruit" class="widget">
                             <template>
                 <span class="fx-checkbox">
                   <input id="check" name="fruit" type="checkbox" value="{@value}"/>
@@ -103,7 +103,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="instance('i-functions')//option" class="widget">
+                    <fx-items ref="data('i-functions')//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
@@ -150,7 +150,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="instance('i-functions')//option" class="widget">
+                    <fx-items ref="data('i-functions')//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
@@ -199,7 +199,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="instance('i-functions')//option" class="widget">
+                    <fx-items ref="data('i-functions')//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
@@ -261,7 +261,7 @@ describe('fx-items tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="selected" update-event="input">
-                    <fx-items ref="instance('list')?*" class="widget">
+                    <fx-items ref="data('list')?*" class="widget">
                         <template>
                   <span class="fx-checkbox">
                     <input id="check" name="option" type="checkbox" value="{value}"/>
@@ -314,7 +314,7 @@ describe('fx-items tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="selected" update-event="input">
-                    <fx-items ref="instance('list')?*" class="widget">
+                    <fx-items ref="data('list')?*" class="widget">
                         <template>
                   <span class="fx-checkbox">
                     <input id="check" name="option" type="checkbox" value="{value}"/>
@@ -362,7 +362,7 @@ describe('fx-items tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="selected" update-event="input">
-                    <fx-items ref="instance('list')?*" class="widget">
+                    <fx-items ref="data('list')?*" class="widget">
                         <template>
                   <span class="fx-checkbox">
                     <input id="check" name="option" type="checkbox" value="{value}"/>

@@ -65,7 +65,7 @@
                 </fx-model>
                 <fx-group>
 
-                    <fx-control ref="instance('default')" as="node">
+                    <fx-control ref="data('default')" as="node">
                         <h3>The input:</h3>
                         <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                     </fx-control>
@@ -73,12 +73,12 @@
 <!--
                     <fx-trigger>
                         <button>convert</button>
-                        <fx-replace ref="instance('converted')/*[1]" with="convert(instance('default')/fx-fore)"></fx-replace>
+                        <fx-replace ref="data('converted')/*[1]" with="convert(data('default')/fx-fore)"></fx-replace>
                     </fx-trigger>
 -->
 
 
-                    <fx-control ref="convert(instance('default')/fx-fore)" as="node">
+                    <fx-control ref="convert(data('default')/fx-fore)" as="node">
                         <h3>The transformed XML:</h3>
                         <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
                     </fx-control>

@@ -312,7 +312,7 @@ describe('delete Tests', () => {
 
                     <fx-trigger>
                         <label>delete</label>
-                        <fx-delete ref="instance()"></fx-delete>
+                        <fx-delete ref="data()"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>
@@ -356,7 +356,7 @@ describe('delete Tests', () => {
 
                     <fx-trigger>
                         <label>delete</label>
-                        <fx-delete ref="instance()/data"></fx-delete>
+                        <fx-delete ref="data()/data"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>
@@ -399,7 +399,7 @@ describe('delete Tests', () => {
 
                     <fx-trigger>
                         <label>delete</label>
-                        <fx-delete ref="instance('items')/item"></fx-delete>
+                        <fx-delete ref="data('items')/item"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>
@@ -450,7 +450,7 @@ describe('delete Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
-                    <fx-delete event="model-construct-done" ref="instance('items')//item[2]"></fx-delete>
+                    <fx-delete event="model-construct-done" ref="data('items')//item[2]"></fx-delete>
                     <data></data>
                     <data id="items">
                         <item>item1</item>
@@ -458,7 +458,7 @@ describe('delete Tests', () => {
                         <item>item3</item>
                     </data>
                 </fx-model>
-                <fx-repeat ref="instance('items')/item">
+                <fx-repeat ref="data('items')/item">
                     <template>
                         <fx-control ref="." id="task" type="text">
                             <label>Task</label>

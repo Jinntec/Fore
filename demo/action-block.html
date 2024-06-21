@@ -57,7 +57,7 @@
 
                     <!-- SUBMISSIONS -->
                     <fx-submission id="s-submission1" method="get" url="#echo" replace="none">
-                        <fx-message event="submit">submit {instance('vars')/completed + 1}</fx-message>
+                        <fx-message event="submit">submit {data('vars')/completed + 1}</fx-message>
                         <fx-message event="submit-error">error</fx-message>
                         <fx-dispatch event="submit-done" name="check-done" targetid="deployment"></fx-dispatch>
                     </fx-submission>
@@ -65,13 +65,13 @@
                 </fx-model>
 
                 <fx-action id="deployment" event="check-done">
-                    <fx-setvalue ref="instance('vars')/completed" value=". + 1"></fx-setvalue>
+                    <fx-setvalue ref="data('vars')/completed" value=". + 1"></fx-setvalue>
                     <fx-update></fx-update>
-                    <fx-action if="instance('vars')/completed = '6'">
+                    <fx-action if="data('vars')/completed = '6'">
                         <fx-message>all checks done</fx-message>
-                        <fx-setvalue ref="instance('vars')/success">true</fx-setvalue>
+                        <fx-setvalue ref="data('vars')/success">true</fx-setvalue>
                     </fx-action>
-                    <fx-send submission="s-submission1" if="instance('vars')/completed < 6"></fx-send>
+                    <fx-send submission="s-submission1" if="data('vars')/completed < 6"></fx-send>
                 </fx-action>
 
                 <fx-group class="ui">
@@ -87,9 +87,9 @@
 
                     <fx-group>
                         <ul>
-                            <li>Completed: { instance('vars')/completed } checks</li>
-                            <li>Complete = {instance('vars')/completed = 6}</li>
-                            <li>success: {instance('vars')/success}</li>
+                            <li>Completed: {data('vars')/completed } checks</li>
+                            <li>Complete = {data('vars')/completed = 6}</li>
+                            <li>success: {data('vars')/success}</li>
                         </ul>
                     </fx-group>
                 </fx-group>

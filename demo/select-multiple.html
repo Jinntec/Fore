@@ -25,13 +25,13 @@
 
     </fx-model>
 
-    lang {instance()/lang}
+    lang {data()/lang}
 
     <fx-control ref="selected">
         <label>Material</label>
-        <select multiple size="10" class="widget" ref="instance('material')/term">
+        <select multiple size="10" class="widget" ref="data('material')/term">
             <template>
-                <option value="{@ref}">{name[@xml:lang = instance()/lang]}</option>
+                <option value="{@ref}">{name[@xml:lang = data()/lang]}</option>
             </template>
         </select>
     </fx-control>

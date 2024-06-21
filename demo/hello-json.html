@@ -84,7 +84,7 @@
 		  <fx-repeat ref="?automobiles">
 			<template>
 			  <li>
-				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <strong>Year:</strong> {?year}- <i>{let $maker := ?maker =>trace() return if(instance('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
+				<strong>Maker:</strong> {?maker} <strong>Model:</strong> {?model} <strong>Year:</strong> {?year}- <i>{let $maker := ?maker =>trace() return if(data('instance1')?motorcycles?*[?maker = $maker]=> exists()) then "Also makes motorcycles" else "Makes no motorcycles"}</i>
 			  </li>
 			</template>
 		  </fx-repeat>

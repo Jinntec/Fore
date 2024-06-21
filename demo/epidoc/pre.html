@@ -63,19 +63,19 @@
 					</fx-function>
 
                 </fx-model>
-                <fx-replace ref="instance('result')"
-                            with="pre-process-corresp(instance())"
+                <fx-replace ref="data('result')"
+                            with="pre-process-corresp(data())"
                             event="ready"></fx-replace>
                 <fx-group>
 
                     <h2>XQuery update facility function</h2>
-                    <fx-control ref="instance()" as="node" >
+                    <fx-control ref="data()" as="node" >
                         <h3>The input:</h3>
                         <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                     </fx-control>
 
 
-                    <fx-control ref="instance('result')" as="node">
+                    <fx-control ref="data('result')" as="node">
                         <h3>The transformed XML:</h3>
                         <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
                     </fx-control>

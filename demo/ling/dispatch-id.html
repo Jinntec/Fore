@@ -39,7 +39,7 @@
                                                 
 
                                 <fx-control ref="//m[@type='prefix'][@n='1']/@function">
-                                    <fx-items ref="instance('functions')//option" class="widget">
+                                    <fx-items ref="data('functions')//option" class="widget">
                                         <template>
                                             <span class="fx-checkbox">
                                                 <input id="check" name="foo" type="checkbox" value="{@value}">
@@ -57,7 +57,7 @@
                                             <fx-trigger>
                                                 <button>add</button>
                                                 <fx-insert context="//entry" ref="gramGrp"
-                                                           origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                                                           origin="data('default')//gramGrp[@type='segmentation']"></fx-insert>
                                             </fx-trigger>
                                         </div>
                                     </div>
@@ -97,7 +97,7 @@
                                                 
 
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@function">
-                                                    <fx-items ref="instance('functions')//option" class="widget">
+                                                    <fx-items ref="data('functions')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="foo" type="checkbox" value="{@value}">

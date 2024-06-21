@@ -106,9 +106,9 @@ describe('instance Tests', () => {
                         <item>second</item>
                     </data>
 
-                    <fx-bind ref="instance('second')/item"></fx-bind>
+                    <fx-bind ref="data('second')/item"></fx-bind>
                 </fx-model>
-                <fx-output ref="instance('second')//item"></fx-output>
+                <fx-output ref="data('second')//item"></fx-output>
             </fx-fore>
         `);
 
@@ -142,7 +142,7 @@ describe('instance Tests', () => {
                     </data>
 
                     <fx-bind
-                            ref="instance('second')/item"
+                            ref="data('second')/item"
                             required="boolean-from-string('maybe!~')"
                     ></fx-bind>
                 </fx-model>
@@ -175,7 +175,7 @@ describe('instance Tests', () => {
                         <item>Maybe</item>
                     </data>
                 </fx-model>
-                <span id="the-span">{instance('second')/item}</span>
+                <span id="the-span">{data('second')/item}</span>
             </fx-fore>
         `);
 
@@ -220,7 +220,7 @@ describe('instance Tests', () => {
                 </fx-model>
 
                 <span id="default-span">{greeting}</span>
-                <span id="pointed-span">{instance("instance-1")/greeting}</span>
+                <span id="pointed-span">{data("instance-1")/greeting}</span>
             </fx-fore>
         `);
 
@@ -342,7 +342,7 @@ describe('instance Tests', () => {
                 </fx-model>
 
                 <div id="outer">{value}</div>
-                <div id="anotherouter">{instance('another')/value}</div>
+                <div id="anotherouter">{data('another')/value}</div>
 
                 <fx-fore>
                     <fx-model>
@@ -355,7 +355,7 @@ describe('instance Tests', () => {
                     </fx-model>
 
                     <div id="inner">{value}</div>
-                    <div id="anotherinner">{instance('another')/value}</div>
+                    <div id="anotherinner">{data('another')/value}</div>
 
                 </fx-fore>
             </fx-fore>

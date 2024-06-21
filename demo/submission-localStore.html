@@ -63,8 +63,8 @@
                     <fx-submission id="sub2"
                                    url="localStore:foo"
                                    method="delete"
-                                   replace="instance"
-                                   instance="second">
+                                   replace="data"
+                                   data="second">
                     </fx-submission>
                 </fx-model>
                 <fx-group>
@@ -105,7 +105,7 @@
                     </ul>
 
 
-                    <h2>Foo is {instance('second')/bar} and bar is {instance('second')/another}</h2>
+                    <h2>Foo is {data('second')/bar} and bar is {data('second')/another}</h2>
                 </fx-group>
                 <fx-inspector></fx-inspector>
             </fx-fore>

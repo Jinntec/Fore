@@ -60,10 +60,10 @@
 <div class="wrapper">
     <h1>Submission and replacement of partial data</h1>
     <p>With <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code> the initial data for submission are selected.</p>
-    <p><code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">targetref</a></code> attribute points to the node that is replaced when <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">replace="instance"</a></code>.</p>
-    <p>Here the 'vehicle' node of the first instance is submitted, echoed by #echo submission and the returned node
+    <p><code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">targetref</a></code> attribute points to the node that is replaced when <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">replace="data"</a></code>.</p>
+    <p>Here the 'vehicle' node of the first data element is submitted, echoed by #echo submission and the returned node
     is replacing the node referenced by <code><a href="https://jinntec.github.io/fore-docs/elements/model/submission/" target="_blank">targetref</a></code>.</p>
-    <p>This Fore automatically runs the submission with a delay of 3 seconds. Reload and watch second instance change.</p>
+    <p>This Fore automatically runs the submission with a delay of 3 seconds. Reload and watch second data change.</p>
     <demo-snippet>
         <template>
             <fx-fore>
@@ -86,11 +86,11 @@
                         url="#echo"
                         replace="data"
                         data="result"
-                        targetref="instance('result')/result">
+                        targetref="data('result')/result">
                     </fx-submission>
                 </fx-model>
 
-                Vehicle: {instance('result')/vehicle}
+                Vehicle: {data('result')/vehicle}
 
                 <h3>Original data:</h3>
                 <br>

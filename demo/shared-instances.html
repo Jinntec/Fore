@@ -47,9 +47,9 @@
 <fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
-    <h1>Shared instances</h1>
+    <h1>Shared Data</h1>
 
-    <p>With the <code>shared</code> attribute an instance becomes visible within nested Fore elements.</p>
+    <p>With the <code>shared</code> attribute an data element becomes visible within nested Fore elements.</p>
 
     <p>The data are truly shared - changing the data within a nested Fore will change the original
         data. This simplifies to delegate the handling of a subtree of elements to a sub Fore without
@@ -57,14 +57,14 @@
 
     <p>
         This example uses an outer Fore element and nests another 2 Fore elements within itself. All share (and modify)
-        the instance 'todos'. The first sub Fore just lists the entries but adds 'You can do it!', the second mirrors
+        the 'todos'. The first sub Fore just lists the entries but adds 'You can do it!', the second mirrors
         the same repeat as its parent.
     </p>
     <p class="note">Refresh of nested Fore elements in a shared scenario only propagate downwards. Making changes in a child won't automatically show up
     in the parent but happen on next refresh cycle. If you want to immediately update
     you can dispatch an <code>refresh</code> event to the parent which will refresh itself then. See child-b which dispatches a <code>refresh</code> whenever
     value changes. </p>
-    <p class="note">Caution: instance ids are not resolved in any way by now, so you have to make
+    <p class="note">Caution: data ids are not resolved in any way by now, so you have to make
         sure that ids that unique within a composed page.</p>
 
     <fx-fore id="outer">
@@ -78,7 +78,7 @@
         </fx-model>
 
         <fx-fore id="inner">
-            {instance('default')/name}
+            {data('default')/name}
         </fx-fore>
     </fx-fore>
 
@@ -97,15 +97,15 @@
                     </data>
                 </fx-model>
                 <div>
-                    <h2>Parent Fore sharing <span>{instance('todos')/todos/todo => count()}</span> todos</h2>
-                    <fx-repeat id="outer" ref="instance('todos')/todos/todo">
+                    <h2>Parent Fore sharing <span>{data('todos')/todos/todo => count()}</span> todos</h2>
+                    <fx-repeat id="outer" ref="data('todos')/todos/todo">
                         <template>
                             <fx-control id="control" ref="." update-event="input"></fx-control>
                         </template>
                     </fx-repeat>
                     <fx-trigger id="addouter">
                         <button>+</button>
-                        <fx-insert ref="instance('todos')/todos/todo"></fx-insert>
+                        <fx-insert ref="data('todos')/todos/todo"></fx-insert>
                     </fx-trigger>
                 </div>
                 <div class="grid">
@@ -116,11 +116,11 @@
                                     <message>You can do it!</message>
                                 </data>
                             </fx-model>
-                            <h3>First nested Fore (<span>{instance('todos')/todos/todo => count()}</span>)</h3>
-                            <div>Just showing todos but adding a comment from local instance</div>
-                            <fx-repeat ref="instance('todos')/todos/todo" id="repeat-a">
+                            <h3>First nested Fore (<span>{data('todos')/todos/todo => count()}</span>)</h3>
+                            <div>Just showing todos but adding a comment from local data</div>
+                            <fx-repeat ref="data('todos')/todos/todo" id="repeat-a">
                                 <template>
-                                    <p>{.} - {instance('default')/message}</p>
+                                    <p>{.} - {data('default')/message}</p>
                                 </template>
                             </fx-repeat>
                         </fx-fore>
@@ -130,8 +130,8 @@
 
                             <fx-dispatch name="refresh" targetid="todo" event="value-changed"></fx-dispatch>
 
-                            <h3>Second nested Fore (<span>{instance('todos')/todos/todo => count()}</span>)</h3>
-                            <fx-repeat ref="instance('todos')/todos/todo" id="repeat-b">
+                            <h3>Second nested Fore (<span>{data('todos')/todos/todo => count()}</span>)</h3>
+                            <fx-repeat ref="data('todos')/todos/todo" id="repeat-b">
                                 <template>
                                     <fx-control ref="." update-event="input">
                                         <input class="widget">
@@ -140,7 +140,7 @@
                             </fx-repeat>
                             <fx-trigger>
                                 <button>+</button>
-                                <fx-insert ref="instance('todos')/todos/todo"></fx-insert>
+                                <fx-insert ref="data('todos')/todos/todo"></fx-insert>
                             </fx-trigger>
                         </fx-fore>
                     </div>

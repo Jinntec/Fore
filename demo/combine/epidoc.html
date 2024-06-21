@@ -23,7 +23,7 @@
 <!--
             <fx-insert if="not(exists(//msDesc/msIdentifier/repository))"
                        ref="//msDesc/msIdentifier/idno"
-                       origin="instance('template')//msDesc/msIdentifier/repository"
+                       origin="data('template')//msDesc/msIdentifier/repository"
                        position="before"></fx-insert>
             <fx-update></fx-update>
 -->
@@ -31,7 +31,7 @@
             <fx-action iterate="//msPart" event="model-construct-done">
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
                            context=".//msItem"
-                           origin="instance('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+                           origin="data('template')//msItem/listBibl[@type='transmission']"></fx-insert>
             </fx-action>
             <fx-action iterate="//msPart" event="model-construct-done">
                 <!-- ##### todo: adding a second action within the iterated block breaks the actions -->
@@ -43,12 +43,12 @@
 <!--
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
                            context=".//msItem"
-                           origin="instance('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+                           origin="data('template')//msItem/listBibl[@type='transmission']"></fx-insert>
                 <fx-update></fx-update>
 -->
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='images']))"
                            context=".//msItem"
-                           origin="instance('template')//msItem/listBibl[@type='images']"></fx-insert>
+                           origin="data('template')//msItem/listBibl[@type='images']"></fx-insert>
                 <fx-update></fx-update>
 
             </fx-action>
@@ -65,14 +65,14 @@
 
     </fx-model>
 
-    <fx-output ref="instance()//msDesc/msIdentifier/repository">
+    <fx-output ref="data()//msDesc/msIdentifier/repository">
         <label slot="label">Repo</label>
     </fx-output>
-    <fx-output ref="instance()//msDesc/msIdentifier/idno">
+    <fx-output ref="data()//msDesc/msIdentifier/idno">
         <label slot="label">idno</label>
     </fx-output>
 
-    <fx-output ref="instance()//msPart/@xml:id">
+    <fx-output ref="data()//msPart/@xml:id">
         <label slot="label">msPart Id</label>
     </fx-output>
 

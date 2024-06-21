@@ -53,7 +53,7 @@
 <script>
     const form = document.querySelector('fx-fore');
     form.addEventListener('refresh-done', () => {
-    const inst = form.model.getDefaultInstanceData();
+    const inst = form.model.getDefaultDataData();
     const ser = new XMLSerializer();
     const serialized = ser.serializeToString(inst);
     console.log('default inst ', ser.serializeToString(inst));

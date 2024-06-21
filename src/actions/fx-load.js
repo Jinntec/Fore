@@ -206,7 +206,7 @@ class FxLoad extends AbstractAction {
             const dataId = XPathUtil.getInstanceId(naked);
 
             // If there is an instance referred
-            const inst = dataId ? this.getModel().getInstance(dataId) : this.getModel().getDefaultInstance();
+            const inst = dataId ? this.getModel().getInstance(dataId) : this.getModel().getDefaultData();
             try {
                 return evaluateXPathToString(naked, inscope, this, null, inst);
             } catch (error) {

@@ -23,7 +23,7 @@
         <fx-trigger>
             <button>add</button>
             <fx-insert context="//entry"
-                       origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                       origin="data('default')//gramGrp[@type='segmentation']"></fx-insert>
         </fx-trigger>
         <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
             <template>
@@ -36,7 +36,7 @@
                             <fx-trigger>
                                 <button>add</button>
                                 <fx-insert context="listBibl"
-                                           origin="instance('i-template')//cit[@type='source']"
+                                           origin="data('i-template')//cit[@type='source']"
                                             ></fx-insert>
                             </fx-trigger>
                         </div>

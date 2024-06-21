@@ -196,7 +196,7 @@ describe('fx-control tests', () => {
                 <fx-group>
                     <span id="result">{result}</span>
                     <fx-control id="input1" ref="result">
-                        <fx-items ref="instance('default')/item">
+                        <fx-items ref="data('default')/item">
                             <template>
                 <span id="checkbox">
                   <label slot="label">{.}</label>
@@ -232,7 +232,7 @@ describe('fx-control tests', () => {
                 <fx-group>
                     <span id="result">{result}</span>
                     <fx-control id="input1" ref="result">
-                        <fx-items ref="instance('default')/item">
+                        <fx-items ref="data('default')/item">
                             <template>
                 <span id="checkbox">
                   <label slot="label">{.}</label>

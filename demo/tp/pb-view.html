@@ -109,13 +109,13 @@
         <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" id="content" src="view.html"></fx-instance>
     </fx-model>
 
-    <fx-replace ref="instance('content')" with="event('root')" event="pb-update"></fx-replace>
+    <fx-replace ref="data('content')" with="event('root')" event="pb-update"></fx-replace>
     <fx-message level="sticky" event="ready">Loading first view on ready</fx-message>
     <fx-message level="sticky" event="loaded">loaded fired on {event('attachPoint')}</fx-message>
     <fx-message level="sticky" event="pb-update" if="event('target.id')">pb-update fired on {event('target.id')}
     </fx-message>
 
-<!--    <fx-insert context="instance('content')" origin="event('root')" event="pb-update"></fx-insert>-->
+<!--    <fx-insert context="data('content')" origin="event('root')" event="pb-update"></fx-insert>-->
 
 
     <fx-action event="ready">
@@ -138,12 +138,12 @@
             <template>
                 <fx-group id="shadow">
                     <h2>Content fetched from shadowDOM of pb-view</h2>
-                    <h3>{instance('content')//span[@class='tei-hi1 document_g']}</h3>
+                    <h3>{data('content')//span[@class='tei-hi1 document_g']}</h3>
                     <!-- todo: investigate why output does not produce same result as template expression here       -->
-                    <fx-ouput ref="instance('content')//*"
+                    <fx-ouput ref="data('content')//*"
                               style="display: block;padding: 1rem 0;"
                               mediatype="html"></fx-ouput>
-                    <fx-repeat ref="instance('content')//p">
+                    <fx-repeat ref="data('content')//p">
                         <template>
                             <div>{.}</div>
                         </template>
@@ -205,12 +205,12 @@
         <div id="shadowed"></div>
 <!--
         <h2>Content fetched from shadowDOM of pb-view</h2>
-        <h3>{instance('content')//span[@class='tei-hi1 document_g']}</h3>
+        <h3>{data('content')//span[@class='tei-hi1 document_g']}</h3>
         &lt;!&ndash; todo: investigate why output does not produce same result as template expression here       &ndash;&gt;
-        <fx-ouput ref="instance('content')//*"
+        <fx-ouput ref="data('content')//*"
                   style="display: block;padding: 1rem 0;"
                   mediatype="html"></fx-ouput>
-        <fx-repeat ref="instance('content')//p">
+        <fx-repeat ref="data('content')//p">
             <template>
                 <div>{.}</div>
             </template>
@@ -218,7 +218,7 @@
 -->
     </div>
     <!--        <fx-output ref="content" mediatype="html"></fx-output>-->
-    <!--        <fx-output ref="instance('content')/*[1]" mediatype="html"></fx-output>-->
+    <!--        <fx-output ref="data('content')/*[1]" mediatype="html"></fx-output>-->
     <fx-inspector open></fx-inspector>
 </fx-fore>
 

@@ -20,7 +20,7 @@
             <fx-insert if="not(exists(gender))"
                        ref="persname"
                        position="after"
-                       origin="instance('template')/gender"></fx-insert>
+                       origin="data('template')/gender"></fx-insert>
             <fx-update></fx-update>
 
 
@@ -28,12 +28,12 @@
             <fx-insert if="not(exists(birth))"
                        ref="gender"
                        position="after"
-                       origin="instance('template')/birth"></fx-insert>
+                       origin="data('template')/birth"></fx-insert>
             <fx-update></fx-update>
 
             <fx-insert if="not(exists(note))"
-                       ref="instance()/*"
-                       origin="instance('template')/note" position="after"></fx-insert>
+                       ref="data()/*"
+                       origin="data('template')/note" position="after"></fx-insert>
             <fx-update></fx-update>
 
 

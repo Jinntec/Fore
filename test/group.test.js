@@ -75,7 +75,7 @@ describe('group tests', () => {
                     <fx-submission id="s-load"
                                    method="post"
                                    url="#echo"
-                                   ref="instance('data')"
+                                   ref="data('data')"
                                    replace="instance"
                                    instance="default"></fx-submission>
                 </fx-model>
@@ -92,7 +92,7 @@ describe('group tests', () => {
                     </fx-control>
                     <fx-trigger id="t2">
                         <button>switch non-relevant again</button>
-                        <fx-delete ref="instance()/foo"></fx-delete>
+                        <fx-delete ref="data()/foo"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>

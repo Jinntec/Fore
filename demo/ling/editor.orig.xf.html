@@ -162,15 +162,15 @@
                         -->
             </meanings>
         </xf:instance>
-        <xf:submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false" resource="modules/load.xql?id={bf:appContext('id')}">
+        <xf:submission id="s-load-data" method="get" replace="data" ref="data('i-default')" validate="false" resource="modules/load.xql?id={bf:appContext('id')}">
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been loaded.</xf:message>
             <xf:message ev:event="xforms-submit-error">Failed to load data.</xf:message>
             <xf:action ev:event="xforms-submit-done">
-                <xf:action while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//TEI:gramGrp[@type='segmentation'])">
-                    <xf:setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="instance('i-meanings')/being-reloaded/@grp + 1"/>
-                    <xf:setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                <xf:action while="data('i-meanings')/being-reloaded/@grp &lt; count(data('i-default')//TEI:gramGrp[@type='segmentation'])">
+                    <xf:setvalue ref="data('i-meanings')/being-reloaded/@grp" value="data('i-meanings')/being-reloaded/@grp + 1"/>
+                    <xf:setvalue ref="data('i-meanings')/being-reloaded/@n" value="1"/>
                     <xf:send submission="s-reload-meanings"/>
-                    <xf:setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                    <xf:setvalue ref="data('i-meanings')/being-reloaded/@n" value="2"/>
                     <xf:send submission="s-reload-meanings"/>
                 </xf:action>
             </xf:action>
@@ -185,22 +185,22 @@
                 <xf:value/>
             </xf:header>
             <xf:action ev:event="xforms-submit">
-                <xf:setvalue ref="instance('i-default')//TEI:entry/@xml:id" value="instance('i-default')//TEI:orth[@type='latin']"/>
+                <xf:setvalue ref="data('i-default')//TEI:entry/@xml:id" value="data('i-default')//TEI:orth[@type='latin']"/>
                 <xf:message ev:event="xforms-submit-done" level="ephemeral">Saving...</xf:message>
             </xf:action>
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been saved.</xf:message>
             <xf:message ev:event="xforms-submit-error">Failed to save data</xf:message>
         </xf:submission>
-        <xf:submission id="s-reload-meanings" method="post" replace="instance" validate="false" resource="modules/reload-meanings.xql" ref="instance('i-default')//TEI:entry/TEI:gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/TEI:m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]" targetref="instance('i-meanings')/target/TEI:taxonomy">
+        <xf:submission id="s-reload-meanings" method="post" replace="data" validate="false" resource="modules/reload-meanings.xql" ref="data('i-default')//TEI:entry/TEI:gramGrp[@type='segmentation'][data('i-meanings')/being-reloaded/@grp/number()]/TEI:m[@type = 'radical' and @n = data('i-meanings')/being-reloaded/@n]" targetref="data('i-meanings')/target/TEI:taxonomy">
             <xf:action ev:event="xforms-submit-done">
-                <xf:action if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
-                    <xf:insert context="instance('i-meanings')" nodeset="*[last()]" origin="instance('i-meanings')/template/meaning"/>
-                    <xf:setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n" value="instance('i-meanings')/being-reloaded/@n"/>
-                    <xf:setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp" value="instance('i-meanings')/being-reloaded/@grp"/>
+                <xf:action if="not(data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n])">
+                    <xf:insert context="data('i-meanings')" nodeset="*[last()]" origin="data('i-meanings')/template/meaning"/>
+                    <xf:setvalue ref="data('i-meanings')/meaning[@grp='0']/@n" value="data('i-meanings')/being-reloaded/@n"/>
+                    <xf:setvalue ref="data('i-meanings')/meaning[@grp='0']/@grp" value="data('i-meanings')/being-reloaded/@grp"/>
                 </xf:action>
-                <xf:delete context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]" nodeset="*"/>
-                <xf:insert context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]" origin="instance('i-meanings')/target/*"/>
-                <xf:delete context="instance('i-meanings')/target/TEI:taxonomy" nodeset="*|@*"/>
+                <xf:delete context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]" nodeset="*"/>
+                <xf:insert context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]" origin="data('i-meanings')/target/*"/>
+                <xf:delete context="data('i-meanings')/target/TEI:taxonomy" nodeset="*|@*"/>
             </xf:action>
             <xf:message ev:event="xforms-submit-error" level="ephemeral">Meanings reload failed.</xf:message>
         </xf:submission>
@@ -220,14 +220,14 @@
         </xf:input>
     </xf:group>
     <xf:group id="load-subform-group">
-        <xf:action ev:event="load-subform-event" if="string-length(instance('i-controller')/morpheme) &gt; 0">
+        <xf:action ev:event="load-subform-event" if="string-length(data('i-controller')/morpheme) &gt; 0">
             <xf:load show="embed" targetid="mountpoint">
-                <xf:resource value="concat('meanings.xhtml?morpheme=', instance('i-controller')/morpheme,'#xforms')"/>
+                <xf:resource value="concat('meanings.xhtml?morpheme=', data('i-controller')/morpheme,'#xforms')"/>
                 <xf:extension includeCSS="false" includeScript="false"/>
             </xf:load>
             <bfc:show dialog="meanings"/>
         </xf:action>
-        <xf:action ev:event="load-subform-event" if="string-length(instance('i-controller')/morpheme) = 0">
+        <xf:action ev:event="load-subform-event" if="string-length(data('i-controller')/morpheme) = 0">
             <xf:load show="embed" targetid="mountpoint">
                 <xf:resource value="'meanings.xhtml#xforms'"/>
                 <xf:extension includeCSS="false" includeScript="false"/>
@@ -277,7 +277,7 @@
                     <div class="tp-form-group-col">
                         <label class="tp-label">Classification</label>
                         <xf:select class="tp-input" ref="//TEI:gramGrp[@type='classification']/TEI:gram[@type='fictitious']" appearance="full">
-                            <xf:itemset nodeset="instance('i-fictitious')//option">
+                            <xf:itemset nodeset="data('i-fictitious')//option">
                                 <xf:label ref="."/>
                                 <xf:value ref="."/>
                             </xf:itemset>
@@ -286,7 +286,7 @@
                     <div class="tp-form-group-col">
                         <label class="tp-label">Classification</label>
                         <xf:select class="tp-input" ref="//TEI:gramGrp[@type='classification']/TEI:gram[@type='GPR']" appearance="full">
-                            <xf:itemset nodeset="instance('i-gpr')//option">
+                            <xf:itemset nodeset="data('i-gpr')//option">
                                 <xf:label ref="."/>
                                 <xf:value ref="."/>
                             </xf:itemset>
@@ -295,7 +295,7 @@
                     <div class="tp-form-group-col">
                         <label class="tp-label">Sublemma</label>
                         <xf:select1 class="tp-input -form-control" ref="//TEI:gramGrp[@type='classification']/TEI:gram[@type='sublemma']">
-                            <xf:itemset nodeset="instance('i-sublemma')//option">
+                            <xf:itemset nodeset="data('i-sublemma')//option">
                                 <xf:label ref="."/>
                                 <xf:value ref="@xml:id"/>
                             </xf:itemset>
@@ -305,7 +305,7 @@
                     <div class="tp-form-group-col">
                         <label class="tp-label">Polysemic</label>
                         <xf:select class="tp-input" ref="//TEI:gramGrp[@type='classification']/TEI:gram[@ana]" appearance="full">
-                            <xf:itemset nodeset="instance('i-polysemic')//option">
+                            <xf:itemset nodeset="data('i-polysemic')//option">
                                 <xf:label ref="."/>
                                 <xf:value ref="."/>
                             </xf:itemset>
@@ -327,7 +327,7 @@
                                     <xf:label class="input-group-addon">
                                         <i class="glyphicon glyphicon-plus"/>
                                     </xf:label>
-                                    <xf:insert context="//TEI:entry" nodeset="TEI:re" origin="instance('i-template')//TEI:re"/>
+                                    <xf:insert context="//TEI:entry" nodeset="TEI:re" origin="data('i-template')//TEI:re"/>
                                     <script>
                                         clearAndInitAutocompletes();
                                     </script>
@@ -340,7 +340,7 @@
                         <div class="tp-form-group-col">
                             <label class="tp-label">Relation</label>
                             <xf:select1 class="tp-input -form-control" ref="//TEI:re//TEI:lbl">
-                                <xf:itemset nodeset="instance('i-relations')//option">
+                                <xf:itemset nodeset="data('i-relations')//option">
                                     <xf:label ref="."/>
                                     <xf:value ref="@xml:id"/>
                                 </xf:itemset>
@@ -391,7 +391,7 @@
                                         <xf:label class="input-group-addon">
                                             <i class="glyphicon glyphicon-plus"/>
                                         </xf:label>
-                                        <xf:insert context="//TEI:gramGrp[@type='classification']" nodeset="TEI:usg" origin="instance('i-template')//TEI:usg[@type='lang']"/>
+                                        <xf:insert context="//TEI:gramGrp[@type='classification']" nodeset="TEI:usg" origin="data('i-template')//TEI:usg[@type='lang']"/>
                                         <script>
                                             clearAndInitAutocompletes();
                                         </script>
@@ -410,7 +410,7 @@
                                         <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                         <xf:select1 class="tp-input -form-control" ref=".">
                                             <xf:label class="input-group-addon"/>
-                                            <xf:itemset nodeset="instance('i-dialects')//TEI:category">
+                                            <xf:itemset nodeset="data('i-dialects')//TEI:category">
                                                 <xf:label ref="TEI:catDesc[@xml:lang='en'][@ana='short']"/>
                                                 <xf:value ref="@xml:id"/>
                                             </xf:itemset>
@@ -471,7 +471,7 @@
                                         <xf:label class="input-group-addon">
                                             <i class="glyphicon glyphicon-plus"/>
                                         </xf:label>
-                                        <xf:insert context="//TEI:entry" nodeset="TEI:form" origin="instance('i-template')//TEI:form[@type='variant']"/>
+                                        <xf:insert context="//TEI:entry" nodeset="TEI:form" origin="data('i-template')//TEI:form[@type='variant']"/>
                                         <script>
                                             clearAndInitAutocompletes();
                                         </script>
@@ -522,7 +522,7 @@
                                         <label class="tp-label">Gender</label>
                                         <xf:select1 class="tp-input -form-control" ref="TEI:gen">
                                             <xf:label class="input-group-addon"/>
-                                            <xf:itemset nodeset="instance('i-genders')//TEI:category">
+                                            <xf:itemset nodeset="data('i-genders')//TEI:category">
                                                 <xf:label ref="TEI:catDesc[@xml:lang='en'][@ana='short']"/>
                                                 <xf:value ref="@xml:id"/>
                                             </xf:itemset>
@@ -534,7 +534,7 @@
                                         <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                         <xf:select1 class="tp-input -form-control" ref="TEI:usg">
                                             <xf:label class="input-group-addon"/>
-                                            <xf:itemset nodeset="instance('i-dialects')//TEI:category">
+                                            <xf:itemset nodeset="data('i-dialects')//TEI:category">
                                                 <xf:label ref="TEI:catDesc[@xml:lang='en'][@ana='short']"/>
                                                 <xf:value ref="@xml:id"/>
                                             </xf:itemset>
@@ -596,7 +596,7 @@
                                                 <i class="glyphicon glyphicon-plus"/>
                                             </xf:label>
 
-                                            <xf:insert context="//TEI:entry" nodeset="TEI:gramGrp" origin="instance('i-template')//TEI:gramGrp[@type='segmentation']"/>
+                                            <xf:insert context="//TEI:entry" nodeset="TEI:gramGrp" origin="data('i-template')//TEI:gramGrp[@type='segmentation']"/>
                                             <script>
                                                 clearAndInitAutocompletes();
                                             </script>
@@ -627,7 +627,7 @@
                                                     <label class="tp-label">Complex Structuration and Semantics</label>
                                                     <xf:select1 class=" -form-control tp-input" ref="@subtype">
                                                         <xf:label class="input-group-addon"/>
-                                                        <xf:itemset nodeset="instance('i-classification')//option">
+                                                        <xf:itemset nodeset="data('i-classification')//option">
                                                             <xf:label ref="."/>
                                                             <xf:value ref="@xml:id"/>
                                                         </xf:itemset>
@@ -637,7 +637,7 @@
                                                     <label class="tp-label">Struct. uncertain</label>
                                                     <xf:select class="" ref="@ana" appearance="full">
                                                         <xf:label class="input-group-addon"/>
-                                                        <xf:itemset nodeset="instance('i-name-characteristic')//option">
+                                                        <xf:itemset nodeset="data('i-name-characteristic')//option">
                                                             <xf:label ref="."/>
                                                             <xf:value ref="."/>
                                                         </xf:itemset>
@@ -681,8 +681,8 @@
                                             </xf:action>
                                             <xf:label class="input-group-addon">root</xf:label>
                                             <xf:action ev:event="xforms-value-changed">
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@n" value="3"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@n" value="3"/>
                                                 <xf:send submission="s-reload-meanings"/>
                                             </xf:action>
                                         </xf:input>
@@ -740,7 +740,7 @@
                                             <label class="tp-label">Headedness classification</label>
                                             <xf:select class="tp-input" ref="TEI:m[@type = 'prefix' and @n = 1]/@subtype" appearance="full">
                                                 <xf:label class="input-group-addon">head.</xf:label>
-                                                <xf:itemset nodeset="instance('i-headedness')//option">
+                                                <xf:itemset nodeset="data('i-headedness')//option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="@xml:id"/>
                                                 </xf:itemset>
@@ -813,8 +813,8 @@
                                             </xf:action>
                                             <xf:label class="input-group-addon">root</xf:label>
                                             <xf:action ev:event="xforms-value-changed">
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@n" value="1"/>
                                                 <xf:send submission="s-reload-meanings"/>
                                             </xf:action>
                                         </xf:input>
@@ -831,7 +831,7 @@
                                                         <i class="glyphicon glyphicon-plus"/>
                                                     </xf:label>
                                                     <xf:action ev:event="DOMActivate">
-                                                        <xf:setvalue ref="instance('i-controller')/morpheme" value="instance('i-default')//TEI:gramGrp[@type='segmentation'][index('r-gramGrp')]/TEI:m[@type = 'radical' and @n = 1]/@baseForm"/>
+                                                        <xf:setvalue ref="data('i-controller')/morpheme" value="data('i-default')//TEI:gramGrp[@type='segmentation'][index('r-gramGrp')]/TEI:m[@type = 'radical' and @n = 1]/@baseForm"/>
                                                         <xf:dispatch name="load-subform-event" targetid="load-subform-group"/>
                                                     </xf:action>
                                                 </xf:trigger>
@@ -849,7 +849,7 @@
                                                                     meanings
                                                                 </span><!--<input class="tags" value="" disabled="disabled"/>-->
                                                     <span class="meanings-val">
-                                                                    <xf:repeat nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=1]//TEI:category" id="r-meanings-1">
+                                                                    <xf:repeat nodeset="data('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=1]//TEI:category" id="r-meanings-1">
                                                                         <xf:output ref="TEI:catDesc[@xml:lang='en']"/>
                                                                     </xf:repeat>
                                                                 </span>
@@ -906,7 +906,7 @@
                                             <label class="tp-label">Headedness classification 1</label>
                                             <xf:select class="tp-input" ref="TEI:m[@type = 'radical' and @n = 1]/@subtype" appearance="full">
                                                 <xf:label class="input-group-addon">head.</xf:label>
-                                                <xf:itemset nodeset="instance('i-headedness')//option">
+                                                <xf:itemset nodeset="data('i-headedness')//option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="@xml:id"/>
                                                 </xf:itemset>
@@ -969,8 +969,8 @@
                                             </xf:action>
                                             <xf:label class="input-group-addon">root</xf:label>
                                             <xf:action ev:event="xforms-value-changed">
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
-                                                <xf:setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@grp" value="count(context()/preceding::TEI:gramGrp[@type='segmentation'])+1"/>
+                                                <xf:setvalue ref="data('i-meanings')/being-reloaded/@n" value="2"/>
                                                 <xf:send submission="s-reload-meanings"/>
                                             </xf:action>
                                         </xf:input>
@@ -987,7 +987,7 @@
                                                         <i class="glyphicon glyphicon-plus"/>
                                                     </xf:label>
                                                     <xf:action ev:event="DOMActivate">
-                                                        <xf:setvalue ref="instance('i-controller')/morpheme" value="instance('i-default')//TEI:gramGrp[@type='segmentation'][index('r-gramGrp')]/TEI:m[@type = 'radical' and @n = 2]/@baseForm"/>
+                                                        <xf:setvalue ref="data('i-controller')/morpheme" value="data('i-default')//TEI:gramGrp[@type='segmentation'][index('r-gramGrp')]/TEI:m[@type = 'radical' and @n = 2]/@baseForm"/>
                                                         <xf:dispatch name="load-subform-event" targetid="load-subform-group"/>
                                                     </xf:action>
                                                 </xf:trigger>
@@ -1006,7 +1006,7 @@
                                                                     meanings
                                                                 </span><!--<input class="tags" value="" disabled="disabled"/>-->
                                                     <span class="meanings-val">
-                                                                    <xf:repeat nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=2]//TEI:category" id="r-meanings-2">
+                                                                    <xf:repeat nodeset="data('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=2]//TEI:category" id="r-meanings-2">
                                                                         <xf:output ref="TEI:catDesc[@xml:lang='en']"/>
                                                                     </xf:repeat>
                                                                 </span>
@@ -1064,7 +1064,7 @@
                                             <label class="tp-label">Headedness classification 2</label>
                                             <xf:select class="tp-input" ref="TEI:m[@type = 'radical' and @n = 2]/@subtype" appearance="full">
                                                 <xf:label class="input-group-addon">head.</xf:label>
-                                                <xf:itemset nodeset="instance('i-headedness')//option">
+                                                <xf:itemset nodeset="data('i-headedness')//option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="@xml:id"/>
                                                 </xf:itemset>
@@ -1110,7 +1110,7 @@
                                             <label class="tp-label">Suffix 4</label>
                                             <xf:select1 class="tp-input -form-control" ref="TEI:m[@type = 'suffix' and @n = '4']">
                                                 <xf:label class="input-group-addon">suffix 4</xf:label>
-                                                <xf:itemset nodeset="instance('i-suffix-4')/option">
+                                                <xf:itemset nodeset="data('i-suffix-4')/option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="."/>
                                                 </xf:itemset>
@@ -1120,7 +1120,7 @@
                                             <label class="tp-label">Suffix 3</label>
                                             <xf:select1 class="tp-input -form-control" ref="TEI:m[@type = 'suffix' and @n = '3']">
                                                 <xf:label class="input-group-addon">suffix 3</xf:label>
-                                                <xf:itemset nodeset="instance('i-suffix-3')/option">
+                                                <xf:itemset nodeset="data('i-suffix-3')/option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="."/>
                                                 </xf:itemset>
@@ -1130,7 +1130,7 @@
                                             <label class="tp-label">Suffix 2</label>
                                             <xf:select1 class="tp-input -form-control" ref="TEI:m[@type = 'suffix' and @n = '2']">
                                                 <xf:label class="input-group-addon">suffix 2</xf:label>
-                                                <xf:itemset nodeset="instance('i-suffix-2')/option">
+                                                <xf:itemset nodeset="data('i-suffix-2')/option">
                                                     <xf:label ref="."/>
                                                     <xf:value ref="."/>
                                                 </xf:itemset>
@@ -1142,7 +1142,7 @@
                                                     <label class="tp-label">Inflect</label>
                                                     <xf:select1 class="tp-input -form-control" ref="TEI:m[@type = 'suffix' and @n = '1']">
                                                         <xf:label class="input-group-addon">inflex 1</xf:label>
-                                                        <xf:itemset nodeset="instance('i-suffix-1')/option">
+                                                        <xf:itemset nodeset="data('i-suffix-1')/option">
                                                             <xf:label ref="base"/>
                                                             <xf:value ref="base"/>
                                                         </xf:itemset>
@@ -1178,7 +1178,7 @@
                                                         <xf:label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </xf:label>
-                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="instance('i-template')//TEI:cit[@type='source']"/>
+                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="data('i-template')//TEI:cit[@type='source']"/>
                                                         <script>
                                                             clearAndInitAutocompletes();
                                                         </script>
@@ -1256,7 +1256,7 @@
                                                         <xf:label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </xf:label>
-                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="instance('i-template')//TEI:cit[@type='auxiliary']"/>
+                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="data('i-template')//TEI:cit[@type='auxiliary']"/>
                                                         <script>
                                                             clearAndInitAutocompletes();
                                                         </script>
@@ -1341,7 +1341,7 @@
                                                         <xf:label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </xf:label>
-                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="instance('i-template')//TEI:cit[@type='linguistic']"/>
+                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="data('i-template')//TEI:cit[@type='linguistic']"/>
                                                         <script>
                                                             clearAndInitAutocompletes();
                                                         </script>
@@ -1418,7 +1418,7 @@
                                                         <xf:label class="input-group-addon">
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </xf:label>
-                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="instance('i-template')//TEI:cit[@type='modern']"/>
+                                                        <xf:insert context="TEI:listBibl" nodeset="TEI:cit" origin="data('i-template')//TEI:cit[@type='modern']"/>
                                                         <script>
                                                             clearAndInitAutocompletes();
                                                         </script>

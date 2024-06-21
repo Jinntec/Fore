@@ -109,7 +109,7 @@
                             <fx-control ref="selected" update-event="change">
                                 <label>Country</label>
                                 <select class="widget"
-                                        ref="instance('countries')//country[@continent = instance('default')/continent]"
+                                        ref="data('countries')//country[@continent = data('default')/continent]"
                                         selection="open">
                                     <template>
                                         <option value="{@code}">{.}</option>
@@ -124,12 +124,12 @@
                         </div>
                     </div>
 
-                    <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
+                    <!--                    <fx-output ref="data('default')" mediatype="xml"></fx-output>-->
                 </fx-group>
             </fx-fore>
         </template>
     </demo-snippet>
-    <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
+    <p>the country list is not show here as its quite long but is loaded from external data.</p>
 
     <p>It is structered like this:</p>
 
@@ -144,7 +144,7 @@
         </template>
     </demo-snippet>
     <!--
-        <fx-output ref="instance('default')">
+        <fx-output ref="data('default')">
             <wc-codemirror mode="xml" class="widget">
                 <script type="wc-content">
                     <countries>

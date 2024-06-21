@@ -38,17 +38,17 @@
 
                 <section>
                     <fx-trigger>
-                        <button>Change default instance</button>
+                        <button>Change default data</button>
                         <fx-setvalue ref="value">Changed value</fx-setvalue>
                     </fx-trigger>
 
                     <fx-output ref="value">
-                        <label slot="label">Default instance value</label>
+                        <label slot="label">Default data value</label>
                     </fx-output>
 
                     <fx-trigger>
                         <button>Reset</button>
-                        <fx-reset instance="default"></fx-reset>
+                        <fx-reset data="default"></fx-reset>
                     </fx-trigger>
                 </section>
 
@@ -56,10 +56,10 @@
                 <section>
                     <fx-trigger>
                         <button>Change JSON instance</button>
-                        <fx-setvalue ref="instance('json')?value">Changed json value</fx-setvalue>
+                        <fx-setvalue ref="data('json')?value">Changed json value</fx-setvalue>
                     </fx-trigger>
 
-                    <fx-output ref="instance('json')?value">
+                    <fx-output ref="data('json')?value">
                         <label slot="label">Default instance value</label>
                     </fx-output>
 

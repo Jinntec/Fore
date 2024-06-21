@@ -229,21 +229,21 @@
 <!--        <fx-group class="elementPanel">-->
             <header>Model</header>
 
-            <fx-repeat id="r-elements" ref="instance('elements')/model/*">
+            <fx-repeat id="r-elements" ref="data('elements')/model/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
 
             <header>UI</header>
-            <fx-repeat id="r-ui" ref="instance('elements')/UI/*">
+            <fx-repeat id="r-ui" ref="data('elements')/UI/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
             </fx-repeat>
 
             <header>Actions</header>
-            <fx-repeat id="r-actions" ref="instance('elements')/actions/*">
+            <fx-repeat id="r-actions" ref="data('elements')/actions/*">
                 <template>
                     <div class="element-name" draggable="true">{local:elementLabel(name(.))}</div>
                 </template>
@@ -251,8 +251,8 @@
 <!--        </fx-group>-->
 
 <!--
-        <fx-control ref="instance('vars')/current">
-            <select ref="instance('elements')/*" class="widget" update-event="change">
+        <fx-control ref="data('vars')/current">
+            <select ref="data('elements')/*" class="widget" update-event="change">
                 <template>
                     <option value="{name(.)}">{name(.)}</option>
                 </template>
@@ -271,7 +271,7 @@
 
     <main current>
 <!--
-        <fx-control id="file" ref="instance('vars')/filename">
+        <fx-control id="file" ref="data('vars')/filename">
             <label>Filename</label>
         </fx-control>
 -->
@@ -290,8 +290,8 @@
             <fx-action target="#document"
                        event="selectElement">
                 <fx-message></fx-message>
-<!--                <fx-setvalue ref="instance('propvars')/currentElement" value="event('current')"></fx-setvalue>-->
-<!--                <fx-insert ref="instance('attributes')" origin="event('current')"></fx-insert>-->
+<!--                <fx-setvalue ref="data('propvars')/currentElement" value="event('current')"></fx-setvalue>-->
+<!--                <fx-insert ref="data('attributes')" origin="event('current')"></fx-insert>-->
             </fx-action>
             <fx-model id="targetModel">
                 <fx-instance id="attributes">
@@ -313,7 +313,7 @@
                 </fx-instance>
             </fx-model>
             <fx-group id="ui">
-                <fx-repeat ref="instance('attributes')//@*">
+                <fx-repeat ref="data('attributes')//@*">
                     <template>
                         <fx-control ref=".">
                             <label>{.}</label>

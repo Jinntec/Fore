@@ -37,7 +37,7 @@
                         <greet>Hi!</greet>
                     </date>
                     <fx-submission id="submission"
-                                   ref="instance('second')"
+                                   ref="data('second')"
                                    url="#echo"
                                    replace="data"
                                    data="default"
@@ -49,7 +49,7 @@
                     <p>This effect can be used to advantage when your data structure changes.</p>
                     <p>Controls will show up as needed if a some node can be bound during a refresh.</p>
                     <p>Hit the button and thereby change the underlying data by replacing them with
-                    some other data from second instance.</p>
+                    some other data from second data.</p>
                     <fx-control id="output" ref="greeting"></fx-control>
                     <fx-control ref="greet"></fx-control>
                     <fx-trigger ref="greeting">

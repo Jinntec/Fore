@@ -57,14 +57,14 @@
                             <div class="tp-row">
                                 <div class="tp-row tp-repeat-headline"></div>
                                 
-<!--                                <span>{instance('i-template')/re}</span>-->
+<!--                                <span>{data('i-template')/re}</span>-->
                                     <div class="tp-repeat-button-left">
                                         <div class="tp-button-row tp-add"><label>Add significant relative</label>
                                             <label>Should insert `re` element into `entry`</label>
                                             <fx-trigger>
                                                 <button>add</button>
                                                 <fx-insert context="//entry" ref="//entry/re"
-                                                           origin="instance('i-template')/re"></fx-insert>
+                                                           origin="data('i-template')/re"></fx-insert>
                                             </fx-trigger>
                                         </div>
                                     </div>
@@ -81,7 +81,7 @@
                                             <fx-insert 
                                                 
                                                 ref="re"
-                                                origin="instance('i-template')//re"></fx-insert>
+                                                origin="data('i-template')//re"></fx-insert>
                                         </fx-trigger>
                                     
                                 </div>
@@ -90,7 +90,7 @@
                                     <div class="tp-form-group-col">
                                         <label class="tp-label">Relation</label>
                                         <fx-control ref="lbl" class="tp-input -form-control">
-                                            <select ref="instance('i-relations')/option" class="widget">
+                                            <select ref="data('i-relations')/option" class="widget">
                                                 <template>
                                                     <option value="{@xml:id}">{.}</option>
                                                 </template>

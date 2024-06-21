@@ -295,7 +295,7 @@ describe('functions', () => {
                     </data>
                 </fx-model>
 
-                <fx-repeat ref="instance('desc')/df">
+                <fx-repeat ref="data('desc')/df">
                     <template>
                         <fx-control ref="tag" update-event="input">
                             <label>Datafield</label>
@@ -309,7 +309,7 @@ describe('functions', () => {
                     </template>
                 </fx-repeat>
 
-                <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
+                <fx-repeat ref="data('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
                     <template>
                         <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
                         <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
@@ -321,9 +321,9 @@ describe('functions', () => {
                                 <span id="context-item-span">{@code}</span>
                                 <span id="context-function-span">{context()/@code}</span>
                                 <span id="current-span">{$current/@code}</span>
-                                <p id="result-p-with-context" style="display: inline;">{instance('desc')/df/sfs/sf[code
+                                <p id="result-p-with-context" style="display: inline;">{data('desc')/df/sfs/sf[code
                                     = context()/@code]/value}</p>
-                                <p id="result-p-with-current" style="display: inline;">{instance('desc')/df/sfs/sf[code
+                                <p id="result-p-with-current" style="display: inline;">{data('desc')/df/sfs/sf[code
                                     = $current/@code]/value}</p>
                             </template>
                         </fx-repeat>

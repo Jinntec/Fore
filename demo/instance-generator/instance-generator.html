@@ -59,14 +59,14 @@
 <!--                <fx-setvalue ref="counter">0</fx-setvalue>-->
                 <fx-action id="trigger" while="number(counter) < number(n)">
                     <fx-setvalue ref="counter" value=".+1"></fx-setvalue>
-                    <fx-insert origin="instance('template')/item"
-                               ref="instance('generated')/item"></fx-insert>
+                    <fx-insert origin="data('template')/item"
+                               ref="data('generated')/item"></fx-insert>
                     <fx-message value="counter"></fx-message>
-                    <fx-var name="cnt" value="instance()/counter"></fx-var>
-                    <fx-setvalue ref="instance('generated')/item[last()]/@prop3" value="string($cnt)"></fx-setvalue>
-                    <fx-setvalue ref="instance('generated')/item[last()]/@prop4" value="random-number-generator()?number"></fx-setvalue>
-                    <fx-setvalue ref="instance('generated')/item[last()]/@prop5" value="number(random-number-generator()?number) * 10"></fx-setvalue>
-                    <fx-setvalue ref="instance('generated')/item[last()]" value="'item'||$cnt"></fx-setvalue>
+                    <fx-var name="cnt" value="data()/counter"></fx-var>
+                    <fx-setvalue ref="data('generated')/item[last()]/@prop3" value="string($cnt)"></fx-setvalue>
+                    <fx-setvalue ref="data('generated')/item[last()]/@prop4" value="random-number-generator()?number"></fx-setvalue>
+                    <fx-setvalue ref="data('generated')/item[last()]/@prop5" value="number(random-number-generator()?number) * 10"></fx-setvalue>
+                    <fx-setvalue ref="data('generated')/item[last()]" value="'item'||$cnt"></fx-setvalue>
                 </fx-action>
 
             </fx-trigger>
@@ -78,7 +78,7 @@
                             phase="capture"><fx-output value="event('target')"></fx-output></fx-message>
         -->
 
-        <p>Total:{count(instance('generated')/*)}</p>
+        <p>Total:{count(data('generated')/*)}</p>
         <p>Count:{counter} of {n}</p>
         <h2>Generated instance data</h2>
         <textarea>

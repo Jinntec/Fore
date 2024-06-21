@@ -16,7 +16,7 @@ describe('fx-control with select tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="item">
-                    <select class="widget" ref="instance('second')/option">
+                    <select class="widget" ref="data('second')/option">
                         <template>
                             <option value="{.}">{.}</option>
                         </template>
@@ -48,7 +48,7 @@ describe('fx-control with select tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="item">
-                    <select class="widget" ref="instance('second')/option">
+                    <select class="widget" ref="data('second')/option">
                         <template>
                             <option value="{.}">{.}</option>
                         </template>
@@ -86,7 +86,7 @@ describe('fx-control with select tests', () => {
                     </data>
                 </fx-model>
                 <fx-control ref="item">
-                    <select class="widget" ref="instance('second')/option" selection="open">
+                    <select class="widget" ref="data('second')/option" selection="open">
                         <template>
                             <option value="{.}">{.}</option>
                         </template>

@@ -260,7 +260,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="instance('default')/data" origin="instance('templ')/foo"></fx-insert>
+                    <fx-insert ref="data('default')/data" origin="data('templ')/foo"></fx-insert>
                 </fx-trigger>
             </fx-fore>
         `);
@@ -474,7 +474,7 @@ describe('insert Tests', () => {
                         <fx-insert
                                 context="//entry"
                                 ref="gramGrp"
-                                origin="instance('i-template')//gramGrp[@type='segmentation']"
+                                origin="data('i-template')//gramGrp[@type='segmentation']"
                         ></fx-insert>
                     </fx-trigger>
                     <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
@@ -489,7 +489,7 @@ describe('insert Tests', () => {
                                             <button>add</button>
                                             <fx-insert
                                                     context="listBibl"
-                                                    origin="instance('i-template')//cit[@type='source']"
+                                                    origin="data('i-template')//cit[@type='source']"
                                             ></fx-insert>
                                         </fx-trigger>
                                     </div>
@@ -564,7 +564,7 @@ describe('insert Tests', () => {
                         <button>add</button>
                         <fx-insert
                                 context="//entry"
-                                origin="instance('i-template')//gramGrp[@type='segmentation']"
+                                origin="data('i-template')//gramGrp[@type='segmentation']"
                         ></fx-insert>
                     </fx-trigger>
                     <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
@@ -579,7 +579,7 @@ describe('insert Tests', () => {
                                             <button>add</button>
                                             <fx-insert
                                                     context="listBibl"
-                                                    origin="instance('i-template')//cit[@type='source']"
+                                                    origin="data('i-template')//cit[@type='source']"
                                             ></fx-insert>
                                         </fx-trigger>
                                     </div>
@@ -634,7 +634,7 @@ describe('insert Tests', () => {
                 <fx-action event="ready">
                     <fx-insert
                             context="//listBibl"
-                            origin="instance('i-template')//cit[@type='source']"
+                            origin="data('i-template')//cit[@type='source']"
                     ></fx-insert>
                 </fx-action>
 
@@ -708,7 +708,7 @@ describe('insert Tests', () => {
                     <fx-insert
                             context="//listBibl"
                             ref="cit"
-                            origin="instance('i-template')//cit[@type='source']"
+                            origin="data('i-template')//cit[@type='source']"
                     ></fx-insert>
                 </fx-action>
 

@@ -42,11 +42,11 @@
 
                     <fx-function signature="sortNames($terms as element()*) as element()*" type="text/xquery">
                         for $term in $terms
-                        order by $term/name[@xml:lang = instance()/language] => lower-case()
+                        order by $term/name[@xml:lang = data()/language] => lower-case()
                         return $term
                     </fx-function>
                 </fx-model>
-                <fx-control ref="instance()/language" update-event="input">
+                <fx-control ref="data()/language" update-event="input">
                     <label>select language</label>
                     <select class="widget">
                         <option value="de">de</option>
@@ -55,11 +55,11 @@
                 </fx-control>
                 {value}
                 <fx-control class="cols" ref="value">
-                    <fx-items ref="sortNames(instance('material')/term)" class="widget">
+                    <fx-items ref="sortNames(data('material')/term)" class="widget">
                         <template>
                             <div class="fx-checkbox">
                                 <input type="checkbox" value="{@ref}"/>
-                                <label>{name[@xml:lang = instance()/language]}</label>
+                                <label>{name[@xml:lang = data()/language]}</label>
                             </div>
                         </template>
                     </fx-items>

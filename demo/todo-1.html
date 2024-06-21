@@ -28,7 +28,7 @@
                 </data>
 
 <!--
-                <fx-bind ref="task" relevant="./@complete='false' or instance('helper')/show-completed='true'">
+                <fx-bind ref="task" relevant="./@complete='false' or data('helper')/show-completed='true'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
 -->
@@ -55,15 +55,15 @@
             <h1>Todo
             </h1>
             <div class="info">
-                You have {count(instance()/task[@complete='true'])} completed tasks
+                You have {count(data()/task[@complete='true'])} completed tasks
             </div>
 
             <div class="info open">
-                {if(count(instance()/task[@complete='false'])!=0) then "You have " || count(instance()/task[@complete='false']) || " open tasks" else ""}
+                {if(count(data()/task[@complete='false'])!=0) then "You have " || count(data()/task[@complete='false']) || " open tasks" else ""}
             </div>
 
             <div class="info big">
-                {if(count(instance()/task[@complete='false'])=0)
+                {if(count(data()/task[@complete='false'])=0)
                     then "You're all done!"
                     else ""
                 }
@@ -95,7 +95,7 @@
             </fx-repeat>
             <fx-trigger class="btn add">
                 <button>+</button>
-                <fx-insert id="doInsert" ref="task" origin="instance('helper')/template/task"></fx-insert>
+                <fx-insert id="doInsert" ref="task" origin="data('helper')/template/task"></fx-insert>
                 <fx-setfocus control="task" event="action-performed"></fx-setfocus>
             </fx-trigger>
 

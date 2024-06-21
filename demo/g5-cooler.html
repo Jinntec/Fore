@@ -90,11 +90,11 @@
             <fx-bind ref="water-tank/@level" readonly="true()"></fx-bind>
             <fx-submission id="setFan"
                           url="http://{wifi/@ip}/fan-speed={rear-fans/@speed}"
-                          replace="instance"></fx-submission>
+                          replace="data"></fx-submission>
 
             <fx-submission id="setPump"
                           url="http://{wifi/@ip}/pump-speed={water-pump/@speed}"
-                          replace="instance"></fx-submission>
+                          replace="data"></fx-submission>
         </fx-model>
         <section>
             <fx-control ref="rear-fans/@speed" update-event="input">

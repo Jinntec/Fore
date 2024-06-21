@@ -138,27 +138,27 @@
                     <p class="note">You won't notice a difference unless you're using a developer tool to inspect the network
                     requests. However there will be a toast message when it succeeds.</p>
 
-                    <h2>replace='instance'</h2>
-                    <p>Sends the data and replaces the default instance with response</p>
+                    <h2>replace='data'</h2>
+                    <p>Sends the data and replaces the default data with response</p>
 
                     <fx-control ref="greeting">
                         <label>Data:</label>
                     </fx-control>
 
                     <fx-trigger>
-                        <button>replace instance</button>
+                        <button>replace data</button>
                         <fx-send submission="submission2"></fx-send>
                     </fx-trigger>
 
-                    <h2>replace='instance' - instance='replaced'</h2>
-                    <p>Sends the data and replaces the instance with id='replaced'</p>
+                    <h2>replace='data' - data='replaced'</h2>
+                    <p>Sends the data and replaces the data with id='replaced'</p>
                     <fx-trigger>
-                        <button>replace another instance</button>
+                        <button>replace another data element</button>
                         <fx-send submission="submission6"></fx-send>
                     </fx-trigger>
 
-                    <fx-output ref="instance('replaced')">
-                        <label slot="label">This message comes from replaced instance:</label>
+                    <fx-output ref="data('replaced')">
+                        <label slot="label">This message comes from replaced data:</label>
                     </fx-output>
 
                     <h2>replace='all'</h2>

@@ -209,18 +209,18 @@
                 <confirm>false</confirm>
             </data>
         </fx-model>
-        <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count(instance()/project)},1fr);">
+        <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count(data()/project)},1fr);">
             <template>
                 <div class="header">
                     <fx-control ref="@name"></fx-control>
                     <fx-trigger class="iconbtn addProject" title="add card">
                         <button>+</button>
-                        <fx-insert ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
+                        <fx-insert ref="task" at="1" position="before" origin="data()/template/task"></fx-insert>
                     </fx-trigger>
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>
                         <fx-confirm message="really delete?">
-                            <fx-delete ref="." if="instance('default')/confirm"></fx-delete>
+                            <fx-delete ref="." if="data('default')/confirm"></fx-delete>
                         </fx-confirm>
                     </fx-trigger>
                 </div>
@@ -236,7 +236,7 @@
                                 <div class="subheader">Checklist
                                     <fx-trigger class="iconbtn">
                                         <button>+</button>
-                                        <fx-insert ref="activity" at="1" position="before" origin="instance('default')/template/activity"></fx-insert>
+                                        <fx-insert ref="activity" at="1" position="before" origin="data('default')/template/activity"></fx-insert>
                                     </fx-trigger>
                                 </div>
                                 <fx-repeat id="activity" class="activity" ref="activity">

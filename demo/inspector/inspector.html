@@ -25,17 +25,17 @@
         </fx-instance>
     </fx-model>
 
-<!--    <fx-replace ref="instance('vars')/currentelement" with="element('foo')" event="ready">-->
+<!--    <fx-replace ref="data('vars')/currentelement" with="element('foo')" event="ready">-->
 <!--    <fx-message event="ready">hi from inspector</fx-message>-->
-    <fx-var name="current" value="string(instance('vars')/currentelement)"></fx-var>
+    <fx-var name="current" value="string(data('vars')/currentelement)"></fx-var>
     <fx-repeat id="r-attrs" ref="element[name='fx-action']/attributes/attribute">
 <!--    <fx-repeat id="r-attrs" ref="?tags?*[?name=$current]?attributes?*">-->
 
         <fx-action event="item-created">
             <fx-message>{event('nodeset')/name} pos: {event('pos')}</fx-message>
-<!--            <fx-insert context="instance()/element[name='fx-action']/attributes/attribute[]" ref="value" origin="instance('vars')/value"></fx-insert>-->
-<!--            <fx-insert context="context('r-attrs')/.[event('pos')]" ref="value" origin="instance('vars')/value"></fx-insert>-->
-<!--            <fx-insert context="instance('payload')/attributes" ref="attribute" origin="instance('payload')/attribute"></fx-insert>-->
+<!--            <fx-insert context="data()/element[name='fx-action']/attributes/attribute[]" ref="value" origin="data('vars')/value"></fx-insert>-->
+<!--            <fx-insert context="context('r-attrs')/.[event('pos')]" ref="value" origin="data('vars')/value"></fx-insert>-->
+<!--            <fx-insert context="data('payload')/attributes" ref="attribute" origin="data('payload')/attribute"></fx-insert>-->
 <!--            <fx-update></fx-update>-->
 
         </fx-action>

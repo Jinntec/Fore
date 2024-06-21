@@ -196,7 +196,7 @@
                         <!-- 14) -->
                         <fx-control ref="physDesc/objectDesc/supportDesc/support/rs/@ref">
                             <label>Dekor</label>
-                            <select ref="instance('decor')?item?*" class="widget">
+                            <select ref="data('decor')?item?*" class="widget">
                                 <option value="yes">Ja</option>
                                 <option value="no">Nein</option>
                                 <option value="uncertain">unsicher</option>
@@ -206,7 +206,7 @@
                         <!-- 15) -->
                         <fx-control ref="msContents/msItem/@class">
                             <label>Inschriftengattung</label>
-                            <select ref="instance('data-typeins')?*" class="widget">
+                            <select ref="data('data-typeins')?*" class="widget">
                                 <template>
                                     <option value="{?value}">{?name}</option>
                                 </template>
@@ -216,7 +216,7 @@
                         <!-- 16a) -->
                         <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectdata-type">
                             <label>Inschriftträger</label>
-                            <select ref="instance('objtyp')?*" class="widget">
+                            <select ref="data('objtyp')?*" class="widget">
                                 <template>
                                     <option value="{?value}">{?name}</option>
                                 </template>
@@ -233,7 +233,7 @@
                         <!-- 18) -->
                         <fx-control ref="//physDesc/objectDesc/supportDesc/support/material" update-event="change" class="orange">
                             <label>Material</label>
-                            <select ref="instance('material')/category[@name=instance('tmp')/material-group]/material/@name" class="widget">
+                            <select ref="data('material')/category[@name=data('tmp')/material-group]/material/@name" class="widget">
                                 <template>
                                     <option value="{string(.)}">{.}</option>
                                 </template>

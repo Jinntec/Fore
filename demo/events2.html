@@ -73,7 +73,7 @@
                 ### document listener
                 -->
                 <fx-action event="custom" target="#document">
-                    <fx-replace context="instance('default')" with="event('data')/*"></fx-replace>
+                    <fx-replace context="data('default')" with="event('data')/*"></fx-replace>
                     <fx-update></fx-update>
                     <fx-refresh></fx-refresh>
                 </fx-action>

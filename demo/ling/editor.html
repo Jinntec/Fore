@@ -59,18 +59,18 @@
         </fx-instance>
 -->
 
-        <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
+        <fx-submission id="s-load-data" method="get" replace="data" ref="data('i-default')" validate="false"
                        resource="modules/load.xql?id={bf:appContext('id')}">
             <fx-message event="submit-done" level="ephemeral">Data have been loaded.</fx-message>
             <fx-message event="submit-error">Failed to load data.</fx-message>
             <fx-action event="submit-done">
                 <fx-action
-                        while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp + 1"></fx-setvalue>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"></fx-setvalue>
+                        while="data('i-meanings')/being-reloaded/@grp &lt; count(data('i-default')//gramGrp[@type='segmentation'])">
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
+                                 value="data('i-meanings')/being-reloaded/@grp + 1"></fx-setvalue>
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n" value="1"></fx-setvalue>
                     <fx-send submission="s-reload-meanings"></fx-send>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"></fx-setvalue>
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n" value="2"></fx-setvalue>
                     <fx-send submission="s-reload-meanings"></fx-send>
                 </fx-action>
             </fx-action>
@@ -87,34 +87,34 @@
             </fx-header>
 -->
             <fx-action event="submit">
-                <fx-setvalue ref="instance('i-default')//entry/@xml:id"
-                             value="instance('i-default')//orth[@type='latin']"></fx-setvalue>
+                <fx-setvalue ref="data('i-default')//entry/@xml:id"
+                             value="data('i-default')//orth[@type='latin']"></fx-setvalue>
                 <fx-message event="submit-done" level="ephemeral">Saving...</fx-message>
             </fx-action>
             <fx-message event="submit-done" level="ephemeral">Data have been saved.</fx-message>
             <fx-message event="submit-error">Failed to save data</fx-message>
         </fx-submission>
-        <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
+        <fx-submission id="s-reload-meanings" method="post" replace="data" validate="false"
                        resource="modules/reload-meanings.xql"
-                       ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
-                       targetref="instance('i-meanings')/target/taxonomy">
+                       ref="data('i-default')//entry/gramGrp[@type='segmentation'][data('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = data('i-meanings')/being-reloaded/@n]"
+                       targetref="data('i-meanings')/target/taxonomy">
             <fx-action event="submit-done">
                 <fx-action
-                        if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
-                    <fx-insert context="instance('i-meanings')" ref="*[last()]"
-                               origin="instance('i-meanings')/template/meaning"></fx-insert>
-                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
-                                 value="instance('i-meanings')/being-reloaded/@n"></fx-setvalue>
-                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp"></fx-setvalue>
+                        if="not(data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n])">
+                    <fx-insert context="data('i-meanings')" ref="*[last()]"
+                               origin="data('i-meanings')/template/meaning"></fx-insert>
+                    <fx-setvalue ref="data('i-meanings')/meaning[@grp='0']/@n"
+                                 value="data('i-meanings')/being-reloaded/@n"></fx-setvalue>
+                    <fx-setvalue ref="data('i-meanings')/meaning[@grp='0']/@grp"
+                                 value="data('i-meanings')/being-reloaded/@grp"></fx-setvalue>
                 </fx-action>
                 <fx-delete
-                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]"
                         nodeset="*"/>
                 <fx-insert
-                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
-                        origin="instance('i-meanings')/target/*"/>
-                <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
+                        context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]"
+                        origin="data('i-meanings')/target/*"/>
+                <fx-delete context="data('i-meanings')/target/taxonomy" nodeset="*|@*"/>
             </fx-action>
             <fx-message event="submit-error" level="ephemeral">Meanings reload failed.</fx-message>
         </fx-submission>
@@ -173,7 +173,7 @@
                             <label class="tp-label">Classification</label>
                             <fx-control class="tp-input"
                                         ref="//gramGrp[@type='classification']/gram[@type='fictitious']">
-                                <select ref="instance('fictitious')/option" class="widget">
+                                <select ref="data('fictitious')/option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
                                     </template>
@@ -185,7 +185,7 @@
                             <fx-control class="tp-input"
                                         ref="//gramGrp[@type='classification']/gram[@type='GPR']"
                                         appearance="full">
-                                <select ref="instance('i-gpr')//option" class="widget">
+                                <select ref="data('i-gpr')//option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
                                     </template>
@@ -196,7 +196,7 @@
                             <label class="tp-label">Sublemma</label>
                             <fx-control class="tp-input -form-control"
                                         ref="//gramGrp[@type='classification']/gram[@type='sublemma']">
-                                <select ref="instance('i-sublemma')//option" class="widget">
+                                <select ref="data('i-sublemma')//option" class="widget">
                                     <template>
                                         <option value="{@xml:id}">{.}</option>
                                     </template>
@@ -208,7 +208,7 @@
                             <label class="tp-label">Polysemic</label>
                             <fx-control class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]"
                                         appearance="full">
-                                <select ref="instance('i-polysemic')//option" class="widget">
+                                <select ref="data('i-polysemic')//option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
                                     </template>
@@ -230,7 +230,7 @@
                                     <fx-trigger class="-btn -btn-default">
                                         <button class="input-group-addon">add</button>
                                         <fx-insert context="//entry" ref="re"
-                                                   origin="instance('i-template')//re"></fx-insert>
+                                                   origin="data('i-template')//re"></fx-insert>
                                         <!--
                                                                                 <script>
                                                                                     clearAndInitAutocompletes();
@@ -245,7 +245,7 @@
                             <div class="tp-form-group-col">
                                 <label class="tp-label">Relation</label>
                                 <fx-control ref="lbl" class="tp-input -form-control">
-                                    <select ref="instance('i-relations')/option" class="widget">
+                                    <select ref="data('i-relations')/option" class="widget">
                                         <template>
                                             <option value="{@xml:id}">{.}</option>
                                         </template>
@@ -300,7 +300,7 @@
                                         <fx-trigger class="-btn -btn-default ">
                                             <button>Add</button>
                                             <fx-insert ref="usg"
-                                                       origin="instance('i-template')//usg[@type='lang']">
+                                                       origin="data('i-template')//usg[@type='lang']">
                                             <!--
                                                                                         <script>
                                                                                             clearAndInitAutocompletes();
@@ -318,7 +318,7 @@
                                         <div class="tp-row">
                                             <fx-control class="tp-input -form-control"
                                                     ref=".">
-                                                <select ref="instance('i-dialects')//option" class="widget">
+                                                <select ref="data('i-dialects')//option" class="widget">
                                                     <template>
                                                         <option value="{.}">{.}</option>
                                                     </template>
@@ -327,7 +327,7 @@
                                             <!--
                                                                                         <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
                                                                                             <fx-control ref=".">
-                                                                                                <select ref="instance('i-dialects')//category"
+                                                                                                <select ref="data('i-dialects')//category"
                                                                                                         class="widget">
                                                                                                     <template>
                                                                                                         <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
@@ -383,7 +383,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert context="//entry" ref="form"
-                                                       origin="instance('i-template')//form[@type='variant']"></fx-insert>
+                                                       origin="data('i-template')//form[@type='variant']"></fx-insert>
                                             <!--
                                                                                         <script>
                                                                                             clearAndInitAutocompletes();
@@ -419,7 +419,7 @@
                                         </div>
                                         <div class="tp-row">
                                             <div class="tp-form-group-col"><label class="tp-label">Gender</label>
-                                                <fx-control ref="gen"><select ref="instance('i-genders')//category"
+                                                <fx-control ref="gen"><select ref="data('i-genders')//category"
                                                                               class="widget">
                                                     <template>
                                                         <option value="{catDesc[@xml:lang='en'][@ana='short']}">
@@ -431,7 +431,7 @@
                                         </div>
                                         <div class="tp-row">
                                             <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
-                                                <fx-control ref="usg"><select ref="instance('i-dialects')//category"
+                                                <fx-control ref="usg"><select ref="data('i-dialects')//category"
                                                                               class="widget">
                                                     <template>
                                                         <option value="{catDesc[@xml:lang='en'][@ana='short']}">
@@ -484,7 +484,7 @@
                                             <fx-trigger>
                                                 <button>add</button>
                                                 <fx-insert context="//entry" ref="gramGrp"
-                                                           origin="instance('i-template')//gramGrp[@type='segmentation']"></fx-insert>
+                                                           origin="data('i-template')//gramGrp[@type='segmentation']"></fx-insert>
                                                 <!--
                                                                                                 <script>
                                                                                                     clearAndInitAutocompletes();
@@ -508,7 +508,7 @@
                                                             Structuration and
                                                             Semantics</label>
                                                             <fx-control ref="@subtype"><select
-                                                                    ref="instance('i-classification')//option"
+                                                                    ref="data('i-classification')//option"
                                                                     class="widget">
                                                                 <template>
                                                                     <option value="{.}">{@xml:id}</option>
@@ -518,7 +518,7 @@
                                                         <div class="col-xs-4"><label class="tp-label">Struct.
                                                             uncertain</label>
                                                             <fx-control ref="@ana"><select
-                                                                    ref="instance('i-name-characteristic')//option"
+                                                                    ref="data('i-name-characteristic')//option"
                                                                     class="widget">
                                                                 <template>
                                                                     <option value="{.}">{.}</option>
@@ -572,7 +572,7 @@
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification</label>
                                                     <fx-control ref="m[@type = 'prefix' and @n = 1]/@subtype"><select
-                                                            ref="instance('i-headedness')//option" class="widget">
+                                                            ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <option value="{.}">{@xml:id}</option>
                                                         </template>
@@ -626,9 +626,9 @@
                                                         <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
                                                     </fx-action>
                                                     <fx-action event="value-changed">
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                        <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
                                                                      value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                        <fx-setvalue ref="data('i-meanings')/being-reloaded/@n"
                                                                      value="1"></fx-setvalue>
                                                         <fx-send submission="s-reload-meanings"></fx-send>
                                                     </fx-action>
@@ -642,8 +642,8 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-action event="DOMActivate">
-                                                                <fx-setvalue ref="instance('i-controller')/morpheme"
-                                                                             value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"></fx-setvalue>
+                                                                <fx-setvalue ref="data('i-controller')/morpheme"
+                                                                             value="data('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"></fx-setvalue>
 <!--
                                                                 <fx-dispatch name="load-subform-event"
                                                                              targetid="load-subform-group"></fx-dispatch>
@@ -665,7 +665,7 @@
                                                                                                       </span>
                                                                                                         &lt;!&ndash;<input class="tags" value="" disabled="disabled"/>&ndash;&gt;<span
                                                                                                                 class="meanings-val">
-                                                                                                      <fx-repeat ref="instance('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=1]//TEI:category" id="r-meanings-1"><template>
+                                                                                                      <fx-repeat ref="data('i-meanings')/meaning[@grp=count(current()/preceding::TEI:gramGrp[@type='segmentation'])+1 and @n=1]//TEI:category" id="r-meanings-1"><template>
                                                                                                             <fx-output ref="catDesc[@xml:lang='en']"></fx-output></template></fx-repeat></span>
                                                                                                     </div>
                                                                                                 </div>
@@ -694,7 +694,7 @@
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification 1</label>
                                                     <fx-control ref="m[@type = 'radical' and @n = 1]/@subtype"><select
-                                                            ref="instance('i-headedness')//option" class="widget">
+                                                            ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <option value="{.}">{@xml:id}</option>
                                                         </template>
@@ -742,9 +742,9 @@
                                                         <fx-setvalue ref="." value="event('termValue')"></fx-setvalue>
                                                     </fx-action>
                                                     <fx-action event="value-changed">
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                        <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
                                                                      value="count(context()/preceding::gramGrp[@type='segmentation'])+1"></fx-setvalue>
-                                                        <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                        <fx-setvalue ref="data('i-meanings')/being-reloaded/@n"
                                                                      value="2"></fx-setvalue>
                                                         <fx-send submission="s-reload-meanings"></fx-send>
                                                     </fx-action>
@@ -759,8 +759,8 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-action event="DOMActivate">
-                                                                <fx-setvalue ref="instance('i-controller')/morpheme"
-                                                                             value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"></fx-setvalue>
+                                                                <fx-setvalue ref="data('i-controller')/morpheme"
+                                                                             value="data('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"></fx-setvalue>
                                                                 <fx-dispatch name="load-subform-event"
                                                                              targetid="load-subform-group"></fx-dispatch>
                                                             </fx-action>
@@ -810,7 +810,7 @@
                                                 <div class="tp-column-3"><label class="tp-label">Headedness
                                                     classification 2</label>
                                                     <fx-control ref="m[@type = 'radical' and @n = 2]/@subtype"><select
-                                                            ref="instance('i-headedness')//option" class="widget">
+                                                            ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <option value="{.}">{@xml:id}</option>
                                                         </template>
@@ -839,7 +839,7 @@
                                             <section class="tp-row">
                                                 <div class="tp-form-group-col"><label class="tp-label">Suffix 4</label>
                                                     <fx-control ref="m[@type = 'suffix' and @n = '4']"><select
-                                                            ref="instance('i-suffix-4')/option" class="widget">
+                                                            ref="data('i-suffix-4')/option" class="widget">
                                                         <template>
                                                             <option value="{.}">{.}</option>
                                                         </template>
@@ -847,7 +847,7 @@
                                                 </div>
                                                 <div class="tp-form-group-col"><label class="tp-label">Suffix 3</label>
                                                     <fx-control ref="m[@type = 'suffix' and @n = '3']"><select
-                                                            ref="instance('i-suffix-3')/option" class="widget">
+                                                            ref="data('i-suffix-3')/option" class="widget">
                                                         <template>
                                                             <option value="{.}">{.}</option>
                                                         </template>
@@ -855,7 +855,7 @@
                                                 </div>
                                                 <div class="tp-form-group-col"><label class="tp-label">Suffix 2</label>
                                                     <fx-control ref="m[@type = 'suffix' and @n = '2']"><select
-                                                            ref="instance('i-suffix-2')/option" class="widget">
+                                                            ref="data('i-suffix-2')/option" class="widget">
                                                         <template>
                                                             <option value="{.}">{.}</option>
                                                         </template>
@@ -866,7 +866,7 @@
                                                         <div class="tp-form-group-col"><label
                                                                 class="tp-label">Inflect</label>
                                                             <fx-control ref="m[@type = 'suffix' and @n = '1']"><select
-                                                                    ref="instance('i-suffix-1')/option" class="widget">
+                                                                    ref="data('i-suffix-1')/option" class="widget">
                                                                 <template>
                                                                     <option value="{base}">{base}</option>
                                                                 </template>
@@ -897,7 +897,7 @@
                                                             <fx-trigger>
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
-                                                                           origin="instance('i-template')//cit[@type='source']"></fx-insert>
+                                                                           origin="data('i-template')//cit[@type='source']"></fx-insert>
 <!--
                                                                 <script>
                                                                     clearAndInitAutocompletes();
@@ -961,7 +961,7 @@
                                                             <fx-trigger>
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
-                                                                           origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
+                                                                           origin="data('i-template')//cit[@type='auxiliary']"></fx-insert>
 <!--
                                                                 <script>
                                                                     clearAndInitAutocompletes();
@@ -1030,7 +1030,7 @@
                                                             <fx-trigger>
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
-                                                                           origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
+                                                                           origin="data('i-template')//cit[@type='linguistic']"></fx-insert>
 <!--
                                                                 <script>
                                                                     clearAndInitAutocompletes();
@@ -1093,7 +1093,7 @@
                                                             <fx-trigger>
                                                                 <button>add</button>
                                                                 <fx-insert context="listBibl" ref="cit"
-                                                                           origin="instance('i-template')//cit[@type='modern']"></fx-insert>
+                                                                           origin="data('i-template')//cit[@type='modern']"></fx-insert>
 <!--
                                                                 <script>
                                                                     clearAndInitAutocompletes();

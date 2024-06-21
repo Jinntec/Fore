@@ -102,9 +102,9 @@
 
                 console.log('who ',$who);
 
-<!--                const nodes = evaluateXPathToNodes($xpath,model.getDefaultInstanceData(),form);-->
+<!--                const nodes = evaluateXPathToNodes($xpath,model.getDefaultDataData(),form);-->
 
-<!--                const nodes = Array.from(model.getDefaultInstanceData().children);-->
+<!--                const nodes = Array.from(model.getDefaultDataData().children);-->
 				const nodes = form.evaluateToNodes(
 				`//server[@id = ("${$who}" => tokenize(','))]`,
 				this

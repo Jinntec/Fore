@@ -48,18 +48,18 @@
             <xf:instance id="i-global-variables">
                 <global-variables xmlns="" number-of-meaning-being-reloaded="0"/>
             </xf:instance>
-            <xf:submission id="s-load-morpheme" method="get" replace="instance" ref="instance('i-default')" validate="false" resource="modules/loadMorpheme.xql?id={bf:appContext('morpheme')}">
+            <xf:submission id="s-load-morpheme" method="get" replace="instance" ref="data('i-default')" validate="false" resource="modules/loadMorpheme.xql?id={bf:appContext('morpheme')}">
                 <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been loaded.</xf:message>
                 <xf:message ev:event="xforms-submit-error">Failed to load data.</xf:message>
-            </xf:submission><!--                    <xf:submission id="s-save-morpheme" method="put" replace="none" ref="instance('i-default')" resource="haka.xml">-->
-            <xf:submission id="s-save-morpheme" method="post" replace="none" ref="instance('i-default')" resource="modules/saveMorpheme.xql">
-                <xf:action ev:event="xforms-submit"><!--                        <xf:setvalue ref="instance('i-default')//TEI:category/@baseForm" value="instance('i-default')//TEI:category/@baseForm"/> -->
+            </xf:submission><!--                    <xf:submission id="s-save-morpheme" method="put" replace="none" ref="data('i-default')" resource="haka.xml">-->
+            <xf:submission id="s-save-morpheme" method="post" replace="none" ref="data('i-default')" resource="modules/saveMorpheme.xql">
+                <xf:action ev:event="xforms-submit"><!--                        <xf:setvalue ref="data('i-default')//TEI:category/@baseForm" value="data('i-default')//TEI:category/@baseForm"/> -->
                     <xf:message ev:event="xforms-submit-done" level="ephemeral">Saving...</xf:message>
                 </xf:action>
                 <xf:message ev:event="xforms-submit-done" level="ephemeral">Data have been saved.</xf:message>
                 <xf:message ev:event="xforms-submit-error">Failed to save data</xf:message>
             </xf:submission>
-            <xf:submission id="s-load-trans" method="post" replace="instance" validate="false" resource="modules/load-root-translations.xql" ref="instance('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]" targetref="instance('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]"/>
+            <xf:submission id="s-load-trans" method="post" replace="instance" validate="false" resource="modules/load-root-translations.xql" ref="data('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]" targetref="data('i-default')/TEI:meaning[instance('i-global-variables')/@number-of-meaning-being-reloaded/number()]"/>
             <xf:action ev:event="xforms-ready">
                 <xf:send submission="s-load-morpheme" if="bf:appContext('morpheme') != ''"/>
                 <script>
@@ -128,7 +128,7 @@
                                 <xf:setvalue ref="." value="event('termValue')"/>
                             </xf:action>
                             <xf:action ev:event="xforms-value-changed">
-                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="1"/>
+                                <xf:setvalue ref="data('i-global-variables')/@number-of-meaning-being-reloaded" value="1"/>
                                 <xf:send submission="s-load-trans"/>
                             </xf:action>
                         </xf:input>
@@ -177,7 +177,7 @@
                                 <xf:setvalue ref="." value="event('termValue')"/>
                             </xf:action>
                             <xf:action ev:event="xforms-value-changed">
-                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="2"/>
+                                <xf:setvalue ref="data('i-global-variables')/@number-of-meaning-being-reloaded" value="2"/>
                                 <xf:send submission="s-load-trans"/>
                             </xf:action>
                         </xf:input>
@@ -216,7 +216,7 @@
                                 <xf:setvalue ref="." value="event('termValue')"/>
                             </xf:action>
                             <xf:action ev:event="xforms-value-changed">
-                                <xf:setvalue ref="instance('i-global-variables')/@number-of-meaning-being-reloaded" value="3"/>
+                                <xf:setvalue ref="data('i-global-variables')/@number-of-meaning-being-reloaded" value="3"/>
                                 <xf:send submission="s-load-trans"/>
                             </xf:action>
                         </xf:input>

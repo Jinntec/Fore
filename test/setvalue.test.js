@@ -29,7 +29,7 @@ describe('setvalue tests', () => {
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
 
-        const inst = model.getDefaultInstance().getDefaultContext();
+        const inst = model.getDefaultData().getDefaultContext();
         const xp = fx.evaluateXPath('greeting', inst, null, {});
         console.log('plain eval: ', xp);
 
@@ -64,7 +64,7 @@ describe('setvalue tests', () => {
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
 
-        const inst = model.getDefaultInstance().getDefaultContext();
+        const inst = model.getDefaultData().getDefaultContext();
         const xp = fx.evaluateXPath('greeting', inst, null, {});
         console.log('plain eval: ', xp);
 
@@ -99,7 +99,7 @@ describe('setvalue tests', () => {
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
 
-        const inst = model.getDefaultInstance().getDefaultContext();
+        const inst = model.getDefaultData().getDefaultContext();
         const xp = fx.evaluateXPath('greeting', inst, null, {});
         console.log('plain eval: ', xp);
 
@@ -134,7 +134,7 @@ describe('setvalue tests', () => {
         await elementUpdated(model);
         expect(model.modelItems.length).to.equal(1);
 
-        const inst = model.getDefaultInstance().getDefaultContext();
+        const inst = model.getDefaultData().getDefaultContext();
         const xp = fx.evaluateXPath('greeting', inst, null, {});
         console.log('plain eval: ', xp);
 

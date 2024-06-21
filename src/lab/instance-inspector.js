@@ -29,7 +29,7 @@ export class InstanceInspector extends HTMLElement {
         `;
         const html = `
         <section>
-            <fx-control ref="instance('${this.id}')" as="node">
+            <fx-control ref="data('${this.id}')" as="node">
                 <label>${this.id}</label>
                 <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
             </fx-control>

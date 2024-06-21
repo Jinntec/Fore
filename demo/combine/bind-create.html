@@ -48,21 +48,21 @@
             When serialising on submit the same 'relevant' can be used to filter out unwanted (optional) nodes.
             ##### -->
             <fx-bind ref="gender" relevant="string-length(@value) != 0">
-                <fx-create ref="persName[last()]" position="after" origin="instance('template')/gender"></fx-create>
+                <fx-create ref="persName[last()]" position="after" origin="data('template')/gender"></fx-create>
             </fx-bind>
 
             <!-- pseudo relevance just to give the idea that arbitrary conditions can be picked -->
             <fx-bind ref="birth" relevant="string-length(string-join(date/@*)) != 0">
-                <fx-create origin="instance('template')/birth"></fx-create>
+                <fx-create origin="data('template')/birth"></fx-create>
             </fx-bind>
 
             <fx-bind ref="death" relevant="string-length(date/@when) != 0">
-                <fx-create origin="instance('template')/death"></fx-create>
+                <fx-create origin="data('template')/death"></fx-create>
             </fx-bind>
 
             <fx-bind ref="notes" relevant="string-length(.) != 0">
                 <!-- pretending we want to force the notes coming after 'death' -->
-                <fx-create ref="death" origin="instance('template')/notes"></fx-create>
+                <fx-create ref="death" origin="data('template')/notes"></fx-create>
             </fx-bind>
         </fx-bind>
     </fx-model>

@@ -462,7 +462,7 @@ describe('scoped resolution tests', () => {
                         <var1>aValue</var1>
                     </data>
                 </fx-model>
-                <fx-control ref="instance('var')/var1">
+                <fx-control ref="data('var')/var1">
                     <label>{.}</label>
                 </fx-control>
             </fx-fore>

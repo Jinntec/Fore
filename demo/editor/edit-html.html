@@ -22,11 +22,11 @@
         </datae>
     </fx-model>
 
-    <fx-control ref="instance()/fx-fore" as="node">
+    <fx-control ref="data()/fx-fore" as="node">
         <jinn-xml-editor class="widget"></jinn-xml-editor>
     </fx-control>
 
-    <fx-control ref="instance('vars')/selected">
+    <fx-control ref="data('vars')/selected">
         <label>add</label>
         <input list="elements">
         <datalist id="elements">
@@ -35,7 +35,7 @@
             <option value="fx-function">function</option>
             <option value="fx-submission">submission</option>
         </datalist>
-        <fx-insert event="value-changed" context="instance()//fx-model" ref="instance('vars')/selected" origin="instance('i-elements')//*[name()=instance('vars')/selected]" ></fx-insert>
+        <fx-insert event="value-changed" context="data()//fx-model" ref="data('vars')/selected" origin="data('i-elements')//*[name()=data('vars')/selected]" ></fx-insert>
     </fx-control>
 <!--    <fx-inspector open></fx-inspector>-->
 </fx-fore>

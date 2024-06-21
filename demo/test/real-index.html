@@ -10,10 +10,10 @@
 <div class="wrapper">
     <fx-fore>
         <fx-model>
-            <fx-action event="model-construct-done" if="exists(instance('query-params')/project)">
-                <fx-message>hey {instance('projects')/project[./@id=instance('query-params')/project]/string()}</fx-message>
+            <fx-action event="model-construct-done" if="exists(data('query-params')/project)">
+                <fx-message>hey {data('projects')/project[./@id=data('query-params')/project]/string()}</fx-message>
 <!--                <fx-toggle case="c-form"></fx-toggle>-->
-                <fx-setvalue ref="project" value="instance('projects')/project[./@id=instance('query-params')/project]/string()"></fx-setvalue>
+                <fx-setvalue ref="project" value="data('projects')/project[./@id=data('query-params')/project]/string()"></fx-setvalue>
             </fx-action>
 
             <fx-instance>
@@ -105,8 +105,8 @@
             </fx-instance>
 
         </fx-model>
-        Found: {instance('projects')/project[./@id=instance('query-params')/project]}
-        <fx-repeat ref="instance('projects')/project">
+        Found: {data('projects')/project[./@id=data('query-params')/project]}
+        <fx-repeat ref="data('projects')/project">
             <template>
                 <div><a href="real-index.html?project={@id}">{.}</a></div>
             </template>

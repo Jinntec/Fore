@@ -51,7 +51,7 @@
                 <hypotheses>1</hypotheses>
             </data>
         </fx-instance>
-        <fx-bind id="hyp" ref="instance('temp')/hypotheses" calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
+        <fx-bind id="hyp" ref="data('temp')/hypotheses" calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
 
     </fx-model>
 
@@ -104,7 +104,7 @@
                         <div class="tp-form-group-col">
                             <label class="tp-label">Classification</label>
                             <fx-control ref="gram[@type='fictitious']">
-                                <fx-items ref="instance('i-fictitious')//option" class="widget">
+                                <fx-items ref="data('i-fictitious')//option" class="widget">
                                     <template>
                                         <span class="fx-checkbox">
                                             <input id="check" name="option" type="checkbox" value="{@value}">
@@ -117,7 +117,7 @@
                         <div class="tp-form-group-col">
                             <label class="tp-label">Classification</label>
                             <fx-control ref="gram[@type='GPR']">
-                                <fx-items ref="instance('i-gpr')//option" class="widget">
+                                <fx-items ref="data('i-gpr')//option" class="widget">
                                     <template>
                                         <span class="fx-checkbox">
                                             <input id="check" name="option" type="checkbox" value="{@value}">
@@ -133,7 +133,7 @@
                             <label class="tp-label">Sublemma</label>
                             <fx-control class="tp-input -form-control"
                                         ref="gram[@type='sublemma']">
-                                <select ref="instance('i-sublemma')//option" class="widget">
+                                <select ref="data('i-sublemma')//option" class="widget">
                                     <template>
                                         <option value="{@xml:id}">{.}</option>
                                     </template>
@@ -144,7 +144,7 @@
                             <label class="tp-label">Polysemic</label>
                             <fx-control class="tp-input -form-control"
                                         ref="gram[@ana]/@ana">
-                                <select ref="instance('i-polysemic')//option" class="widget">
+                                <select ref="data('i-polysemic')//option" class="widget">
                                     <template>
                                         <option value="{@xml:id}">{.}</option>
                                     </template>
@@ -161,7 +161,7 @@
                             <fx-trigger>
                                 <button>add</button>
                                 <fx-insert context="//entry/re" ref="//entry/re/form"
-                                            origin="instance('i-template')/re/form"></fx-insert>
+                                            origin="data('i-template')/re/form"></fx-insert>
                             </fx-trigger>              
                         </div>
 
@@ -171,7 +171,7 @@
                             <div class="tp-form-group-col">
                                 <label class="tp-label">Relation</label>
                                 <fx-control ref="lbl" class="tp-input -form-control">
-                                    <select ref="instance('i-relations')/option" class="widget">
+                                    <select ref="data('i-relations')/option" class="widget">
                                         <template>
                                             <option value="{@xml:id}">{.}</option>
                                         </template>
@@ -221,7 +221,7 @@
                                             <label>Add dialect</label>
                                             <fx-trigger class="-btn -btn-default ">
                                                 <button>Add</button>
-                                                <fx-insert ref="usg" origin="instance('i-template')//usg[@type='lang']"/>
+                                                <fx-insert ref="usg" origin="data('i-template')//usg[@type='lang']"/>
                                             </fx-trigger>
                                         </div>
                                     </div>
@@ -237,7 +237,7 @@
                                                 <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                                 <fx-control class="tp-input -form-control"
                                                     ref=".">
-                                                <select ref="instance('i-dialects')//category" class="widget">
+                                                <select ref="data('i-dialects')//category" class="widget">
                                                     <template>
                                                         <option value="{@xml:id}">{catDesc[@ana='full'][@xml:lang='fr']}</option>
                                                     </template>
@@ -249,7 +249,7 @@
                                                 <label class="tp-label">(Check if uncertain)</label>
                                                 
                                                 <fx-control ref="@cert">
-                                                    <fx-items ref="instance('i-cert')//option" class="widget">
+                                                    <fx-items ref="data('i-cert')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{@value}">
@@ -298,7 +298,7 @@
                                             <fx-insert 
                                                 context="//entry" 
                                                 ref="form"
-                                                origin="instance('i-template')//form[@type='variant']"></fx-insert>
+                                                origin="data('i-template')//form[@type='variant']"></fx-insert>
                                         </fx-trigger>
                                     </div>
                                 </div>
@@ -313,7 +313,7 @@
                                         <div class="tp-form-group-col"><label class="tp-label">Linking of the form
                                             is uncertain</label>
                                             <fx-control ref="@cert">
-                                                <fx-items ref="instance('i-cert')//option" class="widget">
+                                                <fx-items ref="data('i-cert')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@value}">
@@ -332,7 +332,7 @@
                                             of the form is
                                             uncertain</label>
                                             <fx-control ref="orth/@cert">
-                                                <fx-items ref="instance('i-cert')//option" class="widget">
+                                                <fx-items ref="data('i-cert')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@value}">
@@ -346,7 +346,7 @@
                                     <div class="tp-row">
                                         <div class="tp-form-group-col"><label class="tp-label">Gender</label>
                                             <fx-control ref="gen">
-                                                <select ref="instance('i-genders')//category" class="widget">
+                                                <select ref="data('i-genders')//category" class="widget">
                                                 <template>
                                                     <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
                                                 </template>
@@ -356,7 +356,7 @@
                                     <div class="tp-row">
                                         <div class="tp-form-group-col"><label class="tp-label">Dialectal/Areal/Bilingual</label>
                                             <fx-control ref="usg">
-                                            <select ref="instance('i-dialects')//category" class="widget">
+                                            <select ref="data('i-dialects')//category" class="widget">
                                                 <template>
                                                     <option value="{@xml:id}">{catDesc[@ana='full'][@xml:lang='fr']}</option>
                                                 </template>
@@ -366,7 +366,7 @@
                                         <div class="tp-form-group-col"><label class="tp-label">Dialect is
                                             uncertain</label>
                                             <fx-control ref="usg/@cert">
-                                                <fx-items ref="instance('i-cert')//option" class="widget">
+                                                <fx-items ref="data('i-cert')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@value}">
@@ -402,7 +402,7 @@
         <section class="tp-section">
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Segmentation and Semantics
-                    (<fx-output id="output" ref="instance('temp')/hypotheses">counting...</fx-output>)
+                    (<fx-output id="output" ref="data('temp')/hypotheses">counting...</fx-output>)
                 </h2>
                 <div class="tp-width-secondary">
                     <section class="form-horizontal">
@@ -413,7 +413,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert context="//entry" ref="gramGrp"
-                                                        origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                                                        origin="data('default')//gramGrp[@type='segmentation']"></fx-insert>
                                         </fx-trigger>
                                     </div>
                                 </div>
@@ -430,7 +430,7 @@
                                                 <label class="tp-label">Certainty</label>
                                                 
                                                 <fx-control ref="@cert">
-                                                    <fx-items ref="instance('i-cert')//option" class="widget">
+                                                    <fx-items ref="data('i-cert')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{.}">
@@ -445,7 +445,7 @@
                                                     <div class="col-xs-8">
                                                         <label class="tp-label">Complex Structuration and Semantics</label>                                                          
                                                         <fx-control class="tp-input -form-control" ref="@subtype">
-                                                            <select ref="instance('i-classification')//option" class="widget">
+                                                            <select ref="data('i-classification')//option" class="widget">
                                                                 <template>
                                                                     <option value="{@xml:id}">{.}</option>
                                                                 </template>
@@ -455,7 +455,7 @@
                                                     <div class="col-xs-4">
                                                         <label class="tp-label">Struct. uncertain</label>
                                                         <fx-control ref="@ana">
-                                                            <fx-items ref="instance('i-name-characteristic')//option" class="widget">
+                                                            <fx-items ref="data('i-name-characteristic')//option" class="widget">
                                                                 <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox" value="{.}">
@@ -501,7 +501,7 @@
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Functions (preroot)</label>
                                             <fx-control ref="m[@type='prefix'][@n='1']/@function">
-                                                <fx-items ref="instance('i-functions')//option" class="widget">
+                                                <fx-items ref="data('i-functions')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -517,7 +517,7 @@
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification</label>
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@subtype">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -588,7 +588,7 @@
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Functions 1</label>
                                             <fx-control ref="m[@type='radical'][@n='1']/@function">
-                                                <fx-items ref="instance('i-functions')//option" class="widget">
+                                                <fx-items ref="data('i-functions')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -604,7 +604,7 @@
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification</label>
                                                 <fx-control ref="m[@type='radical'][@n='1']/@subtype">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -674,7 +674,7 @@
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Functions 2</label>
                                             <fx-control ref="m[@type='radical'][@n='2']/@function">
-                                                <fx-items ref="instance('i-functions')//option" class="widget">
+                                                <fx-items ref="data('i-functions')//option" class="widget">
                                                     <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -690,7 +690,7 @@
                                             <div class="tp-column-3">
                                                 <label class="tp-label">Headedness classification</label>
                                                 <fx-control ref="m[@type='radical'][@n='2']/@subtype">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                             <span class="fx-checkbox">
                                                                 <input id="check" name="option" type="checkbox" value="{@xml:id}">
@@ -737,7 +737,7 @@
                                         <section class="tp-row">
                                             <div class="tp-form-group-col"><label class="tp-label">Suffix 4</label>
                                                 <fx-control ref="m[@type = 'suffix'][@n = '4']"><select
-                                                        ref="instance('i-suffix-4')/option" class="widget">
+                                                        ref="data('i-suffix-4')/option" class="widget">
                                                     <template>
                                                         <option value="{./string()}">{.}</option>
                                                     </template>
@@ -745,7 +745,7 @@
                                             </div>
                                             <div class="tp-form-group-col"><label class="tp-label">Suffix 3</label>
                                                 <fx-control ref="m[@type = 'suffix'][@n = '3']"><select
-                                                        ref="instance('i-suffix-3')/option" class="widget">
+                                                        ref="data('i-suffix-3')/option" class="widget">
                                                     <template>
                                                         <option value="{./string()}">{.}</option>
                                                     </template>
@@ -753,7 +753,7 @@
                                             </div>
                                             <div class="tp-form-group-col"><label class="tp-label">Suffix 2</label>
                                                 <fx-control ref="m[@type = 'suffix'][@n = '2']"><select
-                                                        ref="instance('i-suffix-2')/option" class="widget">
+                                                        ref="data('i-suffix-2')/option" class="widget">
                                                     <template>
                                                         <option value="{./string()}">{.}</option>
                                                     </template>
@@ -764,7 +764,7 @@
                                                     <div class="tp-form-group-col"><label
                                                             class="tp-label">Inflect</label>
                                                         <fx-control ref="m[@type = 'suffix'][@n = '1']"><select
-                                                                ref="instance('i-suffix-1')/option" class="widget">
+                                                                ref="data('i-suffix-1')/option" class="widget">
                                                             <template>
                                                                 <option value="{base/string()}">{base}</option>
                                                             </template>
@@ -805,7 +805,7 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-insert ref="listBibl/cit"
-                                                                        origin="instance('i-template')//cit[@type='source']"></fx-insert>
+                                                                        origin="data('i-template')//cit[@type='source']"></fx-insert>
 
                                                         </fx-trigger>
                                                     </div>
@@ -864,7 +864,7 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-insert ref="listBibl/cit"
-                                                                        origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
+                                                                        origin="data('i-template')//cit[@type='auxiliary']"></fx-insert>
                                                         </fx-trigger>
                                                     </div>
                                                 </div>
@@ -926,7 +926,7 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-insert ref="listBibl/cit"
-                                                                        origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
+                                                                        origin="data('i-template')//cit[@type='linguistic']"></fx-insert>
                                                         </fx-trigger>
                                                     </div>
                                                 </div>
@@ -983,7 +983,7 @@
                                                         <fx-trigger>
                                                             <button>add</button>
                                                             <fx-insert ref="listBibl/cit"
-                                                                        origin="instance('i-template')//cit[@type='modern']"></fx-insert>
+                                                                        origin="data('i-template')//cit[@type='modern']"></fx-insert>
                                                         </fx-trigger>
                                                     </div>
                                                 </div>

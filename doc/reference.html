@@ -183,10 +183,10 @@
             <fx-instance id="markdown" type="text" src="elements/fx-action.md"></fx-instance>
             <fx-submission id="loadMd"
                            method="get"
-                           url="elements/{instance('default')/current}.md"
-                           replace="instance"
-                           into="instance()/element[contains(@tags , instance()/tag)][index('elements')]">
-                <fx-message event="submit-error" value="instance('default')/current || '.md cannot be loaded'"></fx-message>
+                           url="elements/{data('default')/current}.md"
+                           replace="data"
+                           into="data()/element[contains(@tags , instance()/tag)][index('elements')]">
+                <fx-message event="submit-error" value="data('default')/current || '.md cannot be loaded'"></fx-message>
             </fx-submission>
 
             <fx-function signature="markdown($input as xs:string?) as xs:string"
@@ -235,7 +235,7 @@
                         {@name}
 						  <fx-action event="click" if="string-length(.)=0">
                             <fx-message>clicked {.}</fx-message>
-                            <fx-setvalue ref="instance('default')/current" value="instance()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
+                            <fx-setvalue ref="data('default')/current" value="data()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
                             <fx-send submission="loadMd"></fx-send>
                         </fx-action>
                     </summary>

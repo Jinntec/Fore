@@ -44,7 +44,7 @@
                 </p>
                 <fx-control ref="listitem" update-event="input">
                     <label>dynamic list</label>
-                    <select ref="instance('list')?*" class="widget">
+                    <select ref="data('list')?*" class="widget">
                         <template>
                             <option value="{?value}">{?name}</option>
                         </template>
@@ -57,7 +57,7 @@
                 this list once it has been build.</p>
                 <fx-control ref="listitem2" update-event="input">
                     <label>static list</label>
-                    <select ref="instance('list2')?*" class="widget" static>
+                    <select ref="data('list2')?*" class="widget" static>
                         <template>
                             <option value="{?value}">{?name}</option>
                         </template>

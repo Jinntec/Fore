@@ -7,10 +7,10 @@ describe('XPathUtil Tests', () => {
         expect(XPathUtil.getInstanceId('instance()')).to.equal('default');
     });
     it('returns "default" if arg is "default"', async () => {
-        expect(XPathUtil.getInstanceId("instance('default')")).to.equal('default');
+        expect(XPathUtil.getInstanceId("data('default')")).to.equal('default');
     });
     it('returns "foo" if arg is "foo"', async () => {
-        expect(XPathUtil.getInstanceId("instance('foo')")).to.equal('foo');
+        expect(XPathUtil.getInstanceId("data('foo')")).to.equal('foo');
     });
 
     it('isAbsolutePath returns false when no path is given', async () => {
@@ -25,7 +25,7 @@ describe('XPathUtil Tests', () => {
     it('isAbsolutePath returns true when no path starts with "/"', async () => {
         expect(XPathUtil.isAbsolutePath('/foo')).to.equal(true);
     });
-    it('isAbsolutePath returns true when no path starts with "instance("', async () => {
+    it('isAbsolutePath returns true when no path starts with "data("', async () => {
         expect(XPathUtil.isAbsolutePath('instance()')).to.equal(true);
     });
 

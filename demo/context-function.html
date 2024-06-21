@@ -29,9 +29,9 @@
                 </facets>
             </data>
 
-            <fx-bind ref="facets/facet" relevant="instance('vars')/running != 'true' or @selected='true'">
-                <fx-bind ref="@count" relevant="instance('vars')/running != 'true'"></fx-bind>
-                <fx-bind ref="@selected" relevant="instance('vars')/running != 'true'"></fx-bind>
+            <fx-bind ref="facets/facet" relevant="data('vars')/running != 'true' or @selected='true'">
+                <fx-bind ref="@count" relevant="data('vars')/running != 'true'"></fx-bind>
+                <fx-bind ref="@selected" relevant="data('vars')/running != 'true'"></fx-bind>
             </fx-bind>
 
 
@@ -50,11 +50,11 @@
                           replace="data"
                           data="params">
                 <fx-action event="submit">
-                    <fx-setvalue ref="instance('vars')/running">true</fx-setvalue>
+                    <fx-setvalue ref="data('vars')/running">true</fx-setvalue>
                 </fx-action>
 
                 <fx-action event="submit-done">
-                    <fx-setvalue ref="instance('vars')/running">false</fx-setvalue>
+                    <fx-setvalue ref="data('vars')/running">false</fx-setvalue>
 <!--                    <fx-send submission="dosearch"></fx-send>-->
                 </fx-action>
             </fx-submission>

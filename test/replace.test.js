@@ -22,7 +22,7 @@ describe('replace Tests', () => {
 
                 <fx-trigger id="trigger">
                     <button>replace</button>
-                    <fx-replace ref="value" with="instance('template')/list"></fx-replace>
+                    <fx-replace ref="value" with="data('template')/list"></fx-replace>
                 </fx-trigger>
                 <fx-repeat ref="list/value">
                     <template>
@@ -37,7 +37,7 @@ describe('replace Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const initial = fx.evaluateXPath('//value', inst);
         expect(initial).to.exist;
@@ -77,7 +77,7 @@ describe('replace Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const initial = fx.evaluateXPath('//value', inst);
         expect(initial).to.exist;

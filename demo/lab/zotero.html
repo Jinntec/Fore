@@ -47,28 +47,28 @@
                     <fx-submission id="s-load"
                                    url="https://api.zotero.org/groups/2519759/items?q=lat&include=data,bib"
                                    method="get"
-                                   replace="instance"
+                                   replace="data"
                                    validate="false"></fx-submission>
 
                 </fx-model>
 
-                <section class="zotero-picker {instance('vars')/open}">
+                <section class="zotero-picker {data('vars')/open}">
                     <header>
-                        <fx-control ref="instance('vars')/search" update-event="input">
+                        <fx-control ref="data('vars')/search" update-event="input">
                             <fx-action event="value-changed">
                                 <fx-update></fx-update>
                                 <fx-refresh></fx-refresh>
-                                <fx-setvalue ref="instance('vars')/open">open</fx-setvalue>
+                                <fx-setvalue ref="data('vars')/open">open</fx-setvalue>
                             </fx-action>
                         </fx-control>
                     </header>
                     <fx-repeat ref="?*">
                         <template>
-                            <fx-output class="bib" tabindex="0" ref="?bib[contains(.,instance('vars')/search)]" html>
+                            <fx-output class="bib" tabindex="0" ref="?bib[contains(.,data('vars')/search)]" html>
                                 <fx-message event="click">item clicked</fx-message>
                                 <fx-action event="keydown">
                                     <fx-message>selected {context()}</fx-message>
-                                    <fx-setvalue ref="instance('vars')/open"></fx-setvalue>
+                                    <fx-setvalue ref="data('vars')/open"></fx-setvalue>
                                 </fx-action>
                             </fx-output>
                         </template>

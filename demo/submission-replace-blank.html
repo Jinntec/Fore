@@ -48,8 +48,8 @@
 
 <div class="wrapper">
     <h1>Send response to new tab</h1>
-    <p>In this demo a little CSV file it loaded into an instance of type 'text'. When the submission is triggered
-    it will use the '#echo' handler to just return that instance back but sending it to a new browser tab.</p>
+    <p>In this demo a little CSV file it loaded into an data element of type 'text'. When the submission is triggered
+    it will use the '#echo' handler to just return that data back but sending it to a new browser tab.</p>
 
     <demo-snippet>
         <template>
@@ -74,7 +74,7 @@
                     </fx-trigger>
 
                 </fx-group>
-                {instance()}
+                {data()}
             </fx-fore>
         </template>
     </demo-snippet>

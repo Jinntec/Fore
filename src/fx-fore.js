@@ -802,7 +802,7 @@ export class FxFore extends HTMLElement {
                 this._generateData(this, generated.firstElementChild);
                 generatedData.data = generated;
                 model.data.push(generated);
-                // console.log('generated ', this.getModel().getDefaultInstanceData());
+                // console.log('generated ', this.getModel().getDefaultDataData());
                 Fore.dispatch(this,'data-loaded',{data:this});
             }
         }catch (e) {

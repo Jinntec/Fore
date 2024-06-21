@@ -55,18 +55,18 @@
                         -->
             </meanings>
         </fx-instance>
-        <fx-submission id="s-load-data" method="get" replace="instance" ref="instance('i-default')" validate="false"
+        <fx-submission id="s-load-data" method="get" replace="data" ref="data('i-default')" validate="false"
                        resource="modules/load.xql?id={bf:appContext('id')}">
             <fx-message event="xforms-submit-done" level="ephemeral">Data have been loaded.</fx-message>
             <fx-message event="xforms-submit-error">Failed to load data.</fx-message>
             <fx-action event="xforms-submit-done">
                 <fx-action
-                        while="instance('i-meanings')/being-reloaded/@grp &lt; count(instance('i-default')//gramGrp[@type='segmentation'])">
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp + 1"/>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="1"/>
+                        while="data('i-meanings')/being-reloaded/@grp &lt; count(data('i-default')//gramGrp[@type='segmentation'])">
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
+                                 value="data('i-meanings')/being-reloaded/@grp + 1"/>
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n" value="1"/>
                     <fx-send submission="s-reload-meanings"/>
-                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n" value="2"/>
+                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n" value="2"/>
                     <fx-send submission="s-reload-meanings"/>
                 </fx-action>
             </fx-action>
@@ -81,34 +81,34 @@
                 <fx-value/>
             </fx-header>
             <fx-action event="xforms-submit">
-                <fx-setvalue ref="instance('i-default')//entry/@xml:id"
-                             value="instance('i-default')//orth[@type='latin']"/>
+                <fx-setvalue ref="data('i-default')//entry/@xml:id"
+                             value="data('i-default')//orth[@type='latin']"/>
                 <fx-message event="xforms-submit-done" level="ephemeral">Saving...</fx-message>
             </fx-action>
             <fx-message event="xforms-submit-done" level="ephemeral">Data have been saved.</fx-message>
             <fx-message event="xforms-submit-error">Failed to save data</fx-message>
         </fx-submission>
-        <fx-submission id="s-reload-meanings" method="post" replace="instance" validate="false"
+        <fx-submission id="s-reload-meanings" method="post" replace="data" validate="false"
                        resource="modules/reload-meanings.xql"
-                       ref="instance('i-default')//entry/gramGrp[@type='segmentation'][instance('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = instance('i-meanings')/being-reloaded/@n]"
-                       targetref="instance('i-meanings')/target/taxonomy">
+                       ref="data('i-default')//entry/gramGrp[@type='segmentation'][data('i-meanings')/being-reloaded/@grp/number()]/m[@type = 'radical' and @n = data('i-meanings')/being-reloaded/@n]"
+                       targetref="data('i-meanings')/target/taxonomy">
             <fx-action event="xforms-submit-done">
                 <fx-action
-                        if="not(instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n])">
-                    <fx-insert context="instance('i-meanings')" nodeset="*[last()]"
-                               origin="instance('i-meanings')/template/meaning"/>
-                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@n"
-                                 value="instance('i-meanings')/being-reloaded/@n"/>
-                    <fx-setvalue ref="instance('i-meanings')/meaning[@grp='0']/@grp"
-                                 value="instance('i-meanings')/being-reloaded/@grp"/>
+                        if="not(data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n])">
+                    <fx-insert context="data('i-meanings')" nodeset="*[last()]"
+                               origin="data('i-meanings')/template/meaning"/>
+                    <fx-setvalue ref="data('i-meanings')/meaning[@grp='0']/@n"
+                                 value="data('i-meanings')/being-reloaded/@n"/>
+                    <fx-setvalue ref="data('i-meanings')/meaning[@grp='0']/@grp"
+                                 value="data('i-meanings')/being-reloaded/@grp"/>
                 </fx-action>
                 <fx-delete
-                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
+                        context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]"
                         nodeset="*"/>
                 <fx-insert
-                        context="instance('i-meanings')/meaning[@grp=instance('i-meanings')/being-reloaded/@grp and @n=instance('i-meanings')/being-reloaded/@n]"
-                        origin="instance('i-meanings')/target/*"/>
-                <fx-delete context="instance('i-meanings')/target/taxonomy" nodeset="*|@*"/>
+                        context="data('i-meanings')/meaning[@grp=data('i-meanings')/being-reloaded/@grp and @n=data('i-meanings')/being-reloaded/@n]"
+                        origin="data('i-meanings')/target/*"/>
+                <fx-delete context="data('i-meanings')/target/taxonomy" nodeset="*|@*"/>
             </fx-action>
             <fx-message event="xforms-submit-error" level="ephemeral">Meanings reload failed.</fx-message>
         </fx-submission>
@@ -130,14 +130,14 @@
         </fx-control>
     </fx-group>
     <fx-group id="load-subform-group">
-        <fx-action event="load-subform-event" if="string-length(instance('i-controller')/morpheme) &gt; 0">
+        <fx-action event="load-subform-event" if="string-length(data('i-controller')/morpheme) &gt; 0">
             <fx-load show="embed" targetid="mountpoint">
-                <fx-resource value="concat('meanings.xhtml?morpheme=', instance('i-controller')/morpheme,'#xforms')"/>
+                <fx-resource value="concat('meanings.xhtml?morpheme=', data('i-controller')/morpheme,'#xforms')"/>
                 <fx-extension includeCSS="false" includeScript="false"/>
             </fx-load>
             <bfc-show dialog="meanings"/>
         </fx-action>
-        <fx-action event="load-subform-event" if="string-length(instance('i-controller')/morpheme) = 0">
+        <fx-action event="load-subform-event" if="string-length(data('i-controller')/morpheme) = 0">
             <fx-load show="embed" targetid="mountpoint">
                 <fx-resource value="'meanings.xhtml#xforms'"/>
                 <fx-extension includeCSS="false" includeScript="false"/>
@@ -189,7 +189,7 @@
 <!--
                             <fx-control ref="//gramGrp[@type='classification']/gram[@type='fictitious']"
                                         update-event="change">
-                                <select ref="instance('ifictitious')/option" class="widget">
+                                <select ref="data('ifictitious')/option" class="widget">
                                     <template>
                                         <option value="{.}">{.}</option>
                                     </template>
@@ -198,7 +198,7 @@
 -->
                             <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='fictitious']"
                                        appearance="full">
-                                <fx-itemset nodeset="instance('i-fictitious')//option">
+                                <fx-itemset nodeset="data('i-fictitious')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
                                 </fx-itemset>
@@ -208,7 +208,7 @@
                             <label class="tp-label">Classification</label>
                             <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@type='GPR']"
                                        appearance="full">
-                                <fx-itemset nodeset="instance('i-gpr')//option">
+                                <fx-itemset nodeset="data('i-gpr')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
                                 </fx-itemset>
@@ -218,7 +218,7 @@
                             <label class="tp-label">Sublemma</label>
                             <fx-select1 class="tp-input -form-control"
                                         ref="//gramGrp[@type='classification']/gram[@type='sublemma']">
-                                <fx-itemset nodeset="instance('i-sublemma')//option">
+                                <fx-itemset nodeset="data('i-sublemma')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="@xml:id"/>
                                 </fx-itemset>
@@ -229,7 +229,7 @@
                             <label class="tp-label">Polysemic</label>
                             <fx-select class="tp-input" ref="//gramGrp[@type='classification']/gram[@ana]"
                                        appearance="full">
-                                <fx-itemset nodeset="instance('i-polysemic')//option">
+                                <fx-itemset nodeset="data('i-polysemic')//option">
                                     <fx-label ref="."/>
                                     <fx-value ref="."/>
                                 </fx-itemset>
@@ -251,7 +251,7 @@
                                         <fx-label class="input-group-addon">
                                             <i class="glyphicon glyphicon-plus"/>
                                         </fx-label>
-                                        <fx-insert context="//entry" nodeset="re" origin="instance('i-template')//re"/>
+                                        <fx-insert context="//entry" nodeset="re" origin="data('i-template')//re"/>
                                         <script>
                                             clearAndInitAutocompletes();
                                         </script>
@@ -264,14 +264,14 @@
                             <div class="tp-form-group-col">
                                 <label class="tp-label">Relation</label>
                                 <fx-control ref="lbl" class="tp-input -form-control">
-                                    <select ref="instance('i-relations')/option" class="widget">
+                                    <select ref="data('i-relations')/option" class="widget">
                                         <template>
                                             <option value="{@xml:id}">{.}</option>
                                         </template>
                                     </select>
                                 </fx-control>
                                 <fx-select1 class="tp-input -form-control" ref="//re//lbl">
-                                    <fx-itemset nodeset="instance('i-relations')//option">
+                                    <fx-itemset nodeset="data('i-relations')//option">
                                         <fx-label ref="."/>
                                         <fx-value ref="@xml:id"/>
                                     </fx-itemset>
@@ -323,7 +323,7 @@
                                                 <i class="glyphicon glyphicon-plus"/>
                                             </fx-label>
                                             <fx-insert context="//gramGrp[@type='classification']" nodeset="usg"
-                                                       origin="instance('i-template')//usg[@type='lang']"/>
+                                                       origin="data('i-template')//usg[@type='lang']"/>
                                             <script>
                                                 clearAndInitAutocompletes();
                                             </script>
@@ -342,7 +342,7 @@
                                             <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                             <fx-select1 class="tp-input -form-control" ref=".">
                                                 <fx-label class="input-group-addon"/>
-                                                <fx-itemset nodeset="instance('i-dialects')//category">
+                                                <fx-itemset nodeset="data('i-dialects')//category">
                                                     <fx-label ref="catDesc[@xml:lang='en'][@ana='short']"/>
                                                     <fx-value ref="@xml:id"/>
                                                 </fx-itemset>
@@ -405,7 +405,7 @@
                                                 <i class="glyphicon glyphicon-plus"/>
                                             </fx-label>
                                             <fx-insert context="//entry" nodeset="form"
-                                                       origin="instance('i-template')//form[@type='variant']"/>
+                                                       origin="data('i-template')//form[@type='variant']"/>
                                             <script>
                                                 clearAndInitAutocompletes();
                                             </script>
@@ -459,7 +459,7 @@
                                             <label class="tp-label">Gender</label>
                                             <fx-select1 class="tp-input -form-control" ref="gen">
                                                 <fx-label class="input-group-addon"/>
-                                                <fx-itemset nodeset="instance('i-genders')//category">
+                                                <fx-itemset nodeset="data('i-genders')//category">
                                                     <fx-label ref="catDesc[@xml:lang='en'][@ana='short']"/>
                                                     <fx-value ref="@xml:id"/>
                                                 </fx-itemset>
@@ -471,7 +471,7 @@
                                             <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                             <fx-select1 class="tp-input -form-control" ref="usg">
                                                 <fx-label class="input-group-addon"/>
-                                                <fx-itemset nodeset="instance('i-dialects')//category">
+                                                <fx-itemset nodeset="data('i-dialects')//category">
                                                     <fx-label ref="catDesc[@xml:lang='en'][@ana='short']"/>
                                                     <fx-value ref="@xml:id"/>
                                                 </fx-itemset>
@@ -536,7 +536,7 @@
                                                 </fx-label>
 
                                                 <fx-insert context="//entry" nodeset="gramGrp"
-                                                           origin="instance('i-template')//gramGrp[@type='segmentation']"/>
+                                                           origin="data('i-template')//gramGrp[@type='segmentation']"/>
                                                 <script>
                                                     clearAndInitAutocompletes();
                                                 </script>
@@ -568,7 +568,7 @@
                                                             Semantics</label>
                                                         <fx-select1 class=" -form-control tp-input" ref="@subtype">
                                                             <fx-label class="input-group-addon"/>
-                                                            <fx-itemset nodeset="instance('i-classification')//option">
+                                                            <fx-itemset nodeset="data('i-classification')//option">
                                                                 <fx-label ref="."/>
                                                                 <fx-value ref="@xml:id"/>
                                                             </fx-itemset>
@@ -579,7 +579,7 @@
                                                         <fx-select class="" ref="@ana" appearance="full">
                                                             <fx-label class="input-group-addon"/>
                                                             <fx-itemset
-                                                                    nodeset="instance('i-name-characteristic')//option">
+                                                                    nodeset="data('i-name-characteristic')//option">
                                                                 <fx-label ref="."/>
                                                                 <fx-value ref="."/>
                                                             </fx-itemset>
@@ -625,9 +625,9 @@
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
                                                 <fx-action event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
                                                                  value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n"
                                                                  value="3"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
@@ -691,7 +691,7 @@
                                                            ref="m[@type = 'prefix' and @n = 1]/@subtype"
                                                            appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
-                                                    <fx-itemset nodeset="instance('i-headedness')//option">
+                                                    <fx-itemset nodeset="data('i-headedness')//option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="@xml:id"/>
                                                     </fx-itemset>
@@ -770,9 +770,9 @@
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
                                                 <fx-action event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
                                                                  value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n"
                                                                  value="1"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
@@ -791,8 +791,8 @@
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </fx-label>
                                                         <fx-action event="DOMActivate">
-                                                            <fx-setvalue ref="instance('i-controller')/morpheme"
-                                                                         value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"/>
+                                                            <fx-setvalue ref="data('i-controller')/morpheme"
+                                                                         value="data('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 1]/@baseForm"/>
                                                             <fx-dispatch name="load-subform-event"
                                                                          targetid="load-subform-group"/>
                                                         </fx-action>
@@ -813,7 +813,7 @@
                                                         <!--<input class="tags" value="" disabled="disabled"/>-->
                                                         <span class="meanings-val">
                                                                         <fx-repeat
-                                                                                nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=1]//category"
+                                                                                nodeset="data('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=1]//category"
                                                                                 id="r-meanings-1">
                                                                             <fx-output ref="catDesc[@xml:lang='en']"/>
                                                                         </fx-repeat>
@@ -874,7 +874,7 @@
                                                            ref="m[@type = 'radical' and @n = 1]/@subtype"
                                                            appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
-                                                    <fx-itemset nodeset="instance('i-headedness')//option">
+                                                    <fx-itemset nodeset="data('i-headedness')//option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="@xml:id"/>
                                                     </fx-itemset>
@@ -942,9 +942,9 @@
                                                 </fx-action>
                                                 <fx-label class="input-group-addon">root</fx-label>
                                                 <fx-action event="xforms-value-changed">
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@grp"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@grp"
                                                                  value="count(context()/preceding::gramGrp[@type='segmentation'])+1"/>
-                                                    <fx-setvalue ref="instance('i-meanings')/being-reloaded/@n"
+                                                    <fx-setvalue ref="data('i-meanings')/being-reloaded/@n"
                                                                  value="2"/>
                                                     <fx-send submission="s-reload-meanings"/>
                                                 </fx-action>
@@ -963,8 +963,8 @@
                                                             <i class="glyphicon glyphicon-plus"/>
                                                         </fx-label>
                                                         <fx-action event="DOMActivate">
-                                                            <fx-setvalue ref="instance('i-controller')/morpheme"
-                                                                         value="instance('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"/>
+                                                            <fx-setvalue ref="data('i-controller')/morpheme"
+                                                                         value="data('i-default')//gramGrp[@type='segmentation'][index('r-gramGrp')]/m[@type = 'radical' and @n = 2]/@baseForm"/>
                                                             <fx-dispatch name="load-subform-event"
                                                                          targetid="load-subform-group"/>
                                                         </fx-action>
@@ -986,7 +986,7 @@
                                                         <!--<input class="tags" value="" disabled="disabled"/>-->
                                                         <span class="meanings-val">
                                                                         <fx-repeat
-                                                                                nodeset="instance('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=2]//category"
+                                                                                nodeset="data('i-meanings')/meaning[@grp=count(current()/preceding::gramGrp[@type='segmentation'])+1 and @n=2]//category"
                                                                                 id="r-meanings-2">
                                                                             <fx-output ref="catDesc[@xml:lang='en']"/>
                                                                         </fx-repeat>
@@ -1049,7 +1049,7 @@
                                                            ref="m[@type = 'radical' and @n = 2]/@subtype"
                                                            appearance="full">
                                                     <fx-label class="input-group-addon">head.</fx-label>
-                                                    <fx-itemset nodeset="instance('i-headedness')//option">
+                                                    <fx-itemset nodeset="data('i-headedness')//option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="@xml:id"/>
                                                     </fx-itemset>
@@ -1099,7 +1099,7 @@
                                                 <fx-select1 class="tp-input -form-control"
                                                             ref="m[@type = 'suffix' and @n = '4']">
                                                     <fx-label class="input-group-addon">suffix 4</fx-label>
-                                                    <fx-itemset nodeset="instance('i-suffix-4')/option">
+                                                    <fx-itemset nodeset="data('i-suffix-4')/option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="."/>
                                                     </fx-itemset>
@@ -1110,7 +1110,7 @@
                                                 <fx-select1 class="tp-input -form-control"
                                                             ref="m[@type = 'suffix' and @n = '3']">
                                                     <fx-label class="input-group-addon">suffix 3</fx-label>
-                                                    <fx-itemset nodeset="instance('i-suffix-3')/option">
+                                                    <fx-itemset nodeset="data('i-suffix-3')/option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="."/>
                                                     </fx-itemset>
@@ -1121,7 +1121,7 @@
                                                 <fx-select1 class="tp-input -form-control"
                                                             ref="m[@type = 'suffix' and @n = '2']">
                                                     <fx-label class="input-group-addon">suffix 2</fx-label>
-                                                    <fx-itemset nodeset="instance('i-suffix-2')/option">
+                                                    <fx-itemset nodeset="data('i-suffix-2')/option">
                                                         <fx-label ref="."/>
                                                         <fx-value ref="."/>
                                                     </fx-itemset>
@@ -1134,7 +1134,7 @@
                                                         <fx-select1 class="tp-input -form-control"
                                                                     ref="m[@type = 'suffix' and @n = '1']">
                                                             <fx-label class="input-group-addon">inflex 1</fx-label>
-                                                            <fx-itemset nodeset="instance('i-suffix-1')/option">
+                                                            <fx-itemset nodeset="data('i-suffix-1')/option">
                                                                 <fx-label ref="base"/>
                                                                 <fx-value ref="base"/>
                                                             </fx-itemset>
@@ -1174,7 +1174,7 @@
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
                                                             <fx-insert context="listBibl" nodeset="cit"
-                                                                       origin="instance('i-template')//cit[@type='source']"/>
+                                                                       origin="data('i-template')//cit[@type='source']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1254,7 +1254,7 @@
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
                                                             <fx-insert context="listBibl" nodeset="cit"
-                                                                       origin="instance('i-template')//cit[@type='auxiliary']"/>
+                                                                       origin="data('i-template')//cit[@type='auxiliary']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1341,7 +1341,7 @@
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
                                                             <fx-insert context="listBibl" nodeset="cit"
-                                                                       origin="instance('i-template')//cit[@type='linguistic']"/>
+                                                                       origin="data('i-template')//cit[@type='linguistic']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>
@@ -1420,7 +1420,7 @@
                                                                 <i class="glyphicon glyphicon-plus"/>
                                                             </fx-label>
                                                             <fx-insert context="listBibl" nodeset="cit"
-                                                                       origin="instance('i-template')//cit[@type='modern']"/>
+                                                                       origin="data('i-template')//cit[@type='modern']"/>
                                                             <script>
                                                                 clearAndInitAutocompletes();
                                                             </script>

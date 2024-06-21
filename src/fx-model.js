@@ -492,7 +492,7 @@ export class FxModel extends HTMLElement {
             return this.getDefaultData(); // if id is not found always defaults to first in doc order
         }
         if (!found && this.fore.strict) {
-            // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            // return this.getDefaultData(); // if id is not found always defaults to first in doc order
             Fore.dispatch(this, 'error', {
                 origin: this,
                 message: `Instance '${id}' does not exist`,

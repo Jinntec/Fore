@@ -53,7 +53,7 @@
                 <foo></foo>
             </data>
         </fx-instance>
-        <fx-bind id="hyp" ref="instance('temp')/hypotheses"
+        <fx-bind id="hyp" ref="data('temp')/hypotheses"
                  calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
         <fx-function signature="local:toggleDetails()" type="text/javascript">
             console.log('toggleDetails func');
@@ -95,7 +95,7 @@
                 <!-- line 1: Classification -->
                 <fx-control ref="gram[@type='fictitious']">
                     <label class="tp-label">Classification</label>
-                    <fx-items ref="instance('i-fictitious')//option" class="widget">
+                    <fx-items ref="data('i-fictitious')//option" class="widget">
                         <template>
                             <span class="fx-checkbox">
                                 <input id="check" name="option" type="checkbox" value="{@value}">
@@ -106,7 +106,7 @@
                 </fx-control>
                 <fx-control ref="gram[@type='GPR']">
                     <label class="tp-label">Classification</label>
-                    <fx-items ref="instance('i-gpr')//option" class="widget">
+                    <fx-items ref="data('i-gpr')//option" class="widget">
                         <template>
                             <span class="fx-checkbox">
                                 <input id="check" name="option" type="checkbox" value="{@value}">
@@ -120,7 +120,7 @@
                 <fx-control class="tp-input -form-control"
                             ref="gram[@type='sublemma']">
                     <label class="tp-label">Sublemma</label>
-                    <select ref="instance('i-sublemma')//option" class="widget">
+                    <select ref="data('i-sublemma')//option" class="widget">
                         <template>
                             <option value="{@xml:id}">{.}</option>
                         </template>
@@ -129,7 +129,7 @@
                 <fx-control class="tp-input -form-control"
                             ref="gram[@ana]/@ana">
                     <label class="tp-label">Polysemic</label>
-                    <select ref="instance('i-polysemic')//option" class="widget">
+                    <select ref="data('i-polysemic')//option" class="widget">
                         <template>
                             <option value="{@xml:id}">{.}</option>
                         </template>
@@ -143,7 +143,7 @@
                     <fx-trigger class="add-button">
                         <button>add</button>
                         <fx-insert context="//entry/re" ref="//entry/re/form"
-                                   origin="instance('i-template')/re/form"></fx-insert>
+                                   origin="data('i-template')/re/form"></fx-insert>
                     </fx-trigger>
                 </div>
 
@@ -151,7 +151,7 @@
                     <template>
                         <fx-control ref="lbl" class="tp-input -form-control">
                             <label class="tp-label">Relation</label>
-                            <select ref="instance('i-relations')/option" class="widget">
+                            <select ref="data('i-relations')/option" class="widget">
                                 <template>
                                     <option value="{@xml:id}">{.}</option>
                                 </template>
@@ -183,9 +183,9 @@
                         <button>Add</button>
                         <fx-action>
                             <!--                                <fx-action src="toggledetails.js"></fx-action>-->
-                            <!--                                <fx-setvalue ref="instance('tmp')/foo" value="local:toggleDetails()"></fx-setvalue>-->
+                            <!--                                <fx-setvalue ref="data('tmp')/foo" value="local:toggleDetails()"></fx-setvalue>-->
                             <fx-dispatch name="click" targetid="dialects"></fx-dispatch>
-                            <fx-insert ref="usg" origin="instance('i-template')//usg[@type='lang']"/>
+                            <fx-insert ref="usg" origin="data('i-template')//usg[@type='lang']"/>
                         </fx-action>
                     </fx-trigger>
                     <fx-repeat ref="usg[@type='lang']" id="r-dialect" class="repeat-col-3">
@@ -193,7 +193,7 @@
                             <fx-control class="breaking-label"
                                         ref=".">
                                 <label class="tp-label">Dialectal/Areal/Bilingual</label>
-                                <select ref="instance('i-dialects')//category" class="widget">
+                                <select ref="data('i-dialects')//category" class="widget">
                                     <template>
                                         <option value="{@xml:id}">{catDesc[@ana='full'][@xml:lang='fr']}</option>
                                     </template>
@@ -201,7 +201,7 @@
                             </fx-control>
                             <fx-control ref="@cert" class="breaking-label">
                                 <label class="tp-label">(Check if uncertain)</label>
-                                <fx-items ref="instance('i-cert')//option" class="widget">
+                                <fx-items ref="data('i-cert')//option" class="widget">
                                     <template>
                                             <span class="fx-checkbox">
                                                 <input id="check" name="option" type="checkbox"
@@ -235,7 +235,7 @@
                         <fx-insert
                                 context="//entry"
                                 ref="form"
-                                origin="instance('i-template')//form[@type='variant']"></fx-insert>
+                                origin="data('i-template')//form[@type='variant']"></fx-insert>
                     </fx-trigger>
 
                     <fx-repeat ref="//form[@type='variant']" id="r-nameVariant">
@@ -245,7 +245,7 @@
                                     <fx-control ref="@cert" class="one-col breaking-label">
                                         <label>Linking of the form
                                             is uncertain</label>
-                                        <fx-items ref="instance('i-cert')//option" class="widget">
+                                        <fx-items ref="data('i-cert')//option" class="widget">
                                             <template>
                                             <span class="fx-checkbox">
                                                 <input id="check" name="option" type="checkbox"
@@ -264,7 +264,7 @@
                                         <label class="tp-label tp-invisible">Reading
                                             of the form is
                                             uncertain</label>
-                                        <fx-items ref="instance('i-cert')//option" class="widget">
+                                        <fx-items ref="data('i-cert')//option" class="widget">
                                             <template>
                                             <span class="fx-checkbox">
                                                 <input id="check" name="option" type="checkbox"
@@ -278,7 +278,7 @@
 <!--                                <div class="variant-row-1">-->
                                     <fx-control ref="gen" class="one-col">
                                         <label class="tp-label">Gender</label>
-                                        <select ref="instance('i-genders')//category" class="widget">
+                                        <select ref="data('i-genders')//category" class="widget">
                                             <template>
                                                 <option value="{@xml:id}">{catDesc[@xml:lang='en'][@ana='short']}</option>
                                             </template>
@@ -289,7 +289,7 @@
                                     <fx-control ref="usg" class="one-col">
                                         <label
                                                 class="tp-label">Dialectal/Areal/Bilingual</label>
-                                        <select ref="instance('i-dialects')//category" class="widget">
+                                        <select ref="data('i-dialects')//category" class="widget">
                                             <template>
                                                 <option value="{@xml:id}">{catDesc[@ana='full'][@xml:lang='fr']}</option>
                                             </template>
@@ -298,7 +298,7 @@
                                     <fx-control ref="usg/@cert" class="one-col">
                                         <label class="tp-label">Dialect is
                                             uncertain</label>
-                                        <fx-items ref="instance('i-cert')//option" class="widget">
+                                        <fx-items ref="data('i-cert')//option" class="widget">
                                             <template>
                                                 <span class="fx-checkbox">
                                                     <input id="check" name="option" type="checkbox"
@@ -324,7 +324,7 @@
 
         <!-- begin section segmentation -->
         <section class="tp-section">
-            <h2>Segmentation and Semantics ({count(instance('default')//gramGrp[@type='segmentation'])})</h2>
+            <h2>Segmentation and Semantics ({count(data('default')//gramGrp[@type='segmentation'])})</h2>
             <section class="form-horizontal">
                 <fx-group ref="//entry">
                     <section class="tp-row tp-repeat-add">
@@ -334,7 +334,7 @@
                                 <fx-trigger>
                                     <button>add</button>
                                     <fx-insert context="//entry" ref="gramGrp"
-                                               origin="instance('default')//gramGrp[@type='segmentation']"></fx-insert>
+                                               origin="data('default')//gramGrp[@type='segmentation']"></fx-insert>
                                 </fx-trigger>
                             </div>
                         </div>
@@ -349,7 +349,7 @@
                                     <div class="tp-form-group-col">
                                         <fx-control ref="@cert">
                                             <label class="tp-label">Certainty</label>
-                                            <fx-items ref="instance('i-cert')//option" class="widget">
+                                            <fx-items ref="data('i-cert')//option" class="widget">
                                                 <template>
                                                         <span class="fx-checkbox">
                                                             <input id="check" name="option" type="checkbox"
@@ -366,7 +366,7 @@
                                                 <fx-control class="tp-input -form-control" ref="@subtype">
                                                     <label class="tp-label">Complex Structuration and
                                                         Semantics</label>
-                                                    <select ref="instance('i-classification')//option"
+                                                    <select ref="data('i-classification')//option"
                                                             class="widget">
                                                         <template>
                                                             <option value="{@xml:id}">{.}</option>
@@ -377,7 +377,7 @@
                                             <div class="col-xs-4">
                                                 <fx-control ref="@ana">
                                                     <label class="tp-label">Struct. uncertain</label>
-                                                    <fx-items ref="instance('i-name-characteristic')//option"
+                                                    <fx-items ref="data('i-name-characteristic')//option"
                                                               class="widget">
                                                         <template>
                                                                 <span class="fx-checkbox">
@@ -446,7 +446,7 @@
                                             <td>Functions</td>
                                             <td>
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@function">
-                                                    <fx-items ref="instance('i-functions')//option" class="widget">
+                                                    <fx-items ref="data('i-functions')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -459,7 +459,7 @@
                                             </td>
                                             <td>
                                                 <fx-control ref="m[@type='radical'][@n='1']/@function">
-                                                    <fx-items ref="instance('i-functions')//option" class="widget">
+                                                    <fx-items ref="data('i-functions')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -472,7 +472,7 @@
                                             </td>
                                             <td>
                                                 <fx-control ref="m[@type='radical'][@n='2']/@function">
-                                                    <fx-items ref="instance('i-functions')//option" class="widget">
+                                                    <fx-items ref="data('i-functions')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -489,7 +489,7 @@
                                             <td>
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@subtype"
                                                             class="breaking-label">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -502,7 +502,7 @@
                                             </td>
                                             <td>
                                                 <fx-control ref="m[@type='radical'][@n='1']/@subtype">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -515,7 +515,7 @@
                                             </td>
                                             <td>
                                                 <fx-control ref="m[@type='radical'][@n='2']/@subtype">
-                                                    <fx-items ref="instance('i-headedness')//option" class="widget">
+                                                    <fx-items ref="data('i-headedness')//option" class="widget">
                                                         <template>
                                                                     <span class="fx-checkbox">
                                                                         <input id="check" name="option" type="checkbox"
@@ -630,7 +630,7 @@
                                 <section class="suffixes">
                                     <fx-control ref="m[@type = 'suffix'][@n = '4']">
                                         <select
-                                                ref="instance('i-suffix-4')/option" class="widget">
+                                                ref="data('i-suffix-4')/option" class="widget">
                                             <label class="tp-label">Suffix 4</label>
                                             <template>
                                                 <option value="{./string()}">{.}</option>
@@ -638,21 +638,21 @@
                                         </select>
                                     </fx-control>
                                     <fx-control ref="m[@type = 'suffix'][@n = '3']"><select
-                                            ref="instance('i-suffix-3')/option" class="widget">
+                                            ref="data('i-suffix-3')/option" class="widget">
                                         <label class="tp-label">Suffix 3</label>
                                         <template>
                                             <option value="{./string()}">{.}</option>
                                         </template>
                                     </select></fx-control>
                                     <fx-control ref="m[@type = 'suffix'][@n = '2']"><select
-                                            ref="instance('i-suffix-2')/option" class="widget">
+                                            ref="data('i-suffix-2')/option" class="widget">
                                         <label class="tp-label">Suffix 2</label>
                                         <template>
                                             <option value="{./string()}">{.}</option>
                                         </template>
                                     </select></fx-control>
                                     <fx-control ref="m[@type = 'suffix'][@n = '1']"><select
-                                            ref="instance('i-suffix-1')/option" class="widget">
+                                            ref="data('i-suffix-1')/option" class="widget">
                                         <label class="tp-label">Inflect</label>
                                         <template>
                                             <option value="{base/string()}">{base}</option>
@@ -685,7 +685,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert ref="listBibl/cit"
-                                                       origin="instance('i-template')//cit[@type='source']"></fx-insert>
+                                                       origin="data('i-template')//cit[@type='source']"></fx-insert>
 
                                         </fx-trigger>
                                     </section>
@@ -727,7 +727,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert ref="listBibl/cit"
-                                                       origin="instance('i-template')//cit[@type='auxiliary']"></fx-insert>
+                                                       origin="data('i-template')//cit[@type='auxiliary']"></fx-insert>
                                         </fx-trigger>
                                     </section>
                                     <fx-repeat ref="listBibl/cit[@type='auxiliary']" id="r-cit-auxiliary">
@@ -773,7 +773,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert ref="listBibl/cit"
-                                                       origin="instance('i-template')//cit[@type='linguistic']"></fx-insert>
+                                                       origin="data('i-template')//cit[@type='linguistic']"></fx-insert>
                                         </fx-trigger>
                                     </section>
                                     <fx-repeat ref="listBibl/cit[@type='linguistic']" id="r-cit-linguistic">
@@ -811,7 +811,7 @@
                                         <fx-trigger>
                                             <button>add</button>
                                             <fx-insert ref="listBibl/cit"
-                                                       origin="instance('i-template')//cit[@type='modern']"></fx-insert>
+                                                       origin="data('i-template')//cit[@type='modern']"></fx-insert>
                                         </fx-trigger>
                                     </section>
                                     <fx-repeat ref="listBibl/cit[@type='modern']" id="r-cit-modern">

@@ -217,7 +217,7 @@
             </fx-trigger>
         </div>
 <!--
-        <fx-repeat id="r-pages" ref="instance()/pages/page">
+        <fx-repeat id="r-pages" ref="data()/pages/page">
             <template>
                 <iframe src="{@name}" style="width:100%; height: 30rem;"></iframe>
             </template>
@@ -229,7 +229,7 @@
                 the odds used
             </fx-case>
             <fx-case id="layout-case">
-                <fx-repeat id="r-pages" ref="instance()/pages/page">
+                <fx-repeat id="r-pages" ref="data()/pages/page">
                     <template>
                         <!--
                                                 <fx-control ref="@selected" value-prop="checked" update-value="input">
@@ -246,7 +246,7 @@
 <!--
         <fx-control ref="page-selected" update-event="input">
             <label>Add a layout</label>
-            <select class="widget" ref="instance()/pages/page/@name" selection="open">
+            <select class="widget" ref="data()/pages/page/@name" selection="open">
                 <template>
                     <option value="{.}">{.}</option>
                 </template>

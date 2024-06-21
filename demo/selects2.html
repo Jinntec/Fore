@@ -83,18 +83,18 @@
             </section>
 
             <section>
-                <h2>Native select creating options from instance</h2>
+                <h2>Native select creating options from data</h2>
 
                 <p>Note the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes"target="_blank">ref</a></code> attribute on the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes-on-widgets"target="_blank">select</a></code> element below. As any other
                     <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes"target="_blank">ref</a></code>
-                    binding it will fetch the referenced nodes from the instance and build one instance of the template
+                    binding it will fetch the referenced nodes from the data and build one option element
                     for each node. Bindings within the template are relative to the parent <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes"target="_blank">ref</a></code>.</p>
                 <demo-snippet>
                     <template>
 
                         <fx-control ref="fruit" update-event="change">
                             <label>native select</label>
-                            <select ref="instance('fruits')//fruit" class="widget">
+                            <select ref="data('fruits')//fruit" class="widget">
                                 <template>
                                     <option value="{@value}">{.}</option>
                                 </template>
@@ -110,7 +110,7 @@
             </section>
 
             <section>
-                <h2>Native select creating options from instance but allowing empty value</h2>
+                <h2>Native select creating options from data but allowing empty value</h2>
 
                 <p>Example as above except for <code><a href="https://jinntec.github.io/fore-docs/elements/ui/control/#attributes-on-widgets"target="_blank">selection="open"</a></code> which creates an empty option element.</p>
                 <demo-snippet>
@@ -118,7 +118,7 @@
 
                         <fx-control ref="fruit2" update-event="change">
                             <label>native select</label>
-                            <select ref="instance('fruits')//fruit" class="widget" selection="open">
+                            <select ref="data('fruits')//fruit" class="widget" selection="open">
                                 <template>
                                     <option value="{@value}">{.}</option>
                                 </template>

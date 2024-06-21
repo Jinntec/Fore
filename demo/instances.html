@@ -38,7 +38,7 @@
             </data>
 
 <!--
-            <fx-bind instance="second" ref="instance('outro')">
+            <fx-bind instance="second" ref="data('outro')">
                 <fx-bind ref="outro"></fx-bind>
             </fx-bind>
 -->
@@ -56,7 +56,7 @@
 
         <h1 class="{class}">
             Greeting: <fx-output ref="./greeting" id="output"></fx-output>
-<!--            Greeting: <fx-output ref="instance()/greeting" id="output"></fx-output>-->
+<!--            Greeting: <fx-output ref="data()/greeting" id="output"></fx-output>-->
         </h1>
 
         <fx-control ref="greeting" label="Greeting"></fx-control>
