@@ -374,7 +374,7 @@ describe('delete Tests', () => {
         const rItems = repeat.querySelectorAll('fx-repeatitem');
         expect(rItems.length).to.equal(2);
 
-        const instance = el.querySelector('fx-instance');
+        const instance = el.querySelector('data');
         console.log('isntance', instance);
         const firstChild = instance.instanceData.firstElementChild;
         expect(firstChild.nodeName).to.equal('data');

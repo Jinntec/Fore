@@ -445,7 +445,7 @@ export default class FxControl extends XfAbstractControl {
             imported.addEventListener(
                 'model-construct-done',
                 e => {
-                    const defaultInst = imported.querySelector('fx-instance');
+                    const defaultData = imported.querySelector('data');
                     if (this.initial) {
                         const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
                         // Note: Clone the input to prevent the inner fore from editing the outer node
@@ -453,7 +453,7 @@ export default class FxControl extends XfAbstractControl {
 						this.initialNode = evaluateXPathToFirstNode(this.initial, this.nodeset, this);
 
                         doc.firstElementChild.appendChild(this.initialNode.cloneNode(true));
-                            defaultInst.instanceData = doc;
+                        defaultData.data = doc;
                     }
                         imported.model = imported.querySelector('fx-model');
                         imported.model.updateModel();

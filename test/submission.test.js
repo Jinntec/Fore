@@ -234,7 +234,7 @@ describe('submission tests', () => {
             await oneEvent(sm, 'submit-done');
         */
 
-        const inst = el.querySelector('fx-instance');
+        const inst = el.querySelector('data');
         console.log('instancedata', inst.instanceData);
         expect(inst).to.exist;
         expect(inst.getInstanceData()).to.exist;

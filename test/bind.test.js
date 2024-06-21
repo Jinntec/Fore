@@ -406,7 +406,6 @@ describe('bind Tests', () => {
                         <m1>3</m1>
                         <m2>0</m2>
                     </data>
-                    </fx-instance>
                     <fx-bind ref="m1" calculate="../m2 + 5"></fx-bind>
                     <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
                 </fx-model>

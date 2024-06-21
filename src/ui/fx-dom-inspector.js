@@ -501,7 +501,7 @@ export class FxDomInspector extends HTMLElement {
 
 						if(node.nodeName === 'FX-BIND'){
 							tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;
-						}else if(node.nodeName === 'FX-INSTANCE'){
+						}else if(node.nodeName === 'DATA'){
 							tagStart.textContent = `<${node.nodeName.toLowerCase()} id="${node.id}">`;
 						}else if(node.nodeName === 'FX-CONTROL'){
 							tagStart.textContent = `<${node.nodeName.toLowerCase()} ref="${node.getAttribute('ref')}">`;

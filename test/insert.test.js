@@ -716,14 +716,13 @@ describe('insert Tests', () => {
                     <data
                             id="default"
                             data-src="/base/test/ling-sources-nested.xml"
-                            data-ns="http://www.tei-c.org/ns/1.0"
-                    ></fx-instance>
+                            data-ns="http://www.tei-c.org/ns/1.0"></data>
 
                         <data
                                 id="i-template"
                                 data-src="/base/test/template.xml"
-                                data-ns="http://www.tei-c.org/ns/1.0"
-                        ></data>
+                                data-ns="http://www.tei-c.org/ns/1.0"></data>
+                    
                         <data id="temp">
                             <hypotheses>1</hypotheses>
                         </data>

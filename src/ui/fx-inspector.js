@@ -107,7 +107,7 @@ export class FxInspector extends HTMLElement {
 
   render(style) {
     const fore = this.closest('fx-fore');
-    const instances = Array.from(fore.querySelectorAll('fx-instance'));
+    const instances = Array.from(fore.querySelectorAll('data'));
     this.shadowRoot.innerHTML = `
             <style>
                 ${style}

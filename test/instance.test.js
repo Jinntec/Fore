@@ -116,7 +116,7 @@ describe('instance Tests', () => {
         // await elementUpdated(el);
         await oneEvent(el, 'refresh-done');
 
-        const instances = el.querySelectorAll('fx-instance');
+        const instances = el.querySelectorAll('data');
         expect(instances[0].id).to.equal('default');
         expect(instances[1].id).to.equal('second');
 

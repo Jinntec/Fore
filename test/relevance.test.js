@@ -218,7 +218,7 @@ describe('Relevance Tests', () => {
         // const result = sm.selectRelevant('xml');
         // const result = Relevance.selectRelevant(sm, 'xml');
 
-        const data = el.querySelector('fx-instance');
+        const data = el.querySelector('data');
         // const vehicle = fx.evaluateXPath('vehicle', result, null, {});
         const vehicle = fx.evaluateXPath('//vehicle', data.instanceData, null, {});
         expect(vehicle).to.exist;

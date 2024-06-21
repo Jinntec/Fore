@@ -407,7 +407,7 @@ describe('control tests', () => {
         // await elementUpdated(el);
         let {detail} = await oneEvent(el, 'refresh-done');
 
-        const instance = el.querySelector('fx-instance');
+        const instance = el.querySelector('data');
         const item = fx.evaluateXPathToFirstNode('//item', instance.instanceData, null, {});
 
         expect(item).to.exist;
