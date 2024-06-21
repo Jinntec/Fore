@@ -464,8 +464,9 @@ export class FxModel extends HTMLElement {
         }
         // ### lookup in local data first
         if (!found) {
-            const dataArray = Array.from(this.data);
-            found = dataArray.find(inst => inst.id === id);
+            // const dataArray = Array.from(this.data);
+
+            found = this.data.find(data => data.getId() === id);
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
                 ? this.fore.parentNode.host.closest('fx-fore')
                 : this.fore.parentNode.closest('fx-fore');

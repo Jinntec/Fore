@@ -6,6 +6,9 @@ import {Fore} from './fore.js';
 export class DataElement {
     static get properties() {
         return {
+            id:{
+                type:String
+            },
             src: {
                 type: String,
                 attribute: 'data-src'
@@ -66,6 +69,10 @@ export class DataElement {
         this._setInitialData(data);
     }
 
+    getId(){
+        return this.dataElement.hasAttribute('id') ? this.dataElement.getAttribute('id'):'default';
+    }
+
     /**
      * return the default context (root node of respective instance) for XPath evalution.
      *
@@ -77,7 +84,7 @@ export class DataElement {
         const data = this.getData();
         if (this.type === 'xml') {
             // return data.firstElementChild;
-            return data.getRootNode();
+            return data.documentElement;
         }
         return data;
     }
@@ -174,7 +181,10 @@ export class DataElement {
 
     _useInlineData() {
         if (this.type === 'xml') {
-            const data = new DOMParser().parseFromString(this.dataElement.innerHTML, 'application/xml');
+            console.log('outerHTML', this.dataElement.outerHTML);
+            const data = new DOMParser().parseFromString(this.dataElement.outerHTML, 'application/xml');
+            console.log('parsed as xml', data);
+
             this._setInitialData(data);
         } else if (this.type === 'json') {
             this._setInitialData(JSON.parse(this.dataElement.textContent));

@@ -122,7 +122,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (!data) {
             Fore.dispatch(this, 'warn', {message: `instance not found ${data.getAttribute('id')}`})
         }
-        const instType = data.getAttribute('data-type');
+        const instType = data.type;
         // console.log('instance type', instance.type);
 
         let serialized;

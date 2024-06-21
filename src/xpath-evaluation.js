@@ -194,7 +194,7 @@ function findDataReferences(xpathQuery) {
     const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
     const dataReferences = fxEvaluateXPathToStrings(
         `descendant::xqx:functionCallExpr
-				[xqx:functionName = "instance"]
+				[xqx:functionName = "data"]
 				/xqx:arguments
 				/xqx:stringConstantExpr
 				/xqx:value`,
@@ -261,7 +261,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
                 {namespaceResolver: xhtmlNamespaceResolver},
             );
 
-            data = actualForeElement && actualForeElement.querySelector('fx-instance');
+            data = actualForeElement && actualForeElement.querySelector('data');
         } else {
             data = resolveId(dataReferences[0], formElement, 'data');
         }
@@ -825,7 +825,7 @@ registerCustomXPathFunction(
     'xs:string?',
     (dynamicContext, string) => {
         const {formElement} = dynamicContext.currentContext;
-        const data = resolveId(string, formElement, 'fx-instance');
+        const data = resolveId(string, formElement, 'data');
         if (data) {
             if (data.getAttribute('type') === 'json') {
                 console.warn('log() does not work for JSON yet');
@@ -984,14 +984,14 @@ const data = (dynamicContext, string) => {
     if(string === null || string === 'default'){
         lookup = formElement.getModel().getDefaultData();
     }else{
-        lookup = formElement.getModel().getData(string);
+        lookup = formElement.model.getData(string);
         if(!lookup){
             document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
                 composed: true,
                 bubbles: true,
                 detail: {
                     origin: 'functions',
-                    message: `Instance not found '${localName}'`,
+                    message: `Data not found '${localName}'`,
                     level:'Error'
                 },
             }));

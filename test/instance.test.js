@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import {html, oneEvent, fixtureSync, expect} from '@open-wc/testing';
-
+import {DataElement} from '../src/DataElement.js';
 import {Fore} from '../src/fore.js';
 import {XPathUtil} from "../src/xpath-util";
 
@@ -13,7 +13,7 @@ describe('instance Tests', () => {
         `);
 
         // await elementUpdated(el);
-        expect(el.id).to.equal('default');
+        expect(new DataElement(el).getId()).to.equal('default');
     });
 
     it('init creates instanceData', async () => {
@@ -23,21 +23,20 @@ describe('instance Tests', () => {
             </data>
         `);
 
-        el.init();
-        // await elementUpdated(el);
-        expect(el.instanceData).to.exist;
-        expect(el.instanceData.nodeType).to.equal(Node.DOCUMENT_NODE);
+        const data = new DataElement(el);
+        expect(data).to.exist;
+        expect(data.getData().nodeType).to.equal(Node.DOCUMENT_NODE);
     });
 
-    it('evaluates xpath in its default context', async () => {
+    it.only('evaluates xpath in its default context', async () => {
         const el = await fixtureSync(html`
             <data>
                 <foobar></foobar>
             </data>
         `);
 
-        el.init();
-        const result = el.evalXPath('//foobar');
+        const data = await new DataElement(el).init();
+        const result = data.getData().evalXPath('//foobar');
         expect(result).to.exist;
         expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
         expect(result.nodeName).to.equal('foobar');

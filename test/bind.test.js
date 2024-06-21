@@ -130,7 +130,7 @@ describe('bind Tests', () => {
         expect(model.modelItems.length).to.equal(1);
     });
 
-    it.only('works for repeated element', async () => {
+    it('works for repeated element', async () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
@@ -400,7 +400,6 @@ describe('bind Tests', () => {
     it('does not explode on recursive dependencies', async () => {
         const el = await fixture(html`
             <fx-fore>
-
                 <fx-model id="model1">
                     <data>
                         <m1>3</m1>
@@ -471,14 +470,14 @@ describe('bind Tests', () => {
                         </items>
                     </data>
 
-                    <fx-bind ref="instance('second')">
+                    <fx-bind ref="data('second')">
                         <fx-bind id="wrap" ref=".//item">
                             <fx-bind id="nested" ref="part" constraint="false()"></fx-bind>
                         </fx-bind>
                     </fx-bind>
 
                 </fx-model>
-                <fx-repeat ref="instance('second')//item">
+                <fx-repeat ref="data('second')//item">
                     <template>
                         <fx-control ref=".">
                             <label>Part:</label>
@@ -490,7 +489,7 @@ describe('bind Tests', () => {
 
         await oneEvent(el, 'refresh-done');
         const nestedBind = el.querySelector('#nested');
-        expect(nestedBind.instanceId).to.equal('second');
+        expect(nestedBind.dataId).to.equal('second');
 
     });
 

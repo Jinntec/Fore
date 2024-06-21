@@ -7,7 +7,7 @@ import {Relevance} from '../src/relevance.js';
 import '../index.js';
 
 describe('submission tests', () => {
-    it.skip('replaces the default instance with response', async () => {
+    it.skip('replaces the default data with response', async () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-send submission="submission" event="ready"></fx-send>
@@ -38,17 +38,16 @@ describe('submission tests', () => {
         // await oneEvent(sub, 'submit-done');
         const inst = el.querySelector('data');
         expect(inst).to.exist;
-        expect(inst.instanceData).to.exist;
-        console.log('ljsldkjflsfjkd', inst.instanceData);
+        expect(inst.data).to.exist;
 
         const sub = el.querySelector('#submission');
         await oneEvent(sub, 'submit-done');
 
-        const answer = fx.evaluateXPathToString('//theAnswer/text()', inst.instanceData, null, {});
+        const answer = fx.evaluateXPathToString('//theAnswer/text()', inst.data, null, {});
         expect(answer).to.exist;
         console.log('ljsldkjflsfjkd', answer);
         // expect(answer.innerHTML).to.equal(42);
-        expect(inst.instanceData).to.equal(42);
+        expect(inst.data).to.equal(42);
     });
 
     it('selects relevant nodes', async () => {
@@ -65,7 +64,7 @@ describe('submission tests', () => {
                     </data>
                     <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
                     <fx-bind ref="something" relevant="false()"></fx-bind>
-                    <fx-submission id="submission" url="/submission2" replace="instance"></fx-submission>
+                    <fx-submission id="submission" url="/submission2" replace="data"></fx-submission>
                 </fx-model>
             </fx-fore>
         `);
@@ -110,7 +109,7 @@ describe('submission tests', () => {
                     </data>
                     <fx-bind ref="vehicle/@attr1" relevant="false()"></fx-bind>
                     <fx-bind ref="car/motor/@type" relevant="false()"></fx-bind>
-                    <fx-submission id="submission" url="/submission2" replace="instance"></fx-submission>
+                    <fx-submission id="submission" url="/submission2" replace="data"></fx-submission>
                 </fx-model>
             </fx-fore>
         `);
@@ -147,7 +146,7 @@ describe('submission tests', () => {
                     </data>
                     <fx-bind ref="vehicle/text()" relevant="false()"></fx-bind>
                     <fx-bind ref="car/motor/text()" relevant="false()"></fx-bind>
-                    <fx-submission id="submission" url="/submission2" replace="instance"></fx-submission>
+                    <fx-submission id="submission" url="/submission2" replace="data"></fx-submission>
                 </fx-model>
             </fx-fore>
         `);
@@ -235,11 +234,11 @@ describe('submission tests', () => {
         */
 
         const inst = el.querySelector('data');
-        console.log('instancedata', inst.instanceData);
+        console.log('instancedata', inst.data);
         expect(inst).to.exist;
-        expect(inst.getInstanceData()).to.exist;
-        expect(inst.getInstanceData().firstElementChild.nodeName).to.equal('data');
-        expect(inst.getInstanceData().firstElementChild.childNodes).to.not.exist;
+        expect(inst.getData()).to.exist;
+        expect(inst.getData().firstElementChild.nodeName).to.equal('data');
+        expect(inst.getData().firstElementChild.childNodes).to.not.exist;
     });
 
     it('supports ref and targetref ', async () => {
@@ -264,7 +263,7 @@ describe('submission tests', () => {
                             url="#echo"
                             replace="data"
                             data="result"
-                            targetref="instance('result')/result"
+                            targetref="data('result')/result"
                     >
                     </fx-submission>
                 </fx-model>
@@ -279,10 +278,10 @@ describe('submission tests', () => {
 
         const inst = el.querySelectorAll('data');
         expect(inst[1]).to.exist;
-        expect(inst[1].instanceData).to.exist;
+        expect(inst[1].data).to.exist;
         await oneEvent(sm, 'submit-done');
 
-        expect(inst[1].instanceData.firstElementChild.firstElementChild.textContent).to.equal('suv');
+        expect(inst[1].data.firstElementChild.firstElementChild.textContent).to.equal('suv');
     });
 
     it('submits and replaces json ', async () => {
@@ -302,7 +301,7 @@ describe('submission tests', () => {
                             data="response"
                     >
                         <fx-message event="submit-done"
-                        >JSON Data have been submitted - replacing instance
+                        >JSON Data have been submitted - replacing data
                         </fx-message
                         >
                     </fx-submission>
@@ -310,14 +309,14 @@ describe('submission tests', () => {
                 <fx-group collapse="true">
                     <h1>Submission of JSON data</h1>
                     <fx-trigger>
-                        <button>replace instance with json</button>
+                        <button>replace data with json</button>
                         <fx-send submission="submission"></fx-send>
                     </fx-trigger>
-                    <fx-output ref="instance()?foo">
-                        <label slot="label">instance()?foo =</label>
+                    <fx-output ref="data()?foo">
+                        <label slot="label">data()?foo =</label>
                     </fx-output>
-                    <fx-output id="out" ref="instance('response')?foo">
-                        <label slot="label">This message comes from replaced instance:</label>
+                    <fx-output id="out" ref="data('response')?foo">
+                        <label slot="label">This message comes from replaced data:</label>
                     </fx-output>
                 </fx-group>
             </fx-fore>
@@ -331,10 +330,10 @@ describe('submission tests', () => {
 
         const inst = el.querySelectorAll('data');
         expect(inst[1]).to.exist;
-        expect(inst[1].instanceData).to.exist;
+        expect(inst[1].data).to.exist;
         await oneEvent(sm, 'submit-done');
 
-        expect(inst[1].instanceData.foo).to.equal('bar');
+        expect(inst[1].data.foo).to.equal('bar');
 
         const out = el.querySelector('#out');
         expect(out.value).to.equal('bar');
@@ -372,10 +371,10 @@ describe('submission tests', () => {
 
         const inst = el.querySelectorAll('data');
         expect(inst[1]).to.exist;
-        expect(inst[1].instanceData).to.exist;
+        expect(inst[1].data).to.exist;
         await oneEvent(sm, 'submit-done');
 
-        const root = inst[1].instanceData.firstElementChild;
+        const root = inst[1].data.firstElementChild;
         console.log(root);
         expect(root.nodeName).to.equal('place');
         expect(root.hasAttribute('xml:id')).to.be.true;

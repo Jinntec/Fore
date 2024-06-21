@@ -34,7 +34,7 @@ describe('Event Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const p1 = fx.evaluateXPathToString('param1', inst, null, {});
         const p2 = fx.evaluateXPathToString('param2', inst, null, {});
@@ -78,7 +78,7 @@ describe('Event Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const p1 = fx.evaluateXPathToString('param1', inst, null, {});
         expect(p1).to.equal('foo');
@@ -123,7 +123,7 @@ describe('Event Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const p1 = fx.evaluateXPathToString('param1', inst, null, {});
         expect(p1).to.equal('foo');
@@ -166,7 +166,7 @@ describe('Event Tests', () => {
 
         const inst = el
             .getModel()
-            .getDefaultInstance()
+            .getDefaultData()
             .getDefaultContext();
         const p1 = fx.evaluateXPathToString('param1', inst, null, {});
         expect(p1).to.equal('foo');

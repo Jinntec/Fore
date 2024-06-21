@@ -194,7 +194,7 @@ export const foreElementMixin = superclass =>
     }
 
     getData() {
-      if (this.ref.startsWith('instance(')) {
+      if (this.ref.startsWith('data(')) {
         const instId = XPathUtil.getDataId(this.ref);
         return this.getModel().getData(instId);
       }

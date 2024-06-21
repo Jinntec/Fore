@@ -15,13 +15,19 @@
                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
             </data>
 
+            <data id="second">
+                <hello>hi</hello>
+            </data>
             <fx-bind id="task" ref="task">
                 <fx-bind ref="./text()" required="true()"></fx-bind>
                 <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
                 <fx-bind ref="@due" type="xs:date"></fx-bind>
             </fx-bind>
         </fx-model>
-    </fx-fore></div>
+        {data()/task[1]}
+        {data('second')/hello}
+    </fx-fore>
+</div>
 <script type="module" src="../demo.js"/>
 </body>
 </html>
