@@ -26,14 +26,13 @@
 
             <fx-fore>
                 <fx-model id="model1">
-                    <fx-instance src="data/HD025278.xml"
-                                 xpath-default-namespace="http://www.tei-c.org/ns/1.0">
-                    </fx-instance>
+                    <data src="data/HD025278.xml"
+                                 data-ns="http://www.tei-c.org/ns/1.0">
+                    </data>
 
-                    <fx-instance id="result"
-                                 xpath-default-namespace="http://www.tei-c.org/ns/1.0">
-                        <data></data>
-                    </fx-instance>
+                    <data id="result"
+                                 data-ns="http://www.tei-c.org/ns/1.0">
+                    </data>
                     <fx-function
                         signature="pre-process-corresp($element as element()) as element()*"
                         type="text/xquf">

@@ -331,13 +331,13 @@ describe('fx-switch Tests', () => {
           <fx-fore>
             <fx-model>
               <fx-toggle event="model-construct-done" case="two"></fx-toggle>
-              <fx-instance>
+              <data>
                 <data>
                   <item1>a bound item</item1>
                   <item2>second bound item</item2>
                   <item3>third bound item</item3>
                 </data>
-              </fx-instance>
+              </data>
             </fx-model>
 
             <fx-trigger label="page 1" class="orange">

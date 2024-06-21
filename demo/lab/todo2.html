@@ -21,11 +21,11 @@
 
 
             <fx-model id="record">
-                <fx-instance>
+                <data>
                     <data>
                         <show-completed>false</show-completed>
                     </data>
-                </fx-instance>
+                </data>
                 <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
@@ -49,14 +49,14 @@
                     <fx-reload event="submit-done"></fx-reload>
                 </fx-submission>
 
-                <fx-instance id="helper">
+                <data id="helper">
                     <data>
                         <time></time>
                         <template>
                             <task complete="false" due=""></task>
                         </template>
                     </data>
-                </fx-instance>
+                </data>
             </fx-model>
 
 

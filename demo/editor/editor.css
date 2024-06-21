@@ -2,7 +2,6 @@ fx-fore,
 fx-bind,
 fx-function,
 fx-model,
-fx-instance,
 fx-submission{
     display: block;
     border:thin solid #dddddd;
@@ -32,9 +31,6 @@ fx-model::before{
     position: absolute;
     top:-0.5rem;
     */
-}
-fx-instance::before{
-    content:'fx-instance';
 }
 fx-submission::before{
     content:'fx-submission';

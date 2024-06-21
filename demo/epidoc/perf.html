@@ -50,10 +50,10 @@
 <!--                <fx-send submission="s-load-inscription" if="exists(instance('params')/id)"></fx-send>-->
             </fx-action>
 
-            <fx-instance id="default" src="data/HD025278.xml"
+            <data id="default" src="data/HD025278.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
-            </fx-instance>
+            </data>
 
             <fx-bind ref="instance('default')">
                 <fx-bind ref=".//fileDesc/titleStmt/title" required="true()" constraint="string-length(.) != 0">
@@ -72,30 +72,30 @@
             </fx-bind>
 
 
-            <fx-instance id="typeins" src="data/typeins.json" type="json">
+            <data id="typeins" src="data/typeins.json" type="json">
 
-            </fx-instance>
-            <fx-instance id="objtyp" src="data/objtyp.json" type="json">
+            </data>
+            <data id="objtyp" src="data/objtyp.json" type="json">
 
-            </fx-instance>
+            </data>
 
-            <fx-instance id="material" src="data/material.json" type="json"></fx-instance>
+            <data id="material" src="data/material.json" type="json"></data>
 
-            <fx-instance id="palaeo" src="data/palaeographie.xml">
+            <data id="palaeo" src="data/palaeographie.xml">
                 <data/>
-            </fx-instance>
+            </data>
 
-            <fx-instance id="mspart" src="data/mspart-tmpl.xml"
+            <data id="mspart" src="data/mspart-tmpl.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
-            </fx-instance>
+            </data>
 
-            <fx-instance id="templates" src="data/templates.xml"
+            <data id="templates" src="data/templates.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
-            </fx-instance>
+            </data>
 
-            <fx-instance id="vars">
+            <data id="vars">
                 <data>
                     <display-leiden>hidden</display-leiden>
                     <can-delete>false</can-delete>
@@ -119,21 +119,21 @@
                         <lang code="xpu">Phoenician-Punic</lang>
                     </languages>
                 </data>
-            </fx-instance>
+            </data>
             <fx-bind ref="instance('vars')/can-delete" relevant="index('parts') gt 1"></fx-bind>
             <fx-bind ref="instance('vars')/loggedin" relevant=".='true'"></fx-bind>
             <fx-bind ref="instance('vars')/xml-valid" calculate="editorsValid()" constraint=".='true'"></fx-bind>
 
 
-            <fx-instance xmlns="http://www.tei-c.org/ns/1.0" id="epidoc-editor" src="data/epidoc-snippet.xml"
+            <data xmlns="http://www.tei-c.org/ns/1.0" id="epidoc-editor" src="data/epidoc-snippet.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
-            </fx-instance>
+            </data>
 
             <!-- this instance holds queryString params from the Url of this page -->
-            <fx-instance id="params" src="#querystring">
+            <data id="params" src="#querystring">
                 <data></data>
-            </fx-instance>
+            </data>
 
             <fx-submission id="s-load-inscription"
                            url="data/HD025278.xml"
@@ -182,9 +182,9 @@
             </fx-submission>
 
             <!-- todo:            -->
-            <fx-instance id="geodata" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+            <data id="geodata" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
-            </fx-instance>
+            </data>
 
             <fx-submission id="s-load-geodata"
                            url="data/geo.xml"
@@ -198,7 +198,7 @@
                 return createUUID();
             </fx-function>
 
-            <fx-instance id="login" type="json">{}</fx-instance>
+            <data id="login" type="json">{}</data>
 
             <fx-submission id="s-login" ref="instance('login')?*"
                            url="data/login.json" method="get" replace="instance"

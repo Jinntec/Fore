@@ -106,14 +106,14 @@
         <fx-fore>
 
             <fx-model id="model1">
-                <fx-instance>
+                <data>
                     <data>
                         <m1>3</m1>
                         <m2>0</m2>
                         <add>0</add>
                         <sum></sum>
                     </data>
-                </fx-instance>
+                </data>
                 <fx-bind ref="add" calculate="number(../m2) + 5"></fx-bind>
                 <fx-bind ref="m2" calculate="number(../m1) * 2"></fx-bind>
                 <fx-bind ref="sum" calculate="number(../add) * 2"></fx-bind>

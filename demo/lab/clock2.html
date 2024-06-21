@@ -24,7 +24,7 @@
                 </fx-action>
 
                 <fx-model>
-                    <fx-instance>
+                    <data>
                         <data>
                             <time>12:30:00</time>
                             <hour>0</hour>
@@ -34,7 +34,7 @@
                             <min-deg>0</min-deg>
                             <s-deg></s-deg>
                         </data>
-                    </fx-instance>
+                    </data>
 
                     <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
                     <!--          <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>-->
