@@ -70,26 +70,24 @@
 
             <fx-fore>
                 <fx-model>
-                    <fx-instance type="json">
+                    <data data-type="json">
                         {
                             "foo":"bar"
                         }
-                    </fx-instance>
-                    <fx-instance id="response" type="json">{}</fx-instance>
-                    <fx-instance id="unrelated">
-                        <data>
-                            <name>John Doe</name>
-                            <street></street>
-                            <zip></zip>
-                            <city></city>
-                        </data>
-                    </fx-instance>
+                    </data>
+                    <data id="response" data-type="json">{}</data>
+                    <data id="unrelated">
+                        <name>John Doe</name>
+                        <street></street>
+                        <zip></zip>
+                        <city></city>
+                    </data>
 
                     <fx-submission id="submission"
                                    url="#echo"
                                    method="POST"
-                                   replace="instance"
-                                   instance="response">
+                                   replace="data"
+                                   data="response">
                         <fx-message event="submit-done">JSON Data have been submitted - replacing instance</fx-message>
                     </fx-submission>
                 </fx-model>

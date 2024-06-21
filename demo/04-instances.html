@@ -30,7 +30,7 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance src="instance1.xml"></fx-instance>
+                    <data data-src="instance1.xml"></data>
                 </fx-model>
                 <fx-output ref="greeting"></fx-output>
             </fx-fore>
@@ -44,7 +44,7 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance src="automobiles.json" type="json"></fx-instance>
+                    <data data-src="automobiles.json" type="json"></data>
                 </fx-model>
                 <fx-output ref="?automobiles?1?maker">
                     <span slot="label">Car Maker:</span>
@@ -59,7 +59,7 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance src="#querystring"></fx-instance>
+                    <data data-src="#querystring"></data>
                 </fx-model>
                 <fx-repeat ref="instance()/*">
                     <template>

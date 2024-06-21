@@ -138,7 +138,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
             if (mutations[0].type === 'childList') {
                 const added = mutations[0].addedNodes[0];
                 if (added) {
-                    const instance = XPathUtil.resolveInstance(this, this.ref);
+                    const instance = XPathUtil.resolveData(this, this.ref);
                     const path = XPathUtil.getPath(added, instance);
                     // console.log('path mutated', path);
                     // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});

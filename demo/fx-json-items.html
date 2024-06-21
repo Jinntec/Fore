@@ -31,12 +31,10 @@
                 <!-- ##### xf-model is not exposed to the client! ##### -->
                 <fx-fore>
                     <fx-model id="model-1">
-                        <fx-instance>
-                            <data>
-                                <selected></selected>
-                            </data>
-                        </fx-instance>
-                        <fx-instance id="list" type="json">
+                        <data>
+                            <selected></selected>
+                        </data>
+                        <data id="list" data-type="json">
                             [
                             {
                             "name": "Akklamation",
@@ -127,7 +125,7 @@
                             "value": "https://www.eagle-network.eu/voc/typeins/lod/80"
                             }
                             ]
-                        </fx-instance>
+                        </data>
                     </fx-model>
                     <fx-control ref="selected" update-event="input">
                         <fx-items ref="instance('list')?*" class="widget">

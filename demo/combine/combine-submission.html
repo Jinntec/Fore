@@ -27,8 +27,8 @@
             <template>
                 <fx-fore>
                     <fx-model>
-                        <fx-instance id="full" src="epidoc-template.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-                        <fx-instance id="partial" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <data id="full" data-src="epidoc-template.xml" data-ns="http://www.tei-c.org/ns/1.0"></data>
+                        <data id="partial" data-ns="http://www.tei-c.org/ns/1.0"></data>
 
 
                         <!-- ### merge the response of this submission (partial) into target instance 'full'. That instance
@@ -45,8 +45,8 @@
                         <fx-submission id="save"
                                        url="#echo"
                                        method="post"
-                                       replace="instance"
-                                       instance="result">
+                                       replace="data"
+                                       data="result">
                             <!-- ### call the actual saving operation -->
                             <fx-send submission="doSave" event="submit-done"></fx-send>
                         </fx-submission>
@@ -54,13 +54,13 @@
                                        url="#echo"
                                        method="post"
                                        ref="instance('result')"
-                                       replace="instance"
-                                       instance="result">
+                                       replace="data"
+                                       data="result">
                             <fx-message event="submit">doSave</fx-message>
                             <fx-message event="submit-done">doSave done</fx-message>
                         </fx-submission>
 
-                        <fx-instance id="result" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <data id="result" data-ns="http://www.tei-c.org/ns/1.0"></data>
                         <fx-bind ref="instance('result')//listBibl" relevant="exists(bibl)"></fx-bind>
 
                     </fx-model>

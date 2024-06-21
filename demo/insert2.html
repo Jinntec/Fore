@@ -129,24 +129,20 @@
 
             <fx-fore>
                 <fx-model>
-                    <fx-instance id="buying">
-                        <data>
-                            <list>
-                                <a>1</a>
-                            </list>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="shopping">
-                        <data>
-                            <list>
-                                <a>Milk</a>
-                                <a>Yoghurt</a>
-                                <a>Bread</a>
-                            </list>
-							<blank><a></a></blank>
-                        </data>
-                    </fx-instance>
-				<fx-bind ref="instance('shopping')/list/a" relevant="string-length(.) = 0 or (every $a in instance('buying')/list/a satisfies not($a = .))">
+                    <data id="buying">
+                        <list>
+                            <a>1</a>
+                        </list>
+                    </data>
+                    <data id="shopping">
+                        <list>
+                            <a>Milk</a>
+                            <a>Yoghurt</a>
+                            <a>Bread</a>
+                        </list>
+                        <blank><a></a></blank>
+                    </data>
+                    <fx-bind ref="instance('shopping')/list/a" relevant="string-length(.) = 0 or (every $a in instance('buying')/list/a satisfies not($a = .))"></fx-bind>
                 </fx-model>
 
 

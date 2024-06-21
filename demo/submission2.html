@@ -48,22 +48,17 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <greeting>Hello World!</greeting>
-                            <prop></prop>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <greeting>Hello World!</greeting>
+                        <prop></prop>
+                    </data>
 
-                    <fx-instance id="replaced">
-                        <data></data>
-                    </fx-instance>
+                    <data id="replaced">
+                    </data>
 
-                    <fx-instance id="third">
-                        <data>
-                            <div>Thanks for being here</div>
-                        </data>
-                    </fx-instance>
+                    <data id="third">
+                        <div>Thanks for being here</div>
+                    </data>
 
                     <fx-submission id="submission"
                                    url="#echo"
@@ -75,7 +70,7 @@
                     <fx-submission id="submission2"
                                    url="#echo"
                                    method="POST"
-                                   replace="instance">
+                                   replace="data">
                         <fx-setvalue ref="greeting" event="submit-done">Hello from response</fx-setvalue>
                     </fx-submission>
 
@@ -95,8 +90,8 @@
                     <fx-submission id="submission6"
                                    url="#echo"
                                    method="post"
-                                   replace="instance"
-                                   instance="replaced">
+                                   replace="data"
+                                   data="replaced">
 
                     </fx-submission>
 

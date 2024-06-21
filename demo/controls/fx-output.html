@@ -36,13 +36,11 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <a><b>1</b></a>
-                            <b>2</b>
-                            <b>3</b>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <a><b>1</b></a>
+                        <b>2</b>
+                        <b>3</b>
+                    </data>
                 </fx-model>
                 <section>
                     <h3>Outputting a referenced value</h3>
@@ -72,11 +70,8 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="external" type="html" src="../../doc/actions-overview.html"></fx-instance>
+                    <data></data>
+                    <data id="external" data-type="html" data-src="../../doc/actions-overview.html"></data>
                 </fx-model>
                 <div class="html-out"><fx-output ref="instance('external')//*:body" mediatype="html"></fx-output></div>
             </fx-fore>
@@ -90,11 +85,9 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <pic>../../resources/images/light7.png</pic>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <pic>../../resources/images/light7.png</pic>
+                    </data>
                 </fx-model>
 
 

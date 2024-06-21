@@ -30,12 +30,10 @@
             <fx-fore>
                 <fx-setfocus control="input" event="ready" select></fx-setfocus>
                 <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <value>foobar</value>
-                            <computed>Hello World!</computed>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <value>foobar</value>
+                        <computed>Hello World!</computed>
+                    </data>
                     <fx-bind id="computed" ref="computed" calculate="string-length(../value)"></fx-bind>
 
                 </fx-model>

@@ -69,16 +69,12 @@
 
     <fx-fore id="outer">
         <fx-model>
-            <fx-instance shared>
-                <data>
-                    <name>John</name>
-                </data>
-            </fx-instance>
-            <fx-instance id="notshared">
-                <data>
-                    <foo></foo>
-                </data>
-            </fx-instance>
+            <data data-shared>
+                <name>John</name>
+            </data>
+            <data id="notshared">
+                <foo></foo>
+            </data>
         </fx-model>
 
         <fx-fore id="inner">
@@ -91,16 +87,14 @@
         <template>
             <fx-fore id="todo">
                 <fx-model>
-                    <fx-instance id="todos" shared>
-                        <data>
-                            <todos>
-                                <todo>Fix this!</todo>
-                                <todo>Fix this as well!</todo>
-                                <todo>Why is this not fixed yet?!</todo>
-                                <todo>Write tests</todo>
-                            </todos>
-                        </data>
-                    </fx-instance>
+                    <data id="todos" shared>
+                        <todos>
+                            <todo>Fix this!</todo>
+                            <todo>Fix this as well!</todo>
+                            <todo>Why is this not fixed yet?!</todo>
+                            <todo>Write tests</todo>
+                        </todos>
+                    </data>
                 </fx-model>
                 <div>
                     <h2>Parent Fore sharing <span>{instance('todos')/todos/todo => count()}</span> todos</h2>
@@ -118,11 +112,9 @@
                     <div class="repeat">
                         <fx-fore id="child-a">
                             <fx-model>
-                                <fx-instance id="default">
-                                    <data>
-                                        <message>You can do it!</message>
-                                    </data>
-                                </fx-instance>
+                                <data id="default">
+                                    <message>You can do it!</message>
+                                </data>
                             </fx-model>
                             <h3>First nested Fore (<span>{instance('todos')/todos/todo => count()}</span>)</h3>
                             <div>Just showing todos but adding a comment from local instance</div>

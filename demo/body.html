@@ -6,7 +6,7 @@
 
     <title>Hello</title>
 
-<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <link rel="stylesheet" href="../resources/demo.css">
 
     <style>
@@ -18,38 +18,36 @@
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
-    <fx-fore>
-        <fx-model id="record">
-            <fx-instance>
-                <data>
-                    <arm side="left">
-                        <hand>
-                            <finger index="3">middle</finger>
-                        </hand>
-                    </arm>
-                    <arm side="left">
-                        <hand>
-                            <finger index="3">middle</finger>
-                        </hand>
-                    </arm>
-                </data>
-            </fx-instance>
-            <fx-bind ref="arm">
-                <fx-bind ref="hand">
-                    <fx-bind ref="finger">middle</fx-bind>
-                </fx-bind>
+<fx-fore>
+    <fx-model id="record">
+        <data>
+            <arm side="left">
+                <hand>
+                    <finger index="3">middle</finger>
+                </hand>
+            </arm>
+            <arm side="left">
+                <hand>
+                    <finger index="3">middle</finger>
+                </hand>
+            </arm>
+        </data>
+        <fx-bind ref="arm">
+            <fx-bind ref="hand">
+                <fx-bind ref="finger">middle</fx-bind>
             </fx-bind>
-        </fx-model>
-        <fx-group ref="arm[1]">
-            <h1>hold up one finger!:
-                <fx-output ref="hand/finger" id="output"></fx-output>
-            </h1>
-            <h2>left or right?
-                <fx-output ref="@side"></fx-output>
-            </h2>
-        </fx-group>
-    </fx-fore>
-    <script type="module" src="./demo.js"></script>
+        </fx-bind>
+    </fx-model>
+    <fx-group ref="arm[1]">
+        <h1>hold up one finger!:
+            <fx-output ref="hand/finger" id="output"></fx-output>
+        </h1>
+        <h2>left or right?
+            <fx-output ref="@side"></fx-output>
+        </h2>
+    </fx-group>
+</fx-fore>
+<script type="module" src="./demo.js"></script>
 
 </body>
 </html>

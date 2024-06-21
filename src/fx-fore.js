@@ -1,5 +1,4 @@
 import {Fore} from './fore.js';
-import './fx-instance.js';
 import {FxModel} from './fx-model.js';
 import '@jinntec/jinn-toast';
 import {evaluateXPathToBoolean, evaluateXPathToNodes, evaluateXPathToFirstNode, evaluateXPathToString} from './xpath-evaluation.js';
@@ -311,7 +310,7 @@ export class FxFore extends HTMLElement {
 
         });
         this.addEventListener('path-mutated', () => {
-            this.someInstanceDataStructureChanged = true;
+            this.someDataStructureChanged = true;
         });
         this.addEventListener('refresh', () => {
             this.refresh(true);
@@ -687,10 +686,10 @@ export class FxFore extends HTMLElement {
             }
             // Templates are special: they use the namespace configuration from the place where they are
             // being defined
-            const instanceId = XPathUtil.getInstanceId(naked);
+            const dataId = XPathUtil.getDataId(naked);
 
 			// If there is an instance referred
-            const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
+            const inst = dataId ? this.getModel().getData(dataId) : this.getModel().getDefaultData();
 
 			try {
                 return evaluateXPathToString(naked, inscope, node, null, inst);
@@ -778,7 +777,7 @@ export class FxFore extends HTMLElement {
      * @returns {Promise<void>}
      * @private
      */
-    async _lazyCreateInstance() {
+    async _lazyCreateData() {
         const model = this.querySelector('fx-model');
 
         // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
@@ -788,24 +787,23 @@ export class FxFore extends HTMLElement {
         }
 
         if(parentFore){
-            const shared = parentFore.getModel().instances.filter(shared => shared.hasAttribute('shared'));
+            const shared = parentFore.getModel().data.filter(shared => shared.hasAttribute('shared'));
             if(shared.length !==0) return;
         }
 
         // still need to catch just in case...
         try{
-            if (model.instances.length === 0) {
+            if (model.data.length === 0) {
                 // console.log('### lazy creation of instance');
-                const generatedInstance = document.createElement('fx-instance');
-                model.appendChild(generatedInstance);
+                const generated = document.createElement('data');
+                model.appendChild(generated);
 
-                const generated = document.implementation.createDocument(null, 'data', null);
-                // const newData = this._generateInstance(this, generated.firstElementChild);
-                this._generateInstance(this, generated.firstElementChild);
-                generatedInstance.instanceData = generated;
-                model.instances.push(generatedInstance);
-                // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
-                Fore.dispatch(this,'instance-loaded',{instance:this});
+                const generatedData = document.implementation.createDocument(null, 'data', null);
+                this._generateData(this, generated.firstElementChild);
+                generatedData.data = generated;
+                model.data.push(generated);
+                // console.log('generated ', this.getModel().getDefaultInstanceData());
+                Fore.dispatch(this,'data-loaded',{data:this});
             }
         }catch (e) {
             console.warn('lazyCreateInstance created an error attempting to create a document', e.message);
@@ -816,7 +814,7 @@ export class FxFore extends HTMLElement {
      * @param {Element} start
      * @param {Element} parent
      */
-    _generateInstance(start, parent) {
+    _generateData(start, parent) {
         if (start.hasAttribute('ref') && !Fore.isActionElement(start.nodeName)) {
             const ref = start.getAttribute('ref');
 
@@ -835,7 +833,7 @@ export class FxFore extends HTMLElement {
         if (start.hasChildNodes()) {
             const list = start.children;
             for (let i = 0; i < list.length; i += 1) {
-                this._generateInstance(list[i], parent);
+                this._generateData(list[i], parent);
             }
         }
         return parent;
@@ -908,7 +906,7 @@ export class FxFore extends HTMLElement {
 
         if (!this.initialRun) return;
         this.classList.add('initialRun');
-        await this._lazyCreateInstance();
+        await this._lazyCreateData();
 
         /*
         const options = {

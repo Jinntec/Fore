@@ -70,26 +70,22 @@
                 <fx-send event="ready" submission="submission" delay="3000"></fx-send>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <vehicle attr1="a1" attr2="a2">suv</vehicle>
-                            <car>
-                                <motor type="otto">electric</motor>
-                            </car>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="result">
-                        <data>
-                            <result></result>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <vehicle attr1="a1" attr2="a2">suv</vehicle>
+                        <car>
+                            <motor type="otto">electric</motor>
+                        </car>
+                    </data>
+                    <data id="result">
+                        <result></result>
+                    </data>
                     <fx-submission
                         id="submission"
                         ref="vehicle"
                         method="post"
                         url="#echo"
-                        replace="instance"
-                        instance="result"
+                        replace="data"
+                        data="result"
                         targetref="instance('result')/result">
                     </fx-submission>
                 </fx-model>

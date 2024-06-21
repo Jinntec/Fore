@@ -53,20 +53,17 @@
                 <fx-message event="ready">Hey it's ready</fx-message>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <prop></prop>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="other">
-                        <data></data>
-                    </fx-instance>
+                    <data>
+                        <prop></prop>
+                    </data>
+                    <data id="other">
+                    </data>
 
                     <fx-submission id="hooks"
                                    url="#echo"
                                    method="POST"
-                                   replace="instance"
-                                   instance="other">
+                                   replace="data"
+                                   data="other">
                         <fx-action event="submit">
                             <fx-message>Going to submit</fx-message>
                             <fx-setvalue ref="prop">submit handler executed</fx-setvalue>

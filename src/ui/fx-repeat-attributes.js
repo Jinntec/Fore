@@ -138,7 +138,7 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
         const added = mutations[0].addedNodes[0];
         if (added) {
 
-          const instance = XPathUtil.resolveInstance(this,this.ref);
+          const instance = XPathUtil.resolveData(this,this.ref);
           const path = XPathUtil.getPath(added, instance);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;

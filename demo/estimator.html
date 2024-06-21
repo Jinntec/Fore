@@ -19,21 +19,19 @@
     <h1>Estimator</h1>
     <fx-fore>
         <fx-model>
-            <fx-instance>
-                <data>
-                    <packages>
-                        <package name="project">
-                            <requirement nr="1" hours="8" risk="">
-                                <assigned user="" estimate-in-hours="" risk=""></assigned>
-                            </requirement>
-                        </package>
-                    </packages>
-                    <total-hours></total-hours>
-                    <total-days></total-days>
-                    <rate-per-hour></rate-per-hour>
-                    <total-sum></total-sum>
-                </data>
-            </fx-instance>
+            <data>
+                <packages>
+                    <package name="project">
+                        <requirement nr="1" hours="8" risk="">
+                            <assigned user="" estimate-in-hours="" risk=""></assigned>
+                        </requirement>
+                    </package>
+                </packages>
+                <total-hours></total-hours>
+                <total-days></total-days>
+                <rate-per-hour></rate-per-hour>
+                <total-sum></total-sum>
+            </data>
             <fx-bind ref="total-hours" calculate="sum(../packages/package/requirement/@hours)"></fx-bind>
         </fx-model>
         <h2>Packages</h2>

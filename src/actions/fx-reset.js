@@ -12,7 +12,7 @@ export class FxReset extends AbstractAction {
     static get properties() {
         return {
             ...super.properties,
-            instance: {
+            data: {
                 type: String,
             },
         };
@@ -20,8 +20,8 @@ export class FxReset extends AbstractAction {
 
     connectedCallback() {
         super.connectedCallback();
-        this.instance = this.getAttribute('instance');
-        if (!this.instance) {
+        this.data = this.getAttribute('data');
+        if (!this.data) {
             Fore.dispatch(this, 'error', {message: 'instance does not exist'});
         }
     }
@@ -37,7 +37,7 @@ export class FxReset extends AbstractAction {
         );
 
         const model = this.getModel();
-        const data = model.getInstance(this.instance);
+        const data = model.getData(this.data);
         data.reset();
         this.needsUpdate = true;
     }

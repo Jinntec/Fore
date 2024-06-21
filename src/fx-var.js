@@ -1,6 +1,5 @@
 import { createTypedValueFactory, domFacade } from 'fontoxpath';
 import { Fore } from './fore.js';
-import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import { foreElementMixin } from './ForeElementMixin.js';
 import getInScopeContext from './getInScopeContext.js';

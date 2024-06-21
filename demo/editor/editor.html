@@ -212,16 +212,14 @@
 <!--        <fx-message event="drop" target="fore">got drop</fx-message>-->
 <!--        <fx-action src="editor.js" event="model-construct-done"></fx-action>-->
         <fx-model>
-            <fx-instance id="editor" src="template.xml"></fx-instance>
+            <data id="editor" data-src="template.xml"></data>
 
-            <fx-instance id="elements" src="elements.xml"></fx-instance>
+            <data id="elements" data-src="elements.xml"></data>
 
-            <fx-instance id="vars">
-                <data>
-                    <current></current>
-                    <filename></filename>
-                </data>
-            </fx-instance>
+            <data id="vars">
+                <current></current>
+                <filename></filename>
+            </data>
             <fx-function
                     signature="local:elementLabel($elementName as xs:string) as xs:string?"
                     type="text/javascript">
@@ -283,7 +281,7 @@
 
         <fx-fore id="edited">
             <fx-model id="targetModel" class="droppable">
-                <fx-instance id="default" draggable="true"></fx-instance>
+                <data id="default" draggable="true"></data>
             </fx-model>
             <fx-group id="ui" class="droppable"></fx-group>
         </fx-fore>

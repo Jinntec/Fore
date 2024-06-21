@@ -357,21 +357,21 @@ export class Fore {
   /**
    * returns the proper content-type for instance.
    *
-   * @param instance an fx-instance element
+   * @param data an fx-instance element
    * @param contentType - the contentType
    * @returns {string|null}
    */
-  static getContentType(instance, contentType) {
+  static getContentType(data, contentType) {
     if (contentType === 'application/x-www-form-urlencoded') {
       return 'application/x-www-form-urlencoded; charset=UTF-8';
     }
-    if (instance.type === 'xml') {
+    if (data.type === 'xml') {
       return 'application/xml; charset=UTF-8';
     }
-    if (instance.type === 'json') {
+    if (data.type === 'json') {
       return 'application/json';
     }
-    console.warn('content-type unknown ', instance.type);
+    console.warn('content-type unknown ', data.type);
     return null;
   }
 

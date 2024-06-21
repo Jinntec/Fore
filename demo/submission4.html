@@ -43,21 +43,18 @@
             <fx-fore>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <bar>bar</bar>
-                            <another>value2</another>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="target">
-                        <data></data>
-                    </fx-instance>
+                    <data>
+                        <bar>bar</bar>
+                        <another>value2</another>
+                    </data>
+                    <data id="target">
+                    </data>
 
                     <fx-submission id="sub1"
                                    url="#echo?foo={bar}&param2={another}"
                                    method="post"
-                                   replace="instance"
-                                   instance="target">
+                                   replace="data"
+                                   data="target">
                     </fx-submission>
                 </fx-model>
                 <fx-group>

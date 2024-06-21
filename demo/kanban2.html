@@ -255,10 +255,9 @@
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 <div class="wrapper">
-    <form>
     <fx-fore>
         <fx-model>
-            <data>
+            <data id="foobar">
                 <column name="todo">
                     <task name="launch preps"></task>
                 </column>
@@ -275,75 +274,25 @@
                     <task name="newTask">new task</task>
                 </template>
             </data>
-			<data id="vars">
-				<search></search>
-			</data>
+
+            <data id="second">
+                <search>test</search>
+            </data>
+
         </fx-model>
-        <h1>Kanban Board</h1>
-<!--        <p>Cards and Colums can be moved with Drag and Drop.</p>-->
+<!--        <fx-var id="search" value=""></fx-var>-->
+
+        <h1>Data Element</h1><!--        <p>Cards and Colums can be moved with Drag and Drop.</p>-->
         <main>
-            <header>
-                <fx-control ref="instance('vars')/search" update-event="input" >
+            {//task[1]/@name}
+                <fx-control ref="data('second')/search" update-event="input" >
                     <label for="searchCtl">Search</label>
                     <input id="searchCtl" type="search" placeholder="input a search term - at least 2 characters">
                 </fx-control>
             </header>
-            <fx-repeat id="column" ref="column">
-                <template draggable="true" drop-target="column">
-                    <header class="{@name}" tabindex="1">
-                        <div class="handle">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <fx-control ref="@name"></fx-control>
-                        <fx-trigger class="iconbtn addcolumn" title="add card">
-                            <button>+</button>
-                            <fx-insert ref="task" at="1" position="before" origin="instance()/template/task"></fx-insert>
-                            <fx-refresh></fx-refresh>
-                            <fx-setfocus control="task"></fx-setfocus>
-                        </fx-trigger>
-                        <fx-trigger class="iconbtn deletecolumn">
-                            <button>x</button>
-                            <fx-confirm message="This can't be undone. Really delete? .">
-                                <fx-delete ref="."></fx-delete>
-                            </fx-confirm>
-                        </fx-trigger>
-                    </header>
-                    <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
-                        <template draggable="true" drop-target="r-task">
-                          <div
-							class="card {let $search := instance('vars')/search return if (string-length($search) > 1 and @name => contains($search)) then 'match' else ''}"
-							tabindex="1"
-							data-cy="{../@name}-{count(preceding-sibling::task)}"
-							data-cy-name="{@name}">
-                                <fx-control id="task" class="task" ref="@name">
-                                    <textarea class="widget"></textarea>
-                                </fx-control>
-                                <fx-trigger class="iconbtn" title="delete card">
-                                    <button>x</button>
-                                    <fx-delete ref="."></fx-delete>
-                                </fx-trigger>
-                                <div class="card-content"></div>
-                            </div>
-<!--                            <div class="droptarget"></div>-->
-                        </template>
-                    </fx-repeat>
-                </template>
-            </fx-repeat>
         </main>
-        <div class="buttons">
-            <fx-trigger>
-                <button>insert a column</button>
-                <fx-insert ref="column" at="index('column')" position="before" origin="template/column"></fx-insert>
-            </fx-trigger>
-            <fx-trigger>
-                <button>Append new column</button>
-                <fx-insert ref="column"></fx-insert>
-            </fx-trigger>
-        </div>
     </fx-fore>
-    </form>
+
 
 </div>
 <script type="module" src="./demo.js"></script>

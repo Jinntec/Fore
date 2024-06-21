@@ -46,14 +46,12 @@
 -->
           <fx-fore id="wow">
             <fx-model>
-              <fx-instance>
                 <data>
                   <message>This is the first message!</message>
                   <message>And the second!</message>
                   <message>And the third!</message>
                   <cnt>1</cnt>
                 </data>
-              </fx-instance>
             </fx-model>
 
             <fx-trigger>
@@ -79,22 +77,18 @@
         <template>
           <fx-fore>
             <fx-model>
-              <fx-instance>
-                <data>
+              <data>
+                <item selected="true">A</item>
+                <item selected="false">B</item>
+                <item selected="false">C</item>
+                <item selected="true">D</item>
+              </data>
+              <data id="template">
                   <item selected="true">A</item>
                   <item selected="false">B</item>
                   <item selected="false">C</item>
                   <item selected="true">D</item>
-                </data>
-              </fx-instance>
-              <fx-instance id="template">
-                <data>
-                  <item selected="true">A</item>
-                  <item selected="false">B</item>
-                  <item selected="false">C</item>
-                  <item selected="true">D</item>
-                </data>
-              </fx-instance>
+              </data>
 
               <fx-bind ref="./item/@selected" type="boolean"></fx-bind>
 

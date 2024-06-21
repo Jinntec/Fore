@@ -44,22 +44,18 @@
 
     <fx-fore>
         <fx-model id="model1">
-            <fx-instance>
-                <data>
-                    <item>foobar</item>
-                    <fruit>apple</fruit>
-                    <fruit2></fruit2>
-                    <listitem>foo</listitem>
-                </data>
-            </fx-instance>
+            <data>
+                <item>foobar</item>
+                <fruit>apple</fruit>
+                <fruit2></fruit2>
+                <listitem>foo</listitem>
+            </data>
 
-            <fx-instance id="fruits">
-                <data>
-                    <fruit value="apple">Apple</fruit>
-                    <fruit value="orange">Orange</fruit>
-                    <fruit value="strawberry">Strawberry</fruit>
-                </data>
-            </fx-instance>
+            <data id="fruits">
+                <fruit value="apple">Apple</fruit>
+                <fruit value="orange">Orange</fruit>
+                <fruit value="strawberry">Strawberry</fruit>
+            </data>
 
             <fx-bind ref="item" required="true()" readonly="true()"></fx-bind>
             <fx-bind ref="fruit"></fx-bind>

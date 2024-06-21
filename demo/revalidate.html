@@ -53,14 +53,11 @@
         <fx-fore>
             <fx-refresh force event="ready"></fx-refresh>
             <fx-model id="model1">
-                <fx-instance>
-                    <data>
-                        <a>Aaa</a>
-                        <b>B</b>
-                        <c>C</c>
-                    </data>
-                </fx-instance>
-
+                <data>
+                    <a>Aaa</a>
+                    <b>B</b>
+                    <c>C</c>
+                </data>
 
                 <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
                 <fx-bind ref="b" constraint="string-length(.) = 1"

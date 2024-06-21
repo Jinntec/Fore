@@ -30,21 +30,17 @@
                 <fx-message event="refresh-done">refresh has been done</fx-message>
 
                 <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <greeting type="message:">Hello World!</greeting>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="second">
-                        <data>
-                            <greet>Hi!</greet>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <greeting type="message:">Hello World!</greeting>
+                    </data>
+                    <date id="second">
+                        <greet>Hi!</greet>
+                    </date>
                     <fx-submission id="submission"
                                    ref="instance('second')"
                                    url="#echo"
-                                   replace="instance"
-                                   instance="default"
+                                   replace="data"
+                                   data="default"
                                    method="post"></fx-submission>
                 </fx-model>
                 <fx-group>

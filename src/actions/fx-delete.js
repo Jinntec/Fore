@@ -35,8 +35,8 @@ class FxDelete extends AbstractAction {
 
         // console.log('delete nodeset ', this.nodeset);
 
-        const instanceId = XPathUtil.resolveInstance(this, this.ref);
-        const instance = this.getModel().getInstance(instanceId);
+        const dataId = XPathUtil.resolveData(this, this.ref);
+        const data = this.getModel().getData(dataId);
 
         // const path = instance && this.nodeset.length !== 0 ? evaluateXPathToString('path()', this.nodeset[0], instance) : '';
 
@@ -66,7 +66,7 @@ class FxDelete extends AbstractAction {
         }
 
 
-        await Fore.dispatch(instance, 'deleted', {ref:path,deletedNodes:nodesToDelete});
+        await Fore.dispatch(data, 'deleted', {ref:path,deletedNodes:nodesToDelete});
         this.needsUpdate = true;
     }
 

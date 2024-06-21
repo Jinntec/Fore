@@ -28,7 +28,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         this.id = this.getAttribute('id');
 
         /** if present should be a existing instance id */
-        this.instance = this.hasAttribute('instance') ? this.getAttribute('instance') : null;
+        this.data = this.hasAttribute('data') ? this.getAttribute('data') : null;
 
         /** if present will determine XPath where to insert a response into when mode is 'replace' */
         this.into = this.hasAttribute('into') ? this.getAttribute('into') : null;
@@ -118,11 +118,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         const url = this._getProperty('url');
         const resolvedUrl = this.evaluateAttributeTemplateExpression(url,this);
         console.log('resolvedUrl',resolvedUrl);
-        const instance = this.getInstance();
-        if (!instance) {
-            Fore.dispatch(this, 'warn', {message: `instance not found ${instance.getAttribute('id')}`})
+        const data = this.getData();
+        if (!data) {
+            Fore.dispatch(this, 'warn', {message: `instance not found ${data.getAttribute('id')}`})
         }
-        const instType = instance.getAttribute('type');
+        const instType = data.getAttribute('data-type');
         // console.log('instance type', instance.type);
 
         let serialized;
@@ -160,7 +160,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
         // if (resolvedUrl === '#echo') {
         if (resolvedUrl.startsWith('#echo')) {
-            const data = this._parse(serialized, instance);
+            const data = this._parse(serialized, data);
             this._handleResponse(data);
             // this.dispatch('submit-done', {});
             console.log('### <<<<< submit-done >>>>>');
@@ -181,7 +181,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                     this.parameters.clear();
                     return;
                 }
-                const data = this._parse(serialized, instance);
+                const data = this._parse(serialized, data);
                 this._handleResponse(data);
                 if (this.method === 'consume') {
                     localStorage.removeItem(key);
@@ -193,7 +193,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 // let data = this._parse(serialized, instance);
                 const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
                 localStorage.setItem(key, serialized);
-                this._handleResponse(instance.instanceData);
+                this._handleResponse(data.data);
                 console.log('### <<<<< submit-done >>>>>');
                 Fore.dispatch(this, 'submit-done', {});
             }
@@ -265,21 +265,21 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
     }
 
-    _parse(serialized, instance) {
-        let data = null;
-        if (serialized && instance.getAttribute('type') === 'xml') {
-            data = new DOMParser().parseFromString(serialized, 'application/xml');
+    _parse(serialized, data) {
+        let result = null;
+        if (serialized && result.getAttribute('data-type') === 'xml') {
+            result = new DOMParser().parseFromString(serialized, 'application/xml');
         }
-        if (serialized && instance.getAttribute('type') === 'json') {
-            data = JSON.parse(serialized);
+        if (serialized && result.getAttribute('data-type') === 'json') {
+            result = JSON.parse(serialized);
         }
-        if (serialized && instance.getAttribute('type') === 'text') {
-            data = serialized;
+        if (serialized && result.getAttribute('data-type') === 'text') {
+            result = serialized;
         }
-        return data;
+        return result;
     }
 
-    _serialize(instanceType, relevantNodes) {
+    _serialize(dataType, relevantNodes) {
         if (this.serialization === 'application/x-www-form-urlencoded') {
             // this.method = 'post';
             const params = new URLSearchParams();
@@ -289,26 +289,26 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
             });
             return params;
         }
-        if (instanceType === 'xml') {
+        if (dataType === 'xml') {
             const serializer = new XMLSerializer();
             return serializer.serializeToString(relevantNodes);
         }
-        if (instanceType === 'json') {
+        if (dataType === 'json') {
             // console.warn('JSON serialization is not yet supported')
             return JSON.stringify(relevantNodes);
         }
-        if (instanceType === 'text') {
+        if (dataType === 'text') {
             return relevantNodes;
         }
-        throw new Error('unknown instance type ', instanceType);
+        throw new Error('unknown instance type ', dataType);
     }
 
     _getHeaders() {
         const headers = new Headers();
 
         // ### set content-type header according to type of instance
-        const instance = this.getInstance();
-        const contentType = Fore.getContentType(instance, this.serialization);
+        const data = this.getData();
+        const contentType = Fore.getContentType(data, this.serialization);
         headers.append('Content-Type', contentType);
         // ### needed to overwrite browsers' setting of 'Accept' header
         if (headers.has('Accept')) {
@@ -330,17 +330,17 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         return this.storedTemplateExpressions.find(stored => stored.node.nodeName === 'url');
     }
 
-    _getTargetInstance() {
-        let targetInstance;
-        if (this.instance) {
-            targetInstance = this.model.getInstance(this.instance);
+    _getTargetData() {
+        let targetData;
+        if (this.data) {
+            targetData = this.model.getData(this.data);
         } else {
-            targetInstance = this.model.getInstance('default');
+            targetData = this.model.getData('default');
         }
-        if (!targetInstance) {
-            throw new Error(`target instance not found: ${targetInstance}`);
+        if (!targetData) {
+            throw new Error(`target instance not found: ${targetData}`);
         }
-        return targetInstance;
+        return targetData;
     }
 
     /**
@@ -360,7 +360,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         }
     */
 
-        const targetInstance = this._getTargetInstance();
+        const targetData = this._getTargetData();
 
 /*
         if(this.replace === 'merge'){
@@ -383,11 +383,11 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 */
 
         if (this.replace === 'instance') {
-            if (targetInstance) {
+            if (targetData) {
                 if (this.targetref) {
                     const [theTarget] = evaluateXPath(
                         this.targetref,
-                        targetInstance.instanceData.firstElementChild,
+                        targetData.data.firstElementChild,
                         this,
                     );
                     console.log('theTarget', theTarget);
@@ -398,7 +398,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                 } else if (this.into) {
                     const [theTarget] = evaluateXPath(
                         this.into,
-                        targetInstance.instanceData.firstElementChild,
+                        targetData.data.firstElementChild,
                         this,
                     );
                     console.log('theTarget', theTarget);
@@ -408,10 +408,9 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                         theTarget.innerHTML = data;
                     }
                 } else {
-                    const instanceData = data;
-                    targetInstance.instanceData = instanceData;
+                    targetData.data = data;
                     // console.log('### replaced instance ', this.getModel().instances);
-                    // console.log('### replaced instance ', targetInstance.instanceData);
+                    // console.log('### replaced instance ', targetInstance.data);
                 }
 
                 // Skip any refreshes if the model is not yet inited
@@ -420,7 +419,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
                     this.getOwnerForm().refresh(true);
                 }
             } else {
-                throw new Error(`target instance not found: ${targetInstance}`);
+                throw new Error(`target instance not found: ${targetData}`);
             }
         }
 

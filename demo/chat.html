@@ -48,15 +48,13 @@
 
 <fx-fore>
     <fx-model>
-        <fx-instance>
-            <data>
-                <item>Item1</item>
-                <message from="joern"></message>
-                <transcript>
-                    <message>Welcome</message>
-                </transcript>
-            </data>
-        </fx-instance>
+        <data>
+            <item>Item1</item>
+            <message from="joern"></message>
+            <transcript>
+                <message>Welcome</message>
+            </transcript>
+        </data>
 
         <fx-connection id="chat" ref="instance()/message" url="ws://localhost:8088" message-format="text">
             <fx-message event="open">connection open</fx-message>

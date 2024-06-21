@@ -46,7 +46,8 @@ x<!doctype html>
             margin-top: 2rem;
             font-size: 0.8rem;
         }
-        ins{
+
+        ins {
             background: lightgreen;
             text-decoration: none;
         }
@@ -70,15 +71,13 @@ x<!doctype html>
                 <fx-var name="requirements" value='(: This is a LONG XPath! :)
 										   descendant::requirement[@kind = /descendant::filter]'></fx-var>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <requirement kind="functional">It should work</requirement>
-                            <requirement kind="performance">It should be fast</requirement>
-                            <requirement kind="performance">It should be incredibly fast</requirement>
-                            <requirement kind="functional">It should not be broken</requirement>
-                            <filter>functional</filter>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <requirement kind="functional">It should work</requirement>
+                        <requirement kind="performance">It should be fast</requirement>
+                        <requirement kind="performance">It should be incredibly fast</requirement>
+                        <requirement kind="functional">It should not be broken</requirement>
+                        <filter>functional</filter>
+                    </data>
 
                     <fx-bind ref="$requirements" read-only="true()"></fx-bind>
 
@@ -88,7 +87,8 @@ x<!doctype html>
                     <h2>Variable for simple value</h2>
                     <fx-var value="'a value'" name="my-variable"></fx-var>
                     <p>Variables can occur anywhere. They are invisible, they can contain simple values like
-                        <ins>"{$my-variable}"</ins></p>
+                        <ins>"{$my-variable}"</ins>
+                    </p>
                     <fx-var value="instance()/filter" name="filter"></fx-var>
                     <h2>Using variable for binding</h2>
                     <label>Control using variable as <code>ref</code>:
@@ -100,7 +100,7 @@ x<!doctype html>
                         </fx-control>
                     </label>
 
-<!--                    <p>They can also point to an instance or a node, like this: <ins>{$filter}</ins></p>-->
+                    <!--                    <p>They can also point to an instance or a node, like this: <ins>{$filter}</ins></p>-->
                     <h2>Variable as repeat binding</h2>
                     <p>There are {count(array:flatten($requirements))} requirements!</p>
                     <fx-repeat ref="$requirements">
@@ -108,8 +108,8 @@ x<!doctype html>
                             <p>Requirement: {@kind} {.}</p>
                         </template>
                     </fx-repeat>
-					<h3>And again: but now without using variables.</h3>
-					<!-- For documentation, this is the variant without using variables. Variables make it a lot shorter! -->
+                    <h3>And again: but now without using variables.</h3>
+                    <!-- For documentation, this is the variant without using variables. Variables make it a lot shorter! -->
                     <fx-repeat ref="descendant::requirement[@kind = /descendant::filter]">
                         <template>
                             <p>Requirement: {@kind} {.}</p>

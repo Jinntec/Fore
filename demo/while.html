@@ -31,11 +31,9 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <counter>0</counter>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <counter>0</counter>
+                    </data>
                 </fx-model>
 
                 <fx-trigger>
@@ -62,12 +60,10 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <counter>0</counter>
-                            <oof></oof>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <counter>0</counter>
+                        <oof></oof>
+                    </data>
                 </fx-model>
 
                 <fx-trigger>
@@ -100,11 +96,9 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <stop>false</stop>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <stop>false</stop>
+                    </data>
                 </fx-model>
 
                 <fx-trigger>
@@ -133,16 +127,12 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <task>Hey there!</task>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="templ">
-                        <data>
-                            <task>I'm new!</task>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <task>Hey there!</task>
+                    </data>
+                    <data id="templ">
+                        <task>I'm new!</task>
+                    </data>
 
                     <fx-bind ref="task">
                         <fx-bind ref="./text()" required="true()"></fx-bind>

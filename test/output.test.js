@@ -7,11 +7,9 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <div style="color:white;background:#333;padding:1rem;">hey there</div>
+                    </data>
                 </fx-model>
                 <fx-output ref="div">
                     <label slot="label">Content of div: </label>
@@ -36,11 +34,9 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <div style="color:white;background:#333;padding:1rem;">hey there</div>
+                    </data>
                 </fx-model>
                 <fx-output ref="div">
                     <label slot="label">Content of div: </label>
@@ -65,11 +61,9 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
+                    </data>
                 </fx-model>
                 <fx-output ref="div" mediatype="html">
                     <label slot="label">Output bound node as HTML: </label>
@@ -101,11 +95,9 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <div style="color:white;background:#333;padding:1rem;">hey there</div>
+                    </data>
                 </fx-model>
                 <fx-output ref="div" mediatype="html">
                     <label slot="label">Output bound node as HTML: </label>
@@ -132,13 +124,11 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <a><b>1</b></a>
-                            <b>2</b>
-                            <b>3</b>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <a><b>1</b></a>
+                        <b>2</b>
+                        <b>3</b>
+                    </data>
                 </fx-model>
                 <div>
                     <fx-output context="a" value="b"></fx-output>
@@ -159,11 +149,9 @@ describe('fx-output Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <pic>base/resources/images/light7.png</pic>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <pic>base/resources/images/light7.png</pic>
+                    </data>
                 </fx-model>
                 <fx-output ref="pic" mediatype="image"></fx-output>
             </fx-fore>

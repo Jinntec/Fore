@@ -1,9 +1,9 @@
 import {DepGraph} from './dep_graph.js';
 import {Fore} from './fore.js';
-import './fx-instance.js';
 import {ModelItem} from './modelitem.js';
 import {evaluateXPath, evaluateXPathToBoolean} from './xpath-evaluation.js';
 import {XPathUtil} from './xpath-util.js';
+import {DataElement} from './DataElement.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
@@ -16,11 +16,12 @@ import {XPathUtil} from './xpath-util.js';
  */
 export class FxModel extends HTMLElement {
     static dataChanged = false;
+
     constructor() {
         super();
         // this.id = '';
 
-        this.instances = [];
+        this.data = [];
         this.modelItems = [];
         this.defaultContext = {};
         this.changed = [];
@@ -39,7 +40,7 @@ export class FxModel extends HTMLElement {
 
     connectedCallback() {
         // console.log('connectedCallback ', this);
-        this.setAttribute('inert',true);
+        this.setAttribute('inert', true);
         this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
@@ -70,9 +71,9 @@ export class FxModel extends HTMLElement {
         // const path = fx.evaluateXPath('path()',node);
         let path;
         if (node.nodeType) {
-			const instance = XPathUtil.resolveInstance(model, ref);
-
-            path = XPathUtil.getPath(node, instance);
+            // todo
+            const data = XPathUtil.resolveData(model, ref);
+            path = XPathUtil.getPath(node, data);
         } else {
             path = null;
             targetNode = node;
@@ -111,37 +112,36 @@ export class FxModel extends HTMLElement {
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', {model: this});
 
-        // console.time('instance-loading');
-        const instances = this.querySelectorAll('fx-instance');
-        if (instances.length > 0) {
+        // using HTML <data> elements
+        const dataElements = this.closest('fx-fore').querySelectorAll('data');
+        if (dataElements.length > 0) {
             const promises = [];
-            instances.forEach(instance => {
-                promises.push(instance.init());
+            dataElements.forEach(data =>{
+                const dataElement = new DataElement(data);
+                promises.push(dataElement.init());
+                this.data.push(dataElement);
             });
+            await Promise.all(promises);
 
-			// Wait until all the instances are built
-			await Promise.all(promises);
-
-            this.instances = Array.from(instances);
-            // console.log('_modelConstruct this.instances ', this.instances);
-			// Await until the model-construct-done event is handled off
             await Fore.dispatch(this, 'model-construct-done', {model: this});
             this.inited = true;
             this.updateModel();
-        } else {
-            // ### if there's no instance one will created
-            console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
-            await this.dispatchEvent(
-                new CustomEvent('model-construct-done', {
-                    composed: false,
-                    bubbles: true,
-                    detail: {model: this},
-                }),
-            );
+            console.log('data', this.data);
+            return;
         }
 
-		const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
-		await Promise.all(functionlibImports.map(lib => lib.readyPromise));
+        // ### if there's no instance one will created
+        console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
+        await this.dispatchEvent(
+            new CustomEvent('model-construct-done', {
+                composed: false,
+                bubbles: true,
+                detail: {model: this},
+            }),
+        );
+
+        const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
+        await Promise.all(functionlibImports.map(lib => lib.readyPromise));
         // console.timeEnd('instance-loading');
         this.inited = true;
     }
@@ -157,12 +157,12 @@ export class FxModel extends HTMLElement {
     updateModel() {
         // console.time('updateModel');
         this.rebuild();
-/*
-        if (this.skipUpdate){
-            console.info('%crecalculate/revalidate skipped - no bindings', 'font-style: italic; background: #90a4ae; color:lightgrey; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
-            return;
-        }
-*/
+        /*
+                if (this.skipUpdate){
+                    console.info('%crecalculate/revalidate skipped - no bindings', 'font-style: italic; background: #90a4ae; color:lightgrey; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
+                    return;
+                }
+        */
         this.recalculate();
         this.revalidate();
         // console.log('updateModel finished with modelItems ', this.modelItems);
@@ -192,7 +192,7 @@ export class FxModel extends HTMLElement {
         console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
 
         // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
-        Fore.dispatch(this,'rebuild-done',{maingraph:this.mainGraph});
+        Fore.dispatch(this, 'rebuild-done', {maingraph: this.mainGraph});
         console.log('mainGraph', this.mainGraph);
     }
 
@@ -258,14 +258,14 @@ export class FxModel extends HTMLElement {
             const toRefresh = [...this.changed];
             this.formElement.toRefresh = toRefresh;
             this.changed = [];
-            Fore.dispatch(this,'recalculate-done',{graph:this.subgraph,computes:this.computes})
+            Fore.dispatch(this, 'recalculate-done', {graph: this.subgraph, computes: this.computes})
         } else {
             const v = this.mainGraph.overallOrder(false);
             v.forEach(path => {
                 const node = this.mainGraph.getNodeData(path);
                 this.compute(node, path);
             });
-            Fore.dispatch(this,'recalculate-done',{graph:this.mainGraph,computes:this.computes})
+            Fore.dispatch(this, 'recalculate-done', {graph: this.mainGraph, computes: this.computes})
         }
         console.log('recalculate finished with modelItems ', this.modelItems);
     }
@@ -427,8 +427,8 @@ export class FxModel extends HTMLElement {
         return valid;
     }
 
-    addChanged(modelItem){
-        if(this.inited){
+    addChanged(modelItem) {
+        if (this.inited) {
             this.changed.push(modelItem);
         }
     }
@@ -447,64 +447,55 @@ export class FxModel extends HTMLElement {
      * @returns {Element} the
      */
     getDefaultContext() {
-        return this.instances[0].getDefaultContext();
+        return this.data[0].getDefaultContext();
     }
 
-    getDefaultInstance() {
-        if (this.instances.length) {
-			return this.instances[0];
-		}
-		return this.getInstance('default');
-    }
-
-    getDefaultInstanceData() {
-       return this.instances[0].getInstanceData();
-    }
-
-    getInstance(id) {
-        // console.log('getInstance ', id);
-        // console.log('instances ', this.instances);
-        // console.log('instances array ',Array.from(this.instances));
-
-        let found;
-        if(id === 'default'){
-            found = this.instances[0];
+    getDefaultData() {
+        if (this.data.length) {
+            return this.data[0];
         }
-        // ### lookup in local instances first
-        if(!found) {
-			const instArray = Array.from(this.instances);
-            found = instArray.find(inst => inst.id === id);
+        return this.getData('default');
+    }
+
+    getData(id) {
+        let found;
+        if (id === 'default') {
+            found = this.data[0];
+        }
+        // ### lookup in local data first
+        if (!found) {
+            const dataArray = Array.from(this.data);
+            found = dataArray.find(inst => inst.id === id);
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-                    ? this.fore.parentNode.host.closest('fx-fore')
-                    : this.fore.parentNode.closest('fx-fore');
+                ? this.fore.parentNode.host.closest('fx-fore')
+                : this.fore.parentNode.closest('fx-fore');
 
         }
         // ### lookup in parent Fore if present
-        if(!found){
-            // const parentFore = this.fore.parentNode.closest('fx-fore');
+        if (!found) {
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
                 ? this.fore.parentNode.host.closest('fx-fore')
                 : this.fore.parentNode.closest('fx-fore');
             if (parentFore) {
                 console.log('shared instances from parent', this.parentNode.id);
-                const parentInstances = parentFore.getModel().instances;
-                const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
+                const parentData = parentFore.getModel().data;
+                const shared = parentData.filter(shared => shared.hasAttribute('shared'));
                 found = shared.find(found => found.id === id);
             }
 
         }
-        if(found){
-			return found;
+        if (found) {
+            return found;
         }
         if (id === 'default') {
-            return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            return this.getDefaultData(); // if id is not found always defaults to first in doc order
         }
-        if(!found && this.fore.strict){
+        if (!found && this.fore.strict) {
             // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
             Fore.dispatch(this, 'error', {
                 origin: this,
                 message: `Instance '${id}' does not exist`,
-                level:'Error'
+                level: 'Error'
             });
         }
         return null;
@@ -513,7 +504,7 @@ export class FxModel extends HTMLElement {
     evalBinding(bindingExpr) {
         // console.log('MODEL.evalBinding ', bindingExpr);
         // default context of evaluation is always the default instance
-        const result = this.instances[0].evalXPath(bindingExpr);
+        const result = this.data[0].evalXPath(bindingExpr);
         return result;
     }
 }

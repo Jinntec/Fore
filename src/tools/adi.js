@@ -921,7 +921,7 @@ class ADI {
 		const redrawUi = () => {
             if (this.instanceId !== '#document') {
                 const instance = window.document.querySelector(`#${this.instanceId}`);
-                this.document = instance.getInstanceData();
+                this.document = instance.getData();
             }
             this.drawDOM(this.document, this.domView.querySelector('.adi-tree-view'), true);
 		};

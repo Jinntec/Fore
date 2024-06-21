@@ -38,16 +38,12 @@
         <template>
             <fx-fore>
                 <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <value>outer value</value>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="another">
-                        <data>
-                            <value>another outer value</value>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <value>outer value</value>
+                    </data>
+                    <data id="another">
+                        <value>another outer value</value>
+                    </data>
                 </fx-model>
 
                 <section>
@@ -62,16 +58,12 @@
 
                 <fx-fore>
                     <fx-model>
-                        <fx-instance>
-                            <data>
-                                <value>inner value</value>
-                            </data>
-                        </fx-instance>
-                        <fx-instance id="another">
-                            <data>
-                                <value>another inner value</value>
-                            </data>
-                        </fx-instance>
+                        <data>
+                            <value>inner value</value>
+                        </data>
+                        <data id="another">
+                            <value>another inner value</value>
+                        </data>
                     </fx-model>
 
                     <section>

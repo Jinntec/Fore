@@ -11,86 +11,86 @@
     <script type="module" src="./codemirror/jinn-codemirror-bundle.js"></script>
 
     <style>
-        fx-repeatitem{
+        fx-repeatitem {
             display: block;
             padding: 1rem;
             background: #efefef;
         }
-        main{
-            display:grid;
+
+        main {
+            display: grid;
             grid-template-rows:auto 2rem;
-            height:calc(100vh - 2rem);
-            padding:1rem;
+            height: calc(100vh - 2rem);
+            padding: 1rem;
         }
-        fx-repeat{
-            overflow:auto;
+
+        fx-repeat {
+            overflow: auto;
         }
     </style>
 </head>
 <body unresolved="unresolved">
 
-    <fx-fore>
-        <fx-model>
+<fx-fore>
+    <fx-model>
 
-            <fx-connection id="chat" ref="message" url="ws://localhost:8088" message-format="xml">
-                <!-- <fx-message event="open">connection open</fx-message> -->
-                <fx-action event="channel-message">
-                    <fx-message level="sticky">channel-message {event('message')}</fx-message>
-<!--                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>-->
-<!--                    <fx-update></fx-update>-->
-<!--                    <fx-refresh force></fx-refresh>-->
-                    <!-- <fx-insert context="instance()/transcript" ref="message" origin="context()"></fx-insert> -->
-                    <!-- <fx-setvalue ref="instance()/transcript/message[last()]" value="event('message')"></fx-setvalue> -->
-                </fx-action>
-<!--                <fx-setvalue event="channel-message" ref="message" value="event('message')"></fx-setvalue>-->
-<!--
-                <fx-action event="channel-message">
-                    <fx-message>connection message {event('message')}</fx-message>
-                    <fx-insert context="instance()//transcript" ref="message"  origin="instance()/message"></fx-insert>
-                </fx-action>
--->
-                <!-- <fx-message event="close">connection close</fx-message> -->
-                <!-- <fx-message event="error">connection error {event('detail')}</fx-message> -->
-            </fx-connection>
+        <fx-connection id="chat" ref="message" url="ws://localhost:8088" message-format="xml">
+            <!-- <fx-message event="open">connection open</fx-message> -->
+            <fx-action event="channel-message">
+                <fx-message level="sticky">channel-message {event('message')}</fx-message>
+                <!--                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>-->
+                <!--                    <fx-update></fx-update>-->
+                <!--                    <fx-refresh force></fx-refresh>-->
+                <!-- <fx-insert context="instance()/transcript" ref="message" origin="context()"></fx-insert> -->
+                <!-- <fx-setvalue ref="instance()/transcript/message[last()]" value="event('message')"></fx-setvalue> -->
+            </fx-action>
+            <!--                <fx-setvalue event="channel-message" ref="message" value="event('message')"></fx-setvalue>-->
+            <!--
+                            <fx-action event="channel-message">
+                                <fx-message>connection message {event('message')}</fx-message>
+                                <fx-insert context="instance()//transcript" ref="message"  origin="instance()/message"></fx-insert>
+                            </fx-action>
+            -->
+            <!-- <fx-message event="close">connection close</fx-message> -->
+            <!-- <fx-message event="error">connection error {event('detail')}</fx-message> -->
+        </fx-connection>
 
-            <fx-instance>
-              <data>
-                  <item>Item1</item>
-                  <message></message>
-                  <transcript>
-                  </transcript>
-                  <message></message>
-              </data>
-            </fx-instance>
-        </fx-model>
+        <data>
+            <item>Item1</item>
+            <message></message>
+            <transcript>
+            </transcript>
+            <message></message>
+        </data>
+    </fx-model>
 
-        <div></div>
+    <div></div>
 
-        <main>
+    <main>
 
-            <!-- <fx-control ref="message" update-event="enter"> -->
-            <!--     <textarea placeholder="your message..." class="widget"></textarea> -->
-            <!--     <fx-action event="value-changed" if=". != ''"> -->
-            <!--         <fx-send connection="chat"></fx-send> -->
-            <!--     </fx-action> -->
-            <!-- </fx-control> -->
+        <!-- <fx-control ref="message" update-event="enter"> -->
+        <!--     <textarea placeholder="your message..." class="widget"></textarea> -->
+        <!--     <fx-action event="value-changed" if=". != ''"> -->
+        <!--         <fx-send connection="chat"></fx-send> -->
+        <!--     </fx-action> -->
+        <!-- </fx-control> -->
 
-	    <fx-control ref="message" update-event="enter" as="node">
-	      <fx-action event="value-changed" if=". != ''" >
-		<fx-message>SENDING</fx-message>
+        <fx-control ref="message" update-event="enter" as="node">
+            <fx-action event="value-changed" if=". != ''">
+                <fx-message>SENDING</fx-message>
                 <fx-send connection="chat"></fx-send>
-		<fx-message>SENT!!!</fx-message>
+                <fx-message>SENT!!!</fx-message>
 
-              </fx-action>
+            </fx-action>
 
-              <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
-            </fx-control>
+            <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+        </fx-control>
 
-        </main>
+    </main>
 
 
-<!--        <fx-inspector open></fx-inspector>-->
-    </fx-fore>
+    <!--        <fx-inspector open></fx-inspector>-->
+</fx-fore>
 
 <script type="module">
     import './demo.js';

@@ -23,12 +23,10 @@
     <template>
         <fx-fore ignore-expressions=".myElement, my-sub-element,pb-authority">
             <fx-model>
-                <fx-instance>
-                    <data>
-                        <greeting>Hello</greeting>
-                        <ignored>if you read this it does not work</ignored>
-                    </data>
-                </fx-instance>
+                <data>
+                    <greeting>Hello</greeting>
+                    <ignored>if you read this it does not work</ignored>
+                </data>
             </fx-model>
 
             <span>{greeting}</span>

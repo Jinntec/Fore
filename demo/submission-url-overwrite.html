@@ -76,20 +76,18 @@
             <fx-fore>
                 <fx-setfocus control="message" event="ready"></fx-setfocus>
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <message></message>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="response">
+                    <data>
+                        <message></message>
+                    </data>
+                    <data id="response">
                         <data></data>
-                    </fx-instance>
+                    </data>
 
                     <fx-submission id="sub1"
                                    url=""
                                    method="post"
-                                   replace="instance"
-                                   instance="response">
+                                   replace="data"
+                                   data="response">
                     </fx-submission>
                 </fx-model>
 

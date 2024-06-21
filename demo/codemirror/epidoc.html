@@ -69,8 +69,8 @@
     <h1>Title</h1>
     <fx-fore>
         <fx-model>
-            <fx-instance src="epidoc.xml"
-                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+            <data data-src="epidoc.xml"
+                         data-ns="http://www.tei-c.org/ns/1.0">
 <!--
                 <data>
                     <fundort>
@@ -97,11 +97,9 @@
                 </data>
 -->
             </fx-instance>
-            <fx-instance id="tmp">
-                <data>
-                    <dummy>xpath?</dummy>
-                </data>
-            </fx-instance>
+            <data id="tmp">
+                <dummy>xpath?</dummy>
+            </data>
         </fx-model>
         <fx-group ref="teiHeader">
 

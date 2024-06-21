@@ -2,7 +2,6 @@
 import './src/fx-bind.js';
 import './src/fx-connection.js';
 import './src/fx-fore.js';
-import './src/fx-instance.js';
 import './src/fx-model.js';
 import './src/fx-submission.js';
 import './src/fx-header.js';

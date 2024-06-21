@@ -106,7 +106,7 @@ class FxAppend extends AbstractAction {
     const rootNode = inscope.ownerDocument.createElement(repeat.ref);
 
     // const data = this._dataFromRefs(rootNode, templ.content)
-    const data = this._generateInstance(templ.content, rootNode);
+    const data = this._generateData(templ.content, rootNode);
     // console.log('_dataFromTemplate DATA', data);
     inscope.appendChild(data);
     // console.log('appended new item ', data);
@@ -146,7 +146,7 @@ class FxAppend extends AbstractAction {
     }
   }
 
-  _generateInstance(start, parent) {
+  _generateData(start, parent) {
     if (start.nodeType === 1 && start.hasAttribute('ref')) {
       const ref = start.getAttribute('ref');
 
@@ -167,14 +167,14 @@ class FxAppend extends AbstractAction {
     if (start.hasChildNodes()) {
       const list = start.children;
       for (let i = 0; i < list.length; i += 1) {
-        this._generateInstance(list[i], parent);
+        this._generateData(list[i], parent);
       }
     }
     return parent;
   }
 
-  getInstanceId() {
-    if (this.ref.startsWith('instance(')) {
+  getDataId() {
+    if (this.ref.startsWith('data(')) {
       return 'not implemented';
     }
     return 'default';

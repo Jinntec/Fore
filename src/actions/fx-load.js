@@ -203,10 +203,10 @@ class FxLoad extends AbstractAction {
             }
             // Templates are special: they use the namespace configuration from the place where they are
             // being defined
-            const instanceId = XPathUtil.getInstanceId(naked);
+            const dataId = XPathUtil.getInstanceId(naked);
 
             // If there is an instance referred
-            const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
+            const inst = dataId ? this.getModel().getInstance(dataId) : this.getModel().getDefaultInstance();
             try {
                 return evaluateXPathToString(naked, inscope, this, null, inst);
             } catch (error) {

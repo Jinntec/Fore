@@ -20,24 +20,20 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
-                        <data></data>
-                    </fx-instance>
-                    <fx-instance id="data">
-                        <data>
-                            <foo>bar</foo>
-                            <item type="color">blue</item>
-                            <item type="color">red</item>
-                            <item type="color">green</item>
-                        </data>
-                    </fx-instance>
+                    <data></data>
+                    <data id="data">
+                        <foo>bar</foo>
+                        <item type="color">blue</item>
+                        <item type="color">red</item>
+                        <item type="color">green</item>
+                    </data>
 
                     <fx-submission id="s-load"
                                    method="post"
                                    url="#echo"
                                    ref="instance('data')"
-                                   replace="instance"
-                                   instance="default"></fx-submission>
+                                   replace="data"
+                                   data="default"></fx-submission>
                 </fx-model>
 
                 <fx-trigger>

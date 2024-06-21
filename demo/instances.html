@@ -26,20 +26,16 @@
         <fx-message event="refresh-done">refresh has been done </fx-message>
 
         <fx-model id="model1">
-            <fx-instance>
-                <data>
-                    <greeting>Hello World!</greeting>
-                </data>
-            </fx-instance>
+            <data>
+                <greeting>Hello World!</greeting>
+            </data>
 
             <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
 
-            <fx-instance id="second">
-                <data>
-                    <outro>GoodBye</outro>
-                    <foo></foo>
-                </data>
-            </fx-instance>
+            <data id="second">
+                <outro>GoodBye</outro>
+                <foo></foo>
+            </data>
 
 <!--
             <fx-bind instance="second" ref="instance('outro')">

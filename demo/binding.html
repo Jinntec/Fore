@@ -33,12 +33,13 @@
             width: 15rem;
 
         }
+
         .vertical .buttonArray {
             display: flex;
             flex-direction: row;
             flex-flow: wrap;
-            gap:1rem;
-            width:80%
+            gap: 1rem;
+            width: 80%
         }
 
 
@@ -80,18 +81,20 @@
     <img src="../resources/images/modelitemv2.svg" class="diagram">
 
     <p>Imagine your data as a tree of nodes. With bindings you can add
-    additional constraints to those nodes (the colored dots) which will be recalculated
-    and revalidated automatically when a data change requires it.</p>
+        additional constraints to those nodes (the colored dots) which will be recalculated
+        and revalidated automatically when a data change requires it.</p>
 
-    <p>Each <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code> <strong>requires</strong> a <code>ref</code> attribute pointing
-    to the node(s) it applies to.</p>
+    <p>Each <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank"> fx-bind</a></code>
+        <strong>requires</strong> a <code>ref</code> attribute pointing
+        to the node(s) it applies to.</p>
     <p>With following attributes you can add calculations and validations as needed:</p>
 
     <table class="modelitems">
         <tr>
             <td>calculate</td>
             <td>XPath calculation expression whose result will be stored in node referenced by <code><a
-                    href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code>.</td>
+                    href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code>.
+            </td>
         </tr>
         <tr>
             <td>constraint</td>
@@ -144,15 +147,13 @@
             <fx-fore>
                 <!--                <fx-setfocus control="input" event="ready" delay="500"></fx-setfocus>-->
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <item>Hello</item>
-                            <required>true</required>
-                            <readonly>false</readonly>
-                            <constraint>true</constraint>
-                            <relevant>true</relevant>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <item>Hello</item>
+                        <required>true</required>
+                        <readonly>false</readonly>
+                        <constraint>true</constraint>
+                        <relevant>true</relevant>
+                    </data>
                     <fx-bind ref="item"
                              required="boolean-from-string(../required)"
                              readonly="boolean-from-string(../readonly)"

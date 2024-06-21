@@ -16,21 +16,17 @@
         <fx-fore>
             <fx-model>
 
-                <fx-instance>
-                    <data>
-                        <task complete="false" due=""></task>
-                    </data>
-                </fx-instance>
+                <data>
+                    <task complete="false" due=""></task>
+                </data>
 
-                <fx-instance id="helper">
-                    <data>
-                        <template>
-                            <task complete="false" due=""></task>
-                        </template>
-                        <show-completed>false</show-completed>
-                        <dummy></dummy>
-                    </data>
-                </fx-instance>
+                <data id="helper">
+                    <template>
+                        <task complete="false" due=""></task>
+                    </template>
+                    <show-completed>false</show-completed>
+                    <dummy></dummy>
+                </data>
 
                 <fx-bind ref="task" relevant="./@complete='false' or instance('helper')/show-completed='true'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>

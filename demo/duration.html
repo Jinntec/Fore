@@ -39,19 +39,15 @@
         </fx-action>
         <fx-model style="display:none;">
 
-            <fx-instance>
-                <data>
-                    <minutes>0</minutes>
-                </data>
-            </fx-instance>
+            <data>
+                <minutes>0</minutes>
+            </data>
 
-            <<fx-instance id="vars">
-                <data>
-                    <hours>0</hours>
-                    <mins>0</mins>
-                    <ready></ready>
-                </data>
-            </fx-instance>
+            <<data id="vars">
+                <hours>0</hours>
+                <mins>0</mins>
+                <ready></ready>
+            </data>
 
             <fx-bind ref="instance('vars')/hours" constraint="instance()/minutes != 0"></fx-bind>
             <fx-bind ref="instance('vars')/mins" constraint="instance()/minutes != 0"></fx-bind>

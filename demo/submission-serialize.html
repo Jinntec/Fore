@@ -30,15 +30,13 @@
                 <fx-send event="ready" submission="submission"></fx-send>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <div>a thing</div>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <div>a thing</div>
+                    </data>
                     <fx-submission id="submission"
                                    method="post"
                                    url="#echo"
-                                   replace="instance"
+                                   replace="data"
                                    serialization="none">
                     </fx-submission>
                 </fx-model>

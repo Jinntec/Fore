@@ -45,22 +45,19 @@
             <fx-fore>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <key>foo</key>
-                            <bar>bar</bar>
-                            <another>value2</another>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="second" src="localStore:foo">
-                        <data></data>
-                    </fx-instance>
+                    <data>
+                        <key>foo</key>
+                        <bar>bar</bar>
+                        <another>value2</another>
+                    </data>
+                    <data id="second" data-src="localStore:foo">
+                    </data>
 
                     <fx-submission id="sub1"
                                    url="localStore:{key}"
                                    method="post"
-                                   replace="instance"
-                                   instance="second">
+                                   replace="data"
+                                   data="second">
                         <fx-message event="submit-done">Data have been stored to localStorage with key '{key}'</fx-message>
                     </fx-submission>
                     <fx-submission id="sub2"

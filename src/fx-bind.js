@@ -63,8 +63,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   init(model) {
     this.model = model;
     // console.log('init binding ', this);
-    this._getInstanceId();
-    this.bindType = this.getModel().getInstance(this.instanceId).type;
+    this._getDataId();
+    this.bindType = this.getModel().getData(this.dataId).type;
     // console.log('binding type ', this.bindType);
 
     if (this.bindType === 'xml') {
@@ -81,9 +81,9 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _buildBindGraph() {
     if (this.bindType === 'xml') {
 		this.nodeset.forEach(node => {
-			          const instance = XPathUtil.resolveInstance(this,this.ref);
+			          const data = XPathUtil.resolveData(this,this.ref);
 
-          const path = XPathUtil.getPath(node, instance);
+          const path = XPathUtil.getPath(node, data);
         this.model.mainGraph.addNode(path, node);
 
         /* ### catching references in the 'ref' itself...
@@ -160,9 +160,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         this.model.mainGraph.addNode(nodeHash, node);
       }
 		refs.forEach(ref => {
-			const instance = XPathUtil.resolveInstance(this, path);
-
-			const otherPath = XPathUtil.getPath(ref, instance);
+			const data = XPathUtil.resolveData(this, path);
+			const otherPath = XPathUtil.getPath(ref, data);
         // console.log('otherPath', otherPath)
 
         // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
@@ -229,7 +228,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
         }
       });
     } else {
-      const inst = this.getModel().getInstance(this.instanceId);
+      const inst = this.getModel().getData(this.dataId);
       if (inst.type === 'xml') {
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else {
@@ -307,9 +306,9 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
     // const path = fx.evaluateXPath('path()',node);
       // const path = this.getPath(node);
-	  const instance = XPathUtil.resolveInstance(this, this.ref);
+	  const data = XPathUtil.resolveData(this, this.ref);
 
-      const path = XPathUtil.getPath(node, instance);
+      const path = XPathUtil.getPath(node, data);
     // const shortPath = this.shortenPath(path);
 
     // ### constructing default modelitem - will get evaluated during recalculate()
@@ -405,29 +404,29 @@ export class FxBind extends foreElementMixin(HTMLElement) {
    * and instance() function or if not found return 'default'.
    * @private
    */
-  _getInstanceId() {
+  _getDataId() {
     const bindExpr = this.getBindingExpr();
     // console.log('_getInstanceId bindExpr ', bindExpr);
     if (bindExpr.startsWith('instance(')) {
-      this.instanceId = XPathUtil.getInstanceId(bindExpr);
+      this.dataId = XPathUtil.getDataId(bindExpr);
       return;
     }
-    if(!this.instanceId && this.parentNode.nodeName === 'FX-BIND'){
+    if(!this.dataId && this.parentNode.nodeName === 'FX-BIND'){
       let parent = this.parentNode;
-      while(parent && !this.instanceId){
+      while(parent && !this.dataId){
         const ref = parent.getBindingExpr();
         if (ref.startsWith('instance(')) {
-          this.instanceId = XPathUtil.getInstanceId(ref);
+          this.dataId = XPathUtil.getDataId(ref);
           return;
         }
         if(parent.parentNode.nodeName !== 'FX-BIND'){
-          this.instanceId = 'default';
+          this.dataId = 'default';
           break;
         }
         parent = parent.parentNode;
       }
     }
-    this.instanceId = 'default';
+    this.dataId = 'default';
   }
 
 

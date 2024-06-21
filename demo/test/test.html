@@ -9,30 +9,19 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model1">
-            <fx-instance>
-                <data>
-                    <item>foobar</item>
-                    <result>foobar</result>
-                </data>
-                <fx-bind ref="item"></fx-bind>
-            </fx-instance>
+        <fx-model id="record">
+            <data>
+                <task complete="false" due="2019-02-04">Pick up Milk</task>
+                <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+            </data>
+
+            <fx-bind id="task" ref="task">
+                <fx-bind ref="./text()" required="true()"></fx-bind>
+                <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                <fx-bind ref="@due" type="xs:date"></fx-bind>
+            </fx-bind>
         </fx-model>
-        <fx-group>
-            <span id="result">{result}</span>
-            <fx-control id="input1" ref="result">
-                <fx-items ref="instance('default')/item">
-                    <template>
-                        <span id="checkbox">
-                          <label slot="label">{.}</label>
-                          <input type="checkbox" value="{.}" />
-                        </span>
-                    </template>
-                </fx-items>
-            </fx-control>
-        </fx-group>
-    </fx-fore>
-</div>
+    </fx-fore></div>
 <script type="module" src="../demo.js"/>
 </body>
 </html>

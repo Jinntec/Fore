@@ -17,11 +17,9 @@
             <fx-setvalue ref="instance('helper')/changed" event="value-changed">true</fx-setvalue>
 
             <fx-model id="record">
-                <fx-instance>
-                    <data>
-                        <show-completed>false</show-completed>
-                    </data>
-                </fx-instance>
+                <data>
+                    <show-completed>false</show-completed>
+                </data>
                 <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
@@ -35,7 +33,7 @@
                 <fx-submission id="load"
                                url="localStore:todos"
                                method="get"
-                               replace="instance">
+                               replace="data">
                     <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
                 </fx-submission>
 
@@ -46,14 +44,12 @@
                     <fx-reload event="submit-done"></fx-reload>
                 </fx-submission>
 
-                <fx-instance id="helper">
-                    <data>
-                        <changed></changed>
-                        <template>
-                            <task complete="false" due=""></task>
-                        </template>
-                    </data>
-                </fx-instance>
+                <data id="helper">
+                    <changed></changed>
+                    <template>
+                        <task complete="false" due=""></task>
+                    </template>
+                </data>
             </fx-model>
 
             <h1>Todo

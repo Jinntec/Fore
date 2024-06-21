@@ -101,32 +101,32 @@ export class XPathUtil {
      * @param ref
      * @returns {string}
      */
-    static getInstanceId(ref) {
+    static getDataId(ref) {
         if (!ref) {
             return 'default';
         }
-        if (ref.startsWith('instance()')) {
+        if (ref.startsWith('data()')) {
             return 'default';
         }
-        if (ref.startsWith('instance(')) {
+        if (ref.startsWith('data(')) {
             const result = ref.substring(ref.indexOf('(') + 1);
             return result.substring(1, result.indexOf(')') - 1);
         }
         return null;
     }
 
-    static resolveInstance(boundElement, path) {
-        let instanceId = XPathUtil.getInstanceId(path);
-        if (!instanceId) {
-            instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+    static resolveData(boundElement, path) {
+        let dataId = XPathUtil.getDataId(path);
+        if (!dataId) {
+            dataId = XPathUtil.getDataId(boundElement.getAttribute('ref'));
         }
-        if (instanceId !== null) {
-            return instanceId;
+        if (dataId !== null) {
+            return dataId;
         }
 
         const parentBinding = XPathUtil.getParentBindingElement(boundElement);
         if (parentBinding) {
-            return this.resolveInstance(parentBinding, path);
+            return this.resolveData(parentBinding, path);
         }
         return 'default';
     }
@@ -138,11 +138,11 @@ export class XPathUtil {
         return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
     }
 
-    static getPath(node, instanceId) {
+    static getPath(node, dataId) {
         const path = fx.evaluateXPathToString('path()', node);
         // Path is like `$default/x[1]/y[1]`
         const shortened = XPathUtil.shortenPath(path);
-        return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+        return shortened.startsWith('/') ? `$${dataId}${shortened}` : `$${dataId}/${shortened}`;
     }
 
     static shortenPath(path) {

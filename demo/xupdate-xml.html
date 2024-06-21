@@ -23,24 +23,22 @@
 <script type="module" src="../index.js"></script>            <fx-fore>
 
     <fx-model>
-        <fx-instance src="inspector/element-def.xml"></fx-instance>
-        <fx-instance id="result">
-            <data>
-                <xml>
-                    <references>
-                        <ref id="123">The first ref!</ref>
-                        <ref id="abc">The second ref!</ref>
-                    </references>
-                    <main>
-                        <not-a-ref>Not a ref here!</not-a-ref>
-                        <ref link="123">I should be replaced!</ref>
-                        <not-a-ref>Not a ref here!</not-a-ref>
-                        <ref link="abc">I should also be replaced!</ref>
-                        <not-a-ref>Not a ref here!</not-a-ref>
-                    </main>
-                </xml>
-            </data>
-        </fx-instance>
+        <data data-src="inspector/element-def.xml"></data>
+        <data id="result">
+            <xml>
+                <references>
+                    <ref id="123">The first ref!</ref>
+                    <ref id="abc">The second ref!</ref>
+                </references>
+                <main>
+                    <not-a-ref>Not a ref here!</not-a-ref>
+                    <ref link="123">I should be replaced!</ref>
+                    <not-a-ref>Not a ref here!</not-a-ref>
+                    <ref link="abc">I should also be replaced!</ref>
+                    <not-a-ref>Not a ref here!</not-a-ref>
+                </main>
+            </xml>
+        </data>
 
         <fx-function
                 signature="update($element as element()) as element()*"

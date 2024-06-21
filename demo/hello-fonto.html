@@ -49,20 +49,16 @@
                     <fx-message event="model-construct">model-construct was fired</fx-message>
                     <fx-message event="model-construct-done">model-construct-done was fired</fx-message>
 
-                    <fx-instance>
-                        <data>
-                            <greeting>Hello World!</greeting>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <greeting>Hello World!</greeting>
+                    </data>
                     <fx-bind id="b-greeting" ref="greeting" required="string-length(.) < 6"
                              readonly="string-length(.) < 6">
                     </fx-bind>
 
-                    <fx-instance id="second">
-                        <data>
-                            <outro>GoodBye</outro>
-                        </data>
-                    </fx-instance>
+                    <data id="second">
+                        <outro>GoodBye</outro>
+                    </data>
                 </fx-model>
                 <fx-group collapse="true">
                     <h1>

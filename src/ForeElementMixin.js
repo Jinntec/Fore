@@ -111,10 +111,10 @@ export const foreElementMixin = superclass =>
       if (this.hasAttribute('ref')) {
         inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
       }
-      if (!inscopeContext && this.getModel().instances.length !== 0) {
+      if (!inscopeContext && this.getModel().data.length !== 0) {
         // ### always fall back to default context with there's neither a 'context' or 'ref' present
         inscopeContext = this.getModel()
-          .getDefaultInstance()
+          .getDefaultData()
           .getDefaultContext();
         // console.warn('no in scopeContext for ', this);
         // console.warn('using default context ', this);
@@ -193,12 +193,12 @@ export const foreElementMixin = superclass =>
       return parent.getAttribute('ref');
     }
 
-    getInstance() {
+    getData() {
       if (this.ref.startsWith('instance(')) {
-        const instId = XPathUtil.getInstanceId(this.ref);
-        return this.getModel().getInstance(instId);
+        const instId = XPathUtil.getDataId(this.ref);
+        return this.getModel().getData(instId);
       }
-      return this.getModel().getInstance('default');
+      return this.getModel().getData('default');
     }
 
     _getParentBindingElement(start) {

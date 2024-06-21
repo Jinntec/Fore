@@ -56,24 +56,20 @@
 
     <fx-fore>
         <fx-model id="model1">
-            <fx-instance>
-                <data>
-                    <item>foobar</item>
-                    <checked>true</checked>
-                    <listitem>foo</listitem>
-                    <label>a bound label</label>
-                    <flavor></flavor>
-                </data>
-            </fx-instance>
-            <fx-instance id="i-flavors">
-                <data>
-                    <flavor>Chocolate</flavor>
-                    <flavor>Coconut</flavor>
-                    <flavor>Mint</flavor>
-                    <flavor>Strawberry</flavor>
-                    <flavor>Vanilla</flavor>
-                </data>
-            </fx-instance>
+            <data>
+                <item>foobar</item>
+                <checked>true</checked>
+                <listitem>foo</listitem>
+                <label>a bound label</label>
+                <flavor></flavor>
+            </data>
+            <data id="i-flavors">
+                <flavor>Chocolate</flavor>
+                <flavor>Coconut</flavor>
+                <flavor>Mint</flavor>
+                <flavor>Strawberry</flavor>
+                <flavor>Vanilla</flavor>
+            </data>
             <fx-bind ref="item"></fx-bind>
             <fx-bind ref="checked" type="boolean"></fx-bind>
             <fx-bind ref="listitem"></fx-bind>

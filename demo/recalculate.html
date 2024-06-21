@@ -43,13 +43,11 @@
                 <!--    <fx-message event="refresh-done">refresh has been done</fx-message>-->
 
                 <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <a>A</a>
-                            <b>B</b>
-                            <c>C</c>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <a>A</a>
+                        <b>B</b>
+                        <c>C</c>
+                    </data>
                     <fx-bind ref="a" readonly="string-length(../b) > 1"
                              required="../b = 'B'"></fx-bind>
                     <fx-bind ref="b" required="../c = 'C'"></fx-bind>

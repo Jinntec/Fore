@@ -28,11 +28,9 @@
         <fx-model>
             <fx-message event="model-construct-done">subcomponent model ready</fx-message>
 
-            <fx-instance id="email">
-                <data>
-                    <attachment>default</attachment>
-                </data>
-            </fx-instance>
+            <data id="email">
+                <attachment>default</attachment>
+            </data>
         </fx-model>
         <fx-control ref="attachment" update-event="input">
             <label>Email</label>

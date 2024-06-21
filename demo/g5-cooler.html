@@ -75,7 +75,7 @@
     -->
     <fx-fore>
         <fx-model>
-            <fx-instance>
+            <data>
                 <g5-cooler board="S" cpuspeed="I">
                     <rear-fans speed="25" pwm="I" voltage="F"></rear-fans>
                     <water-pump speed="25" pwm="I" voltage="F"></water-pump>
@@ -86,7 +86,7 @@
                     <memory heap="I" fragmentation="P"></memory>
                     <wifi ssid="S" ip="S"></wifi>
                 </g5-cooler>
-            </fx-instance>
+            </data>
             <fx-bind ref="water-tank/@level" readonly="true()"></fx-bind>
             <fx-submission id="setFan"
                           url="http://{wifi/@ip}/fan-speed={rear-fans/@speed}"

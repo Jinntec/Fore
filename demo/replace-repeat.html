@@ -22,27 +22,22 @@
     <fx-fore>
         <fx-model>
 
-            <fx-instance>
-                <data>
-                    <item>item1</item>
-                    <item>item2</item>
-                    <item>item3</item>
-                    <item>item4</item>
-                </data>
-            </fx-instance>
-
-            <fx-instance id="second">
-                <data>
-                    <item>item8</item>
-                    <item>item9</item>
-                </data>
-            </fx-instance>
+            <data>
+                <item>item1</item>
+                <item>item2</item>
+                <item>item3</item>
+                <item>item4</item>
+            </data>
+            <data id="second">
+                <item>item8</item>
+                <item>item9</item>
+            </data>
             <fx-submission id="s1"
                            url="#echo"
                            method="post"
                            ref="instance('second')"
-                           replace="instance"
-                           instance="default"></fx-submission>
+                           replace="data"
+                           data="default"></fx-submission>
         </fx-model>
         <fx-repeat ref="item">
             <template>

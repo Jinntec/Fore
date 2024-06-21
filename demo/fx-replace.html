@@ -38,20 +38,16 @@
         <template>
             <fx-fore>
                 <fx-model id="model1">
-                    <fx-instance id="default">
-                        <data>
+                    <data id="default">
+                        <value>A</value>
+                    </data>
+                    <data id="template">
+                        <list>
                             <value>A</value>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="template">
-                        <data>
-                            <list>
-                                <value>A</value>
-                                <value>B</value>
-                                <value>C</value>
-                            </list>
-                        </data>
-                    </fx-instance>
+                            <value>B</value>
+                            <value>C</value>
+                        </list>
+                    </data>
                 </fx-model>
 
                 <fx-trigger id="trigger">

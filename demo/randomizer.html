@@ -49,17 +49,15 @@
         </fx-action>
 
         <fx-model>
-            <fx-instance>
-                <data>
-                    <color1></color1>
-                    <color2></color2>
-                    <opacity></opacity>
-                    <skew-x></skew-x>
-                    <skew-y></skew-y>
-                    <scale>1</scale>
-                    <speed>1</speed>
-                </data>
-            </fx-instance>
+            <data>
+                <color1></color1>
+                <color2></color2>
+                <opacity></opacity>
+                <skew-x></skew-x>
+                <skew-y></skew-y>
+                <scale>1</scale>
+                <speed>1</speed>
+            </data>
             <fx-bind ref="color1" calculate="local:randomColor()"></fx-bind>
             <fx-bind ref="color2" calculate="local:randomColor()"></fx-bind>
             <fx-bind ref="opacity" calculate="local:random(5,99)"></fx-bind>

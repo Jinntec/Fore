@@ -15,21 +15,17 @@
         <fx-fore>
             <fx-model>
 
-                <fx-instance>
-                    <data>
-                        <task complete="false" due=""></task>
-                    </data>
-                </fx-instance>
+                <data>
+                    <task complete="false" due=""></task>
+                </data>
 
-                <fx-instance id="helper">
-                    <data>
-                        <template>
-                            <task complete="false" due=""></task>
-                        </template>
-                        <show-completed>false</show-completed>
-                        <dummy></dummy>
-                    </data>
-                </fx-instance>
+                <data id="helper">
+                    <template>
+                        <task complete="false" due=""></task>
+                    </template>
+                    <show-completed>false</show-completed>
+                    <dummy></dummy>
+                </data>
 
 <!--
                 <fx-bind ref="task" relevant="./@complete='false' or instance('helper')/show-completed='true'">
@@ -46,7 +42,7 @@
                 <fx-submission id="load"
                                url="localStore:todos"
                                method="get"
-                                replace="instance"></fx-submission>
+                                replace="data"></fx-submission>
 
                 <fx-submission id="clear"
                                url="localStore:todos"

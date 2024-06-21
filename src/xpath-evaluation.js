@@ -181,18 +181,18 @@ export function resolveId(id, sourceObject, nodeName = null) {
 // Make namespace resolving use the `instance` element that is related to here
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 
-const instanceReferencesByQuery = new Map();
+const dataReferencesByQuery = new Map();
 
-function findInstanceReferences(xpathQuery) {
+function findDataReferences(xpathQuery) {
 	if (!xpathQuery.includes('instance')) {
 		// No call to the instance function anyway: short-circuit and prevent AST processing
 		return [];
 	}
-	if (instanceReferencesByQuery.has(xpathQuery)) {
-	  	return instanceReferencesByQuery.get(xpathQuery);
+	if (dataReferencesByQuery.has(xpathQuery)) {
+	  	return dataReferencesByQuery.get(xpathQuery);
 	}
     const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
-    const instanceReferences = fxEvaluateXPathToStrings(
+    const dataReferences = fxEvaluateXPathToStrings(
         `descendant::xqx:functionCallExpr
 				[xqx:functionName = "instance"]
 				/xqx:arguments
@@ -207,9 +207,9 @@ function findInstanceReferences(xpathQuery) {
         },
     );
 
-	instanceReferencesByQuery.set(xpathQuery, instanceReferences);
+	dataReferencesByQuery.set(xpathQuery, dataReferences);
 
-	return instanceReferences;
+	return dataReferences;
 }
 
 /**
@@ -231,8 +231,8 @@ function createNamespaceResolver(xpathQuery, formElement) {
     if (cachedResolver) {
         return cachedResolver;
     }
-	let instanceReferences = findInstanceReferences(xpathQuery);
-    if (instanceReferences.length === 0) {
+	let dataReferences = findDataReferences(xpathQuery);
+    if (dataReferences.length === 0) {
         // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
         const ancestorComponent = formElement.parentNode &&
 			  formElement.parentNode.nodeType === formElement.ELEMENT &&
@@ -246,13 +246,13 @@ function createNamespaceResolver(xpathQuery, formElement) {
             return resolver;
         }
         // Nothing found: let's just assume we're supposed to use the `default` instance
-        instanceReferences = ['default'];
+        dataReferences = ['default'];
     }
 
-    if (instanceReferences.length === 1) {
+    if (dataReferences.length === 1) {
         // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
-        let instance;
-        if (instanceReferences[0] === 'default') {
+        let data;
+        if (dataReferences[0] === 'default') {
             const actualForeElement = fxEvaluateXPathToFirstNode(
                 'ancestor-or-self::fx-fore[1]',
                 formElement,
@@ -261,12 +261,12 @@ function createNamespaceResolver(xpathQuery, formElement) {
                 {namespaceResolver: xhtmlNamespaceResolver},
             );
 
-            instance = actualForeElement && actualForeElement.querySelector('fx-instance');
+            data = actualForeElement && actualForeElement.querySelector('fx-instance');
         } else {
-            instance = resolveId(instanceReferences[0], formElement, 'fx-instance');
+            data = resolveId(dataReferences[0], formElement, 'data');
         }
-        if (instance && instance.hasAttribute('xpath-default-namespace')) {
-            const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
+        if (data && data.hasAttribute('data-ns')) {
+            const xpathDefaultNamespace = data.getAttribute('data-ns');
             /*
             console.log(
               `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
@@ -282,7 +282,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
             return resolveNamespacePrefix;
         }
     }
-    if (instanceReferences.length > 1) {
+    if (dataReferences.length > 1) {
         console.warn(
             `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
         );
@@ -334,11 +334,11 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'base64encode':
         case 'boolean-from-string':
         case 'current':
+        case 'data':
         case 'depends':
         case 'event':
         case 'fore-attr':
         case 'index':
-        case 'instance':
         case 'json2xml':
         case 'xml2Json':
         case 'log':
@@ -745,23 +745,23 @@ export function evaluateXPathToNumber(
 
 const contextFunction = (dynamicContext, string) => {
     const caller = dynamicContext.currentContext.formElement;
-	let instance = null;
+	let data = null;
     if (string) {
-        instance = resolveId(string, caller);
+        data = resolveId(string, caller);
 	} else {
-		instance = XPathUtil.getParentBindingElement(caller);
+		data = XPathUtil.getParentBindingElement(caller);
 	}
-    if (instance) {
-        if (instance.nodeName === 'FX-REPEAT') {
-            const {nodeset} = instance;
+    if (data) {
+        if (data.nodeName === 'FX-REPEAT') {
+            const {nodeset} = data;
             for (let parent = caller; parent; parent = parent.parentNode) {
-                if (parent.parentNode === instance) {
+                if (parent.parentNode === data) {
                     const offset = Array.from(parent.parentNode.children).indexOf(parent);
                     return nodeset[offset];
                 }
             }
         }
-        return instance.nodeset;
+        return data.nodeset;
     }
 
     return caller.getInScopeContext();
@@ -825,13 +825,13 @@ registerCustomXPathFunction(
     'xs:string?',
     (dynamicContext, string) => {
         const {formElement} = dynamicContext.currentContext;
-        const instance = resolveId(string, formElement, 'fx-instance');
-        if (instance) {
-            if (instance.getAttribute('type') === 'json') {
+        const data = resolveId(string, formElement, 'fx-instance');
+        if (data) {
+            if (data.getAttribute('type') === 'json') {
                 console.warn('log() does not work for JSON yet');
                 // return JSON.stringify(instance.getDefaultContext());
             } else {
-                const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+                const def = new XMLSerializer().serializeToString(data.getDefaultContext());
                 return prettifyXml(def);
             }
         }
@@ -945,9 +945,9 @@ registerCustomXPathFunction(
     'element()?',
     (dynamicContext, string) => {
         const {formElement} = dynamicContext.currentContext;
-        const instance = resolveId(string, formElement, 'fx-instance');
+        const data = resolveId(string, formElement, 'data');
 
-        if (instance) {
+        if (data) {
             // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
             // const def = JSON.stringify(instance.getDefaultContext());
 
@@ -961,7 +961,7 @@ registerCustomXPathFunction(
             if (logtree) {
                 logtree.parentNode.removeChild(logtree);
             }
-            const tree = buildTree(treeDiv, instance.getDefaultContext());
+            const tree = buildTree(treeDiv, data.getDefaultContext());
             if (tree) {
                 form.appendChild(tree);
             }
@@ -970,9 +970,7 @@ registerCustomXPathFunction(
     },
 );
 
-const instance = (dynamicContext, string) => {
-    // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
-    // TODO: handle no string passed (null will be passed instead)
+const data = (dynamicContext, string) => {
 
     const formElement = fxEvaluateXPathToFirstNode(
         'ancestor-or-self::fx-fore[1]',
@@ -984,9 +982,9 @@ const instance = (dynamicContext, string) => {
 
     let lookup = null;
     if(string === null || string === 'default'){
-        lookup = formElement.getModel().getDefaultInstance();
+        lookup = formElement.getModel().getDefaultData();
     }else{
-        lookup = formElement.getModel().getInstance(string);
+        lookup = formElement.getModel().getData(string);
         if(!lookup){
             document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
                 composed: true,
@@ -1027,21 +1025,21 @@ registerCustomXPathFunction(
     },
 );
 
-// Note that this is not to spec. The spec enforces elements to be returned from the
-// instance. However, we allow instances to actually be JSON!
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance'},
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'data'},
     [],
     'item()?',
-    domFacade => instance(domFacade, null),
+    domFacade => data(domFacade, null),
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'instance'},
+    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'data'},
     ['xs:string?'],
     'item()?',
-    instance,
+    data,
 );
+
+
 const getAttributes = (value) => {
     if (Array.isArray(value)) {
         return ` type="array"`;

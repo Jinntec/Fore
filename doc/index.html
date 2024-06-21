@@ -97,17 +97,15 @@
 
                         <fx-model>
                             <!-- ### data-container ### -->
-                            <fx-instance>
-                                <data>
-                                    <time>12:30:00</time>
-                                    <hour>0</hour>
-                                    <minute>0</minute>
-                                    <second>0</second>
-                                    <h-deg></h-deg>
-                                    <min-deg>0</min-deg>
-                                    <s-deg></s-deg>
-                                </data>
-                            </fx-instance>
+                            <data>
+                                <time>12:30:00</time>
+                                <hour>0</hour>
+                                <minute>0</minute>
+                                <second>0</second>
+                                <h-deg></h-deg>
+                                <min-deg>0</min-deg>
+                                <s-deg></s-deg>
+                            </data>
 
                             <!-- ### bindings calculating the hours, minutes and seconds and rotation degrees ### -->
                             <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>

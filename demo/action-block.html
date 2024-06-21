@@ -7,30 +7,30 @@
     <title>complex test </title>
     <link rel="stylesheet" href="../resources/vars.css"/>
     <link rel="stylesheet" href="../resources/demo.css"/>
-<!--
-    <style>
-        .logo-corner{
-            transform:rotate(-45deg);
-            position: fixed;
-            right: -2.5rem;
-            top:0rem;
-            width: 5rem;
-            height: 5rem;
-            background: #efefef;
-            border-radius: 0.5rem;
-        }
-        .logo{
-            width: 3rem;
-            position: absolute;
-            top: 1.5rem;
-            left:0;
-            transform: rotate(45deg);
-        }
-        .logo-corner:hover{
-            background: #ccc;
-        }
-    </style>
--->
+    <!--
+        <style>
+            .logo-corner{
+                transform:rotate(-45deg);
+                position: fixed;
+                right: -2.5rem;
+                top:0rem;
+                width: 5rem;
+                height: 5rem;
+                background: #efefef;
+                border-radius: 0.5rem;
+            }
+            .logo{
+                width: 3rem;
+                position: absolute;
+                top: 1.5rem;
+                left:0;
+                transform: rotate(45deg);
+            }
+            .logo-corner:hover{
+                background: #ccc;
+            }
+        </style>
+    -->
 </head>
 <body>
 <div class="wrapper">
@@ -38,33 +38,30 @@
 
     <h1>Looping with an action block</h1>
 
-    <p>This demo shows how to create a loop of submissions by using a action block and the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/"target="_blank">fx-dispatch</a></code>
-    action.</p>
+    <p>This demo shows how to create a loop of submissions by using a action block and the <code><a
+            href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/" target="_blank">fx-dispatch</a></code>
+        action.</p>
 
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-model>                    
-                    <fx-instance>
-                        <data>
-                            <test/>
-                        </data>
-                    </fx-instance>
+                <fx-model>
+                    <data>
+                        <test/>
+                    </data>
 
-                    <fx-instance id="vars" type="xml">
-                        <data>                         
-                            <completed>0</completed>
-                            <success>false</success>
-                        </data>
-                    </fx-instance>
-                    
+                    <data id="vars">
+                        <completed>0</completed>
+                        <success>false</success>
+                    </data>
+
                     <!-- SUBMISSIONS -->
                     <fx-submission id="s-submission1" method="get" url="#echo" replace="none">
                         <fx-message event="submit">submit {instance('vars')/completed + 1}</fx-message>
                         <fx-message event="submit-error">error</fx-message>
                         <fx-dispatch event="submit-done" name="check-done" targetid="deployment"></fx-dispatch>
                     </fx-submission>
-                    
+
                 </fx-model>
 
                 <fx-action id="deployment" event="check-done">
@@ -93,7 +90,7 @@
                             <li>Completed: { instance('vars')/completed } checks</li>
                             <li>Complete = {instance('vars')/completed = 6}</li>
                             <li>success: {instance('vars')/success}</li>
-                        </ul>    
+                        </ul>
                     </fx-group>
                 </fx-group>
             </fx-fore>
@@ -101,10 +98,10 @@
     </demo-snippet>
 
     <p>The action block 'deployment' is called 6 times in this example and is triggered by the 'start checking' button
-    initially. This will call the submission which upon its completion will dispatch a custom event "check-done" to
-    the action block.</p>
+        initially. This will call the submission which upon its completion will dispatch a custom event "check-done" to
+        the action block.</p>
     <p>Within the action we increment a counter, which is then used to check whether we're done or have to call
-    the submission again.</p>
+        the submission again.</p>
 </div>
 <!--    <script type="module" src="./js/fore-debug.js"/>-->
 <script type="module" src="demo.js"></script>

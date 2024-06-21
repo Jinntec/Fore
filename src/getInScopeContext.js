@@ -40,18 +40,19 @@ function _getInitialContext(node, ref) {
         if (localFore === parentBindFore) {
             return parentBind.nodeset;
         }
-        return model.getDefaultInstance().getDefaultContext();
+        return model.getDefaultData().getDefaultContext();
     }
 
     if (XPathUtil.isAbsolutePath(ref)) {
-        const instanceId = XPathUtil.getInstanceId(ref);
-        if (instanceId) {
-            return model.getInstance(instanceId).getDefaultContext();
+        const dataId = XPathUtil.getDataId(ref);
+        if (dataId) {
+            return model.getData(dataId).getDefaultContext();
         }
-        return model.getDefaultInstance().getDefaultContext();
+        return model.getDefaultData().getDefaultContext();
     }
     // should always return default context if all other fails
-    return model.getDefaultInstance().getDefaultContext();
+    const defaultData = model.getDefaultData();
+    return defaultData.getDefaultContext();
 }
 
 export default function getInScopeContext(node, ref) {
@@ -62,7 +63,7 @@ export default function getInScopeContext(node, ref) {
     // console.log('getInScopeContext parent', parentElement);
 
     if(parentElement.nodeName === 'FX-FORE'){
-        const context = parentElement.getModel().getDefaultInstance()?.getDefaultContext();
+        const context = parentElement.getModel().getDefaultData()?.getDefaultContext();
 		if (!context) {
 			// Edge-case, we are in an inner fore. Use the outer fore's default context
 			return getInScopeContext(parentElement.parentNode, ref);

@@ -43,15 +43,13 @@
             <fx-fore>
 
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                        </data>
-                    </fx-instance>
+                    <data>
+                    </data>
 
                     <fx-submission id="get"
                                    url="localStore:foo"
                                    method="get"
-                                   replace="instance">
+                                   replace="data">
                         <fx-message event="submit-error">Data not present</fx-message>
                     </fx-submission>
                 </fx-model>

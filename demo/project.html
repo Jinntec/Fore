@@ -164,52 +164,50 @@
     <p>This demo uses a 3 levels of repeat</p>
     <fx-fore>
         <fx-model>
-            <fx-instance>
-                <data>
-                    <project name="backlog">
-                        <task name="make project plan">
-                            <activity status="open">create excel sheet</activity>
-                            <activity status="open">cook coffee</activity>
-                            <activity status="open">plan long and fruitless meetings</activity>
-                            <activity status="open">gather numbers and create already outdated plan</activity>
-                        </task>
-                        <task name="estimate">
-                            <activity status="open">look after security</activity>
-                            <activity status="open">stay calm and underpaid</activity>
-                        </task>
-                    </project>
-                    <project name="todo">
-                        <task name="launch preps">
-                            <activity status="open">prepare laudatio</activity>
-                            <activity status="open">show his rolex around</activity>
-                        </task>
-                    </project>
-                    <project name="doing">
-                        <task name="press investors for more money">
-                            <activity status="open">blackmail with dirty private details</activity>
-                        </task>
-                        <task name="worst case">
-                            <activity status="done">rob the safe</activity>
-                            <activity status="done">expansion expansion expansion</activity>
-                        </task>
-                    </project>
-                    <project name="done">
-                        <task name="press investors for more money">
-                            <activity status="open">blackmail with dirty private details</activity>
-                        </task>
-                        <task name="worst case">
-                            <activity status="done">rob the safe</activity>
-                            <activity status="open">expansion expansion expansion</activity>
-                        </task>
-                    </project>
-                    <template>
-                        <project name=""></project>
-                        <task name="newTask">new task</task>
-                        <activity status="todo">new item</activity>
-                    </template>
-                    <confirm>false</confirm>
-                </data>
-            </fx-instance>
+            <data>
+                <project name="backlog">
+                    <task name="make project plan">
+                        <activity status="open">create excel sheet</activity>
+                        <activity status="open">cook coffee</activity>
+                        <activity status="open">plan long and fruitless meetings</activity>
+                        <activity status="open">gather numbers and create already outdated plan</activity>
+                    </task>
+                    <task name="estimate">
+                        <activity status="open">look after security</activity>
+                        <activity status="open">stay calm and underpaid</activity>
+                    </task>
+                </project>
+                <project name="todo">
+                    <task name="launch preps">
+                        <activity status="open">prepare laudatio</activity>
+                        <activity status="open">show his rolex around</activity>
+                    </task>
+                </project>
+                <project name="doing">
+                    <task name="press investors for more money">
+                        <activity status="open">blackmail with dirty private details</activity>
+                    </task>
+                    <task name="worst case">
+                        <activity status="done">rob the safe</activity>
+                        <activity status="done">expansion expansion expansion</activity>
+                    </task>
+                </project>
+                <project name="done">
+                    <task name="press investors for more money">
+                        <activity status="open">blackmail with dirty private details</activity>
+                    </task>
+                    <task name="worst case">
+                        <activity status="done">rob the safe</activity>
+                        <activity status="open">expansion expansion expansion</activity>
+                    </task>
+                </project>
+                <template>
+                    <project name=""></project>
+                    <task name="newTask">new task</task>
+                    <activity status="todo">new item</activity>
+                </template>
+                <confirm>false</confirm>
+            </data>
         </fx-model>
         <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count(instance()/project)},1fr);">
             <template>

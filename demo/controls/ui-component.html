@@ -91,19 +91,17 @@
 
         <fx-model>
             <fx-message event="model-construct-done">Outer model ready</fx-message>
-            <fx-instance shared>
-                <data>
-                    <from>
-                        <email>John.Doe@nowhere.com</email>
-                    </from>
-                    <to>
-                        <email>Jane.Doe@nowhere.com</email>
-                    </to>
-                    <subject>just a message</subject>
-                    <message>Hey there - i'm a shared message</message>
-                    <attachments></attachments>
-                </data>
-            </fx-instance>
+            <data  data-shared>
+                <from>
+                    <email>John.Doe@nowhere.com</email>
+                </from>
+                <to>
+                    <email>Jane.Doe@nowhere.com</email>
+                </to>
+                <subject>just a message</subject>
+                <message>Hey there - i'm a shared message</message>
+                <attachments></attachments>
+            </data>
 <!--            <fx-message event="model-construct-done">outer fore done</fx-message>-->
 
         </fx-model>

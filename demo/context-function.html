@@ -21,15 +21,13 @@
 
     <fx-fore>
         <fx-model>
-            <fx-instance>
-                <data>
-                    <facets>
-                        <facet dimension="type" count="21" selected="">red</facet>
-                        <facet dimension="type" count="23" selected="">blue</facet>
-                        <facet dimension="type" count="74" selected="">green</facet>
-                    </facets>
-                </data>
-            </fx-instance>
+            <data>
+                <facets>
+                    <facet dimension="type" count="21" selected="">red</facet>
+                    <facet dimension="type" count="23" selected="">blue</facet>
+                    <facet dimension="type" count="74" selected="">green</facet>
+                </facets>
+            </data>
 
             <fx-bind ref="facets/facet" relevant="instance('vars')/running != 'true' or @selected='true'">
                 <fx-bind ref="@count" relevant="instance('vars')/running != 'true'"></fx-bind>
@@ -37,24 +35,20 @@
             </fx-bind>
 
 
-            <fx-instance id="params">
-                <data running="false">
+            <data id="params">
                     <facet dimension="type">green</facet>
                     <facet dimension="type">red</facet>
                     <facet dimension="authorship"></facet>
-                </data>
-            </fx-instance>
-            <fx-instance id="vars">
-                <data>
-                    <running>false</running>
-                </data>
-            </fx-instance>
+            </data>
+            <data id="vars">
+                <running>false</running>
+            </data>
 
             <fx-submission id="search"
                           url="#echo"
                           method="post"
-                          replace="instance"
-                          instance="params">
+                          replace="data"
+                          data="params">
                 <fx-action event="submit">
                     <fx-setvalue ref="instance('vars')/running">true</fx-setvalue>
                 </fx-action>
@@ -67,8 +61,8 @@
 
             <fx-submission id="dosearch"
                            url="..."
-                           replace="instance"
-                           instance="default"></fx-submission>
+                           replace="data"
+                           data="default"></fx-submission>
             </fx-submission>
 
         </fx-model>

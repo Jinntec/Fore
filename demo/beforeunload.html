@@ -6,12 +6,13 @@
     <title>template</title>
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
-        a, a:link, a:visited{
+        a, a:link, a:visited {
             display: block;
-            color:black;
-            margin:1rem 0;
+            color: black;
+            margin: 1rem 0;
         }
-        fx-fore, fx-control{
+
+        fx-fore, fx-control {
             width: 100%;
         }
     </style>
@@ -28,23 +29,22 @@
     <h2>Confirmation based on a condition</h2>
 
     <p>On <code>show-confirmation</code> attribute you can specify an XPath resolving to a boolean
-    value that determines whether to show/not show a page exit warning when the user navigates away from the page e.g. by
-    clicking a link.</p>
+        value that determines whether to show/not show a page exit warning when the user navigates away from the page
+        e.g. by
+        clicking a link.</p>
     <p>
         Clicking the link without touching the control will just send you to the destination.
     </p>
     <p>If you change the control value a page exit warning will appear allowing the user to cancel navigation, go
-    back and save changes.</p>
+        back and save changes.</p>
     <demo-snippet>
         <template>
             <fx-fore id="todo" show-confirmation="changed='true'">
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <changed>false</changed>
-                            <item>item</item>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <changed>false</changed>
+                        <item>item</item>
+                    </data>
                 </fx-model>
                 <fx-control ref="item">
                     <label>Change this</label>
@@ -63,12 +63,10 @@
         <template>
             <fx-fore id="todo" show-confirmation="true">
                 <fx-model>
-                    <fx-instance>
-                        <data>
-                            <changed>change this</changed>
-                            <item></item>
-                        </data>
-                    </fx-instance>
+                    <data>
+                        <changed>change this</changed>
+                        <item></item>
+                    </data>
                 </fx-model>
                 <fx-control ref="changed" update-event="input">
                     <label>a value</label>
@@ -78,7 +76,8 @@
         </template>
     </demo-snippet>
 
-    <p class="note"> <code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/"target="_blank">fx-setvalue</a></code> or other actions changing data will have no direct effect on wether to show/not show
+    <p class="note"><code><a href="https://jinntec.github.io/fore-docs/elements/actions/setvalue/" target="_blank">fx-setvalue</a></code>
+        or other actions changing data will have no direct effect on wether to show/not show
         the confirmation. It's just answers the question if the user has at least changed one control value.</p>
 
 
