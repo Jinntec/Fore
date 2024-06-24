@@ -5,6 +5,7 @@ import {
   evaluateXPathToBoolean,
   evaluateXPathToNodes,
   evaluateXPathToString,
+  evaluateXPath,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
@@ -85,6 +86,27 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
           const path = XPathUtil.getPath(node, instance);
         this.model.mainGraph.addNode(path, node);
+
+        // Get the additional dependencies that lead to the node(s) in the first place
+        const touchedNodes = new Set();
+        const domFacade = new DependencyNotifyingDomFacade(otherNode =>
+          touchedNodes.add(otherNode),
+        );
+        this.nodeset.forEach(node => {
+          evaluateXPath(
+            this.ref,
+            getInScopeContext(this.getAttributeNode('ref') || this, this.ref),
+            this,
+            {},
+            { domFacade },
+          );
+        });
+        touchedNodes.delete(node);
+        const touchedNodesArray = [...touchedNodes.values()];
+        if (touchedNodesArray.length !== 0) {
+          this._addDependencies(touchedNodesArray, node, path, 'ref');
+        }
+        console.log('DEPS', touchedNodesArray);
 
         /* ### catching references in the 'ref' itself...
         todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
@@ -359,6 +381,8 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     this.nodeset.forEach(node => {
       evaluateXPathToString(propertyExpr, node, this, domFacade);
     });
+
+    console.log(touchedNodes.values());
     return Array.from(touchedNodes.values());
   }
 
