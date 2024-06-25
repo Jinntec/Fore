@@ -984,7 +984,7 @@ const data = (dynamicContext, string) => {
     if(string === null || string === 'default'){
         lookup = formElement.getModel().getDefaultData();
     }else{
-        lookup = formElement.model.getData(string);
+        lookup = formElement.getModel().getData(string);
         if(!lookup){
             document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
                 composed: true,

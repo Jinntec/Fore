@@ -1,4 +1,5 @@
 import {Fore} from './fore.js';
+import {evaluateXPath} from "./xpath-evaluation.js";
 
 /**
  * Decorator for native HTMLDataElement to act as a data container.
@@ -89,6 +90,11 @@ export class DataElement {
         return data;
     }
 
+    evalXPath(xpath) {
+        const formElement = this.dataElement.parentElement.parentElement;
+        const result = evaluateXPath(xpath, this.getDefaultContext(), formElement);
+        return result;
+    }
 
     reset(){
         // this._useInlineData();
